@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Error" context="title of a dialog box that displays information about an error that has occurred" translation="Error" />
+  <StringItem id="polys" context="abbreviation of 'polygons'" translation="polys" />
+</StringLocalizationTable>

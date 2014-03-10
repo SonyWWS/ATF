@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component
+  xmlns="http://www.ship.scea.com/wws_sdk/component/v1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.ship.scea.com/wws_sdk/component/v1 http://www.ship.scea.com/wws_sdk/component/v1.xsd">
+
+  <readablename>Authoring Tools Framework</readablename>
+  <version>3.8</version>
+  <owner>rlittle</owner>
+  <platforms>PC</platforms>
+  <category>Component</category>
+  <description>
+    <brief>The Authoring Tools Framework (ATF) is a set of C#/.NET components that can be used to build rich professional-grade Windows client applications and game-related tools.</brief>
+  </description>
+  <forumurl>http://forums.ship.scea.com/jive/forum.jspa?forumID=95</forumurl>
+  <reportbugurl>http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Create+an+Issue</reportbugurl>
+  <allbugsurl>http://tracker.ship.scea.com/jira/browse/WWSATF</allbugsurl>
+  <wikipage>wws_atf Overview</wikipage>
+
+  <buildserver xmlns="http://www.ship.scea.com/wws_sdk/buildserver/v1">
+    <stage>
+      <name>Build</name>
+      <script>
+        <command>Test\BuildAllRelease.cmd</command>
+        <arg>false</arg>
+      </script>
+    </stage>
+    <stage>
+      <name>BuildAndUpload</name>
+      <trigger>
+        <!-- This plan uploads a zip file, so wait a few hours so that a file doesn't upload on every check-in -->
+        <change>21600</change>
+      </trigger>
+      <ignorefail>false</ignorefail>
+      <script>
+        <command>NoDistro\Deployment\BuildScripts\CleanATF.cmd</command>        
+      </script>
+      <script>
+        <command>NoDistro\Deployment\BuildScripts\SVN-Zip.cmd</command>        
+        <arg>Source</arg>
+      </script>
+      <script>
+        <command>Test\BuildAll.cmd</command>
+        <arg>false</arg>
+      </script>
+      <script>
+        <command>NoDistro\Deployment\BuildScripts\SVN-Zip.cmd</command>
+        <arg>SourceBinary</arg>
+      </script>
+      <script>
+        <command>NoDistro\Deployment\BuildScripts\AlfrescoUpload.cmd</command>
+      </script>
+    </stage>
+  </buildserver>
+
+</component>

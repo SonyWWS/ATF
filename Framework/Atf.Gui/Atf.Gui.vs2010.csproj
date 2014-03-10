@@ -1,0 +1,769 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sce.Atf</RootNamespace>
+    <AssemblyName>Atf.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bespoke.Common">
+      <HintPath>..\..\ThirdParty\Bespoke\Bespoke.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Bespoke.Common.Osc">
+      <HintPath>..\..\ThirdParty\Bespoke\Bespoke.Common.Osc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\IronPython\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\SharpDX\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\SharpDX\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\SharpDX\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Applications\ApplicationUtil.cs" />
+    <Compile Include="Applications\CanvasPrintDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Applications\CommandId.cs" />
+    <Compile Include="Applications\CommandServiceBase.cs" />
+    <Compile Include="Applications\CommandState.cs" />
+    <Compile Include="Applications\CommandVisibility.cs" />
+    <Compile Include="Applications\ContentTypeService.cs" />
+    <Compile Include="Applications\DocumentClosingEventArgs.cs" />
+    <Compile Include="Applications\DocumentEventType.cs" />
+    <Compile Include="Applications\IColoringContext.cs" />
+    <Compile Include="Applications\IDockStateProvider.cs" />
+    <Compile Include="Applications\IOscService.cs" />
+    <Compile Include="Applications\IPinnable.cs" />
+    <Compile Include="Applications\ISelectionPathProvider.cs" />
+    <Compile Include="Applications\ISettingsPathsProvider.cs" />
+    <Compile Include="Applications\ISubSelectionContext.cs" />
+    <Compile Include="Applications\IWindowLayoutService.cs" />
+    <Compile Include="Applications\LemurOscService.cs" />
+    <Compile Include="Applications\Listers\ITreeListView.cs" />
+    <Compile Include="Applications\DocumentEventArgs.cs" />
+    <Compile Include="Applications\NetworkTargetServices\Deci4pTargetProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Applications\NetworkTargetServices\ITargetConsumer.cs" />
+    <Compile Include="Applications\NetworkTargetServices\ITargetProvider.cs" />
+    <Compile Include="Applications\NetworkTargetServices\SelectedTargetsChangedArgs.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetCommands.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetInfo.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetScope.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TcpIpTargetInfo.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TcpIpTargetProvider.cs" />
+    <Compile Include="Applications\OscCommandReceiver.cs" />
+    <Compile Include="Applications\OscService.cs" />
+    <Compile Include="Applications\PinnableActiveCollection.cs" />
+    <Compile Include="Applications\ScriptingService.cs" />
+    <Compile Include="Applications\StandardDockAreas.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlFileInfo.cs" />
+    <Compile Include="Applications\StandardEditHistoryCommands.cs" />
+    <Compile Include="Applications\DocumentClientInfo.cs" />
+    <Compile Include="Applications\IDocumentClient.cs" />
+    <Compile Include="Applications\IDocumentService.cs" />
+    <Compile Include="Applications\IInstancingContext.cs" />
+    <Compile Include="Applications\INamingContext.cs" />
+    <Compile Include="Applications\IVisibilityContext.cs" />
+    <Compile Include="Applications\RecentDocumentInfo.cs" />
+    <Compile Include="Applications\StandardShowCommands.cs" />
+    <Compile Include="Applications\StandardViewCommands.cs" />
+    <Compile Include="Applications\IViewingContext.cs" />
+    <Compile Include="Applications\IPaletteClient.cs" />
+    <Compile Include="Applications\IPaletteService.cs" />
+    <Compile Include="Applications\Listers\ITreeView.cs" />
+    <Compile Include="Applications\RecentDocumentCommands.cs" />
+    <Compile Include="Applications\DocumentRegistry.cs" />
+    <Compile Include="Applications\ISettingsService.cs" />
+    <Compile Include="Applications\IThumbnailResolver.cs" />
+    <Compile Include="Applications\Listers\IListView.cs" />
+    <Compile Include="Applications\TextPrintDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Applications\ThumbnailReadyEventArgs.cs" />
+    <Compile Include="Applications\VersionControl\ISourceControlContext.cs" />
+    <Compile Include="Applications\VersionControl\ISourceControlService.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlEventArgs.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlRevision.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlRevisionKind.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlService.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlStatus.cs" />
+    <Compile Include="Applications\WebServices\Web References\com.scea.ship.submitBug\BugReportingService.cs" />
+    <Compile Include="Applications\WebServices\Web References\com.scea.ship.versionCheck\VersionCheckerService.cs" />
+    <Compile Include="Applications\WindowLayoutService.cs" />
+    <Compile Include="Applications\WindowLayoutServiceCommandsBase.cs" />
+    <Compile Include="Controls\Adaptable\D2dDiagramTheme.cs" />
+    <Compile Include="Controls\Adaptable\DiagramBorder.cs" />
+    <Compile Include="Controls\Adaptable\DiagramDrawingStyle.cs" />
+    <Compile Include="Controls\Adaptable\DiagramHitEventArgs.cs" />
+    <Compile Include="Controls\Adaptable\DiagramHitRecord.cs" />
+    <Compile Include="Controls\Adaptable\DiagramRenderer.cs" />
+    <Compile Include="Controls\Adaptable\DiagramScrollBar.cs" />
+    <Compile Include="Controls\Adaptable\DiagramTitleBar.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\BoundaryRoute.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\CircuitDefaultStyle.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\CircuitGroupInfo.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\CircuitGroupPinInfo.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Annotation.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Circuit.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitUtil.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Element.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\ElementRef.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\ElementType.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Group.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupPin.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\ICircuitContainer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\LayerFolder.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Pin.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\PinTarget.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Prototype.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\PrototypeFolder.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\SubCircuit.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\SubCircuitInstance.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\Wire.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dGraphRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\EdgeStyleData.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IEdgeStyleProvider.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphHitRecord.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\ICircuitElement.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\ICircuitElementType.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\ICircuitGroupPin.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\ICircuitPin.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IComplexState.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IEdgeRoute.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IEditableGraph.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IEditableGraphContainer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IGraph.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IGraphAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IGraphEdge.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IGraphNode.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IGraphNodeOptionsProvider.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\ICircuitGroupType.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IHierarchicalCircuitElementType.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IHierarchicalGraphNode.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\IState.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\StateIndicators.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\StateType.cs" />
+    <Compile Include="Controls\Adaptable\IAnnotatedDiagram.cs" />
+    <Compile Include="Controls\Adaptable\IAnnotation.cs" />
+    <Compile Include="Controls\CurveEditing\CurveEnums.cs" />
+    <Compile Include="Controls\CurveEditing\CurveInterfaces.cs" />
+    <Compile Include="Controls\CurveEditing\CurveUtils.cs" />
+    <Compile Include="Controls\CurveEditing\HermiteCurveEvaluator.cs" />
+    <Compile Include="Controls\CurveEditing\LinearCurveEvaluator.cs" />
+    <Compile Include="Controls\CurveEditing\ICurveEvaluator.cs" />
+    <Compile Include="Controls\PropertyEditing\BoundedFloatConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\BoundedIntConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\BoundPropertyDescriptor.cs" />
+    <Compile Include="Controls\PropertyEditing\ExclusiveEnumTypeConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\IDynamicTypeDescriptor.cs" />
+    <Compile Include="Controls\PropertyEditing\IPropertyCustomSorter.cs" />
+    <Compile Include="Controls\PropertyEditing\IPropertyEditingControlOwner.cs" />
+    <Compile Include="Controls\PropertyEditing\EnumTypeConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\FlagsTypeConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\FloatArrayConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\ICacheablePropertyControl.cs" />
+    <Compile Include="Controls\PropertyEditing\IntColorConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyChangedExtensions.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyCollectionWrapper.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyEditedEventArgs.cs" />
+    <Compile Include="Controls\PropertyEditing\ReadOnlyConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\SelectionPropertyEditingContext.cs" />
+    <Compile Include="Controls\PropertyEditing\SortableBindingList.cs" />
+    <Compile Include="Controls\PropertyEditing\UnboundPropertyDescriptor.cs" />
+    <Compile Include="Controls\PropertyEditing\UniformFloatArrayConverter.cs" />
+    <Compile Include="Controls\Timelines\DefaultTimelineConstraints.cs" />
+    <Compile Include="Controls\Timelines\EventMovedEventArgs.cs" />
+    <Compile Include="Controls\Timelines\GhostInfo.cs" />
+    <Compile Include="Controls\Timelines\GhostType.cs" />
+    <Compile Include="Controls\Timelines\HitRecord.cs" />
+    <Compile Include="Controls\Timelines\HitType.cs" />
+    <Compile Include="Controls\Timelines\IEvent.cs" />
+    <Compile Include="Controls\Timelines\IGroup.cs" />
+    <Compile Include="Controls\Timelines\IHierarchicalTimeline.cs" />
+    <Compile Include="Controls\Timelines\IHierarchicalTimelineList.cs" />
+    <Compile Include="Controls\Timelines\IInterval.cs" />
+    <Compile Include="Controls\Timelines\IKey.cs" />
+    <Compile Include="Controls\Timelines\IMarker.cs" />
+    <Compile Include="Controls\Timelines\ITimeline.cs" />
+    <Compile Include="Controls\Timelines\ITimelineDocument.cs" />
+    <Compile Include="Controls\Timelines\ITimelineObject.cs" />
+    <Compile Include="Controls\Timelines\ITimelineObjectCreator.cs" />
+    <Compile Include="Controls\Timelines\ITimelineReference.cs" />
+    <Compile Include="Controls\Timelines\ITrack.cs" />
+    <Compile Include="Controls\Timelines\TimelineConstraints.cs" />
+    <Compile Include="Controls\Timelines\TimelineLayout.cs" />
+    <Compile Include="Controls\Timelines\TimelinePath.cs" />
+    <Compile Include="Controls\Timelines\TimelineReferenceOptions.cs" />
+    <Compile Include="Direct2D\D2dBitmap.cs" />
+    <Compile Include="Direct2D\D2dBitmapBrush.cs" />
+    <Compile Include="Direct2D\D2dBitmapGraphics.cs" />
+    <Compile Include="Direct2D\D2dBrush.cs" />
+    <Compile Include="Direct2D\D2dFactory.cs" />
+    <Compile Include="Direct2D\D2dGraphics.cs" />
+    <Compile Include="Direct2D\D2dHwndGraphics.cs" />
+    <Compile Include="Direct2D\D2dLinearGradientBrush.cs" />
+    <Compile Include="Direct2D\D2dRadialGradientBrush.cs" />
+    <Compile Include="Direct2D\D2dResource.cs" />
+    <Compile Include="Direct2D\D2dShapes.cs" />
+    <Compile Include="Direct2D\D2dSolidColorBrush.cs" />
+    <Compile Include="Direct2D\D2dStrokeStyle.cs" />
+    <Compile Include="Direct2D\D2dTextFormat.cs" />
+    <Compile Include="Direct2D\D2dTextLayout.cs" />
+    <Compile Include="Direct2D\D2dUtil.cs" />
+    <Compile Include="DirectWrite\ClusterMetrics.cs" />
+    <Compile Include="DirectWrite\LineMetrics.cs" />
+    <Compile Include="DirectWrite\TextEditor.cs" />
+    <Compile Include="DirectWrite\HitTestMetrics.cs" />
+    <Compile Include="Dom\ChildAttributeCollectionPropertyDescriptor.cs" />
+    <Compile Include="Dom\GlobalHistoryContext.cs" />
+    <Compile Include="Dom\HistoryContext.cs" />
+    <Compile Include="Dom\MultipleHistoryContext.cs" />
+    <Compile Include="Dom\MultiPropertyDescriptor.cs" />
+    <Compile Include="Dom\SelectionContext.cs" />
+    <Compile Include="Dom\EditingContext.cs" />
+    <Compile Include="Dom\NodeTypePaletteItem.cs" />
+    <Compile Include="Applications\IPropertyEditingContext.cs" />
+    <Compile Include="Applications\IPrintableDocument.cs" />
+    <Compile Include="Applications\IStatusImage.cs" />
+    <Compile Include="Applications\IStatusService.cs" />
+    <Compile Include="Applications\IUserFeedbackService.cs" />
+    <Compile Include="Applications\Listers\ILayeringContext.cs" />
+    <Compile Include="Applications\IHierarchicalInsertionContext.cs" />
+    <Compile Include="Applications\Listers\ItemInfo.cs" />
+    <Compile Include="Applications\SetPropertyCommand.cs" />
+    <Compile Include="Applications\StandardControlGroup.cs" />
+    <Compile Include="Applications\Listers\IItemView.cs" />
+    <Compile Include="Controls\PropertyEditing\ColorEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\DateTimeEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyEditingContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dom\Template.cs" />
+    <Compile Include="Dom\TemplateFolder.cs" />
+    <Compile Include="FileFilterBuilder.cs" />
+    <Compile Include="Applications\PropertyEventArgs.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyErrorEventArgs.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyGridMode.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertySorting.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyUtils.cs" />
+    <Compile Include="Applications\ISelectionContext.cs" />
+    <Compile Include="Applications\IDocumentRegistry.cs" />
+    <Compile Include="ColorUtil.cs" />
+    <Compile Include="Controls\FindFileAction.cs" />
+    <Compile Include="GroupAttribute.cs" />
+    <Compile Include="Input\DragEventArgs.cs" />
+    <Compile Include="Input\KeyEventArgs.cs" />
+    <Compile Include="Input\Keys.cs" />
+    <Compile Include="Input\Message.cs" />
+    <Compile Include="Input\MouseButtons.cs" />
+    <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="IPerformanceTarget.cs" />
+    <Compile Include="Rendering\AxisSystemType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\Camera.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ControlScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ControlSchemes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\HitRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IBeforeLocalTransform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IBoundable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IBuildSceneNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IGeometricPick.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IIntersectable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IManipulator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IPickAction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IQueryObjectStats.cs" />
+    <Compile Include="Rendering\IRenderableParent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IRenderAction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IRenderObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IRenderPick.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\IRenderStateCreator.cs" />
+    <Compile Include="Rendering\IRenderThumbnail.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ISceneGraphHierarchy.cs" />
+    <Compile Include="Rendering\ISetsLocalTransform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ITransformable.cs" />
+    <Compile Include="Rendering\ManipulatorEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\MaxControlScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\MayaControlScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\MayaLaptopControlScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ObjectStats.cs" />
+    <Compile Include="Rendering\PickEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ProjectionType.cs" />
+    <Compile Include="Rendering\RenderMode.cs" />
+    <Compile Include="Rendering\RenderObjectList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\RenderState.cs" />
+    <Compile Include="Rendering\RenderStateGuardian.cs" />
+    <Compile Include="Rendering\RenderStateSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\RenderStateStack.cs" />
+    <Compile Include="Rendering\Scene.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\SceneGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\SceneNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\TransformationTypes.cs" />
+    <Compile Include="Rendering\TransformUtils.cs" />
+    <Compile Include="Rendering\TraverseNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\TraverseSortUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\TraverseState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rendering\ViewTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="CursorResourceAttribute.cs" />
+    <Compile Include="Dom\AttributePropertyDescriptor.cs" />
+    <Compile Include="Dom\ChildAttributePropertyDescriptor.cs" />
+    <Compile Include="Dom\ChildPropertyDescriptor.cs" />
+    <Compile Include="IAnnotatedParams.cs" />
+    <Compile Include="Dom\PropertyDescriptor.cs" />
+    <Compile Include="Applications\Command.cs" />
+    <Compile Include="Applications\CommandCount.cs" />
+    <Compile Include="Applications\CommandHistory.cs" />
+    <Compile Include="Applications\CommandInfo.cs" />
+    <Compile Include="Applications\CompositeCommand.cs" />
+    <Compile Include="Applications\ContextRegistry.cs" />
+    <Compile Include="Applications\ICommandClient.cs" />
+    <Compile Include="Applications\ICommandService.cs" />
+    <Compile Include="Applications\IContextRegistry.cs" />
+    <Compile Include="Applications\IContextMenuCommandProvider.cs" />
+    <Compile Include="Applications\IHistoryContext.cs" />
+    <Compile Include="Applications\MenuInfo.cs" />
+    <Compile Include="Applications\SetSelectionCommand.cs" />
+    <Compile Include="Applications\StandardCommand.cs" />
+    <Compile Include="Applications\StandardCommandGroup.cs" />
+    <Compile Include="Applications\StandardLockCommands.cs" />
+    <Compile Include="Applications\StandardMenu.cs" />
+    <Compile Include="Applications\StandardSelectionCommands.cs" />
+    <Compile Include="Gdi32.cs" />
+    <Compile Include="ImageResourceAttribute.cs" />
+    <Compile Include="Applications\IStatusText.cs" />
+    <Compile Include="KeysUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="User32.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\4WAY05.CUR" />
+    <EmbeddedResource Include="Resources\AlignBottoms16.png" />
+    <EmbeddedResource Include="Resources\AlignBottoms24.png" />
+    <EmbeddedResource Include="Resources\AlignBottoms32.png" />
+    <EmbeddedResource Include="Resources\AlignCenters16.png" />
+    <EmbeddedResource Include="Resources\AlignCenters24.png" />
+    <EmbeddedResource Include="Resources\AlignCenters32.png" />
+    <EmbeddedResource Include="Resources\AlignLefts16.png" />
+    <EmbeddedResource Include="Resources\AlignLefts24.png" />
+    <EmbeddedResource Include="Resources\AlignLefts32.png" />
+    <EmbeddedResource Include="Resources\AlignMiddles16.png" />
+    <EmbeddedResource Include="Resources\AlignMiddles24.png" />
+    <EmbeddedResource Include="Resources\AlignMiddles32.png" />
+    <EmbeddedResource Include="Resources\AlignRights16.png" />
+    <EmbeddedResource Include="Resources\AlignRights24.png" />
+    <EmbeddedResource Include="Resources\AlignRights32.png" />
+    <EmbeddedResource Include="Resources\AlignTops16.png" />
+    <EmbeddedResource Include="Resources\AlignTops24.png" />
+    <EmbeddedResource Include="Resources\AlignTops32.png" />
+    <EmbeddedResource Include="Resources\Alphabetical.png" />
+    <EmbeddedResource Include="Resources\ByCategory.png" />
+    <EmbeddedResource Include="Resources\Copy16.png" />
+    <EmbeddedResource Include="Resources\Copy24.png" />
+    <EmbeddedResource Include="Resources\Copy32.png" />
+    <EmbeddedResource Include="Resources\Cut16.png" />
+    <EmbeddedResource Include="Resources\Cut24.png" />
+    <EmbeddedResource Include="Resources\Cut32.png" />
+    <EmbeddedResource Include="Resources\Data16.png" />
+    <EmbeddedResource Include="Resources\Data24.png" />
+    <EmbeddedResource Include="Resources\Data32.png" />
+    <EmbeddedResource Include="Resources\Delete16.png" />
+    <EmbeddedResource Include="Resources\Delete24.png" />
+    <EmbeddedResource Include="Resources\Delete32.png" />
+    <EmbeddedResource Include="Resources\Document16.png" />
+    <EmbeddedResource Include="Resources\Document24.png" />
+    <EmbeddedResource Include="Resources\Document32.png" />
+    <EmbeddedResource Include="Resources\Find16.png" />
+    <EmbeddedResource Include="Resources\Find24.png" />
+    <EmbeddedResource Include="Resources\Find32.png" />
+    <EmbeddedResource Include="Resources\FitToSize16.png" />
+    <EmbeddedResource Include="Resources\FitToSize24.png" />
+    <EmbeddedResource Include="Resources\FitToSize32.png" />
+    <EmbeddedResource Include="Resources\Folder16.png" />
+    <EmbeddedResource Include="Resources\Folder24.png" />
+    <EmbeddedResource Include="Resources\Folder32.png" />
+    <EmbeddedResource Include="Resources\gear_preferences.ico" />
+    <EmbeddedResource Include="Resources\greenPlus13.png" />
+    <EmbeddedResource Include="Resources\Group16.png" />
+    <EmbeddedResource Include="Resources\Group24.png" />
+    <EmbeddedResource Include="Resources\Group32.png" />
+    <EmbeddedResource Include="Resources\Help16.png" />
+    <EmbeddedResource Include="Resources\Help24.png" />
+    <EmbeddedResource Include="Resources\Help32.png" />
+    <EmbeddedResource Include="Resources\HO_SPLIT.CUR" />
+    <EmbeddedResource Include="Resources\lock13.png" />
+    <EmbeddedResource Include="Resources\Lock16.png" />
+    <EmbeddedResource Include="Resources\Lock24.png" />
+    <EmbeddedResource Include="Resources\Lock32.png" />
+    <EmbeddedResource Include="Resources\nav_left.png" />
+    <EmbeddedResource Include="Resources\nav_right.png" />
+    <EmbeddedResource Include="Resources\Paste16.png" />
+    <EmbeddedResource Include="Resources\Paste24.png" />
+    <EmbeddedResource Include="Resources\Paste32.png" />
+    <EmbeddedResource Include="Resources\Preferences16.png" />
+    <EmbeddedResource Include="Resources\Preferences24.png" />
+    <EmbeddedResource Include="Resources\Preferences32.png" />
+    <EmbeddedResource Include="Resources\redCheck13.png" />
+    <EmbeddedResource Include="Resources\Redo16.png" />
+    <EmbeddedResource Include="Resources\Redo24.png" />
+    <EmbeddedResource Include="Resources\Redo32.png" />
+    <EmbeddedResource Include="Resources\Save16.png" />
+    <EmbeddedResource Include="Resources\Save24.png" />
+    <EmbeddedResource Include="Resources\Save32.png" />
+    <EmbeddedResource Include="Resources\SaveAll16.png" />
+    <EmbeddedResource Include="Resources\SaveAll24.png" />
+    <EmbeddedResource Include="Resources\SaveAll32.png" />
+    <EmbeddedResource Include="Resources\SaveAs16.png" />
+    <EmbeddedResource Include="Resources\SaveAs24.png" />
+    <EmbeddedResource Include="Resources\SaveAs32.png" />
+    <EmbeddedResource Include="Resources\SCEA.png" />
+    <EmbeddedResource Include="Resources\Selection16.png" />
+    <EmbeddedResource Include="Resources\Selection24.png" />
+    <EmbeddedResource Include="Resources\Selection32.png" />
+    <EmbeddedResource Include="Resources\Undo16.png" />
+    <EmbeddedResource Include="Resources\Undo24.png" />
+    <EmbeddedResource Include="Resources\Undo32.png" />
+    <EmbeddedResource Include="Resources\Ungroup16.png" />
+    <EmbeddedResource Include="Resources\Ungroup24.png" />
+    <EmbeddedResource Include="Resources\Ungroup32.png" />
+    <EmbeddedResource Include="Resources\Unlock16.png" />
+    <EmbeddedResource Include="Resources\Unlock24.png" />
+    <EmbeddedResource Include="Resources\Unlock32.png" />
+    <EmbeddedResource Include="Resources\Unsorted.png" />
+    <EmbeddedResource Include="Resources\VE_SPLIT.CUR" />
+    <EmbeddedResource Include="Resources\warning.ico" />
+    <EmbeddedResource Include="Resources\ZoomIn16.png" />
+    <EmbeddedResource Include="Resources\ZoomIn24.png" />
+    <EmbeddedResource Include="Resources\ZoomIn32.png" />
+    <EmbeddedResource Include="Resources\ZoomOut16.png" />
+    <EmbeddedResource Include="Resources\ZoomOut24.png" />
+    <EmbeddedResource Include="Resources\ZoomOut32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\add.png" />
+    <EmbeddedResource Include="Resources\arrow_down_blue.png" />
+    <EmbeddedResource Include="Resources\arrow_up_blue.png" />
+    <EmbeddedResource Include="Resources\cube_molecule.png" />
+    <EmbeddedResource Include="Resources\cube_molecule_new.png" />
+    <EmbeddedResource Include="Resources\delete.png" />
+    <EmbeddedResource Include="Resources\document_add.png" />
+    <EmbeddedResource Include="Resources\document_check.png" />
+    <EmbeddedResource Include="Resources\document_into.png" />
+    <EmbeddedResource Include="Resources\document_lock.png" />
+    <EmbeddedResource Include="Resources\document_refresh.png" />
+    <EmbeddedResource Include="Resources\document_revert.png" />
+    <EmbeddedResource Include="Resources\document_warning.png" />
+    <EmbeddedResource Include="Resources\dom_interface.png" />
+    <EmbeddedResource Include="Resources\factory.png" />
+    <EmbeddedResource Include="Resources\layer.png" />
+    <EmbeddedResource Include="Resources\package.png" />
+    <EmbeddedResource Include="Resources\prefabFolder.png" />
+    <EmbeddedResource Include="Resources\SubDocument16.png" />
+    <EmbeddedResource Include="Resources\SubDocument24.png" />
+    <EmbeddedResource Include="Resources\SubDocument32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\AddKeysTool.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\BreakTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\ClampedTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\CurveSnap.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\CycleAfter.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\CycleAfterwithOffset.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\CycleBefore.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\CycleBeforewithOffset.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\Denormalize-curves.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\FlatTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\FrameAll.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\FreeTangentWeight.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\InsertKeysTool.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\LinearTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\LockTangent-Weight.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\MoveKeysTool.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\MoveNearestPickedKeyTool.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\NoAction.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\Normalizecurves.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\Panhv.cur" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\PlateauTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\PointSnap.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\QuestionMark.cur" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\QuickHelp.txt" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\ScaleKeysTool.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\SelectionCursor.cur" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\SplineTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\StepTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\TimeSnap.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\UnifyTangents.png" />
+    <EmbeddedResource Include="Controls\CurveEditing\Resources\ValueSnap.png" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\printer16.png" />
+    <EmbeddedResource Include="Resources\printer24.png" />
+    <EmbeddedResource Include="Resources\printer32.png" />
+    <EmbeddedResource Include="Resources\printer_preferences16.png" />
+    <EmbeddedResource Include="Resources\printer_preferences24.png" />
+    <EmbeddedResource Include="Resources\printer_preferences32.png" />
+    <EmbeddedResource Include="Resources\printer_view16.png" />
+    <EmbeddedResource Include="Resources\printer_view24.png" />
+    <EmbeddedResource Include="Resources\printer_view32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Applications\WebServices\Web References\com.scea.ship.submitBug\SubmitBug.discomap" />
+    <None Include="Applications\WebServices\Web References\com.scea.ship.submitBug\SubmitBug.wsdl" />
+    <None Include="Applications\WebServices\Web References\com.scea.ship.versionCheck\VersionChecker.discomap" />
+    <None Include="Applications\WebServices\Web References\com.scea.ship.versionCheck\VersionChecker.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\HideSelection16.png" />
+    <EmbeddedResource Include="Resources\HideSelection24.png" />
+    <EmbeddedResource Include="Resources\HideSelection32.png" />
+    <EmbeddedResource Include="Resources\Isolate16.png" />
+    <EmbeddedResource Include="Resources\Isolate24.png" />
+    <EmbeddedResource Include="Resources\Isolate32.png" />
+    <EmbeddedResource Include="Resources\ShowAll16.png" />
+    <EmbeddedResource Include="Resources\ShowAll24.png" />
+    <EmbeddedResource Include="Resources\ShowAll32.png" />
+    <EmbeddedResource Include="Resources\ShowSelection16.png" />
+    <EmbeddedResource Include="Resources\ShowSelection24.png" />
+    <EmbeddedResource Include="Resources\ShowSelection32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\reference.png" />
+    <EmbeddedResource Include="Resources\referenceNull.png" />
+    <EmbeddedResource Include="Resources\referenceOverride.png" />
+    <EmbeddedResource Include="Resources\resource.png" />
+    <EmbeddedResource Include="Resources\resourceFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\search.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Computer.ico" />
+    <EmbeddedResource Include="Resources\diskdrive16.png" />
+    <EmbeddedResource Include="Resources\diskdrive24.png" />
+    <EmbeddedResource Include="Resources\diskdrive32.png" />
+    <EmbeddedResource Include="Resources\Folder.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\filter.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sourceControl_connect.png" />
+    <EmbeddedResource Include="Resources\sourceControl_enable.png" />
+    <EmbeddedResource Include="Resources\sourceControl_reconcile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sort_ascending.png" />
+    <EmbeddedResource Include="Resources\sort_descending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\checked_items.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ui_locked16x16.png" />
+    <EmbeddedResource Include="Resources\ui_locked24x24.png" />
+    <EmbeddedResource Include="Resources\ui_locked32x32.png" />
+    <EmbeddedResource Include="Resources\ui_unlocked16x16.png" />
+    <EmbeddedResource Include="Resources\ui_unlocked24x24.png" />
+    <EmbeddedResource Include="Resources\ui_unlocked32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\edit_locked16x16.png" />
+    <EmbeddedResource Include="Resources\edit_locked24x24.png" />
+    <EmbeddedResource Include="Resources\edit_locked32x32.png" />
+    <EmbeddedResource Include="Resources\edit_unlocked16x16.png" />
+    <EmbeddedResource Include="Resources\edit_unlocked24x24.png" />
+    <EmbeddedResource Include="Resources\edit_unlocked32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sourceControl_add.png" />
+    <EmbeddedResource Include="Resources\sourceControl_checkin.png" />
+    <EmbeddedResource Include="Resources\sourceControl_checkout.png" />
+    <EmbeddedResource Include="Resources\sourceControl_disable.png" />
+    <EmbeddedResource Include="Resources\sourceControl_getLatest.png" />
+    <EmbeddedResource Include="Resources\sourceControl_refresh.png" />
+    <EmbeddedResource Include="Resources\sourceControl_revert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\component16.png" />
+    <EmbeddedResource Include="Resources\component24.png" />
+    <EmbeddedResource Include="Resources\component32.png" />
+    <EmbeddedResource Include="Resources\components.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\pin_green16.png" />
+    <EmbeddedResource Include="Resources\pin_green24.png" />
+    <EmbeddedResource Include="Resources\pin_green32.png" />
+    <EmbeddedResource Include="Resources\pin_grey16.png" />
+    <EmbeddedResource Include="Resources\pin_grey24.png" />
+    <EmbeddedResource Include="Resources\pin_grey32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\document_unknown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\unknown13.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ja\Localization.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\folderClosedReference16.png" />
+    <EmbeddedResource Include="Resources\folderOpenReference16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Reset16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AtfLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AtfIcon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D1FA9A85-9359-4725-A50F-8A67A77D700C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Atf.Atgi</RootNamespace>
+    <AssemblyName>Atf.Atgi</AssemblyName>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Anim.cs" />
+    <Compile Include="AnimChannel.cs" />
+    <Compile Include="AnimClip.cs" />
+    <Compile Include="AtgiResolver.cs" />
+    <Compile Include="AtgiSchemaTypeLoader.cs" />
+    <Compile Include="AtgiXmlPersister.cs" />
+    <Compile Include="CustomData.cs" />
+    <Compile Include="CustomDataAttribute.cs" />
+    <Compile Include="DataSet.cs" />
+    <Compile Include="Instance.cs" />
+    <Compile Include="Joint.cs" />
+    <Compile Include="LodGroup.cs" />
+    <Compile Include="Material.cs" />
+    <Compile Include="MaterialBinding.cs" />
+    <Compile Include="Mesh.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeProperties.cs" />
+    <Compile Include="Pose.cs" />
+    <Compile Include="PoseElement.cs" />
+    <Compile Include="PrimitiveSet.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="schemas\Schema.cs" />
+    <Compile Include="Shader.cs" />
+    <Compile Include="ShaderBinding.cs" />
+    <Compile Include="Texture.cs" />
+    <Compile Include="World.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui.OpenGL\Atf.Gui.OpenGL.vs2010.csproj">
+      <Project>{52D35323-1AA1-4205-A1B0-26C5E5E8D543}</Project>
+      <Name>Atf.Gui.OpenGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="schemas\atgi.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="schemas\GenSchemaDef.bat" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

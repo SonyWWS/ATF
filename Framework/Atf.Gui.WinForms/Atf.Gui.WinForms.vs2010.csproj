@@ -1,0 +1,759 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7C36A258-9102-420D-B80A-5EB5717644B6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sce.Atf</RootNamespace>
+    <AssemblyName>Atf.Gui.WinForms</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>649</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>649</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\DockPanelSuite\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Applications\AtfScriptVariables.cs" />
+    <Compile Include="Applications\AutoDocumentService.cs" />
+    <Compile Include="Applications\AutomationService.cs" />
+    <Compile Include="Applications\CommandInfos.cs" />
+    <Compile Include="Applications\CommandLineArgsService.cs" />
+    <Compile Include="Applications\CommandService.cs" />
+    <Compile Include="Applications\ControlHostService.cs" />
+    <Compile Include="Applications\ControlInfo.cs" />
+    <Compile Include="Applications\DefaultTabCommands.cs" />
+    <Compile Include="Applications\Dialogs.cs" />
+    <Compile Include="Applications\ErrorDialogService.cs" />
+    <Compile Include="Applications\FileDialogService.cs" />
+    <Compile Include="Applications\FileWatcherService.cs" />
+    <Compile Include="Applications\FunctionalTestBase.cs" />
+    <Compile Include="Applications\GridPropertyEditor.cs" />
+    <Compile Include="Applications\HelpAboutCommand.cs" />
+    <Compile Include="Applications\IControlHostClient.cs" />
+    <Compile Include="Applications\IControlHostService.cs" />
+    <Compile Include="Applications\IControlRegistry.cs" />
+    <Compile Include="Applications\IDialogService.cs" />
+    <Compile Include="Applications\IFileDialogService.cs" />
+    <Compile Include="Applications\ILayoutConstraint.cs" />
+    <Compile Include="Applications\ILayoutContext.cs" />
+    <Compile Include="Applications\ImageThumbnailResolver.cs" />
+    <Compile Include="Applications\IMainWindow.cs" />
+    <Compile Include="Applications\Listers\FilteredTreeControlEditor.cs" />
+    <Compile Include="Applications\Listers\FilteredTreeView.cs" />
+    <Compile Include="Applications\Listers\IPrototypingContext.cs" />
+    <Compile Include="Applications\Listers\ItemInfos.cs" />
+    <Compile Include="Applications\Listers\ITemplatingContext.cs" />
+    <Compile Include="Applications\Listers\LayerLister.cs" />
+    <Compile Include="Applications\Listers\ListViewAdapter.cs" />
+    <Compile Include="Applications\Listers\ListViewEditor.cs" />
+    <Compile Include="Applications\Listers\ProjectLister.cs" />
+    <Compile Include="Applications\Listers\PrototypeLister.cs" />
+    <Compile Include="Applications\Listers\ResourceLister.cs" />
+    <Compile Include="Applications\Listers\TreeControlAdapter.cs" />
+    <Compile Include="Applications\Listers\TreeControlEditor.cs" />
+    <Compile Include="Applications\Listers\TreeListViewAdapter.cs" />
+    <Compile Include="Applications\Listers\TreeListViewEditor.cs" />
+    <Compile Include="Applications\Listers\WinFormsItemInfo.cs" />
+    <Compile Include="Applications\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\MainFormAdapter.cs" />
+    <Compile Include="Applications\MainWindowTitleService.cs" />
+    <Compile Include="Applications\MenuInfos.cs" />
+    <Compile Include="Applications\NetworkTargetServices\ITargetService.cs" />
+    <Compile Include="Applications\NetworkTargetServices\Target.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\NetworkTargetServices\TargetDialog.designer.cs">
+      <DependentUpon>TargetDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\NetworkTargetServices\TargetEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\NetworkTargetServices\TargetEditDialog.designer.cs">
+      <DependentUpon>TargetEditDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\NetworkTargetServices\TargetEnumerationService.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetService.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TargetTcpSocket.cs" />
+    <Compile Include="Applications\NetworkTargetServices\TcpCommandClient.cs" />
+    <Compile Include="Applications\OscCommands.cs" />
+    <Compile Include="Applications\OscDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\OscDialog.designer.cs">
+      <DependentUpon>OscDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\OutputService.cs" />
+    <Compile Include="Applications\PaletteService.cs" />
+    <Compile Include="Applications\PerformanceMonitor.cs" />
+    <Compile Include="Applications\PropertyEditingCommands.cs" />
+    <Compile Include="Applications\PropertyEditor.cs" />
+    <Compile Include="Applications\RenameCommand.cs" />
+    <Compile Include="Applications\RenameCommandDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\RenameCommandDialog.designer.cs">
+      <DependentUpon>RenameCommandDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\ScriptConsole.cs" />
+    <Compile Include="Applications\SearchAndReplace\DomNodePropertySearchService.cs" />
+    <Compile Include="Applications\SearchAndReplace\IReplaceUI.cs" />
+    <Compile Include="Applications\SearchAndReplace\IResultsUI.cs" />
+    <Compile Include="Applications\SearchAndReplace\ISearchableContext.cs" />
+    <Compile Include="Applications\SearchAndReplace\ISearchableContextUI.cs" />
+    <Compile Include="Applications\SearchAndReplace\ISearchUI.cs" />
+    <Compile Include="Applications\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\SettingsLoadSaveDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\SettingsLoadSaveDialog.designer.cs">
+      <DependentUpon>SettingsLoadSaveDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\SettingsService.cs" />
+    <Compile Include="Applications\SingleInstanceService.cs" />
+    <Compile Include="Applications\SkinService\ControlGradient.cs" />
+    <Compile Include="Applications\SkinService\DockColors.cs" />
+    <Compile Include="Applications\SkinService\EmbeddedImage.cs" />
+    <Compile Include="Applications\SkinService\SkinService.cs" />
+    <Compile Include="Applications\StandardEditCommands.cs" />
+    <Compile Include="Applications\StandardFileCommands.cs" />
+    <Compile Include="Applications\StandardFileExitCommand.cs" />
+    <Compile Include="Applications\StandardLayoutCommands.cs" />
+    <Compile Include="Applications\StandardPrintCommands.cs" />
+    <Compile Include="Applications\StatusService.cs" />
+    <Compile Include="Applications\TabbedControlSelector.cs" />
+    <Compile Include="Applications\ThumbnailService.cs" />
+    <Compile Include="Applications\UnhandledExceptionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\UnhandledExceptionDialog.Designer.cs">
+      <DependentUpon>UnhandledExceptionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\UnhandledExceptionService.cs" />
+    <Compile Include="Applications\VersionControl\CheckInForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\VersionControl\CheckInForm.Designer.cs">
+      <DependentUpon>CheckInForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\VersionControl\ReconcileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\VersionControl\ReconcileForm.designer.cs">
+      <DependentUpon>ReconcileForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\VersionControl\SourceControlCommands.cs" />
+    <Compile Include="Applications\WebHelp.cs" />
+    <Compile Include="Applications\WebHelpCommands.cs" />
+    <Compile Include="Applications\WebServices\FeedbackForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\WebServices\ProjectMappingAttribute.cs" />
+    <Compile Include="Applications\WebServices\UserFeedbackService.cs" />
+    <Compile Include="Applications\WebServices\VersionCheck.cs" />
+    <Compile Include="Applications\WebServices\VersionUpdateService.cs" />
+    <Compile Include="Applications\WindowLayoutServiceCommands.cs" />
+    <Compile Include="ChartUtil.cs" />
+    <Compile Include="Controls\AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\AboutSysInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Adaptable\AdaptableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Adaptable\AnnotatingCommands.cs" />
+    <Compile Include="Controls\Adaptable\AnnotationAdapter.cs" />
+    <Compile Include="Controls\Adaptable\AutoTranslateAdapter.cs" />
+    <Compile Include="Controls\Adaptable\CanvasAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ContextMenuAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ControlAdapter.cs" />
+    <Compile Include="Controls\Adaptable\CoordinateAxisAdapter.cs" />
+    <Compile Include="Controls\Adaptable\D2dAdaptableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Adaptable\D2dAnnotationAdapter.cs" />
+    <Compile Include="Controls\Adaptable\D2dGridAdapter.cs" />
+    <Compile Include="Controls\Adaptable\DiagramExpander.cs" />
+    <Compile Include="Controls\Adaptable\DiagramLabel.cs" />
+    <Compile Include="Controls\Adaptable\DiagramPin.cs" />
+    <Compile Include="Controls\Adaptable\DiagramTheme.cs" />
+    <Compile Include="Controls\Adaptable\DiagramVisibilityCheck.cs" />
+    <Compile Include="Controls\Adaptable\DragDropAdapter.cs" />
+    <Compile Include="Controls\Adaptable\DraggingControlAdapter.cs" />
+    <Compile Include="Controls\Adaptable\DragSelectionEventArgs.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\CircuitRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitControlRegistry.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitDocument.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitEditingContext.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\WireStyleProvider.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupingCommands.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupPinEditor.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\LayeringCommands.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\LayeringContext.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\PrototypingContext.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\ViewingContext.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dCircuitRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dGraphAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dGraphEdgeEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dGraphNodeEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dStatechartRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dSubCircuitRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\D2dSubgraphAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\DigraphRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphEdgeEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphNodeEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphRenderer.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\GraphViewCommands.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\KeyboardGraphNavigator.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\KeyboardIOGraphNavigator.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\NumberedRoute.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\StatechartRenderer.cs" />
+    <Compile Include="Controls\Adaptable\GridAdapter.cs" />
+    <Compile Include="Controls\Adaptable\HoverAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IAutoTranslateAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ICanvasAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IControlAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IDragSelector.cs" />
+    <Compile Include="Controls\Adaptable\IItemDragAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ILabelEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IPickingAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IPickingAdapter2.cs" />
+    <Compile Include="Controls\Adaptable\IPrintingAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ISelectionAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ITransformAdapter.cs" />
+    <Compile Include="Controls\Adaptable\LabelEditAdapter.cs" />
+    <Compile Include="Controls\Adaptable\MouseLayoutManipulator.cs" />
+    <Compile Include="Controls\Adaptable\MouseTransformManipulator.cs" />
+    <Compile Include="Controls\Adaptable\MouseWheelManipulator.cs" />
+    <Compile Include="Controls\Adaptable\RectangleDragSelector.cs" />
+    <Compile Include="Controls\Adaptable\ScrollbarAdapter.cs" />
+    <Compile Include="Controls\Adaptable\SelectionAdapter.cs" />
+    <Compile Include="Controls\Adaptable\TransformAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ViewingAdapter.cs" />
+    <Compile Include="Controls\BoolInputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CanvasControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CollapsibleGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorPicker\AdobeColors.cs" />
+    <Compile Include="Controls\ColorPicker\ColorBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorPicker\ColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorPicker\ColorPickerEditor.cs" />
+    <Compile Include="Controls\ColorPicker\VerticalColorSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ConfirmationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ConsoleBox\ConsoleTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ConsoleBox\IConsoleTextBox.cs" />
+    <Compile Include="Controls\CurveEditing\Cartesian2dCanvas.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CurveEditing\CurveCanvas.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CurveEditing\CurveEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CurveEditing\CurveEditor.cs" />
+    <Compile Include="Controls\CurveEditing\CurveRenderer.cs" />
+    <Compile Include="Controls\CustomFileDialog.cs" />
+    <Compile Include="Controls\CustomizeKeyboardDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\CustomizeKeyboardDialog.designer.cs">
+      <DependentUpon>CustomizeKeyboardDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CustomOpenFileDialog.cs" />
+    <Compile Include="Controls\CustomSaveFileDialog.cs" />
+    <Compile Include="Controls\CustomColorTable.cs" />
+    <Compile Include="Controls\CustomToolStripRenderer.cs" />
+    <Compile Include="Controls\DataBoundListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Direct2DControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ErrorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ErrorDialog.Designer.cs">
+      <DependentUpon>ErrorDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FilteredFileDialogBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FilteredFileDialogBase.designer.cs">
+      <DependentUpon>FilteredFileDialogBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FindFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FindFileDialog.designer.cs">
+      <DependentUpon>FindFileDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FindFileWithSuggestionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FindFileWithSuggestionDialog.designer.cs">
+      <DependentUpon>FindFileWithSuggestionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FloatInputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FolderSelectDialog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\HoverBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\HoverEventArgs.cs" />
+    <Compile Include="Controls\HoverLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\IntInputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\NoFocusTrackBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericMatrixControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericTupleControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\OpenFilteredFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\OverlayButton.cs" />
+    <Compile Include="Controls\PerformanceMonitorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PerformanceMonitorControl.Designer.cs">
+      <DependentUpon>PerformanceMonitorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\ArrayEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\ArrayEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\BoolEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\BoundedFloatEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\BoundedIntEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\CollectionEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\CollectionEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\ColorPickerEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\CompositeOpenedEventArgs.cs" />
+    <Compile Include="Controls\PropertyEditing\EmbeddedCollectionEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\EnumUITypeEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\FileUriEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\FlagsUITypeEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\FolderBrowserDialogUITypeEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\FolderUriEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\GridControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\GridControlShowHidePropertiesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\GridControlShowHidePropertiesDialog.Designer.cs">
+      <DependentUpon>GridControlShowHidePropertiesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\GridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\ICompositePropertyControl.cs" />
+    <Compile Include="Controls\PropertyEditing\IFormsOwner.cs" />
+    <Compile Include="Controls\PropertyEditing\IPropertyEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\LongEnumEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\NestedCollectionEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\NestedCollectionEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\NestedCollectionEditorForm.designer.cs">
+      <DependentUpon>NestedCollectionEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\NumericEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\NumericMatrixEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\NumericTupleEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\PropertyEditorControlContext.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\PropertyGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\PropertyView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\TypeDescriptorContext.cs" />
+    <Compile Include="Controls\PropertyEditing\UniformArrayEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\WinFormsPropertyUtils.cs" />
+    <Compile Include="Controls\QuadPanelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\DomNodeNameSearchTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\DomNodeReplaceToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\DomNodeSearchResultsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\DomNodeSearchToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\DomNodeQueryRoot.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryButton.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryLabel.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryNode.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryOption.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryOptionItem.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryRoot.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QuerySeparator.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryTextInput.cs" />
+    <Compile Include="Controls\SearchAndReplace\QueryInputTree\QueryTree.cs" />
+    <Compile Include="Controls\SearchAndReplace\ReplaceTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\ReplaceToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\SearchResultsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\SearchTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\SearchToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchAndReplace\StringSearchInputUI.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TabbedControlSelectorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\TabbedControlSelectorDialog.Designer.cs">
+      <DependentUpon>TabbedControlSelectorDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ThreadSafeProgressDialog.cs" />
+    <Compile Include="Controls\ThumbnailControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ThumbnailControlItem.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dDefaultTimelineRenderer.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dMoveManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dScaleManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dScrubberManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dSelectionManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dSnapManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dSplitManipulator.cs" />
+    <Compile Include="Controls\Timelines\Direct2D\D2dTimelineControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Timelines\Direct2D\D2dTimelineRenderer.cs" />
+    <Compile Include="Controls\Timelines\Gdi\DefaultTimelineRenderer.cs" />
+    <Compile Include="Controls\Timelines\Gdi\MoveManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\ScaleManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\ScrubberManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\SelectionManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\SnapManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\SplitManipulator.cs" />
+    <Compile Include="Controls\Timelines\Gdi\TimelineControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Timelines\Gdi\TimelineRenderer.cs" />
+    <Compile Include="Controls\Timelines\HitEventArgs.cs" />
+    <Compile Include="Controls\ToolStripAutoFitLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripAutoFitTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeItemRenderer.cs" />
+    <Compile Include="Controls\TreeListView.Column.cs" />
+    <Compile Include="Controls\TreeListView.cs" />
+    <Compile Include="Controls\TreeListView.ListView.cs" />
+    <Compile Include="Controls\TreeListView.Node.cs" />
+    <Compile Include="Controls\WindowLayoutManageDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\WindowLayoutManageDialog.designer.cs">
+      <DependentUpon>WindowLayoutManageDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WindowLayoutNewDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\WindowLayoutNewDialog.designer.cs">
+      <DependentUpon>WindowLayoutNewDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dom\DomExplorer.cs" />
+    <Compile Include="Dom\DomRecorder.cs" />
+    <Compile Include="Dom\TemplateLister.cs" />
+    <Compile Include="Dom\TemplatingCommands.cs" />
+    <Compile Include="Dom\TemplatingContext.cs" />
+    <Compile Include="FileIconUtil.cs" />
+    <Compile Include="FindFileResolver.cs" />
+    <Compile Include="GdiUtil.cs" />
+    <Compile Include="Interop\DragEventArgsInterop.cs" />
+    <Compile Include="Interop\InteropControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Interop\KeyEventArgsInterop.cs" />
+    <Compile Include="Interop\KeysInterop.cs" />
+    <Compile Include="Interop\MessageInterop.cs" />
+    <Compile Include="Interop\MouseButtonsInterop.cs" />
+    <Compile Include="Interop\MouseEventArgsInterop.cs" />
+    <Compile Include="KeysUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\CameraController.cs" />
+    <Compile Include="Rendering\Controller.cs" />
+    <Compile Include="Rendering\WinFormsControlSchemes.cs" />
+    <Compile Include="ResourceUtil.cs" />
+    <Compile Include="StandardIconUtil.cs" />
+    <Compile Include="WaitCursor.cs" />
+    <Compile Include="WinFormsUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Applications\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\NetworkTargetServices\TargetDialog.resx">
+      <DependentUpon>TargetDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\NetworkTargetServices\TargetEditDialog.resx">
+      <DependentUpon>TargetEditDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\OscDialog.resx">
+      <DependentUpon>OscDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\RenameCommandDialog.resx">
+      <DependentUpon>RenameCommandDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\SettingsLoadSaveDialog.resx">
+      <DependentUpon>SettingsLoadSaveDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\UnhandledExceptionDialog.resx">
+      <DependentUpon>UnhandledExceptionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\VersionControl\CheckInForm.resx">
+      <DependentUpon>CheckInForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\VersionControl\ReconcileForm.resx">
+      <DependentUpon>ReconcileForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\WebServices\FeedbackForm.resx">
+      <DependentUpon>FeedbackForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AboutSysInfoDialog.resx">
+      <DependentUpon>AboutSysInfoDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\BoolInputControl.resx">
+      <DependentUpon>BoolInputControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CanvasControl.resx">
+      <DependentUpon>CanvasControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorPicker\ColorBox.resx">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorPicker\ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorPicker\VerticalColorSlider.resx">
+      <DependentUpon>VerticalColorSlider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConfirmationDialog.resx">
+      <DependentUpon>ConfirmationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CustomizeKeyboardDialog.resx">
+      <DependentUpon>CustomizeKeyboardDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ErrorDialog.resx">
+      <DependentUpon>ErrorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FilteredFileDialogBase.resx">
+      <DependentUpon>FilteredFileDialogBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FindFileDialog.resx">
+      <DependentUpon>FindFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FindFileWithSuggestionDialog.resx">
+      <DependentUpon>FindFileWithSuggestionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FloatInputControl.resx">
+      <DependentUpon>FloatInputControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HoverBase.resx">
+      <DependentUpon>HoverBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HoverLabel.resx">
+      <DependentUpon>HoverLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\IntInputControl.resx">
+      <DependentUpon>IntInputControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PerformanceMonitorControl.resx">
+      <DependentUpon>PerformanceMonitorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PropertyEditing\GridControlShowHidePropertiesDialog.resx">
+      <DependentUpon>GridControlShowHidePropertiesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PropertyEditing\NestedCollectionEditorForm.resx">
+      <DependentUpon>NestedCollectionEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TabbedControlSelectorDialog.resx">
+      <DependentUpon>TabbedControlSelectorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WindowLayoutManageDialog.resx">
+      <DependentUpon>WindowLayoutManageDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WindowLayoutNewDialog.resx">
+      <DependentUpon>WindowLayoutNewDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\Adaptable\Graphs\D2dDigraphRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Applications\SkinService\Schemas\skin.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Applications\SkinService\Skins\Classic.skn" />
+    <None Include="Applications\SkinService\Skins\Dark.skn" />
+    <None Include="Applications\SkinService\Skins\Light.skn" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ja\Localization.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Resources\ja\Atf.Gui.WinForms.resources.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="Resources\ja\Atf.Gui.WinForms.resources.dll" DestinationFolder="$(OutputPath)\ja" />
+  </Target>
+</Project>

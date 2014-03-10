@@ -1,0 +1,1037 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema targetNamespace="http://www.collada.org/2005/COLLADASchema" elementFormDefault="qualified"
+	xmlns="http://www.collada.org/2005/COLLADASchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	version="1.3.1">
+	<!-- BEGIN COLLADA Format Schema -->
+	<xs:annotation>
+		<xs:documentation>
+			COLLADA Format Schema
+			Version 1.3.1 Draft 1
+			Copyright 2005 Sony Computer Entertainment America
+			All Rights Reserved
+		</xs:documentation>
+	</xs:annotation>
+	<!-- Root Element -->
+	<xs:element name="COLLADA">
+	<xs:annotation>
+		<xs:appinfo>xmlns-able</xs:appinfo>
+	</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="asset" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="library" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="scene" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Simple Types -->
+	<!-- Primitive Types -->
+	<xs:simpleType name="bool">
+		<xs:restriction base="xs:boolean" />
+	</xs:simpleType>
+	<xs:simpleType name="dateTime">
+		<xs:restriction base="xs:dateTime" />
+	</xs:simpleType>
+	<xs:simpleType name="float">
+		<xs:restriction base="xs:double" />
+	</xs:simpleType>
+	<xs:simpleType name="int">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
+	<xs:simpleType name="Name">
+		<xs:restriction base="xs:Name" />
+	</xs:simpleType>
+	<xs:simpleType name="string">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+	<xs:simpleType name="token">
+		<xs:restriction base="xs:token" />
+	</xs:simpleType>
+	<!-- Container Types -->
+	<xs:simpleType name="ListOfBools">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:boolean" />
+	</xs:simpleType>
+	<xs:simpleType name="ListOfFloats">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:double" />
+	</xs:simpleType>
+	<xs:simpleType name="ListOfHexBinary">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:hexBinary" />
+	</xs:simpleType>
+	<xs:simpleType name="ListOfInts">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:long" />
+	</xs:simpleType>
+	<xs:simpleType name="ListOfNames">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:Name" />
+	</xs:simpleType>
+	<xs:simpleType name="ListOfTokens">
+		<!-- MCB: MS XML Designer dataview doesn't support list or union derived simpleType -->
+		<xs:list itemType="xs:token" />
+	</xs:simpleType>
+	<!-- Aggregate Types -->
+	<xs:simpleType name="bool2">
+		<xs:restriction base="ListOfBools">
+			<xs:minLength value="2" />
+			<xs:maxLength value="2" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="bool3">
+		<xs:restriction base="ListOfBools">
+			<xs:minLength value="3" />
+			<xs:maxLength value="3" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="bool4">
+		<xs:restriction base="ListOfBools">
+			<xs:minLength value="4" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float2">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="2" />
+			<xs:maxLength value="2" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float3">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="3" />
+			<xs:maxLength value="3" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float4">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="4" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float7">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="7" />
+			<xs:maxLength value="7" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float2x2">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="4" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float3x3">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="9" />
+			<xs:maxLength value="9" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="float4x4">
+		<xs:restriction base="ListOfFloats">
+			<xs:minLength value="16" />
+			<xs:maxLength value="16" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int2">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="2" />
+			<xs:maxLength value="2" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int3">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="3" />
+			<xs:maxLength value="3" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int4">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="4" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int2x2">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="4" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int3x3">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="9" />
+			<xs:maxLength value="9" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="int4x4">
+		<xs:restriction base="ListOfInts">
+			<xs:minLength value="16" />
+			<xs:maxLength value="16" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Basic Enumerations -->
+	<xs:simpleType name="ArrayTypes">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="float" />
+			<xs:enumeration value="int" />
+			<xs:enumeration value="Name" />
+			<xs:enumeration value="token" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FlowType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="IN" />
+			<xs:enumeration value="OUT" />
+			<xs:enumeration value="INOUT" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LibraryType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="ANIMATION" />
+			<xs:enumeration value="CAMERA" />
+			<xs:enumeration value="CODE" />
+			<xs:enumeration value="CONTROLLER" />
+			<xs:enumeration value="GEOMETRY" />
+			<xs:enumeration value="IMAGE" />
+			<xs:enumeration value="LIGHT" />
+			<xs:enumeration value="MATERIAL" />
+			<xs:enumeration value="PROGRAM" />
+			<xs:enumeration value="TEXTURE" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LightType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="AMBIENT" />
+			<xs:enumeration value="DIRECTIONAL" />
+			<xs:enumeration value="POINT" />
+			<xs:enumeration value="SPOT" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NodeType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="JOINT" />
+			<xs:enumeration value="NODE" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UpAxisType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="X_UP" />
+			<xs:enumeration value="Y_UP" />
+			<xs:enumeration value="Z_UP" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Complex Types -->
+	<!--   none yet -->
+	<!-- Dataflow Elements -->
+	<xs:element name="accessor">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="offset" type="xs:nonNegativeInteger" default="0" />
+			<xs:attribute name="source" type="xs:anyURI" use="required" />
+			<xs:attribute name="stride" type="xs:nonNegativeInteger" default="1" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="array">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfTokens">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+					<xs:attribute name="type" type="ArrayTypes" use="required" />
+					<xs:attribute name="minInclusive" type="xs:integer" default="-2147483648" />
+					<xs:attribute name="maxInclusive" type="xs:integer" default="2147483647" />
+					<xs:attribute name="digits" type="xs:short" default="6" />
+					<xs:attribute name="magnitude" type="xs:short" default="38" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!-- ARRAYS: typed arrays (Name, float, int, bool) -->
+	<xs:element name="float_array">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfFloats">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+					<xs:attribute name="digits" type="xs:short" default="6" />
+					<xs:attribute name="magnitude" type="xs:short" default="38" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="int_array">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfInts">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+					<xs:attribute name="minInclusive" type="xs:integer" default="-2147483648" />
+					<xs:attribute name="maxInclusive" type="xs:integer" default="2147483647" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Name_array">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfNames">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="bool_array">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfBools">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="input">
+		<xs:complexType>
+			<xs:attribute name="idx" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+			<xs:attribute name="source" type="xs:anyURI" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="param">
+		<xs:annotation>
+			<xs:documentation>Finding flow attribute unneccesary in practice. A unnamed parameter is unbound/skipped.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="sid" type="xs:NCName" />
+					<xs:attribute name="flow" type="FlowType" />
+					<xs:attribute name="semantic" type="xs:token" />
+					<xs:attribute name="type" type="xs:NMTOKEN" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!-- ARRAYS: insert a choice group with all array types in place of the old array element ref -->
+	<!-- This allows for multiple arrays per source -->
+	<xs:element name="source">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:choice minOccurs="0" maxOccurs="1">
+					<xs:element ref="array" />
+					<xs:element ref="bool_array" />
+					<xs:element ref="float_array" />
+					<xs:element ref="int_array" />
+					<xs:element ref="Name_array" />
+				</xs:choice>
+				<xs:element name="technique" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element ref="accessor" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element ref="combiner" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="joints" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="program" minOccurs="0" maxOccurs="1" />
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<!-- this source allows only one array per source. -->
+	<!--<xs:element name="source">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="1">
+					<xs:element ref="array" />
+					<xs:element ref="bool_array" />
+					<xs:element ref="float_array" />
+					<xs:element ref="int_array" />
+					<xs:element ref="Name_array" />
+				</xs:choice>
+				<xs:element name="technique" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element ref="accessor" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element ref="combiner" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="joints" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="program" minOccurs="0" maxOccurs="1" />
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	-->
+	<!-- Geometry Container Elements -->
+	<xs:element name="mesh">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="source" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:element ref="vertices" minOccurs="1" maxOccurs="1" />
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="lines" />
+					<xs:element ref="linestrips" />
+					<xs:element ref="polygons" />
+					<xs:element ref="triangles" />
+					<xs:element ref="trifans" />
+					<xs:element ref="tristrips" />
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Collation Elements -->
+	<xs:element name="combiner">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="input" minOccurs="2" maxOccurs="unbounded" />
+				<xs:element name="v" type="ListOfInts" minOccurs="1" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Variable length value element. The indices form the source's output aggregated by the number of inputs.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="joints">
+		<xs:annotation>
+			<xs:documentation>Joint nodes and their bind matrices.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="input" minOccurs="2" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+						<xs:attribute name="source" type="xs:anyURI" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="count" type="xs:nonNegativeInteger" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="lines">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. Every two indices form a line.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="linestrips">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. The first two indices form a line. Each subsequent index extends the line from the previous index.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="polygons">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. All the indices form a polygon.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="h" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Contour Separator. Primitives after this each describe a hole.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="triangles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. Every three indices form a triangle.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="trifans">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. The 1st three indices form a triangle. Each subsequent index forms an additional triangle reusing the first and previous indices.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tristrips">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="input" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="p" type="ListOfInts" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Primitive element. The 1st three indices form a triangle. Each subsequent index forms an additional triangle reusing the previous two indices.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="count" type="xs:nonNegativeInteger" use="required" />
+			<xs:attribute name="material" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="vertices">
+		<xs:annotation>
+			<xs:documentation>Mesh or skin vertices.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="input" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+						<xs:attribute name="source" type="xs:anyURI" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="count" type="xs:nonNegativeInteger" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Transformational Elements -->
+	<xs:element name="lookat">
+		<xs:annotation>
+			<xs:documentation>Look-at transform (PX, PY, PZ, IX, IY, IZ, UPX, UPY, UPZ)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float3x3">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="matrix">
+		<xs:annotation>
+			<xs:documentation>Full 4x4 transformation matrix.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float4x4">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="perspective">
+		<xs:annotation>
+			<xs:documentation>Perspective transformation along the Z axis with the given FOV.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="rotate">
+		<xs:annotation>
+			<xs:documentation>Rotate N degrees about the given axis (DX, DY, DZ, N).</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float4">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scale">
+		<xs:annotation>
+			<xs:documentation>Scale transformation (SX, SY, SZ).</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float3">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="skew">
+		<xs:annotation>
+			<xs:documentation>Skew N degrees between the given axes (N, DX1, DY1, DZ1, DX2, DY2, DZ2)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float7">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="translate">
+		<xs:annotation>
+			<xs:documentation>Translate transformation (DX, DY, DZ).</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="float3">
+					<xs:attribute name="sid" type="xs:NCName" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!-- Material and Shading Elements -->
+	<xs:element name="image">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="ListOfHexBinary">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="name" type="xs:NCName" />
+					<xs:attribute name="source" type="xs:anyURI" />
+					<xs:attribute name="format" type="xs:string" />
+					<xs:attribute name="height" type="xs:nonNegativeInteger" />
+					<xs:attribute name="width" type="xs:nonNegativeInteger" />
+					<xs:attribute name="depth" type="xs:nonNegativeInteger" default="1" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="light">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="param" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="type" type="LightType" default="POINT" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="material">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="shader" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="pass">
+		<xs:complexType>		
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="input" minOccurs="0" maxOccurs="unbounded" >
+					<xs:complexType>
+						<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+						<xs:attribute name="source" type="xs:anyURI" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="program" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="shader">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="technique" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element ref="pass" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element ref="program" minOccurs="0" maxOccurs="1" />
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="texture">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="technique" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+							<xs:element name="input" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+									<xs:attribute name="source" type="xs:anyURI" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="program" minOccurs="0" maxOccurs="1" />
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- Procedural Elements -->
+	<xs:element name="code">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="id" type="xs:ID" />
+					<xs:attribute name="lang" type="xs:NMTOKEN" use="required" />
+					<xs:attribute name="profile" type="xs:string" />
+					<xs:attribute name="semantic" type="xs:NMTOKEN" />
+					<xs:attribute name="url" type="xs:anyURI" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="entry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="id" type="xs:ID" />
+								<xs:attribute name="name" type="xs:NCName" use="required" />
+								<xs:attribute name="qualifier" type="xs:NMTOKEN" use="required" />
+								<xs:attribute name="semantic" type="xs:token" use="required" />
+								<xs:attribute name="type" type="xs:NMTOKEN" use="required" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="function" type="xs:NMTOKEN" use="required" />
+			<xs:attribute name="semantic" type="xs:NMTOKEN" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="program">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="entry" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="code" minOccurs="0" maxOccurs="unbounded" />
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:Name" />
+			<xs:attribute name="url" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Object Elements -->
+	<xs:element name="camera">
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>A camera's output is defined its imager.</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element name="technique" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element name="optics">
+								<xs:complexType>
+									<xs:choice>
+										<xs:element ref="program" />
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="imager" minOccurs="0">
+								<xs:complexType>
+									<xs:choice>
+										<xs:element ref="program" />
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="instance">
+		<xs:complexType>
+			<xs:attribute name="url" type="xs:anyURI" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Animation Elements -->
+	<xs:element name="channel">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="source" type="xs:anyURI" use="required" />
+			<xs:attribute name="target" type="xs:token" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sampler">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="input" minOccurs="1" maxOccurs="unbounded" >
+					<xs:complexType>
+						<xs:attribute name="semantic" type="xs:NMTOKEN" use="required" />
+						<xs:attribute name="source" type="xs:anyURI" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Controller Elements -->
+	<xs:element name="skin">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="source" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:element ref="vertices" minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Meta Elements -->
+	<xs:element name="asset">
+		<xs:annotation>
+			<xs:documentation>
+				Asset management information.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="author" type="xs:string" />
+				<xs:element name="authoring_tool" type="xs:string" maxOccurs="1" />
+				<xs:element name="created" type="xs:dateTime" maxOccurs="1" />
+				<xs:element name="modified" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+				<xs:element name="revision" type="xs:string" maxOccurs="1" />
+				<xs:element name="source_data" type="xs:anyURI" maxOccurs="1" />
+				<xs:element name="copyright" type="xs:string" />
+				<xs:element name="title" type="xs:string" maxOccurs="1" />
+				<xs:element name="subject" type="xs:string" maxOccurs="1" />
+				<xs:element name="keywords" type="xs:string" />
+				<xs:element name="comments" type="xs:string" />
+				<xs:element name="up_axis" type="UpAxisType" maxOccurs="1" default="Y_UP" />
+				<xs:element name="unit" maxOccurs="1">
+					<xs:complexType>
+						<xs:attribute name="meter" type="xs:double" default="1.000" />
+						<xs:attribute name="name" type="xs:NMTOKEN" default="meter" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="extra">
+		<xs:annotation>
+			<xs:documentation>
+				A bag of techniques.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="technique" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="asset" minOccurs="0" maxOccurs="1" />
+							<xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="profile" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="type" type="xs:NMTOKEN" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Hierarchical Elements -->
+	<xs:element name="boundingbox">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="min" >
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="float3">
+								<xs:attribute name="sid" type="xs:NCName" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="max" >
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="float3">
+								<xs:attribute name="sid" type="xs:NCName" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="sid" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="node">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="lookat" />
+				<xs:element ref="matrix" />
+				<xs:element ref="perspective" />
+				<xs:element ref="rotate" />
+				<xs:element ref="scale" />
+				<xs:element ref="skew" />
+				<xs:element ref="translate" />
+				<xs:element ref="boundingbox" maxOccurs="1" />
+				<xs:element ref="instance" />
+				<xs:element ref="node" />
+				<xs:element ref="extra" />
+			</xs:choice>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="type" type="NodeType" default="NODE" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scene">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="lookat" />
+				<xs:element ref="matrix" />
+				<xs:element ref="perspective" />
+				<xs:element ref="rotate" />
+				<xs:element ref="scale" />
+				<xs:element ref="skew" />
+				<xs:element ref="translate" />
+				<xs:element ref="boundingbox" maxOccurs="1" />
+				<xs:element ref="node" />
+				<xs:element ref="extra" />
+			</xs:choice>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<!-- Categorical Elements -->
+	<xs:element name="animation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="source" maxOccurs="unbounded" />
+				<xs:element ref="sampler" maxOccurs="unbounded" />
+				<xs:element ref="channel" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="controller">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="skin" minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="target" type="xs:IDREF" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="geometry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="mesh" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="extra" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="library">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="animation" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="camera" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="code" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="controller" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="geometry" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="image" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="light" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="material" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="program" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="texture" minOccurs="0" maxOccurs="unbounded" />
+			</xs:choice>
+			<xs:attribute name="id" type="xs:ID" />
+			<xs:attribute name="name" type="xs:NCName" />
+			<xs:attribute name="type" type="LibraryType" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<!-- END Format Schema -->
+</xs:schema>

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Circuit Editor Sample" context="" translation="CircuitEditor サンプル" />
+  <StringItem id="Master" context="this is the name of a command" translation="マスター" />
+  <StringItem id="Creates a custom module type from the selection" context="" translation="選択部分から、カスタムのモジュールタイプを作成します。" />
+  <StringItem id="Unmaster" context="this is the name of a command" translation="マスター解除" />
+  <StringItem id="Expands the last selected custom module" context="" translation="直前に選択したカスタムモジュールを展開します。" />
+  <StringItem id="Master" context="this is the name of a command" translation="マスター" />
+  <StringItem id="Unmaster" context="this is the name of a command" translation="マスター解除" />
+  <StringItem id="Can't remove connectors from sub-circuits" context="" translation="サブ回路からはコネクタを削除できません。" />
+  <StringItem id="Can't use a sub-circuit inside itself" context="" translation="サブ回路はそれ自身の内部では使用できません。" />
+  <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?
+" context="" translation="既存のテンプレート「{0}」を「{1}」で上書きしますか? それとも新規に追加しますか?" />
+  <StringItem id="Overwrite / Add" context="" translation="上書き / 追加" />
+  <StringItem id="Overwrite" context="" translation="上書き" />
+  <StringItem id="Add" context="" translation="追加" />
+  <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="回路テンプレートファイル (*.circuit)|*.circuit" />
+  <StringItem id="Input Files" context="" translation="入力ファイル" />
+  <StringItem id="first" context="as in, 'the first file'" translation="ファイル 1" />
+  <StringItem id="second" context="as in, 'the second file'" translation="ファイル 2" />
+  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="構造" />
+  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="構造" />
+  <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
+  <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
+  <StringItem id="Create Circuit Programmatically" context="" translation="回路をプログラムで作成" />
+  <StringItem id="Create Circuit Programmatically" context="" translation="回路をプログラムで作成" />
+  <StringItem id="Wire Style" context="" translation="ワイヤーの種類" />
+  <StringItem id="Circuit Editor" context="" translation="CircuitEditor" />
+  <StringItem id="Default Edge Style" context="" translation="デフォルトのエッジスタイルです。" />
+  <StringItem id="Show Expanded Group Pins" context="" translation="展開したグループのピンを表示" />
+  <StringItem id="Circuit Editor" context="" translation="CircuitEditor" />
+  <StringItem id="Show group pins when a group is expanded" context="" translation="グループの展開時に、グループピンを表示します。" />
+  <StringItem id="Show Virtual links" context="" translation="仮想リンクを表示" />
+  <StringItem id="Circuit Editor" context="" translation="CircuitEditor" />
+  <StringItem id="Show virtual links between group pin and its associated subnodes when a group is expanded" context="" translation="グループの展開時に、グループピンと、それに関連するサブノード間の仮想リンクを表示します。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" />
+  <StringItem id="Circuit" context="" translation="回路" />
+  <StringItem id="Circuits" context="" translation="回路" />
+  <StringItem id="Comment" context="" translation="コメント" />
+  <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="回路キャンバス上に、移動およびサイズ変更が可能なコメントを作成します。" />
+  <StringItem id="Text" context="" translation="テキスト" />
+  <StringItem id="Comment Text" context="" translation="コメントのテキストです。" />
+  <StringItem id="Comment Color" context="" translation="コメントの背景色" />
+  <StringItem id="Comment background color" context="" translation="コメントの背景色です。" />
+  <StringItem id="Button" context="" translation="ボタン" />
+  <StringItem id="On/Off Button" context="" translation="オン/オフボタン" />
+  <StringItem id="Out" context="" translation="出力" />
+  <StringItem id="Light" context="" translation="ライト" />
+  <StringItem id="Light source" context="" translation="光源" />
+  <StringItem id="In" context="" translation="入力" />
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="スピーカー" />
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="スピーカー" />
+  <StringItem id="In" context="" translation="入力" />
+  <StringItem id="And" context="" translation="AND" />
+  <StringItem id="Logical AND" context="" translation="論理積" />
+  <StringItem id="In1" context="input pin #1" translation="入力1" />
+  <StringItem id="In2" context="input pin #2" translation="入力2" />
+  <StringItem id="Out" context="" translation="出力" />
+  <StringItem id="Or" context="" translation="OR" />
+  <StringItem id="Logical OR" context="" translation="論理和" />
+  <StringItem id="In1" context="input pin #1" translation="入力1" />
+  <StringItem id="In2" context="input pin #2" translation="入力2" />
+  <StringItem id="Out" context="" translation="出力" />
+  <StringItem id="Sound" context="" translation="サウンド" />
+  <StringItem id="Sound Player" context="" translation="サウンドプレーヤー" />
+  <StringItem id="On" context="" translation="オン" />
+  <StringItem id="Reset" context="" translation="リセット" />
+  <StringItem id="Pause" context="" translation="一時停止" />
+  <StringItem id="Out" context="" translation="出力" />
+  <StringItem id="Name" context="" translation="名前" />
+  <StringItem id="Module name" context="" translation="モジュールの名前です。" />
+  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="Unique ID" context="" translation="一意の ID" />
+  <StringItem id="Name" context="" translation="名前" />
+  <StringItem id="Layer name" context="" translation="レイヤー名" />
+  <StringItem id="Name" context="" translation="名前" />
+  <StringItem id="Prototype folder name" context="" translation="プロトタイプフォルダー名" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample_j" />
+</StringLocalizationTable>

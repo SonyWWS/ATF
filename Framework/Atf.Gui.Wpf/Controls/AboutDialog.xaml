@@ -1,0 +1,51 @@
+﻿<local:CommonDialog x:Class="Sce.Atf.Wpf.Controls.AboutDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Sce.Atf.Wpf.Controls"
+    xmlns:l="clr-namespace:Sce.Atf.Wpf.Markup"
+    Height="Auto" Width="500"
+    ShowInTaskbar="False"
+    ResizeMode="NoResize"
+    SizeToContent="Height">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style x:Key="ParagraphSeparator" TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
+                <Setter Property="Padding" Value="0,10,0,0" />
+            </Style>
+            <Style x:Key="LinkLabelStyle">
+                <Setter Property="Control.Padding" Value="0" />
+                <Setter Property="Control.VerticalAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <StackPanel>
+        <StackPanel Margin="12">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <Label Content="{l:Loc Version:}" Margin="0,0,4,0"/>
+                <Label Content="{Binding Mode=OneTime, Path=Version}" />
+                <Label Content="{l:Loc Build:}" Margin="4,0,4,0"/>
+                <Label Content="{Binding Mode=OneTime, Path=FileVersion}" />
+            </StackPanel>
+            <Label Content="{Binding Mode=OneTime, Path=Copyright}"  />
+            <Label Content="{Binding Mode=OneTime, Path=Company}" />
+            <Label Content="{l:Loc All Rights Reserved}" />
+            <Label Style="{StaticResource ParagraphSeparator}" Content="{l:Loc Product details:}" Margin="0,0,4,0" />
+            <Label Content="{Binding Mode=OneTime, Path=Description}" />
+            <DockPanel>
+                <Button Content="{l:Loc OK}" 
+                        MinWidth="75" Margin="0,12,12,0" DockPanel.Dock="Right" IsDefault="True" IsCancel="True"/>
+                <Label Style="{StaticResource LinkLabelStyle}" >
+                    <Hyperlink x:Name="hyperlink" x:Uid="hyperlink" NavigateUri="{Binding Mode=OneTime, Path=LinkUri}"  Style="{StaticResource LinkLabelStyle}"
+                               Hyperlink.RequestNavigate="hyperlink_RequestNavigate">
+                        <TextBlock Text="{Binding Mode=OneTime, Path=LinkText}" />
+                    </Hyperlink>
+                </Label>
+            </DockPanel>
+        </StackPanel>
+    </StackPanel>
+</local:CommonDialog>

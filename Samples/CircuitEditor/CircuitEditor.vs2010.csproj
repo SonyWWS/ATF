@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{357ACD8B-7AB5-4B52-A3E6-6C50B74D3D41}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CircuitEditorSample</RootNamespace>
+    <AssemblyName>CircuitEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUG_VERBOSE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython, Version=2.6.10920.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\IronPython\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Annotation.cs" />
+    <Compile Include="GroupingCommands.cs" />
+    <Compile Include="HelpAboutCommand.cs" />
+    <Compile Include="LayerFolder.cs" />
+    <Compile Include="GroupInstance.cs" />
+    <Compile Include="LayeringCommands.cs" />
+    <Compile Include="MasteringCommands.cs" />
+    <Compile Include="MasteringValidator.cs" />
+    <Compile Include="ModuleInstance.cs" />
+    <Compile Include="Prototype.cs" />
+    <Compile Include="PrototypeFolder.cs" />
+    <Compile Include="PrototypingContext.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="ModuleRef.cs" />
+    <Compile Include="Circuit.cs" />
+    <Compile Include="CircuitDocument.cs" />
+    <Compile Include="CircuitEditingContext.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="GroupPin.cs" />
+    <Compile Include="LayeringContext.cs" />
+    <Compile Include="Pin.cs" />
+    <Compile Include="ProxyGroup.cs" />
+    <Compile Include="SubCircuit.cs" />
+    <Compile Include="SubCircuitInstance.cs" />
+    <Compile Include="CircuitValidator.cs" />
+    <Compile Include="Template.cs" />
+    <Compile Include="TemplateFolder.cs" />
+    <Compile Include="TemplatingCommands.cs" />
+    <Compile Include="TemplatingContext.cs" />
+    <Compile Include="Tests\CircuitEditorTester.cs" />
+    <Compile Include="Tests\CircuitTestCommands.cs" />
+    <Compile Include="PrintableDocument.cs" />
+    <Compile Include="Editor.cs" />
+    <Compile Include="ModulePlugin.cs" />
+    <Compile Include="schemas\Schema.cs" />
+    <Compile Include="SchemaLoader.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\and_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\and_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\annotation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\button_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\button_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\light_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\light_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\or_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\or_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sound_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sound_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\speaker_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\speaker_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="schemas\Circuit.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.IronPython\Atf.IronPython.vs2010.csproj">
+      <Project>{7F794C24-7A8D-4D21-B443-F03509669F89}</Project>
+      <Name>Atf.IronPython.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="data\Example.circuit" />
+    <EmbeddedResource Include="Resources\About.rtf" />
+    <EmbeddedResource Include="Resources\ja\Localization.xml" />
+    <EmbeddedResource Include="Resources\ja\About.rtf" />
+    <None Include="schemas\GenSchemaDef.bat" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

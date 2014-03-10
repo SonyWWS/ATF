@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt, style=Bold</value>
+  </data>
+  <data name="lblTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 11</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblTitle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 18</value>
+  </data>
+  <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>What do you want to do?</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Name" xml:space="preserve">
+    <value>lblTitle</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="m_saveRadioButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="m_saveRadioButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="m_saveRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 19</value>
+  </data>
+  <data name="m_saveRadioButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_saveRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 22</value>
+  </data>
+  <data name="m_saveRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="m_saveRadioButton.Text" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="&gt;&gt;m_saveRadioButton.Name" xml:space="preserve">
+    <value>m_saveRadioButton</value>
+  </data>
+  <data name="&gt;&gt;m_saveRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_saveRadioButton.Parent" xml:space="preserve">
+    <value>m_grpImportExport</value>
+  </data>
+  <data name="&gt;&gt;m_saveRadioButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_loadRadioButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="m_loadRadioButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="m_loadRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 98</value>
+  </data>
+  <data name="m_loadRadioButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_loadRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 22</value>
+  </data>
+  <data name="m_loadRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_loadRadioButton.Text" xml:space="preserve">
+    <value>Load Settings</value>
+  </data>
+  <data name="&gt;&gt;m_loadRadioButton.Name" xml:space="preserve">
+    <value>m_loadRadioButton</value>
+  </data>
+  <data name="&gt;&gt;m_loadRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_loadRadioButton.Parent" xml:space="preserve">
+    <value>m_grpImportExport</value>
+  </data>
+  <data name="&gt;&gt;m_loadRadioButton.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_btnCancel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="m_btnCancel.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="m_btnCancel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 7.8pt</value>
+  </data>
+  <data name="m_btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>492, 249</value>
+  </data>
+  <data name="m_btnCancel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 27</value>
+  </data>
+  <data name="m_btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="m_btnCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;m_btnCancel.Name" xml:space="preserve">
+    <value>m_btnCancel</value>
+  </data>
+  <data name="&gt;&gt;m_btnCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_btnCancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_btnCancel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_btnProceed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="m_btnProceed.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="m_btnProceed.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 7.8pt</value>
+  </data>
+  <data name="m_btnProceed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>396, 249</value>
+  </data>
+  <data name="m_btnProceed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_btnProceed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 27</value>
+  </data>
+  <data name="m_btnProceed.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_btnProceed.Text" xml:space="preserve">
+    <value>Proceed</value>
+  </data>
+  <data name="&gt;&gt;m_btnProceed.Name" xml:space="preserve">
+    <value>m_btnProceed</value>
+  </data>
+  <data name="&gt;&gt;m_btnProceed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_btnProceed.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_btnProceed.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_lblExport.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="m_lblExport.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 48</value>
+  </data>
+  <data name="m_lblExport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>431, 46</value>
+  </data>
+  <data name="m_lblExport.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="m_lblExport.Text" xml:space="preserve">
+    <value>Settings will be saved to a file so they can be loaded at a later time or on a different machine.</value>
+  </data>
+  <data name="&gt;&gt;m_lblExport.Name" xml:space="preserve">
+    <value>m_lblExport</value>
+  </data>
+  <data name="&gt;&gt;m_lblExport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_lblExport.Parent" xml:space="preserve">
+    <value>m_grpImportExport</value>
+  </data>
+  <data name="&gt;&gt;m_lblExport.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="m_lblImport.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="m_lblImport.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 126</value>
+  </data>
+  <data name="m_lblImport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>431, 64</value>
+  </data>
+  <data name="m_lblImport.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="m_lblImport.Text" xml:space="preserve">
+    <value>Load settings from a file and apply them to the application.</value>
+  </data>
+  <data name="&gt;&gt;m_lblImport.Name" xml:space="preserve">
+    <value>m_lblImport</value>
+  </data>
+  <data name="&gt;&gt;m_lblImport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_lblImport.Parent" xml:space="preserve">
+    <value>m_grpImportExport</value>
+  </data>
+  <data name="&gt;&gt;m_lblImport.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_grpImportExport.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 40</value>
+  </data>
+  <data name="m_grpImportExport.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_grpImportExport.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 4, 3, 4</value>
+  </data>
+  <data name="m_grpImportExport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>544, 201</value>
+  </data>
+  <data name="m_grpImportExport.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_grpImportExport.Name" xml:space="preserve">
+    <value>m_grpImportExport</value>
+  </data>
+  <data name="&gt;&gt;m_grpImportExport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_grpImportExport.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_grpImportExport.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>9, 20</value>
+  </data>
+  <data name="$this.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>572, 290</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9.75pt</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 5, 4, 5</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterParent</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Load or Save Settings</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>SettingsLoadSaveDialog</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

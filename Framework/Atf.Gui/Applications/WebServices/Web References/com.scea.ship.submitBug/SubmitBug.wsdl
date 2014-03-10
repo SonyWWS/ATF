@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:tns1="http://faults.webservices.portal.ship.scea.com" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://scea.com/tnt/bugs" xmlns:intf="http://scea.com/tnt/bugs" targetNamespace="http://scea.com/tnt/bugs" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://faults.webservices.portal.ship.scea.com">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:complexType name="TNTWebServiceFault" abstract="true">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:complexType name="ObjectNotFoundFault">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns1:TNTWebServiceFault">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="PermissionFault">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns1:TNTWebServiceFault">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="LoginFailedFault">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns1:TNTWebServiceFault">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GeneralSystemFault">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns1:TNTWebServiceFault">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="submitBugRequest1">
+    <wsdl:part name="shortcutName" type="soapenc:string" />
+    <wsdl:part name="username" type="soapenc:string" />
+    <wsdl:part name="password" type="soapenc:string" />
+    <wsdl:part name="title" type="soapenc:string" />
+    <wsdl:part name="description" type="soapenc:string" />
+    <wsdl:part name="priority" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="GeneralSystemFault">
+    <wsdl:part name="fault" type="tns1:GeneralSystemFault" />
+  </wsdl:message>
+  <wsdl:message name="PermissionFault">
+    <wsdl:part name="fault" type="tns1:PermissionFault" />
+  </wsdl:message>
+  <wsdl:message name="submitBugRequest">
+    <wsdl:part name="shortcutName" type="soapenc:string" />
+    <wsdl:part name="title" type="soapenc:string" />
+    <wsdl:part name="description" type="soapenc:string" />
+    <wsdl:part name="priority" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="ObjectNotFoundFault">
+    <wsdl:part name="fault" type="tns1:ObjectNotFoundFault" />
+  </wsdl:message>
+  <wsdl:message name="LoginFailedFault">
+    <wsdl:part name="fault" type="tns1:LoginFailedFault" />
+  </wsdl:message>
+  <wsdl:message name="submitBugResponse">
+    <wsdl:part name="submitBugReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="submitBugResponse1">
+    <wsdl:part name="submitBugReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:portType name="BugReporting">
+    <wsdl:operation name="submitBug" parameterOrder="shortcutName title description priority">
+      <wsdl:input name="submitBugRequest" message="intf:submitBugRequest" />
+      <wsdl:output name="submitBugResponse" message="intf:submitBugResponse" />
+      <wsdl:fault name="GeneralSystemFault" message="intf:GeneralSystemFault" />
+      <wsdl:fault name="PermissionFault" message="intf:PermissionFault" />
+      <wsdl:fault name="ObjectNotFoundFault" message="intf:ObjectNotFoundFault" />
+      <wsdl:fault name="LoginFailedFault" message="intf:LoginFailedFault" />
+    </wsdl:operation>
+    <wsdl:operation name="submitBug" parameterOrder="shortcutName username password title description priority">
+      <wsdl:input name="submitBugRequest1" message="intf:submitBugRequest1" />
+      <wsdl:output name="submitBugResponse1" message="intf:submitBugResponse1" />
+      <wsdl:fault name="GeneralSystemFault" message="intf:GeneralSystemFault" />
+      <wsdl:fault name="PermissionFault" message="intf:PermissionFault" />
+      <wsdl:fault name="ObjectNotFoundFault" message="intf:ObjectNotFoundFault" />
+      <wsdl:fault name="LoginFailedFault" message="intf:LoginFailedFault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SubmitBugSoapBinding" type="intf:BugReporting">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="submitBug">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="submitBugRequest">
+        <wsdlsoap:body use="encoded" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="submitBugResponse">
+        <wsdlsoap:body use="encoded" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+      <wsdl:fault name="GeneralSystemFault">
+        <wsdlsoap:fault use="encoded" name="GeneralSystemFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="PermissionFault">
+        <wsdlsoap:fault use="encoded" name="PermissionFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="ObjectNotFoundFault">
+        <wsdlsoap:fault use="encoded" name="ObjectNotFoundFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="LoginFailedFault">
+        <wsdlsoap:fault use="encoded" name="LoginFailedFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="submitBug">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="submitBugRequest1">
+        <wsdlsoap:body use="encoded" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="submitBugResponse1">
+        <wsdlsoap:body use="encoded" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+      <wsdl:fault name="GeneralSystemFault">
+        <wsdlsoap:fault use="encoded" name="GeneralSystemFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="PermissionFault">
+        <wsdlsoap:fault use="encoded" name="PermissionFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="ObjectNotFoundFault">
+        <wsdlsoap:fault use="encoded" name="ObjectNotFoundFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+      <wsdl:fault name="LoginFailedFault">
+        <wsdlsoap:fault use="encoded" name="LoginFailedFault" namespace="http://scea.com/tnt/bugs" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BugReportingService">
+    <wsdl:port name="SubmitBug" binding="intf:SubmitBugSoapBinding">
+      <wsdlsoap:address location="http://www.ship.scea.com/portal/services/SubmitBug" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

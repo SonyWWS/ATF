@@ -1,0 +1,1460 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--	Schema for the ATGs intermediate file format (.atgi).
+		Comments with the prefix "ATFCompatibility:" indicate additions that are required for compatibility with the SCEA ATF. -->
+<xs:schema elementFormDefault="qualified"
+	targetNamespace="http://www.atg.development.scee.net/atgi/1_29_0/atgi"
+	xmlns="http://www.atg.development.scee.net/atgi/1_29_0/atgi"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Union of float and int. -->
+	<xs:simpleType name="floatOrIntType">
+		<xs:union memberTypes="xs:float xs:integer " />
+	</xs:simpleType>
+	<!-- List of integers. -->
+	<xs:simpleType name="intList">
+		<xs:list itemType="xs:int"/>
+	</xs:simpleType>
+	<!-- List of strings. Ambiguous because a string can contain spaces so be careful. -->
+	<xs:simpleType name="stringList">
+		<xs:list itemType="xs:string"/>
+	</xs:simpleType>
+	<!-- Mixed list of floats and ints. -->
+	<xs:simpleType name="floatOrIntListType">
+		<xs:list itemType="xs:float" />
+	</xs:simpleType>
+	<!-- Space seperated list of floats. -->
+	<xs:simpleType name="floatListType">
+		<xs:list itemType="xs:float"></xs:list>
+	</xs:simpleType>
+	<!-- 2 float vector. -->
+	<xs:simpleType name="vector2Type">
+		<xs:restriction base="floatListType">
+			<xs:length value="2"></xs:length>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- 3 float vector. -->
+	<xs:simpleType name="vector3Type">
+		<xs:restriction base="floatListType">
+			<xs:length value="3"></xs:length>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- 4 float vector. -->
+	<xs:simpleType name="vector4Type">
+		<xs:restriction base="floatListType">
+			<xs:length value="4"></xs:length>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="matrixType">
+		<xs:restriction base="floatListType">
+			<xs:length value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="boundingBoxType">
+		<xs:restriction base="floatListType">
+			<xs:length value="6"></xs:length>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Rotation order enum. -->
+	<xs:simpleType name="rotationOrderType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="xyz" />
+			<xs:enumeration value="yzx" />
+			<xs:enumeration value="zxy" />
+			<xs:enumeration value="xzy" />
+			<xs:enumeration value="yxz" />
+			<xs:enumeration value="zyx" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Joint freedoms enum. -->
+	<xs:simpleType name="jointFreedomsType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="X" />
+			<xs:enumeration value="Y" />
+			<xs:enumeration value="Z" />
+			<xs:enumeration value="XY" />
+			<xs:enumeration value="XZ" />
+			<xs:enumeration value="YZ" />
+			<xs:enumeration value="XYZ" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Custom data type enum. -->
+	<xs:simpleType name="customDataEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="string"></xs:enumeration>
+			<xs:enumeration value="filename"></xs:enumeration>
+			<xs:enumeration value="enum"></xs:enumeration>
+			<xs:enumeration value="bool"></xs:enumeration>
+			<xs:enumeration value="int"></xs:enumeration>
+			<xs:enumeration value="float"></xs:enumeration>
+			<xs:enumeration value="floatarray"></xs:enumeration>
+      <xs:enumeration value="intarray"></xs:enumeration>
+			<xs:enumeration value="vector2"></xs:enumeration>
+			<xs:enumeration value="vector3"></xs:enumeration>
+			<xs:enumeration value="vector4"></xs:enumeration>
+			<xs:enumeration value="objlink"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Euler rotation with axis order. -->
+	<xs:complexType name="rotationType">
+		<xs:simpleContent>
+			<xs:extension base="vector3Type">
+				<xs:attribute name="rotOrd" type="rotationOrderType"></xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- Type which defines a custom data attribute. -->
+	<xs:complexType name="customDataAttributeType" mixed="true">
+		<xs:sequence>
+			<xs:element name="field" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="value" type="customDataAttributeType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:Name"/>
+		<xs:attribute name="type" type="customDataEnumType"/>
+		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="default" type="xs:string"/>
+		<xs:attribute name="min" type="xs:string"/>
+		<xs:attribute name="max" type="xs:string"/>
+		<xs:attribute name="count" type="xs:integer"/>
+		<xs:attribute name="index" type="xs:integer"/>
+		<xs:attribute name="isArray" type="xs:boolean"/>
+	</xs:complexType>
+	<!-- Custom data object. -->
+	<xs:complexType name="customDataType">
+		<xs:sequence>
+			<xs:element name="attribute" type="customDataAttributeType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Group that contains elements for every object. Really this should be defined in objType but the derivation order restrictions make this impossible at present. @todo reorder our write methods to make this work in future. -->
+	<xs:group name="everyObjectGroup">
+		<xs:sequence>
+			<xs:group ref="allObjectsGroup" maxOccurs="unbounded"/>
+			<xs:element name="customData" type="customDataType" minOccurs="0" maxOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of nodes. -->
+	<xs:group name="nodeChildrenGroup">
+		<xs:sequence>
+			<xs:element name="aimConstraint" type="aimConstraintType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="atgilocator" type="atgiLocatorType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="blendtarget" type="blendtargetType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="camera" type="cameraType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="constraint" type="constraintType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="cluster" type="clusterType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="dynamicType" type="dynamicTypeType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="instance" type="instanceType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="joint" type="jointType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="light" type="lightType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="locator" type="locatorType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="lodgroup" type="lodgroupType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="mesh" type="meshType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="multiBlendTarget" type="multiBlendTargetType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="node" type="nodeType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="nurbsCurve" type="nurbsCurveType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="nurbs" type="nurbsSurfaceType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="orientationConstraint" type="orientConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="parentConstraint" type="parentConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="primitive" type="primitiveShapeType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="reference" type="referenceType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="rigidBody" type="rigidBodyType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="scaleConstraint" type="scaleConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="springConstraint" type="springConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="translationConstraint" type="translationConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of the world. -->
+	<xs:group name="globalObjectGroup">
+		<xs:sequence>
+			<xs:element name="animclip" type="animclipType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="blend" type="blendType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="blendshapeController" type="blendshapeControllerType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="cgshader" type="cgshaderType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="deformer" type="deformerType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="expression" type="expressionType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="image" type="imageType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="material" type="materialType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="motionPath" type="motionPathType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="objset" type="objSetType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="pmdataATG" type="pmdataATGType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="pose" type="poseType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="scene" type="sceneType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="shader" type="shaderType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+			<xs:element name="texture" type="textureType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of deformer. -->
+	<xs:group name="deformerObjectGroup">
+		<xs:sequence>
+			<xs:element name="blendshape" type="blendshapeType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="skin" type="skinType" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of animClip. -->
+	<xs:group name="animClipGroup">
+		<xs:sequence>
+			<xs:element name="anim" type="animType" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of anim. -->
+	<xs:group name="animGroup">
+		<xs:sequence>
+			<xs:element name="animChannel" type="animChannelType" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of objects that can be children of animChannel. -->
+	<xs:group name="animChannelGroup">
+		<xs:sequence>
+			<xs:element name="animDiscontinuities" type="animDiscontinuitiesType" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:group>
+	<!-- Group of all objects. -->
+	<xs:group name="allObjectsGroup">
+		<xs:sequence>
+			<xs:group ref="animGroup" maxOccurs="unbounded"/>
+			<xs:group ref="animChannelGroup" maxOccurs="unbounded"/>
+			<xs:group ref="animClipGroup" maxOccurs="unbounded"/>
+			<xs:group ref="nodeChildrenGroup" maxOccurs="unbounded"/>
+			<xs:group ref="globalObjectGroup" maxOccurs="unbounded"/>
+			<xs:group ref="deformerObjectGroup" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+	<!-- Primitive type enum. -->
+	<xs:simpleType name="primitiveEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="POLYGONS"></xs:enumeration>
+			<xs:enumeration value="TRIANGLES"></xs:enumeration>
+			<xs:enumeration value="TRISTRIPS"></xs:enumeration>
+			<xs:enumeration value="TRIFANS"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- AifPath type. -->
+	<xs:simpleType name="aifPathType">
+		<xs:restriction base="xs:anyURI"/>
+	</xs:simpleType>
+	<!-- List of ints. -->
+	<xs:simpleType name="intListType">
+		<xs:list itemType="xs:integer"></xs:list>
+	</xs:simpleType>
+	<!-- Constraint target type. -->
+	<xs:complexType name="constraintTargetType">
+		<xs:attribute name="name" type="aifPathType" />
+		<xs:attribute name="weight" type="xs:float" />
+	</xs:complexType>
+	<!-- Accleration Structures. Not data of the file, just to facilitate fast parse optimisations. -->
+	<xs:complexType name="fileType">
+		<xs:attribute name="uri" type="xs:anyURI"/>
+	</xs:complexType>
+	<xs:complexType name="filereferencesType">
+		<xs:sequence>
+			<xs:element name="file" type="fileType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="parseaccelerationType">
+		<xs:sequence>
+			<xs:element name="filereferences" type="filereferencesType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- Object definitions -->
+	<!-- Anim. -->
+	<xs:complexType name="animType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="target" type="aifPathType"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- AnimChannel -->
+	<xs:complexType name="animChannelType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="animData" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="keyValues" type="floatListType" minOccurs="1" maxOccurs="1"></xs:element>
+								<xs:element name="keyTimes" type="floatListType" minOccurs="0" maxOccurs="1"></xs:element>
+								<xs:element name="tangents" type="floatListType" minOccurs="0" maxOccurs="1"></xs:element>
+							</xs:sequence>
+							<xs:attribute name="interp">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Timestep" />
+										<xs:enumeration value="Linear" />
+										<xs:enumeration value="Flat" />
+										<xs:enumeration value="Smooth" />
+										<xs:enumeration value="Tangent" />
+										<xs:enumeration value="WTangent" />
+										<xs:enumeration value="SplitTangent" />
+										<xs:enumeration value="WSplitTangent" />
+										<xs:enumeration value="ATGCurve" />
+										<xs:enumeration value="ATGHermite"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="numKeys" type="xs:integer"></xs:attribute>
+							<xs:attribute name="keyStride" type="xs:integer"></xs:attribute>
+							<xs:attribute name="timeOffset" type="xs:float"></xs:attribute>
+							<xs:attribute name="duration" type="xs:float"></xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="channel" type="xs:string"></xs:attribute>
+				<xs:attribute name="inputObject" type="aifPathType"></xs:attribute>
+				<xs:attribute name="inputChannel" type="xs:string"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+	<!-- Animclip. -->
+	<xs:complexType name="animclipType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- AnimDiscontinuities. -->
+	<xs:complexType name="animDiscontinuitiesType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="corner" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="time" type ="xs:float"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="step" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="before" type="floatListType" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="after" type="floatListType" minOccurs="1" maxOccurs="1"/>
+							</xs:sequence>
+							<xs:attribute name="time" type ="xs:float"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="keyStride" type="xs:int"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- AtgiLocator. -->
+	<xs:complexType name="atgiLocatorType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="file" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:attribute name="uri" type="xs:anyURI"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="localPosition" type="vector3Type" minOccurs="0" maxOccurs="1" default="0.0 0.0 0.0" />
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Blendshape. -->
+	<xs:complexType name="blendshapeType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="target" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:group ref="everyObjectGroup"></xs:group>
+							</xs:sequence>
+							<xs:attribute name="weightIndex" type="xs:integer"></xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="controller" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Blendshape controller. -->
+	<xs:complexType name="blendshapeControllerType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="weight" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="weightName" type="xs:string"></xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Blendtarget. -->
+	<xs:complexType name="blendtargetType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence minOccurs="1" maxOccurs="unbounded">
+					<xs:element name="diff" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="indices" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="intListType">
+												<xs:attribute name="count" type="xs:integer"></xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="deltas" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="floatListType">
+												<xs:attribute name="count" type="xs:integer"></xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="name" type="xs:string" />
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- MultiBlendTarget. -->
+	<xs:complexType name="multiBlendTargetType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="blendStage" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:group ref="everyObjectGroup"></xs:group>
+							</xs:sequence>
+							<xs:attribute name="interpolant" type="xs:float"></xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Blend. -->
+	<xs:complexType name="blendType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="input" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="value" type="xs:float"/>
+							<xs:attribute name="weight" type="xs:float" use="optional"/>
+						</xs:complexType>			 
+					</xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="target" type="aifPathType"/>
+				<xs:attribute name="channel" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>	 
+	</xs:complexType>
+	<!-- BlindData. -->
+	<xs:complexType name="blindDataType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="components" type="intList" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="stringList">
+									<xs:attribute name="name" type="xs:string"/>
+									<xs:attribute name="type">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Bool"/>
+												<xs:enumeration value="Int"/>
+												<xs:enumeration value="Enum"/>
+												<xs:enumeration value="Float"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="component">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="Poly"/>
+							<xs:enumeration value="Edge"/>
+							<xs:enumeration value="Vert"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="numComponents" type="xs:int"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Camera. -->
+	<xs:complexType name="cameraType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="nearClipPlane" type="xs:float" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:element name="farClipPlane" type="xs:float" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:element name="focalLength" type="xs:float" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:element name="verticalFilmAperture" type="xs:float" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:element name="horizontalFilmAperture" type="xs:float" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:element name="orthographic" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="orthographicWidth" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- CgShader. -->
+	<xs:complexType name="cgshaderType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="binding" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="tag" type="xs:string" />
+									<xs:attribute name="type">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="texture" />
+												<xs:enumeration value="geometry" />
+												<xs:enumeration value="constant" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="source" type="aifPathType" />
+									<xs:attribute name="dataset" type="xs:string" />
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="url" type="xs:anyURI" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Cluster. -->
+	<xs:complexType name="clusterType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Constraint. -->
+	<xs:complexType name="constraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Aim Constraint -->
+	<xs:complexType name="aimConstraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="offset" type="rotationType" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="aim" type="vector3Type" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="up" type="vector3Type" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="globalup" type="vector3Type" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="upobject" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="name" type="aifPathType"/>
+								<xs:attribute name="transform">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="translate"/>
+											<xs:enumeration value="rotate"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Orient Constraint -->
+	<xs:complexType name="orientConstraintType">
+		<xs:complexContent>
+			<xs:extension base="constraintType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="rotEul" type="rotationType" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="orientInterpolation" minOccurs="1" maxOccurs="1">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="noFlip"/>
+									<xs:enumeration value="average"/>
+									<xs:enumeration value="shortest"/>
+									<xs:enumeration value="longest"/>
+									<xs:enumeration value="cache"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Parent Constraint -->
+	<xs:complexType name="parentConstraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="offset" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="translation" type="vector3Type" minOccurs="0" maxOccurs="1"/>
+									<xs:element name="rotEul" type="rotationType" minOccurs="0" maxOccurs="1"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Scale Constraint -->
+	<xs:complexType name="scaleConstraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="offset" type="vector3Type" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Spring Constraint -->
+	<xs:complexType name="springConstraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="stiffness" type="xs:float" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="restLength" type="xs:float" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="damping" type="xs:float" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Translation Constraint -->
+	<xs:complexType name="translationConstraintType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="offset" type="vector3Type" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Deformer. -->
+	<xs:complexType name="deformerType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="target" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Dynamic type. -->
+	<xs:complexType name="dynamicTypeType">
+		<xs:sequence>
+			<xs:any processContents="skip" minOccurs="1" maxOccurs="unbounded"></xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Expression type. -->
+	<xs:complexType name="expressionType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="input" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="object" type="aifPathType" />
+								<xs:attribute name="channel" type="xs:string" />
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="output" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="object" type="aifPathType" />
+								<xs:attribute name="channel" type="xs:string" />
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1"></xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Image. -->
+	<xs:complexType name="imageType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="data" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:attribute name="width" type="xs:integer" />
+							<xs:attribute name="height" type="xs:integer" />
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="image_channel" type="image_channelType" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+				<xs:attribute name="width" type="xs:integer" />
+				<xs:attribute name="height" type="xs:integer" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Image channel. -->
+	<xs:complexType name="image_channelType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="data" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="componentCount" type="xs:integer" />
+									<xs:attribute name="width" type="xs:integer" />
+									<xs:attribute name="height" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Instance -->
+	<xs:complexType name="instanceType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:group ref="everyObjectGroup"></xs:group>
+				<xs:attribute name="target" type="aifPathType"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Joint. -->
+	<xs:complexType name="jointType">
+		<xs:complexContent>
+			<xs:extension base="nodeType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="freedoms" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="channels" type="jointFreedomsType" />
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="minrotation" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="floatListType">
+										<xs:attribute name="channels" type="jointFreedomsType" />
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="maxrotation" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="floatListType">
+										<xs:attribute name="channels" type="jointFreedomsType" />
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="jointOrientEul" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="vector3Type">
+										<xs:attribute name="rotOrd" type="rotationOrderType" />
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="scaleCompensate" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="translate" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="rotEul" type="rotationType" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="rotAxisEul" type="rotationType" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="scale" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="scalePivot" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="scalePivotTranslation" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="rotatePivot" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+						<xs:element name="rotatePivotTranslation" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Light. -->
+	<xs:complexType name="lightType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="intensity" type="xs:float" minOccurs="1" maxOccurs="1" />
+					<xs:element name="colour" type="vector3Type" minOccurs="1" maxOccurs="1" />
+					<xs:element name="colourTexture" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="coneAngle" type="xs:float" minOccurs="0" maxOccurs="1" />
+					<xs:element name="penumbraAngle" type="xs:float" minOccurs="0" maxOccurs="1" />
+					<xs:element name="dropOff" type="xs:float" minOccurs="0" maxOccurs="1" />
+					<xs:element name="decayRate" type="xs:float" minOccurs="0" maxOccurs="1" />
+					<xs:element name="colourRamp" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="positions" type="floatListType" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="colours" type="floatListType" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="interpolationTypes" minOccurs="1" maxOccurs="1">
+									<!-- List of string enum values. -->
+									<xs:simpleType>
+										<xs:list>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="None"/>
+													<xs:enumeration value="Linear"/>
+													<xs:enumeration value="Smooth"/>
+													<xs:enumeration value="Spline"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:list>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>			 
+					</xs:element>
+					<xs:element name="scale" type="xs:float" minOccurs="0" maxOccurs="1" />
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="DirectionalLight" />
+							<xs:enumeration value="PointLight" />
+							<xs:enumeration value="SpotLight" />
+							<xs:enumeration value="AreaLight" />
+							<xs:enumeration value="VolumeLight" />
+							<xs:enumeration value="AmbientLight" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="castShadows" type="xs:boolean" />
+				<xs:attribute name="hasAmbient" type="xs:boolean" />
+				<xs:attribute name="hasDiffuse" type="xs:boolean" />
+				<xs:attribute name="hasSpecular" type="xs:boolean" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Locator. -->
+	<xs:complexType name="locatorType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="localPosition" type="vector3Type" minOccurs="0" maxOccurs="1" default="0.0 0.0 0.0" />
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- LodGroup. -->
+	<xs:complexType name="lodgroupType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="thresholds" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="floatListType">
+										<xs:attribute name="count" type="xs:integer" />
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:group ref="nodeElementGroup"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Material. -->
+	<xs:complexType name="materialType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="renderstate" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="alphablend">
+									<xs:complexType>
+										<xs:attribute name="enabled" type="xs:boolean"></xs:attribute>
+										<xs:attribute name="sourceblend" type="xs:token"></xs:attribute>
+										<xs:attribute name="destblend" type="xs:token"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="alphatest">
+									<xs:complexType>
+										<xs:attribute name="enabled" type="xs:boolean"></xs:attribute>
+										<xs:attribute name="alphafunc" type="xs:token"></xs:attribute>
+										<xs:attribute name="alpharef" type="xs:float"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="zwrite">
+									<xs:complexType>
+										<xs:attribute name="enabled" type="xs:boolean"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ztest">
+									<xs:complexType>
+										<xs:attribute name="enabled" type="xs:boolean"></xs:attribute>
+										<xs:attribute name="ztestfunc" type="xs:token"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="backfaceculling">
+									<xs:complexType>
+										<xs:attribute name="enabled" type="xs:boolean"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="overriden" type="xs:boolean"></xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="binding" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="tag" type="xs:Name"></xs:attribute>
+									<xs:attribute name="type" type="xs:Name"></xs:attribute>
+									<xs:attribute name="dataset" type="xs:Name"></xs:attribute>
+									<xs:attribute name="count" type="xs:integer"></xs:attribute>
+									<xs:attribute name="source" type="aifPathType"></xs:attribute>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="url" type="xs:anyURI"></xs:attribute>
+				<xs:attribute name="mat" type="xs:anyURI"></xs:attribute>
+        <xs:attribute name="frompreset" type="xs:boolean"></xs:attribute>
+        <xs:attribute name="preseturl" type="xs:anyURI"></xs:attribute>
+        <xs:attribute name="preset" type="xs:anyURI"></xs:attribute>        
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Mesh. -->
+	<xs:complexType name="meshType">
+		<xs:annotation>
+			<xs:appinfo>
+				<scea.dom.element name="boundingBox" mutable="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="vertexArray" minOccurs="1" maxOccurs="1">
+						<!-- Use inline definition here because this type is not of global significance. -->
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="primitives" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="binding" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="source" type="xs:Name"></xs:attribute>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="sizes" type="intListType" minOccurs="1" maxOccurs="1"></xs:element>
+											<xs:element name="indices" type="intListType" minOccurs="1" maxOccurs="1"></xs:element>
+										</xs:sequence>
+										<xs:attribute name="name" type="xs:string"/>
+										<xs:attribute name="shader" type="aifPathType"></xs:attribute>
+										<xs:attribute name="type" type="primitiveEnumType"></xs:attribute>
+										<xs:attribute name="count" type="xs:integer"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="array" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="floatListType">
+												<xs:attribute name="name" type="xs:Name"></xs:attribute>
+												<xs:attribute name="count" type="xs:integer"></xs:attribute>
+												<xs:attribute name="stride" type="xs:integer"></xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="blindData" type="blindDataType" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="boundingBox" type="boundingBoxType" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Motion Path -->
+	<xs:complexType name="motionPathType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="offset" type="rotationType" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="aim" type="vector3Type" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="up" type="vector3Type" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="globalup" type="vector3Type" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="upobject" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="name" type="aifPathType"/>
+								<xs:attribute name="transform">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="translate"/>
+											<xs:enumeration value="rotate"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="target" type="constraintTargetType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="constrain" type="aifPathType" />
+				<xs:attribute name="parameterisation">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="curve"/>
+							<xs:enumeration value="length"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="constrainOrientation" type="xs:boolean"/>
+				<xs:attribute name="curvePath" type="aifPathType"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="nodeElementGroup">
+		<xs:sequence>
+			<xs:element name="translate" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="rotEul" type="rotationType" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="rotAxisEul" type="rotationType" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="scale" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="shear" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="scalePivot" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="scalePivotTranslation" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="rotatePivot" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="rotatePivotTranslation" type="vector3Type" minOccurs="0" maxOccurs="1"></xs:element>
+		</xs:sequence>
+	 </xs:group>
+	<!-- Node. -->
+	<xs:complexType name="nodeType">
+		<xs:annotation>
+		<xs:appinfo>
+			<scea.dom.element name="transform" mutable="true" />
+			<scea.dom.element name="boundingBox" mutable="true" />
+			<scea.dom.attribute name="visibility" mutable="true" />
+		</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="nodeElementGroup"/>
+					<xs:element name="transform" type="matrixType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="boundingBox" type="boundingBoxType" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="visibility" type="xs:boolean" default="true" />
+				<xs:attribute name="parentEffect" use="optional" default="normal">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="normal"/>
+							<xs:enumeration value="scaleCompensate"/>
+							<xs:enumeration value="noInherit"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- NurbsCurve. -->
+	<xs:complexType name="nurbsCurveType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="points" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="knots" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="degree" type="xs:integer" />
+				<xs:attribute name="form">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="open" />
+							<xs:enumeration value="closed" />
+							<xs:enumeration value="periodic" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- NurbsSurface. -->
+	<xs:complexType name="nurbsSurfaceType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="surface" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="controlVertices" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="floatListType">
+												<xs:attribute name="numCVinU" type="xs:integer" />
+												<xs:attribute name="numCVinV" type="xs:integer" />
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="knotsInU" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="floatListType">
+												<xs:attribute name="numKnotsInU" type="xs:integer" />
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="knotsInV" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="floatListType">
+												<xs:attribute name="numKnotsInV" type="xs:integer" />
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="uOrder" type="xs:integer" />
+							<xs:attribute name="vOrder" type="xs:integer" />
+							<xs:attribute name="uMin" type="xs:float" />
+							<xs:attribute name="uMax" type="xs:float" />
+							<xs:attribute name="vMin" type="xs:float" />
+							<xs:attribute name="vMax" type="xs:float" />
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Obj. -->
+	<xs:complexType name="objType" abstract="true">
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<!-- ObjSet. -->
+	<xs:complexType name="objSetType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="member" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="path" type="aifPathType" />
+							<xs:attribute name="membership" type="xs:string" />
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="type" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- PmData ATG. -->
+	<xs:complexType name="pmdataATGType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence minOccurs="0">
+					<xs:element name="vs" type="intListType" minOccurs="1" maxOccurs="1" />
+					<xs:element name="vt" type="intListType" minOccurs="1" maxOccurs="1" />
+					<xs:element name="faces" type="intListType" minOccurs="1" maxOccurs="1" />
+					<xs:element name="costs" type="floatListType" minOccurs="1" maxOccurs="1" />
+					<xs:element name="splits" type="intListType" minOccurs="1" maxOccurs="1" />
+					<xs:element name="fixFaces" type="intListType" minOccurs="1" maxOccurs="1" />
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="target" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Pose. -->
+	<xs:complexType name="poseType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="translate" type="vector3Type" minOccurs="1" maxOccurs="1" />
+								<xs:element name="rotEul" minOccurs="1" maxOccurs="1">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="vector3Type">
+												<xs:attribute name="rotOrd" type="rotationOrderType" />
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="scale" type="vector3Type" minOccurs="1" maxOccurs="1" />
+							</xs:sequence>
+							<xs:attribute name="target" type="aifPathType" />
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="bindPose" type="xs:boolean" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Primitive Shape. -->
+	<xs:complexType name="primitiveShapeType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:choice minOccurs ="0">
+						<xs:element name="cube">
+							<xs:complexType>
+								<xs:attribute name="width" type="xs:float"/>
+								<xs:attribute name="height" type="xs:float"/>
+								<xs:attribute name="depth" type="xs:float"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="cylinder">
+							<xs:complexType>
+								<xs:attribute name="radius" type="xs:float"/>
+								<xs:attribute name="height" type="xs:float"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="sphere">
+							<xs:complexType>
+								<xs:attribute name="radius" type="xs:float"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+					<xs:group ref="everyObjectGroup" />				
+				</xs:sequence>
+				<xs:attribute name="shader" type="aifPathType" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Reference. -->
+	<xs:complexType name="referenceType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="uri" type="xs:anyURI" />
+				<xs:attribute name="namespace" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- RigidBody -->
+	<xs:complexType name="rigidBodyType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="mass" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="geometry" type="aifPathType" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="everyObjectGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Scene. -->
+	<xs:complexType name="sceneType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Shader. -->
+	<xs:complexType name="shaderType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="binding" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatListType">
+									<xs:attribute name="tag" type="xs:string" />
+									<xs:attribute name="type">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="texture" />
+												<xs:enumeration value="geometry" />
+												<xs:enumeration value="constant" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="source" type="aifPathType" />
+									<xs:attribute name="dataset" type="xs:string" />
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Skin. -->
+	<xs:complexType name="skinType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence>
+					<xs:element name="influence" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="bindInverse" type="floatListType" minOccurs="0" maxOccurs="1" />
+							</xs:sequence>
+							<xs:attribute name="target" type="aifPathType" />
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="weights" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="floatOrIntListType">
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="components" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="intListType">
+									<xs:attribute name="count" type="xs:integer" />
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="everyObjectGroup" />
+				</xs:sequence>
+				<xs:attribute name="type" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Texture -->
+	<xs:complexType name="textureType">
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:group ref="everyObjectGroup"></xs:group>
+				<xs:attribute name="uri" type="xs:anyURI"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Root element. -->
+	<xs:complexType name="worldType">
+		<xs:annotation>
+			<xs:appinfo>
+				<scea.dom.collection id="name" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="objType">
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element name="parseacceleration" type="parseaccelerationType" minOccurs="0" maxOccurs="1"></xs:element>
+					<xs:group ref="everyObjectGroup"></xs:group>
+				</xs:sequence>
+				<xs:attribute name="filenameform" type="xs:string"/>
+				<xs:attribute name="upaxis" default="y">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="y"/>
+							<xs:enumeration value="z"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ATG" type="worldType"></xs:element>
+</xs:schema>

@@ -1,0 +1,8 @@
+Python scripting quick help
+
+Please see this blog post:
+http://wiki.ship.scea.com/confluence/display/WWSSDKATF/2012/05/18/Scripting+your+app+with+Python
+
+And take a look at the Python scripts used by our automated functional tests. These can be found in this Visual Studio solution file:
+\Test\Everything.*.sln
+And in the \Tests\FunctionalTests directory.

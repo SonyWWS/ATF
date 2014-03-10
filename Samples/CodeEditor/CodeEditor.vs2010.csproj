@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D002C9F-0F1B-4D4C-9A83-B876895F7B30}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeEditor</RootNamespace>
+    <AssemblyName>CodeEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\File_edit.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeDocument.cs" />
+    <Compile Include="Editor.cs" />
+    <Compile Include="HelpAboutCommand.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceControlContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.IronPython\Atf.IronPython.vs2010.csproj">
+      <Project>{7F794C24-7A8D-4D21-B443-F03509669F89}</Project>
+      <Name>Atf.IronPython.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Perforce\Atf.Perforce.vs2010.csproj">
+      <Project>{C7A306E0-32AE-4053-8882-E1A1E702C139}</Project>
+      <Name>Atf.Perforce.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.SyntaxEditorControl\Atf.SyntaxEditorControl.vs2010.csproj">
+      <Project>{D1A78912-9AD2-4555-8560-B251A4D751DC}</Project>
+      <Name>Atf.SyntaxEditorControl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="Resources\About.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\File_edit.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

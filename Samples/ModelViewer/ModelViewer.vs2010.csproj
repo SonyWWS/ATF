@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{07553179-5151-4429-B556-6730B2B131A2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModelViewerSample</RootNamespace>
+    <AssemblyName>ModelViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0649</NoWarn>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0649</NoWarn>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.OpenGl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HelpAboutCommand.cs" />
+    <Compile Include="ModelDocument.cs" />
+    <Compile Include="ModelViewer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderCommands.cs" />
+    <Compile Include="Rendering\RenderPrimitives.cs" />
+    <Compile Include="Rendering\RenderTransform.cs" />
+    <Compile Include="RenderView.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="ShoutOutputService.cs" />
+    <None Include="app.config" />
+    <EmbeddedResource Include="Resources\About.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Atgi\Atf.Atgi.vs2010.csproj">
+      <Project>{D1FA9A85-9359-4725-A50F-8A67A77D700C}</Project>
+      <Name>Atf.Atgi.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Collada\Atf.Collada.vs2010.csproj">
+      <Project>{6F80048B-E81F-4E06-9438-26C23487777C}</Project>
+      <Name>Atf.Collada.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.OpenGL\Atf.Gui.OpenGL.vs2010.csproj">
+      <Project>{52D35323-1AA1-4205-A1B0-26C5E5E8D543}</Project>
+      <Name>Atf.Gui.OpenGL.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.IronPython\Atf.IronPython.vs2010.csproj">
+      <Project>{7F794C24-7A8D-4D21-B443-F03509669F89}</Project>
+      <Name>Atf.IronPython.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Backface16.png" />
+    <EmbeddedResource Include="Resources\Backface24.png" />
+    <EmbeddedResource Include="Resources\Backface32.png" />
+    <EmbeddedResource Include="Resources\Lighting16.png" />
+    <EmbeddedResource Include="Resources\Lighting24.png" />
+    <EmbeddedResource Include="Resources\Lighting32.png" />
+    <EmbeddedResource Include="Resources\Outlined16.png" />
+    <EmbeddedResource Include="Resources\Outlined24.png" />
+    <EmbeddedResource Include="Resources\Outlined32.png" />
+    <EmbeddedResource Include="Resources\SmoothShading16.png" />
+    <EmbeddedResource Include="Resources\SmoothShading24.png" />
+    <EmbeddedResource Include="Resources\SmoothShading32.png" />
+    <EmbeddedResource Include="Resources\Texture16.png" />
+    <EmbeddedResource Include="Resources\Texture24.png" />
+    <EmbeddedResource Include="Resources\Texture32.png" />
+    <EmbeddedResource Include="Resources\Wireframe16.png" />
+    <EmbeddedResource Include="Resources\Wireframe24.png" />
+    <EmbeddedResource Include="Resources\Wireframe32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\ThirdParty\Tao.OpenGl\DevIL.dll">
+      <Link>DevIL.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

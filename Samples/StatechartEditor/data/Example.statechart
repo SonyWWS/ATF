@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<statechart xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://sony.com/gametech/statecharts/1_0">
+	<state xsi:type="stateType" name="State" x="110" y="104" label="State1" width="64" height="64" />
+	<state xsi:type="stateType" name="State_1" x="186" y="214" label="State2" width="64" height="64" />
+	<state xsi:type="stateType" name="State_2" x="145" y="348" width="172" height="222">
+		<statechart>
+			<state xsi:type="stateType" name="State_5" x="161" y="380" label="State1" width="64" height="64" />
+			<state xsi:type="stateType" name="State_6" x="237" y="490" label="State2" width="64" height="64" />
+		</statechart>
+	</state>
+	<transition fromState="State" fromPosition="1.734375" toState="State_1" toPosition="2.58571434" />
+	<transition fromState="State_1" fromPosition="3.55882359" toState="State" toPosition="0.5" />
+	<transition fromState="State_5" fromPosition="1.734375" toState="State_6" toPosition="2.58571434" />
+	<transition fromState="State_6" fromPosition="3.55882359" toState="State_5" toPosition="0.5" />
+	<annotation text="Drag some states from the Statechart&#xD;&#xA;Tab in the Palette. You can drag them by&#xD;&#xA;clicking on their interior.&#xD;&#xA;&#xD;&#xA;Try clicking on the label to edit the state's&#xD;&#xA;name.&#xD;&#xA;&#xD;&#xA;Move the mouse over the state boundary&#xD;&#xA;until you see the 'wiring' cursor. Then drag&#xD;&#xA;the transition to another state's boundary&#xD;&#xA;and release the mouse to create a transition." x="283" y="84" />
+	<annotation text="Drag another state from the palette.&#xD;&#xA;Notice that it is selected, and has&#xD;&#xA;resizing knobbies along the boundary.&#xD;&#xA;Drag those to make the state bigger&#xD;&#xA;or smaller.&#xD;&#xA;&#xD;&#xA;Add states to this new state by selecting&#xD;&#xA;the two states above and copying them,&#xD;&#xA;then selecting this state and pasting.&#xD;&#xA;&#xD;&#xA;Drag this new complex state. Notice that&#xD;&#xA;its child states move with it." x="369" y="337" />
+	<annotation text="Finally, try copying the new complex state&#xD;&#xA;and pasting it into the Prototypes lister. Now&#xD;&#xA;you can drag and drop this new prototype&#xD;&#xA;onto your canvas to rapidly create complex&#xD;&#xA;state machines." x="205" y="654" />
+	<prototypeFolder>
+		<prototype name="Prototype">
+			<state xsi:type="stateType" name="State_7" x="145" y="348" width="172" height="222">
+				<statechart>
+					<state xsi:type="stateType" name="State_8" x="161" y="380" label="State1" width="64" height="64" />
+					<state xsi:type="stateType" name="State_9" x="237" y="490" label="State2" width="64" height="64" />
+				</statechart>
+			</state>
+			<transition fromState="State_8" fromPosition="1.734375" toState="State_9" toPosition="2.58571434" />
+			<transition fromState="State_9" fromPosition="3.55882359" toState="State_8" toPosition="0.5" />
+		</prototype>
+	</prototypeFolder>
+</statechart>

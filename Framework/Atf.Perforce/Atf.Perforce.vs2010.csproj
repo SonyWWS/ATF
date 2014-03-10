@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C7A306E0-32AE-4053-8882-E1A1E702C139}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Atf.Perforce</RootNamespace>
+    <AssemblyName>Atf.Perforce</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\lib\win64_dotnet_clr4_debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\lib\win64_dotnet_clr4_release\</OutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\lib\win32_dotnet_clr4_debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\lib\win32_dotnet_clr4_release\</OutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CurrentPlatform>x64</CurrentPlatform>
+    <CurrentPlatform Condition="'$(Platform)'=='x86' ">x86</CurrentPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="p4api.net" Condition="$(Platform) == 'x86'">
+      <HintPath>..\..\ThirdParty\P4API.NET\clr4\x86\p4api.net.dll</HintPath>
+    </Reference>
+    <Reference Include="p4api.net" Condition="$(Platform) == 'x64'">
+      <HintPath>..\..\ThirdParty\P4API.NET\clr4\x64\p4api.net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConnectionManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Connections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Connections.Designer.cs">
+      <DependentUpon>Connections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileInfo.cs" />
+    <Compile Include="LoginDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginDialog.Designer.cs">
+      <DependentUpon>LoginDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerforceRequest.cs" />
+    <Compile Include="PerforceRequestQueue.cs" />
+    <Compile Include="PerforceService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UriPaths.cs" />
+    <Compile Include="UsersList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsersList.Designer.cs">
+      <DependentUpon>UsersList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorkspaceList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkspaceList.Designer.cs">
+      <DependentUpon>WorkspaceList.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Connections.resx">
+      <DependentUpon>Connections.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginDialog.resx">
+      <DependentUpon>LoginDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsersList.resx">
+      <DependentUpon>UsersList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkspaceList.resx">
+      <DependentUpon>WorkspaceList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\p4v_file_add.png" />
+    <EmbeddedResource Include="Resources\p4v_file_add_other_ws.png" />
+    <EmbeddedResource Include="Resources\p4v_file_branch.png" />
+    <EmbeddedResource Include="Resources\p4v_file_delete.png" />
+    <EmbeddedResource Include="Resources\p4v_file_deleted.png" />
+    <EmbeddedResource Include="Resources\p4v_file_delete_other.png" />
+    <EmbeddedResource Include="Resources\p4v_file_differs.png" />
+    <EmbeddedResource Include="Resources\p4v_file_edit_head.png" />
+    <EmbeddedResource Include="Resources\p4v_file_edit_other.png" />
+    <EmbeddedResource Include="Resources\p4v_file_lock.png" />
+    <EmbeddedResource Include="Resources\p4v_file_needs_resolve.png" />
+    <EmbeddedResource Include="Resources\p4v_file_notmapped.png" />
+    <EmbeddedResource Include="Resources\p4v_file_notsync.png" />
+    <EmbeddedResource Include="Resources\p4v_file_sync.png" />
+    <EmbeddedResource Include="Resources\p4v_file_txt.png" />
+    <EmbeddedResource Include="Resources\p4v_file_ws.png" />
+    <EmbeddedResource Include="Resources\p4v_folder_black_triangle.png" />
+    <EmbeddedResource Include="Resources\p4v_integrate.png" />
+    <EmbeddedResource Include="Resources\p4v_file_lock_other.png" />
+    <EmbeddedResource Include="Resources\ja\Localization.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\ThirdParty\P4API.NET\clr4\x64\p4bridge.dll" Condition="$(Platform) == 'x64'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\ThirdParty\P4API.NET\clr4\x86\p4bridge.dll" Condition="$(Platform) == 'x86'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+                    xmlns:l="clr-namespace:Sce.Atf.Wpf.Controls.PropertyEditing">
+    <DataTemplate x:Key="{x:Static l:MultiLineTextValueEditor.TemplateKey}">
+        <TextBox Text="{Binding Value, Mode=TwoWay}"  AcceptsReturn="True" TextWrapping="WrapWithOverflow" VerticalContentAlignment="Center" Margin="0"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static l:SliderValueEditor.TemplateKey}">
+        <c:SliderBox Value="{Binding EditorContext.DoubleValue, Mode=TwoWay}" 
+                     DeferDragUpdate="True"
+                     StringFormat="{Binding EditorContext.FormatString, Mode=OneTime}">
+        </c:SliderBox>
+    </DataTemplate>
+</ResourceDictionary>

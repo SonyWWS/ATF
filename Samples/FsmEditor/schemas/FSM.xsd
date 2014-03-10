@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="http://sony.com/gametech/fsms/1_0"
+	xmlns="http://sony.com/gametech/fsms/1_0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+  A state has a name (id), label, position, flag indicating if it's hidden, and flag
+  indicating if it's the starting state, and can be referenced by transitions.
+  -->
+  <xs:complexType name="stateType">
+    <xs:attribute name="name" type="xs:ID" use="required" />
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+    <xs:attribute name="size" type="xs:int" />
+    <xs:attribute name="hidden" type="xs:boolean" />
+    <xs:attribute name="start" type="xs:boolean" />
+  </xs:complexType>
+
+  <!--
+  A transition has a label, and connects the source state to the destination state.
+  -->
+  <xs:complexType name="transitionType">
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="source" type="xs:IDREF" use="required" />
+    <xs:attribute name="destination" type="xs:IDREF" use="required" />
+  </xs:complexType>
+
+  <!--
+  A prototype is a set of states and transitions among them that can be copied and
+  pasted into an FSM.
+  -->
+  <xs:complexType name ="prototypeType" >
+    <xs:sequence>
+      <xs:element name="state" type="stateType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="transition" type="transitionType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A prototype folder allows a hierarchy containing prototypes to be defined.
+  -->
+  <xs:complexType name ="prototypeFolderType">
+    <xs:sequence>
+      <xs:element name="prototypeFolder" type="prototypeFolderType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="prototype" type="prototypeType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  An annotation is a comment on the FSM canvas.
+  -->
+  <xs:complexType name="annotationType">
+    <xs:attribute name="text" type="xs:string" use="required" />
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+  </xs:complexType>
+
+  <!--
+  An FSM contains states, transitions among them, annotations, and a prototype
+  folder hierarchy.
+  -->
+  <xs:complexType name ="fsmType">
+    <xs:sequence>
+      <xs:element name="state" type="stateType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="transition" type="transitionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="prototypeFolder" type="prototypeFolderType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  The root element of an FSM document.
+  -->
+  <xs:element name="fsm" type ="fsmType"/>
+
+</xs:schema>

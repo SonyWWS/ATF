@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Activate Control" context="" translation="アクティブなコントロール" />
+  <StringItem id="Could not load window layout" context="" translation="ウィンドウレイアウトを読み込めません。" />
+  <StringItem id="Show/Hide " context="" translation="表示/非表示 " />
+  <StringItem id="Show/Hide " context="" translation="表示/非表示 " />
+  <StringItem id="Rename" context="" translation="名前を変更" />
+  <StringItem id="Rename" context="" translation="名前を変更" />
+  <StringItem id="About" context="" translation="バージョン情報" />
+  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Show Context Help" context="" translation="コンテキストヘルプを表示" />
+  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Uncheck this to hide help commands in context menus" context="" translation="コンテキストメニューにヘルプコマンドを表示しない場合は選択を解除します。" />
+  <StringItem id="_Contents" context="" translation="コンテンツ(_C)" />
+  <StringItem id="Help Contents" context="" translation="ヘルプコンテンツ" />
+  <StringItem id="_About" context="" translation="バージョン情報(_A)" />
+  <StringItem id="Shows Information About Application" context="" translation="アプリケーションの情報を表示します。" />
+  <StringItem id="_File" context="" translation="ファイル(_F)" />
+  <StringItem id="File Commands" context="" translation="ファイルコマンド" />
+  <StringItem id="_Edit" context="" translation="編集(_E)" />
+  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
+  <StringItem id="_View" context="" translation="表示(_V)" />
+  <StringItem id="View Commands" context="" translation="表示コマンド" />
+  <StringItem id="Modify" context="" translation="変更" />
+  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
+  <StringItem id="_Format" context="" translation="フォーマット(_F)" />
+  <StringItem id="Formatting Commands" context="" translation="フォーマットコマンド" />
+  <StringItem id="_Window" context="" translation="ウィンドウ(_W)" />
+  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
+  <StringItem id="_Help" context="" translation="ヘルプ(_H)" />
+  <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
+  <StringItem id="Output" context="" translation="出力" />
+  <StringItem id="View errors, warnings, and informative messages" context="" translation="エラー、警告、情報メッセージを表示。" />
+  <StringItem id="_File" context="" translation="ファイル(_F)" />
+  <StringItem id="File Commands" context="" translation="ファイルコマンド" />
+  <StringItem id="_Edit" context="" translation="編集(_E)" />
+  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
+  <StringItem id="_View" context="" translation="表示(_V)" />
+  <StringItem id="View Commands" context="" translation="表示コマンド" />
+  <StringItem id="Modify" context="" translation="変更" />
+  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
+  <StringItem id="_Format" context="" translation="フォーマット(_F)" />
+  <StringItem id="Formatting Commands" context="" translation="フォーマットコマンド" />
+  <StringItem id="_Window" context="" translation="ウィンドウ(_W)" />
+  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
+  <StringItem id="_Help" context="" translation="ヘルプ(_H)" />
+  <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
+  <StringItem id="Ready" context="Application is ready" translation="準備完了" />
+  <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="Edit Property" context="" translation="プロパティを編集" />
+  <StringItem id="Unhandled Exception" context="" translation="未処理例外" />
+  <StringItem id="About" context="" translation="バージョン情報" />
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="Please wait..." context="" translation="お待ちください..." />
+  <StringItem id="Progress" context="" translation="進行状況" />
+  <StringItem id="Edit Label" context="" translation="ラベルを編集" />
+</StringLocalizationTable>

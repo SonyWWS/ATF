@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{52D35323-1AA1-4205-A1B0-26C5E5E8D543}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Atf.OpenGL</RootNamespace>
+    <AssemblyName>Atf.Gui.OpenGL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DDSUtils, Version=1.0.2980.36182, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\DDSUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.Cg, Version=1.4.1.1, Culture=neutral, PublicKeyToken=52fa5aba625fe731, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.Cg.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.DevIl, Version=1.6.8.0, Culture=neutral, PublicKeyToken=7ec4053013524957, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.DevIl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.3, Culture=neutral, PublicKeyToken=701104b2da67a104">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArcBallCameraController.cs" />
+    <Compile Include="BitmapContext.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CanvasControl3D.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CgfxCore.cs" />
+    <Compile Include="DdsCompressor.cs" />
+    <Compile Include="DdsImageLoader.cs" />
+    <Compile Include="DesignControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DevilImageLoader.cs" />
+    <Compile Include="FlyCameraController.cs" />
+    <Compile Include="IImageLoader.cs" />
+    <Compile Include="Image.cs" />
+    <Compile Include="ImageLoaderRegistry.cs" />
+    <Compile Include="MsBitmapImageLoader.cs" />
+    <Compile Include="OpenGlCore.cs" />
+    <Compile Include="Panel3D.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PickAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderAction.cs" />
+    <Compile Include="RenderObject.cs" />
+    <Compile Include="RenderStateGuardianUtils.cs" />
+    <Compile Include="RenderStats.cs" />
+    <Compile Include="TargaImageLoader.cs" />
+    <Compile Include="TextureInfo.cs" />
+    <Compile Include="TextureManager.cs" />
+    <Compile Include="ThumbnailGenerator.cs" />
+    <Compile Include="TrackBallCameraController.cs" />
+    <Compile Include="TranslatorControl.cs" />
+    <Compile Include="Util3D.cs" />
+    <Compile Include="VboManager.cs" />
+    <Compile Include="WalkCameraController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DesignControl.resx">
+      <DependentUpon>DesignControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Panel3D.resx">
+      <DependentUpon>Panel3D.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ja\Localization.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

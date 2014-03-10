@@ -1,0 +1,1851 @@
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
+using Sce.Atf.Rendering;
+using Sce.Atf.VectorMath;
+using Sce.Atf.Direct2D;
+
+namespace Sce.Atf.Controls.Adaptable.Graphs
+{
+    /// <summary>
+    /// Graph renderer that draws graph nodes as circuit elements, and edges as wires.
+    /// Elements have 0 or more output pins, where wires originate, and 0 or more input
+    /// pins, where wires end. Output pins are on the right and input pins are on the left
+    /// side of elements.</summary>
+    /// <typeparam name="TElement">Element type, must implement IElementType, and IGraphNode</typeparam>
+    /// <typeparam name="TWire">Wire type, must implement IGraphEdge</typeparam>
+    /// <typeparam name="TPin">Pin type, must implement ICircuitPin, IEdgeRoute</typeparam>
+    public class D2dCircuitRenderer<TElement, TWire, TPin> : D2dGraphRenderer<TElement, TWire, TPin>, IDisposable
+        where TElement : class, ICircuitElement
+        where TWire : class, IGraphEdge<TElement, TPin>
+        where TPin : class, ICircuitPin
+    {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="theme">Diagram theme for rendering graph</param>
+        /// <param name="documentRegistry">An optional document registry, used to clear the internal
+        /// element type cache when a document is removed.</param>
+        public D2dCircuitRenderer(D2dDiagramTheme theme, IDocumentRegistry documentRegistry = null)
+        {
+            m_theme = theme;
+            m_theme.Redraw += new EventHandler(theme_Redraw);
+            SetPinSpacing();
+            m_elementBody.RadiusX = 6;
+            m_elementBody.RadiusY = 6;
+
+            EdgeThickness = 2.0f;
+            m_subGraphPinBrush = D2dFactory.CreateSolidBrush(Color.SandyBrown);
+            MaxCollapsedGroupPinNameLength = 25;
+
+            m_documentRegistry = documentRegistry;
+            if (m_documentRegistry != null)
+            {
+                m_documentRegistry.DocumentRemoved += DocumentRegistryOnDocumentRemoved;
+                m_documentRegistry.ActiveDocumentChanging += DocumentRegistryOnActiveDocumentChanging;
+                m_documentRegistry.ActiveDocumentChanged += DocumentRegistryOnActiveDocumentChanged;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the threshold size that shows the details in a circuit element</summary>
+        /// <remarks>Title, pins, and labels(after transformation) smaller than the threshold won’t be displayed for speed optimization.
+        /// Default is 6. Set value 0 effectively turns off this optimization </remarks>
+        public int DetailsThresholdSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a Boolean that determines if wires should be selected as a fallback
+        /// if no elements are selected, in a marquee selection</summary>
+        public bool RectangleSelectsWires { get; set; }
+
+        public D2dDiagramTheme Theme
+        {
+            get { return m_theme; }
+            set
+            {
+                if (m_theme != value)
+                {
+                    if (m_theme != null)
+                        m_theme.Redraw -= new EventHandler(theme_Redraw);
+                    SetPinSpacing();
+                    m_theme = value;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_theme.Redraw -= new EventHandler(theme_Redraw);
+                m_subGraphPinBrush.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        public D2dBrush SubGraphPinBrush
+        {
+            get { return m_subGraphPinBrush; }
+            set
+            {
+                m_subGraphPinBrush.Dispose();
+                m_subGraphPinBrush = value;
+            }
+        }
+
+        /// <summary>
+        /// Is called when the content of the graph object changes.</summary>
+        public override void OnGraphObjectChanged(object sender, ItemChangedEventArgs<object> e)
+        {
+            if (e.Item.Is<ICircuitElementType>())
+                Invalidate(e.Item.Cast<ICircuitElementType>());
+        }
+              
+        /// <summary>
+        /// Invalidates cached info for element type name</summary>
+        /// <param name="elementType">Element type to invalidate</param>
+        public void Invalidate(ICircuitElementType elementType)
+        {
+            m_elementTypeCache.Remove(elementType);
+            OnRedraw();
+        }
+
+        /// <summary>
+        /// Draws a graph node</summary>
+        /// <param name="element">Element to draw</param>
+        /// <param name="style">Diagram drawing style</param>
+        /// <param name="g">Graphics object</param>
+        public override void Draw(TElement element, DiagramDrawingStyle style, D2dGraphics g)
+        {
+            DiagramDrawingStyle cusomStyle = GetCustomStyle(element);
+            if (cusomStyle != DiagramDrawingStyle.None)
+                style = cusomStyle; // custom style overrides a regular style 
+
+            switch (style)
+            {
+                case DiagramDrawingStyle.Normal:
+                    Draw(element, g, false);
+                    break;
+                case DiagramDrawingStyle.Selected:
+                case DiagramDrawingStyle.LastSelected:
+                case DiagramDrawingStyle.Hot:
+                case DiagramDrawingStyle.DropTarget:
+                case DiagramDrawingStyle.DragSource:
+                default:
+                    Draw(element, g, false);
+                    DrawOutline(element, m_theme.GetOutLineBrush(style), g);
+                    break;
+ 
+                case DiagramDrawingStyle.Ghosted:
+                case DiagramDrawingStyle.Hidden:
+                    DrawGhost(element, g);
+                    break;
+            }            
+        }
+
+        /// <summary>
+        /// Draws a graph edge</summary>
+        /// <param name="edge">Edge to draw</param>
+        /// <param name="style">Diagram drawing style</param>
+        /// <param name="g">Graphics object</param>
+        public override void Draw(TWire edge, DiagramDrawingStyle style, D2dGraphics g)
+        {
+            TPin inputPin = edge.ToRoute;
+            TPin outputPin = edge.FromRoute;
+            if (RectangleSelectsWires && style == DiagramDrawingStyle.LastSelected) // last selected is not well defined in multi-edge selection   
+                style = DiagramDrawingStyle.Selected;
+             
+            D2dBrush pen = (style == DiagramDrawingStyle.Normal) ? GetPen(inputPin) : m_theme.GetOutLineBrush(style);
+            if (edge.Is<IEdgeStyleProvider>())
+                DrawEdgeUsingStyleInfo(edge.Cast<IEdgeStyleProvider>(), pen, g);                       
+            else
+                DrawWire(edge.FromNode, outputPin, edge.ToNode, inputPin, g, pen);
+        }
+
+        private void DrawEdgeUsingStyleInfo(IEdgeStyleProvider edgeStyleProvider, D2dBrush pen, D2dGraphics g)
+        {
+            foreach (var edgeInfo in edgeStyleProvider.GetData(this, WorldOffset(m_graphPath), g))
+            {
+                if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Bezier)
+                {
+                    var curve = edgeInfo.EdgeData.As<BezierCurve2F>();
+                     g.DrawBezier(curve.P1, curve.P2, curve.P3, curve.P4, pen, edgeInfo.Thickness);
+                }
+                else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Line)
+                {
+                    var line = edgeInfo.EdgeData.As<PointF[]>();
+                      if (line != null)
+                          g.DrawLine(line[0], line[1], pen, edgeInfo.Thickness);
+                  }
+                else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Polyline)
+                {
+                    var lines = edgeInfo.EdgeData.As<PointF[]>();
+                    if (lines != null)
+                        g.DrawLines(lines, pen, edgeInfo.Thickness);
+                }
+                else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.BezierSpline)
+                {
+                    var curves = edgeInfo.EdgeData.As<IEnumerable<BezierCurve2F>>();
+                    foreach (var curve in curves)
+                    {
+                        g.DrawBezier(curve.P1, curve.P2, curve.P3, curve.P4, pen, edgeInfo.Thickness);
+                    }
+                }
+                else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.None)
+                     return;
+ 
+            }
+        }
+
+  
+        /// <summary>
+        /// Get group pin position in group local space
+        /// </summary>
+        /// <param name="groupPin"></param>
+        /// <param name="group">owner</param>/param>
+        /// <param name="inputSide"></param>
+        /// <param name="g">Graphics object</param>
+        /// <returns></returns>
+        public Point GetGroupPinPosition(ICircuitGroupType<TElement, TWire, TPin> group, ICircuitGroupPin<TElement> groupPin,  bool inputSide, D2dGraphics g)
+        {
+
+            if (inputSide) // group pin box on the left edge
+            {
+                Point op = group.Bounds.Location;
+                op.Y += GetPinOffset(group.Cast<TElement>(), groupPin.Index, true);
+                return op;
+            }
+            else
+            {
+                ElementTypeInfo info = GetElementTypeInfo(group.Cast<TElement>(), g);
+                Point ip = group.Bounds.Location;
+                ip.X += info.Size.Width;
+                ip.Y += GetPinOffset(group.Cast<TElement>(), groupPin.Index, false); ;
+                return ip;
+
+            }
+        }
+
+        /// <summary>
+        /// Get  pin position in element local space.</summary>
+        public Point GetPinPosition(TElement element,  int pinIndex, bool inputSide, D2dGraphics g)
+        {
+            if (inputSide) // group pin box on the left edge
+            {
+                Point op = element.Bounds.Location;
+                op.Y += GetPinOffset(element, pinIndex, true);
+                return op;
+            }
+            else
+            {
+                ElementTypeInfo info = GetElementTypeInfo(element, g);
+                Point ip = element.Bounds.Location;
+                ip.X += info.Size.Width;
+                ip.Y += GetPinOffset(element, pinIndex, false);
+                return ip;
+
+            }
+        }
+
+        /// <summary>
+        /// Draws a partially defined graph edge</summary>
+        /// <param name="outputElement">Source element, or null</param>
+        /// <param name="outputPin">Source pin, or null</param>
+        /// <param name="inputElement">Destination element, or null</param>
+        /// <param name="inputPin">Destination pin, or null</param>
+        /// <param name="label">Edge label</param>
+        /// <param name="endPoint">Endpoint to substitute for source or destination, if either is null</param>
+        /// <param name="g">Graphics object</param>
+        public override void Draw(
+            TElement outputElement,
+            TPin outputPin,
+            TElement inputElement,
+            TPin inputPin,
+            string label,
+            Point endPoint,
+            D2dGraphics g)
+        {
+            if (inputElement == null || inputPin == null)
+            {
+                // dragging from output to endPoint
+                DrawWire(outputElement, outputPin, endPoint, true, g);
+            }
+            else if (outputElement == null || outputPin == null) 
+            {
+                // dragging from input to endPoint
+                DrawWire(inputElement, inputPin, endPoint, false, g);
+            }
+            else
+            {
+                // routed edge
+                DrawWire(outputElement, outputPin, inputElement, inputPin, g, GetPen(outputPin));
+            }
+        }
+
+        /// <summary>
+        /// Draws a partially defined graph edge</summary>
+        /// <param name="outputElement">Source element, or null</param>
+        /// <param name="outputPin">Source pin, or null</param>
+        /// <param name="inputElement">Destination element, or null</param>
+        /// <param name="inputPin">Destination pin, or null</param>
+        /// <param name="label">Edge label</param>
+        /// <param name="startPoint">Startpoint for source</param>
+        /// <param name="endPoint">Endpoint for source</param>
+        /// <param name="g">Graphics object</param>
+        public override void DrawPartialEdge(
+            TElement outputElement,
+            TPin outputPin,
+            TElement inputElement,
+            TPin inputPin,
+            string label,
+            PointF startPoint,
+            PointF endPoint,
+            D2dGraphics g)
+        {
+            D2dBrush pen = outputPin != null ? GetPen(outputPin) : GetPen(inputPin);
+            var inverse = g.Transform;
+            inverse.Invert();
+
+            PointF start = startPoint;
+            PointF end = endPoint;
+            if (outputPin == null)
+            {
+                start = Matrix3x2F.TransformPoint(inverse, startPoint);
+            }
+
+            if (inputPin == null)
+            {
+                end = Matrix3x2F.TransformPoint(inverse, endPoint);
+            }
+        
+            DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
+            DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
+        }
+
+        /// <summary>
+        /// Gets the bounding rectangle of a circuit element in local space, which is the same as
+        /// world space except for sub-circuits</summary>
+        /// <param name="element">Element to get the bounds for</param>
+        /// <param name="g">Graphics object</param>
+        /// <returns>Rectangle completely bounding the node</returns>
+        public override RectangleF GetBounds(TElement element, D2dGraphics g)
+        {
+            RectangleF result = GetElementBounds(element, g);
+            result.Height += m_pinMargin + m_rowSpacing; // label at bottom
+            return result;                        
+        }
+
+        /// <summary>
+        /// Finds node and/or edge hit by the given rect</summary>
+        /// <param name="graph">Graph to test</param>
+        /// <param name="rect">given rect in graph space</param>
+        /// <param name="g">D2dGraphics object</param>
+        /// <returns>Hit record containing node and/or edge hit by the given rect</returns>
+        public override IEnumerable<object> Pick(
+            IGraph<TElement, TWire, TPin> graph,
+            RectangleF rect,
+            D2dGraphics g)
+        {
+            var pickedNodes = base.Pick(graph, rect, g).ToArray(); // base version picks nodes only
+            if (!RectangleSelectsWires || pickedNodes.Length >0)
+            {
+                if (pickedNodes.Length == 1 && pickedNodes[0].Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                {
+                    var pickedGroup = pickedNodes[0].Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                    var pickedSubItems = PickSubItems(pickedGroup, rect, g).ToArray();
+                    if (pickedSubItems.Length >0) // try to pick the sub-nodes expanded to the lowest level
+                    {
+                        return pickedSubItems;
+                    }
+                }
+                return pickedNodes;
+            }
+
+            List<object> pickedEdges = new List<object>();
+    
+            // only marquee select edges if no nodes are selected
+            if (RectangleSelectsWires )
+            {
+                foreach (TWire edge in graph.Edges)
+                {
+                    RectangleF edgeBounds = GetBounds(edge, g);
+                    if (edgeBounds.IntersectsWith(rect))
+                        pickedEdges.Add(edge);
+                }
+            }
+            return pickedEdges;
+        }
+
+        /// <summary>
+        /// Finds node and/or edge hit by the given point</summary>
+        /// <param name="graph">Graph to test</param>
+        /// <param name="priorityEdge">Graph edge to test before others</param>
+        /// <param name="p">Point to test in graph space</param>
+        /// <param name="g">Graphics object</param>
+        /// <returns>Hit record containing node and/or edge hit by the given point</returns>
+        public override GraphHitRecord<TElement, TWire, TPin> Pick(
+            IGraph<TElement, TWire, TPin> graph, TWire priorityEdge, PointF p, D2dGraphics g)
+        {
+            return Pick(graph.Nodes.Reverse(), graph.Edges, priorityEdge, p, g);         
+        }
+
+
+        /// <summary>
+        /// Finds node and/or edge hit by the given point</summary>
+        /// <param name="nodes">nodes to test, usually in reverse order of rendering</param>
+        /// <param name="edges">edges to test</param>
+        /// <param name="priorityEdge">Graph edge to test before others</param>
+        /// <param name="p">Point to test in graph space</param>
+        /// <param name="g">D2dGraphics object</param>
+        /// <returns>Hit record containing node and/or edge hit by the given point</returns>
+        public override GraphHitRecord<TElement, TWire, TPin> Pick(
+            IEnumerable<TElement> nodes, IEnumerable<TWire> edges, TWire priorityEdge, PointF p, D2dGraphics g)
+        {
+            TElement pickedElement = null;
+            TPin pickedInput = null;
+            TPin pickedOutput = null;
+            TWire pickedWire = null;
+
+            if (priorityEdge != null &&
+                PickEdge(priorityEdge, p, g))
+            {
+                pickedWire = priorityEdge;
+            }
+            else
+            {
+                foreach (TWire edge in edges)
+                {
+                    if (PickEdge(edge, p, g))
+                    {
+                        pickedWire = edge;
+                        break;
+                    }
+                }
+            }
+
+            Point pickedInputPos =  new Point();
+            Point pickedOutputPos = new Point();
+            foreach (TElement element in nodes)
+            {
+                if (Pick(element, g, p))
+                {
+                    if (pickedElement != null && element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                    {
+                        bool higherPriority = true;
+                        var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                        if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                        {
+                            var pickedGroup = pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                            if (group.Info.PickingPriority <= pickedGroup.Info.PickingPriority)
+                                higherPriority = false;
+                        }
+
+                        if (group.Expanded && higherPriority)
+                        {
+                            pickedElement = element;
+                            pickedInput = PickInput(element, g, p);
+                            pickedOutput = PickOutput(element, g, p);
+                        }
+                    }
+                    else if (pickedElement == null)
+                    {
+                        pickedElement = element;
+                        pickedInput = PickInput(element, g, p);
+                        pickedOutput = PickOutput(element, g, p);
+                    }
+
+                    if (pickedInput != null)
+                        pickedInputPos = GetPinPosition(pickedElement, pickedInput.Index,  true, g);
+                    if (pickedOutput != null)
+                        pickedOutputPos = GetPinPosition(pickedElement, pickedOutput.Index, false, g);
+                }
+            }
+
+            DiagramLabel label = null;
+            var subPick = new Pair<IEnumerable<TElement>, object>();
+            var borderPart = new DiagramBorder(pickedElement);
+            TPin pickedSubInput = null;
+            TPin pickedSubOutput = null;
+
+            if (pickedElement != null) // if an element is picked, further check if its label or expander is picked. They take priority over wire picking.
+            {
+                RectangleF bounds = GetElementBounds(pickedElement, g);
+                var labelBounds = new RectangleF(
+                    bounds.Left, bounds.Bottom + m_pinMargin, bounds.Width, m_rowSpacing);
+
+                label = new DiagramLabel(
+                      new Rectangle((int)labelBounds.Left, (int)labelBounds.Top, (int)labelBounds.Width, (int)labelBounds.Height),
+                      TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
+                if (labelBounds.Contains(p))
+                    return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, label);
+               
+
+                if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                {
+                    var hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
+                    if (hitRecord != null)
+                        return hitRecord;
+                    
+                    // check title bar
+                    var titkeBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight );
+                    if (titkeBar.Contains(p))
+                        return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
+         
+
+                    if (pickedWire == null && pickedOutput == null && pickedInput==null) // check border lastly
+                    {
+                        var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
+                        if(border.Contains(p))
+                            borderPart.Border = DiagramBorder.BorderType.Left;
+                        else
+                        {
+                            border.Offset(bounds.Width, 0);
+                            if (border.Contains(p))
+                                borderPart.Border = DiagramBorder.BorderType.Right;
+                            else
+                            {
+                                border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
+                                if (border.Contains(p))
+                                    borderPart.Border = DiagramBorder.BorderType.Top;
+                                else
+                                {
+                                    border.Offset(0, bounds.Height);
+                                    if (border.Contains(p))
+                                        borderPart.Border = DiagramBorder.BorderType.Bottom;
+                                }
+                            }
+                        }                                       
+                    }
+
+                    subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g, 
+                        out pickedSubInput, out pickedSubOutput);                 
+                }
+            }
+
+            if (pickedSubInput != null)
+            {
+                pickedInput =  pickedSubInput;
+                pickedInputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubInput.Index, true, g);
+                pickedInputPos.Offset(ParentWorldOffset(subPick.First));
+            }
+            if (pickedSubOutput != null)
+            {
+                pickedOutput = pickedSubOutput;
+                pickedOutputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubOutput.Index, false, g);
+                pickedOutputPos.Offset(ParentWorldOffset(subPick.First));
+            }
+
+            var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement, pickedWire, pickedOutput, pickedInput);
+            if (pickedElement != null && pickedWire == null && pickedOutput == null && pickedInput == null)
+                result.Part = borderPart.Border == DiagramBorder.BorderType.None ? null : borderPart;
+            result.DefaultPart = label;
+            result.SubItem = subPick.First ==null? null: subPick.First.First();
+            result.SubPart = subPick.Second;
+            result.ToRoutePos = pickedInputPos;
+            result.FromRoutePos = pickedOutputPos;
+          
+            result.HitPathInversed = subPick.First;
+            return result;
+        }
+
+        protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g)
+        {            
+            ElementTypeInfo fromInfo = GetElementTypeInfo(edge.FromNode, g);
+            TPin inputPin = edge.ToRoute;
+            TPin outputPin = edge.FromRoute;
+
+            Point p1 = edge.FromNode.Bounds.Location;
+            int x1 = p1.X + fromInfo.Size.Width;
+            int y1 = p1.Y + GetPinOffset(edge.FromNode, outputPin.Index, false);
+
+            Point p2 = edge.ToNode.Bounds.Location;
+            int x2 = p2.X;
+            int y2 = p2.Y + GetPinOffset(edge.ToNode, inputPin.Index, true);
+
+            float tanLen = GetTangentLength(x1, x2);
+
+            BezierCurve2F curve = new BezierCurve2F(
+                new Vec2F(x1, y1),
+                new Vec2F(x1 + tanLen, y1),
+                new Vec2F(x2 - tanLen, y2),
+                new Vec2F(x2, y2));
+
+            Vec2F hitPoint = new Vec2F();
+            return BezierCurve2F.Pick(curve, new Vec2F(p.X,p.Y), m_theme.PickTolerance, ref hitPoint);
+        }
+
+                
+        private void theme_Redraw(object sender, EventArgs e)
+        {
+            m_elementTypeCache.Clear(); // invalidate cached info
+            OnRedraw();
+        }
+
+        private void Draw(TElement element, D2dGraphics g, bool outline)
+        {            
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            Point p = element.Bounds.Location;
+            p.Offset(WorldOffset(m_graphPath));
+            
+            RectangleF bounds = new RectangleF(p, info.Size);
+            ICircuitElementType type = element.Type;
+
+            bool groupExpanded = false;
+            ICircuitGroupType<TElement, TWire, TPin> group = null;
+            if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            {
+                group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                groupExpanded = group.Expanded;
+            }
+
+            // Check if the user is actively connecting wires. If there are no connections that can
+            //  be made to this element, then draw it as a ghost.
+            if (RouteConnecting != null)
+            {
+                bool atLeastOneValidPin = false;
+                var allPins = groupExpanded ?
+                    group.Inputs.Concat(group.Info.HiddenInputPins).Concat(group.Outputs).Concat(group.Info.HiddenOutputPins)
+                    : type.Inputs.Concat(type.Outputs);
+                foreach (TPin pin in allPins)
+                {
+                    EdgeRouteDrawMode pinDrawMode = GetEdgeRouteDrawMode(element, pin);
+                    if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
+                    {
+                        atLeastOneValidPin = true;
+                        break;
+                    }
+                }
+                if (!atLeastOneValidPin)
+                {
+                    DrawGhost(element, g);
+                    if (!groupExpanded)
+                        return;
+                }
+            }
+
+            float scaleX = g.Transform.M11; // assume no rotation.
+            bool useRoundedRect = (scaleX * m_elementBody.RadiusX) > 3.0f;
+            bool drawPins =  !groupExpanded  && (scaleX * m_pinSize) > DetailsThresholdSize;
+            bool drawText = (m_theme.TextFormat.FontHeight * scaleX) > DetailsThresholdSize;
+            int titleHeight = m_rowSpacing + m_pinMargin;
+
+            m_elementBody.Rect = bounds;
+            var fillBrush = m_theme.GetCustomOrDefaultBrush(type.Name) as D2dLinearGradientBrush;
+            fillBrush.StartPoint = bounds.Location;
+            fillBrush.EndPoint = new PointF(bounds.Left, bounds.Bottom);
+            if (useRoundedRect)
+            {
+                g.FillRoundedRectangle(m_elementBody, fillBrush);
+                if (outline)
+                    g.DrawRoundedRectangle(m_elementBody, m_theme.OutlineBrush);
+            }
+            else
+            {
+                g.FillRectangle(bounds, fillBrush);
+                if (outline)
+                    g.DrawRectangle(bounds, m_theme.OutlineBrush);
+            }
+            g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
+            
+            if (drawPins)
+            {                                                
+                int pinY = titleHeight + m_pinMargin;
+                foreach (TPin inputPin in type.Inputs)
+                {
+                    EdgeRouteDrawMode pinDrawMode = GetEdgeRouteDrawMode(element, inputPin);
+                    if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
+                    {
+                        var pen = GetPen(inputPin);
+                        g.DrawRectangle(new RectangleF(p.X, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen, 1.0f);
+                        var pinText = inputPin.Name;
+                        if (!groupExpanded)
+                            pinText = TruncatePinText(pinText);
+
+                        g.DrawText(pinText, m_theme.TextFormat,
+                                   new PointF(p.X + m_pinSize + m_pinMargin, p.Y + pinY), m_theme.TextBrush);
+                    }
+                    pinY += m_rowSpacing;
+                }
+
+                pinY = titleHeight + m_pinMargin;
+                int i = 0;
+                foreach (TPin outputPin in type.Outputs)
+                {
+                    EdgeRouteDrawMode pinDrawMode = GetEdgeRouteDrawMode(element, outputPin);
+                    if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
+                    {
+                        var pen = GetPen(outputPin);
+                        g.DrawRectangle(
+                            new RectangleF(bounds.Right - m_pinSize, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize),
+                            pen, 1.0f);
+                        var pinText = outputPin.Name;
+                        if (!groupExpanded)
+                            pinText = TruncatePinText(pinText);
+
+                        g.DrawText(pinText, m_theme.TextFormat, new PointF(p.X + info.OutputLeftX[i], p.Y + pinY),
+                                   m_theme.TextBrush);
+                    }
+                    pinY += m_rowSpacing;
+                    i++;
+                }
+            }
+
+            Image image = type.Image;
+            if (image != null)
+            {
+                var bitMap = m_theme.GetBitmap(type);
+                if (bitMap == null)
+                {
+                    m_theme.RegisterBitmap(type, image);
+                    bitMap = m_theme.GetBitmap(type);
+                }
+                if (bitMap != null)
+                    g.DrawBitmap(bitMap, new RectangleF(p.X + info.Interior.X, p.Y + info.Interior.Y, info.Interior.Width, info.Interior.Height), 1, D2dBitmapInterpolationMode.Linear);
+
+            }
+            
+            if (drawText)
+            {
+                g.DrawText(type.Name, m_theme.TextFormat, new PointF(p.X + m_pinMargin + 2* ExpanderSize + 1, p.Y + m_pinMargin + 1), m_theme.TextBrush);
+                string name = element.Name;
+                if (!string.IsNullOrEmpty(name))
+                {
+                    RectangleF alignRect = new RectangleF(bounds.Left - MaxNameOverhang, bounds.Bottom + m_pinMargin, bounds.Width + 2 * MaxNameOverhang, m_rowSpacing);
+                    var textAlignment = m_theme.TextFormat.TextAlignment;
+                    m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
+                    g.DrawText(name, m_theme.TextFormat, alignRect, m_theme.TextBrush);
+                    m_theme.TextFormat.TextAlignment = textAlignment;
+                }
+            }
+
+            if (element.Is<IReference<TElement>>())
+                g.DrawLink(p.X + bounds.Width -  2 * ExpanderSize, p.Y + 2 * m_pinMargin + 1, ExpanderSize, m_theme.HotBrush);
+
+            if (group != null)
+            {
+                RectangleF expanderRect = GetExpanderRect(p);
+                g.DrawExpander(expanderRect.X, expanderRect.Y, expanderRect.Width, m_theme.OutlineBrush, group.Expanded);
+
+                if (group.Expanded)
+                {
+                    DrawExpandedGroup(element, g);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Truncates very long pin names into the form "prefix...suffix" where prefix and suffix are the 
+        /// beginning and ending substrings of the original name.
+        /// </summary>
+        /// <param name="pinText">Original pin name</param>
+        /// <returns>Original pin name if it is less than MaxCollapsedGroupPinNameLength, otherwise the 
+        /// truncated version</returns>
+        private string TruncatePinText(string pinText)
+        {
+            if (pinText.Length < MaxCollapsedGroupPinNameLength) return pinText;
+
+            var sb = new StringBuilder();
+            sb.Append(pinText.Substring(0, m_truncatedPinNameSubstringLength));
+            sb.Append("...");
+            sb.Append(pinText.Substring(pinText.Length - m_truncatedPinNameSubstringLength));
+            return sb.ToString();
+        }
+
+        protected void DrawExpandedGroup(TElement element,  D2dGraphics g)
+        {
+            m_graphPath.Push(element);
+            var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+             DrawExpandedGroupPins(element, g);
+
+            // ensure to draw the drag target first,  prevent it from hiding the drag sources 
+            var subNodes = group.SubNodes.ToArray();
+            for (int i = 0; i < subNodes.Count(); ++i)
+            {
+                var subNode = subNodes[i];
+                DiagramDrawingStyle customStyle = GetCustomStyle(subNode);
+                if (customStyle == DiagramDrawingStyle.DropTarget)
+                {
+                    subNodes[i] = subNodes[0];
+                    subNodes[0] = subNode;
+                }
+            }
+
+            foreach (var subNode in subNodes)
+            {
+                DiagramDrawingStyle customStyle = GetCustomStyle(subNode);
+                if (customStyle == DiagramDrawingStyle.None)
+                {
+                    if (GetStyle != null)
+                        Draw(subNode, GetStyle(subNode), g);
+                    else
+                        Draw(subNode, g, false);
+                }
+                else
+                Draw(subNode, customStyle, g);
+            }
+
+            // draw sub-edges after recursively draw sub-nodes
+            foreach (var subEdge in group.SubEdges)
+                Draw(subEdge, DiagramDrawingStyle.Normal, g);
+
+            m_graphPath.Pop();
+        }
+
+        /// <summary>
+        /// Gets the pin drawing mode for given element and its pin</summary>
+        /// <param name="element">Element to get the pin drawing mode for</param>
+        /// <param name="pin">Pin to get the pin drawing mode for</param>
+        /// <returns>Drawing mode of edge routes</returns>
+        public override EdgeRouteDrawMode GetEdgeRouteDrawMode(TElement element, TPin pin)
+        {
+            // check if the user is actively connecting wires
+            RouteConnectingInfo info = RouteConnecting;
+            if (info != null)
+            {
+                // display the start node and pin prominently
+                if (info.StartNode == element &&
+                    info.StartRoute == pin)
+                    return EdgeRouteDrawMode.CanConnect;
+
+                return info.EditableGraph.CanConnect(info.StartNode, info.StartRoute, element, pin) ?
+                    EdgeRouteDrawMode.CanConnect :
+                    EdgeRouteDrawMode.CannotConnect;
+            }
+
+            return EdgeRouteDrawMode.Normal;
+        }
+
+        /// <summary>
+        /// Returns if the given element is picked by the given point</summary>
+        /// <param name="element"></param>
+        /// <param name="g"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        protected virtual bool Pick(TElement element, D2dGraphics g, PointF p)
+        {
+            RectangleF bounds = GetBounds(element, g);
+            int pickTolerance = m_theme.PickTolerance;
+            bounds.Inflate(pickTolerance, pickTolerance);
+            return bounds.Contains(p.X, p.Y);
+        }
+    
+
+        private void DrawExpandedGroupPins(TElement element, D2dGraphics g)
+        {
+            var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+            if (group.Info.ShowExpandedGroupPins)
+            {
+                Point subOffset = SubGraphOffset(element);
+
+                int x1, y1;
+                foreach (var pin in group.Inputs)
+                {
+                    var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                    // draw group pin box on the left edge
+                    Point op = group.Bounds.Location;
+                    op.Offset(ParentWorldOffset(m_graphPath));
+                    x1 = op.X;
+                    y1 = op.Y + grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + subOffset.Y;
+                    g.DrawRectangle(new RectangleF(x1 - m_pinSize / 2, y1 - m_pinSize / 2, m_pinSize, m_pinSize),
+                                    grpPin.Info.Color, 1.0f, null );
+
+                    // draw virtual link from the subnode to the group pin box when there are incoming wires
+                    if (!grpPin.Info.ExternalConnected && CircuitDefaultStyle.ShowVirtualLinks)
+                    {
+                        Point ip = grpPin.InternalElement.Bounds.Location;
+                        ip.Offset(WorldOffset(m_graphPath));
+                        int y2 = ip.Y + GetPinOffset(grpPin.InternalElement, grpPin.InternalPinIndex, true) ;
+                        int x2 = ip.X;
+
+                        DrawWire(g, SubGraphPinBrush, x1, y1, x2, y2, 1.0f, null);
+                        //DrawLine(g, SubGraphPinBrush, x1, y1, x2, y2, 1.0f, null);
+                    }
+
+                }
+
+                foreach (var pin  in group.Outputs)
+                {
+                    var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                    ElementTypeInfo info = GetElementTypeInfo(element, g);
+
+                    // draw group pin box on the right edge
+                    Point op = group.Bounds.Location;
+                    op.Offset(ParentWorldOffset(m_graphPath));
+                    x1 = op.X + info.Size.Width;
+                    y1 = op.Y + grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + subOffset.Y;
+
+                    g.DrawRectangle(new RectangleF(x1 - m_pinSize / 2, y1 - m_pinSize / 2, m_pinSize, m_pinSize),
+                                    grpPin.Info.Color, 1.0f, null);
+
+                    // draw virtual link from the subnode to the group pin box when there are outgoing wires
+                    if (!grpPin.Info.ExternalConnected && CircuitDefaultStyle.ShowVirtualLinks)
+                    {
+                        info = GetElementTypeInfo(grpPin.InternalElement, g);
+                        Point ip = grpPin.InternalElement.Bounds.Location;
+                        ip.Offset(WorldOffset(m_graphPath));
+                        int y2 = ip.Y + GetPinOffset(grpPin.InternalElement, grpPin.InternalPinIndex, false);
+                        int x2 = ip.X + info.Size.Width;
+
+                        DrawWire(g, SubGraphPinBrush, x2, y2, x1, y1, 1.0f, null);
+                        //DrawLine(g, SubGraphPinBrush, x1, y1, x2, y2, 1.0f, null);
+                    }
+                }
+            }
+        }
+
+        private void DrawGhost(TElement element, D2dGraphics g)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            Point p = element.Bounds.Location;
+            p.Offset(WorldOffset(m_graphPath));
+            Rectangle bounds = new Rectangle(p, info.Size);            
+            m_elementBody.Rect = bounds;
+            g.FillRoundedRectangle(m_elementBody, m_theme.GhostBrush);            
+        }
+
+        private void DrawOutline(TElement element, D2dBrush pen, D2dGraphics g)
+        {            
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            Point p = element.Bounds.Location;
+            RectangleF bounds = new RectangleF(p, info.Size);
+            bounds.Offset(WorldOffset(m_graphPath));
+
+            float scaleX = g.Transform.M11; // assume no rotation.
+            bool useRoundedRect = (scaleX * m_elementBody.RadiusX) > 3.0f;
+            if (useRoundedRect)
+            {
+                m_elementBody.Rect = bounds;
+                g.DrawRoundedRectangle(m_elementBody, pen, 2);
+            }
+            else
+            {
+                g.DrawRectangle(bounds, pen, 2);
+            }
+        }
+
+        /// <summary>
+        /// Find input pin, if any, at given point</summary>
+        /// <param name="element">Element</param>
+        /// <param name="g">Graphics object</param>
+        /// <param name="p">Point to test, in world space</param>
+        /// <returns>Input pin hit by p; null otherwise</returns>
+        private TPin PickInput(TElement element, D2dGraphics g, PointF p)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            return PickPin(element, true, element.Bounds.X, element.Bounds.Location.Y, info, p);
+        }
+
+        /// <summary>
+        /// Find output pin, if any, at given point</summary>
+        /// <param name="element">Element</param>
+        /// <param name="g">Graphics object</param>
+        /// <param name="p">Point to test, in world space</param>
+        /// <returns>Output pin hit by p; null otherwise</returns>
+        private TPin PickOutput(TElement element, D2dGraphics g, PointF p)
+        {
+            //info.Size is larger than element.Bounds and is more accurate (?)
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            int pinX;
+            if (RouteConnecting == null)
+                pinX = element.Bounds.X + info.Size.Width - m_pinSize;
+            else
+                pinX = element.Bounds.X + info.Size.Width / 2;
+            return PickPin(element, false, pinX, element.Bounds.Location.Y, info, p);
+        }
+
+        private TPin PickPin(TElement element, bool inputSide, int pinX, int elementY, ElementTypeInfo info, PointF p)
+        {
+            int pickTolerance = m_theme.PickTolerance;
+            var pins = inputSide ? element.Type.Inputs : element.Type.Outputs;
+            if (RouteConnecting == null || // or for expanded group pins, 
+               (element.Is<ICircuitGroupType<TElement, TWire, TPin>>() && element.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded))
+            {
+                // normal picking rectangles; the user may want to select the circuit element instead, for example
+                int pinIndex = 0;
+                foreach (TPin pin in pins)
+                {
+                    int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                    var normalPinBounds = new RectangleF(pinX, y, m_pinSize, m_pinSize);
+                    normalPinBounds.Inflate(pickTolerance, pickTolerance);
+                    if (normalPinBounds.Contains(p.X, p.Y))
+                        return pin;
+                    ++pinIndex;
+                }
+            }
+            else
+            {
+                // Use Extra-large picking rectangles for the pins since the user is actively making a connection.
+                // info.Size.Width is larger (?) and more accurate for the width than element.Bounds.
+                int pinIndex = 0;
+                foreach (TPin pin in pins)
+                {
+                    int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                    ++pinIndex;
+                    EdgeRouteDrawMode drawMode = GetEdgeRouteDrawMode(element, pin);
+                    if (drawMode == EdgeRouteDrawMode.CanConnect)
+                    {
+                        var currentBounds = new RectangleF(pinX, y, info.Size.Width, m_pinSize);
+                        currentBounds.Inflate(pickTolerance, pickTolerance);
+                        if (currentBounds.Contains(p.X, p.Y))
+                            return pin;
+                    }
+                }
+
+            }
+            return null;
+        }
+
+        // Try to pick the expander on a group element recursively
+        private GraphHitRecord<TElement, TWire, TPin> PickExpander(ICircuitGroupType<TElement, TWire, TPin> pickedElement, PointF p, D2dGraphics g)
+        {
+            var stack = new Stack<TElement>();
+            stack.Push(pickedElement.Cast<TElement>());
+
+            bool goDown = false;
+            do
+            {
+                var current = stack.Peek();
+                var location = current.Bounds.Location;
+                location.Offset(ParentWorldOffset(stack));
+                RectangleF expanderRect = GetExpanderRect(location);
+                expanderRect.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                if (expanderRect.Contains(p))
+                {
+                    var diagExapander = new DiagramExpander(expanderRect);
+
+                    var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement.Cast<TElement>(), diagExapander);
+                    if (stack.Count > 1)
+                    {                    
+                        result.SubItem = current;
+                        result.HitPathInversed = stack;
+                    }
+                    return result;
+                }
+
+                var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                goDown = false;
+                foreach (var child in group.SubNodes.AsIEnumerable<ICircuitGroupType<TElement, TWire, TPin>>())
+                {
+                    // only push in the first child that hits the point                  
+                    var childElement = child.Cast<TElement>();
+                    RectangleF bounds = GetBounds(childElement, g);
+                    bounds.Offset(WorldOffset(stack));
+                    bounds.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                    if (bounds.Contains(p.X, p.Y))
+                    {
+                        stack.Push(child.Cast<TElement>());
+                        goDown = true;
+                        break;
+                    }
+                   
+                }
+            } while (goDown);
+
+            return null;
+        }
+
+        // Try to pick the child element of a group element and the pin of the child element recursively
+        private Pair<IEnumerable<TElement>, object> PickSubItem(ICircuitGroupType<TElement, TWire, TPin> pickedElement, PointF p, D2dGraphics g,
+            out TPin pickedSubInput, out TPin pickedSubOutput)
+        {
+            pickedSubInput = null;
+            pickedSubOutput = null;
+            var result = new Pair<IEnumerable<TElement>, object>();
+            if (!pickedElement.Expanded)
+                return result;
+
+            var stack = new Stack<TElement>();
+            stack.Push(pickedElement.Cast<TElement>());
+
+            var subgroup_stack = new Stack<TElement>();
+            subgroup_stack.Push(pickedElement.Cast<TElement>());
+            
+            bool goDown;
+            do
+            {
+                var current = stack.Peek();            
+                var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                goDown = false;
+                foreach (var child in group.SubNodes)
+                {
+                    // only push in the first child that hits the point                  
+                    RectangleF bounds = GetBounds(child, g);
+                    bounds.Offset(WorldOffset(subgroup_stack));
+                    bounds.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                    if (bounds.Contains(p.X, p.Y))
+                    {
+                        stack.Push(child.Cast<TElement>());
+                        if (child.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                        {
+                            subgroup_stack.Push(child.Cast<TElement>());            
+                            // go down when the child is expanded
+                            goDown = child.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded;
+                            break;
+                        }
+                    }
+
+                }
+            } while (goDown);
+
+            // stack top is the subitem
+            if (stack.Peek() != pickedElement.Cast<TElement>())
+            {
+                var subItem = stack.Peek();
+                result.First = stack;
+
+                // try pick subItem
+                RectangleF bounds = GetBounds(subItem, g);
+                bounds.Offset(ParentWorldOffset(stack));
+                ElementTypeInfo info = GetElementTypeInfo(subItem, g);
+
+                pickedSubInput = PickPin(subItem, true, (int)bounds.X, (int)bounds.Y, info, p);
+                pickedSubOutput = PickPin(subItem, false, (int)bounds.X + info.Size.Width - m_pinSize, (int)bounds.Y, info, p);
+                result.Second = pickedSubInput ?? pickedSubOutput;
+                if (result.Second == null) // check border lastly
+                {
+                    var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
+                    if (border.Contains(p))
+                        result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Left);
+                    else
+                    {
+                        border.Offset(bounds.Width, 0);
+                        if (border.Contains(p))
+                            result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Right);
+                    }
+                }
+            }
+            return result;
+          
+        }
+
+
+        // Try to pick the sub-nodes expanded to the (same) lowest level
+        private IEnumerable<TElement> PickSubItems(ICircuitGroupType<TElement, TWire, TPin> pickedElement, RectangleF rect, D2dGraphics g)
+        {
+            if (!pickedElement.Expanded)
+                return EmptyEnumerable<TElement>.Instance;
+
+            var stack = new Stack<TElement>();
+            stack.Push(pickedElement.Cast<TElement>());
+            
+            var subgroupStack = new Stack<TElement>();
+            subgroupStack.Push(pickedElement.Cast<TElement>());
+
+            bool goDown;
+            do
+            {
+                var current = stack.Pop();
+                var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                ICircuitGroupType<TElement, TWire, TPin> subGroup = null;
+                goDown = false;
+                int hitGroups = 0;
+                foreach (var child in group.SubNodes)
+                {
+                    var visible = child.As<IVisible>();
+                    if (visible != null && !visible.Visible)
+                        continue;
+
+                    // push children that hits the rect                  
+                    RectangleF bounds = GetBounds(child, g);
+                    bounds.Offset(WorldOffset(subgroupStack));
+                    bounds.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                    if (bounds.IntersectsWith(rect))
+                    {
+                        stack.Push(child.Cast<TElement>());
+                        if (child.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                        {
+                            subgroupStack.Push(child.Cast<TElement>());
+                            // go down when only one child is hit, and that child is an expanded group node
+                            if (child.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded)
+                            {
+                                subGroup = child.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                                ++hitGroups;
+                            }
+                           
+                        }
+                    }
+                }
+
+                if (hitGroups == 1)
+                {
+                    stack.Clear();
+                    stack.Push(subGroup.Cast<TElement>());
+                    goDown = true;
+                }
+            } while (goDown);
+            return stack;
+        }
+
+        protected ElementTypeInfo GetElementTypeInfo(TElement element, D2dGraphics g)
+        {
+            // look it up in the cache
+            ICircuitElementType type = element.Type;
+            ElementTypeInfo cachedInfo;
+            if (m_elementTypeCache.TryGetValue(type, out cachedInfo))
+            {
+                if (cachedInfo.numInputs != type.Inputs.Count || cachedInfo.numOutputs != type.Outputs.Count)
+                {
+                    m_elementTypeCache.Remove(type);
+                    Invalidate(type);
+                }
+                else
+                    return cachedInfo;
+            }
+               
+
+            // not in cache, recompute
+            if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            {
+                var group = element.Cast < ICircuitGroupType<TElement, TWire, TPin>>();
+                if (m_elementTypeCache.TryGetValue(group, out cachedInfo))
+                {
+                    if (cachedInfo.numInputs != group.Inputs.Count || cachedInfo.numOutputs != group.Outputs.Count)
+                    {
+                        m_elementTypeCache.Remove(group);
+                        Invalidate(group);
+                    }
+                    else
+                        return cachedInfo;
+                }
+                return GetHierarchicalElementTypeInfo(group,  g);
+            
+            }
+  
+            ElementSizeInfo sizeInfo = GetElementSizeInfo(type, g);
+            var info = new ElementTypeInfo
+            {
+                Size = sizeInfo.Size,
+                Interior = sizeInfo.Interior,
+                OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
+                numInputs = type.Inputs.Count,
+                numOutputs = type.Outputs.Count,
+            };
+
+            m_elementTypeCache.Add(type, info);
+
+            return info;
+        }
+
+        /// <summary>Computes interior and exterior size as well as the x positions of output pins</summary>
+        /// <param name="type">Circuit element type</param>
+        /// <param name="g">Graphics that can be used for measuring strings</param>
+        /// <returns>Element size info; cannot be null</returns>
+        /// <remarks>Clients using customized rendering should override this method
+        /// to adjust sizes accordingly. These sizes are used by drag-from picking.</remarks>
+        protected virtual ElementSizeInfo GetElementSizeInfo(ICircuitElementType type, D2dGraphics g)
+        {     
+            SizeF typeNameSize = g.MeasureText(type.Name, m_theme.TextFormat);
+            int width = (int)typeNameSize.Width + 2 * m_pinMargin + 4 * ExpanderSize + 1;
+
+            IList<ICircuitPin> inputPins = type.Inputs;
+            IList<ICircuitPin> outputPins = type.Outputs;
+            int inputCount = inputPins.Count;
+            int outputCount = outputPins.Count;
+            int minRows = Math.Min(inputCount, outputCount);
+            int maxRows = Math.Max(inputCount, outputCount);
+
+            bool isCollapsedGroup = false;
+            if (type.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            {
+                // If this is a group, it must be collapsed, because expanded groups
+                // are handled by GetHierarchicalElementSizeInfo.
+                isCollapsedGroup = true;
+            }
+
+            int[] outputLeftX = new int[outputCount];
+
+            int height = m_rowSpacing + 2 * m_pinMargin;
+            height += Math.Max(
+                maxRows * m_rowSpacing,
+                minRows * m_rowSpacing + type.InteriorSize.Height - m_pinMargin);
+
+            bool imageRight = true;
+            for (int i = 0; i < maxRows; i++)
+            {
+                double rowWidth = 2 * m_pinMargin;
+                if (inputCount > i)
+                {
+                    var pinText = inputPins[i].Name;
+                    if (isCollapsedGroup)
+                        pinText = TruncatePinText(pinText);
+                    SizeF labelSize = g.MeasureText(pinText, m_theme.TextFormat);
+                    rowWidth += labelSize.Width + m_pinSize + m_pinMargin;
+                }
+                else
+                {
+                    imageRight = false;
+                }
+            
+
+                if (outputCount > i)
+                {
+                    var pinText = outputPins[i].Name;
+                    if (isCollapsedGroup)
+                        pinText = TruncatePinText(pinText);
+                    SizeF labelSize = g.MeasureText(pinText, m_theme.TextFormat);
+                    outputLeftX[i] = (int)labelSize.Width;
+                    rowWidth += labelSize.Width + m_pinSize + m_pinMargin;
+                }
+
+                    rowWidth += type.InteriorSize.Width;
+                
+                width = Math.Max(width, (int)rowWidth);
+            }
+
+            if (inputCount == outputCount)
+                width = Math.Max(width, type.InteriorSize.Width + 2);
+
+            width = Math.Max(width, MinElementWidth);
+            height = Math.Max(height, MinElementHeight);
+
+            Size size = new Size(width, height);
+            Rectangle interior = new Rectangle(
+                imageRight ? width - type.InteriorSize.Width : 1,
+                height - type.InteriorSize.Height,
+                type.InteriorSize.Width,
+                type.InteriorSize.Height);
+
+            for (int i = 0; i < outputLeftX.Length; i++)
+                outputLeftX[i] = width - m_pinMargin - m_pinSize - outputLeftX[i];                
+
+            return new ElementSizeInfo(size, interior, outputLeftX);
+        }
+
+        private ElementTypeInfo GetHierarchicalElementTypeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
+        {     
+            ElementSizeInfo sizeInfo = GetHierarchicalElementSizeInfo(group, g);
+        
+            var info = new ElementTypeInfo
+            {
+                Size = sizeInfo.Size,
+                Interior = sizeInfo.Interior,
+                OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
+                numInputs = group.Inputs.Count,
+                numOutputs = group.Outputs.Count,
+            };
+
+            m_elementTypeCache.Add(group, info);
+            return info; 
+        }
+
+        protected virtual ElementSizeInfo GetHierarchicalElementSizeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
+        {         
+            if (!group.Expanded) // group element collapased, treat like non-Hierarchical node
+                return GetElementSizeInfo(group, g);
+
+
+           
+            Rectangle grpBounds;
+            if (group.AutoSize)
+            {
+                // measure size of the expanded group element 
+                grpBounds = new Rectangle(); // always start with origin for sub-contents area
+                foreach (var subNode in group.SubNodes)
+                {
+
+                    ElementSizeInfo sizeInfo = subNode.Is<ICircuitGroupType<TElement, TWire, TPin>>()
+                                                   ? GetHierarchicalElementSizeInfo(
+                                                       subNode.Cast
+                                                           <ICircuitGroupType<TElement, TWire, TPin>>(),
+                                                       g)
+                                                   : GetElementSizeInfo(subNode.Type, g);
+
+                    //if this is the first time through, then lets just set the location and size to
+                    //be the current node. Then the box will take the minimum space to hold all of the subnodes.
+                    if (grpBounds.Width == 0 && grpBounds.Height == 0)
+                    {
+                        grpBounds.Location = subNode.Bounds.Location;
+                        grpBounds.Size = sizeInfo.Size;
+                    }
+                    else
+                    {
+                        grpBounds = Rectangle.Union(grpBounds, new Rectangle(subNode.Bounds.Location, sizeInfo.Size));
+                    }                    
+                }
+
+                // compensate group pin positions
+                int yMin = int.MaxValue;
+                int yMax = int.MinValue;
+                foreach (var pin in group.Inputs)
+                {
+                    var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                    if (grpPin.Bounds.Location.Y < yMin)
+                        yMin = grpPin.Bounds.Location.Y;
+                    if (grpPin.Bounds.Location.Y > yMax)
+                        yMax = grpPin.Bounds.Location.Y;
+                }
+                if (yMin == int.MaxValue) // if no visible input pins
+                    yMin = grpBounds.Y;
+
+                foreach (var pin in group.Outputs)
+                {
+                    var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                    if (grpPin.Bounds.Location.Y < yMin)
+                        yMin = grpPin.Bounds.Location.Y;
+                    if (grpPin.Bounds.Location.Y > yMax)
+                        yMax = grpPin.Bounds.Location.Y;
+                }
+                if (yMax == int.MinValue) // if no visible output pins
+                    yMax = grpBounds.Y + grpBounds.Height;
+
+                int width = grpBounds.Width + m_subContentOffset.X;
+                int height = Math.Max(yMax - yMin, grpBounds.Height+ TitleHeight + LabelHeight);
+                if (group.Info.MinimumSize.Width > width)
+                    width = group.Info.MinimumSize.Width;
+                if (group.Info.MinimumSize.Height > height)
+                    height = group.Info.MinimumSize.Height;
+
+
+                grpBounds = Rectangle.Union(grpBounds,
+                                            new Rectangle(grpBounds.Location.X, yMin, width, height ));
+               
+            }
+            else
+            {
+                grpBounds = group.Bounds;
+            }
+           
+
+            // measure offset of right pins
+            int outputCount = group.Outputs.Count();
+            int[] grpOutputLeftX = new int[outputCount];
+            for (int i = 0; i < grpOutputLeftX.Length; i++)
+            {
+                SizeF labelSize = g.MeasureText(group.Outputs[i].Name, m_theme.TextFormat);
+                grpOutputLeftX[i] = grpBounds.Size.Width - m_pinMargin - m_pinSize - (int)labelSize.Width;
+
+            }
+    
+            if (group.AutoSize)
+            {
+                bool includeHMargin = group.Info.MinimumSize.IsEmpty;
+                bool includeVMargin = includeHMargin; 
+                if (!group.Info.MinimumSize.IsEmpty) // MinimumSize is set, 
+                {
+                    if (group.Info.MinimumSize.Width >= grpBounds.Size.Width)
+                        includeHMargin = false;
+                    if (group.Info.MinimumSize.Height >= grpBounds.Size.Height)
+                        includeVMargin = false;
+                }
+                if (includeHMargin || includeVMargin)
+                {
+                    int margin = 2 * m_groupPinExpandedOffset;
+                    return new ElementSizeInfo(new Size(grpBounds.Size.Width + (includeHMargin ? m_subContentOffset.X : 0),
+                                                        grpBounds.Size.Height + +(includeVMargin ? margin : 0)),
+                                               grpBounds,
+                                               grpOutputLeftX);
+                }
+
+                return new ElementSizeInfo(grpBounds.Size,
+                                               grpBounds,
+                                               grpOutputLeftX);
+            }
+
+            return new ElementSizeInfo(
+                grpBounds.Size,
+                new Rectangle(0, 0, 0, 0),
+                grpOutputLeftX);
+
+        }
+      
+        private void DrawWire(
+            TElement outputElement,
+            TPin outputPin,
+            TElement inputElement,
+            TPin inputPin,
+            D2dGraphics g,
+            D2dBrush pen)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(outputElement, g);
+
+            Point op = outputElement.Bounds.Location;
+            op.Offset(WorldOffset(m_graphPath));
+            int x1 = op.X + info.Size.Width;
+            int y1 = op.Y + GetPinOffset(outputElement, outputPin.Index, false);   
+
+            Point ip = inputElement.Bounds.Location;
+            ip.Offset(WorldOffset(m_graphPath));
+            int x2 = ip.X;
+            int y2 = ip.Y + GetPinOffset(inputElement,inputPin.Index, true);
+
+            DrawWire(g, pen, x1, y1, x2, y2, 0.0f, null);            
+        }
+
+        private void DrawWire(
+            TElement element,
+            TPin pin,
+            Point p,
+            bool fromOutput,
+            D2dGraphics g)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+
+            PointF ep = element.Bounds.Location;
+            float x = ep.X;
+            float y = ep.Y + GetPinOffset(element, pin.Index, !fromOutput);
+            if (fromOutput)
+                x += info.Size.Width;
+
+            var inverse = g.Transform;
+            inverse.Invert();
+            PointF end = Matrix3x2F.TransformPoint(inverse, p);
+
+            var pen = GetPen(pin);
+            if (fromOutput)
+                DrawWire(g, pen, x, y, end.X, end.Y, 0, null);
+            else
+                DrawWire(g, pen, end.X, end.Y, x, y, 0, null);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="pen"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="strokeWidth">Use 0 to get the default stroke width</param>
+        /// <param name="strokeStyle">Use null to get default behavior</param>
+        protected void DrawWire(D2dGraphics g, D2dBrush pen, float x1, float y1, float x2, float y2, float strokeWidth, D2dStrokeStyle strokeStyle)
+        {
+            float thickness = strokeWidth == 0 ? EdgeThickness : strokeWidth;
+            float tanLen = GetTangentLength(x1, x2);
+            g.DrawBezier(
+                    new PointF(x1, y1),
+                    new PointF(x1 + tanLen, y1),
+                    new PointF(x2 - tanLen, y2),
+                    new PointF(x2, y2),
+                    pen, thickness, strokeStyle);
+        }
+
+        private void DrawLine(D2dGraphics g, D2dBrush pen, float x1, float y1, float x2, float y2, float strokeWidth, D2dStrokeStyle strokeStyle)
+        {
+            float thickness = strokeWidth == 0 ? EdgeThickness : strokeWidth;  
+            g.DrawLine(
+                    new PointF(x1, y1),                  
+                    new PointF(x2, y2),
+                    pen, thickness, strokeStyle);
+        }
+
+        private float GetTangentLength(float x1, float x2)
+        {
+            const int minTanLen = 32;
+            float tanLen = Math.Abs(x1 - x2) / 2;
+            tanLen = Math.Max(tanLen, minTanLen);
+            return tanLen;
+        }
+
+        private D2dBrush GetPen(TPin pin)
+        {
+            D2dBrush pen = m_theme.GetCustomBrush(pin.TypeName);
+            if (pen == null)
+                pen = m_theme.GhostBrush;
+
+            return pen;
+        }
+
+        public virtual int GetPinOffset(ICircuitElement element, int pinIndex, bool inputSide)
+        {
+            if (inputSide)
+            {
+                if (pinIndex < element.Type.Inputs.Count())
+                {
+                    var pin = element.Type.Inputs[pinIndex];
+                    if (pin.Is<ICircuitGroupPin<TElement>>())
+                    {
+                        var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                        if (group.Expanded)
+                        {
+                            var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                            return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (pinIndex < element.Type.Outputs.Count())
+                {
+                    var pin = element.Type.Outputs[pinIndex];
+                    if (pin.Is<ICircuitGroupPin<TElement>>())
+                    {
+                        var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                        if (group.Expanded)
+                        {
+                            var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                            return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
+                        }
+                    }
+                }
+            }
+
+            return m_rowSpacing + 2 * m_pinMargin + pinIndex * m_rowSpacing + m_pinOffset + m_pinSize / 2;
+        }
+
+        private void SetPinSpacing()
+        {
+            m_pinMargin = m_theme.PinMargin;
+            m_rowSpacing = m_theme.RowSpacing;
+            m_pinOffset = m_theme.PinOffset;
+            m_pinSize = m_theme.PinSize;
+            m_groupPinExpandedOffset = 2 * m_rowSpacing;
+            if (!m_subContentOffseExternalSet)
+                m_subContentOffset = new Point(m_rowSpacing + 4 * m_pinMargin, m_rowSpacing + 4 * m_pinMargin);
+        }
+
+        private RectangleF GetElementBounds(TElement element, D2dGraphics g)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(element, g);
+            return new RectangleF(element.Bounds.Location, info.Size);
+        }
+
+        /// <summary>
+        /// Gets expander rectangle</summary>
+        /// <param name="p">Upper-left corner point of expander</param>
+        /// <returns>Expander rectangle</returns>
+        protected RectangleF GetExpanderRect(PointF p)
+        {
+            return new RectangleF(p.X + m_pinMargin + 1, p.Y + 2 * m_pinMargin + 1, ExpanderSize, ExpanderSize);
+        }
+
+        /// <summary>
+        /// Margin offset to be added to draw all sub-elements when the group is expanded inline
+        /// </summary>
+        public Point SubContentOffset
+        {
+            get { return m_subContentOffset; }
+            set
+            {
+                m_subContentOffset = value;
+                m_subContentOffseExternalSet = true;
+            }
+        }
+
+        /// <summary>
+        /// Vertical(Y) offset to be added to draw group pins on the border of the group when the group is expanded inline
+        /// </summary>
+        public int GroupPinExpandedOffset
+        {
+            get { return m_groupPinExpandedOffset; }
+            set { m_groupPinExpandedOffset = value; }
+        }
+
+        /// <summary>
+        /// Title height at the top of an element
+        /// </summary>
+        public int TitleHeight
+        {
+            get { return m_rowSpacing + m_pinMargin; }
+        }
+
+        /// <summary>
+        /// Label height at the bottom of an element
+        /// </summary>
+        public int LabelHeight
+        {
+            get { return m_rowSpacing + m_pinMargin; }
+        }
+
+        // The upper-left corner of the sub-nodes and floating pinYs defines the origin offset of sub-contents
+        // relative to the containing group. This offset is used when expanding groups, 
+        // so that the contained sub-nodes are drawn within the expanded space
+        private Point SubGraphOffset(TElement element)
+        {
+            Point offset = Point.Empty;
+            if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            {
+                var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                offset = group.Info.Offset;               
+            }
+
+            return offset;
+        }
+
+        /// <summary>
+        /// Accumulated world offset of given drawing stack</summary>
+        public Point WorldOffset(IEnumerable<TElement> graphPath)
+        {
+
+            Point offset = new Point();
+            Point nodeDelta = Point.Empty;
+            foreach (var element in graphPath)
+            {
+                nodeDelta = SubGraphOffset(element);
+                            
+                offset.X += element.Bounds.Location.X + nodeDelta.X;
+                offset.Y += element.Bounds.Location.Y + nodeDelta.Y;
+
+                // nested subgraph contents  offset
+                offset.Offset(m_subContentOffset);
+            }
+
+            return offset;
+                    
+        }
+
+        /// <summary>
+        /// Accumulated world offset of current drawing stack</summary>
+        public Point CurrentWorldOffset
+        {
+            get { return WorldOffset(m_graphPath); }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum length of a pin name on a collapsed circuit group. If a pin name is longer than
+        /// this when the group is collapsed, then the pin name will be truncated and shown with an ellipsis. The
+        /// default is 25 characters and the minimum is 5 characters.</summary>
+        public int MaxCollapsedGroupPinNameLength
+        {
+            get { return m_maxCollapsedGroupPinNameLength; }
+            set
+            {
+                if (value < 5)
+                    throw new ArgumentOutOfRangeException("the minimum value is 5");
+                m_maxCollapsedGroupPinNameLength = value;
+                m_truncatedPinNameSubstringLength = (value - 3) / 2;
+            }
+        }
+
+        /// <summary>
+        /// accumulated offset of next to top drawing stack
+        /// </summary>
+        private Point ParentWorldOffset(IEnumerable<TElement> graphPath)
+        {
+
+            var offset = new Point();
+            Point node_delta = Point.Empty;
+
+            foreach (var element in graphPath.Skip(1)) // m_graphPath is a stack, top item is the most nested 
+            {
+                node_delta = SubGraphOffset(element);
+
+                offset.X += element.Bounds.Location.X + node_delta.X;
+                offset.Y += element.Bounds.Location.Y + node_delta.Y;
+
+                // nested subgraph contents  offset
+                int margin = m_rowSpacing + 4 * m_pinMargin;
+                offset.Offset(margin, margin);
+            }
+
+            return offset;
+           
+        }
+
+        private void DocumentRegistryOnDocumentRemoved(object sender, ItemRemovedEventArgs<IDocument> itemRemovedEventArgs)
+        {
+            m_cachePerDocument.Remove(itemRemovedEventArgs.Item);
+        }
+
+        private void DocumentRegistryOnActiveDocumentChanging(object sender, EventArgs eventArgs)
+        {
+            if (m_documentRegistry.ActiveDocument != null)
+                m_cachePerDocument[m_documentRegistry.ActiveDocument] = m_elementTypeCache;
+        }
+
+        private void DocumentRegistryOnActiveDocumentChanged(object sender, EventArgs eventArgs)
+        {
+            if (m_documentRegistry.ActiveDocument == null ||
+                !m_cachePerDocument.TryGetValue(m_documentRegistry.ActiveDocument, out m_elementTypeCache))
+            {
+                m_elementTypeCache = new Dictionary<ICircuitElementType, ElementTypeInfo>();
+            }
+        }
+
+        #region Private Classes
+
+        /// <summary>
+        /// Class to hold cached element type layout, in pixels (or DIPs)</summary>
+        protected class ElementTypeInfo
+        {
+            public Size Size;
+            public Rectangle Interior;
+            public int[] OutputLeftX;
+
+            // The following are properties of the ICircuitElementType that reflect info in the cached object
+            // If any of these differ from the cached object the cached object should be invalidated so it can be re-drawn to reflect these changes.
+            public int numInputs;
+            public int numOutputs;
+        }
+
+        /// <summary>
+        /// Size info for a CircuitElement type</summary>
+        public class ElementSizeInfo
+        {
+            /// <summary>
+            /// Constructor for gathering size information, in pixels (or DIPs)</summary>
+            /// <param name="size">Element size in pixels</param>
+            /// <param name="interior">Element interior rectangle in pixels</param>
+            /// <param name="outputLeftX">Horizontal offset of output pins in pixels</param>
+            public ElementSizeInfo(Size size, Rectangle interior, IEnumerable<int> outputLeftX)
+            {
+                m_size = size;
+                m_interior = interior;
+                m_outputLeftX = outputLeftX;
+            }
+
+            /// <summary>
+            /// Gets the size in pixels</summary>
+            public Size Size { get { return m_size; } }
+
+            /// <summary>
+            /// Gets the interior rectangle in pixels</summary>
+            public Rectangle Interior { get { return m_interior; } }
+
+            /// <summary>
+            /// Gets the horizontal offset of output pins in pixels</summary>
+            public IEnumerable<int> OutputLeftX { get { return m_outputLeftX; } }
+
+            private readonly Size m_size;
+            private readonly Rectangle m_interior;
+            private readonly IEnumerable<int> m_outputLeftX;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Size of category expanders in pixels</summary>
+        protected const int ExpanderSize = GdiUtil.ExpanderSize;
+        private D2dBrush m_subGraphPinBrush;
+ 
+        private D2dRoundedRect m_elementBody = new D2dRoundedRect();
+        private D2dDiagramTheme m_theme;
+
+        private int m_rowSpacing;
+        private int m_pinSize = 8;
+        private int m_pinOffset;
+        private int m_pinMargin = 2;
+        private Point m_subContentOffset;
+        private bool m_subContentOffseExternalSet;
+
+
+        private int m_groupPinExpandedOffset; // the y offset to be added to draw group pins on the border of the group when the group is expanded inline
+
+
+        private Dictionary<ICircuitElementType, ElementTypeInfo> m_elementTypeCache = new Dictionary<ICircuitElementType, ElementTypeInfo>();
+        private readonly Stack<TElement> m_graphPath = new Stack<TElement>(); // current drawing stack
+        private readonly Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>> m_cachePerDocument =
+            new Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>>();
+        private IDocumentRegistry m_documentRegistry;
+
+        private int m_maxCollapsedGroupPinNameLength;
+        private int m_truncatedPinNameSubstringLength;
+
+        private const int MinElementWidth = 4;
+        private const int MinElementHeight = 4;
+        //private const int HighlightingWidth = 3;
+        private const int MaxNameOverhang = 64;
+    }
+}

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6F80048B-E81F-4E06-9438-26C23487777C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sce.Atf.Collada</RootNamespace>
+    <AssemblyName>Atf.Collada</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\MEF\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="AnimationChannel.cs" />
+    <Compile Include="AnimationClip.cs" />
+    <Compile Include="AnimationSampler.cs" />
+    <Compile Include="Collada.cs" />
+    <Compile Include="ColladaResolver.cs" />
+    <Compile Include="ColladaSchemaTypeLoader.cs" />
+    <Compile Include="ColladaXmlPersister.cs" />
+    <Compile Include="Effect.cs" />
+    <Compile Include="Geometry.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="InstanceController.cs" />
+    <Compile Include="InstanceGeometry.cs" />
+    <Compile Include="Mesh.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="schemas\Schema.cs" />
+    <Compile Include="Source.cs" />
+    <Compile Include="SubMesh.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="VisualScene.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="schemas\collada.xsd" />
+    <None Include="schemas\GenSchemaDef.bat" />
+    <EmbeddedResource Include="schemas\xml.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui.OpenGL\Atf.Gui.OpenGL.vs2010.csproj">
+      <Project>{52D35323-1AA1-4205-A1B0-26C5E5E8D543}</Project>
+      <Name>Atf.Gui.OpenGL.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

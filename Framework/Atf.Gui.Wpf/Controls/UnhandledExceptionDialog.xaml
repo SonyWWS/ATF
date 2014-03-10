@@ -1,0 +1,33 @@
+﻿<c:CommonDialog
+    x:Class="Sce.Atf.Wpf.Controls.UnhandledExceptionDialog"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+    xmlns:l="clr-namespace:Sce.Atf.Wpf.Markup"
+    xmlns:b="clr-namespace:Sce.Atf.Wpf"
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="400"
+    Height="400" Width="500"
+    ShowInTaskbar="False"
+    ResizeMode="CanResize">
+
+    <DockPanel Margin="4" LastChildFill="True">
+        <StackPanel Margin="4" DockPanel.Dock="Bottom" >
+            <DockPanel Margin="4" LastChildFill="False">
+                <Button Content="{l:Loc Quit}" Command="{Binding CancelCommand}"
+                        DockPanel.Dock="Right" IsCancel="True"
+                        Style="{StaticResource {x:Static b:Resources.DialogButtonStyleKey}}"/>
+                <Button Content="{l:Loc Continue}" Command="{Binding OkCommand}"
+                        DockPanel.Dock="Right" IsDefault="True"
+                        Style="{StaticResource {x:Static b:Resources.DialogButtonStyleKey}}"/>
+            </DockPanel>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <TextBox DockPanel.Dock="Top" Text="{Binding Message, Mode=OneTime}" IsReadOnly="True" MinHeight="40" TextWrapping="Wrap" />
+        </ScrollViewer>
+    </DockPanel>
+
+</c:CommonDialog>

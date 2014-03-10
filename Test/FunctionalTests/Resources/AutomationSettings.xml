@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings appName="" appVersion="3.0">
+  <block id="Sce.Atf.Applications.AutoDocumentService">
+    <value name="Auto New Document" type="Boolean">False</value>
+    <value name="Auto-load Documents" type="Boolean">False</value>
+  </block>
+  <block id="9533d679-d825-4754-bc64-c468fe102873">
+    <value name="Show Errors" type="Boolean">False</value>
+    <value name="Enabled" type="Boolean">False</value>
+  </block>
+  <block id="18CABE31-4B86-4d10-9CD7-545616055E1B">
+    <value name="Show File Association Dialog" type="Boolean">False</value>
+  </block>
+</settings>

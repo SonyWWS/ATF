@@ -1,0 +1,264 @@
+<SyntaxLanguage Key="Squirrel" LanguageDefinitionVersion="4.0" Secure="False">
+
+  <!-- Macros -->
+  <Macros>
+    <Macro Key="IdentifierMacro" Value="(_ | {AlphaMacro})({WordMacro})*" />
+  </Macros>
+
+  <!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="John Yuill" />
+		<Property Key="Copyright" Value="Copyright (c) Sony Computer Entertainment America.  All rights reserved." />
+	</Properties>
+	
+	<!-- Highlighting Styles -->	
+	<Styles>
+    <Style Key="ObnoxiousStyle" ForeColor="LightGreen" Bold="True" />
+    <Style Key="IdentifierStyle" ForeColor="Gray" />
+    <Style Key="MetaMethodStyle" ForeColor="DarkRed" />
+    <Style Key="FunctionStyle" ForeColor="DarkRed" />
+    <Style Key="ReservedWordStyle" ForeColor="Blue" />
+    <Style Key="OperatorStyle" ForeColor="Black" />
+		<Style Key="NumberStyle" ForeColor="Black" />
+		<Style Key="StringDelimiterStyle" ForeColor="Black" />
+    <Style Key="StringEscapeStyle" ForeColor="Teal" />
+    <Style Key="StringStyle" ForeColor="Teal" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Green" />
+		<Style Key="CommentStyle" ForeColor="Green" Italic="True" />
+	</Styles>
+
+	<!-- States -->
+	<States>
+		<!-- Code -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+
+				<!-- Line Terminators -->
+				<RegexPatternGroup TokenKey="LineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+
+				<!-- Brackets -->
+				<ExplicitPatternGroup Key="OpenParenthesisPatternGroup" TokenKey="OpenParenthesisToken" EndBracket="CloseParenthesisPatternGroup" PatternValue="("  />
+				<ExplicitPatternGroup Key="CloseParenthesisPatternGroup" TokenKey="CloseParenthesisToken" StartBracket="OpenParenthesisPatternGroup" PatternValue=")" />
+				<ExplicitPatternGroup Key="OpenCurlyBracePatternGroup" TokenKey="OpenCurlyBraceToken" EndBracket="CloseCurlyBracePatternGroup" PatternValue="{" />
+				<ExplicitPatternGroup Key="CloseCurlyBracePatternGroup" TokenKey="CloseCurlyBraceToken" StartBracket="OpenCurlyBracePatternGroup" PatternValue="}" />
+				<ExplicitPatternGroup Key="OpenSquareBracePatternGroup" TokenKey="OpenSquareBraceToken" EndBracket="CloseSquareBracePatternGroup" PatternValue="[" />
+				<ExplicitPatternGroup Key="CloseSquareBracePatternGroup" TokenKey="CloseSquareBraceToken" StartBracket="OpenSquareBracePatternGroup" PatternValue="]" />
+
+        <!-- Reserved Words -->
+        <ExplicitPatternGroup TokenKey="ReservedWordToken" Style="ReservedWordStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+          <ExplicitPatterns>
+            break		  case 		  catch 		class 		  clone 		continue
+            default 	delegate 	delete 		do			    else 		  enum      extends
+            for			  foreach   function 	if 			    in 			  local 		resume
+            return 		switch 		this 		  throw 		  try 		  typeof
+            while 		parent 		yield 		constructor vargc 		vargv     vargc
+            instanceof 	static
+          </ExplicitPatterns>
+        </ExplicitPatternGroup>
+
+        <!-- Meta Methods -->
+        <ExplicitPatternGroup TokenKey="MetaMethodToken" Style="MetaMethodStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+          <ExplicitPatterns>
+            _set	_get		_newslot	_delslot	_add		_sub		_mul		_div		_modulo
+            _unm 	_typeof		_cmp		_call		_cloned		_nexti		_tostring	_inherited	_newmember
+          </ExplicitPatterns>
+        </ExplicitPatternGroup>
+
+        <!-- Builtin Functions -->
+        <ExplicitPatternGroup TokenKey="BuiltinFunctionToken" Style="FunctionStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="AutoCorrect">
+          <ExplicitPatterns>
+            array	seterrorhandler	enabledebuginfo	getroottable	assert	print	compilestring	collectgarbage
+            type	getstackinfos	newthread
+            tofloat	tostring	tointeger	tochar	weakref
+            len		slice		find		tolower	toupper
+            rawget	rawset	rawdelete	rawin
+            append	extend	Propertytop	insert	remove	resize	sort	reverse
+            call	pcall	acall	pacall	bindenv
+            instance	getattributes	getclass
+            getstatus	wakeup	ref
+            _version_	_charsize_	_intsize_
+          </ExplicitPatterns>
+        </ExplicitPatternGroup>
+
+        <!-- Functions -->
+        <RegexPatternGroup TokenKey="FunctionToken" Style="FunctionStyle" PatternValue="{IdentifierMacro}" LookAhead="\(" />
+
+        <!-- Operators -->
+        <ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle">
+          <ExplicitPatterns>
+            ++		+=		+		--		-=		-		/=		/		*=		*
+            !=		!		||		|		%=		%		==		=		^		~
+            &lt;-	&lt;=	&lt;	&gt;=	&lt;&lt;	&gt;&gt;&gt;	&gt;&gt;	&gt;	&amp;&amp;	&amp;
+          </ExplicitPatterns>
+        </ExplicitPatternGroup>
+
+        <!-- Punctuation -->
+        <ExplicitPatternGroup TokenKey="PunctuationToken" Style="OperatorStyle">
+          <ExplicitPatterns>
+            .	:	::	'	;
+          </ExplicitPatterns>
+        </ExplicitPatternGroup>
+
+        <!-- null -->
+        <ExplicitPatternGroup TokenKey="NullToken" Style="NumberStyle" PatternValue ="null" LookAhead="{NonWordMacro}" CaseSensitivity="Sensitive" />
+
+        <!-- Booleans -->
+				<ExplicitPatternGroup TokenKey="BooleanToken" Style="NumberStyle" LookAhead="{NonWordMacro}" CaseSensitivity="Sensitive">
+					<ExplicitPatterns>
+						false true
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+
+				<!-- Numbers -->
+				<RegexPatternGroup TokenKey="RealNumberToken" Style="NumberStyle" LookAhead="{NonWordMacro}|\z">
+					<RegexPattern Value="{DigitMacro}* \. {DigitMacro}+ ([Ee] [\+\-]? {DigitMacro}+)?" />
+					<RegexPattern Value="{DigitMacro}+ [Ee] [\+\-]? {DigitMacro}+" />
+				</RegexPatternGroup>
+				<RegexPatternGroup TokenKey="IntegerNumberToken" Style="NumberStyle" PatternValue="{DigitMacro}+ [Ll]?" LookAhead="{NonWordMacro}|\z" />
+
+        <!-- Identifier -->
+        <RegexPatternGroup TokenKey="IdentifierToken" Style="IdentifierStyle" PatternValue="{IdentifierMacro}" />
+
+      </PatternGroups>
+			
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="StringState" />
+				<ChildState Key="VerbatimStringState" />
+				<ChildState Key="CommentState" />
+				<ChildState Key="MultiLineCommentState" />
+			</ChildStates>
+
+    </State>
+
+		<!-- Verbatim Strings -->
+		<State Key="VerbatimStringState" TokenKey="VerbatimStringToken" Style="StringStyle">
+			<!-- Scopes -->
+			<Scopes>
+        <Scope BracketHighlight="True">
+          <ExplicitPatternGroup Type="StartScope" TokenKey="VerbatimStringStartToken" EndBracket="VerbatimStringEndToken" Style="StringDelimiterStyle" PatternValue="@&quot;" />
+          <RegexPatternGroup Type="EndScope" TokenKey="VerbatimStringEndToken" StartBracket="VerbatimStringStartToken" Style="StringDelimiterStyle" PatternValue="\&quot;" />
+        </Scope>
+      </Scopes>
+      <!-- Patterns Groups -->
+      <PatternGroups>
+        <RegexPatternGroup TokenKey="VerbatimStringEscapedQuoteToken" Style="StringEscapeStyle" PatternValue="\&quot;\&quot;" />
+        <RegexPatternGroup TokenKey="VerbatimStringWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+        <RegexPatternGroup TokenKey="VerbatimStringWordToken" PatternValue="\w+" />
+        <RegexPatternGroup TokenKey="VerbatimStringToken" PatternValue="[^(\\\.)\&quot;]+" />
+      </PatternGroups>
+    </State>
+
+    <!-- Strings -->
+    <State Key="StringState" TokenKey="StringToken" Style="StringStyle" >
+      <!-- Scopes -->
+      <Scopes>
+        <Scope BracketHighlight="True">
+          <ExplicitPatternGroup Type="StartScope" TokenKey="StringStartToken" EndBracket="StringEndToken" Style="StringDelimiterStyle" PatternValue="&quot;" />
+          <RegexPatternGroup Type="EndScope" TokenKey="StringEndToken" StartBracket="StringStartToken" Style="StringDelimiterStyle" PatternValue="[\&quot;\n]" />
+        </Scope>
+      </Scopes>
+      <!-- Patterns Groups -->
+      <PatternGroups>
+        <RegexPatternGroup TokenKey="StringEscapedQuoteToken" Style="StringEscapeStyle" PatternValue="\\." />
+        <RegexPatternGroup TokenKey="StringWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+        <RegexPatternGroup TokenKey="StringWordToken" PatternValue="\w+" />
+        <RegexPatternGroup TokenKey="StringToken" PatternValue="[^(\\\.)\&quot;\n]+" />
+      </PatternGroups>
+		</State>
+	
+		<!-- Comments -->
+		<State Key="CommentState" TokenKey="CommentDefaultToken" Style="CommentStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CommentStartToken" Style="CommentDelimiterStyle" PatternValue="//" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentStringEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CommentDefaultToken" PatternValue="{NonLineTerminatorMacro}+" />
+			</PatternGroups>
+		</State>
+
+		<!-- MultiLine Comments -->
+		<State Key="MultiLineCommentState" TokenKey="MultiLineCommentDefaultToken" Style="CommentStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" EndBracket="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="/*" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" StartBracket="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="*/" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="MultiLineCommentWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="MultiLineCommentLineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="MultiLineCommentWordToken" PatternValue="{WordMacro}+" />
+				<RegexPatternGroup TokenKey="MultiLineCommentDefaultToken" PatternValue="[^*]" />
+			</PatternGroups>
+		</State>
+
+  </States>
+
+  <!-- Example Text -->
+	<ExampleText>
+// This is a single line comment
+function tailRecursion(n)
+{
+	if(n>0)
+	{
+		::print( "n="+n+"\n" );
+		return tailRecursion(n-1);
+	}
+}
+
+/* 
+	This is a multi-line comment.
+	Should be familiar!
+*/
+
+local normalString = "This is a normal string. It will not \"embed\" new line characters.";
+
+local verbatimString = @"This is a multiline string.
+It will ""embed"" new line characters.";
+
+print( verbatimString + "\n" );
+print( normalString + "\n" );
+
+class Dummy
+{
+	static threshold = 20;
+	constructor( value ) 
+	{ 
+		if ( value != threshold )
+			print( "Made object with " + value + " != " + threshold + "\n" ); 
+		else
+			print( "Made object with " + value + " == " + threshold + "\n" ); 
+	}
+}
+
+tailRecursion(5);
+
+local myint = 1;
+local myfloat = 2.0;
+local mystring = "three";
+local myarray = [ myint, myfloat, mystring ];
+local mytable = { ["a"] = myint, ["b"] = myfloat, ["c"] = mystring };
+
+foreach( index,value in myarray )
+	print ( "myarray[" + index + "] = " + value + "\n" );
+
+foreach( key,value in mytable )
+	print ( "mytable[" + key + "] = " + value + "\n" );
+	
+local obj1 = Dummy( 10 );
+local obj2 = Dummy( 20 );
+print ( "Threshold = " + Dummy.threshold + "\n" );
+	</ExampleText>
+</SyntaxLanguage>
+

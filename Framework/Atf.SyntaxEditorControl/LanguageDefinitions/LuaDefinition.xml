@@ -1,0 +1,240 @@
+<SyntaxLanguage Key="Lua" LanguageDefinitionVersion="4.0" Secure="True" 
+				xmlns="http://ActiproSoftware/SyntaxEditor/4.0/LanguageDefinition">
+
+	<!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="Actipro Software LLC" />
+		<Property Key="Copyright" Value="Copyright (c) 2001-2006 Actipro Software LLC.  All rights reserved." />
+	</Properties>
+	
+	<!-- Highlighting Styles -->	
+	<Styles>		
+		<Style Key="ReservedWordStyle" ForeColor="Blue" />
+		<Style Key="FunctionStyle" ForeColor="Magenta" />
+		<Style Key="GlobalVariableStyle" ForeColor="Teal" />
+		<Style Key="OperatorStyle" ForeColor="Black" />
+		<Style Key="NumberStyle" ForeColor="Purple" />
+		<Style Key="StringDelimiterStyle" ForeColor="Maroon" />
+		<Style Key="StringDefaultStyle" ForeColor="Maroon" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Green" />
+		<Style Key="CommentURLStyle" ForeColor="Green" UnderlineStyle="Solid" CursorName="Hand" CursorModifierKeys="AnyControl" />
+		<Style Key="CommentTagStyle" ForeColor="Gray" />
+		<Style Key="CommentDefaultStyle" ForeColor="Green" />
+	</Styles>
+
+	<!-- States -->
+	<States>
+		<!-- Code -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<!-- Line Terminators -->
+				<RegexPatternGroup TokenKey="LineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+				<!-- Brackets -->
+				<ExplicitPatternGroup Key="OpenParenthesisPatternGroup" TokenKey="OpenParenthesisToken" PatternValue="(" EndBracket="CloseParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="CloseParenthesisPatternGroup" TokenKey="CloseParenthesisToken" PatternValue=")" StartBracket="OpenParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="OpenCurlyBracePatternGroup" TokenKey="OpenCurlyBraceToken" PatternValue="{" EndBracket="CloseCurlyBracePatternGroup" />
+				<ExplicitPatternGroup Key="CloseCurlyBracePatternGroup" TokenKey="CloseCurlyBraceToken" PatternValue="}" StartBracket="OpenCurlyBracePatternGroup" />
+				<ExplicitPatternGroup Key="OpenSquareBracePatternGroup" TokenKey="OpenSquareBraceToken" PatternValue="[" EndBracket="CloseSquareBracePatternGroup" />
+				<ExplicitPatternGroup Key="CloseSquareBracePatternGroup" TokenKey="CloseSquareBraceToken" PatternValue="]" StartBracket="OpenSquareBracePatternGroup" />
+				<!-- Reserved Words -->
+				<ExplicitPatternGroup TokenKey="ReservedWordToken" Style="ReservedWordStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+					<ExplicitPatterns>
+						and       break     do        else      elseif
+						end       false     for       function  if
+						in        local     nil       not       or
+						repeat    return    then      true      until     while
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Functions -->
+				<ExplicitPatternGroup TokenKey="FunctionToken" Style="FunctionStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+					<ExplicitPatterns>
+						assert collectgarbage dofile error getfenv getmetatable ipairs load loadfile loadstring module next pairs 
+						pcall print rawequal rawget rawset require select setfenv setmetatable tonumber tostring type unpack xpcall
+						coroutine.create coroutine.resume coroutine.running coroutine.status coroutine.wrap coroutine.yield
+						debug.debug debug.getfenv debug.gethook debug.getinfo debug.getlocal debug.getmetatable debug.getregistry
+						debug.getupvalue debug.setfenv debug.sethook debug.setlocal debug.setmetatable debug.setupvalue debug.traceback
+						file:close file:flush file:lines file:read file:seek file:setvbuf file:write 
+						io.close io.flush io.input io.lines io.open io.output io.popen io.read io.tmpfile io.type io.write 
+						math.abs math.acos math.asin math.atan2 math.atan math.ceil math.cosh math.cos math.deg math.exp
+						math.floor math.fmod math.frexp math.huge math.ldexp math.log10 math.log math.max math.min math.modf
+						math.pi math.pow math.rad math.random math.randomseed math.sinh math.sin math.sqrt math.tanh math.tan
+						os.clock os.date os.difftime os.execute os.exit os.getenv os.remove os.rename os.setlocale os.time os.tmpname
+						package.cpath package.loaded package.loadlib package.path package.preload package.seeall 
+						string.byte string.char string.dump string.find string.format string.gmatch string.gsub string.len
+						string.lower string.match string.rep string.reverse string.sub string.upper 
+						table.concat table.insert table.maxn table.remove table.sort
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Global Variable -->
+				<RegexPatternGroup TokenKey="GlobalVariableToken" Style="GlobalVariableStyle" PatternValue="_ [A-Z]+" />
+				<!-- Identifier -->
+				<RegexPatternGroup TokenKey="IdentifierToken" PatternValue="(_ | {AlphaMacro})({WordMacro})*" />
+				<!-- Operators -->
+				<ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle">
+					<ExplicitPatterns>
+						+ - * / % ^ #
+						== = ~= ::=
+						&lt;= &lt; &gt;= &gt;  
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Punctuation -->
+				<ExplicitPatternGroup TokenKey="PunctuationToken">
+					<ExplicitPatterns>
+						... .. . , : ;		
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Numbers -->
+				<RegexPatternGroup TokenKey="RealNumberToken" Style="NumberStyle" LookAhead="{NonWordMacro}|\z">
+					<RegexPattern Value="{DigitMacro}* \. {DigitMacro}+ ([Ee] [\+\-]? {DigitMacro}+)?" />
+					<RegexPattern Value="{DigitMacro}+ [Ee] [\+\-]? {DigitMacro}+" />
+				</RegexPatternGroup>
+				<RegexPatternGroup TokenKey="IntegerNumberToken" Style="NumberStyle" PatternValue="{DigitMacro}+ [Ll]?" LookAhead="{NonWordMacro}|\z" />
+			</PatternGroups>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="SingleQuoteStringState" />
+				<ChildState Key="DoubleQuoteStringState" />
+				<ChildState Key="LongBracketStringState" />
+				<ChildState Key="MultiLineCommentState" />
+				<ChildState Key="CommentState" />
+			</ChildStates>
+		</State>
+		
+		<!-- Single Quote Strings -->
+		<State Key="SingleQuoteStringState" TokenKey="SingleQuoteStringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="SingleQuoteStringStartToken" Style="StringDelimiterStyle" PatternValue="'" />
+					<RegexPatternGroup Type="EndScope" TokenKey="SingleQuoteStringEndToken" Style="StringDelimiterStyle" PatternValue="['\n]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="SingleQuoteStringEscapedCharacterToken" PatternValue="\\." />
+				<RegexPatternGroup TokenKey="SingleQuoteStringWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="SingleQuoteStringWordToken" PatternValue="\w+" />
+				<RegexPatternGroup TokenKey="SingleQuoteStringDefaultToken" PatternValue="[^'\n]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Double Quote Strings -->
+		<State Key="DoubleQuoteStringState" TokenKey="DoubleQuoteStringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="DoubleQuoteStringStartToken" Style="StringDelimiterStyle" PatternValue="&quot;" />
+					<RegexPatternGroup Type="EndScope" TokenKey="DoubleQuoteStringEndToken" Style="StringDelimiterStyle" PatternValue="[\&quot;\n]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="DoubleQuoteStringEscapedCharacterToken" PatternValue="\\." />
+				<RegexPatternGroup TokenKey="DoubleQuoteStringWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="DoubleQuoteStringWordToken" PatternValue="\w+" />
+				<RegexPatternGroup TokenKey="DoubleQuoteStringDefaultToken" PatternValue="[^\&quot;\n]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Long Bracket Strings -->
+		<State Key="LongBracketStringState" TokenKey="LongBracketStringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="LongBracketStringStartToken" Style="StringDelimiterStyle" PatternValue="[[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="LongBracketStringEndToken" Style="StringDelimiterStyle" PatternValue="]]" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="LongBracketStringStartToken" Style="StringDelimiterStyle" PatternValue="[=[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="LongBracketStringEndToken" Style="StringDelimiterStyle" PatternValue="]=]" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="LongBracketStringStartToken" Style="StringDelimiterStyle" PatternValue="[==[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="LongBracketStringEndToken" Style="StringDelimiterStyle" PatternValue="]==]" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="LongBracketStringStartToken" Style="StringDelimiterStyle" PatternValue="[===[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="LongBracketStringEndToken" Style="StringDelimiterStyle" PatternValue="]===]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="LongBracketStringWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="LongBracketStringWordToken" PatternValue="\w+" />
+				<RegexPatternGroup TokenKey="LongBracketStringDefaultToken" PatternValue="[^\]]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Comments -->
+		<State Key="CommentState" TokenKey="CommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CommentStartToken" Style="CommentDelimiterStyle" PatternValue="--" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentStringEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CommentDefaultToken" PatternValue="{NonLineTerminatorMacro}+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- MultiLine Comments -->
+		<State Key="MultiLineCommentState" TokenKey="MultiLineCommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="--[[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="]]" />	
+				</Scope>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="--[=[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="]=]" />	
+				</Scope>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="--[==[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="]==]" />	
+				</Scope>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="--[===[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="]===]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="MultiLineCommentWhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="MultiLineCommentLineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+				<RegexPatternGroup TokenKey="MultiLineCommentWordToken" PatternValue="\w+" />
+				<RegexPatternGroup TokenKey="MultiLineCommentDefaultToken" PatternValue="[^\]]+" />
+			</PatternGroups>
+		</State>
+			
+	</States>
+	
+	<!-- Example Text -->
+	<ExampleText>
+		<![CDATA[
+--[[
+	Sample Lua code
+]]
+x = 10					-- global variable
+do						-- new block
+	local x = x			-- new 'x', with value 10
+	print(x)			--> 10
+	x = x + 1
+	do					-- another block
+		local x = x + 1	-- another 'x'
+		print(x)		--> 12
+	end
+	print(x)			--> 11
+end
+print(x)				--> 10  (the global one)
+print("Complete!")
+		]]>
+	</ExampleText>
+		
+</SyntaxLanguage>

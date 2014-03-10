@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Circuit Editor Sample" context="" translation="Circuit Editor Sample" />
+  <StringItem id="Master" context="this is the name of a command" translation="Master" />
+  <StringItem id="Creates a custom module type from the selection" context="" translation="Creates a custom module type from the selection" />
+  <StringItem id="Unmaster" context="this is the name of a command" translation="Unmaster" />
+  <StringItem id="Expands the last selected custom module" context="" translation="Expands the last selected custom module" />
+  <StringItem id="Master" context="this is the name of a command" translation="Master" />
+  <StringItem id="Unmaster" context="this is the name of a command" translation="Unmaster" />
+  <StringItem id="Can't remove connectors from sub-circuits" context="" translation="Can't remove connectors from sub-circuits" />
+  <StringItem id="Can't use a sub-circuit inside itself" context="" translation="Can't use a sub-circuit inside itself" />
+  <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" context="" translation="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" />
+  <StringItem id="Overwrite / Add" context="" translation="Overwrite / Add" />
+  <StringItem id="Overwrite" context="" translation="Overwrite" />
+  <StringItem id="Add" context="" translation="Add" />
+  <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="Circuit Template File (*.circuit)|*.circuit" />
+  <StringItem id="Input Files" context="" translation="Input Files" />
+  <StringItem id="first" context="as in, 'the first file'" translation="first" />
+  <StringItem id="second" context="as in, 'the second file'" translation="second" />
+  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="structure" />
+  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="structure" />
+  <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="subStream0" />
+  <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="sub-stream 0" />
+  <StringItem id="Create Circuit Programmatically" context="" translation="Create Circuit Programmatically" />
+  <StringItem id="Create Circuit Programmatically" context="" translation="Create Circuit Programmatically" />
+  <StringItem id="Wire Style" context="" translation="Wire Style" />
+  <StringItem id="Circuit Editor" context="" translation="Circuit Editor" />
+  <StringItem id="Default Edge Style" context="" translation="Default Edge Style" />
+  <StringItem id="Show Expanded Group Pins" context="" translation="Show Expanded Group Pins" />
+  <StringItem id="Circuit Editor" context="" translation="Circuit Editor" />
+  <StringItem id="Show group pins when a group is expanded" context="" translation="Show group pins when a group is expanded" />
+  <StringItem id="Show Virtual links" context="" translation="Show Virtual links" />
+  <StringItem id="Circuit Editor" context="" translation="Circuit Editor" />
+  <StringItem id="Show virtual links between group pin and its associated subnodes when a group is expanded" context="" translation="Show virtual links between group pin and its associated subnodes when a group is expanded" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" />
+  <StringItem id="Circuit" context="" translation="Circuit" />
+  <StringItem id="Circuits" context="" translation="Circuits" />
+  <StringItem id="Comment" context="" translation="Comment" />
+  <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="Create a moveable resizable comment on the circuit canvas" />
+  <StringItem id="Text" context="" translation="Text" />
+  <StringItem id="Comment Text" context="" translation="Comment Text" />
+  <StringItem id="Comment Color" context="" translation="Comment Color" />
+  <StringItem id="Comment background color" context="" translation="Comment background color" />
+  <StringItem id="Button" context="" translation="Button" />
+  <StringItem id="On/Off Button" context="" translation="On/Off Button" />
+  <StringItem id="Out" context="" translation="Out" />
+  <StringItem id="Light" context="" translation="Light" />
+  <StringItem id="Light source" context="" translation="Light source" />
+  <StringItem id="In" context="" translation="In" />
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="Speaker" />
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="Speaker" />
+  <StringItem id="In" context="" translation="In" />
+  <StringItem id="And" context="" translation="And" />
+  <StringItem id="Logical AND" context="" translation="Logical AND" />
+  <StringItem id="In1" context="input pin #1" translation="In1" />
+  <StringItem id="In2" context="input pin #2" translation="In2" />
+  <StringItem id="Out" context="" translation="Out" />
+  <StringItem id="Or" context="" translation="Or" />
+  <StringItem id="Logical OR" context="" translation="Logical OR" />
+  <StringItem id="In1" context="input pin #1" translation="In1" />
+  <StringItem id="In2" context="input pin #2" translation="In2" />
+  <StringItem id="Out" context="" translation="Out" />
+  <StringItem id="Sound" context="" translation="Sound" />
+  <StringItem id="Sound Player" context="" translation="Sound Player" />
+  <StringItem id="On" context="" translation="On" />
+  <StringItem id="Reset" context="" translation="Reset" />
+  <StringItem id="Pause" context="" translation="Pause" />
+  <StringItem id="Out" context="" translation="Out" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="Module name" context="" translation="Module name" />
+  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="Unique ID" context="" translation="Unique ID" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="Layer name" context="" translation="Layer name" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="Prototype folder name" context="" translation="Prototype folder name" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample" />
+</StringLocalizationTable>

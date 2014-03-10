@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{91425A90-B0FD-4AE6-9B20-C83BB3E20FBF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DomTreeEditorSample</RootNamespace>
+    <AssemblyName>DomTreeEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ControlPoint.cs" />
+    <Compile Include="HelpAboutCommand.cs" />
+    <Compile Include="Validator.cs" />
+    <Compile Include="Curve.cs" />
+    <Compile Include="EmptyRef.cs" />
+    <Compile Include="UIAnimation.cs" />
+    <Compile Include="TreeView.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="EditingContext.cs" />
+    <Compile Include="UI.cs" />
+    <Compile Include="UIControl.cs" />
+    <Compile Include="UIFont.cs" />
+    <Compile Include="UIForm.cs" />
+    <Compile Include="UIObject.cs" />
+    <Compile Include="UIPackage.cs" />
+    <Compile Include="UIRef.cs" />
+    <Compile Include="UIShader.cs" />
+    <Compile Include="UISprite.cs" />
+    <Compile Include="UITextItem.cs" />
+    <Compile Include="UITexture.cs" />
+    <Compile Include="UITransform.cs" />
+    <Compile Include="PaletteClient.cs" />
+    <Compile Include="Editor.cs" />
+    <Compile Include="TreeLister.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="Resources\About.rtf" />
+    <None Include="Schemas\GenSchemaDef.bat" />
+    <EmbeddedResource Include="Schemas\CurveSchema.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\UISchema.xsd">
+    </EmbeddedResource>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Resources.cs" />
+    <Compile Include="Schemas\UISchema.cs" />
+    <Compile Include="SchemaLoader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.IronPython\Atf.IronPython.vs2010.csproj">
+      <Project>{7F794C24-7A8D-4D21-B443-F03509669F89}</Project>
+      <Name>Atf.IronPython.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\control.png" />
+    <EmbeddedResource Include="Resources\font.png" />
+    <EmbeddedResource Include="Resources\form.png" />
+    <EmbeddedResource Include="Resources\package.png" />
+    <EmbeddedResource Include="Resources\ref.png" />
+    <EmbeddedResource Include="Resources\refEmpty.png" />
+    <EmbeddedResource Include="Resources\shader.png" />
+    <EmbeddedResource Include="Resources\sprite.png" />
+    <EmbeddedResource Include="Resources\text.png" />
+    <EmbeddedResource Include="Resources\texture.png" />
+    <EmbeddedResource Include="Resources\transform.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DefaultLayout1.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

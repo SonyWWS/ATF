@@ -1,0 +1,1 @@
+Libcrashreport_net is developed by Sony's Worldwide Studios' Tools and Technology Group, and is included with permission in Authoring Tools Framework, in binary form.

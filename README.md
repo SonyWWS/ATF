@@ -4,19 +4,6 @@ Authoring Tools Framework (ATF) is a set of C#/.NET components for making tools 
 
 ATF is an open source project. See License.txt.
 
-### Installation ###
-After cloning or unzipping, the root of this zip file will be the root of the Worldwide Studios (WWS) SDK.
-
-The source code can be found at:
-{root of WWS SDK}\components\wws_atf\
-
-The executables, whether compiled yourself or included in this zip file, can be found at:
-{root of WWS SDK}\bin\wws_atf\
-
-The DLLs, whether compiled yourself or included in this zip file, can be found at:
-{root of WWS SDK}\lib\
-Then look for the configuration directory, such as anycpu_dotnet_clr2_release.
-
 
 ### Prerequisites ###
 You must have .NET Framework 4.0 or greater installed in order to run the ATF applications. You can download it here:
@@ -24,18 +11,15 @@ http://www.microsoft.com/en-us/download/details.aspx?id=17851
 
 You must have Windows 7 or later to run the circuit, FSM, statechart, and timeline editors, due to their use of Direct2D.
 
-To use Live Connect, a local network broadcasting service, you must have Bonjour installed. Bonjour is installed with iTunes and some other products. The installers, Bonjour64.msi (for 64-bit Windows) and Bonjour.msi (for 32-bit Windows), can be provided within Sony upon request, and are located in our non-public directory: \wws_atf\NoDistro\ThirdParty\Wws.LiveConnect.
+To use Live Connect, a local network broadcasting service, you must have Bonjour installed. Bonjour is installed with iTunes and some other products. The installers, Bonjour64.msi (for 64-bit Windows) and Bonjour.msi (for 32-bit Windows), can be provided within Sony upon request, and are located in our non-public directory: \NoDistro\ThirdParty\Wws.LiveConnect.
 
 
 ### Getting Started ###
-If your zip file included pre-compiled binaries, then you can find them in the \bin\wws_atf\ directory. For example, TimelineEditor.exe is in:
-\bin\wws_atf\Release.vs2010
-
 Visual Studio C# 2010 solution files and project files are provided.
 
-To try the ATF sample applications, open and build \components\wws_atf\Samples\Samples.vs2010.sln. The sample applications' .exe's are placed in the \bin\wws_atf folder.
+To try the ATF sample applications, open and build \Samples\Samples.vs2010.sln. The sample applications' .exe's are placed in the \bin folder.
 
-To build all the samples, legacy tutorial applications, development tools, and unit tests, open and build \components\wws_atf\Test\Everything.vs2010.sln.
+To build all the samples, development tools, and unit tests, open and build \Test\Everything.vs2010.sln.
 
 
 ### Project Warnings ###

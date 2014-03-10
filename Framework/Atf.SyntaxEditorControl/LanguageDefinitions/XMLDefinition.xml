@@ -1,0 +1,219 @@
+<SyntaxLanguage Key="XML" LanguageDefinitionVersion="4.0" Secure="True" xmlns="http://ActiproSoftware/SyntaxEditor/4.0/LanguageDefinition">
+
+	<!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="Actipro Software LLC" />
+		<Property Key="Copyright" Value="Copyright (c) 2001-2006 Actipro Software LLC.  All rights reserved." />
+	</Properties>
+
+	<!-- Highlighting Styles -->	
+	<Styles>
+		<Style Key="EntityStyle" ForeColor="Red" />
+		<Style Key="TagDelimiterStyle" ForeColor="Blue" />
+		<Style Key="TagNameStyle" ForeColor="Maroon" />
+		<Style Key="TagAttributeStyle" ForeColor="Red" />
+		<Style Key="TagAttributeValueStyle" ForeColor="Blue" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Green" />
+		<Style Key="CommentDefaultStyle" ForeColor="Green" />
+		<Style Key="ProcessingInstructionDelimiterStyle" ForeColor="Blue" />
+		<Style Key="ProcessingInstructionDefaultStyle" ForeColor="Magenta" />
+		<Style Key="DeclarationDelimiterStyle" ForeColor="Blue" />
+		<Style Key="DeclarationDefaultStyle" ForeColor="Magenta" />
+		<Style Key="CDATADelimiterStyle" ForeColor="Blue" />
+		<Style Key="CDATADefaultStyle" ForeColor="Gray" />
+	</Styles>
+
+	<!-- Macros -->	
+	<Macros>
+		<!-- Redefine word macros to include hyphens -->
+		<Macro Key="WordMacro" Value="[a-zA-Z_0-9\-]" />
+		<Macro Key="NonWordMacro" Value="[^a-zA-Z_0-9\-]" />
+		<!-- Tag name macro to include hyphens and colons -->
+		<Macro Key="TagNameMacro" Value="[a-zA-Z_0-9\-:]" />
+	</Macros>
+	
+	<!-- States -->
+	<States>
+		<!-- Text -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Entities -->
+				<RegexPatternGroup TokenKey="EntityToken" Style="EntityStyle" PatternValue="&amp; {WordMacro}+ ;?" />
+				<!-- Identifier -->
+				<RegexPatternGroup TokenKey="IdentifierToken" PatternValue="{AlphaMacro}({WordMacro})*" />
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+			</PatternGroups>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="EndTagState" />
+				<ChildState Key="CommentState" />
+				<ChildState Key="CDATAState" />
+				<ChildState Key="DeclarationState" />
+				<ChildState Key="ProcessingInstructionState" />
+				<ChildState Key="StartTagState" />
+			</ChildStates>
+		</State>
+		
+		<!-- Start Tags -->
+		<State Key="StartTagState" TokenKey="StartTagDefaultToken" Style="TagNameStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="StartTagStartToken" Style="TagDelimiterStyle" PatternValue="&lt;" />
+					<RegexPatternGroup Type="EndScope" TokenKey="StartTagEndToken" Style="TagDelimiterStyle" PatternValue="/? &gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="StartTagAttributeState" />
+			</ChildStates>
+		</State>
+		
+		<!-- Start Tag Attributes -->
+		<State Key="StartTagAttributeState" TokenKey="StartTagDefaultToken" Style="TagAttributeStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<RegexPatternGroup Type="StartScope" TokenKey="StartTagNameToken" Style="TagNameStyle" PatternValue="{LineTerminatorWhitespaceMacro}* {TagNameMacro}+ {LineTerminatorWhitespaceMacro}*" />
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Brackets -->
+				<RegexPatternGroup TokenKey="StartTagAttributeToken" Style="TagAttributeStyle" LookAhead="{NonWordMacro}|\z" PatternValue="{WordMacro}+" />
+			</PatternGroups>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="StartTagAttributeStringValueState" />
+				<ChildState Key="StartTagAttributeValueState" />
+			</ChildStates>
+		</State>
+		
+		<!-- Start Tag Attribute Values -->
+		<State Key="StartTagAttributeValueState" TokenKey="StartTagAttributeValueDefaultToken" Style="TagAttributeValueStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<RegexPatternGroup Type="StartScope" TokenKey="StartTagAttributeValueStartToken" Style="TagAttributeValueStyle" PatternValue="= {LineTerminatorWhitespaceMacro}*" />
+					<RegexPatternGroup Type="EndScope" TokenKey="StartTagAttributeValueEndToken" Style="TagAttributeValueStyle" PatternValue="{LineTerminatorWhitespaceMacro}+" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="StartTagAttributeStringValueDefaultToken" PatternValue="{NonLineTerminatorWhitespaceMacro}+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Start Tag Attribute String Values -->
+		<State Key="StartTagAttributeStringValueState" TokenKey="StartTagAttributeStringValueDefaultToken" Style="TagAttributeValueStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<RegexPatternGroup Type="StartScope" TokenKey="StartTagAttributeStringValueStartToken" Style="TagAttributeValueStyle" PatternValue="= {LineTerminatorWhitespaceMacro}* \&quot;" />
+					<RegexPatternGroup Type="EndScope" TokenKey="StartTagAttributeStringValueEndToken" Style="TagAttributeValueStyle" PatternValue="\&quot;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="StartTagAttributeStringValueDefaultToken" PatternValue="[^&quot;]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- End Tags -->
+		<State Key="EndTagState" TokenKey="EndTagDefaultToken" Style="TagNameStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="EndTagStartToken" Style="TagDelimiterStyle" PatternValue="&lt;/" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="EndTagEndToken" Style="TagDelimiterStyle" PatternValue="&gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="EndTagDefaultToken" PatternValue="[^&gt;]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Comments -->
+		<State Key="CommentState" TokenKey="CommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CommentStartToken" Style="CommentDelimiterStyle" PatternValue="&lt;!--" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="CommentEndToken" Style="CommentDelimiterStyle" PatternValue="--&gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CommentDefaultToken" PatternValue="[^\-]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Processing Instructions -->
+		<State Key="ProcessingInstructionState" TokenKey="ProcessingInstructionDefaultToken" Style="ProcessingInstructionDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="ProcessingInstructionStartToken" Style="ProcessingInstructionDelimiterStyle" PatternValue="&lt;?" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="ProcessingInstructionEndToken" Style="ProcessingInstructionDelimiterStyle" PatternValue="?&gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="ProcessingInstructionDefaultToken" PatternValue="[^\?]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Declarations -->
+		<State Key="DeclarationState" TokenKey="DeclarationDefaultToken" Style="DeclarationDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="DeclarationStartToken" Style="DeclarationDelimiterStyle" PatternValue="&lt;!" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="DeclarationEndToken" Style="DeclarationDelimiterStyle" PatternValue="&gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="DeclarationDefaultToken" PatternValue="[^&gt;]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- CDATAs -->
+		<State Key="CDATAState" TokenKey="CDATADefaultToken" Style="CDATADefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CDATAStartToken" Style="CDATADelimiterStyle" PatternValue="&lt;![CDATA[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="CDATAEndToken" Style="CDATADelimiterStyle" PatternValue="]]&gt;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CDATADefaultToken" PatternValue="[^\]]+" />
+			</PatternGroups>
+		</State>
+	</States>
+
+	<!-- Example Text -->
+	<ExampleText>
+		<![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" > 
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- This is a comment -->
+<parser version="1.0">
+	<somevalue>
+		Text
+	</somevalue>
+	Entities: &amp; &gt;
+	<singlevals>
+		<singleval value="true" anothervalue="2" />
+		<singleval value="false" anothervalue="3" />
+	</singlevals>
+</parser>
+		]]>
+	</ExampleText>
+		
+</SyntaxLanguage>

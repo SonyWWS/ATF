@@ -1,0 +1,5 @@
+SCC = This is a source code control file
+
+[LocalizableStringExtractor.csproj]
+SCC_Aux_Path = "P4SCC#perforce1.ship.scea.com:1666##bbudge##FC-BBUDGE-LP"
+SCC_Project_Name = Perforce Project

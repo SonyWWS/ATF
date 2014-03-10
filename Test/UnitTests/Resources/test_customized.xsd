@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+	xmlns:test="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:i="importedNamespace">
+
+  <xs:include schemaLocation="test.xsd"/>
+  <xs:import schemaLocation="testImportSchemas.xsd" namespace="importedNamespace"/>
+  
+  <xs:redefine schemaLocation="test.xsd">
+
+    <!--redefinition of base type-->
+    <xs:complexType name="complexType">
+      <xs:annotation>
+        <xs:appinfo>
+          <annotation attr2="value2"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+        <xs:extension base="complexType">
+          <xs:attribute name="attr2" type="xs:integer"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+    
+  </xs:redefine>
+
+    <xs:complexType name="includeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <sce.domgen include="true"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="complexType">
+                <xs:attribute name="attr3" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="excludeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <sce.domgen include="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="attr4" type="xs:string"/>
+    </xs:complexType>
+
+  <xs:element name="importedRoot" type="i:importedComplexType"/>
+
+  <!--END Format Schema -->
+</xs:schema>

@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="Sce.Atf.Wpf.Controls.OutputView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:Sce.Atf.Wpf"
+    xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+    xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors"
+    xmlns:atf="clr-namespace:Sce.Atf;assembly=Atf.Core"
+    AllowDrop="False">
+    
+    <UserControl.Resources>
+        <Style TargetType="GridViewColumnHeader" x:Key="NonResizeColumnHeaderStyle" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+            <Setter Property="b:GridViewColumnHeaderBehavior.IsResizable" Value="True"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <DockPanel >
+        
+        <ToolBar DockPanel.Dock="Top">
+            <ToggleButton IsChecked="{Binding ShowErrors}" ToolTip="{m:Loc Errors}">
+                <Image Source="{StaticResource {x:Static l:Resources.ErrorImageKey}}" Width="16" Height="16" SnapsToDevicePixels="True"/>
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding ShowWarnings}" ToolTip="{m:Loc Warnings}">
+                <Image Source="{StaticResource {x:Static l:Resources.WarningImageKey}}" Width="16" Height="16" SnapsToDevicePixels="True"/>
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding ShowInfo}" ToolTip="{m:Loc Info}">
+                <Image Source="{StaticResource {x:Static l:Resources.InfoImageKey}}" Width="16" Height="16" SnapsToDevicePixels="True"/>
+            </ToggleButton>
+            <Separator/>
+            <Button ToolTip="{m:Loc Clear All}" Command="{Binding ClearAllCommand}">
+                <Image Source="{StaticResource {x:Static l:Resources.ClearImageKey}}" Width="16" Height="16"
+                       Style="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}" SnapsToDevicePixels="True"/>
+            </Button>
+        </ToolBar>
+        
+        <ListView DockPanel.Dock ="Top"
+              ItemsSource="{Binding OutputItems}"
+              VirtualizingStackPanel.IsVirtualizing="True"
+              VirtualizingStackPanel.VirtualizationMode="Recycling">
+            <ListView.View >
+                <GridView AllowsColumnReorder="False">
+
+                    <GridViewColumn Width="24" HeaderContainerStyle="{StaticResource NonResizeColumnHeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="12" Height="12" Margin="0,2,0,0"
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Top"
+                                       SnapsToDevicePixels="True">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MessageType}">
+                                                    <DataTrigger.Value>
+                                                        <atf:OutputMessageType>Info</atf:OutputMessageType>
+                                                    </DataTrigger.Value>
+                                                    <Setter Property="Source" Value="{StaticResource {x:Static l:Resources.InfoImageKey}}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding MessageType}">
+                                                    <DataTrigger.Value>
+                                                        <atf:OutputMessageType>Warning</atf:OutputMessageType>
+                                                    </DataTrigger.Value>
+                                                    <Setter Property="Source" Value="{StaticResource {x:Static l:Resources.WarningImageKey}}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding MessageType}">
+                                                    <DataTrigger.Value>
+                                                        <atf:OutputMessageType>Error</atf:OutputMessageType>
+                                                    </DataTrigger.Value>
+                                                    <Setter Property="Source" Value="{StaticResource {x:Static l:Resources.ErrorImageKey}}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="{m:Loc Time}" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Time, StringFormat='{}{0:HH:mm:ss}', Mode=OneTime}" VerticalAlignment="Top"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="{m:Loc Message}" Width="400">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Message, Mode=OneTime}" VerticalAlignment="Top"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="VerticalContentAlignment" Value="Top"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MessageType}" Value="Error">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,5 @@
+To register, use:
+regasm /codebase CustomToolDomGen.dll
+
+To unregister use:
+regasm /codebase CustomToolDomGen.dll /u

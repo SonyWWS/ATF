@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{76FF94DB-1AE8-436E-B38D-87BA3C0DE925}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FunctionalTests</RootNamespace>
+    <AssemblyName>FunctionalTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\tests\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\tests\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.core">
+      <HintPath>..\..\ThirdParty\nUnit\nunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\..\ThirdParty\nUnit\nunit.core.interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.fixtures">
+      <HintPath>..\..\ThirdParty\nUnit\nunit.fixtures.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\ThirdParty\nUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\..\ThirdParty\nUnit\nunit.util.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DomPropertyEditorTests.cs" />
+    <Compile Include="ModelViewerTests.cs" />
+    <Compile Include="DiagramEditorTests.cs" />
+    <Compile Include="DomTreeEditorTests.cs" />
+    <Compile Include="FileExplorerTests.cs" />
+    <Compile Include="LiveConnectServiceTests.cs" />
+    <Compile Include="SimpleDomEditorTests.cs" />
+    <Compile Include="TestBase.cs" />
+    <Compile Include="CircuitEditorTests.cs" />
+    <Compile Include="CodeEditorTests.cs" />
+    <Compile Include="FsmEditorTests.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleDomNoXmlEditorTests.cs" />
+    <Compile Include="StatechartEditorTests.cs" />
+    <Compile Include="TimelineEditorTests.cs" />
+    <Compile Include="TreeListEditorTests.cs" />
+    <Compile Include="UsingDomTests.cs" />
+    <Compile Include="WinFormsAppTests.cs" />
+    <Compile Include="WpfAppTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CircuitEditorTestScripts\AddAllItems.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CircuitEditorTestScripts\DeleteLayers.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CircuitEditorTestScripts\TestLayers.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CircuitEditorTestScripts\EditSaveCloseAndReopen.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CircuitEditorTestScripts\TestTemplates.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeEditorTestScripts\CreateNewDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\CircuitEditorUtil.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\StatechartEditorUtil.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\TimelineEditorUtil.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\CreateNewDocument.Legacy.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\CreateNewDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\LaunchApplication.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\LevelEditorUtil.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DiagramEditorTestScripts\CreateNewDocuments.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DomTreeEditorTestScripts\AddAllItems.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DomTreeEditorTestScripts\CreateNewDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\CopyPaste.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\CutPaste.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\DeleteUndoAndRedoComments.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\DeleteUndoAndRedoTransitions.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\EditSaveCloseAndReopen.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertComments.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertStates.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\DeleteUndoAndRedoStates.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\ExpectedFailureAssert.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\ExpectedFailureNoSuccessMessage.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\ExpectedTimeout.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\FsmUtil.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CommonTestScripts\Test.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertTransitions.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertUndoAndRedoComments.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertUndoAndRedoStates.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsmEditorTestScripts\InsertUndoAndRedoTransitions.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\AutomationSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\NUnitToJUnit.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SimpleDomEditorTestScripts\CreateNewDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="StatechartEditorTestScripts\AddAllItems.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="StatechartEditorTestScripts\EditSaveCloseAndReopen.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TimelineEditorTestScripts\AddAllItems.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TimelineEditorTestScripts\CreateReferencedDocumentInSubDir.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TimelineEditorTestScripts\CreateReferencedDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TimelineEditorTestScripts\EditSaveCloseAndReopen.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="CircuitEditorTestScripts\CopyPaste.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="CircuitEditorTestScripts\CutPaste.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="CircuitEditorTestScripts\TestGroups.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="CommonTestScripts\CreateNewDocumentSingular.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="TimelineEditorTestScripts\CreateReferencedDocumentInUnsavedTimeline.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="StatechartEditorTestScripts\UndoRedo.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="ModelViewerTestScripts\OpenDocument.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\bike.atgi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="complexType">
+    <xs:annotation>
+      <xs:appinfo>
+        <annotation attr1="value1"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="attr1" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="complexType2">
+    <xs:annotation>
+      <xs:appinfo>
+        <annotation attr1="value1"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="attr1" type="xs:string"/>
+  </xs:complexType>
+
+</xs:schema>

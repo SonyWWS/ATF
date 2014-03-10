@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="timeline"
+	xmlns="timeline"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="timelineType">
+    <xs:annotation>
+      <!--
+      <xs:appinfo>
+        <scea.dom.collection id="name"/>
+      </xs:appinfo>
+      -->
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="group" type="groupType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="marker" type="markerType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="timelineRef" type="timelineRefType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="groupType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Group" description="Group" image="TimelineEditorSample.Resources.group.png" category="Timelines" />
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name" />
+        <scea.dom.editors.attribute name="expanded" displayName="Expanded" description="Whether Group is Expanded" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="track" type="trackType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" default="Group"/>
+    <xs:attribute name="expanded" type="xs:boolean" default="true"/>
+  </xs:complexType>
+
+  <xs:complexType name="trackType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Track" description="Track" image="TimelineEditorSample.Resources.track.png" category="Timelines" />
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="interval" type="intervalType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="key" type="keyType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" default="Track"/>
+  </xs:complexType>
+
+  <xs:complexType name="eventType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors.attribute name="start" displayName="Start" description="Start Time" />
+        <scea.dom.editors.attribute name="description" displayName="Description" description="Event description" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="start" type="xs:float"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="intervalType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Interval" description="Interval" image="TimelineEditorSample.Resources.interval.png" category="Timelines" />
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name" />
+        <scea.dom.editors.attribute name="length" displayName="Length" description="Length or Duration" />
+        <scea.dom.editors.attribute name="color" displayName="Color" description="Display Color"
+          editor="Sce.Atf.Controls.PropertyEditing.ColorEditor,Atf.Gui"
+          converter="Sce.Atf.Controls.PropertyEditing.IntColorConverter" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="eventType">
+        <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="length" type="xs:float"/>
+        <xs:attribute name="color" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="markerType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Marker" description="Marker" image="TimelineEditorSample.Resources.marker.png" category="Timelines" />
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name" />
+        <scea.dom.editors.attribute name="color" displayName="Color" description="Display Color"
+          editor="Sce.Atf.Controls.PropertyEditing.ColorEditor,Atf.Gui"
+          converter="Sce.Atf.Controls.PropertyEditing.IntColorConverter" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="eventType">
+        <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="color" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="keyType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Key" description="Key" image="TimelineEditorSample.Resources.key.png" category="Timelines" />
+        <scea.dom.editors.attribute
+           name="specialEvent"
+           displayName="Special Event"
+           description="One or more special events will occur at this time"
+           editor="Sce.Atf.Controls.PropertyEditing.FlagsUITypeEditor,Atf.Gui.WinForms"
+           converter="Sce.Atf.Controls.PropertyEditing.ReadOnlyConverter"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="eventType">
+        <xs:attribute name="specialEvent" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="timelineRefType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors menuText="Reference" description="Timeline Reference"
+                          image="TimelineEditorSample.Resources.group.png" category="Timelines" />
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name" />
+        <scea.dom.editors.attribute name="start" displayName="Start" description="Start Time" />
+        <scea.dom.editors.attribute name="description" displayName="Description" description="Event description" />
+        <scea.dom.editors.attribute name="color" displayName="Color" description="Display Color"
+          editor="Sce.Atf.Controls.PropertyEditing.ColorEditor,Atf.Gui"
+          converter="Sce.Atf.Controls.PropertyEditing.IntColorConverter" />
+        <scea.dom.editors.attribute name="ref" displayName="File Name" description="File name of timeline reference"
+                                    editor="Sce.Atf.Controls.PropertyEditing.FileUriEditor,Atf.Gui.WinForms:Timeline files (*.timeline)|*.timeline"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="start" type="xs:float"/>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="color" type="xs:integer" default="-32640"/>
+    <xs:attribute name="ref" type="xs:anyURI" />
+  </xs:complexType>
+  
+  <xs:element name="timeline" type="timelineType"/>
+
+</xs:schema>
+

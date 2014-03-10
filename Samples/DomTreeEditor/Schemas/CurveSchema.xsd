@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CurveSchema"    
+    elementFormDefault="qualified"    
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="ListOfFloats">
+    <xs:list itemType="xs:float"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="float2Type">
+    <xs:restriction base="ListOfFloats">
+      <xs:length value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- control point type-->
+  <xs:complexType name="controlPointType">
+    <xs:attribute name="x" type="xs:float" default="0.0"/>
+    <xs:attribute name="y" type="xs:float"   default="0.0"/>
+    <xs:attribute name="tangentIn" type="float2Type" use="required"/>
+    <xs:attribute name="tangentInType" type="xs:string" use="required"/>
+    <xs:attribute name="tangentOut" type="float2Type"  use="required"/>
+    <xs:attribute name="tangentOutType" type="xs:string" use="required"/>
+    <xs:attribute name="brokenTangents" type="xs:boolean" default="false"/>
+  </xs:complexType>
+
+  <!-- curve type -->
+  <xs:complexType name="curveType">
+    <xs:sequence>
+      <xs:element name="controlPoint" type="controlPointType"  minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="minX" type="xs:float" default="-1e6"/>
+    <xs:attribute name="maxX" type="xs:float" default="1e6"/>
+    <xs:attribute name="minY" type="xs:float" default="-1e6"/>
+    <xs:attribute name="maxY" type="xs:float" default="-1e6"/>
+    <xs:attribute name="preInfinity" type="xs:string" use="required"/>
+    <xs:attribute name="postInfinity" type="xs:string" use ="required"/>
+    <xs:attribute name="color" type="xs:integer" default="-65536" />
+    <xs:attribute name="xLabel" type="xs:string" default="X - Axis" />
+    <xs:attribute name="yLabel" type="xs:string" default="Y - Axis" />
+  </xs:complexType>
+  
+</xs:schema>

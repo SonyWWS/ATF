@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="Warning" context="" translation="警告" />
+  <StringItem id="The Live Connect Service failed to initialize due to too many advertisers." context="" translation="Live Connect Service は、アドバタイザー数が多すぎるため、初期化に失敗しました。" />
+  <StringItem id="The Live Connect Service failed to initialize because Bonjour is either not installed or the Windows service, 'Bonjour Service', is not running." context="" translation="Live Connect Service は、Bonjour がインストールされていないか、Windows サービス「Bonjour Service」が実行していないため、初期化に失敗しました。" />
+  <StringItem id="The Live Connect Service failed to initialize for some unknown reason: " context="" translation="Live Connect Service は、不明な理由で初期化に失敗しました: " />
+  <StringItem id="Replace" context="" translation="置換" />
+  <StringItem id="Unknown" context="" translation="不明" />
+  <StringItem id="Can't find source directory" context="" translation="ソースディレクトリがみつからない" />
+  <StringItem id="Can't find source file" context="" translation="ソースファイルがみつからない" />
+  <StringItem id="Can't overwrite existing file" context="" translation="既存のファイルを上書きできない" />
+</StringLocalizationTable>

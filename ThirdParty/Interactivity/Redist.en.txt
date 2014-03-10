@@ -1,0 +1,30 @@
+Expression Blend 3 SDK
+=====================================================
+The following list is a list of files available with Microsoft Expression Blend 3 SDK for redistribution under the Expression Blend 3 SDK license.  If the Microsoft software you have licensed is not Expression Blend 3 SDK, only the files that are installed by the Microsoft software may be redistributed under such license.
+
+Subject to the license terms for the software, you may redistribute the .dll files listed below unmodified as a part of your programs.
+
+_____________________________________________________________
+
+
+Behaviors Runtime Components (WPF)
+---------------------------------------------
+Microsoft.Expression.Interactions.dll
+System.Windows.Interactivity.dll
+
+
+Behaviors Runtime Components (Silverlight)
+---------------------------------------------
+Microsoft.Expression.Interactions.dll
+System.Windows.Interactivity.dll
+
+
+Build Tasks:
+---------------------------------------------
+All files under:
+
+	{Program Files}\MSBuild\Microsoft\Expression\Blend\3.0\
+
+
+
+

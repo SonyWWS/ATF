@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="Game.UsingDom"
+	xmlns="Game.UsingDom"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="gameObjectType">
+    <xs:attribute name="name" type="xs:ID" />
+  </xs:complexType>
+
+  <xs:complexType name="gameType">    
+    <xs:sequence>
+      <xs:element name="gameObject" type="gameObjectType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:ID"/>
+  </xs:complexType>
+
+  <xs:complexType name="ogreType">    
+    <xs:complexContent>
+      <xs:extension base="gameObjectType">
+        <xs:attribute name="size" type="xs:integer"/>
+        <xs:attribute name="strength" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dwarfType">   
+    <xs:complexContent>
+      <xs:extension base="gameObjectType">
+        <xs:attribute name="age" type="xs:integer"/>
+        <xs:attribute name="experience" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="treeType">    
+    <xs:complexContent>
+      <xs:extension base="gameObjectType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="game" type="gameType"/>
+  
+  <!--END Format Schema -->
+</xs:schema>

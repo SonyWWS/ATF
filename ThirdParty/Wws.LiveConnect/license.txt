@@ -1,0 +1,4 @@
+Wws.LiveConnect DLLs
+--------------------
+These DLLs were created by Rob Povey in the Tools And Technology group in SCEA and can be distributed with the Authoring Tools Framework.
+

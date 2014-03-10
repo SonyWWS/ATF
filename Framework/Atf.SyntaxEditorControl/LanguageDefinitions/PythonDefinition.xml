@@ -1,0 +1,206 @@
+<SyntaxLanguage Key="Python" LanguageDefinitionVersion="4.0" Secure="True" xmlns="http://ActiproSoftware/SyntaxEditor/4.0/LanguageDefinition">
+
+	<!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="Actipro Software LLC" />
+		<Property Key="Copyright" Value="Copyright (c) 2001-2006 Actipro Software LLC.  All rights reserved." />
+	</Properties>
+
+	<!-- Highlighting Styles -->	
+	<Styles>
+		<Style Key="ReservedWordStyle" ForeColor="Blue" />
+		<Style Key="SystemIdentifierStyle" ForeColor="Purple" />
+		<Style Key="OperatorStyle" ForeColor="Black" />
+		<Style Key="NumberStyle" ForeColor="Black" />
+		<Style Key="StringDelimiterStyle" ForeColor="Maroon" />
+		<Style Key="StringDefaultStyle" ForeColor="Maroon" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Green" />
+		<Style Key="CommentDefaultStyle" ForeColor="Green" />
+	</Styles>
+	
+	<!-- States -->
+	<States>
+		<!-- Code -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<!-- Line Terminators -->
+				<RegexPatternGroup TokenKey="LineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+				<!-- Line Terminators -->
+				<RegexPatternGroup TokenKey="BackSlashToken" PatternValue="\\" LookAhead="{WhitespaceMacro}* $" />
+				<!-- Brackets -->
+				<ExplicitPatternGroup Key="OpenParenthesisPatternGroup" TokenKey="OpenParenthesisToken" PatternValue="(" EndBracket="CloseParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="CloseParenthesisPatternGroup" TokenKey="CloseParenthesisToken" PatternValue=")" StartBracket="OpenParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="OpenCurlyBracePatternGroup" TokenKey="OpenCurlyBraceToken" PatternValue="{" EndBracket="CloseCurlyBracePatternGroup" />
+				<ExplicitPatternGroup Key="CloseCurlyBracePatternGroup" TokenKey="CloseCurlyBraceToken" PatternValue="}" StartBracket="OpenCurlyBracePatternGroup" />
+				<ExplicitPatternGroup Key="OpenSquareBracePatternGroup" TokenKey="OpenSquareBraceToken" PatternValue="[" EndBracket="CloseSquareBracePatternGroup" />
+				<ExplicitPatternGroup Key="CloseSquareBracePatternGroup" TokenKey="CloseSquareBraceToken" PatternValue="]" StartBracket="OpenSquareBracePatternGroup" />
+				<!-- Punctuation -->
+				<ExplicitPatternGroup TokenKey="PunctuationToken">
+					<ExplicitPatterns>
+						. , : ; ` 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Reserved Words -->
+				<ExplicitPatternGroup TokenKey="ReservedWordToken" Style="ReservedWordStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+					<ExplicitPatterns>
+						and assert break class continue def 
+						del elif else except exec finally 
+						for from global if import in 
+						is lambda not or pass print
+						raise return try while yield
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- System Identifier -->
+				<RegexPatternGroup TokenKey="SystemIdentifierToken" Style="SystemIdentifierStyle" PatternValue="__ ({WordMacro})+" />
+				<!-- Identifier -->
+				<RegexPatternGroup TokenKey="IdentifierToken" PatternValue="(_ | {AlphaMacro})({WordMacro})*" />
+				<!-- Operators -->
+				<ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle">
+					<ExplicitPatterns>
+						== != 
+						=
+						+= -= *= //= /= %=
+						+ - ** * // / % 
+						&amp;= |= ^=
+						&amp; | ^ ~ 
+						&lt;&lt;= &gt;&gt;= **=
+						&lt;&lt; &gt;&gt; 
+						&lt;&gt;
+						&lt;= &lt; &gt;= &gt;  							
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Numbers -->
+				<RegexPatternGroup TokenKey="RealNumberToken" Style="NumberStyle" LookAhead="{NonWordMacro}|\z">
+					<RegexPattern Value="{DigitMacro}* \. {DigitMacro}+ ([Ee] [\+\-]? {DigitMacro}+)? [Jj]?" />
+					<RegexPattern Value="{DigitMacro}+ [Ee] [\+\-]? {DigitMacro}+ [Jj]?" />
+				</RegexPatternGroup>
+				<RegexPatternGroup TokenKey="IntegerNumberToken" Style="NumberStyle" PatternValue="[1-9]+ {DigitMacro}* [Ll]? [Jj]?" LookAhead="{NonWordMacro}|\z" />
+				<RegexPatternGroup TokenKey="OctalNumberToken" Style="NumberStyle" PatternValue="0 [0-7]+ [Ll]? [Jj]?" LookAhead="{NonWordMacro}|\z" />
+				<RegexPatternGroup TokenKey="HexIntegerNumberToken" Style="NumberStyle" PatternValue="0 [xX] {HexDigitMacro}+ [Ll]? [Jj]?" LookAhead="{NonWordMacro}|\z" />
+			</PatternGroups>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="MultiLineStringState" />
+				<ChildState Key="StringState" />
+				<ChildState Key="CommentState" />
+			</ChildStates>
+		</State>
+		
+		<!-- MultiLine Strings -->
+		<State Key="MultiLineStringState" TokenKey="MultiLineStringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineStringStartToken" Style="StringDelimiterStyle" PatternValue="'''" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineStringEndToken" Style="StringDelimiterStyle" PatternValue="'''" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineStringStartToken" Style="StringDelimiterStyle" PatternValue="&quot;&quot;&quot;" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineStringEndToken" Style="StringDelimiterStyle" PatternValue="&quot;&quot;&quot;" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="MultiLineStringEscapedCharacterToken" PatternValue="\\x {HexDigitMacro}{1,4}" />
+				<RegexPatternGroup TokenKey="MultiLineStringEscapedCharacterToken" PatternValue="\\u {HexDigitMacro}{4,4}" />
+				<RegexPatternGroup TokenKey="MultiLineStringEscapedCharacterToken" PatternValue="\\U {HexDigitMacro}{8,8}" />
+				<RegexPatternGroup TokenKey="MultiLineStringEscapedCharacterToken" PatternValue="\\ {DigitMacro}{3}" />
+				<RegexPatternGroup TokenKey="MultiLineStringEscapedCharacterToken" PatternValue="\\." />
+				<RegexPatternGroup TokenKey="MultiLineStringDefaultToken" PatternValue="[^\\\&quot;']+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Strings -->
+		<State Key="StringState" TokenKey="StringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="StringStartToken" Style="StringDelimiterStyle" PatternValue="'" />
+					<RegexPatternGroup Type="EndScope" TokenKey="StringEndToken" Style="StringDelimiterStyle" PatternValue="['\n]" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="StringStartToken" Style="StringDelimiterStyle" PatternValue="&quot;" />
+					<RegexPatternGroup Type="EndScope" TokenKey="StringEndToken" Style="StringDelimiterStyle" PatternValue="[&quot;\n]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\x {HexDigitMacro}{1,4}" />
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\u {HexDigitMacro}{4,4}" />
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\U {HexDigitMacro}{8,8}" />
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\ {DigitMacro}{3}" />
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\." />
+				<RegexPatternGroup TokenKey="StringEscapedCharacterToken" PatternValue="\\\n" />
+				<RegexPatternGroup TokenKey="StringDefaultToken" PatternValue="[^\\\&quot;'\n]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Comments -->
+		<State Key="CommentState" TokenKey="CommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CommentStartToken" Style="CommentDelimiterStyle" PatternValue="#" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CommentDefaultToken" PatternValue="{NonLineTerminatorMacro}+" />
+			</PatternGroups>
+		</State>
+	</States>
+
+	<!-- Example Text -->
+	<ExampleText>
+		<![CDATA[
+#
+# PythonSample.py
+#
+# This file uses some common Python constructs.
+#
+
+import os
+from sys import path
+
+mystring = "Here's a string that spans \
+                    two lines."
+        
+
+class MyClass:
+    def __init__(self, value):
+        self.value = value
+        
+    def test(self):
+        try:
+            raise KeyboardInterrupt
+        finally:
+            print 'Goodbye, world!'
+
+
+def reverse(data):
+    '''
+    A simple iterator test function.
+    '''
+    for index in range(len(data)-1, -1, -1):
+        yield data[index]
+
+
+def fib(n):    # write Fibonacci series up to n
+    """
+    Print a Fibonacci series up to n.
+    """
+    result = []
+    a, b = 0, 1
+    while b &lt; n:
+        result.append(b)    # add to the list
+        a, b = b, a+b
+    return result
+        
+		]]>
+	</ExampleText>
+		
+</SyntaxLanguage>

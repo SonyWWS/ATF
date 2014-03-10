@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<value name="DockPanelState" type="String">
+  <DockPanel FormatVersion="1.0" DockLeftPortion="0.236673482698442" DockRightPortion="0.23706727915385" DockTopPortion="0.25" DockBottomPortion="0.267349485070433" ActiveDocumentPane="3" ActivePane="3">
+    <Contents Count="7">
+      <Content ID="0" PersistString="PaletteService_Palette" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="1" PersistString="PropertyEditor_Property Editor" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="2" PersistString="GridPropertyEditor_Grid Property Editor" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="3" PersistString="CurveEditor_Curve Editor" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="4" PersistString="TreeLister_UI Tree Lister" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="5" PersistString="DomExplorer_DomExplorer" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      <Content ID="6" PersistString="ScriptConsole_document_panel" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+    </Contents>
+    <Panes Count="8">
+      <Pane ID="0" DockState="DockBottom" ActiveContent="5">
+        <Contents Count="3">
+          <Content ID="0" RefID="2" />
+          <Content ID="1" RefID="5" />
+          <Content ID="2" RefID="6" />
+        </Contents>
+      </Pane>
+      <Pane ID="1" DockState="Float" ActiveContent="-1">
+        <Contents Count="1">
+          <Content ID="0" RefID="3" />
+        </Contents>
+      </Pane>
+      <Pane ID="2" DockState="Document" ActiveContent="3">
+        <Contents Count="1">
+          <Content ID="0" RefID="3" />
+        </Contents>
+      </Pane>
+      <Pane ID="3" DockState="Document" ActiveContent="4">
+        <Contents Count="1">
+          <Content ID="0" RefID="4" />
+        </Contents>
+      </Pane>
+      <Pane ID="4" DockState="Float" ActiveContent="-1">
+        <Contents Count="1">
+          <Content ID="0" RefID="4" />
+        </Contents>
+      </Pane>
+      <Pane ID="5" DockState="Float" ActiveContent="-1">
+        <Contents Count="1">
+          <Content ID="0" RefID="1" />
+        </Contents>
+      </Pane>
+      <Pane ID="6" DockState="DockLeft" ActiveContent="0">
+        <Contents Count="1">
+          <Content ID="0" RefID="0" />
+        </Contents>
+      </Pane>
+      <Pane ID="7" DockState="DockRight" ActiveContent="1">
+        <Contents Count="1">
+          <Content ID="0" RefID="1" />
+        </Contents>
+      </Pane>
+    </Panes>
+    <DockWindows>
+      <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+        <NestedPanes Count="2">
+          <Pane ID="0" RefID="3" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          <Pane ID="1" RefID="2" PrevPane="3" Alignment="Bottom" Proportion="0.5" />
+        </NestedPanes>
+      </DockWindow>
+      <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="2">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="6" PrevPane="-1" Alignment="Bottom" Proportion="0.5" />
+        </NestedPanes>
+      </DockWindow>
+      <DockWindow ID="2" DockState="DockRight" ZOrderIndex="3">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="7" PrevPane="-1" Alignment="Bottom" Proportion="0.5" />
+        </NestedPanes>
+      </DockWindow>
+      <DockWindow ID="3" DockState="DockTop" ZOrderIndex="4">
+        <NestedPanes Count="0" />
+      </DockWindow>
+      <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="5">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+        </NestedPanes>
+      </DockWindow>
+    </DockWindows>
+    <FloatWindows Count="3">
+      <FloatWindow ID="0" Bounds="834, 437, 300, 300" ZOrderIndex="0">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+        </NestedPanes>
+      </FloatWindow>
+      <FloatWindow ID="1" Bounds="2635, 431, 673, 360" ZOrderIndex="1">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="4" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+        </NestedPanes>
+      </FloatWindow>
+      <FloatWindow ID="2" Bounds="2151, 508, 545, 370" ZOrderIndex="2">
+        <NestedPanes Count="1">
+          <Pane ID="0" RefID="5" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+        </NestedPanes>
+      </FloatWindow>
+    </FloatWindows>
+  </DockPanel>
+</value>

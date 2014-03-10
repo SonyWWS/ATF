@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="For user {0} with workspace {1} on server {2}." context="" translation="ユーザー {0}、ワークスペース {1}、サーバー {2}" />
+  <StringItem id="Perforce Connection History" context="" translation="Perforce の接続履歴" />
+  <StringItem id="Perforce Connection History" context="" translation="Perforce の接続履歴" />
+  <StringItem id="Perforce Default Connection" context="" translation="Perforce のデフォルト接続" />
+  <StringItem id="Perforce Default Connection" context="" translation="Perforce のデフォルト接続" />
+  <StringItem id="Enable or Disable Perforce Service" context="" translation="Perforce サービスを有効または無効にする" />
+  <StringItem id="Enable or Disable Perforce Service" context="" translation="Perforce サービスを有効または無効にする" />
+  <StringItem id="File Status Cache Timeout" context="" translation="ファイル状態キャッシュのタイムアウト" />
+  <StringItem id="Rate at which cached Perforce file records are updated" context="" translation="キャッシュされた Perforce ファイルレコードの更新レート" />
+</StringLocalizationTable>

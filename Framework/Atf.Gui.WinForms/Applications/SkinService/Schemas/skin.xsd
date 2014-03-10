@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<schema
+  targetNamespace="atfskin"
+  xmlns:atfskin="atfskin"
+  xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <complexType name="skinType">
+    <sequence>
+      <element name="style" type="atfskin:styleType" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="styleType">
+    <sequence>
+      <element name="setter" type="atfskin:setterType" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" />
+    <attribute name="targetType" type="string" />
+  </complexType>
+
+  <complexType name="setterType">
+    <sequence>
+      <element name="valueInfo" type="atfskin:valueInfoType" minOccurs="0" maxOccurs="1"/>
+      <element name="listInfo" type="atfskin:listInfoType" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+    <attribute name="propertyName" type="string"/>
+  </complexType>
+
+  <complexType name="valueInfoType">
+    <sequence>
+      <element name="constructorParams" type="atfskin:constructorParamsType" minOccurs="0" maxOccurs="1"/>
+      <element name="setter" type="atfskin:setterType" minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+    <attribute name="converter" type="string" use="optional"/>
+    <attribute name="type" type="string" use="optional"/>
+    <attribute name="value" type="string" use="optional"/>
+  </complexType>
+
+  <complexType name="listInfoType">
+    <sequence>
+      <element name="valueInfo" type="atfskin:valueInfoType" minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+
+  <complexType name="constructorParamsType">
+    <sequence>
+      <element name="valueInfo" type="atfskin:valueInfoType" minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+
+  <element name="skin" type="atfskin:skinType" />
+  
+</schema>

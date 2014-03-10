@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+  targetNamespace="http://www.fileformat.info/format/wavefrontobj"
+  xmlns="http://www.fileformat.info/format/wavefrontobj"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Common List Types -->
+  <xs:simpleType name="FloatListType">
+    <xs:list itemType="xs:float"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="IntegerListType">
+    <xs:list itemType="xs:integer"/>
+  </xs:simpleType>
+
+  <!-- Common Vector Types -->
+  <xs:simpleType name="Matrix4Type">
+    <xs:restriction base="FloatListType">
+      <xs:length value="16"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="Vec4Type">
+    <xs:restriction base="FloatListType">
+      <xs:length value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Primitives -->
+  <xs:simpleType name="PrimitiveType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="POLYGONS"/>
+      <xs:enumeration value="TRIANGLES"/>
+      <xs:enumeration value="TRISTRIPS"/>
+      <xs:enumeration value="TRIFANS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- Bounding Box -->
+  <xs:simpleType name="BoundingBoxType">
+    <xs:restriction base="FloatListType">
+      <xs:length value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Mesh -->
+  <xs:complexType name="meshType">
+    <xs:sequence>
+      <xs:element name="vertexArray" minOccurs="1" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- Index Arrays -->
+            <xs:element name="primitives" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="binding" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="source" type="xs:string"/>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="indices" type="IntegerListType" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="shader" type="shaderType" minOccurs="0" maxOccurs="1"/>
+                  <xs:element name="sizes" type="IntegerListType" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:Name"/>
+                <xs:attribute name="type" type="PrimitiveType"/>
+              </xs:complexType>
+            </xs:element>
+            <!-- Vertex Arrays -->
+            <xs:element name="array" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="FloatListType">
+                    <xs:attribute name="count" type="xs:integer"/>
+                    <xs:attribute name="name" type="xs:Name" use="required"/>
+                    <xs:attribute name="stride" type="xs:integer"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="boundingBox" type="BoundingBoxType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:Name"/>
+  </xs:complexType>
+  
+  <!-- Node -->
+  <xs:complexType name="nodeType">
+    <xs:sequence>
+      <xs:element name="boundingBox" type="BoundingBoxType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="mesh" type="meshType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="shader" type ="shaderType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="transform" type="Matrix4Type" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:Name"/>
+  </xs:complexType>
+
+  <!-- Shader -->
+  <xs:complexType name="shaderType">
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="ambient" type="FloatListType" default="0.2 0.2 0.2 1.0"/>
+    <xs:attribute name="diffuse" type="FloatListType" default="1.0 1.0 1.0 1.0"/>
+    <xs:attribute name="shininess" type="xs:float" default="0.0"/>
+    <xs:attribute name="specular" type="FloatListType" default="0.0 0.0 0.0 1.0"/>
+    <xs:attribute name="texture" type="xs:string"/>
+  </xs:complexType>
+  
+</xs:schema>

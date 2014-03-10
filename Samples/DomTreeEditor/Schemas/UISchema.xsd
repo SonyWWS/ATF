@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="IdolMinds.UI"
+  xmlns="IdolMinds.UI"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="CurveSchema.xsd"/>
+  
+  <xs:element name="UI" type="UIType"/>
+
+  <xs:simpleType name="floatListType">
+    <xs:list itemType="xs:float"/>
+  </xs:simpleType>
+  <xs:simpleType name="stringListType">
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="vector3Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="3"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="UIObjectType" abstract="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors.attribute name="name" displayName="Name" description="Name of item"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:ID"/>
+  </xs:complexType>
+
+  <xs:complexType name="UIRefType">
+    <xs:attribute name="ref" type="xs:IDREF" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="UIType">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:sequence>
+          <xs:element name="Package" type="UIPackageType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIPackageType">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:sequence>
+          <xs:element name="Form" type="UIFormType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Shader" type="UIShaderType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Texture" type="UITextureType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Font" type="UIFontType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIFormType">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:sequence>
+          <xs:element name="Control" type="UIControlType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name ="Animation" type="UIAnimationType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIControlType" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:sequence>
+          <xs:element name="Transform" type="UITransformType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name ="Animation" type="UIAnimationType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Control" type="UIControlType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--The values here are ignored, but need enumeration type for UISpriteType-->
+  <xs:simpleType name="spriteEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="xxxx"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="UISpriteType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors.attribute name="SpriteType" displayName="Sprite type" description="Sprite type"
+          editor="Sce.Atf.Controls.PropertyEditing.LongEnumEditor,Atf.Gui.WinForms:Pixie,Ghost,Gollum,Robot,Skeleton,Big bird"
+          converter="Sce.Atf.Controls.PropertyEditing.EnumTypeConverter" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="UIControlType">
+        <xs:sequence>
+          <xs:element name="Shader" type="UIRefType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="SpriteType" type="spriteEnumType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIShaderType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors.attribute name="ShaderID" displayName="Shader ID" description="Shader ID"
+          editor="Sce.Atf.Controls.PropertyEditing.BoundedIntEditor,Atf.Gui.WinForms:10,1000"
+          converter="Sce.Atf.Controls.PropertyEditing.BoundedIntConverter" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:attribute name="FxFile" type="xs:string" use="required"/>
+        <xs:attribute name="ShaderID" type="xs:int" use="required"/>
+        <xs:attribute name="ShaderParam" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UITextureType">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:attribute name="TextureFile" type="xs:string" use="required"/>
+        <xs:attribute name="TextureFolder" type="xs:string" use="required"/>
+        <xs:attribute name="TextureArray" type="floatListType" use="required" />
+        <xs:attribute name="TextureRevDate" type="xs:time" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIFontType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.editors.attribute name="FontFolder" displayName="Font folder" description="Font folder"
+          editor="Sce.Atf.Controls.PropertyEditing.FolderUriEditor,Atf.Gui.WinForms:0" />
+        <scea.dom.editors.attribute name="FontSize" displayName="Font size" description="Font size"
+          editor="Sce.Atf.Controls.PropertyEditing.BoundedFloatEditor,Atf.Gui.WinForms:1.0,20.0"
+          converter="Sce.Atf.Controls.PropertyEditing.BoundedFloatConverter" />
+        <scea.dom.editors.attribute name="FontColor" displayName="Font color" description="Font Color"
+          editor="Sce.Atf.Controls.PropertyEditing.ColorPickerEditor,Atf.Gui.WinForms:true"
+          converter="Sce.Atf.Controls.PropertyEditing.IntColorConverter" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:attribute name="FontFile" type="xs:string" use="required"/>
+        <xs:attribute name="FontFolder" type="xs:string"/>
+        <xs:attribute name="FontSize" type="xs:float" use="required"/>
+        <xs:attribute name="FontParams" type="floatListType" default="10 1 5 8" />
+        <xs:attribute name="FontColor" type="xs:integer" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UIAnimationType">
+    <xs:complexContent>
+      <xs:extension base="UIObjectType">
+        <xs:sequence>
+          <xs:element name="curve" type="curveType" minOccurs="0" maxOccurs="unbounded"/>          
+        </xs:sequence>
+        <xs:attribute name="AnimationTransform" type="floatListType" default="0 0 0 1 1 1 2 2 2"/>
+        <xs:attribute name="AnimalKinds" type="stringListType" default="Cow Duck Alligator Moose Wombat" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="UITextItemType">
+    <xs:complexContent>
+      <xs:extension base="UIControlType">
+        <xs:sequence>
+          <xs:element name="Font" type="UIRefType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+        <xs:attribute name="text" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+  <xs:complexType name="UITransformType">
+    <xs:attribute name="Rotate" type="vector3Type" default="0 0 0" />
+    <xs:attribute name="Scale" type="vector3Type" default="1 1 1" />
+    <xs:attribute name="Translate" type="vector3Type" default="0 0 0" />        
+	</xs:complexType>
+</xs:schema>

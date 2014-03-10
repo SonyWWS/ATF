@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="http://sony.com/gametech/fsms/1_0"
+	xmlns="http://sony.com/gametech/fsms/1_0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="FSM.xsd"/>
+
+  <!--Redefine basic FSM schema to add actions and triggers-->
+  
+  <xs:redefine schemaLocation="FSM.xsd">
+
+    <xs:complexType name="stateType">
+      <xs:complexContent>
+        <xs:extension base="stateType">
+          <xs:attribute name="entryAction" type="xs:string"  use="optional" />
+          <xs:attribute name="action" type="xs:string"  use="optional" />
+          <xs:attribute name="exitAction" type="xs:string"  use="optional" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="transitionType">
+      <xs:complexContent>
+        <xs:extension base="transitionType">
+          <xs:attribute name="trigger" type="xs:string" use="optional" />
+          <xs:attribute name="action" type="xs:string" use="optional" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+  </xs:redefine>
+
+</xs:schema>

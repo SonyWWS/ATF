@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="http://sony.com/gametech/circuits/1_0"
+	xmlns="http://sony.com/gametech/circuits/1_0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+  A module has a name (id), label, and position, and can be referenced by
+  connections.
+  -->
+  <xs:complexType name="moduleType" abstract="true">
+    <xs:attribute name="name" type="xs:ID" use="required" />
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+    <xs:attribute name="visible" type="xs:boolean" default="true"/>
+    <!--the original GUID of the template if this module is a copy-instance of-->
+    <xs:attribute name="sourceGuid" type="xs:string"/>
+  </xs:complexType>
+
+  <!--
+  A connection has a label, and connects the output pin on the output module
+  to the input pin of the input module
+  -->
+  <xs:complexType name="connectionType">
+    <xs:attribute name="label" type="xs:string" use="optional" />
+    <xs:attribute name="outputModule" type="xs:IDREF" use="required" />
+    <xs:attribute name="outputPin" type="xs:integer" use="required" />
+    <xs:attribute name="inputModule" type="xs:IDREF" use="required" />
+    <xs:attribute name="inputPin" type="xs:integer" use="required" />
+  </xs:complexType>
+
+  <!--
+  A pin has a name, and a type which determines the connection type.
+  -->
+  <xs:complexType name="pinType">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!--
+  A group pin is a pin on a grouped sub-circuit; it extends the information
+  of a pin to preserve the internal pin/module which is connected to the
+  outside circuit.
+  -->
+  <xs:complexType name="groupPinType">
+    <xs:complexContent>
+      <xs:extension base="pinType">
+        <!--associated internal(sub) element-->
+        <xs:attribute name="module" type="xs:IDREF" use="required" />
+        <!--associated internal(sub) pin-->
+        <xs:attribute name="pin" type="xs:integer" use="required" />
+        <!--visibility: hide or show this group pin-->
+        <xs:attribute name="visible" type="xs:boolean" default="true"/>      
+        <!-- pin index(order) in its sub-graph owner  -->
+        <xs:attribute name="index" type="xs:integer" use="required" />
+        <xs:attribute name="pinned" type="xs:boolean" default="false"/>
+        <!--user defined floating pin location y value (x value is auto-generated)-->
+        <xs:attribute name="pinY" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A group is a collection of modules, connections between them (internal),
+  and input and output pins which preserve how the modules were connected to
+  the outside circuit. There may be annotations among the modules.
+  -->
+  <xs:complexType name="groupType">
+    <xs:complexContent>
+      <xs:extension base="moduleType">
+        
+        <xs:sequence>
+          <xs:element name="input" type="groupPinType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="output" type="groupPinType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="module" type="moduleType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="connection" type="connectionType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        
+        <xs:attribute name="expanded" type="xs:boolean" default="false"/>
+        <xs:attribute name="showExpandedGroupPins" type="xs:boolean" default="false"/>
+
+        <!--container size when the group is expanded; when autosize is true, container size is computed-->
+        <xs:attribute name="autosize" type="xs:boolean" default="true"/>
+        <xs:attribute name="width" type="xs:int"/>
+        <xs:attribute name="height" type="xs:int"/>
+        <xs:attribute name="minwidth" type="xs:int"/>
+        <xs:attribute name="minheight" type="xs:int"/>
+
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A module reference holds a reference to a module in the circuit. It is used to
+  build lists of module references which define layers.
+  -->
+  <xs:complexType name="moduleRefType">
+    <xs:attribute name="ref" type="xs:IDREF" use="required" />
+  </xs:complexType>
+
+  <!--
+  A layer folder allows a hierarchy of layers to be defined. Folders can be hidden
+  by the user to allow layering.
+  -->
+  <xs:complexType name ="layerFolderType" >
+    <xs:sequence>
+      <xs:element name="layerFolder" type="layerFolderType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="moduleRef" type="moduleRefType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  An annotation is a comment on the circuit canvas.
+  -->
+  <xs:complexType name="annotationType"> 
+    <xs:attribute name="text" type="xs:string" use="required" />
+    <!--position--> 
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+    <!--size-->
+    <xs:attribute name="width" type="xs:int"/>
+    <xs:attribute name="height" type="xs:int"/>
+    <xs:attribute name="backcolor" type="xs:integer" default="-31"/>
+  </xs:complexType>
+
+  <!--
+  A circuit contains modules, connections among them, and annotations
+  -->
+  <xs:complexType name ="circuitType">
+    <xs:sequence>
+      <xs:element name="module" type="moduleType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="connection" type="connectionType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="layerFolder" type="layerFolderType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  A sub-circuit is a circuit that defines a master module type, with custom
+  input and output pins. It can be referenced by instances, which are all
+  equivalent.
+  -->
+  <xs:complexType name ="subCircuitType">
+    <xs:complexContent>
+      <xs:extension base="circuitType">
+        <xs:sequence>
+          <xs:element name="input" type="pinType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="output" type="pinType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:ID" use="required" />
+        <xs:attribute name="label" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A sub-circuit instance is a module whose type is defined by a sub-circuit (master).
+  -->
+  <xs:complexType name="subCircuitInstanceType">
+    <xs:complexContent>
+      <xs:extension base="moduleType">
+        <xs:attribute name="type" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A prototype is a set of modules and connections among them that can be copied and
+  pasted into a circuit.
+  -->
+  <xs:complexType name ="prototypeType" >
+    <xs:sequence>
+      <xs:element name="module" type="moduleType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="connection" type="connectionType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A prototype folder allows a hierarchy containing prototypes to be defined.
+  -->
+  <xs:complexType name ="prototypeFolderType">
+    <xs:sequence>
+      <xs:element name="prototypeFolder" type="prototypeFolderType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="prototype" type="prototypeType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A template is a module that can be referenced into a circuit.
+  -->
+  <xs:complexType name ="templateType" >
+   <xs:sequence>
+      <xs:element name="module" type="moduleType"/>
+    </xs:sequence>
+    <!--template name default to module name,  can be different-->
+    <xs:attribute name="guid" type="xs:string" use="required"/>
+    <xs:attribute name="label" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A module reference is a reference instance to a module.
+  -->
+  <xs:complexType name ="moduleTemplateRefType" >
+    <xs:complexContent>
+      <xs:extension base="moduleType">
+        <!--<xs:IDREF is based on guid of a template/>-->
+        <xs:attribute name="typeRef" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A group reference is a reference instance to a group.
+  -->
+  <xs:complexType name ="groupTemplateRefType" >
+    <xs:complexContent>
+      <xs:extension base="moduleType">
+        <!--<xs:IDREF is based on guid of a template/>-->
+        <xs:attribute name="typeRef" type="xs:IDREF" use="required" />
+        <xs:attribute name="refExpanded" type="xs:boolean" default="false"/>
+        <xs:attribute name="refShowExpandedGroupPins" type="xs:boolean" default="true"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A template folder allows a hierarchy containing references to subgraphs.
+  -->
+  <xs:complexType name ="templateFolderType">
+    <xs:sequence>
+      <xs:element name="templateFolder" type="templateFolderType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="template" type="templateType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+    <!--an absolute or relative URL to an external file-->
+    <xs:attribute name="referenceFile" type="xs:anyURI" />
+  </xs:complexType>
+
+  <!--
+  A circuit document extends the circuit type to hold sub-circuits (masters), prototype
+  folders, and template folders.
+  -->
+  <xs:complexType name="circuitDocumentType">
+    <xs:complexContent>
+      <xs:extension base="circuitType">
+        <xs:sequence>
+          <xs:element name="subCircuit" type="subCircuitType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="prototypeFolder" type="prototypeFolderType" />
+          <xs:element name="templateFolder" type="templateFolderType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  The root element of a circuit document.
+  -->
+  <xs:element name="circuit" type ="circuitDocumentType"/>
+
+</xs:schema>

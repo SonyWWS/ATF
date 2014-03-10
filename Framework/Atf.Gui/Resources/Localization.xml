@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Keyboard Shortcuts" context="" translation="Keyboard Shortcuts" />
+  <StringItem id="Command Icon Size" context="" translation="Command Icon Size" />
+  <StringItem id="Size of icons on Toolbar buttons" context="" translation="Size of icons on Toolbar buttons" />
+  <StringItem id="Application" context="" translation="Application" />
+  <StringItem id="Keyboard Shortcuts" context="" translation="Keyboard Shortcuts" />
+  <StringItem id="Customize keyboard shortcuts" context="" translation="Customize keyboard shortcuts" />
+  <StringItem id="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" context="" translation="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" />
+  <StringItem id="OSC Receiving Port Number" context="" translation="OSC Receiving Port Number" />
+  <StringItem id="The IP Port number that this app listens to for receiving Open Sound Control messages" context="" translation="The IP Port number that this app listens to for receiving Open Sound Control messages" />
+  <StringItem id="Primary Destination IP Endpoint" context="" translation="Primary Destination IP Endpoint" />
+  <StringItem id="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" context="" translation="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" />
+  <StringItem id="Preferred Receiving IP Address" context="" translation="Preferred Receiving IP Address" />
+  <StringItem id="The preferred IP address that this app listens to for receiving Open Sound Control messages" context="" translation="The preferred IP address that this app listens to for receiving Open Sound Control messages" />
+  <StringItem id="Vita Target" context="" translation="Vita Target" />
+  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Edit Vita Target in Neighborhood" />
+  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Edit Vita Target in Neighborhood" />
+  <StringItem id="Add New " context="" translation="Add New " />
+  <StringItem id="Creates a new target" context="" translation="Creates a new target" />
+  <StringItem id="Remove " context="" translation="Remove " />
+  <StringItem id="Remove selected target" context="" translation="Remove selected target" />
+  <StringItem id="Add New " context="" translation="Add New " />
+  <StringItem id="Remove " context="" translation="Remove " />
+  <StringItem id="Add New " context="" translation="Add New " />
+  <StringItem id="Remove " context="" translation="Remove " />
+  <StringItem id="The IP address format should be like &quot;192.168.0.1:12345&quot; or &quot;2001:740:8deb:0::1:12345&quot;" context="" translation="The IP address format should be like &quot;192.168.0.1:12345&quot; or &quot;2001:740:8deb:0::1:12345&quot;" />
+  <StringItem id="The scope type is unknown" context="" translation="The scope type is unknown" />
+  <StringItem id="The name must not be empty or all whitespace" context="" translation="The name must not be empty or all whitespace" />
+  <StringItem id="The property name is unknown: " context="" translation="The property name is unknown: " />
+  <StringItem id="TCP Target" context="" translation="TCP Target" />
+  <StringItem id="Targets" context="" translation="Targets" />
+  <StringItem id="X86 Target" context="" translation="X86 Target" />
+  <StringItem id="PS3 Target" context="" translation="PS3 Target" />
+  <StringItem id="PS4 Target" context="" translation="PS4 Target" />
+  <StringItem id="Undo {0}" context="{0} is the name of the command" translation="Undo {0}" />
+  <StringItem id="Redo {0}" context="{0} is the name of the command " translation="Redo {0}" />
+  <StringItem id="Untitled" context="" translation="Untitled" />
+  <StringItem id="Untitled" context="" translation="Untitled" />
+  <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="Recent Files Count" />
+  <StringItem id="Number of recent files to display in File Menu" context="" translation="Number of recent files to display in File Menu" />
+  <StringItem id="Documents" context="" translation="Documents" />
+  <StringItem id="Pin file" context="Pin active file to the recent files list" translation="Pin file" />
+  <StringItem id="Pin active file to the recent files list" context="" translation="Pin active file to the recent files list" />
+  <StringItem id="Recent Files" context="" translation="Recent Files" />
+  <StringItem id="empty" context="" translation="empty" />
+  <StringItem id="No entries in recent files list" context="" translation="No entries in recent files list" />
+  <StringItem id="Must be between 1 and 32" context="" translation="Must be between 1 and 32" />
+  <StringItem id="Pin active document" context="" translation="Pin active document" />
+  <StringItem id="Pin {0}" context="{0} will be replaced with a file name" translation="Pin {0}" />
+  <StringItem id="Unpin {0}" context="{0} will be replaced with a file name " translation="Unpin {0}" />
+  <StringItem id="Recent Files" context="" translation="Recent Files" />
+  <StringItem id="Open a recently used file" context="" translation="Open a recently used file" />
+  <StringItem id="Layouts" context="" translation="Layouts" />
+  <StringItem id="Save Layout As..." context="" translation="Save Layout As..." />
+  <StringItem id="Manage Layouts..." context="" translation="Manage Layouts..." />
+  <StringItem id="(none)" context="No flags" translation="(none)" />
+  <StringItem id="Unknown error code" context="" translation="Unknown error code" />
+  <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0} files" />
+  <StringItem id="All files" context="" translation="All files" />
+  <StringItem id="All" context="As in 'All files'" translation="All" />
+  <StringItem id="Misc" context="Miscellaneous category" translation="Misc" />
+  <StringItem id="Back" context="the back side of the model that is being viewed" translation="Back" />
+  <StringItem id="Bottom" context="the bottom side of the model that is being viewed" translation="Bottom" />
+  <StringItem id="Front" context="the front side of the model that is being viewed" translation="Front" />
+  <StringItem id="Left" context="the left side of the model that is being viewed" translation="Left" />
+  <StringItem id="Right" context="the right side of the model that is being viewed" translation="Right" />
+  <StringItem id="Top" context="the top side of the model that is being viewed" translation="Top" />
+  <StringItem id="Perspective" context="a 3D perspective view of the model" translation="Perspective" />
+  <StringItem id="Save" context="Save the active file" translation="Save" />
+  <StringItem id="Save the active file" context="" translation="Save the active file" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Save As ..." context="Save the active file under a new name" translation="Save As ..." />
+  <StringItem id="Save the active file under a new name" context="" translation="Save the active file under a new name" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Save All" context="Saves all open files" translation="Save All" />
+  <StringItem id="Save all open files" context="" translation="Save all open files" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Close" context="Close the active file" translation="Close" />
+  <StringItem id="Close the active file" context="" translation="Close the active file" />
+  <StringItem id="Print..." context="Print the active document" translation="Print..." />
+  <StringItem id="Print the active document" context="" translation="Print the active document" />
+  <StringItem id="Page Setup..." context="Set up page for printing" translation="Page Setup..." />
+  <StringItem id="Set up page for printing" context="" translation="Set up page for printing" />
+  <StringItem id="Print Preview..." context="Show a print preview of the active document" translation="Print Preview..." />
+  <StringItem id="Show a print preview of the active document" context="" translation="Show a print preview of the active document" />
+  <StringItem id="Exit" context="Exit the application" translation="Exit" />
+  <StringItem id="Exit Application" context="" translation="Exit Application" />
+  <StringItem id="Undo" context="Undo the last change" translation="Undo" />
+  <StringItem id="Undo the last change" context="" translation="Undo the last change" />
+  <StringItem id="Redo" context="Redo the last edit" translation="Redo" />
+  <StringItem id="Redo the last edit" context="" translation="Redo the last edit" />
+  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="Cut" />
+  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="Cut the selection and place it on the clipboard" />
+  <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="Copy" />
+  <StringItem id="Copy the selection and place it on the clipboard" context="" translation="Copy the selection and place it on the clipboard" />
+  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="Paste" />
+  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="Paste the contents of the clipboard and make that the new selection" />
+  <StringItem id="Delete" context="Delete the selection" translation="Delete" />
+  <StringItem id="Delete the selection" context="" translation="Delete the selection" />
+  <StringItem id="Select All" context="Select all items" translation="Select All" />
+  <StringItem id="Select all items" context="" translation="Select all items" />
+  <StringItem id="Deselect All" context="Deselect all items" translation="Deselect All" />
+  <StringItem id="Deselect all items" context="" translation="Deselect all items" />
+  <StringItem id="Invert Selection" context="Select unselected items and deselect selected items" translation="Invert Selection" />
+  <StringItem id="Select unselected items and deselect selected items" context="" translation="Select unselected items and deselect selected items" />
+  <StringItem id="Lock" context="" translation="Lock" />
+  <StringItem id="Lock the selection to disable editing" context="" translation="Lock the selection to disable editing" />
+  <StringItem id="Unlock" context="Unlock the selection to enable editing" translation="Unlock" />
+  <StringItem id="Unlock the selection to enable editing" context="" translation="Unlock the selection to enable editing" />
+  <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
+  <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Group" context="Group the selection into a single item" translation="Group" />
+  <StringItem id="Group the selection into a single item" context="" translation="Group the selection into a single item" />
+  <StringItem id="Ungroup" context="Ungroup any selected groups" translation="Ungroup" />
+  <StringItem id="Ungroup any selected groups" context="" translation="Ungroup any selected groups" />
+  <StringItem id="Hide" context="Hide all selected objects" translation="Hide" />
+  <StringItem id="Hide all selected objects" context="" translation="Hide all selected objects" />
+  <StringItem id="Show" context="Show all selected objects" translation="Show" />
+  <StringItem id="Show all selected objects" context="" translation="Show all selected objects" />
+  <StringItem id="Show Last Hidden" context="Show the last hidden object" translation="Show Last Hidden" />
+  <StringItem id="Show the last hidden object" context="" translation="Show the last hidden object" />
+  <StringItem id="Show All" context="Show all hidden objects" translation="Show All" />
+  <StringItem id="Show all hidden objects" context="" translation="Show all hidden objects" />
+  <StringItem id="Isolate" context="Show only the selected objects and hide all others" translation="Isolate" />
+  <StringItem id="Show only the selected objects and hide all others" context="" translation="Show only the selected objects and hide all others" />
+  <StringItem id="Frame Selection" context="Frame selection in view" translation="Frame Selection" />
+  <StringItem id="Frames all selected objects in the current view" context="" translation="Frames all selected objects in the current view" />
+  <StringItem id="Frame All" context="Frame all objects in view" translation="Frame All" />
+  <StringItem id="Frames all objects in the current view" context="" translation="Frames all objects in the current view" />
+  <StringItem id="Zoom In" context="Zoom In" translation="Zoom In" />
+  <StringItem id="Zoom In" context="" translation="Zoom In" />
+  <StringItem id="Zoom Out" context="Zoom Out" translation="Zoom Out" />
+  <StringItem id="Zoom Out" context="" translation="Zoom Out" />
+  <StringItem id="Zoom Reset" context="Zoom Reset" translation="Zoom Reset" />
+  <StringItem id="Zoom Reset" context="" translation="Zoom Reset" />
+  <StringItem id="Fit In Active View" context="Pan and Zoom to center selection" translation="Fit In Active View" />
+  <StringItem id="Pan and Zoom to center selection" context="" translation="Pan and Zoom to center selection" />
+  <StringItem id="Align/Lefts" context="Align left sides of selected items" translation="Align/Lefts" />
+  <StringItem id="Align left sides of selected items" context="" translation="Align left sides of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Rights" context="Align right sides of selected items" translation="Align/Rights" />
+  <StringItem id="Align right sides of selected items" context="" translation="Align right sides of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Centers" context="Align centers of selected items" translation="Align/Centers" />
+  <StringItem id="Align centers of selected items" context="" translation="Align centers of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Tops" context="Align tops of selected items" translation="Align/Tops" />
+  <StringItem id="Align tops of selected items" context="" translation="Align tops of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Bottoms" context="Align bottoms of selected items" translation="Align/Bottoms" />
+  <StringItem id="Align bottoms of selected items" context="" translation="Align bottoms of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Middles" context="" translation="Align/Middles" />
+  <StringItem id="Align middles of selected items" context="" translation="Align middles of selected items" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/To Grid" context="Align selected items to x/y grid" translation="Align/To Grid" />
+  <StringItem id="Align selected items to x/y grid" context="" translation="Align selected items to x/y grid" />
+  <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="Size/Make Equal" />
+  <StringItem id="Make selected items have the same size" context="" translation="Make selected items have the same size" />
+  <StringItem id="Size/Make Widths Equal" context="Make selected items have the same width" translation="Size/Make Widths Equal" />
+  <StringItem id="Make selected items have the same width" context="" translation="Make selected items have the same width" />
+  <StringItem id="Size/Make Heights Equal" context="Make selected items have the same height" translation="Size/Make Heights Equal" />
+  <StringItem id="Make selected items have the same height" context="" translation="Make selected items have the same height" />
+  <StringItem id="Size/Size to Grid" context="Make selected items sizes align to x/y grid" translation="Size/Size to Grid" />
+  <StringItem id="Make selected items sizes align to x/y grid" context="" translation="Make selected items sizes align to x/y grid" />
+  <StringItem id="Split Horizontal" context="Split the window horizontally" translation="Split Horizontal" />
+  <StringItem id="Split the window horizontally" context="" translation="Split the window horizontally" />
+  <StringItem id="Split Vertical" context="Split the window vertically" translation="Split Vertical" />
+  <StringItem id="Split the window vertically" context="" translation="Split the window vertically" />
+  <StringItem id="Remove Split" context="Remove the split" translation="Remove Split" />
+  <StringItem id="Remove the split" context="" translation="Remove the split" />
+  <StringItem id="Tile Horizontal" context="Tile Documents Horizontally" translation="Tile Horizontal" />
+  <StringItem id="Tile the documents, as separate visible items, horizontally" context="" translation="Tile the documents, as separate visible items, horizontally" />
+  <StringItem id="Tile Vertical" context="Tile Documents Vertically" translation="Tile Vertical" />
+  <StringItem id="Tile the documents, as separate visible items, vertically" context="" translation="Tile the documents, as separate visible items, vertically" />
+  <StringItem id="Tile Overlapping" context="Tile Documents Overlapping" translation="Tile Overlapping" />
+  <StringItem id="Tile the documents, all together as tabbed items, in the central region of the application" context="" translation="Tile the documents, all together as tabbed items, in the central region of the application" />
+  <StringItem id="&amp;About" context="Get information about application" translation="&amp;About" />
+  <StringItem id="Get information about application" context="" translation="Get information about application" />
+  <StringItem id="File" context="this is the name of a menu" translation="File" />
+  <StringItem id="File Commands" context="" translation="File Commands" />
+  <StringItem id="Edit" context="this is the name of a menu" translation="Edit" />
+  <StringItem id="Editing Commands" context="" translation="Editing Commands" />
+  <StringItem id="View" context="this is the name of a menu" translation="View" />
+  <StringItem id="View Commands" context="'View' is a noun. This text is a description of the View menu" translation="View Commands" />
+  <StringItem id="Modify" context="this is the name of a menu" translation="Modify" />
+  <StringItem id="Modify Commands" context="" translation="Modify Commands" />
+  <StringItem id="Format" context="this is the name of a menu" translation="Format" />
+  <StringItem id="Formatting Commands" context="" translation="Formatting Commands" />
+  <StringItem id="Window" context="this is the name of a menu" translation="Window" />
+  <StringItem id="Window Management Commands" context="" translation="Window Management Commands" />
+  <StringItem id="Help" context="this is the name of a menu" translation="Help" />
+  <StringItem id="Help Commands" context="" translation="Help Commands" />
+  <StringItem id="Set Selection" context="" translation="Set Selection" />
+</StringLocalizationTable>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Activate Control" context="" translation="Activate Control" />
+  <StringItem id="Could not load window layout" context="" translation="Could not load window layout" />
+  <StringItem id="Show/Hide " context="" translation="Show/Hide " />
+  <StringItem id="Show/Hide " context="" translation="Show/Hide " />
+  <StringItem id="Rename" context="" translation="Rename" />
+  <StringItem id="Rename" context="" translation="Rename" />
+  <StringItem id="About" context="" translation="About" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Show Context Help" context="" translation="Show Context Help" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Uncheck this to hide help commands in context menus" context="" translation="Uncheck this to hide help commands in context menus" />
+  <StringItem id="_Contents" context="" translation="_Contents" />
+  <StringItem id="Help Contents" context="" translation="Help Contents" />
+  <StringItem id="_About" context="" translation="_About" />
+  <StringItem id="Shows Information About Application" context="" translation="Shows Information About Application" />
+  <StringItem id="_File" context="" translation="_File" />
+  <StringItem id="File Commands" context="" translation="File Commands" />
+  <StringItem id="_Edit" context="" translation="_Edit" />
+  <StringItem id="Editing Commands" context="" translation="Editing Commands" />
+  <StringItem id="_View" context="" translation="_View" />
+  <StringItem id="View Commands" context="" translation="View Commands" />
+  <StringItem id="Modify" context="" translation="Modify" />
+  <StringItem id="Modify Commands" context="" translation="Modify Commands" />
+  <StringItem id="_Format" context="" translation="_Format" />
+  <StringItem id="Formatting Commands" context="" translation="Formatting Commands" />
+  <StringItem id="_Window" context="" translation="_Window" />
+  <StringItem id="Window Management Commands" context="" translation="Window Management Commands" />
+  <StringItem id="_Help" context="" translation="_Help" />
+  <StringItem id="Help Commands" context="" translation="Help Commands" />
+  <StringItem id="Output" context="" translation="Output" />
+  <StringItem id="View errors, warnings, and informative messages" context="" translation="View errors, warnings, and informative messages" />
+  <StringItem id="_File" context="" translation="_File" />
+  <StringItem id="File Commands" context="" translation="File Commands" />
+  <StringItem id="_Edit" context="" translation="_Edit" />
+  <StringItem id="Editing Commands" context="" translation="Editing Commands" />
+  <StringItem id="_View" context="" translation="_View" />
+  <StringItem id="View Commands" context="" translation="View Commands" />
+  <StringItem id="Modify" context="" translation="Modify" />
+  <StringItem id="Modify Commands" context="" translation="Modify Commands" />
+  <StringItem id="_Format" context="" translation="_Format" />
+  <StringItem id="Formatting Commands" context="" translation="Formatting Commands" />
+  <StringItem id="_Window" context="" translation="_Window" />
+  <StringItem id="Window Management Commands" context="" translation="Window Management Commands" />
+  <StringItem id="_Help" context="" translation="_Help" />
+  <StringItem id="Help Commands" context="" translation="Help Commands" />
+  <StringItem id="Ready" context="Application is ready" translation="Ready" />
+  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
+  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
+  <StringItem id="Edit Property" context="" translation="Edit Property" />
+  <StringItem id="Unhandled Exception" context="" translation="Unhandled Exception" />
+  <StringItem id="About" context="" translation="About" />
+  <StringItem id="Error" context="" translation="Error" />
+  <StringItem id="Please wait..." context="" translation="Please wait..." />
+  <StringItem id="Progress" context="" translation="Progress" />
+  <StringItem id="Edit Label" context="" translation="Edit Label" />
+</StringLocalizationTable>

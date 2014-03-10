@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{050FC659-553F-4911-A609-5BA1BE4EDBF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sce.Atf.Wpf</RootNamespace>
+    <AssemblyName>Atf.Gui.Wpf</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\ThirdParty\Interactivity\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Wws.UI.Docking, Version=0.0.0.23689, Culture=neutral, PublicKeyToken=2806335437706e59, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Wws.UI\Wws.UI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Applications\AtfApp.cs" />
+    <Compile Include="Applications\BoundsSpecified.cs" />
+    <Compile Include="Applications\CommandDef.cs" />
+    <Compile Include="Applications\CommandId.cs" />
+    <Compile Include="Applications\CommandService.cs" />
+    <Compile Include="Applications\ControlDef.cs" />
+    <Compile Include="Applications\ControlHostService.cs" />
+    <Compile Include="Applications\ControlInfo.cs" />
+    <Compile Include="Applications\EditLabelCommand.cs" />
+    <Compile Include="Applications\ErrorDialogService.cs" />
+    <Compile Include="Applications\EventToCommandArgs.cs" />
+    <Compile Include="Applications\HelpCommands.cs" />
+    <Compile Include="Applications\IComposer.cs" />
+    <Compile Include="Applications\IControlHostClient.cs" />
+    <Compile Include="Applications\IControlHostService.cs" />
+    <Compile Include="Applications\IControlInfo.cs" />
+    <Compile Include="Applications\IHelpContext.cs" />
+    <Compile Include="Applications\ILabelEditingContext.cs" />
+    <Compile Include="Applications\ILayoutConstraint.cs" />
+    <Compile Include="Applications\ILayoutContext.cs" />
+    <Compile Include="Applications\IMenu.cs" />
+    <Compile Include="Applications\IMenuItem.cs" />
+    <Compile Include="Applications\IPaletteService.cs" />
+    <Compile Include="Applications\IStatusItem.cs" />
+    <Compile Include="Applications\IStatusService.cs" />
+    <Compile Include="Applications\IThumbnailResolver.cs" />
+    <Compile Include="Applications\IViewingContext.cs" />
+    <Compile Include="Applications\MenuInfo.cs" />
+    <Compile Include="Applications\OutputService.cs" />
+    <Compile Include="Applications\PaletteService.cs" />
+    <Compile Include="Applications\StandardMenus.cs" />
+    <Compile Include="Applications\CommandComparer.cs" />
+    <Compile Include="Applications\ICommandItem.cs" />
+    <Compile Include="Applications\StatusService.cs" />
+    <Compile Include="Applications\ThumbnailReadyEventArgs.cs" />
+    <Compile Include="Applications\ThumbnailService.cs" />
+    <Compile Include="Applications\UnhandledExceptionService.cs" />
+    <Compile Include="Applications\WindowLayoutServiceCommands.cs" />
+    <Compile Include="Applications\WpfItemInfo.cs" />
+    <Compile Include="Behaviors\AdaptableBehavior.cs" />
+    <Compile Include="Behaviors\AtfTreeViewBehavior.cs" />
+    <Compile Include="Behaviors\CommandBehavior.cs" />
+    <Compile Include="Behaviors\ContextMenuBehavior.cs" />
+    <Compile Include="Behaviors\DragAutoScrollBehavior.cs" />
+    <Compile Include="Behaviors\DragSourceBehavior.cs" />
+    <Compile Include="Behaviors\DropTargetBehavior.cs" />
+    <Compile Include="Behaviors\EditableTextBlockBehavior.cs" />
+    <Compile Include="Behaviors\GridViewColumnHeaderBehavior.cs" />
+    <Compile Include="Behaviors\GridViewSortBehavior.cs" />
+    <Compile Include="Behaviors\ItemsControlDoubleClickBehavior.cs" />
+    <Compile Include="Behaviors\ItemsControlDragSourceBehavior.cs" />
+    <Compile Include="Behaviors\ItemsControlDropTargetBehavior.cs" />
+    <Compile Include="Behaviors\SelectionBehavior.cs" />
+    <Compile Include="Behaviors\SelectionContextDragSourceBehavior.cs" />
+    <Compile Include="Behaviors\StyleBehaviors.cs" />
+    <Compile Include="Behaviors\TreeViewDragHoverExpandBehavior.cs" />
+    <Compile Include="Behaviors\TreeViewItemLabelEditBehavior.cs" />
+    <Compile Include="Behaviors\ViewModelLocator.cs" />
+    <Compile Include="CollectionUtil.cs" />
+    <Compile Include="Interop\Util.cs" />
+    <Compile Include="TreeViewUtil.cs" />
+    <Compile Include="CommandReference.cs" />
+    <Compile Include="Composer.cs" />
+    <Compile Include="Contracts.cs" />
+    <Compile Include="Controls\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Adaptable\DragSelectionEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Adaptable\IAdaptableControl.cs" />
+    <Compile Include="Controls\Adaptable\IAutoTranslateAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ICanvasAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IDragDropAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IDragDropConverter.cs" />
+    <Compile Include="Controls\Adaptable\IDragSelector.cs" />
+    <Compile Include="Controls\Adaptable\IPickingAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ITransformAdapter.cs" />
+    <Compile Include="Controls\Adaptable\IViewingAdapter.cs" />
+    <Compile Include="Controls\CommonDialog.cs" />
+    <Compile Include="Controls\ErrorDialog.xaml.cs">
+      <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FormattingTextBox.cs" />
+    <Compile Include="Controls\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\ICommandService.cs" />
+    <Compile Include="Applications\MenuDef.cs" />
+    <Compile Include="Controls\MessageBoxDialog.xaml.cs">
+      <DependentUpon>MessageBoxDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OutputView.xaml.cs">
+      <DependentUpon>OutputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\Attributes.cs" />
+    <Compile Include="Controls\PropertyEditing\DefaultPropertyGrouping.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\MultiLineTextEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\SliderEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\EditorTemplateSelector.cs" />
+    <Compile Include="Controls\PropertyEditing\IPropertyFactory.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyGrid.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyGridToolBar.cs" />
+    <Compile Include="Controls\PropertyEditing\PropertyNode.cs" />
+    <Compile Include="Controls\PropertyEditing\TransactionPropertyFactory.cs" />
+    <Compile Include="Controls\PropertyEditing\TransactionPropertyNode.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\ValueEditor.cs" />
+    <Compile Include="Controls\SliderBox.xaml.cs">
+      <DependentUpon>SliderBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeListView.cs" />
+    <Compile Include="Controls\UnhandledExceptionDialog.xaml.cs">
+      <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WindowsFormsHostEx.cs" />
+    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="DialogUtil.cs" />
+    <Compile Include="DispatcherUtil.cs" />
+    <Compile Include="ExportViewModelAttribute.cs" />
+    <Compile Include="ImageUtil.cs" />
+    <Compile Include="Interop\CommandClientAdapter.cs" />
+    <Compile Include="Interop\CommandServiceAdapter.cs" />
+    <Compile Include="Interop\ContextMenuService.cs" />
+    <Compile Include="Interop\ControlHostClientAdapter.cs" />
+    <Compile Include="Interop\ControlHostServiceAdapter.cs" />
+    <Compile Include="Interop\DialogService.cs" />
+    <Compile Include="Interop\IContextMenuService.cs" />
+    <Compile Include="Interop\MainWindowAdapter.cs" />
+    <Compile Include="Interop\StandardInteropParts.cs" />
+    <Compile Include="Interop\StatusServiceAdapter.cs" />
+    <Compile Include="IViewModelMetadata.cs" />
+    <Compile Include="Markup\ConverterMarkupExtension.cs" />
+    <Compile Include="Markup\LocExtension.cs" />
+    <Compile Include="Markup\MultiConverterMarkupExtension.cs" />
+    <Compile Include="Markup\TransactionBinding.cs" />
+    <Compile Include="MathUtil.cs" />
+    <Compile Include="Models\AboutDialogViewModel.cs" />
+    <Compile Include="Models\AdapterViewModel.cs" />
+    <Compile Include="Models\BindingAdapterObject.cs" />
+    <Compile Include="Models\CommandItem.cs" />
+    <Compile Include="Models\DialogViewModelBase.cs" />
+    <Compile Include="Models\ErrorDialogViewModel.cs" />
+    <Compile Include="Models\IDialogViewModel.cs" />
+    <Compile Include="Models\MainMenuViewModel.cs" />
+    <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\MenuItemBase.cs" />
+    <Compile Include="Models\MenuUtil.cs" />
+    <Compile Include="Models\NodeTypePaletteItem.cs" />
+    <Compile Include="Models\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Models\OutputVm.cs" />
+    <Compile Include="Models\PaletteContent.cs" />
+    <Compile Include="Models\ProgressViewModel.cs" />
+    <Compile Include="Models\StandardViewModels.cs" />
+    <Compile Include="Models\StatusBarViewModel.cs" />
+    <Compile Include="Models\StatusImage.cs" />
+    <Compile Include="Models\StatusItem.cs" />
+    <Compile Include="Models\StatusText.cs" />
+    <Compile Include="Models\ToolBarTrayBinder.cs" />
+    <Compile Include="Models\ToolBarViewModel.cs" />
+    <Compile Include="Models\TreeViewModel.cs" />
+    <Compile Include="ObservableUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceDictionaryResourceAttribute.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="ValueConverters\MenuItemStyleSelector.cs" />
+    <Compile Include="ValueConverters\MiscValueConverters.cs" />
+    <Compile Include="ValueConverters\VisibilityValueConverters.cs" />
+    <Compile Include="ViewModelRepository.cs" />
+    <Compile Include="VisualTreeUtil.cs" />
+    <Compile Include="WpfImageResourceAttribute.cs" />
+    <Compile Include="WpfMessageBox.cs" />
+    <Compile Include="WpfResourceUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\AboutDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MessageBoxDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\OutputView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SliderBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UnhandledExceptionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\PropertyEditors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\PropertyGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\PropertyGridToolBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\TreeListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Alphabetical.png" />
+    <Resource Include="Resources\ByCategory.png" />
+    <Resource Include="Resources\clear.bmp" />
+    <Resource Include="Resources\error.ico" />
+    <Resource Include="Resources\info.ico" />
+    <Resource Include="Resources\warning.ico" />
+    <EmbeddedResource Include="Resources\ja\Localization.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

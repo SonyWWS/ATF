@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 
+    targetNamespace="GameWorld"
+    elementFormDefault="qualified"
+    xmlns="GameWorld"    
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+
+  <xs:simpleType name="floatListType">
+    <xs:list itemType="xs:float"></xs:list>
+  </xs:simpleType>
+
+  <xs:simpleType name="vector2Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="2"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vector3Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="3"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vector4Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="4"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="matrixType">
+    <xs:restriction base="floatListType">
+      <xs:length value="16"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!--The values here are ignored, but need enumeration type for UISpriteType-->
+  <xs:simpleType name="spriteEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="xxxx"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+  <xs:complexType name="gameObjectType" abstract="true">   
+    <xs:attribute name="name" type="xs:ID"/>
+    <xs:attribute name="visible" type="xs:boolean" default="true" />
+    <xs:attribute name="translate" type="vector3Type" default="0 0 0"/>
+    <xs:attribute name="rotate" type="vector3Type" default="0 0 0"/>
+    <xs:attribute name="scale" type="vector3Type" default="1 1 1"/>        
+  </xs:complexType>
+
+
+  <xs:complexType name="clubType">
+    <xs:attribute name="spikes" type="xs:boolean" default="true" />
+    <xs:attribute name="Damage" type="xs:int" default ="20"/>
+    <xs:attribute name="wieght" type="xs:float" default ="10"/>    
+  </xs:complexType>
+
+  
+  <xs:complexType name="armorType">   
+    <xs:attribute name="name" type="xs:string"  default ="Armor"/>
+    <xs:attribute name="defense" type="xs:int" default="20"/>
+    <xs:attribute name="price" type="xs:int" default="10" />
+  </xs:complexType>
+  
+  <xs:complexType name="orcType">    
+    <xs:complexContent>
+      <xs:extension base="gameObjectType">
+        <xs:sequence>
+          <xs:element name="club" type="clubType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="armor" type="armorType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="orc" type="orcType" minOccurs="0" maxOccurs="unbounded" />          
+        </xs:sequence>
+        <xs:attribute name="skill" type="xs:int" default="20"/>
+        <xs:attribute name="weight" type="xs:float" default="100" />        
+        <xs:attribute name="emotion" type="xs:string" default="Happy" />
+        <xs:attribute name="goals" type="xs:int" default ="12" />
+        <xs:attribute name="health" type="xs:int" default="100" />
+        <xs:attribute name="skinColor" type="xs:int" />
+        <xs:attribute name="toeColor" type="xs:int" />
+        <xs:attribute name="textureFile" type="xs:string" use="required"/>        
+        <xs:attribute name="textureArray" type="floatListType" default="33 12 56 43 54" />
+        <xs:attribute name="textureTransform" type="matrixType" default="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        <xs:attribute name="TextureRevDate" type="xs:dateTime" />
+        <xs:attribute name="resourceFolder" type="xs:string" use="required"/>
+        
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="gameType">
+    <xs:sequence>
+      <xs:element name="gameObject" type="gameObjectType" minOccurs="0" maxOccurs="unbounded" />            
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:ID"/>
+  </xs:complexType>
+
+  <xs:element name="game" type="gameType"/>
+</xs:schema>

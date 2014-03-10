@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
+  <StringItem id="Command Icon Size" context="" translation="コマンドアイコンのサイズ" />
+  <StringItem id="Size of icons on Toolbar buttons" context="" translation="ツールバーボタンのアイコンのサイズ。" />
+  <StringItem id="Application" context="" translation="アプリケーション" />
+  <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
+  <StringItem id="Customize keyboard shortcuts" context="" translation="キーボードショートカットをカスタマイズします。" />
+  <StringItem id="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" context="" translation="IP エンドポイントの形式は、「192.168.0.120:9000」のようになります。" />
+  <StringItem id="OSC Receiving Port Number" context="" translation="ポート番号を受診する OSC" />
+  <StringItem id="The IP Port number that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するためにリッスンする IP ポート番号" />
+  <StringItem id="Primary Destination IP Endpoint" context="" translation="プライマリの接続先の IP エンドポイント" />
+  <StringItem id="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" context="" translation="このアプリケーションからの Open Sound Control メッセージ送信先のプライマリ IP アドレスおよびポート番号。 自動構成であるため、追加の送信先が追加可能です。" />
+  <StringItem id="Preferred Receiving IP Address" context="" translation="優先される受信 IP アドレス" />
+  <StringItem id="The preferred IP address that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するために優先的にリッスンする IP アドレス。" />
+  <StringItem id="Vita Target" context="" translation="Vita ターゲット" />
+  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
+  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
+  <StringItem id="Add New " context="" translation="新規追加 " />
+  <StringItem id="Creates a new target" context="" translation="新しいターゲットを作成します。" />
+  <StringItem id="Remove " context="" translation="削除 " />
+  <StringItem id="Remove selected target" context="" translation="選択したターゲットを削除します。" />
+  <StringItem id="Add New " context="" translation="新規追加 " />
+  <StringItem id="Remove " context="" translation="削除 " />
+  <StringItem id="Add New " context="" translation="新規追加 " />
+  <StringItem id="Remove " context="" translation="削除 " />
+  <StringItem id="The IP address format should be like &quot;192.168.0.1:12345&quot; or &quot;2001:740:8deb:0::1:12345&quot;" context="" translation="IP アドレスの形式は、「192.168.0.1:12345」または「2001:740:8deb:0::1:12345」のようになります。" />
+  <StringItem id="The scope type is unknown" context="" translation="スコープの種類が不明です。" />
+  <StringItem id="The name must not be empty or all whitespace" context="" translation="名前を空のままにしたり、空白文字のみにすることはできません。" />
+  <StringItem id="The property name is unknown: " context="" translation="プロパティ名が不明です。 " />
+  <StringItem id="TCP Target" context="" translation="TCP ターゲット" />
+  <StringItem id="Targets" context="" translation="ターゲット" />
+  <StringItem id="X86 Target" context="" translation="X86 ターゲット" />
+  <StringItem id="PS3 Target" context="" translation="PS3 ターゲット" />
+  <StringItem id="PS4 Target" context="" translation="PS4 ターゲット" />
+  <StringItem id="Undo {0}" context="{0} is the name of the command" translation="「{0}」を元に戻す" />
+  <StringItem id="Redo {0}" context="{0} is the name of the command " translation="「{0}」をやり直す" />
+  <StringItem id="Untitled" context="" translation="無題" />
+  <StringItem id="Untitled" context="" translation="無題" />
+  <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="最近使用したファイルの数" />
+  <StringItem id="Number of recent files to display in File Menu" context="" translation="[ファイル] &gt; [最近使用したファイル] メニューに表示するファイルの数。" />
+  <StringItem id="Documents" context="" translation="ドキュメント" />
+  <StringItem id="Pin file" context="Pin active file to the recent files list" translation="ファイルをピン留め" />
+  <StringItem id="Pin active file to the recent files list" context="" translation="アクティブなファイルを最近使用したファイルのリストに常に含めます。" />
+  <StringItem id="Recent Files" context="" translation="最近使用したファイル" />
+  <StringItem id="empty" context="" translation="なし" />
+  <StringItem id="No entries in recent files list" context="" translation="最近使用したファイルはありません。" />
+  <StringItem id="Must be between 1 and 32" context="" translation="1～32 の間である必要があります。" />
+  <StringItem id="Pin active document" context="" translation="アクティブなドキュメントをピン留め" />
+  <StringItem id="Pin {0}" context="{0} will be replaced with a file name" translation="{0} をピン留め" />
+  <StringItem id="Unpin {0}" context="{0} will be replaced with a file name " translation="{0} のピン留めを解除" />
+  <StringItem id="Recent Files" context="" translation="最近使用したファイル" />
+  <StringItem id="Open a recently used file" context="" translation="最近使用されたファイルを開きます。" />
+  <StringItem id="Layouts" context="" translation="レイアウト" />
+  <StringItem id="Save Layout As..." context="" translation="レイアウトに名前を付けて保存..." />
+  <StringItem id="Manage Layouts..." context="" translation="レイアウトを管理..." />
+  <StringItem id="(none)" context="No flags" translation="(なし)" />
+  <StringItem id="Unknown error code" context="" translation="未知のエラーコード" />
+  <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0}ファイル" />
+  <StringItem id="All files" context="" translation="すべてのファイル" />
+  <StringItem id="All" context="As in 'All files'" translation="すべての" />
+  <StringItem id="Misc" context="Miscellaneous category" translation="その他" />
+  <StringItem id="Back" context="the back side of the model that is being viewed" translation="裏面" />
+  <StringItem id="Bottom" context="the bottom side of the model that is being viewed" translation="下部" />
+  <StringItem id="Front" context="the front side of the model that is being viewed" translation="前面" />
+  <StringItem id="Left" context="the left side of the model that is being viewed" translation="左" />
+  <StringItem id="Right" context="the right side of the model that is being viewed" translation="右" />
+  <StringItem id="Top" context="the top side of the model that is being viewed" translation="上部" />
+  <StringItem id="Perspective" context="a 3D perspective view of the model" translation="3D 投影" />
+  <StringItem id="Save" context="Save the active file" translation="保存" />
+  <StringItem id="Save the active file" context="" translation="アクティブなファイルを保存します。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Save As ..." context="Save the active file under a new name" translation="名前を付けて保存..." />
+  <StringItem id="Save the active file under a new name" context="" translation="アクティブなファイルに名前を付けて保存します。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Save All" context="Saves all open files" translation="すべて保存" />
+  <StringItem id="Save all open files" context="" translation="開いているファイルをすべて保存します。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Close" context="Close the active file" translation="閉じる" />
+  <StringItem id="Close the active file" context="" translation="アクティブなファイルを閉じます。" />
+  <StringItem id="Print..." context="Print the active document" translation="印刷..." />
+  <StringItem id="Print the active document" context="" translation="アクティブなドキュメントを印刷します。" />
+  <StringItem id="Page Setup..." context="Set up page for printing" translation="ページ設定..." />
+  <StringItem id="Set up page for printing" context="" translation="印刷のためのページ設定をします。" />
+  <StringItem id="Print Preview..." context="Show a print preview of the active document" translation="印刷プレビュー..." />
+  <StringItem id="Show a print preview of the active document" context="" translation="アクティブなドキュメントの印刷プレビューを表示します。" />
+  <StringItem id="Exit" context="Exit the application" translation="終了" />
+  <StringItem id="Exit Application" context="" translation="アプリケーションを終了します。" />
+  <StringItem id="Undo" context="Undo the last change" translation="元に戻す" />
+  <StringItem id="Undo the last change" context="" translation="直前の変更を元に戻します。" />
+  <StringItem id="Redo" context="Redo the last edit" translation="やり直し" />
+  <StringItem id="Redo the last edit" context="" translation="直前の編集をやり直します。" />
+  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="切り取り" />
+  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="選択部分を切り取り、クリップボードに配置します。" />
+  <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="コピー" />
+  <StringItem id="Copy the selection and place it on the clipboard" context="" translation="選択部分をクリップボードにコピーします。" />
+  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="貼り付け" />
+  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="クリップボードの内容を貼り付け、貼り付けた内容を選択します。" />
+  <StringItem id="Delete" context="Delete the selection" translation="削除" />
+  <StringItem id="Delete the selection" context="" translation="選択部分を削除します。" />
+  <StringItem id="Select All" context="Select all items" translation="すべて選択" />
+  <StringItem id="Select all items" context="" translation="すべてのアイテムを選択します。" />
+  <StringItem id="Deselect All" context="Deselect all items" translation="すべて選択解除" />
+  <StringItem id="Deselect all items" context="" translation="アイテムの選択をすべて解除します。" />
+  <StringItem id="Invert Selection" context="Select unselected items and deselect selected items" translation="選択を切り替え" />
+  <StringItem id="Select unselected items and deselect selected items" context="" translation="選択されていないアイテムを選択し、選択されているアイテムの選択を解除します。" />
+  <StringItem id="Lock" context="" translation="ロック" />
+  <StringItem id="Lock the selection to disable editing" context="" translation="選択部分が編集できないようにロックします。" />
+  <StringItem id="Unlock" context="Unlock the selection to enable editing" translation="ロックを解除" />
+  <StringItem id="Unlock the selection to enable editing" context="" translation="選択部分が編集できるようにロックを解除します。" />
+  <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
+  <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Group" context="Group the selection into a single item" translation="グループ" />
+  <StringItem id="Group the selection into a single item" context="" translation="選択部分をグループとして 1 つにまとめます。" />
+  <StringItem id="Ungroup" context="Ungroup any selected groups" translation="グループ化解除" />
+  <StringItem id="Ungroup any selected groups" context="" translation="選択されたグループのグループ化を解除します。" />
+  <StringItem id="Hide" context="Hide all selected objects" translation="隠す" />
+  <StringItem id="Hide all selected objects" context="" translation="選択したオブジェクトすべてを隠します。" />
+  <StringItem id="Show" context="Show all selected objects" translation="表示" />
+  <StringItem id="Show all selected objects" context="" translation="選択したオブジェクトすべてを表示します。" />
+  <StringItem id="Show Last Hidden" context="Show the last hidden object" translation="直前に隠したオブジェクトを表示" />
+  <StringItem id="Show the last hidden object" context="" translation="直前に隠したオブジェクトを表示します。" />
+  <StringItem id="Show All" context="Show all hidden objects" translation="すべて表示" />
+  <StringItem id="Show all hidden objects" context="" translation="隠したオブジェクトすべてを表示します。" />
+  <StringItem id="Isolate" context="Show only the selected objects and hide all others" translation="選択的表示" />
+  <StringItem id="Show only the selected objects and hide all others" context="" translation="選択したオブジェクトのみを表示し、ほかのすべてを隠します。" />
+  <StringItem id="Frame Selection" context="Frame selection in view" translation="選択範囲を最大表示" />
+  <StringItem id="Frames all selected objects in the current view" context="" translation="選択したオブジェクトすべてが現在のビューに収まるように表示します。" />
+  <StringItem id="Frame All" context="Frame all objects in view" translation="全体を最大表示" />
+  <StringItem id="Frames all objects in the current view" context="" translation="すべてのオブジェクトが現在のビューに収まるように表示します。" />
+  <StringItem id="Zoom In" context="Zoom In" translation="拡大" />
+  <StringItem id="Zoom In" context="" translation="拡大" />
+  <StringItem id="Zoom Out" context="Zoom Out" translation="縮小" />
+  <StringItem id="Zoom Out" context="" translation="縮小" />
+  <StringItem id="Zoom Reset" context="Zoom Reset" translation="リセット" />
+  <StringItem id="Zoom Reset" context="" translation="リセット" />
+  <StringItem id="Fit In Active View" context="Pan and Zoom to center selection" translation="現在のビューに表示" />
+  <StringItem id="Pan and Zoom to center selection" context="" translation="パンおよびズームで選択部分が中央に表示されるようにします。" />
+  <StringItem id="Align/Lefts" context="Align left sides of selected items" translation="整列/左揃え" />
+  <StringItem id="Align left sides of selected items" context="" translation="選択したアイテムの左端を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Rights" context="Align right sides of selected items" translation="整列/右揃え" />
+  <StringItem id="Align right sides of selected items" context="" translation="選択したアイテムの右端を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Centers" context="Align centers of selected items" translation="整列/中央揃え" />
+  <StringItem id="Align centers of selected items" context="" translation="選択したアイテムの中央を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Tops" context="Align tops of selected items" translation="整列/上揃え" />
+  <StringItem id="Align tops of selected items" context="" translation="選択したアイテムの上端を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Bottoms" context="Align bottoms of selected items" translation="整列/下揃え" />
+  <StringItem id="Align bottoms of selected items" context="" translation="選択したアイテムの下端を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/Middles" context="" translation="整列/上下中央揃え" />
+  <StringItem id="Align middles of selected items" context="" translation="選択したアイテムの上下の中央を揃えます。" />
+  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="Align/To Grid" context="Align selected items to x/y grid" translation="整列/グリッド" />
+  <StringItem id="Align selected items to x/y grid" context="" translation="選択したアイテムを、X/Y グリッドに揃えます。" />
+  <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="サイズ/等しくする" />
+  <StringItem id="Make selected items have the same size" context="" translation="選択したアイテムのサイズを等しくします。" />
+  <StringItem id="Size/Make Widths Equal" context="Make selected items have the same width" translation="サイズ/幅を等しくする" />
+  <StringItem id="Make selected items have the same width" context="" translation="選択したアイテムの幅を等しくします。" />
+  <StringItem id="Size/Make Heights Equal" context="Make selected items have the same height" translation="サイズ/高さを等しくする" />
+  <StringItem id="Make selected items have the same height" context="" translation="選択したアイテムの高さを等しくします。" />
+  <StringItem id="Size/Size to Grid" context="Make selected items sizes align to x/y grid" translation="サイズ/グリッド" />
+  <StringItem id="Make selected items sizes align to x/y grid" context="" translation="選択したアイテムのサイズを、X/Y グリッドに揃えます。" />
+  <StringItem id="Split Horizontal" context="Split the window horizontally" translation="左右に分割" />
+  <StringItem id="Split the window horizontally" context="" translation="ウィンドウを左右に分割します。" />
+  <StringItem id="Split Vertical" context="Split the window vertically" translation="上下に分割" />
+  <StringItem id="Split the window vertically" context="" translation="ウィンドウを上下に分割します。" />
+  <StringItem id="Remove Split" context="Remove the split" translation="分割を解除" />
+  <StringItem id="Remove the split" context="" translation="分割を解除します。" />
+  <StringItem id="Tile Horizontal" context="Tile Documents Horizontally" translation="左右に並べて表示" />
+  <StringItem id="Tile the documents, as separate visible items, horizontally" context="" translation="複数のドキュメントを左右に並べて表示します。" />
+  <StringItem id="Tile Vertical" context="Tile Documents Vertically" translation="上下に並べて表示" />
+  <StringItem id="Tile the documents, as separate visible items, vertically" context="" translation="複数のドキュメントを上下に並べて表示します。" />
+  <StringItem id="Tile Overlapping" context="Tile Documents Overlapping" translation="重ねて表示" />
+  <StringItem id="Tile the documents, all together as tabbed items, in the central region of the application" context="" translation="ドキュメントにタブを付け、アプリケーションの中央部分に重ねて表示します。" />
+  <StringItem id="&amp;About" context="Get information about application" translation="バージョン情報(&amp;A)" />
+  <StringItem id="Get information about application" context="" translation="アプリケーションの情報を表示します。" />
+  <StringItem id="File" context="this is the name of a menu" translation="ファイル" />
+  <StringItem id="File Commands" context="" translation="ファイルコマンド" />
+  <StringItem id="Edit" context="this is the name of a menu" translation="編集" />
+  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
+  <StringItem id="View" context="this is the name of a menu" translation="表示" />
+  <StringItem id="View Commands" context="'View' is a noun. This text is a description of the View menu" translation="表示コマンド" />
+  <StringItem id="Modify" context="this is the name of a menu" translation="変更" />
+  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
+  <StringItem id="Format" context="this is the name of a menu" translation="フォーマット" />
+  <StringItem id="Formatting Commands" context="" translation="フォーマットコマンド" />
+  <StringItem id="Window" context="this is the name of a menu" translation="ウィンドウ" />
+  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
+  <StringItem id="Help" context="this is the name of a menu" translation="ヘルプ" />
+  <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
+  <StringItem id="Set Selection" context="" translation="選択範囲を設定" />
+</StringLocalizationTable>

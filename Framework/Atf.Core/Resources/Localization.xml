@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Error" context="" translation="Error" />
+  <StringItem id="Warning" context="" translation="Warning" />
+  <StringItem id="The Live Connect Service failed to initialize due to too many advertisers." context="" translation="The Live Connect Service failed to initialize due to too many advertisers." />
+  <StringItem id="The Live Connect Service failed to initialize because Bonjour is either not installed or the Windows service, 'Bonjour Service', is not running." context="" translation="The Live Connect Service failed to initialize because Bonjour is either not installed or the Windows service, 'Bonjour Service', is not running." />
+  <StringItem id="The Live Connect Service failed to initialize for some unknown reason: " context="" translation="The Live Connect Service failed to initialize for some unknown reason: " />
+  <StringItem id="Replace" context="" translation="Replace" />
+  <StringItem id="Unknown" context="" translation="Unknown" />
+  <StringItem id="Can't find source directory" context="" translation="Can't find source directory" />
+  <StringItem id="Can't find source file" context="" translation="Can't find source file" />
+  <StringItem id="Can't overwrite existing file" context="" translation="Can't overwrite existing file" />
+</StringLocalizationTable>

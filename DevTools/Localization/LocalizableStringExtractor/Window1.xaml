@@ -1,0 +1,11 @@
+﻿<Window x:Class="LocalizableStringExtractor.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="ATF Localizable String Extractor" Height="163" Width="311" Name="MainWindow" ResizeMode="NoResize">
+    <Grid Height="75" Width="279" VerticalAlignment="Top" Margin="6,0">
+        <TextBlock Name="textBlock1" Text="Press Start to create the Localization.xml files for each assembly. If these files need to be checked out from your versioning control system, do that now." TextWrapping="Wrap" Height="54" VerticalAlignment="Top" />
+        <Button Height="23" Margin="0,0,80,-44" Name="StartBtn" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" TabIndex="2147483647" Click="StartBtn_Click">Start</Button>
+        <Button Height="23" Margin="0,0,0,-44" Name="CancelBtn" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="CancelBtn_Click">Cancel</Button>
+        <Button x:Name="AssembliesBtn" Content="Assemblies..." HorizontalAlignment="Left" Height="23" Margin="0,96,0,-44" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.373,-1.909" Click="AssembliesBtn_Click"/>
+    </Grid>
+</Window>

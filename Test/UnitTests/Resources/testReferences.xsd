@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="refType">
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="ref" type="xs:anyURI"/>
+    <xs:attribute name="actuate" type="xs:string"/>
+    <xs:attribute name="constraint" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="refOwnerType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.attribute name="onRequesRef:constraint" value="refOwner[@name='refOwner1']"/>
+        <scea.dom.attribute name="onLoadRef:constraint" value="refOwner"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="onLoadRef" type="refType"/>
+      <xs:element name="onRequestRef" type="refType"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="docType">
+    <xs:annotation>
+      <xs:appinfo>
+        <scea.dom.collection id="name"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="refOwner" type="refOwnerType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="doc" type="docType"/>
+
+</xs:schema>

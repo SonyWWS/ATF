@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+The style names, e.g., "ControlStyle", are currently unused.
+-->
+<atfskin:skin xmlns:atfskin="atfskin" >
+ 
+  <!--Base Control Style-->
+  <style name="ControlStyle" targetType="System.Windows.Forms.Control">
+    <setter propertyName="BackColor">
+      <valueInfo type="System.Drawing.Color" value="#FF000000"/>
+    </setter>
+  </style>
+
+  <!--TestControlX derives from TestControlA-->
+  <style name="TestControlX" targetType="UnitTests.Atf.TestControlX">
+    <setter propertyName="StringA">
+      <valueInfo type="string" value="TestSkinValueX"/>
+    </setter>
+  </style>
+
+  <!--TestControlC derives from TestControlB. Make sure that these definitions can appear in any order.-->
+  <style name="TestControlC" targetType="UnitTests.Atf.TestControlC">
+    <setter propertyName="BackColor">
+      <valueInfo type="System.Drawing.Color" value="#FF00000c"/>
+    </setter>
+    <setter propertyName="StringC">
+      <valueInfo type="string" value="TestSkinValueC"/>
+    </setter>
+  </style>
+
+  <!--TestControlY derives from TestControlA-->
+  <style name="TestControlY" targetType="UnitTests.Atf.TestControlY">
+    <setter propertyName="StringA">
+      <valueInfo type="string" value="TestSkinValueY"/>
+    </setter>
+  </style>
+
+  <!--TestControlA derives from Control-->
+  <style name="TestControlA" targetType="UnitTests.Atf.TestControlA">
+    <setter propertyName="BackColor">
+      <valueInfo type="System.Drawing.Color" value="#FF00000a"/>
+    </setter>
+    <setter propertyName="StringA">
+      <valueInfo type="string" value="TestSkinValueA"/>
+    </setter>
+  </style>
+
+  <!--TestControlB derives from TestControlA-->
+  <style name="TestControlB" targetType="UnitTests.Atf.TestControlB">
+    <setter propertyName="BackColor">
+      <valueInfo type="System.Drawing.Color" value="#FF00000b"/>
+    </setter>
+    <setter propertyName="StringB">
+      <valueInfo type="string" value="TestSkinValueB"/>
+    </setter>
+  </style>
+
+  <!--TestControlZ derives from TestControlA-->
+  <style name="TestControlZ" targetType="UnitTests.Atf.TestControlZ">
+    <setter propertyName="StringA">
+      <valueInfo type="string" value="TestSkinValueZ"/>
+    </setter>
+  </style>
+
+  <!--Undefined target types can happen because the same skin file can be used in multiple apps
+  and not all the apps define the same types.-->
+  <style name="TestUndefinedType" targetType="Xxx.NotAValidType">
+    <setter propertyName="StringUndefined">
+      <valueInfo type="string" value="TestUndefined"/>
+    </setter>
+  </style>
+
+  <!--GeneralObjectA is just a base class and does not derive from Control-->
+  <style name="GeneralObjectA" targetType="UnitTests.Atf.GeneralObjectA">
+    <setter propertyName="StringA">
+      <valueInfo type="string" value="TestSkinValueA"/>
+    </setter>
+  </style>
+
+</atfskin:skin>

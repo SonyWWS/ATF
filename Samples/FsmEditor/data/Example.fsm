@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<fsm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://sony.com/gametech/fsms/1_0">
+	<state entryAction="" action="" exitAction="" name="State" label="State1" x="96" y="64" hidden="false" start="false" />
+	<state entryAction="" action="" exitAction="" name="State_1" label="State2" x="128" y="160" />
+	<state entryAction="" action="" exitAction="" name="State_2" label="State3" x="320" y="64" />
+	<state entryAction="" action="" exitAction="" name="State_3" label="State1" x="96" y="288" size="64" hidden="false" start="false" />
+	<state entryAction="" action="" exitAction="" name="State_7" label="State2" x="224" y="416" size="64" />
+	<state entryAction="" action="" exitAction="" name="State_8" label="State3" x="320" y="288" size="64" />
+	<transition source="State" destination="State_2" />
+	<transition source="State_1" destination="State_2" />
+	<transition source="State_3" destination="State_8" />
+	<transition source="State_7" destination="State_8" />
+	<transition source="State_3" destination="State_7" />
+	<transition source="State_7" destination="State_3" />
+	<transition source="State_7" destination="State_3" />
+	<annotation text="Drag some states from the Palette&#xD;&#xA;FSM tab onto the canvas.&#xD;&#xA;&#xD;&#xA;Click on a state to select it&#xD;&#xA;and click on a selected state's label&#xD;&#xA;to edit it.&#xD;&#xA;&#xD;&#xA;Click on the border of a state to drag&#xD;&#xA;a transition, and release the mouse&#xD;&#xA;button over the boundary of another&#xD;&#xA;state to complete the transition." x="416" y="32" />
+	<annotation text="Drag multiple transitions from one state&#xD;&#xA;to another and notice how they are routed&#xD;&#xA;so that all are visible." x="416" y="288" />
+	<annotation text="Copy multiple states by clicking on the canvas&#xD;&#xA;and dragging a rectangle around the desired&#xD;&#xA;states.&#xD;&#xA;&#xD;&#xA;Try copying and pasting states.&#xD;&#xA;&#xD;&#xA;Copy the states and paste them into the&#xD;&#xA;Prototypes tab. Then drag and drop the prototype&#xD;&#xA;onto the canvas." x="352" y="384" />
+	<prototypeFolder />
+</fsm>

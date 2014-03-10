@@ -1,0 +1,61 @@
+<SyntaxLanguage Key="Imat" LanguageDefinitionVersion="4.0" Secure="True" 
+				xmlns="http://ActiproSoftware/SyntaxEditor/4.0/LanguageDefinition">
+
+	<!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="Sony Computer Entertainment America" />
+		<Property Key="Copyright" Value="Copyright (c) 2012 Sony Computer Entertainment America.  All rights reserved." />
+	</Properties>
+	
+	<!-- Highlighting Styles -->	
+	<Styles>		
+		<Style Key="ReservedWordStyle" ForeColor="Blue" />
+		<Style Key="FunctionStyle" ForeColor="Magenta" />
+		<Style Key="GlobalVariableStyle" ForeColor="Teal" />
+		<Style Key="OperatorStyle" ForeColor="Black" />
+		<Style Key="NumberStyle" ForeColor="Purple" />
+		<Style Key="StringDelimiterStyle" ForeColor="Maroon" />
+		<Style Key="StringDefaultStyle" ForeColor="Maroon" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Green" />
+		<Style Key="CommentURLStyle" ForeColor="Green" UnderlineStyle="Solid" CursorName="Hand" CursorModifierKeys="AnyControl" />
+		<Style Key="CommentTagStyle" ForeColor="Gray" />
+		<Style Key="CommentDefaultStyle" ForeColor="Green" />
+	</Styles>
+
+	<!-- States -->
+	<States>
+		<!-- Code -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<!-- Brackets -->
+				<ExplicitPatternGroup Key="OpenParenthesisPatternGroup" TokenKey="OpenParenthesisToken" PatternValue="(" EndBracket="CloseParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="CloseParenthesisPatternGroup" TokenKey="CloseParenthesisToken" PatternValue=")" StartBracket="OpenParenthesisPatternGroup" />
+				<!-- Reserved Words -->
+				<ExplicitPatternGroup TokenKey="ReservedWordToken" Style="ReservedWordStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
+					<ExplicitPatterns>
+						and or not true false StateTime ChannelPlaying ChannelStopped PlaylistPlaying PlaylistStopped
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Identifier -->
+				<RegexPatternGroup TokenKey="IdentifierToken" PatternValue="({AlphaMacro})({WordMacro})*" />
+				<!-- Operators -->
+				<ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle">
+					<ExplicitPatterns>
+						+ - * / = != &lt;= &lt; &gt;= &gt;  
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Numbers -->
+				<RegexPatternGroup TokenKey="RealNumberToken" Style="NumberStyle" LookAhead="{NonWordMacro}|\z">
+					<RegexPattern Value="{DigitMacro}* \. {DigitMacro}+ ([Ee] [\+\-]? {DigitMacro}+)?" />
+					<RegexPattern Value="{DigitMacro}+ [Ee] [\+\-]? {DigitMacro}+" />
+				</RegexPatternGroup>
+				<RegexPatternGroup TokenKey="IntegerNumberToken" Style="NumberStyle" PatternValue="{DigitMacro}+ [Ll]?" LookAhead="{NonWordMacro}|\z" />
+			</PatternGroups>			
+		</State>
+			
+	</States>	
+		
+</SyntaxLanguage>

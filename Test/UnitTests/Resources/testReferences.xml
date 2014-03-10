@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="test">
+  <refOwner name="refOwner1">
+    <onLoadRef ref="refOwner2" actuate="onLoad"/>
+  </refOwner>
+  <refOwner name="refOwner2">
+    <onRequestRef ref="refOwner1" actuate="onRequest"/>
+  </refOwner>
+</doc>

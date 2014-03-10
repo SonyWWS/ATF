@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="importedNamespace"
+	xmlns="importedNamespace"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="importedSimpleType">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:complexType name="importedComplexType">
+  </xs:complexType>
+
+  <!--This complexType named "complesType" is defined in test_customized.xsd which imports this schema.-->
+  <xs:complexType name="complexType">
+  </xs:complexType>
+
+  <xs:element name="root" type="importedComplexType"/>
+  
+</xs:schema>

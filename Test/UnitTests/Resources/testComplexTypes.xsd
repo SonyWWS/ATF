@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="abstractType" abstract="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <annotation attr1="value1"/>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:complexType>
+
+  <xs:complexType name="complexType1">
+    <xs:complexContent>
+      <xs:extension base="abstractType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="complexType2">
+    <xs:attribute name="attr1" type="xs:integer" default="1">
+      <xs:annotation>
+        <xs:appinfo>
+          <annotation/>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="attr2" type="xs:integer" default="2"/>
+  </xs:complexType>
+
+  <xs:complexType name="complexType3">
+    <xs:complexContent>
+      <xs:extension base="complexType2">
+        <xs:sequence>
+          <xs:element name="elem1" type="complexType1">
+            <xs:annotation>
+              <xs:appinfo>
+                <annotation/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="elem2" type="complexType1" minOccurs="1" maxOccurs="3"/>
+          <xs:element name="elem3" type="xs:integer" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="attr3" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="complexType4">
+    <xs:sequence>
+      <xs:element name="elem1" type="complexType3"/>
+    </xs:sequence>
+    <xs:attribute name="attr1" type="xs:integer"/>
+  </xs:complexType>
+
+  <xs:complexType name="complexType5">
+    <xs:choice>
+      <xs:element name="elem1" type="abstractType" maxOccurs="unbounded"/>
+      <xs:element name="elem2" type="complexType2" maxOccurs="1"/>
+      <xs:element name="elem3" type="complexType3"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="complexType6">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="elem1" type="abstractType"/>
+        <xs:element name="elem2" type="complexType2" maxOccurs="2"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="floatListType">
+    <xs:list itemType="xs:float"></xs:list>
+  </xs:simpleType>
+
+  <xs:simpleType name="vector3Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="3"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="complexType7">
+    <xs:sequence>
+      <xs:element name="elemSimpleSequence" type="vector3Type" minOccurs="3" maxOccurs="3"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

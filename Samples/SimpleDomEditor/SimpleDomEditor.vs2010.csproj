@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{323C6B4C-DCF6-49EB-8A74-3A18BE0B0DE7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SimpleDomEditorSample</RootNamespace>
+    <AssemblyName>SimpleDomEditor</AssemblyName>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release.vs2010\</OutputPath>
+    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="schemas\GenSchemaDef.bat" />
+    <EmbeddedResource Include="schemas\eventSequence.xsd">
+      <SubType>
+      </SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\About.rtf" />
+    <Compile Include="DomNodeNameSearchControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DomNodeNameSearchControl.Designer.cs">
+      <DependentUpon>DomNodeNameSearchControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EventListEditor.cs" />
+    <Compile Include="GenericSelectionContext.cs" />
+    <Compile Include="ResourceListEditor.cs" />
+    <Compile Include="EventContext.cs" />
+    <Compile Include="EventSequenceContext.cs" />
+    <Compile Include="DomNodeAdapters\Event.cs" />
+    <Compile Include="DomNodeAdapters\EventSequence.cs" />
+    <Compile Include="PaletteClient.cs" />
+    <Compile Include="DomNodeAdapters\Resource.cs" />
+    <Compile Include="EventSequenceDocument.cs">
+    </Compile>
+    <Compile Include="HelpAboutCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="schemas\Schema.cs" />
+    <Compile Include="SchemaLoader.cs" />
+    <Compile Include="Program.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Editor.cs" />
+    <Compile Include="DomNodeNameSearchService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\event.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\resource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
+      <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
+      <Name>Atf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
+      <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
+      <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
+      <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
+      <Name>Atf.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.IronPython\Atf.IronPython.vs2010.csproj">
+      <Project>{7F794C24-7A8D-4D21-B443-F03509669F89}</Project>
+      <Name>Atf.IronPython.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\animation.png" />
+    <EmbeddedResource Include="Resources\geometry.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dom_collection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dom_object.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DomNodeNameSearchControl.resx">
+      <DependentUpon>DomNodeNameSearchControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\dom_repository.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>@ REM copy schemas  to ATF\Bin\Schemas
+rem xcopy /Y /I /S /R /D "$(ProjectDir)schemas\*.xsd"  "..\bin\schemas\"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

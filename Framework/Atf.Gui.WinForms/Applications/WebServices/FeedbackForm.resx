@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_userTextBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_userTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 325</value>
+  </data>
+  <data name="m_userTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 20</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_userTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;m_userTextBox.Name" xml:space="preserve">
+    <value>m_userTextBox</value>
+  </data>
+  <data name="&gt;&gt;m_userTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_userTextBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_userTextBox.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="m_descLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 86</value>
+  </data>
+  <data name="m_descLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>128, 16</value>
+  </data>
+  <data name="m_descLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="m_descLabel.Text" xml:space="preserve">
+    <value>Bug description:</value>
+  </data>
+  <data name="&gt;&gt;m_descLabel.Name" xml:space="preserve">
+    <value>m_descLabel</value>
+  </data>
+  <data name="&gt;&gt;m_descLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_descLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_descLabel.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="m_descTextBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="m_descTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 105</value>
+  </data>
+  <data name="m_descTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>304, 185</value>
+  </data>
+  <data name="m_descTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="m_descTextBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;m_descTextBox.Name" xml:space="preserve">
+    <value>m_descTextBox</value>
+  </data>
+  <data name="&gt;&gt;m_descTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_descTextBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_descTextBox.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="m_titleTextBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="m_titleTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 25</value>
+  </data>
+  <data name="m_titleTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>304, 20</value>
+  </data>
+  <data name="m_titleTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_titleTextBox.Name" xml:space="preserve">
+    <value>m_titleTextBox</value>
+  </data>
+  <data name="&gt;&gt;m_titleTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_titleTextBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_titleTextBox.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="m_titleLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 9</value>
+  </data>
+  <data name="m_titleLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 16</value>
+  </data>
+  <data name="m_titleLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_titleLabel.Text" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="&gt;&gt;m_titleLabel.Name" xml:space="preserve">
+    <value>m_titleLabel</value>
+  </data>
+  <data name="&gt;&gt;m_titleLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_titleLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_titleLabel.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="m_passwordLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="m_passwordLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>120, 309</value>
+  </data>
+  <data name="m_passwordLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 16</value>
+  </data>
+  <data name="m_passwordLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="m_passwordLabel.Text" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="&gt;&gt;m_passwordLabel.Name" xml:space="preserve">
+    <value>m_passwordLabel</value>
+  </data>
+  <data name="&gt;&gt;m_passwordLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_passwordLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_passwordLabel.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="m_userLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="m_userLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 309</value>
+  </data>
+  <data name="m_userLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 16</value>
+  </data>
+  <data name="m_userLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="m_userLabel.Text" xml:space="preserve">
+    <value>SHIP username:</value>
+  </data>
+  <data name="&gt;&gt;m_userLabel.Name" xml:space="preserve">
+    <value>m_userLabel</value>
+  </data>
+  <data name="&gt;&gt;m_userLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_userLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_userLabel.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="m_passwordTextBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="m_passwordTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>120, 325</value>
+  </data>
+  <data name="m_passwordTextBox.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="m_passwordTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 20</value>
+  </data>
+  <data name="m_passwordTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;m_passwordTextBox.Name" xml:space="preserve">
+    <value>m_passwordTextBox</value>
+  </data>
+  <data name="&gt;&gt;m_passwordTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_passwordTextBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_passwordTextBox.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="m_submitBtn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="m_submitBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 365</value>
+  </data>
+  <data name="m_submitBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 23</value>
+  </data>
+  <data name="m_submitBtn.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="m_submitBtn.Text" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="&gt;&gt;m_submitBtn.Name" xml:space="preserve">
+    <value>m_submitBtn</value>
+  </data>
+  <data name="&gt;&gt;m_submitBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_submitBtn.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_submitBtn.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="m_cancelBtn.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="m_cancelBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>248, 365</value>
+  </data>
+  <data name="m_cancelBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 23</value>
+  </data>
+  <data name="m_cancelBtn.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="m_cancelBtn.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Name" xml:space="preserve">
+    <value>m_cancelBtn</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_cancelBtn.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="m_statusBar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 390</value>
+  </data>
+  <data name="m_statusBar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>320, 24</value>
+  </data>
+  <data name="m_statusBar.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;m_statusBar.Name" xml:space="preserve">
+    <value>m_statusBar</value>
+  </data>
+  <data name="&gt;&gt;m_statusBar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.StatusBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_statusBar.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_statusBar.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="m_lblEmail.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="m_lblEmail.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 306</value>
+  </data>
+  <data name="m_lblEmail.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 16</value>
+  </data>
+  <data name="m_lblEmail.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="m_lblEmail.Text" xml:space="preserve">
+    <value>Your email address:</value>
+  </data>
+  <data name="&gt;&gt;m_lblEmail.Name" xml:space="preserve">
+    <value>m_lblEmail</value>
+  </data>
+  <data name="&gt;&gt;m_lblEmail.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_lblEmail.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_lblEmail.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="m_txtEmail.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="m_txtEmail.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 325</value>
+  </data>
+  <data name="m_txtEmail.Size" type="System.Drawing.Size, System.Drawing">
+    <value>161, 20</value>
+  </data>
+  <data name="m_txtEmail.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;m_txtEmail.Name" xml:space="preserve">
+    <value>m_txtEmail</value>
+  </data>
+  <data name="&gt;&gt;m_txtEmail.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_txtEmail.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_txtEmail.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_lblPriority.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="m_lblPriority.Location" type="System.Drawing.Point, System.Drawing">
+    <value>107, 49</value>
+  </data>
+  <data name="m_lblPriority.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 23</value>
+  </data>
+  <data name="m_lblPriority.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="m_lblPriority.Text" xml:space="preserve">
+    <value>Priority: </value>
+  </data>
+  <data name="m_lblPriority.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;m_lblPriority.Name" xml:space="preserve">
+    <value>m_lblPriority</value>
+  </data>
+  <data name="&gt;&gt;m_lblPriority.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_lblPriority.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_lblPriority.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_cmbPriority.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="m_cmbPriority.Items" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="m_cmbPriority.Items1" xml:space="preserve">
+    <value>Trivial</value>
+  </data>
+  <data name="m_cmbPriority.Items2" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="m_cmbPriority.Items3" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="m_cmbPriority.Items4" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="m_cmbPriority.Items5" xml:space="preserve">
+    <value>Critical</value>
+  </data>
+  <data name="m_cmbPriority.Location" type="System.Drawing.Point, System.Drawing">
+    <value>187, 51</value>
+  </data>
+  <data name="m_cmbPriority.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
+  </data>
+  <data name="m_cmbPriority.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_cmbPriority.Name" xml:space="preserve">
+    <value>m_cmbPriority</value>
+  </data>
+  <data name="&gt;&gt;m_cmbPriority.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_cmbPriority.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_cmbPriority.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing">
+    <value>5, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>320, 414</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>232, 300</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Submit bug</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FeedbackForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

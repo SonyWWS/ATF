@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<circuit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://sony.com/gametech/circuits/1_0">
+	<module xsi:type="buttonType" name="Button_1" x="96" y="96" />
+	<module xsi:type="andType" name="And_1" x="224" y="160" />
+	<module xsi:type="lightType" name="Light_1" x="352" y="96" />
+	<module xsi:type="buttonType" name="Button_3" label="In1" x="64" y="352" />
+	<module xsi:type="andType" name="And_5" x="192" y="352" />
+	<module xsi:type="lightType" name="Light_3" label="Out1" x="416" y="352" />
+	<module xsi:type="buttonType" name="Button_4" label="In2" x="64" y="448" />
+	<module xsi:type="andType" name="And_6" x="288" y="448" />
+	<module xsi:type="lightType" name="Light_4" label="Out2" x="416" y="448" />
+	<connection outputModule="Button_1" outputPin="0" inputModule="And_1" inputPin="0" />
+	<connection outputModule="And_1" outputPin="0" inputModule="Light_1" inputPin="0" />
+	<connection outputModule="Button_3" outputPin="0" inputModule="And_5" inputPin="0" />
+	<connection outputModule="And_5" outputPin="0" inputModule="Light_3" inputPin="0" />
+	<connection outputModule="And_6" outputPin="0" inputModule="Light_4" inputPin="0" />
+	<connection outputModule="And_5" outputPin="0" inputModule="And_6" inputPin="0" />
+	<connection outputModule="Button_4" outputPin="0" inputModule="And_6" inputPin="1" />
+	<connection outputModule="Button_4" outputPin="0" inputModule="And_5" inputPin="1" />
+	<layerFolder />
+	<annotation text="Try dragging some circuit modules&#xD;&#xA;from the Circuits Tab in the Palette. Button&#xD;&#xA;represents an input to the circuit, while Light&#xD;&#xA;is an output. These, together with the And&#xD;&#xA;and Or modules, use one wire type, while&#xD;&#xA;Sound and Speaker connect with another&#xD;&#xA;type.&#xD;&#xA;&#xD;&#xA;Try connecting modules with wires by&#xD;&#xA;clicking on the module pins and dragging&#xD;&#xA;and dropping onto other pins." x="467" y="60" />
+	<annotation text="Complex circuits can be also be simplified&#xD;&#xA;by creating layers. Copy some modules in&#xD;&#xA;the circuit and paste them into the Layers&#xD;&#xA;control. By clicking the layer's checkbox,&#xD;&#xA;the user can show/hide modules." x="508" y="589" />
+	<annotation text="New module types can also be created. Try&#xD;&#xA;selecting the entire sub-circuit above and do&#xD;&#xA;Edit/Master. Notice how the elements are&#xD;&#xA;replaced by a new module. Double click on&#xD;&#xA;the new module to see the original modules.&#xD;&#xA;All copies of this new module will be identical.&#xD;&#xA;&#xD;&#xA;Edit/Unmaster converts an instance of this&#xD;&#xA;master to its component modules, but leaves&#xD;&#xA;all other instances unchanged." x="164" y="560" />
+	<annotation text="Modules in a circuit can be grouped to&#xD;&#xA;simplify the layout or keep modules together.&#xD;&#xA;&#xD;&#xA;Select the two And states and do Edit/Group.&#xD;&#xA;Notice how the two modules are replaced&#xD;&#xA;with a single one that is still connected to the&#xD;&#xA;rest of the circuit.&#xD;&#xA;&#xD;&#xA;Select the group and do Edit/Ungroup to&#xD;&#xA;restore the original modules." x="509" y="303" />
+	<prototypeFolder />
+</circuit>

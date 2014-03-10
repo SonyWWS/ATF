@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="http://sony.com/gametech/statecharts/1_0"
+	xmlns="http://sony.com/gametech/statecharts/1_0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+  A state has a name (id), position, and can be referenced by transitions.
+  -->
+  <xs:complexType name ="stateBaseType" abstract="true">
+    <xs:attribute name="name" type="xs:ID" use="required" />
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+  </xs:complexType>
+
+  <!--
+  A reaction is an event/guard/action triple
+  -->
+  <xs:complexType name="reactionType">
+    <xs:attribute name="event" type="xs:string" use="required" />
+    <xs:attribute name="guard" type="xs:string" />
+    <xs:attribute name="action" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A transition is a reaction, and connects the source state to the destination state.
+  The positions of the transition ends are determined by the fromPosition and toPosition
+  values, which are in the range [0..3].
+  -->
+  <xs:complexType name="transitionType">
+    <xs:complexContent>
+      <xs:extension base="reactionType">
+        <xs:attribute name="fromState" type="xs:IDREF" use="required" />
+        <xs:attribute name="fromPosition" type="xs:float" />
+        <xs:attribute name="toState" type="xs:IDREF" use="required" />
+        <xs:attribute name="toPosition" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A normal state is a state which can contain statecharts (as opposed to a pseudo-state).
+  -->
+  <xs:complexType name="stateType">
+    <xs:complexContent>
+      <xs:extension base="stateBaseType">
+        <xs:sequence>
+          <xs:element name="reaction" type="reactionType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="statechart" type="statechartType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="label" type="xs:string" default="State"/>
+        <xs:attribute name="width" type="xs:int" use="required" />
+        <xs:attribute name="height" type="xs:int" use="required" />
+        <xs:attribute name="entryAction" type="xs:string" />
+        <xs:attribute name="exitAction" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A start pseudo-state
+  -->
+  <xs:complexType name="startStateType">
+    <xs:complexContent>
+      <xs:extension base="stateBaseType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A final pseudo-state
+  -->
+  <xs:complexType name="finalStateType">
+    <xs:complexContent>
+      <xs:extension base="stateBaseType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A history pseudo-state; history can be deep or shallow
+  -->
+  <xs:complexType name="historyStateType">
+    <xs:complexContent>
+      <xs:extension base="stateBaseType">
+        <xs:attribute name="type" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A conditional pseudo-state
+  -->
+  <xs:complexType name="conditionalStateType">
+    <xs:complexContent>
+      <xs:extension base="stateBaseType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  A statechart contains states; all transitions are stored on the root statechart
+  document.
+  -->
+  <xs:complexType name="statechartType">
+    <xs:sequence>
+      <xs:element name="state" type="stateBaseType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  A prototype is a set of states and transitions among them that can be copied and
+  pasted into a statechart.
+  -->
+  <xs:complexType name ="prototypeType" >
+    <xs:sequence>
+      <xs:element name="state" type="stateBaseType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="transition" type="transitionType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  A prototype folder allows a hierarchy containing prototypes to be defined.
+  -->
+  <xs:complexType name ="prototypeFolderType">
+    <xs:sequence>
+      <xs:element name="prototypeFolder" type="prototypeFolderType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="prototype" type="prototypeType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+
+  <!--
+  An annotation is a comment on the statechart canvas.
+  -->
+  <xs:complexType name="annotationType">
+    <xs:attribute name="text" type="xs:string" use="required" />
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+  </xs:complexType>
+
+  <!--
+  A statechart document is the root statechart, and contains all transitions,
+  as well as the prototype hierarchy.
+  -->
+  <xs:complexType name="statechartDocumentType">
+    <xs:complexContent>
+      <xs:extension base="statechartType">
+        <xs:sequence>
+          <xs:element name="transition" type="transitionType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="prototypeFolder" type="prototypeFolderType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--
+  The root element of a statechart document.
+  -->
+  <xs:element name="statechart" type="statechartDocumentType"/>
+
+</xs:schema>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="tutorial3/game"
+	xmlns="tutorial3/game"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="assetType">
+    <xs:attribute name="name" type="xs:Name" />
+    <xs:attribute name="uri" type="xs:anyURI" />
+  </xs:complexType>
+
+  <xs:complexType name="gameObjectType">
+    <xs:attribute name="name" type="xs:Name" />
+  </xs:complexType>
+
+  <xs:complexType name="assetFolderType">
+    <xs:sequence>
+      <xs:element name="asset" type="assetType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="folder" type="assetFolderType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:Name"/>
+  </xs:complexType>
+
+  <xs:complexType name="gameObjectFolderType">
+    <xs:sequence>
+      <xs:element name="gameObject" type="gameObjectType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="folder" type="gameObjectFolderType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:Name"/>
+  </xs:complexType>
+
+  <xs:complexType name="gameType">
+    <xs:sequence>
+      <xs:element name="assetFolder" type="assetFolderType" minOccurs="0" maxOccurs="1" />
+      <xs:element name="gameObjectFolder" type="gameObjectFolderType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:Name"/>
+  </xs:complexType>
+
+  <xs:complexType name="ogreType">
+    <xs:annotation>
+      <xs:appinfo>
+        modifiers="private",editor="ogreEditor"
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gameObjectType">
+        <xs:attribute name="size" type="xs:integer"/>
+        <xs:attribute name="strength" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="ogre" type="ogreType"/>
+
+  <xs:element name="game" type="gameType"/>
+  
+  <!--END Format Schema -->
+</xs:schema>

@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="Sce.Atf.Wpf.Controls.SliderBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+             d:DesignHeight="16" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" MinWidth="40" />
+        </Grid.ColumnDefinitions>
+            <Slider HorizontalAlignment="Stretch" 
+                    x:Name="PositionSlider"
+                  Minimum="0" Maximum="1"
+                    Focusable="True" Margin="0 0 4 0"
+                    Value="{Binding Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=c:SliderBox},
+                            UpdateSourceTrigger=Explicit}">
+            </Slider>
+        <c:FormattingTextBox
+                x:Name="TextBox"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                BorderThickness="0" Margin="0" Padding="0"
+                Value="{Binding Value, ElementName=PositionSlider}"
+                StringFormat="{Binding StringFormat, RelativeSource={RelativeSource AncestorType=c:SliderBox}}">
+        </c:FormattingTextBox>
+    </Grid>
+</UserControl>

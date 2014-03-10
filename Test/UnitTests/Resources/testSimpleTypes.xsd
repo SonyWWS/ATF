@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="floatListType">
+    <xs:list itemType="xs:float"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="float2Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="stringType1">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="stringType2">
+    <xs:restriction base="stringType1">
+      <xs:enumeration id="value1" value="value1"/>
+      <xs:enumeration id="value2" value="value2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="minInclusiveType">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="minExclusiveType">
+    <xs:restriction base="xs:integer">
+      <xs:minExclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="maxInclusiveType">
+    <xs:restriction base="xs:integer">
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="maxExclusiveType">
+    <xs:restriction base="xs:integer">
+      <xs:maxExclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

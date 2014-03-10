@@ -1,0 +1,312 @@
+Quick Help for the ATF Curve Editor
+
+The ATF Curve Editor is used to create and edit curves or splines, including working with control points (keys) and tangents, and to create different kinds of curves (linear, stepped, clamped, smooth). The Curve Editor has a mode similar to Maya's Graph editor.
+
+The splines used by the Curve editor are Cubic Hermite splines (cspline). For more information, see http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Catmull.E2.80.93Rom_spline.
+
+This page is a quick reference for using the ATF Curve Editor. For the full guide, see the "ATF Curve Editor User and Programming Guide".
+
+
+Origin Lock Modes:
+
+There are several modes for locking the origin of the graph. From curve editor's main menu Options > Lock Origin:
+  
+Free:          No lock. Can pan along x- and y-axes.
+Center:        Lock origin to center; panning disabled.
+Left:          Lock to positive x-axis, y-axis is free to pan.
+LeftTop:       Lock to left top; panning disabled.
+LeftMiddle:    Lock to left middle; panning disabled.
+LeftBottom:    Lock to left bottom; panning disabled.
+
+
+Input modes:
+
+Curve Editor has two input modes:
+
+Basic mode:    In this mode, all operations are done either
+               with the left mouse button or right mouse button. 
+               Mouse wheel is optional for zooming.
+Advanced mode: Input handling for this mode is similar 
+               to Maya’s Graph Editor. It is more powerful, 
+               but it is harder to learn and use compared to
+               Basic mode.
+               
+The default mode is Basic; the user can change the mode with the Options > Input Mode menu. All shortcut keys are the same for both modes; only mouse handling differs.
+
+
+Basic Mode Mouse Handling
+-------------------------
+
+Task                          Operation
+---------------------------------------
+RMB (Right mouse button):
+  To zoom:                    Alt + drag, or rotate mouse wheel.
+  To show context menu:       Click.
+                            
+LMB (Left mouse button)
+  To pan:                     Alt + drag.
+  To clear selection:         Click an empty area.
+  To select a point:          Click on the point.
+  To add/remove a point       Ctrl + click the point.
+    from/to selection:
+  To select multiple points:  Drag selection rectangle around points.
+  To select an entire curve:  Click the curve.
+  To move a point:            Drag the point.
+  To select a tangent:        Select point, and then click its tangent.
+  To add tangent to           Ctrl + click on point, then on tangent.
+    selection:
+  To remove tangent from      Ctrl + click on tangent.
+    selection:
+  To add a new point:         First select curve(s) and then
+                              Shift + click anywhere. 
+                              If editing a single curve, there is 
+                              no need to select it first. Use either 
+                              Shift + LMB or Shift + MMB
+                              (Middle Mouse Button) to add point.
+MMB (Middle mouse button)
+  To Pan:                     Alt + drag.
+ 
+
+Advanced Mode Mouse Handling
+----------------------------
+
+Centering, Panning, and Zooming
+-------------------------------
+
+Task                          Operation
+---------------------------------------
+Zoom the view:                Alt + right mouse button and drag,                
+                              or use the mouse wheel.
+
+Pan the view:                 Alt + middle mouse button and drag,
+                              or Ctrl + Alt + Right mouse button
+                              and drag.
+ 
+Center the view around        C
+the origin: 
+
+Frame the view around         F, or select Fit button on toolbar.
+the selection or all curves
+if nothing is selected:
+
+Frame the view around         A
+all visible curves
+
+
+Selections
+----------
+
+Task                             Operation
+------------------------------------------
+Select a single point:           Click left mouse button on point, or
+                                 drag selection rectangle around point.
+
+To select multiple points:       Drag selection rectangle around points.
+
+Clear selection:                 Click left mouse button outside
+                                 selection.
+
+Add point to selection:          Ctrl + Shift + left mouse button on point.
+
+Remove point from selection:     Ctrl + left Mouse button on point.
+
+Toggle point's selection         Shift + left Mouse button on point.
+state:
+
+Add multiple points to           Shift + Ctrl + left mouse button
+selection:                       and drag around points.
+
+Remove multiple points from      Ctrl + left mouse button and drag
+selection:                       around points.
+
+Toggle selection state           Shift + left mouse button and drag
+for multiple points:             around points.
+
+Select entire curve:             Left mouse button on curve.
+
+Select tangent:                  Select a point, and then use left
+                                 mouse button to select tangent.
+
+Add tangent to selection:        Ctrl + Shift + left Mouse button on
+                                 control point, and then on tangent.
+
+Remove tangent from selection:   Ctrl + left Mouse button on tangent.
+
+Remove multiple tangents         Ctrl + left mouse button and drag
+from selection:                  around tangents.
+
+Select tangent in and            Not supported.
+tangent out for the same point:
+
+
+Editing
+-------
+
+Some standard clipboard editing operations (Delete/Undo/Redo) are available in the Curve Editor and can be accessed from:
+
+* The Edit menu (for example, Edit > Undo).
+* The context menu.
+* The standard shortcut keys, such as Ctrl + Z.
+
+
+Task      Operation
+----------------------
+Delete:   Select point(s) and then select Delete.
+Undo:     Select Edit > Undo.
+Redo:     Select Edit > Redo.
+
+
+Working with Control Points
+---------------------------
+
+See "Selections" section for information on selecting control points.
+
+To add a new point in Basic input mode (Options > Input Mode > Basic):
+
+1. Select the curve(s) to which you want to add a control point (if you have not done so already). Or isolate the curve so that it is the only one being shown.
+2. Use Shift + left mouse button or Shift + middle mouse button to add a new control point.
+
+The new point is inserted at the mouse position for each selected curve and the curve(s) adjust to include the point.
+
+To add a new point in Advanced input mode (Options > Input Mode > Advanced):
+
+1. Click the Add Control Point button on the toolbar to change to Add mode. The Add button has a Key icon and a + sign on it.
+2. Select the curve(s) to which you want to add a control point (if you have not done so already). You can select curve by clicking on a point. Or isolate the curve so that it is the only one being shown.
+3. Use the middle mouse button to add a new control point. Or use Ctrl + right mouse button.
+
+The new point is inserted at the mouse position for each selected curve. The curve(s) adjusts to include the new point.
+
+To insert a new point onto curve(s) in Advanced input mode (Options > Input Mode > Advanced):
+
+1. Click the Insert Control Point button on the toolbar to change to Add mode. Insert Add button has a Key icon, V and + sign on it.
+2. Select the curve(s) to which you want to insert a control point (if you have not done so already). You can select curve by clicking on a point. Or isolate the curve so that it is the only one being shown.
+3. Use the middle mouse button to add a new control point. Or use Ctrl + right mouse button. 
+
+The point is placed on the curve(s) at the intersection of each selected curve and the vertical line through the insertion point. Each curve's shape does not change.
+
+To add a new point with the curve list:
+
+1. In the curve list in the left panel, right-click the curve.
+2. From the context menu click "Add Point" to show the Add Point dialog.
+3. Enter values for x and y and press Ok. The new point is added at the specified location.
+
+To move or translate points with the mouse in Basic input mode (Options > Input Mode > Basic):
+1. Select the points you want to move.
+2. Click on one of the selected points and drag the selection with the left mouse button.
+
+To move or translate points with the mouse in Advanced input mode (Options > Input Mode > Advanced):
+1. Click the Move Selected Control Point button on the toolbar to change to Move mode. The Move button has an icon with a stack of keys and an arrow pointing to the right.
+2. Select the points you want to move. For the right mouse button, hold Ctrl + right mouse button. 
+3. Drag the selection with the middle mouse button to move the selected points. Or use Ctrl + right mouse button and drag. Hold down the Shift key to constrain the movement along a single axis.
+
+To move or translate a single point with the Stats fields:
+1. Select a single point with the left mouse button.
+2. Edit the x- or y-coordinates of that point in the Stats field to move that point.
+
+To move or translate multiple points with the Stats fields:
+1. Select multiple points with the left mouse button. You can change x- coordinates only for points on different curves.
+2. Edit the x- or y-coordinates of the selection in the Stats field.
+
+Changing the y value aligns points along the y-axis. Changing the x value aligns points of different curves along the x-axis.
+
+You can also use simple assignment operations in the Stats fields:
+
+Operation   Function
+-------------------------
+value       The entered value replaces existing value.
++=value     The entered value is added to the existing value.
+*=value     The entered value multiplies the existing value.
+-=value     The entered value is subtracted from the existing value.
+/=value     The entered value divides the existing value.
+
+You can't move points outside the bounding rectangle for the curve, which is displayed when you select the curve.
+
+To scale points around a pivot in Advanced mode:
+1. Click the Scale Selected Control Points button on the toolbar to change to Scale mode.
+The Scale button has an icon with a stack of keys and a double-headed arrow.
+2. Select the points you want to scale.
+3. Drag the selection with the middle mouse button to scale uniformly along both axes. Or use Ctrl + right mouse button. Hold down the shift key to constrain the scaling along a single axis. Note that scaling happens around a pivot point positioned at the cursor or the nearest grid mark if grid snapping to next major x/y tickis enabled. Or Hold down Ctrl + Shift + right mouse button. Hold down the Shift key to constrain the scaling along a single axis.
+
+
+Snapping
+--------
+
+Auto snap of control points is enabled with four toolbar buttons. Enable any of these snapping options to control snapping of control points to x- or y-axis major grid ticks, to other points, or to curves. Auto snap to major tick affects moving or scaling points around a pivot. Auto snap to point or curve affects moving a control point.
+
+
+Working with Tangents
+---------------------
+
+See the "Selections" section for information on selecting tangents.  
+
+To Adjust the tangent for a curve:
+In Basic mode:
+1. Select the point(s) and then the tangent(s) you want to adjust.
+2. Click one of selected tangents and drag to adjust selected tangent(s).
+
+In Advanced mode:
+1. Click the Move Selected Control Point button on the toolbar to change to Move mode.
+The Move button has an icon with a stack of keys and an arrow pointing to the right.
+2. Select the point(s) and then the tangent(s) you want to adjust.
+3. Drag the selection with the middle mouse button to move the selected tangents. Or Ctrl + right mouse button.
+
+To break tangents for one or more points:
+1. Select point(s).
+2. Select the Break Tangents button from the toolbar.
+
+To unify tangents for one or more points:
+1. Select point(s).
+2. Select the Unify Tangents button from the toolbar.
+
+To set the tangent type:
+1.  Select point(s).
+2.  Select the tangent type from the Tangents menu to set either both, the in tangent, or out tangent. Or click one of the Tangent type toolbar buttons to set both the in and out tangents for the selected points.
+
+There are five tangent types:
+
+* Spline: The curve is smooth between two points.
+* Clamped: The curve is similar to spline, except for curves that are nearly flat, in which case the curve is clamped linear.
+* Linear: The curve is a straight line between two points.
+* Flat: The curve's tangent is horizontal.
+* Stepped: The curve's out tangent is horizontal to the next control point.
+
+
+Infinity Curves
+---------------
+
+To set the curve shape beyond the control points:
+1. Select one or more curves.
+
+Note: To select a curve, you can select the entire curve or just one point in that curve.
+
+2. Select an infinity value from the Curve > Pre-Infinity or Curve > Post-Infinity menus, or from the toolbar buttons.
+
+There are five Infinity values for both Pre- and Post-Infinity curves:
+* Constant: Use the y-coordinate value of the ending control point. 
+* Cycle: Copy and repeat the curve.
+* Cycle with Offset: Copy and repeat the curve, offsetting the copied curve to join the original curve, creating a continuous curve.
+* Oscillate: Copy and repeat the curve by reversing its values at the end of each cycle and then repeating the original curve, to create a continuous alternate forwards and backwards effect.
+* Linear: Maintain the tangent of the end control point.  
+
+
+Curve Limits
+------------
+
+To display the limits of curves:
+Select one or more curves.
+
+Note: To select a curve, you can select the entire curve or just one point in that curve.
+
+You can't move control points out of the limit rectangle. You can drag the limit rectangle to a new position, but not inside the control points.
+
+
+Shortcut Reference
+------------------
+Ctrl + Z: Undo
+Ctrl + Y: Redo
+W:        Move (translation) mode in Advanced mode
+R:        Scale mode in Advanced mode
+F:        Frame selected items
+A:        Frame all, not just selected
+C:        Pan to origin
+Delete:   Delete
