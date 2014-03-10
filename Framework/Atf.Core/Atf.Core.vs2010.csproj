@@ -20,7 +20,7 @@
     <Optimize>false</Optimize>
     <OutputPath>..\..\lib\anycpu_dotnet_clr4_debug\</OutputPath>
     <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;CS_4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CS_4;PUBLIC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -31,7 +31,7 @@
     <Optimize>true</Optimize>
     <OutputPath>..\..\lib\anycpu_dotnet_clr4_release\</OutputPath>
     <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
-    <DefineConstants>TRACE;CS_4</DefineConstants>
+    <DefineConstants>TRACE;CS_4;PUBLIC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>

@@ -41,13 +41,16 @@ namespace Sce.Atf
         /// multiple times only sends usage information once.</summary>
         public static void SendAtfUsageInfo()
         {
+#if !PUBLIC
             if (s_atfUsageInfoLogged)
                 return;
             s_atfUsageInfoLogged = true;
 
             ThreadPool.QueueUserWorkItem(_SendAtfUsageInfo);
+#endif
         }
 
+#if !PUBLIC
         // Prepares and sends the usage info. Run this on a separate thread in case it is time-consuming.
         private static void _SendAtfUsageInfo(object unusedState)
         {
@@ -326,5 +329,6 @@ namespace Sce.Atf
         private static extern void freeaddrinfo([In] IntPtr info);
 
         private static bool s_atfUsageInfoLogged;
+#endif
     }
 }
