@@ -1,4 +1,4 @@
-#Sony Computer Entertainment Confidential
+#Copyright (c) 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 import sys
 import time
