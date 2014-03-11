@@ -1,15 +1,20 @@
-# Our product targets Windows. The default setting, "text=auto", causes GitHub's zip file
-# to have incorrect end-of-lines for Windows. For example, opening a file in Notepad will
-# show all the text in one line unless we set "eol=crlf".
-* text eol=crlf
+# Set default behaviour, in case users don't have core.autocrlf set.
+*        text=auto
 
-# Custom for Visual Studio
-*.cs     diff=csharp
-*.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
+# Explicitly list our text file types. We don't want to risk having binary
+#  files having linefeed normalization! We want these to use CRLF so that
+#  Windows users see and edit them correctly in Notepad, for example.
+*.cs     text diff=csharp eol=crlf
+*.sln    text merge=union eol=crlf
+*.csproj text merge=union eol=crlf
+*.html   text diff=html
+*.txt    text eol=crlf
+*.py     text eol=crlf
+*.cmd    text eol=crlf
+*.bat    text eol=crlf
+*.config text eol=crlf
+*.xml    text eol=crlf
+*.xsd    text eol=crlf
 
 # Standard to msysgit
 *.doc	 diff=astextplain
@@ -22,3 +27,10 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Denote all files that are truly binary and should not be modified.
+*.dll binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.ico binary
