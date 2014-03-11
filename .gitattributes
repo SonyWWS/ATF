@@ -15,6 +15,7 @@
 *.config text eol=crlf
 *.xml    text eol=crlf
 *.xsd    text eol=crlf
+*.md     text eol=crlf
 
 # Standard to msysgit
 *.doc	 diff=astextplain
