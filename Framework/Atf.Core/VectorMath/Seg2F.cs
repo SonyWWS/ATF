@@ -94,7 +94,7 @@ namespace Sce.Atf.VectorMath
             else
                 return String.Format
                 (
-                     "({0}, {1}, {2}, {3}, {4}, {5})",
+                     "({0}, {1}, {2}, {3})",
                      ((double)P1.X).ToString(format, formatProvider),
                      ((double)P1.Y).ToString(format, formatProvider),
                      ((double)P2.X).ToString(format, formatProvider),
