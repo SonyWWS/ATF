@@ -44,7 +44,7 @@ namespace Sce.Atf
         /// <returns>true iff object and this instance are the same type and represent the same value</returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is Pair<T1, T2>)
+            if (obj is Pair<T1, T2>)
             {
                 Pair<T1, T2> other = (Pair<T1, T2>)obj;
                 return Equals(other);
