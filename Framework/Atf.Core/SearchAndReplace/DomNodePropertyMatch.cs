@@ -20,8 +20,11 @@ namespace Sce.Atf.Dom
         /// <param name="domNode">The DomNode with the matching property</param>
         public DomNodePropertyMatch(PropertyDescriptor property, DomNode domNode)
         {
-            if (property == null || domNode == null)
-                throw new ArgumentNullException("Cannot create a DomNodePropertyMatchCandiate without valid non-null arguments");
+            if (property == null)
+                throw new ArgumentNullException("property", "Cannot create a DomNodePropertyMatchCandiate with a null property.");
+
+            if (domNode == null)
+                throw new ArgumentNullException("domNode", "Cannot create a DomNodePropertyMatchCandiate with a null domNode.");
 
             m_propertyDescriptor = property;
             m_domNode = domNode;

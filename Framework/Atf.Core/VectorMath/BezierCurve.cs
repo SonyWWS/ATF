@@ -75,7 +75,7 @@ namespace Sce.Atf.VectorMath
 
             return String.Format
            (
-                "({0}, {1}, {2}, {3},{4}, {5}, {6}, {7}, {8})",
+                "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})",
                 ((double)m_ctrlPoints[0].X).ToString(format, formatProvider),
                 ((double)m_ctrlPoints[0].Y).ToString(format, formatProvider),
                 ((double)m_ctrlPoints[0].Z).ToString(format, formatProvider),
