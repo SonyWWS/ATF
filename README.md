@@ -2,8 +2,45 @@ ATF
 ===
 Authoring Tools Framework (ATF) is a set of C#/.NET components for making tools on Windows. ATF has been used by most Sony first party game studios to make many custom tools such as Naughty Dog’s level editor and shader editor for _The Last of Us_, Guerrilla Games’ sequence editor for Killzone games (including the _Killzone: Shadow Fall_ PS4 launch title), an animation blending tool at Santa Monica Studios, a level editor at Bend Studio, a visual state machine editor for Quantic Dream, sound editing tools, and many others. ATF has been in continuous development in Sony's Worldwide Studios central tools group since early 2006.
 
-ATF is an open source project. See License.txt.
+There are many types of components in ATF. Components that can be added to a .NET TypeCatalog with a single line of code can be found in most of our sample apps, like in \Samples\CircuitEditor\Program.cs. Other components, like the DOM, are really a collection of related classes. Components include:
 
+* Control Host Service -- for Windows docking and tracking active Controls.
+* Command Service -- for registering commands in menus and on tool bars and associating keyboard shortcuts.
+* Property Editor -- 2-column property editor for editing selected objects.
+* Grid Property Editor -- spreadsheet-style property editor for selected objects.
+* Tree Control and Tree List Control
+* Property Editing Commands -- commands for editing properties, like Reset, Reset All, Copy Value, Paste Value, Copy All, Paste All.
+* Many property editing controls -- bounded integer, bounded float, tuples, enums, flags, colors, collections of child properties.
+* Document Object Model (DOM) -- an in-memory observable database, to help support document persistence and copy/paste and undo/redo. It's currently required for circuit editing.
+* Direct2D -- a thin layer over native Direct2D resources.
+* OpenGL 2.1 -- a thin wrapper to access native OpenGL resources.
+* Open Sound Control (OSC) -- a general way of controlling a Windows app using a tablet computer (e.g., iPad), by sending name-value pairs.
+* Circuit Editing -- circuits and groups of circuits and templates, wires, annotations.
+* Timeline Editing -- timelines with intervals, keys, tracks, groups, and referenced child timelines.
+* Settings Service -- for persisting settings and user preferences, plus a settings command and dialog.
+* Window Layout Service -- allows user to switch between window layouts and to create or delete layouts.
+* Unhandled Exception Service -- catches unhandled exceptions, displays info, and gives user a chance to save.
+* File Dialog Service -- standard Windows file dialogs.
+* Document Registry -- central document registry with change notification.
+* Auto Document Service -- opens documents from last session, or creates a new document, on startup.
+* Recent Document Commands -- standard recent document commands in File menu.
+* Standard File Commands -- standard File menu commands for New, Open, Save, SaveAs, Close.
+* Tabbed Control Selector -- enable ctrl-tab selection of documents and controls within the app.
+* Help About Command -- Help -> About command.
+* Context Registry -- central context registry with change notification.
+* Standard File Exit Command -- standard File exit menu command.
+* Standard Edit Commands -- standard Edit menu commands for copy/paste.
+* Standard Edit History Commands -- standard Edit menu commands for undo/redo.
+* Standard Selection Commands -- standard Edit menu selection commands.
+* Standard Print Commands -- does not currently work with Direct2D.
+* Palette Service -- global palette, for drag/drop instancing.
+* Outputs -- passes messages to all log writers.
+* Python Service -- scripting service for automated tests.
+* Script Console -- provides a dockable command console for entering script (e.g., Python) commands.
+* Automation Service -- provides facilities to run an automated script using the .NET remoting service.
+* Source Control Commands -- source control commmands to interact with Perforce service.
+
+ATF is an open source project. See License.txt.
 
 ### Prerequisites ###
 You must have .NET Framework 4.0 or greater installed in order to run the ATF applications. You can download it here:
@@ -13,9 +50,15 @@ You must have Windows 7 or later to run the circuit, FSM, statechart, and timeli
 
 To use Live Connect, a local network broadcasting service, you must have Bonjour installed. Bonjour is installed with iTunes and some other products. The installers, Bonjour64.msi (for 64-bit Windows) and Bonjour.msi (for 32-bit Windows), can be provided within Sony upon request, and are located in our non-public directory: \NoDistro\ThirdParty\Wws.LiveConnect.
 
+Visual Studio 2010 or later is required to compile the ATF solution and project files.
+
 
 ### Getting Started ###
-Visual Studio C# 2010 solution files and project files are provided.
+Our wiki-based documentation is extensive and it describes the different components that are available and how to make new Windows tools.
+http://github.com/SonyWWS/ATF/wiki
+
+Another good starting document is:
+/Docs/Atf-GettingStarted.pdf
 
 To try the ATF sample applications, open and build \Samples\Samples.vs2010.sln. The sample applications' .exe's are placed in the \bin folder.
 
@@ -35,6 +78,7 @@ This project has a warning about a possible run-time error due to a mismatch bet
 ### More Info ###
 Documentation:
 https://github.com/SonyWWS/ATF/wiki
+Locally, we have PDF files in the /Docs directory.
 
 Bugs, feature requests, and questions:
 https://github.com/SonyWWS/ATF/issues
