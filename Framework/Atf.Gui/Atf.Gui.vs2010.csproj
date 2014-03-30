@@ -258,6 +258,8 @@
     <Compile Include="Direct2D\D2dBitmapGraphics.cs" />
     <Compile Include="Direct2D\D2dBrush.cs" />
     <Compile Include="Direct2D\D2dFactory.cs" />
+    <Compile Include="Direct2D\D2dGeometry.cs" />
+    <Compile Include="Direct2D\D2dGeometrySink.cs" />
     <Compile Include="Direct2D\D2dGraphics.cs" />
     <Compile Include="Direct2D\D2dHwndGraphics.cs" />
     <Compile Include="Direct2D\D2dLinearGradientBrush.cs" />
@@ -268,7 +270,9 @@
     <Compile Include="Direct2D\D2dStrokeStyle.cs" />
     <Compile Include="Direct2D\D2dTextFormat.cs" />
     <Compile Include="Direct2D\D2dTextLayout.cs" />
+    <Compile Include="Direct2D\D2dToSharpDX.cs" />
     <Compile Include="Direct2D\D2dUtil.cs" />
+    <Compile Include="Direct2D\D2dWicGraphics.cs" />
     <Compile Include="DirectWrite\ClusterMetrics.cs" />
     <Compile Include="DirectWrite\LineMetrics.cs" />
     <Compile Include="DirectWrite\TextEditor.cs" />

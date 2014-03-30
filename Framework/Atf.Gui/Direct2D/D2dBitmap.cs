@@ -1,5 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 //using System.Drawing;
+
+using System;
 using GdiPixelFormat = System.Drawing.Imaging.PixelFormat;
 
 using SharpDX;
@@ -58,6 +60,13 @@ namespace Sce.Atf.Direct2D
                 m_bitmap.PixelFormat);
             m_nativeBitmap.CopyFromMemory(data.Scan0, data.Stride);            
             m_bitmap.UnlockBits(data);
+        }
+
+        /// <summary>
+        /// Copy raw memory into the bitmap.</summary>
+        public void CopyFromMemory(byte[] bytes, int stride)
+        {
+            m_nativeBitmap.CopyFromMemory(bytes, stride);
         }
 
         internal D2dBitmap(D2dGraphics owner, SharpDX.Direct2D1.Bitmap bmp)

@@ -78,9 +78,11 @@ namespace Sce.Atf.Direct2D
 
             using (var stopcol = new GradientStopCollection(Owner.D2dRenderTarget, stops, (Gamma)m_gamma, (ExtendMode)m_extendMode))
             {
-                var props = new LinearGradientBrushProperties();
-                props.StartPoint = new DrawingPointF(m_start.X, m_start.Y);
-                props.EndPoint = new DrawingPointF(m_end.X, m_end.Y);
+                var props = new LinearGradientBrushProperties 
+                {
+                    StartPoint = m_start.ToSharpDX(), 
+                    EndPoint = m_end.ToSharpDX()
+                };
                 NativeBrush = new LinearGradientBrush(Owner.D2dRenderTarget, props, stopcol);
             }
         }

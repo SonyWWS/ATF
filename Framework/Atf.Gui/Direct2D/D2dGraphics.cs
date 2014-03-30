@@ -137,7 +137,7 @@ namespace Sce.Atf.Direct2D
         public SizeF DotsPerInch
         {
             get { return new SizeF(m_renderTarget.DotsPerInch.Width, m_renderTarget.DotsPerInch.Height); }
-            set { m_renderTarget.DotsPerInch = new DrawingSizeF(value.Width, value.Height); }
+            set { m_renderTarget.DotsPerInch = value.ToSharpDX(); }
         }
 
         /// <summary>
@@ -263,11 +263,13 @@ namespace Sce.Atf.Direct2D
             using (var geom = new PathGeometry(D2dFactory.NativeFactory))
             {
                 var sink = geom.Open();
-                sink.BeginFigure(new DrawingPointF(pt1.X, pt1.Y), FigureBegin.Hollow);
-                var seg = new BezierSegment();
-                seg.Point1 = new DrawingPointF(pt2.X, pt2.Y);
-                seg.Point2 = new DrawingPointF(pt3.X, pt3.Y);
-                seg.Point3 = new DrawingPointF(pt4.X, pt4.Y);
+                sink.BeginFigure(pt1.ToSharpDX(), FigureBegin.Hollow);
+                var seg = new BezierSegment
+                {
+                    Point1 = pt2.ToSharpDX(),
+                    Point2 = pt3.ToSharpDX(),
+                    Point3 = pt4.ToSharpDX()
+                };
                 sink.AddBezier(seg);
                 sink.EndFigure(FigureEnd.Open);
                 sink.Close();
@@ -322,8 +324,7 @@ namespace Sce.Atf.Direct2D
         /// by the drawing operation</param>
         public void DrawBitmap(D2dBitmap bmp, RectangleF destRect, float opacity = 1.0f, D2dBitmapInterpolationMode interpolationMode = D2dBitmapInterpolationMode.Linear)
         {
-            var rect = new SharpDX.RectangleF(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
-            m_renderTarget.DrawBitmap(bmp.NativeBitmap, rect, opacity, (BitmapInterpolationMode)interpolationMode, null);
+            m_renderTarget.DrawBitmap(bmp.NativeBitmap, destRect.ToSharpDX(), opacity, (BitmapInterpolationMode)interpolationMode, null);
         }
 
         /// <summary>
@@ -339,14 +340,11 @@ namespace Sce.Atf.Direct2D
         /// by the drawing operation</param>
         /// <param name="sourceRect">The size and position, in pixels in the bitmap's coordinate space, of the area
         /// within the bitmap to draw</param>
-        public void DrawBitmap(D2dBitmap bmp, RectangleF destRect, float opacity, 
+        public void DrawBitmap(D2dBitmap bmp, RectangleF destRect, float opacity,
             D2dBitmapInterpolationMode interpolationMode, RectangleF sourceRect)
         {
-            var drect = new SharpDX.RectangleF(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
-            var srect = new SharpDX.RectangleF(sourceRect.X, sourceRect.Y, sourceRect.Right, sourceRect.Bottom);
-
-            m_renderTarget.DrawBitmap(bmp.NativeBitmap, drect, opacity,
-                (BitmapInterpolationMode)interpolationMode, srect);
+            m_renderTarget.DrawBitmap(bmp.NativeBitmap, destRect.ToSharpDX(), opacity,
+                (BitmapInterpolationMode)interpolationMode, sourceRect.ToSharpDX());
         }
 
         /// <summary>
@@ -385,11 +383,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="strokeStyle">The style of stroke to apply to the ellipse's outline or null to draw a solid line</param>
         public void DrawEllipse(D2dEllipse ellipse, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
-            var tmpEllipse = new Ellipse();
-            tmpEllipse.Point = new DrawingPointF(ellipse.Center.X, ellipse.Center.Y);
-            tmpEllipse.RadiusX = ellipse.RadiusX;
-            tmpEllipse.RadiusY = ellipse.RadiusY;
-            m_renderTarget.DrawEllipse(tmpEllipse, brush.NativeBrush, strokeWidth,
+            m_renderTarget.DrawEllipse(ellipse.ToSharpDX(), brush.NativeBrush, strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
         }
 
@@ -448,11 +442,8 @@ namespace Sce.Atf.Direct2D
         /// <param name="strokeStyle">The style of stroke to paint, or NULL to paint a solid line</param>
         public void DrawLine(PointF pt1, PointF pt2, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
-            m_renderTarget.DrawLine(
-                new DrawingPointF(pt1.X, pt1.Y),
-                new DrawingPointF(pt2.X, pt2.Y),
-                brush.NativeBrush,
-                strokeWidth,
+            m_renderTarget.DrawLine(pt1.ToSharpDX(), pt2.ToSharpDX(),
+                brush.NativeBrush, strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
         }
 
@@ -496,10 +487,10 @@ namespace Sce.Atf.Direct2D
                 {
                     var sink = geom.Open();
                     var pt1 = iter.Current;
-                    sink.BeginFigure(new DrawingPointF(pt1.X, pt1.Y), FigureBegin.Hollow);
+                    sink.BeginFigure(pt1.ToSharpDX(), FigureBegin.Hollow);
                     while (iter.MoveNext())
                     {
-                        sink.AddLine(new DrawingPointF(iter.Current.X, iter.Current.Y));
+                        sink.AddLine(iter.Current.ToSharpDX());
                     }
                     sink.EndFigure(FigureEnd.Open);
                     sink.Close();
@@ -515,10 +506,7 @@ namespace Sce.Atf.Direct2D
                 while (iter.MoveNext())
                 {
                     var pt2 = iter.Current;
-                    m_renderTarget.DrawLine(
-                            new DrawingPointF(pt1.X, pt1.Y),
-                            new DrawingPointF(pt2.X, pt2.Y),
-                            nbrush,
+                    m_renderTarget.DrawLine(pt1.ToSharpDX(), pt2.ToSharpDX(), nbrush,
                             strokeWidth, nstroke);
                     pt1 = pt2;
                 }
@@ -553,16 +541,16 @@ namespace Sce.Atf.Direct2D
             {
                 var sink = geom.Open();
                 var pt1 = iter.Current;
-                sink.BeginFigure(new DrawingPointF(pt1.X, pt1.Y), FigureBegin.Hollow);
+                sink.BeginFigure(pt1.ToSharpDX(), FigureBegin.Hollow);
                 while (iter.MoveNext())
                 {
-                    sink.AddLine(new DrawingPointF(iter.Current.X, iter.Current.Y));
+                    sink.AddLine(iter.Current.ToSharpDX());
                 }
                 sink.EndFigure(FigureEnd.Closed);
                 sink.Close();
                 sink.Dispose();
 
-                m_renderTarget.DrawGeometry(geom, brush.NativeBrush, strokeWidth, 
+                m_renderTarget.DrawGeometry(geom, brush.NativeBrush, strokeWidth,
                     strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
             }
         }
@@ -589,8 +577,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="strokeStyle">The style of stroke to paint or null to draw a solid line</param>
         public void DrawRectangle(RectangleF rect, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
-            var r = new SharpDX.RectangleF(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            m_renderTarget.DrawRectangle(r, brush.NativeBrush, strokeWidth,
+            m_renderTarget.DrawRectangle(rect.ToSharpDX(), brush.NativeBrush, strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
         }
 
@@ -616,14 +603,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="strokeStyle">The style of the rounded rectangle's stroke, or null to paint a solid stroke</param>
         public void DrawRoundedRectangle(D2dRoundedRect roundedRect, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
-            var roundrect = new RoundedRectangle();
-            roundrect.RadiusX = roundedRect.RadiusX;
-            roundrect.RadiusY = roundedRect.RadiusY;
-            roundrect.Rect.Top = roundedRect.Rect.Top;
-            roundrect.Rect.Left = roundedRect.Rect.Left;
-            roundrect.Rect.Right = roundedRect.Rect.Right;
-            roundrect.Rect.Bottom = roundedRect.Rect.Bottom;
-            m_renderTarget.DrawRoundedRectangle(roundrect, brush.NativeBrush, strokeWidth,
+            m_renderTarget.DrawRoundedRectangle(roundedRect.ToSharpDX(), brush.NativeBrush, strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
         }
 
@@ -659,7 +639,7 @@ namespace Sce.Atf.Direct2D
                 if (textFormat.Strikeout)
                     layout.SetStrikethrough(true,
                                             new SharpDX.DirectWrite.TextRange(0, text.Length));
-                m_renderTarget.DrawTextLayout(new DrawingPointF(upperLeft.X, upperLeft.Y),
+                m_renderTarget.DrawTextLayout(upperLeft.ToSharpDX(),
                     layout,
                     brush.NativeBrush,
                     (DrawTextOptions)textFormat.DrawTextOptions);
@@ -696,7 +676,7 @@ namespace Sce.Atf.Direct2D
                 if (textFormat.Strikeout)
                     layout.SetStrikethrough(true, new SharpDX.DirectWrite.TextRange(0, text.Length));
                 m_renderTarget.DrawTextLayout(
-                    new DrawingPointF(layoutRect.Location.X, layoutRect.Location.Y),
+                    layoutRect.Location.ToSharpDX(),
                     layout, brush.NativeBrush,
                     (DrawTextOptions)textFormat.DrawTextOptions);
             }
@@ -725,7 +705,7 @@ namespace Sce.Atf.Direct2D
         public void DrawTextLayout(PointF origin, D2dTextLayout textLayout, D2dBrush brush)
         {
             m_renderTarget.DrawTextLayout(
-                new DrawingPointF(origin.X, origin.Y),
+                origin.ToSharpDX(),
                 textLayout.NativeTextLayout,
                 brush.NativeBrush,
                 (DrawTextOptions)textLayout.DrawTextOptions);
@@ -780,9 +760,11 @@ namespace Sce.Atf.Direct2D
         /// <param name="brush">The brush used to paint the interior of the ellipse</param>
         public void FillEllipse(RectangleF rect, D2dBrush brush)
         {
-            var tmpEllipse = new Ellipse();
-            tmpEllipse.RadiusX = rect.Width * 0.5f;
-            tmpEllipse.RadiusY = rect.Height * 0.5f;
+            var tmpEllipse = new Ellipse 
+            {
+                RadiusX = rect.Width * 0.5f, 
+                RadiusY = rect.Height * 0.5f
+            };
             tmpEllipse.Point = new DrawingPointF(rect.X + tmpEllipse.RadiusX, rect.Y + tmpEllipse.RadiusY);
             m_renderTarget.FillEllipse(tmpEllipse, brush.NativeBrush);
         }
@@ -803,11 +785,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="brush">The brush used to paint the interior of the ellipse</param>
         public void FillEllipse(D2dEllipse ellipse, D2dBrush brush)
         {
-            var tmpEllipse = new Ellipse();
-            tmpEllipse.Point = new DrawingPointF(ellipse.Center.X, ellipse.Center.Y);
-            tmpEllipse.RadiusX = ellipse.RadiusX;
-            tmpEllipse.RadiusY = ellipse.RadiusY;
-            m_renderTarget.FillEllipse(tmpEllipse, brush.NativeBrush);
+            m_renderTarget.FillEllipse(ellipse.ToSharpDX(), brush.NativeBrush);
         }
 
         /// <summary>
@@ -830,11 +808,9 @@ namespace Sce.Atf.Direct2D
         /// <param name="destRect">The region of the render target to paint, in device-independent pixels.</param>
         public void FillOpacityMask(D2dBitmap opacityMask, D2dBrush brush, RectangleF destRect)
         {
-            var drect = new SharpDX.RectangleF(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
-
             m_renderTarget.FillOpacityMask(opacityMask.NativeBitmap, brush.NativeBrush,
                                            OpacityMaskContent.Graphics,
-                                           drect, null);
+                                           destRect.ToSharpDX(), null);
         }
 
         /// <summary>
@@ -862,12 +838,9 @@ namespace Sce.Atf.Direct2D
         /// <param name="sourceRect">The region of the bitmap to use as the opacity mask, in device-independent pixels.</param>
         public void FillOpacityMask(D2dBitmap opacityMask, D2dBrush brush, RectangleF destRect, RectangleF sourceRect)
         {
-            var drect = new SharpDX.RectangleF(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
-            var srect = new SharpDX.RectangleF(sourceRect.X, sourceRect.Y, sourceRect.Right, sourceRect.Bottom);
-
             m_renderTarget.FillOpacityMask(opacityMask.NativeBitmap, brush.NativeBrush,
                                            OpacityMaskContent.Graphics,
-                                           drect, srect);
+                                           destRect.ToSharpDX(), sourceRect.ToSharpDX());
         }
 
         /// <summary>
@@ -899,10 +872,10 @@ namespace Sce.Atf.Direct2D
             {
                 var sink = geom.Open();
                 var pt1 = iter.Current;
-                sink.BeginFigure(new DrawingPointF(pt1.X, pt1.Y), FigureBegin.Filled);
+                sink.BeginFigure(pt1.ToSharpDX(), FigureBegin.Filled);
                 while (iter.MoveNext())
                 {
-                    sink.AddLine(new DrawingPointF(iter.Current.X, iter.Current.Y));
+                    sink.AddLine(iter.Current.ToSharpDX());
                 }
                 sink.EndFigure(FigureEnd.Closed);
                 sink.Close();
@@ -929,8 +902,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="brush">The brush used to paint the rectangle's interior</param>
         public void FillRectangle(RectangleF rect, D2dBrush brush)
         {
-            var r = new SharpDX.RectangleF(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            m_renderTarget.FillRectangle(r, brush.NativeBrush);
+            m_renderTarget.FillRectangle(rect.ToSharpDX(), brush.NativeBrush);
         }
 
         /// <summary>
@@ -954,11 +926,10 @@ namespace Sce.Atf.Direct2D
         /// is cached, so you cannot use an unlimited number of color combinations.</remarks>
         public void FillRectangle(RectangleF rect, PointF pt1, PointF pt2, Color color1, Color color2)
         {
-            var r = new SharpDX.RectangleF(rect.Left, rect.Top, rect.Right, rect.Bottom);
             var brush = GetCachedLinearGradientBrush(color1, color2);
-            brush.StartPoint = new DrawingPointF(pt1.X, pt1.Y);
-            brush.EndPoint = new DrawingPointF(pt2.X, pt2.Y);
-            m_renderTarget.FillRectangle(r, brush);
+            brush.StartPoint = pt1.ToSharpDX();
+            brush.EndPoint = pt2.ToSharpDX();
+            m_renderTarget.FillRectangle(rect.ToSharpDX(), brush);
         }
 
         /// <summary>
@@ -967,15 +938,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="brush">The brush used to paint the interior of the rounded rectangle</param>
         public void FillRoundedRectangle(D2dRoundedRect roundedRect, D2dBrush brush)
         {
-            var tmp = new RoundedRectangle();
-            tmp.RadiusX = roundedRect.RadiusX;
-            tmp.RadiusY = roundedRect.RadiusY;
-            var r = new SharpDX.RectangleF(
-                roundedRect.Rect.Left,
-                roundedRect.Rect.Top,
-                roundedRect.Rect.Right,
-                roundedRect.Rect.Bottom);
-            tmp.Rect = r;
+            var tmp = roundedRect.ToSharpDX();
             m_renderTarget.FillRoundedRectangle(ref tmp, brush.NativeBrush);
         }
 
@@ -1009,11 +972,11 @@ namespace Sce.Atf.Direct2D
                         var line = edge.EdgeData.As<PointF[]>();
                         if (firstPoint)
                         {
-                            sink.BeginFigure(new DrawingPointF(line[0].X, line[0].Y), FigureBegin.Hollow);
+                            sink.BeginFigure(line[0].ToSharpDX(), FigureBegin.Hollow);
                             firstPoint = false;
                         }
                         for (var i = 1; i < line.Length; ++i)
-                            sink.AddLine(new DrawingPointF(line[i].X, line[i].Y));
+                            sink.AddLine(line[i].ToSharpDX());
 
                     }
                     else if (edge.ShapeType == EdgeStyleData.EdgeShape.Bezier)
@@ -1073,11 +1036,11 @@ namespace Sce.Atf.Direct2D
                         var line = edge.EdgeData.As<PointF[]>();
                         if (firstPoint)
                         {
-                            sink.BeginFigure(new DrawingPointF(line[0].X, line[0].Y), FigureBegin.Filled);
+                            sink.BeginFigure(line[0].ToSharpDX(), FigureBegin.Filled);
                             firstPoint = false;
                         }
                         for (var i = 1; i < line.Length; ++i)
-                            sink.AddLine(new DrawingPointF(line[i].X, line[i].Y));
+                            sink.AddLine(line[i].ToSharpDX());
 
                     }
                     else if (edge.ShapeType == EdgeStyleData.EdgeShape.Bezier)
@@ -1114,6 +1077,49 @@ namespace Sce.Atf.Direct2D
         {
             m_solidColorBrush.Color = color;
             FillPath(path, m_solidColorBrush);
+        }
+
+        /// <summary>
+        /// Draws a geometry previosly defined</summary>
+        /// <param name="geometry">The geometry to draw</param>
+        /// <param name="brush">The brush used to paint the geometry's stroke</param>
+        /// <param name="strokeWidth">A value greater than or equal to 0.0f that specifies the width of the stroke</param>
+        /// <param name="strokeStyle">The style of the geometry's stroke, or null to paint a solid stroke</param>
+        public void DrawGeometry(D2dGeometry geometry, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
+        {
+            m_renderTarget.DrawGeometry(geometry.NativeGeometry, brush.NativeBrush, strokeWidth,
+                    strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
+        }
+
+        /// <summary>
+        /// Draws a geometry previosly defined</summary>
+        /// <param name="geometry">The geometry to draw</param>
+        /// <param name="color">The color used to paint the geometry's stroke</param>
+        /// <param name="strokeWidth">A value greater than or equal to 0.0f that specifies the width of the stroke</param>
+        /// <param name="strokeStyle">The style of the geometry's stroke, or null to paint a solid stroke</param>
+        public void DrawGeometry(D2dGeometry geometry, Color color, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
+        {
+            m_solidColorBrush.Color = color;
+            DrawGeometry(geometry, m_solidColorBrush, strokeWidth, strokeStyle);
+        }
+
+        /// <summary>
+        /// Draws a geometry previosly defined</summary>
+        /// <param name="geometry">The geometry to draw</param>
+        /// <param name="brush">The brush used to fill.</param>
+        public void FillGeometry(D2dGeometry geometry, D2dBrush brush)
+        {
+            m_renderTarget.FillGeometry(geometry.NativeGeometry, brush.NativeBrush);
+        }
+
+        /// <summary>
+        /// Draws a geometry previosly defined</summary>
+        /// <param name="geometry">The geometry to draw</param>
+        /// <param name="color">The color used to fill.</param>
+        public void FillGeometry(D2dGeometry geometry, Color color)
+        {
+            m_solidColorBrush.Color = color;
+            FillGeometry(geometry, m_solidColorBrush);
         }
 
         /// <summary>    
@@ -1377,8 +1383,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>        
         public D2dBitmapGraphics CreateCompatibleGraphics(SizeF size, D2dCompatibleGraphicsOptions options)
         {
-            var dsize = new DrawingSizeF(size.Width, size.Height);
-            var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, dsize, null, null);
+            var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, size.ToSharpDX(), null, null);
             return new D2dBitmapGraphics(rt);
         }
 
@@ -1486,7 +1491,7 @@ namespace Sce.Atf.Direct2D
 
             if (s_strokeStyle == null)
             {
-                var props = new D2dStrokeStyleProperties {EndCap = D2dCapStyle.Round, StartCap = D2dCapStyle.Round};
+                var props = new D2dStrokeStyleProperties { EndCap = D2dCapStyle.Round, StartCap = D2dCapStyle.Round };
                 s_strokeStyle = D2dFactory.CreateD2dStrokeStyle(props);
             }
             m_solidColorBrush = CreateSolidBrush(Color.Empty);

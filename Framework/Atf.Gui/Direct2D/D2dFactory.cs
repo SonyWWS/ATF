@@ -3,10 +3,13 @@
 using System;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.DXGI;
+
 using SizeF = System.Drawing.SizeF;
 using PointF = System.Drawing.PointF;
 using Color = System.Drawing.Color;
 using GdiFontStyle = System.Drawing.FontStyle;
+using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 
 namespace Sce.Atf.Direct2D
 {
@@ -55,7 +58,7 @@ namespace Sce.Atf.Direct2D
             else// use the property of the first created render target.
             {
                 rt = new WindowRenderTarget(s_d2dFactory, s_rtprops, hwnProps);
-            }            
+            }
             return new D2dHwndGraphics(rt);
         }
 
@@ -70,6 +73,31 @@ namespace Sce.Atf.Direct2D
             {
                 s_gfx = CreateD2dHwndGraphics(hwnd);
             }
+        }
+
+        /// <summary>
+        /// Creates an instance of D2dWicGraphics 
+        /// which can be used for rendering to offscreen surfaces 
+        /// that can be copied to main memory</summary>
+        /// <param name="width">width of the offscreen surface.</param>
+        /// <param name="height">height of the offscreen surface.</param>
+        public static D2dWicGraphics CreateWicGraphics(int width, int height)
+        {
+            var wicBitmap = new SharpDX.WIC.Bitmap(s_wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPBGRA,
+                SharpDX.WIC.BitmapCreateCacheOption.CacheOnLoad);
+
+            var rtprops = new RenderTargetProperties 
+            {
+                Type = RenderTargetType.Default,
+                DpiX = 96.0f, 
+                DpiY = 96.0f,
+                PixelFormat = new PixelFormat(Format.Unknown, AlphaMode.Unknown), 
+                Usage = RenderTargetUsage.None,
+                MinLevel = FeatureLevel.Level_DEFAULT
+            };
+
+            var rt = new WicRenderTarget(s_d2dFactory, wicBitmap, rtprops);
+            return new D2dWicGraphics(rt, wicBitmap);
         }
 
 
@@ -395,7 +423,7 @@ namespace Sce.Atf.Direct2D
         /// <returns>A new D2dBitmap</returns>
         public static D2dBitmap CreateBitmap(int width, int height)
         {
-            return s_gfx.CreateBitmap(width, height);            
+            return s_gfx.CreateBitmap(width, height);
         }
 
         /// <summary>
@@ -471,6 +499,11 @@ namespace Sce.Atf.Direct2D
             get { return s_d2dFactory; }
         }
 
+        internal static SharpDX.WIC.ImagingFactory NativeWicFactory
+        {
+            get { return s_wicFactory; }
+        }
+
         internal static RenderTargetProperties RenderTargetProperties
         {
             get { return s_rtprops; }
@@ -482,10 +515,12 @@ namespace Sce.Atf.Direct2D
                 throw new Exception("Direct2D requires Windows Vista or newer");
             s_d2dFactory = new SharpDX.Direct2D1.Factory();
             s_dwFactory = new SharpDX.DirectWrite.Factory();
+            s_wicFactory = new SharpDX.WIC.ImagingFactory();
         }
 
-        private static SharpDX.Direct2D1.Factory s_d2dFactory;
-        private static SharpDX.DirectWrite.Factory s_dwFactory;
+        private static readonly SharpDX.Direct2D1.Factory s_d2dFactory;
+        private static readonly SharpDX.DirectWrite.Factory s_dwFactory;
+        private static readonly SharpDX.WIC.ImagingFactory s_wicFactory;
         private static D2dHwndGraphics s_gfx;
 
         // the first render target property

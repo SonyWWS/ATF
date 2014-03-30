@@ -22,11 +22,11 @@ namespace Sce.Atf.Direct2D
         /// The coordinates of the rectangle</summary>
         public RectangleF Rect;
     }
-    
+
     /// <summary>
     /// Contains the center point, x-radius, and y-radius of an ellipse</summary>
     public struct D2dEllipse
-    {      
+    {
         /// <summary>
         /// The center point of the ellipse</summary>
         public PointF Center;
@@ -38,7 +38,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// The y-radius of the ellipse</summary>
         public float RadiusY;
-      
+
         /// <summary>
         /// Constructs a new instance of the D2dEllipse struct</summary>
         /// <param name="center">The center</param>
@@ -81,8 +81,38 @@ namespace Sce.Atf.Direct2D
             temp.RadiusX = radx;
             temp.RadiusY = rady;
             return temp;
-        }            
+        }
     }
 
-   
+    public struct D2dBezierSegment
+    {
+        public PointF Point1;
+        public PointF Point2;
+        public PointF Point3;
+    }
+
+    public enum D2dSweepDirection : int
+    {
+        /// <summary>Arcs are drawn in a counterclockwise (negative-angle) direction.</summary>
+        CounterClockwise = 0,
+        /// <summary>Arcs are drawn in a clockwise (positive-angle) direction.</summary>
+        Clockwise = 1,
+    }
+
+    public enum D2dArcSize
+    {
+        /// <summary>An arc's sweep should be 180 degrees or less.</summary>
+        Small = 0,
+        /// <summary>An arc's sweep should be 180 degrees or greater.</summary>
+        Large = 1,
+    }
+
+    public struct D2dArcSegment
+    {
+        public PointF Point;
+        public SizeF Size;
+        public float RotationAngle;
+        public D2dSweepDirection SweepDirection;
+        public D2dArcSize ArcSize;
+    }
 }

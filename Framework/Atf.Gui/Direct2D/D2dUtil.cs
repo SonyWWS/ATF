@@ -7,7 +7,7 @@ using SharpDX;
 
 using Sce.Atf.Controls.Adaptable.Graphs;
 using Sce.Atf.VectorMath;
-
+using SharpDX.Direct2D1;
 using Matrix = System.Drawing.Drawing2D.Matrix;
 using RectangleF = System.Drawing.RectangleF;
 
