@@ -351,25 +351,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawHorizontalMajorTicks(Graphics g)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
-
-            double ytop = ClientToGraph_d(0, 0).Y;
-            double ybottom = ClientToGraph_d(0, m_clientSize.Y).Y;
-            if (m_flipY)
-            {
-                double tmp = ytop;
-                ytop = ybottom;
-                ybottom = tmp;
-            }
-
-            double y = ybottom - ybottom % m_majorTickY;
-            float width = (float)m_clientSize.X;
-            for (; y <= ytop; y += m_majorTickY)
-            {
-                float ypos = (float)(m_trans.Y + y * m_scale.Y);
-                g.DrawLine(gridLinePen, 0, ypos, width, ypos);
-            }         
+            DrawHorizontalTicks(g, gridLinePen, m_majorTickY);                
         }
 
         /// <summary>
@@ -377,19 +359,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawVerticalMajorTicks(Graphics g)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
-
-            double xleft = ClientToGraph_d(0); // left graph rect.
-            double xright = ClientToGraph_d(m_clientSize.X); // right of graph rect.            
-            double x = xleft - xleft % m_majorTickX;
-            float height = (float)m_clientSize.Y;
-            for (; x <= xright; x += m_majorTickX)
-            {
-                // xform x from graph to client space.
-                float xpos = (float)( m_trans.X + x * m_scale.X);
-                g.DrawLine(gridLinePen, xpos, 0, xpos, height);
-            }            
+            DrawVerticalMajorTicks(g, gridLinePen, m_majorTickX);            
         }
 
         /// <summary>
@@ -397,26 +367,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawHorizontalMinorTicks(Graphics g)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
-
-            double minorTick = m_majorTickY / m_numOfMinorTicks;
-            double ytop = ClientToGraph_d(0, 0).Y;
-            double ybottom = ClientToGraph_d(0, m_clientSize.Y).Y;
-            if (m_flipY)
-            {
-                double tmp = ytop;
-                ytop = ybottom;
-                ybottom = tmp;
-            }
-
-            double y = ybottom - ybottom % minorTick;
-            float width = (float)m_clientSize.X;            
-            for (; y <= ytop; y += minorTick)
-            {
-                float ypos = (float)(m_trans.Y + y * m_scale.Y);
-                g.DrawLine(tickPen, 0, ypos, width, ypos);
-            }
+            DrawHorizontalTicks(g, tickPen, m_majorTickY / m_numOfMinorTicks);            
         }
 
         /// <summary>
@@ -424,20 +375,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawVerticalMinorTicks(Graphics g)
         {
-            if (g == null)
-                throw new ArgumentNullException("g");
-
-            double minorTick = m_majorTickX / m_numOfMinorTicks;
-            double xleft = ClientToGraph_d(0); // left graph rect.
-            double xright = ClientToGraph_d(m_clientSize.X); // right of graph rect.            
-            double x = xleft - xleft % minorTick;
-            float height = (float)m_clientSize.Y;            
-            for (; x <= xright; x += minorTick)
-            {
-                // xform x from graph to client space.
-                float xpos = (float)(m_trans.X + x * m_scale.X);
-                g.DrawLine(tickPen, xpos, 0, xpos, height);
-            }
+            DrawVerticalMajorTicks(g, tickPen, m_majorTickX / m_numOfMinorTicks);
         }
         /// <summary>
         /// Draws x and y labels</summary>
@@ -812,6 +750,47 @@ namespace Sce.Atf.Controls.CurveEditing
            
         }
 
+
+        private void DrawVerticalMajorTicks(Graphics g, Pen p, double tickLength)
+        {
+            if (g == null)
+                throw new ArgumentNullException("g");
+            
+            double xleft = ClientToGraph_d(0); // left graph rect.
+            double xright = ClientToGraph_d(m_clientSize.X); // right of graph rect.            
+            double x = xleft - xleft % tickLength;
+            float height = (float)m_clientSize.Y;
+            for (; x <= xright; x += tickLength)
+            {
+                // xform x from graph to client space.
+                float xpos = (float)(m_trans.X + x * m_scale.X);
+                g.DrawLine(p, xpos, 0, xpos, height);
+            }
+
+        }
+        /// <summary>
+        /// Draw horizontal ticks.</summary>        
+        private void DrawHorizontalTicks(Graphics g, Pen p, double tickLength)
+        {
+             if (g == null)
+                throw new ArgumentNullException("g");            
+            double ytop = ClientToGraph_d(0, 0).Y;
+            double ybottom = ClientToGraph_d(0, m_clientSize.Y).Y;
+            if (m_flipY)
+            {
+                double tmp = ytop;
+                ytop = ybottom;
+                ybottom = tmp;
+            }
+
+            double y = ybottom - ybottom % tickLength;
+            float width = (float)m_clientSize.X;
+            for (; y <= ytop; y += tickLength)
+            {
+                float ypos = (float)(m_trans.Y + y * m_scale.Y);
+                g.DrawLine(p, 0, ypos, width, ypos);
+            }
+        }
         /// <summary>
         /// Updates pan against current origin lock mode</summary>
         private void UpdatePan()
