@@ -94,11 +94,13 @@ namespace Sce.Atf.Direct2D
                 stops[s].Position = m_gradientStops[s].Position;
             }
 
-            var props = new RadialGradientBrushProperties();
-            props.Center = new DrawingPointF(m_center.X, m_center.Y);
-            props.GradientOriginOffset = new DrawingPointF(m_gradientOriginOffset.X, m_gradientOriginOffset.Y);
-            props.RadiusX = m_radiusX;
-            props.RadiusY = m_radiusY;
+            var props = new RadialGradientBrushProperties
+            {
+                Center = m_center.ToSharpDX(), 
+                GradientOriginOffset = m_gradientOriginOffset.ToSharpDX(), 
+                RadiusX = m_radiusX, 
+                RadiusY = m_radiusY
+            };
 
             using (var stopcol = new GradientStopCollection(Owner.D2dRenderTarget, stops, Gamma.StandardRgb, ExtendMode.Clamp))
             {
