@@ -359,7 +359,10 @@ namespace Sce.Atf.Controls
 
                             if (visibleAtClose)
                             {
-                                m_parent.Owner.BeginInvoke(new MethodInvoker(m_parent.Show));
+                                // Though unlikely, it is possible the parent dialog has already been disposed,
+                                // so check for null Owner.
+                                if (m_parent.Owner != null)
+                                    m_parent.Owner.BeginInvoke(new MethodInvoker(m_parent.Show));
                             }
                         }
                     }
