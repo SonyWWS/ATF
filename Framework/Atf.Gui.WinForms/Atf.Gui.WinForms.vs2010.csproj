@@ -86,6 +86,7 @@
     <Compile Include="Applications\IMainWindow.cs" />
     <Compile Include="Applications\Listers\FilteredTreeControlEditor.cs" />
     <Compile Include="Applications\Listers\FilteredTreeView.cs" />
+    <Compile Include="Applications\Listers\HistoryLister.cs" />
     <Compile Include="Applications\Listers\IPrototypingContext.cs" />
     <Compile Include="Applications\Listers\ItemInfos.cs" />
     <Compile Include="Applications\Listers\ITemplatingContext.cs" />

@@ -83,6 +83,7 @@ namespace DiagramEditorSample
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
 
+                typeof(HistoryLister),                  // vistual list of undo/redo stack
                 typeof(PrototypeLister),                // editable palette of instantiable item groups
                 typeof(LayerLister),                    // editable tree view of layers
 

@@ -18,6 +18,28 @@ namespace Sce.Atf.Applications
             m_commandCount.DirtyChanged += commandCount_DirtyChanged;
         }
 
+
+        /// <summary>
+        /// Gets index of the current command.</summary>
+        public int Current
+        {
+            get { return m_commandCount.Current; }
+        }
+
+        /// <summary>
+        /// Gets command count.</summary>
+        public int Count 
+        {
+            get { return m_commands.Count; }
+        }
+
+        /// <summary>
+        /// Gets command at the given index</summary>        
+        public Command this[int index]
+        {
+            get { return m_commands[index];}
+        }
+
         /// <summary>
         /// Clear the command history</summary>
         public void Clear()
@@ -204,7 +226,14 @@ namespace Sce.Atf.Applications
             CommandUndone.Raise(this, EventArgs.Empty);
         }
 
+        IEnumerable<Command> Commands
+        {
+            get
+            {
+                return m_commands;
+            }
+        }
         private readonly List<Command> m_commands;
-        private readonly CommandCount m_commandCount;
+        private readonly CommandCount m_commandCount;                
     }
 }
