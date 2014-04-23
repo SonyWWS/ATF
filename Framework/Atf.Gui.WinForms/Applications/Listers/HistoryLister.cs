@@ -101,9 +101,9 @@ namespace Sce.Atf.Applications
                 var descriptor = new BoundPropertyDescriptor(
                         this,
                         () => MaxCommandCount,
-                        "MaxCommandCount".Localize(),
+                        "Max Visual Command History Count".Localize(),
                         null,
-                        "Max command displayed in visual command history".Localize());
+                        "Maximum number of commands in the visual command history".Localize());
 
                 m_settingsService.RegisterSettings(this, descriptor);
                 m_settingsService.RegisterUserSettings("Application", descriptor);
