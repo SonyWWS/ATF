@@ -11,6 +11,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// Contains options for specifying the behavior or appearance of a ICircuitGroup.</summary>
     public class CircuitGroupInfo : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Constructor</summary>
         public CircuitGroupInfo()
         {
             m_showExpandedGroupPins = CircuitDefaultStyle.ShowExpandedGroupPins;
@@ -43,7 +45,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show the group pins when the group is expanded.</summary>
+        /// Gets or sets whether to show the group pins when the group is expanded</summary>
         public bool ShowExpandedGroupPins
         {
             get { return m_showExpandedGroupPins; }
@@ -74,6 +76,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             set { PropertyChanged.NotifyIfChanged(ref m_hiddenOutputPins, value, () => HiddenOutputPins); }
         }
 
+        /// <summary>
+        /// Gets or sets picking priority</summary>
         public int PickingPriority
         {
             get { return m_pickingPriority; }

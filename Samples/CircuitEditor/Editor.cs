@@ -22,7 +22,16 @@ using Sce.Atf.Dom;
 namespace CircuitEditorSample
 {
     /// <summary>
-    /// Circuit editor</summary>
+    /// Circuit editor. There is just one instance of this class in this application. This class
+    /// is added to the Managed Extensibility Framework's TypeCatalog. This class is in charge of:
+    /// 1) Opening and closing documents (IDocumentClient).
+    /// 2) Creating a circuit canvas control for each opened document.
+    /// 3) Registering that circuit canvas control (D2dAdaptableControl) with a IControlHostService
+    /// so that the control appears in the Windows docking framework.
+    /// 4) Opening up circuit group (also known as a sub-circuit) in a separate window when the
+    /// user double-clicks on the circuit group.
+    /// 5) Showing a floating circuit preview window when the user hovers the mouse over a closed
+    /// circuit group.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -30,7 +39,8 @@ namespace CircuitEditorSample
     public class Editor : IDocumentClient, IControlHostClient, IInitializable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor. Creates circuit and subgraph renderers. 
+        /// Creates and configures D2dAdaptableControl to display subcircuit when hovering over it.</summary>
         /// <param name="controlHostService">Control host service</param>
         /// <param name="commandService">Command service</param>
         /// <param name="contextRegistry">Context registry</param>
@@ -103,6 +113,8 @@ namespace CircuitEditorSample
 
         #region IInitializable
 
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service and setting service</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -188,7 +200,8 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Opens or creates a document at the given URI</summary>
+        /// Opens or creates a document at the given URI.
+        /// Creates and configures with control adapters D2dAdaptableControl to display subcircuit</summary>
         /// <param name="uri">Document URI</param>
         /// <returns>Document, or null if the document couldn't be opened or created</returns>
         public IDocument Open(Uri uri)
@@ -600,7 +613,8 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control.
+        /// Allows user to save document before closing it.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control either can close or is already closed. False to cancel.</returns>
         /// <remarks>

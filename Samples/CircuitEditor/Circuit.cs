@@ -7,6 +7,8 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample
 {
+    /// <summary>
+    /// Adapts DomNode to a circuit and observable context with change notification events</summary>
     public class Circuit : Sce.Atf.Controls.Adaptable.Graphs.Circuit, IGraph<Module, Connection, ICircuitPin>
 #if !CS_4
         , IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>
@@ -23,17 +25,24 @@ namespace CircuitEditorSample
             base.OnNodeSet();
         }
 
+        /// <summary>
+        /// Gets ChildInfo for Elements (circuit elements with pins) in circuit</summary>
         protected override ChildInfo ElementChildInfo
         {
             get { return Schema.circuitType.moduleChild; }
         }
 
+        /// <summary>
+        /// Gets ChildInfo for Wires (connections) in circuit</summary>
         protected override ChildInfo WireChildInfo
         {
             get { return Schema.circuitType.connectionChild; }
         }
 
         // optional child info
+        /// <summary>
+        /// Gets ChildInfo for annotations (comments) in circuit.
+        /// Return null if annotations are not supported.</summary>
         protected override ChildInfo AnnotationChildInfo
         {
             get { return Schema.circuitType.annotationChild; }
@@ -43,7 +52,7 @@ namespace CircuitEditorSample
 
         /// <summary>
         /// Gets all visible nodes in the circuit</summary>
-        ///<remarks>IGraph.Nodes is called during circuit rendering, and picking(in reverse order). </remarks>
+        ///<remarks>IGraph.Nodes is called during circuit rendering, and picking(in reverse order).</remarks>
         IEnumerable<Module> IGraph<Module, Connection, ICircuitPin>.Nodes
         {
             get
@@ -53,7 +62,7 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Gets all connections between visible nodes in the circuit</summary>
+        /// Gets enumeration of all connections between visible nodes in the circuit</summary>
         IEnumerable<Connection> IGraph<Module, Connection, ICircuitPin>.Edges
         {
             get
@@ -65,11 +74,15 @@ namespace CircuitEditorSample
         // In VS2008, without C# 4's covariance and contravariance, we have to manually implement variations of
         //  interfaces that use the 'out' or 'in' keywords on the generic type parameters.
 #if !CS_4
+        /// <summary>
+        /// Gets enumeration of all connections between visible nodes in the circuit</summary>
         IEnumerable<IGraphEdge<IGraphNode, IEdgeRoute>> IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>.Edges
         {
             get { return ((IGraph<Module, Connection, ICircuitPin>) this).Edges.Cast<IGraphEdge<IGraphNode, IEdgeRoute>>(); }
         }
 
+        /// <summary>
+        /// Gets enumeration of all nodes in the circuit</summary>
         IEnumerable<IGraphNode> IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>.Nodes
         {
             get { return ((IGraph<Module, Connection, ICircuitPin>)this).Nodes.Cast<IGraphNode>(); }

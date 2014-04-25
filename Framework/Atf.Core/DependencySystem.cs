@@ -70,12 +70,20 @@ namespace Sce.Atf
         /// that caused it</summary>
         public struct InvalidDependent
         {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="dependent">Dependent object that has become invalidated</param>
+            /// <param name="dependencies">Enumeration of dependencies invalidating object</param>
             public InvalidDependent(T dependent, IEnumerable<T> dependencies)
             {
                 Dependent = dependent;
                 Dependencies = dependencies;
             }
+            /// <summary>
+            /// Dependent object that has become invalidated</summary>
             public readonly T Dependent;
+            /// <summary>
+            /// Enumeration of dependencies invalidating object</summary>
             public readonly IEnumerable<T> Dependencies;
         }
 

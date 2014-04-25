@@ -9,12 +9,19 @@ namespace Sce.Atf.VectorMath
     [Flags]
     public enum EulerAngleChannels
     {
+        /// <summary>X-axis</summary>
         X = 0x1,
+        /// <summary>Y-axis</summary>
         Y = 0x2,
+        /// <summary>Z-axis</summary>
         Z = 0x4,
+        /// <summary>X- or y-axis</summary>
         XY = X | Y,
+        /// <summary>X- or z-axis</summary>
         XZ = X | Z,
+        /// <summary>Y- or z-axis</summary>
         YZ = Y | Z,
+        /// <summary>X- or y- or z-axis</summary>
         XYZ = X | Y | Z
     };
 

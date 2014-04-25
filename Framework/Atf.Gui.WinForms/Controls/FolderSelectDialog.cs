@@ -37,6 +37,8 @@ namespace Sce.Atf.Controls.FolderSelection
         }
 
         #region IDisposable
+        /// <summary>
+        /// Safely handle disposing of resources</summary>
         public void Dispose()
         {
             Dispose(true);
@@ -131,8 +133,10 @@ namespace Sce.Atf.Controls.FolderSelection
         }
 
         /// <summary>
-        /// Safely handle disposing of resources</summary>
-        /// <param name="disposing">State of disposing of calling subtype</param>
+        /// Disposes resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!Disposed)

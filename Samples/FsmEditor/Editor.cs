@@ -21,7 +21,8 @@ namespace FsmEditorSample
 {
     /// <summary>
     /// FSM editor, which opens and closes FSM documents and manages the
-    /// document editing controls</summary>
+    /// document editing controls. The document client handles file operations,
+    /// such as opening and closing documents.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -85,6 +86,8 @@ namespace FsmEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up the scripting service</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -110,6 +113,7 @@ namespace FsmEditorSample
         }
 
         #endregion
+
         #region IDocumentClient Members
 
         /// <summary>
@@ -135,7 +139,8 @@ namespace FsmEditorSample
         }
 
         /// <summary>
-        /// Opens or creates a document at the given URI</summary>
+        /// Opens or creates a document at the given URI. Create an AdaptableControl with control adapters for viewing state machine.
+        /// Handles application data persistence.</summary>
         /// <param name="uri">Document URI</param>
         /// <returns>Document, or null if the document couldn't be opened or created</returns>
         public IDocument Open(Uri uri)
@@ -347,7 +352,8 @@ namespace FsmEditorSample
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control.
+        /// Allows user to save document before closing.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control can close, or false to cancel</returns>
         /// <remarks>

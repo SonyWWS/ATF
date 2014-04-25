@@ -17,6 +17,8 @@ namespace Sce.Atf.Applications
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component</summary>
         public void Initialize()
         {
         }

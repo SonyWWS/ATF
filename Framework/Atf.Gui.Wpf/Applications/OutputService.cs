@@ -18,11 +18,15 @@ namespace Sce.Atf.Wpf.Applications
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class OutputService : IOutputWriter, IControlHostClient, IInitializable, Sce.Atf.Applications.ICommandClient
     {
+        /// <summary>
+        /// Gets or sets IControlHostService</summary>
         [Import]
         protected IControlHostService ControlHostService { get; set; }
 
         #region IInitializable
 
+        /// <summary>
+        /// Finishes initializing component by creating and registering OutputView control</summary>
         public void Initialize()
         {
             m_view = new OutputView();

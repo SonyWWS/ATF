@@ -9,7 +9,8 @@ namespace DomTreeEditorSample
     public class UIForm : UIObject
     {
         /// <summary>
-        /// Performs initialization when the adapter is connected to the UI form's DomNode</summary>
+        /// Performs initialization when the adapter is connected to the UI form's DomNode,
+        /// getting list of children</summary>
         protected override void OnNodeSet()
         {
             m_UIControls = GetChildList<UIControl>(UISchema.UIControlType.ControlChild);

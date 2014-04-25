@@ -5,7 +5,8 @@ using Sce.Atf;
 namespace ModelViewerSample
 {
     /// <summary>
-    /// Standard game icons</summary>
+    /// Filenames for standard game icons. Call ResourceUtil.Register(typeof(Resources))
+    /// to cause the referenced images to become globally available to other users of ResourceUtil.</summary>
     public static class Resources
     {      
         /// <summary>

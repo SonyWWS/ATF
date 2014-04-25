@@ -32,7 +32,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Constructor</summary>
         /// <param name="theme">Diagram theme for rendering graph</param>
         /// <param name="documentRegistry">An optional document registry, used to clear the internal
-        /// element type cache when a document is removed.</param>
+        /// element type cache when a document is removed</param>
         public D2dCircuitRenderer(D2dDiagramTheme theme, IDocumentRegistry documentRegistry = null)
         {
             m_theme = theme;
@@ -57,7 +57,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets or sets the threshold size that shows the details in a circuit element</summary>
         /// <remarks>Title, pins, and labels(after transformation) smaller than the threshold won’t be displayed for speed optimization.
-        /// Default is 6. Set value 0 effectively turns off this optimization </remarks>
+        /// Default is 6. Set value 0 effectively turns off this optimization.</remarks>
         public int DetailsThresholdSize { get; set; }
 
         /// <summary>
@@ -65,6 +65,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// if no elements are selected, in a marquee selection</summary>
         public bool RectangleSelectsWires { get; set; }
 
+        /// <summary>
+        /// Gets or sets D2dDiagramTheme</summary>
         public D2dDiagramTheme Theme
         {
             get { return m_theme; }
@@ -95,6 +97,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Gets or sets D2dBrush for subgraph pins</summary>
         public D2dBrush SubGraphPinBrush
         {
             get { return m_subGraphPinBrush; }
@@ -106,7 +110,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Is called when the content of the graph object changes.</summary>
+        /// Called when content of graph object changes</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         public override void OnGraphObjectChanged(object sender, ItemChangedEventArgs<object> e)
         {
             if (e.Item.Is<ICircuitElementType>())
@@ -211,13 +217,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
   
         /// <summary>
-        /// Get group pin position in group local space
-        /// </summary>
-        /// <param name="groupPin"></param>
-        /// <param name="group">owner</param>/param>
-        /// <param name="inputSide"></param>
+        /// Gets group pin position in group local space</summary>
+        /// <param name="groupPin">Group pin</param>
+        /// <param name="group">Owner</param>/param>
+        /// <param name="inputSide">True if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
-        /// <returns></returns>
+        /// <returns>Group pin position</returns>
         public Point GetGroupPinPosition(ICircuitGroupType<TElement, TWire, TPin> group, ICircuitGroupPin<TElement> groupPin,  bool inputSide, D2dGraphics g)
         {
 
@@ -239,7 +244,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Get  pin position in element local space.</summary>
+        /// Gets pin position in element local space</summary>
+        /// <param name="element">Element</param>
+        /// <param name="pinIndex">Pin index</param>
+        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <param name="g">Graphics object</param>
+        /// <returns>Pin position</returns>
         public Point GetPinPosition(TElement element,  int pinIndex, bool inputSide, D2dGraphics g)
         {
             if (inputSide) // group pin box on the left edge
@@ -560,6 +570,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return result;
         }
 
+        /// <summary>
+        /// Tests if edge is hit by point</summary>
+        /// <param name="edge">Edge to test</param>
+        /// <param name="p">Point to test</param>
+        /// <param name="g">D2dGraphics object</param>
+        /// <returns>True iff edge hits point</returns>
         protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g)
         {            
             ElementTypeInfo fromInfo = GetElementTypeInfo(edge.FromNode, g);
@@ -763,11 +779,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return sb.ToString();
         }
 
-        protected void DrawExpandedGroup(TElement element,  D2dGraphics g)
+        /// <summary>
+        /// Draws expanded group</summary>
+        /// <param name="element">Group to draw</param>
+        /// <param name="g">D2dGraphics object</param>
+        protected void DrawExpandedGroup(TElement element, D2dGraphics g)
         {
             m_graphPath.Push(element);
             var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
-             DrawExpandedGroupPins(element, g);
+            DrawExpandedGroupPins(element, g);
 
             // ensure to draw the drag target first,  prevent it from hiding the drag sources 
             var subNodes = group.SubNodes.ToArray();
@@ -949,7 +969,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Find output pin, if any, at given point</summary>
-        /// <param name="element">Element</param>
+        /// <param name="element">Element containing pin</param>
         /// <param name="g">Graphics object</param>
         /// <param name="p">Point to test, in world space</param>
         /// <returns>Output pin hit by p; null otherwise</returns>
@@ -1188,6 +1208,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return stack;
         }
 
+        /// <summary>
+        /// Obtains ElementTypeInfo for element</summary>
+        /// <param name="element">Element to obtain ElementTypeInfo</param>
+        /// <param name="g">D2dGraphics object</param>
+        /// <returns>ElementTypeInfo for element</returns>
         protected ElementTypeInfo GetElementTypeInfo(TElement element, D2dGraphics g)
         {
             // look it up in the cache
@@ -1340,9 +1365,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return info; 
         }
 
+        /// <summary>Computes interior and exterior size as well as the x positions of output pins for expanded group</summary>
+        /// <param name="group">Group</param>
+        /// <param name="g">Graphics object that can be used for measuring strings</param>
+        /// <returns>Element size info; cannot be null</returns>
         protected virtual ElementSizeInfo GetHierarchicalElementSizeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
         {         
-            if (!group.Expanded) // group element collapased, treat like non-Hierarchical node
+            if (!group.Expanded) // group element collapsed, treat like non-Hierarchical node
                 return GetElementSizeInfo(group, g);
 
 
@@ -1557,6 +1586,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return pen;
         }
 
+        /// <summary>
+        /// Gets pin offset</summary>
+        /// <param name="element">Element containing pin</param>
+        /// <param name="pinIndex">Pin index</param>
+        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <returns>Pin offset</returns>
         public virtual int GetPinOffset(ICircuitElement element, int pinIndex, bool inputSide)
         {
             if (inputSide)
@@ -1622,8 +1657,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Margin offset to be added to draw all sub-elements when the group is expanded inline
-        /// </summary>
+        /// Gets or sets margin offset to be added to draw all sub-elements when the group is expanded inline</summary>
         public Point SubContentOffset
         {
             get { return m_subContentOffset; }
@@ -1635,8 +1669,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Vertical(Y) offset to be added to draw group pins on the border of the group when the group is expanded inline
-        /// </summary>
+        /// Gets or sets vertical (Y) offset to be added to draw group pins on the border of the group 
+        /// when the group is expanded inline</summary>
         public int GroupPinExpandedOffset
         {
             get { return m_groupPinExpandedOffset; }
@@ -1644,16 +1678,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Title height at the top of an element
-        /// </summary>
+        /// Gets title height at the top of an element</summary>
         public int TitleHeight
         {
             get { return m_rowSpacing + m_pinMargin; }
         }
 
         /// <summary>
-        /// Label height at the bottom of an element
-        /// </summary>
+        /// Gets label height at the bottom of an element</summary>
         public int LabelHeight
         {
             get { return m_rowSpacing + m_pinMargin; }
@@ -1770,13 +1802,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Class to hold cached element type layout, in pixels (or DIPs)</summary>
         protected class ElementTypeInfo
         {
+            /// <summary>Element size</summary>
             public Size Size;
+            /// <summary>Element interior size</summary>
             public Rectangle Interior;
+            /// <summary>Array of horizontal offsets of output pins in pixels</summary>
             public int[] OutputLeftX;
 
             // The following are properties of the ICircuitElementType that reflect info in the cached object
             // If any of these differ from the cached object the cached object should be invalidated so it can be re-drawn to reflect these changes.
+            /// <summary>
+            /// Number of input pins. Property of the ICircuitElementType that reflects info in the cached object.</summary>
             public int numInputs;
+            /// <summary>
+            /// Number of output pins. Property of the ICircuitElementType that reflects info in the cached object.</summary>
             public int numOutputs;
         }
 

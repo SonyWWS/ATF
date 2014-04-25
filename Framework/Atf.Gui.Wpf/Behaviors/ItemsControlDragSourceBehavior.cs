@@ -20,7 +20,7 @@ namespace Sce.Atf.Wpf.Behaviors
             var data = AssociatedObject.GetItemAtPoint(pos);
             if (data != null)
             {
-                DragDrop.DoDragDrop(AssociatedObject, new[]{data}, DragDropEffects.All);
+                System.Windows.DragDrop.DoDragDrop(AssociatedObject, new[]{data}, DragDropEffects.All);
             }
         }
     }

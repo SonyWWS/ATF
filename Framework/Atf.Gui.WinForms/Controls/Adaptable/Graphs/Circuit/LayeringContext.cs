@@ -31,13 +31,21 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         INamingContext
     {
         // required  attribute info
+        /// <summary>
+        /// Gets visible attribute for layer</summary>
         protected abstract AttributeInfo VisibleAttribute { get; }
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for layers in circuit</summary>
         protected abstract ChildInfo LayerFolderChildInfo { get; }
 
         // required  DomNodeType info
+        /// <summary>
+        /// Gets type of layer folder</summary>
         protected abstract DomNodeType LayerFolderType { get; }
+        /// <summary>
+        /// Gets type of module reference</summary>
         protected abstract DomNodeType ElementRefType { get; }
 
         /// <summary>

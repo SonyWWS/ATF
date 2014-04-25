@@ -701,6 +701,8 @@ namespace Sce.Atf.Controls.SyntaxEditorControl
         }
     }
 
+    /// <summary>
+    /// Document text range class implementing ISyntaxEditorTextRange</summary>
     public class SyntaxEditorTextRange : ISyntaxEditorTextRange
     {
         /// <summary>

@@ -10,7 +10,8 @@ using Sce.Atf.Applications;
 namespace Sce.Atf.Dom
 {
     /// <summary>
-    /// Editing Context for templates library; this is the context that is bound to the TemplateLister when a circuit document becomes the active context. </summary>
+    /// Editing Context for templates library; this is the context that is bound to the TemplateLister 
+    /// when a circuit document becomes the active context. </summary>
     /// <remarks>This context has its own independent Selection, 
     /// The ITreeView implementation controls the hierarchy in the TemplateLister's TreeControl.
     /// The IItemView implementation controls icons and labels in the TemplateLister's TreeControl.</remarks>
@@ -20,6 +21,9 @@ namespace Sce.Atf.Dom
         IObservableContext,
         INamingContext
     {
+        /// <summary>
+        /// Performs initialization when the adapter is connected to the circuit's DomNode:
+        /// subscribe to DomNode tree change events</summary>
         protected override void OnNodeSet()
         {
             DomNode.AttributeChanged += DomNode_AttributeChanged;
@@ -35,9 +39,13 @@ namespace Sce.Atf.Dom
         /// Gets whether or not the user is actively moving the tempelate items</summary>
         protected bool IsMovingItems { get; set; }
 
+        /// <summary>
+        /// Gets root template folder</summary>
         public abstract TemplateFolder RootFolder { get; }
 
         // required  DomNodeType info
+        /// <summary>
+        /// Gets type of template</summary>
         protected abstract DomNodeType TemplateType { get; }
 
 
@@ -45,6 +53,10 @@ namespace Sce.Atf.Dom
 
         // Standard naming (anything derived from the normal base class)
 
+        /// <summary>
+        /// Gets the item's name in the context, or null if none</summary>
+        /// <param name="item">Item</param>
+        /// <returns>Item's name in the context, or null if none</returns>
         public string GetName(object item)
         {
             var templatesFolder = item.As<TemplateFolder>();
@@ -58,11 +70,19 @@ namespace Sce.Atf.Dom
             return null;
         }
 
+        /// <summary>
+        /// Returns whether the item can be named</summary>
+        /// <param name="item">Item to name</param>
+        /// <returns>True iff the item can be named</returns>
         public bool CanSetName(object item)
         {
             return item.Is<TemplateFolder>() || item.Is<Template>();
         }
 
+        /// <summary>
+        /// Sets the item's name</summary>
+        /// <param name="item">Item to name</param>
+        /// <param name="name">New item name</param>
         public void SetName(object item, string name)
         {
             var templatesFolder = item.As<TemplateFolder>();
@@ -81,6 +101,10 @@ namespace Sce.Atf.Dom
 
         #region ITemplatingContext Members
 
+        /// <summary>
+        /// Sets the active item in the prototyping context; used by UI components to
+        /// set insertion point as the user selects and edits</summary>
+        /// <param name="item">Active layer or item</param>
         public void SetActiveItem(object item)
         {
             if (item.Is<TemplateFolder>() || item.Is<Template>())
@@ -89,6 +113,11 @@ namespace Sce.Atf.Dom
                 m_activeItem = RootFolder; // so we can drag items in a folder out to root folder(which is hidden bu default)
         }
 
+        /// <summary>
+        /// Gets the IDataObject for the items being dragged from a prototype lister, for
+        /// use in a drag-and-drop operation</summary>
+        /// <param name="items">Objects being dragged</param>
+        /// <returns>IDataObject representing the dragged items</returns>
         public IDataObject GetInstances(IEnumerable<object> items)
         {
             List<object> instances = new List<object>();
@@ -102,23 +131,46 @@ namespace Sce.Atf.Dom
             return new DataObject(instances.ToArray());
         }
 
+        /// <summary>
+        /// Returns true iff the reference can reference the specified target item</summary>
+        /// <param name="item">Template item to be referenced</param>
+        /// <returns>True iff the reference can reference the specified target item</returns>
         public abstract bool CanReference(object item);
+
+        /// <summary>
+        /// Creates a reference instance that references the specified target item</summary>
+        /// <param name="item">Item to create reference for</param>
         public abstract object CreateReference(object item);
 
         #endregion
 
         #region IInstancingContext Members
 
+        /// <summary>
+        /// Returns whether the context can copy the selection</summary>
+        /// <returns>True iff the context can copy</returns>
         public bool CanCopy()
         {
             return Selection.Count > 0 && Selection.All(x => x.Is<Template>());
         }
 
+        /// <summary>
+        /// Copies the selection. Returns a data object representing the copied items.</summary>
+        /// <returns>Data object representing the copied items; e.g., a
+        /// System.Windows.Forms.IDataObject object</returns>
         public object Copy()
         {
             return GetInstances(Selection);
         }
 
+        /// <summary>
+        /// Returns whether the context can insert the data object</summary>
+        /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
+        /// <returns>True iff the context can insert the data object</returns>
+        /// <remarks>ApplicationUtil calls this method in its CanInsert method, BUT
+        /// if the context also implements IHierarchicalInsertionContext,
+        /// IHierarchicalInsertionContext is preferred and the IInstancingContext
+        /// implementation is ignored for insertion.</remarks>
         public bool CanInsert(object insertingObject)
         {
             var dataObject = (IDataObject)insertingObject;
@@ -131,6 +183,13 @@ namespace Sce.Atf.Dom
             return items.All(item => item.Is<Template>() || item.Is<TemplateFolder>());
         }
 
+        /// <summary>
+        /// Inserts the data object into the context</summary>
+        /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
+        /// <remarks>ApplicationUtil calls this method in its Insert method, BUT
+        /// if the context also implements IHierarchicalInsertionContext,
+        /// IHierarchicalInsertionContext is preferred and the IInstancingContext
+        /// implementation is ignored for insertion.</remarks>
         public void Insert(object insertingObject)
         {
             IDataObject dataObject = (IDataObject)insertingObject;
@@ -174,11 +233,16 @@ namespace Sce.Atf.Dom
             IsMovingItems = false;
         }
 
+        /// <summary>
+        /// Returns whether the context can delete the selection</summary>
+        /// <returns>True iff the context can delete</returns>
         public bool CanDelete()
         {
             return Selection.Count > 0;
         }
 
+        /// <summary>
+        /// Deletes the selection</summary>
         public void Delete()
         {
             foreach (DomNode node in Selection.AsIEnumerable<DomNode>())
@@ -192,11 +256,17 @@ namespace Sce.Atf.Dom
 
         #region ITreeView Members
 
+        /// <summary>
+        /// Gets the root object of the tree view</summary>
         object ITreeView.Root
         {
             get { return RootFolder; }
         }
 
+        /// <summary>
+        /// Obtains enumeration of the children of the given parent object</summary>
+        /// <param name="parent">Parent object</param>
+        /// <returns>Enumeration of children of the parent object</returns>
         IEnumerable<object> ITreeView.GetChildren(object parent)
         {
             var folder = parent.As<TemplateFolder>();
@@ -213,6 +283,10 @@ namespace Sce.Atf.Dom
 
         #region IItemView Members
 
+        /// <summary>
+        /// Fills in or modifies the given display info for the item</summary>
+        /// <param name="item">Item</param>
+        /// <param name="info">Display info to update</param>
         public virtual void GetInfo(object item, ItemInfo info)
         {
             var folder = item.As<TemplateFolder>();
@@ -238,12 +312,20 @@ namespace Sce.Atf.Dom
 
         #region IObservableContext Members
 
+        /// <summary>
+        /// Event that is raised when an item is inserted</summary>
         public event EventHandler<ItemInsertedEventArgs<object>> ItemInserted;
 
+        /// <summary>
+        /// Event that is raised when an item is removed</summary>
         public event EventHandler<ItemRemovedEventArgs<object>> ItemRemoved;
 
+        /// <summary>
+        /// Event that is raised when an item is changed</summary>
         public event EventHandler<ItemChangedEventArgs<object>> ItemChanged;
 
+        /// <summary>
+        /// Event that is raised when the collection has been reloaded</summary>
         public event EventHandler Reloaded;
        
 
@@ -274,17 +356,30 @@ namespace Sce.Atf.Dom
 
         #endregion
 
+        /// <summary>
+        /// Gets object last promoted to template library</summary>
+        /// <param name="original">Original item</param>
+        /// <returns>Object last promoted to template library</returns>
         public object LastPromoted(object original)
         {
             return m_lastPromoted.ContainsKey(original) ? m_lastPromoted[original] : null;
         }
 
+        /// <summary>
+        /// Returns whether an item is a global template</summary>
+        /// <param name="item">Item to test</param>
+        /// <returns>True iff item is a global template</returns>
         public virtual bool IsGlobalTemplate(object item)
         {
             return false;
 
         }
 
+        /// <summary>
+        /// Searches for a template by its GUID</summary>
+        /// <param name="parentFolder">Template's parent folder to search through</param>
+        /// <param name="guid">GUID to search for</param>
+        /// <returns></returns>
         public Template SearchForTemplateByGuid(TemplateFolder parentFolder, Guid guid)
         {        
             foreach (var template in parentFolder.Templates)
@@ -306,6 +401,10 @@ namespace Sce.Atf.Dom
             return null;
         }
 
+        /// <summary>
+        /// Replace template with another one</summary>
+        /// <param name="template">Template to replace</param>
+        /// <param name="sourceModel">Template to replace it by as DomNode</param>
         public void ReplaceTemplateModel(Template template,  DomNode sourceModel)
         {
             template.Model = DomNode.Copy(new[] { sourceModel }).First(); // DOM deep copy;
@@ -313,7 +412,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Invalid if the specified file  uri is already used in one of the template folder</summary>
+        /// Validate template folder URI.
+        /// Folder invalid if the specified file URI is already used in one of the template folders</summary>
+        /// <returns>True iff folder is valid</returns>
         public bool ValidateNewFolderUri(Uri uri)
         {
             return ValidateNewFolderUri(RootFolder, uri);

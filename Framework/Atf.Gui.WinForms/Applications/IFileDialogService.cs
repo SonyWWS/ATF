@@ -66,6 +66,8 @@ namespace Sce.Atf.Applications
         bool PathExists(string pathName);
     }
 
+    /// <summary>
+    /// Class with useful static methods for IFileDialogService</summary>
     public static class FileDialogServices
     {
         /// <summary>

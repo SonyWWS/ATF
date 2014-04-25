@@ -35,6 +35,8 @@ namespace Sce.Atf.Perforce
             UseAsDefaultConnection = checkBox1.Checked;
         }
 
+        /// <summary>
+        /// Gets or sets current or most recent connection as "server,user,workspace" string</summary>
         public string ConnectionSelected
         {
             get

@@ -9,7 +9,8 @@ namespace TimelineEditorSample
     /// either clipping the new interval or repositioning it to the right.
     /// Client code can override methods in the base class for custom contraints on events'
     /// start times and interval placements. The default is to always fix overlaps when
-    /// new intervals are added to the timeline.</summary>
+    /// new intervals are added to the timeline.
+    /// This class simply uses the default timeline constraints.</summary>
     public class TimelineConstraints : DefaultTimelineConstraints
     {
     }

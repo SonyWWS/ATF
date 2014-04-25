@@ -62,7 +62,7 @@ namespace Sce.Atf.Applications
         /// be sent due to changes in 'common'.</summary>
         /// <param name="common">The object whose properties or data are being broadcast. This would have
         /// come from ObservableToCommon().</param>
-        /// <returns></returns>
+        /// <returns>Set of OSC addresses and associated data payloads</returns>
         /// <remarks>In Liine Lemur, this is a good opportunity to update the 'interface' value,
         /// which can switch GUI screens in Lemur.</remarks>
         protected override IEnumerable<Tuple<string, object>> GetCustomDataToSend(object common)

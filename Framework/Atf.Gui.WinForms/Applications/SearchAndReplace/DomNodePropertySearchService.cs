@@ -194,8 +194,14 @@ namespace Sce.Atf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Root UserControl for replacement control</summary>
         protected UserControl m_rootControl;
+        /// <summary>
+        /// IContextRegistry</summary>
         protected IContextRegistry m_contextRegistry;
+        /// <summary>
+        /// IControlHostService</summary>
         protected IControlHostService m_controlHostService;
     }
 }

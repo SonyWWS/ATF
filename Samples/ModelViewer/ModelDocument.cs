@@ -8,11 +8,11 @@ using Sce.Atf.Dom;
 namespace ModelViewerSample
 {
     /// <summary>
-    /// Implements a readonly IDocument that holds the root node  of loaded 3d model</summary>    
+    /// Implements a read only IDocument that holds the root node  of loaded 3D model</summary>    
     public class ModelDocument : IDocument
     {
         /// <summary>
-        /// Construct from root node and uri</summary>        
+        /// Construct from root node and URI</summary>        
         public ModelDocument(DomNode node, Uri ur)
         {
             RootNode = node;
@@ -20,7 +20,7 @@ namespace ModelViewerSample
         }
 
         /// <summary>
-        /// Gets root node of this document.</summary>
+        /// Gets root node of this document</summary>
         public DomNode RootNode
         {
             get;
@@ -30,7 +30,7 @@ namespace ModelViewerSample
         #region IDocument Members
 
         /// <summary>
-        /// Gets whether the document is read-only</summary>
+        /// Gets whether the document is read only</summary>
         public bool IsReadOnly
         {
             get { return true; }

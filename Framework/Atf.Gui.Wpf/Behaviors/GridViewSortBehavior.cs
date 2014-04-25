@@ -46,6 +46,10 @@ namespace Sce.Atf.Wpf.Behaviors
                 typeof(string),
                 typeof(GridViewSortBehavior));
 
+        /// <summary>
+        /// Determines if user can sort columns</summary>
+        /// <param name="element">ListView control</param>
+        /// <returns>True iff user can sort columns</returns>
         [AttachedPropertyBrowsableForType(typeof(ListView))]
         public static bool GetCanUserSortColumns(ListView element)
         {

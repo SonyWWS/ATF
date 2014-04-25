@@ -12,7 +12,7 @@ namespace UsingDirect2D
     public class GdiCanvas : Control
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor that creates various graphics objects</summary>
         public GdiCanvas()
         {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint

@@ -32,6 +32,8 @@ namespace TimelineEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering timeline commands</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(                

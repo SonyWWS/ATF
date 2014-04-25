@@ -42,7 +42,6 @@ namespace Sce.Atf.Controls
             m_textBox.Name = "m_textBox";
 
             m_spinner = new CompactSpinner();
-            m_spinner.BackColor = m_textBox.BackColor;
             
             SuspendLayout();            
             UpdateTextBox();            
@@ -188,19 +187,9 @@ namespace Sce.Atf.Controls
             ValueEdited.Raise(this, e);
         }
 
-
         /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Control.BackColorChanged"></see> event</summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"></see> that contains the event data</param>
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            m_textBox.BackColor = BackColor;
-            m_spinner.BackColor = BackColor;
-
-            base.OnBackColorChanged(e);
-        }
-
-
+        /// Handles the <see cref="E:System.Windows.Forms.Control.Paint"></see> event and performs custom processing</summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             float r = (float)(m_value - m_min) / (float)(m_max - m_min);

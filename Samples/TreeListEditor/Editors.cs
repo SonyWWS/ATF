@@ -13,12 +13,14 @@ using Sce.Atf.Controls.PropertyEditing;
 namespace TreeListEditor
 {
     /// <summary>
-    /// Common data item editor used for all the tree view editors</summary>
+    /// Common data item editor derived from TreeListViewEditor used for all the tree view editors
+    /// except RawTreeListView.</summary>
     [InheritedExport(typeof(IInitializable))]
     class CommonEditor : TreeListViewEditor, IInitializable, IControlHostClient
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor that configures TreeListView. Creates and registers control it populates with desired buttons
+        /// that have the handler method BtnClick().</summary>
         /// <param name="name">Name of editor</param>
         /// <param name="style">TreeListView style</param>
         /// <param name="flags">Flags indicating which buttons appear for this editor</param>
@@ -371,7 +373,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// List view editor component</summary>
+    /// List view editor component deriving from CommonEditor</summary>
     [Export(typeof(List))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class List : CommonEditor
@@ -402,7 +404,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Checked list view editor component</summary>
+    /// Checked list view editor component deriving from CommonEditor</summary>
     [Export(typeof(CheckedList))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class CheckedList : CommonEditor
@@ -446,7 +448,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Virtual list view editor component</summary>
+    /// Virtual list view editor component deriving from CommonEditor</summary>
     [Export(typeof(VirtualList))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class VirtualList : CommonEditor
@@ -485,7 +487,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Tree list view editor component</summary>
+    /// Tree list view editor component deriving from CommonEditor</summary>
     [Export(typeof(TreeList))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class TreeList : CommonEditor
@@ -516,7 +518,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Checked tree list view editor component</summary>
+    /// Checked tree list view editor component deriving from CommonEditor</summary>
     [Export(typeof(CheckedTreeList))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class CheckedTreeList : CommonEditor

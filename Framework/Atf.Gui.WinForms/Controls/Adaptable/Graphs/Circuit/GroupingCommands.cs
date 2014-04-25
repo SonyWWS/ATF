@@ -23,20 +23,32 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class GroupingCommands : ICommandClient, IInitializable, IContextMenuCommandProvider
     {
         // required DomNodeType
-        protected abstract DomNodeType GroupType { get;  }
+        /// <summary>
+        /// Gets type for Group</summary>
+        protected abstract DomNodeType GroupType { get; }
 
+        /// <summary>
+        /// Gets or sets the default pin order style</summary>
         public Group.PinOrderStyle DefaultPinOderStyle
         {
             get { return m_defaultPinOderStyle; }
             set { m_defaultPinOderStyle = value; }
         }
 
+        /// <summary>
+        /// Enums for behavior of group pins</summary>
         public enum GroupCreationOptions
         {
-            None, // Specifies that the default behavior should be used.
-            HideUnconnectedPins // Only expose connected group pins
+            /// <summary>
+            /// Specifies that default behavior should be used</summary>
+            None,
+            /// <summary>
+            /// Only expose connected group pins</summary>
+            HideUnconnectedPins
         }
            
+        /// <summary>
+        /// Gets or sets group creation options</summary>
         public GroupCreationOptions CreationOptions { get; set; }
 
         /// <summary>
@@ -281,6 +293,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             EdgeStyleDirectCurve,
         }
 
+        /// <summary>
+        /// Gets IContextRegistry</summary>
         protected IContextRegistry ContextRegistry { get { return m_contextRegistry; } }
 
         private ICommandService m_commandService;
@@ -292,6 +306,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering grouping commands</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(CommandInfo.EditGroup, this);

@@ -20,8 +20,6 @@ namespace Sce.Atf.Applications
 {
     /// <summary>
     /// Service to host controls and documents</summary>
-    /// <remarks>This class is for internal use and should not be instantiated or
-    /// accessed directly by clients.</remarks>
     [Export(typeof(IControlHostService))]
     [Export(typeof(IControlRegistry))]
     [Export(typeof(IInitializable))]
@@ -73,11 +71,17 @@ namespace Sce.Atf.Applications
         [Flags]
         public enum CommandRegister
         {
+            /// <summary>Use no window commands</summary>
             None = 0,
+            /// <summary>Use Tile Horizontal window commands</summary>
             WindowTileHorizontal = 1,
-            WindowTileVertical = 2,      
-            WindowTileTabbed = 4,   
-            UILock = 8,         
+            /// <summary>Use Tile Vertical window commands</summary>
+            WindowTileVertical = 2,
+            /// <summary>Use Tile Tabbed window commands</summary>
+            WindowTileTabbed = 4,
+            /// <summary>Use Lock window commands</summary>
+            UILock = 8,
+            /// <summary>Use all window commands</summary>
             Default = UILock | WindowTileHorizontal | WindowTileVertical | WindowTileTabbed
         }
 
@@ -393,7 +397,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns an identifier object that represents the tab group that this control is a part of.</summary>
-        /// <param name="control"></param>
+        /// <param name="control">Control</param>
         /// <returns>A tab group identifier or null, if this control isn't a part of any tab group</returns>
         public object GetTabGroup(Control control)
         {

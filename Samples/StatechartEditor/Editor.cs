@@ -22,7 +22,12 @@ using Sce.Atf.VectorMath;
 namespace StatechartEditorSample
 {
     /// <summary>
-    /// Statechart editor</summary>
+    /// Editor class that creates and saves statechart documents. 
+    /// There is just one instance of this class in this application.
+    /// It creates a D2dAdaptableControl with control adapters for each opened document.
+    /// It registers this control with the hosting service so that the control appears in the Windows docking framework.
+    /// This document client handles file operations, such as saving and closing a document, and
+    /// handles application data persistence.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -97,6 +102,8 @@ namespace StatechartEditorSample
 
         #region IInitializable
 
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -129,8 +136,7 @@ namespace StatechartEditorSample
 
         /// <summary>
         /// Gets information about the document client, such as the file type and file
-        /// extensions it supports, whether or not it allows multiple documents to be open,
-        /// etc.</summary>
+        /// extensions it supports, whether or not it allows multiple documents to be open, etc.</summary>
         public DocumentClientInfo Info
         {
             get { return EditorInfo; }
@@ -151,7 +157,10 @@ namespace StatechartEditorSample
         }
 
         /// <summary>
-        /// Opens or creates a document at the given URI</summary>
+        /// Opens or creates a document at the given URI.
+        /// It creates a D2dAdaptableControl with control adapters for the document.
+        /// It registers this control with the hosting service so that the control appears 
+        /// in the Windows docking framework.</summary>
         /// <param name="uri">Document URI</param>
         /// <returns>Document, or null if the document couldn't be opened or created</returns>
         public IDocument Open(Uri uri)
@@ -358,7 +367,8 @@ namespace StatechartEditorSample
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control.
+        /// Allows the user to save the document before it closes.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control can close, or false to cancel</returns>
         /// <remarks>

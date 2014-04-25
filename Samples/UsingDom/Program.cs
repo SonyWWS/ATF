@@ -9,9 +9,10 @@ using Sce.Atf.Dom;
 namespace UsingDom
 {
     /// <summary>
-    /// This is a simple demo of basic DOM use sample application.
+    /// This is a simple demo of basic DOM use in a sample application.
     /// It illustrates loading a schema with a schema loader, 
-    /// creating a game using DomNodes then saving the game data using the schema loader.
+    /// creating a game using DomNodes and then saving the game data using the schema loader.
+    /// It demonstrates creating application data, with and without DOM adapters.
     /// It has no UI, running in a command prompt window.
     /// For more information, see https://github.com/SonyWWS/ATF/wiki/ATF-Using-Dom-Sample. </summary>
     class Program
@@ -47,10 +48,10 @@ namespace UsingDom
         }  
       
         /// <summary>
-        /// Creates game using raw DomNode</summary>        
+        /// Creates game by creating DomNodes and not using DOM adapters</summary>
         private static DomNode CreateGameUsingDomNode()
         {                                     
-            // create Dom node of the root type defined by the schema
+            // Create DOM node of the root type defined by the schema
             DomNode game = new DomNode(GameSchema.gameType.Type, GameSchema.gameRootElement);
             game.SetAttribute(GameSchema.gameType.nameAttribute, "Ogre Adventure II");
             IList<DomNode> childList = game.GetChildList(GameSchema.gameType.gameObjectChild);
@@ -79,10 +80,10 @@ namespace UsingDom
         }
 
         /// <summary>
-        /// Creates game using DomNode adapter</summary>        
+        /// Creates game using DOM adapters</summary>        
         private static DomNode CreateGameUsingDomNodeAdapter()
         {
-            // create game.
+            // Create game
             DomNode root = new DomNode(GameSchema.gameType.Type, GameSchema.gameRootElement);
             Game game = root.As<Game>();
             game.Name = "Ogre Adventure II";

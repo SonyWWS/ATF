@@ -61,7 +61,11 @@ namespace Sce.Atf.Dom
             get { return m_propertyDescriptor; }
         }
 
+        /// <summary>
+        /// DomNode's matching property descriptor</summary>
         protected PropertyDescriptor m_propertyDescriptor;
+        /// <summary>
+        /// DomNode with the matching property</summary>
         protected DomNode m_domNode;
     }
 }

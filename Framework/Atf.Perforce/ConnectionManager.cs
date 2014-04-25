@@ -16,11 +16,15 @@ namespace Sce.Atf.Perforce
     /// Manages connection to Perforce server connections, using the P4API.NET</summary>
     public class ConnectionManager : IDisposable
     {
+        /// <summary>
+        /// Connection changed event</summary>
         public event EventHandler ConnectionChanged;
+        /// <summary>
+        /// Login canceled event</summary>
         public event EventHandler LoginCanceled;
 
         /// <summary>
-        /// Gets or sets a value indicating recent connections to Perforce server</summary>
+        /// Gets or sets a string indicating recent connections to Perforce server</summary>
         public string ConnectionHistory
         {
             get
@@ -53,6 +57,8 @@ namespace Sce.Atf.Perforce
             }
         }
 
+        /// <summary>
+        /// Gets or sets a string list of recent connections to Perforce server</summary>
         public List<string> RecentConnections
         {
             get { return m_recentConnections; }
@@ -60,7 +66,7 @@ namespace Sce.Atf.Perforce
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the default connection to Perforce server</summary>
+        /// Gets or sets a string indicating the default connection to Perforce server</summary>
         public string DefaultConnection
         {
             get { return m_defaultConnection; }
@@ -131,6 +137,10 @@ namespace Sce.Atf.Perforce
             m_connectionInitialized = false;
         }
 
+        /// <summary>
+        /// Creates a new Changelist and add add a new change to it</summary>
+        /// <param name="description">Description of change</param>
+        /// <returns>New Changelist with added change</returns>
         public Changelist CreateChangelist(string description)
         {
             Changelist cl = new Changelist();
@@ -140,6 +150,8 @@ namespace Sce.Atf.Perforce
             return cl;
         }
 
+        /// <summary>
+        /// Gets the current connection</summary>
         public  string CurrentConnection
         {
             get
@@ -148,6 +160,10 @@ namespace Sce.Atf.Perforce
             }
         }
 
+        /// <summary>
+        /// Returns an enumeration of user names for the given server's repository</summary>
+        /// <param name="serverAddress">Server</param>
+        /// <returns>Enumeration of user names</returns>
         public  IEnumerable<string> GetUsers(string serverAddress)
         {
             var result = new List<string>();
@@ -191,7 +207,11 @@ namespace Sce.Atf.Perforce
             return result;
         }
 
-   
+        /// <summary>
+        /// Gets list of workspaces for a given server and user</summary>
+        /// <param name="serverAddress">Server address</param>
+        /// <param name="userId">User ID</param>
+        /// <returns>List of workspaces</returns>
         public IEnumerable<string> GetWorkspaces(string serverAddress, string userId)
         {
   
@@ -376,12 +396,17 @@ namespace Sce.Atf.Perforce
         }
 
        
-
+        /// <summary>
+        /// Raises ConnectionChanged event</summary>
+        /// <param name="e">Event arguments</param>
         protected virtual void OnConnectionChanged(EventArgs e)
         {
             ConnectionChanged.Raise(this, e);
         }
 
+        /// <summary>
+        /// Raises LoginCanceled event</summary>
+        /// <param name="e">Event arguments</param>
         protected virtual void OnLoginCanceled(EventArgs e)
         {
             LoginCanceled.Raise(this, e);
@@ -408,6 +433,8 @@ namespace Sce.Atf.Perforce
             }
             return tokens;
         }
+        /// <summary>
+        /// Gets or sets default connection marker</summary>
         public string DefaultConnectionMarker
         {
             get { return m_defaultConnectionMarker; }
@@ -439,10 +466,15 @@ namespace Sce.Atf.Perforce
 
 #pragma warning disable 649 // Field is never assigned to and will always have its default value null
 
+        /// <summary>
+        /// Gets or sets main form</summary>
         [Import(AllowDefault = true)] // optional service
         protected Form MainForm { get; set; }
 
 #pragma warning restore 649
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources</summary>
         public void Dispose()
         {
             if (m_connection != null)

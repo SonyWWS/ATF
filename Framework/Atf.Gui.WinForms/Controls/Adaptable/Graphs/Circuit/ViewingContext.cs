@@ -301,6 +301,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             SetCanvasBounds();
         }
 
+        /// <summary>
+        /// Updates the control CanvasAdapter's bounds</summary>
         protected virtual void SetCanvasBounds()
         {
             // update the control CanvasAdapter's bounds

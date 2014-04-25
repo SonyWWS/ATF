@@ -138,14 +138,14 @@ namespace Sce.Atf.Wpf.ValueConverters
     /// <summary>
     /// Returns an image resource from a resource key.
     /// This class is a workaround for a WPF bug (Fixed in .NET 4).
-    /// that prevents binding a MenuItem.Icon to an ImageSource correctly!
+    /// that prevents binding a MenuItem.Icon to an ImageSource correctly! For details, see
     /// https://connect.microsoft.com/VisualStudio/feedback/details/497408/wpf-menuitem-icon-cannot-be-set-via-setter?wa=wsignin1.0 </summary>
     public class ImageResourceLookupConverter : ConverterMarkupExtension<ImageResourceLookupConverter>
     {
         /// <summary>
         /// Returns an image resource from a resource key.
         /// This method is a workaround for a WPF bug (Fixed in .NET 4).
-        /// that prevents binding a MenuItem.Icon to an ImageSource correctly!
+        /// that prevents binding a MenuItem.Icon to an ImageSource correctly! For details, see
         /// https://connect.microsoft.com/VisualStudio/feedback/details/497408/wpf-menuitem-icon-cannot-be-set-via-setter?wa=wsignin1.0 </summary>
         /// <param name="value">Image resource ID</param>
         /// <param name="targetType">Type of target (unused)</param>
@@ -157,6 +157,13 @@ namespace Sce.Atf.Wpf.ValueConverters
             return Convert(value);
         }
 
+        /// <summary>
+        /// Obtains an image resource from a resource key</summary>
+        /// <param name="value">Image resource ID</param>
+        /// <returns>Image resource</returns>
+        /// <remarks>This method is a workaround for a WPF bug (Fixed in .NET 4).
+        /// that prevents binding a MenuItem.Icon to an ImageSource correctly! For details, see
+        /// https://connect.microsoft.com/VisualStudio/feedback/details/497408/wpf-menuitem-icon-cannot-be-set-via-setter?wa=wsignin1.0 </remarks>
         public static object Convert(object value)
         {
             if (value == null)

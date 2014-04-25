@@ -642,8 +642,11 @@ namespace Sce.Atf.Rendering.Dom
     /// Enums that correspond to the strings in TransformUtils.SnapFromModes</summary>
     public enum SnapFromMode
     {
+        /// <summary>Snap from pivot</summary>
         Pivot,
+        /// <summary>Snap from origin</summary>
         Origin,
+        /// <summary>Snap from bottom center</summary>
         BottomCenter
     }
 }

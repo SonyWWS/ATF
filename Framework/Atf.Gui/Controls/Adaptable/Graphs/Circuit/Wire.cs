@@ -13,10 +13,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class Wire : DomNodeAdapter, IGraphEdge<Element, ICircuitPin>
     {
 
+        /// <summary>
+        /// Gets label attribute on connection</summary>
         protected abstract AttributeInfo LabelAttribute { get; }
+        /// <summary>
+        /// Gets input module attribute for connection</summary>
         protected abstract AttributeInfo InputElementAttribute { get; }
+        /// <summary>
+        /// Gets output module attribute for connection</summary>
         protected abstract AttributeInfo OutputElementAttribute { get; }
+        /// <summary>
+        /// Gets input pin attribute for connection</summary>
         protected abstract AttributeInfo InputPinAttribute { get; }
+        /// <summary>
+        /// Gets output pin attribute for connection</summary>
         protected abstract AttributeInfo OutputPinAttribute { get; }
 
 
@@ -80,12 +90,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// Sets output pin for an element</summary>
+        /// <param name="outputElement">Element</param>
+        /// <param name="outputPin">Output pin</param>
         public virtual void SetOutput(Element outputElement, ICircuitPin outputPin)
         {
             OutputElement = outputElement;
             OutputPin = outputPin;
         }
 
+        /// <summary>
+        /// Sets input pin for an element</summary>
+        /// <param name="inputElement">Element</param>
+        /// <param name="inputPin">Input pin</param>
         public virtual void SetInput(Element inputElement, ICircuitPin inputPin)
         {
             InputElement = inputElement;
@@ -139,7 +157,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         #endregion
 
-    
+        /// <summary>
+        /// Sets input and output PinTarget for this connection</summary>
         public void SetPinTarget()
         {
             if (InputPin != null)
@@ -201,7 +220,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets the input pin target.</summary>
+        /// Gets or sets the input pin target</summary>
         public PinTarget InputPinTarget
         {
             get
@@ -215,7 +234,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets the output pin target.</summary>
+        /// Gets or sets the output pin target</summary>
         public PinTarget OutputPinTarget
         {
             get
@@ -227,6 +246,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             set { m_outputPinTarget = value; }
         }
 
+        /// <summary>
+        /// For input pin, gets enumeration of group pins down the chain before the leaf level</summary>
         public IEnumerable<GroupPin> InputPinSinkChain 
         {
             get
@@ -237,6 +258,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             } 
         }
 
+        /// <summary>
+        /// For output pin, gets enumeration of group pins down the chain before the leaf level</summary>
         public IEnumerable<GroupPin> OutputPinSinkChain
         {
             get

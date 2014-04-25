@@ -13,6 +13,8 @@ using Sce.Atf.Input;
 
 namespace CircuitEditorSample.Tests
 {
+    /// <summary>
+    /// Circuit creation command component</summary>
     [Export(typeof(IInitializable))]
     public class CircuitTestCommands : ICommandClient, IInitializable
     {
@@ -39,6 +41,8 @@ namespace CircuitEditorSample.Tests
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering command to create circuit</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(CommandTag.TestCreateCircuitDoc, 

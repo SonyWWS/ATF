@@ -35,6 +35,10 @@ namespace Sce.Atf.Controls
             Define(numericType, names);
         }
 
+        
+
+       
+
         /// <summary>
         /// Gets or sets whether axis labels should be hidden. The labels are visible by default.</summary>
         public bool HideAxisLabel
@@ -255,6 +259,9 @@ namespace Sce.Atf.Controls
             SuspendLayout();            
         }
 
+        /// <summary>
+        /// Raises Paint event and draws control</summary>
+        /// <param name="e">Paint event arguments</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -297,6 +304,9 @@ namespace Sce.Atf.Controls
             ValueEdited.Raise(this, e);
         }
 
+        /// <summary>
+        /// Raises FontChanged event and updates control</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnFontChanged(EventArgs e)
         {
             // copied from PropertyView's OnFontChanged().
@@ -310,14 +320,7 @@ namespace Sce.Atf.Controls
         }
 
 
-        /// <summary>
-        /// Update child control background</summary>            
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            foreach (NumericTextBox textBox in Controls)
-                textBox.BackColor = BackColor;                            
-            base.OnBackColorChanged(e);
-        }
+        
 
 
         /// <summary>

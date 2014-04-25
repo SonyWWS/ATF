@@ -20,6 +20,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class LayeringCommands : ICommandClient, IContextMenuCommandProvider, IInitializable
     {
         // required DomNodeType
+        /// <summary>
+        /// Gets type of layer folder</summary>
         protected abstract DomNodeType LayerFolderType { get; }
     
 

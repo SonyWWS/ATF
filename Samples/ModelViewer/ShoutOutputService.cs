@@ -17,7 +17,7 @@ namespace ModelViewerSample
     public class ShoutOutputService : OutputService
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with IControlHostService</summary>
         /// <param name="controlHostService">Control host service used to register the output control</param>
         [ImportingConstructor]
         public ShoutOutputService(IControlHostService controlHostService)
@@ -61,7 +61,7 @@ namespace ModelViewerSample
         }
 
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with no parameters</summary>
         static ShoutOutputService()
         {
             s_warningFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Italic);

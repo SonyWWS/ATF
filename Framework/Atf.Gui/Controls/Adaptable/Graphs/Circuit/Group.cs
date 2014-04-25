@@ -18,6 +18,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// Adapts DomNode to group in a circuit</summary>
     public abstract class Group : Element, ICircuitGroupType<Element, Wire, ICircuitPin>, IGraph<Element, Wire, ICircuitPin>, IAnnotatedDiagram, ICircuitContainer
     {
+        /// <summary>
+        /// Constructor, creating CircuitGroupInfo object</summary>
         protected Group()
         {
             m_info = new CircuitGroupInfo();
@@ -25,19 +27,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the attribute for the minimum width in graph (world) space that the group can be.</summary>
+        /// Gets the attribute for the minimum width in graph (world) space that the group can be</summary>
         protected abstract AttributeInfo MinWidthAttribute { get; }
 
         /// <summary>
-        /// Gets attribute for the minimum height in graph space that the group can be.</summary>
+        /// Gets attribute for the minimum height in graph space that the group can be</summary>
         protected abstract AttributeInfo MinHeightAttribute { get; }
 
         /// <summary>
-        /// Gets the attribute for the current width in graph space.</summary>
+        /// Gets the attribute for the current width in graph space</summary>
         protected abstract AttributeInfo WidthAttribute { get; }
 
         /// <summary>
-        /// Gets the attribute for the current height in graph space.</summary>
+        /// Gets the attribute for the current height in graph space</summary>
         protected abstract AttributeInfo HeightAttribute { get; }
 
         /// <summary>
@@ -56,19 +58,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected abstract AttributeInfo ShowExpandedGroupPinsAttribute { get; }
 
         /// <summary>
-        /// Gets the child info for the circuit elements contained within this group.</summary>
+        /// Gets the child info for the circuit elements contained within this group</summary>
         protected abstract ChildInfo ElementChildInfo { get; }
 
         /// <summary>
-        /// Gets the child info for the wires contained within this group.</summary>
+        /// Gets the child info for the wires contained within this group</summary>
         protected abstract ChildInfo WireChildInfo { get; }
 
         /// <summary>
-        /// Gets the child info for the input pins of this group.</summary>
+        /// Gets the child info for the input pins of this group</summary>
         protected abstract ChildInfo InputChildInfo { get; }
 
         /// <summary>
-        /// Gets the child info for the output pins of this group.</summary>
+        /// Gets the child info for the output pins of this group</summary>
         protected abstract ChildInfo OutputChildInfo { get; }
 
         /// <summary>
@@ -80,19 +82,21 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the DomNodeType for the group pins.</summary>
+        /// Gets the DomNodeType for the group pins</summary>
         protected abstract DomNodeType GroupPinType { get; }
 
         /// <summary>
         /// Initial pin order style</summary>
         public enum PinOrderStyle
         {
+            /// <summary>Order by y-coordinate</summary>
             NodeY,
+            /// <summary>Order by depth first for nested elements, ordering by y-coordinate at same depth</summary>
             DepthFirst,
         }
 
         /// <summary>
-        /// Gets or sets the default pin order style.</summary>
+        /// Gets or sets the default pin order style</summary>
         public PinOrderStyle DefaultPinOrder
         {
             get { return m_defaultPinOrder; }
@@ -100,7 +104,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets/sets a value indicating whether or not the contents of the group have been changed.</summary>
+        /// Gets or sets whether the contents of the group have been changed</summary>
         public bool Dirty
         {
             get { return m_dirty; }
@@ -178,11 +182,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             get { return this; }
         }
 
+        /// <summary>
+        /// Tests if group has a given input pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff group contains the given input pin</returns>
         public override bool HasInputPin(ICircuitPin pin)
         {
             return InputGroupPins.Contains(pin);
         }
 
+        /// <summary>
+        /// Tests if group has a given output pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff group contains the given output pin</returns>
         public override bool HasOutputPin(ICircuitPin pin)
         {
             return OutputGroupPins.Contains(pin);
@@ -409,7 +421,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets CircuitGroupInfo object which controls various options on this circuit group.</summary>
+        /// Gets or sets CircuitGroupInfo object which controls various options on this circuit group</summary>
         public virtual CircuitGroupInfo Info
         {
             get { return m_info; }
@@ -418,7 +430,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         #endregion
 
         /// <summary>
-        /// Gets or sets a value indicating whether the group container is automatically resized to display its entire contents.</summary>
+        /// Gets or sets whether the group container is automatically resized to display its entire contents</summary>
         public virtual bool AutoSize
         {
             get { return GetAttribute<bool>(AutosizeAttribute); }
@@ -426,7 +438,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show the group pins when the group is expanded.</summary>
+        /// Gets or sets whether to show the group pins when the group is expanded</summary>
         public virtual bool ShowExpandedGroupPins
         {
             get { return GetAttribute<bool>(ShowExpandedGroupPinsAttribute); }
@@ -438,12 +450,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
 
+        /// <summary>
+        /// Gets group's parent as IGraph</summary>
         public virtual IGraph<Element, Wire, ICircuitPin> ParentGraph
         {
             get { return GetParentAs<IGraph<Element, Wire, ICircuitPin>>(); }
         }
 
-        // update group pin connectivity and style for each group pin
+        /// <summary>
+        /// Update group pin connectivity and style for each group pin</summary>
         public void UpdateGroupPinInfo()
         {
             bool topLevelGroup = !ParentGraph.Is<Group>();// for top level group, propagate down the connectivity
@@ -897,13 +912,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Whether or not the module pin can be legally exposed as a group pin.</summary>
-        /// <param name="element">The module to check</param>
-        /// <param name="pin">The pin on the module</param>
-        /// <param name="internalConnections">internal connections of the owner group</param>
-        /// <param name="inputSide"> whether or not the pin is located at the input side of the module</param>
-        /// <returns></returns>
-        ///<remarks>An internal pin must be exposed if there are external edges connected to it; 
+        /// Whether or not the module pin can be legally exposed as a group pin</summary>
+        /// <param name="element">Module to check</param>
+        /// <param name="pin">Pin on module</param>
+        /// <param name="internalConnections">Internal connections of the owner group</param>
+        /// <param name="inputSide">Whether or not the pin is located at the input side of the module</param>
+        /// <returns>True iff module pin can be legally exposed as a group pin</returns>
+        /// <remarks>An internal pin must be exposed if there are external edges connected to it; 
         /// an internal pin may be visible or hidden if it is legal to expose but no external connections.
         /// This default implementation exposes all legal candidates that can be exposed as group pins. 
         /// So there is always over-exposing problem, never under-exposing problem to start with the default.</remarks>
@@ -946,8 +961,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Validate the state of the group
-        /// </summary>
+        /// Validates the state of the group</summary>
         public void Validate()
         {
 
@@ -1153,6 +1167,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// Finds the element and pin that matched the pin target for this circuit container</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public override Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();
@@ -1172,6 +1192,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return result;
         }
 
+        /// <summary>
+        /// Finds the element and pin that fully matched the pin target for this circuit container, 
+        /// including the template instance node</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public override Pair<Element, ICircuitPin> FullyMatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();
@@ -1192,11 +1219,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// find a group pin corresponding to the given node and the pin index inside the node</summary>
-        /// <param name="node"></param>
-        /// <param name="pinIndex">input or output pin index of the given node</param>
-        /// <param name="inputSide"></param>
-        /// <returns></returns>
+        /// Finds a group pin corresponding to the given node and the pin index inside the node</summary>
+        /// <param name="node">Node to search</param>
+        /// <param name="pinIndex">Input or output pin index of the given node</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Group pin found</returns>
         public GroupPin MatchedGroupPin(Element node, int pinIndex, bool inputSide)
         {
             if (node.Is<Group>())
@@ -1221,7 +1248,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Returns true if the specified attribute is name or label </summary>
+        /// Returns true iff the specified attribute is name or label</summary>
         public bool IsNameAttribute(AttributeInfo attributeInfo)
         {
             return (attributeInfo == NameAttribute || attributeInfo == LabelAttribute);
@@ -1407,6 +1434,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Info.Offset = offset;
         }
 
+        /// <summary>
+        /// Handler for event that raised if any of the properties on group are changed</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         protected virtual void GroupInfoChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             MinimumSize = Info.MinimumSize;

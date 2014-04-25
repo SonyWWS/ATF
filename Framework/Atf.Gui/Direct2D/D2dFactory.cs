@@ -1,6 +1,9 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Drawing;
+using Sce.Atf.VectorMath;
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
@@ -8,6 +11,7 @@ using SharpDX.DXGI;
 using SizeF = System.Drawing.SizeF;
 using PointF = System.Drawing.PointF;
 using Color = System.Drawing.Color;
+using FontStyle = SharpDX.DirectWrite.FontStyle;
 using GdiFontStyle = System.Drawing.FontStyle;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 
@@ -28,7 +32,7 @@ namespace Sce.Atf.Direct2D
             HwndRenderTargetProperties hwnProps
                 = new HwndRenderTargetProperties();
             hwnProps.Hwnd = hwnd;
-            hwnProps.PixelSize = new SharpDX.DrawingSize(16, 16);
+            hwnProps.PixelSize = new SharpDX.Size2(16, 16);
             hwnProps.PresentOptions = PresentOptions.Immediately;
 
             WindowRenderTarget rt = null;
@@ -265,8 +269,44 @@ namespace Sce.Atf.Direct2D
         /// <returns>A new instance of D2dTextLayout</returns>
         public static D2dTextLayout CreateTextLayout(string text, D2dTextFormat textFormat, float layoutWidth, float layoutHeight)
         {
-            TextLayout textlayout
-                = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, layoutWidth, layoutHeight);
+            var textlayout = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, 
+                layoutWidth, layoutHeight);
+            return new D2dTextLayout(text, textlayout);
+        }
+
+        /// <summary>
+        /// Creates a TextLayout with the specified parameter</summary>
+        /// <param name="text">The string to create a new D2dTextLayout object from</param>
+        /// <param name="textFormat">The text format to apply to the string</param>
+        /// <param name="transform">2D Matrix used to transform the text</param>
+        /// <returns>A new instance of D2dTextLayout</returns>
+        public static D2dTextLayout CreateTextLayout(string text, D2dTextFormat textFormat, Matrix3x2F transform)
+        {
+            return CreateTextLayout(text, textFormat, 2048, 2048, transform);
+        }
+
+        /// <summary>
+        /// Creates a TextLayout with the specified parameter</summary>
+        /// <param name="text">The string to create a new D2dTextLayout object from</param>
+        /// <param name="textFormat">The text format to apply to the string</param>
+        /// <param name="layoutWidth">Text layout width</param>
+        /// <param name="layoutHeight">Text layout height</param>
+        /// <param name="transform">2D Matrix used to transform the text</param>
+        /// <returns>A new instance of D2dTextLayout</returns>
+        public static D2dTextLayout CreateTextLayout(string text, D2dTextFormat textFormat, float layoutWidth, float layoutHeight, Matrix3x2F transform)
+        {
+            var matrix = new Matrix3x2
+            {
+                M11 = transform.M11,
+                M12 = transform.M12,
+                M21 = transform.M21,
+                M22 = transform.M22,
+                M31 = transform.DX,
+                M32 = transform.DY
+            };
+
+            var textlayout = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, 
+                layoutWidth, layoutHeight, 1, matrix, true);
             return new D2dTextLayout(text, textlayout);
         }
 
@@ -279,6 +319,8 @@ namespace Sce.Atf.Direct2D
         /// with the format parameter</returns>
         public static SizeF MeasureText(string text, D2dTextFormat textFormat)
         {
+            if (string.IsNullOrEmpty(text))
+                return SizeF.Empty;
             return s_gfx.MeasureText(text, textFormat);
         }
 
@@ -527,18 +569,31 @@ namespace Sce.Atf.Direct2D
         private static RenderTargetProperties s_rtprops = new RenderTargetProperties();
     }
 
+    /// <summary>
+    /// Result of Direct2D drawing operation</summary>
     public struct D2dResult : IEquatable<D2dResult>
     {
+        /// <summary>Operation succeeded</summary>
         public readonly static D2dResult Ok;
+        /// <summary>Operation was aborted</summary>
         public readonly static D2dResult Abord;
+        /// <summary>Operation was denied access</summary>
         public readonly static D2dResult AccessDenied;
+        /// <summary>Operation failed</summary>
         public readonly static D2dResult Fail;
+        /// <summary>Operation result is handle</summary>
         public readonly static D2dResult Handle;
+        /// <summary>Operation had invalid argument</summary>
         public static D2dResult InvalidArg;
+        /// <summary>Operation has no interface</summary>
         public static D2dResult NoInterface;
+        /// <summary>Operation is not implemented</summary>
         public static D2dResult NotImplemented;
+        /// <summary>Operation ran out of memory</summary>
         public static D2dResult OutOfMemory;
+        /// <summary>Operation had invalid pointer</summary>
         public static D2dResult InvalidPointer;
+        /// <summary>Operation had an unexpected failure</summary>
         public static D2dResult UnexpectedFailure;
 
         internal D2dResult(int code)

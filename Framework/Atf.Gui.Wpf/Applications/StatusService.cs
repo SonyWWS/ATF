@@ -54,6 +54,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by showing status</summary>
         public void Initialize()
         {
             m_mainStatusText.IsLeftDock = true;

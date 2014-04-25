@@ -318,15 +318,37 @@ namespace Sce.Atf
             public int code;
         }
 
+        /// <summary>
+        /// Sends specified message to a window or windows.
+        /// </summary>
+        /// <param name="hWnd">Handle to the window</param>
+        /// <param name="Msg">Message to be sent</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns></returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Auto)]
         public static extern uint SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
+        /// <summary>
+        /// Sends specified message to a window or windows.
+        /// </summary>
+        /// <param name="hWnd">Handle to the window</param>
+        /// <param name="msg">Message to be sent</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns></returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(DllName, EntryPoint = "SendMessage")]
         public static extern IntPtr SendMessageITEM(IntPtr Handle, Int32 msg, IntPtr wParam, ref HDITEM lParam);
 
+        /// <summary>
+        /// Retrieves handle to window that has the keyboard focus</summary>
+        /// <returns>Handle to window</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646294%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
         public static extern IntPtr GetFocus();
 
@@ -558,7 +580,7 @@ namespace Sce.Atf
         public static extern uint GetClipboardSequenceNumber();
 
         /// <summary>
-        /// Resume drawing to the specified window handle</summary>
+        /// Resumes drawing to the specified window handle</summary>
         /// <param name="hwnd">Handle to window</param>
         public static void StartDrawing(IntPtr hwnd)
         {                        
@@ -566,7 +588,7 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Stop drawing of the specified window handle</summary>
+        /// Stops drawing of the specified window handle</summary>
         /// <param name="hwnd">Handle to window</param>
         public static void StopDrawing(IntPtr hwnd)
         {            
@@ -684,26 +706,87 @@ namespace Sce.Atf
         [DllImport(DllName)]
         public static extern IntPtr SetWindowsHookEx(HookType code, WindowsHookCallback func, IntPtr hInstance, int threadID);
 
+        /// <summary>
+        /// Passes hook information to next hook procedure in current hook chain</summary>
+        /// <param name="hhk">Ignored</param>
+        /// <param name="nCode">Hook code passed to current hook procedure</param>
+        /// <param name="wParam">wParam value passed to the current hook procedure</param>
+        /// <param name="lParam">lParam value passed to the current hook procedure</param>
+        /// <returns>Value returned by the next hook procedure in the chain</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644974%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern int CallNextHookEx(IntPtr hhk, int nCode, int wParam, int lParam);
 
+        /// <summary>
+        /// Removes a hook procedure installed in a hook chain by the SetWindowsHookEx()</summary>
+        /// <param name="hhk">Handle to the hook to be removed</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644993%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
+        /// <summary>
+        /// Adds rectangle to specified window's update region</summary>
+        /// <param name="hWnd">Handle to window</param>
+        /// <param name="lpRect">Pointer to a RECT structure for rectangle added to the update region</param>
+        /// <param name="bErase">Specifies whether background within update region is erased</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/dd145002%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
 
+        /// <summary>
+        /// Creates new shape for system caret and assigns ownership of caret to specified window</summary>
+        /// <param name="hWnd">Handle to window that owns caret</param>
+        /// <param name="hBitmap">Handle to bitmap that defines caret shape</param>
+        /// <param name="nWidth">Width of caret</param>
+        /// <param name="nHeight">Height of caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648399%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
+        /// <summary>
+        /// Creates new shape for system caret and assigns ownership of caret to specified window</summary>
+        /// <param name="hWnd">Handle to window that owns caret</param>
+        /// <param name="hBitmap">Handle to bitmap that defines caret shape</param>
+        /// <param name="nWidth">Width of caret</param>
+        /// <param name="nHeight">Height of caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648399%28v=vs.85%29.aspx </remarks>
         public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
+        /// <summary>
+        /// Makes caret visible on screen at caret's current position</summary>
+        /// <param name="hWnd">Handle to window that owns caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648406%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool ShowCaret(IntPtr hWnd);
+        /// <summary>
+        /// Copies caret's position to specified POINT structure</summary>
+        /// <param name="lpPoint">Pointer to POINT structure to receive client coordinates of caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648402%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool GetCaretPos(out Point lpPoint);
+        /// <summary>
+        /// Removes caret from screen</summary>
+        /// <param name="hWnd">Handle to window that owns caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648403%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool HideCaret(IntPtr hWnd);
+        /// <summary>
+        /// Moves caret to specified coordinates</summary>
+        /// <param name="x">New x-coordinate of the caret</param>
+        /// <param name="y">New y-coordinate of the caret</param>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648405%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool SetCaretPos(int x, int y);
+        /// <summary>
+        /// caret's current shape, frees caret from window, and caret from screen</summary>
+        /// <returns>Nonzero iff function succeeds</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648400%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool DestroyCaret();
 

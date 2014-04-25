@@ -13,17 +13,17 @@ using ModelViewerSample.Rendering;
 namespace ModelViewerSample
 {
     /// <summary>
-    /// 3d model viewer. Imports available IResourceResolver objects and uses them to try to load
-    /// and display the model files.</summary>
+    /// 3D model viewer. Imports available IResourceResolver objects and uses them to try to load
+    /// and display model files.</summary>
     [Export(typeof(IDocumentClient))]    
     [Export(typeof(IInitializable))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ModelViewer : IDocumentClient, IInitializable
     {
         /// <summary>
-        /// Construct an instance of ModelViewer.</summary>
-        /// <param name="documentRegistry">The document registry used to clear old documents, since
-        /// we don't enable the Close command and we don't have a multiple document interface.</param>
+        /// Construct an instance of ModelViewer</summary>
+        /// <param name="documentRegistry">The document registry used to clear old documents, because
+        /// we don't enable the Close command and we don't have a multiple document interface</param>
         [ImportingConstructor]
         public ModelViewer(IDocumentRegistry documentRegistry)
         {
@@ -35,11 +35,11 @@ namespace ModelViewerSample
         #region IInitializable Members
 
         /// <summary>
-        /// Initializes the object</summary>
+        /// Initializes the object by initializing DOM adapters for types</summary>
         void IInitializable.Initialize()
         {
 
-            // Register ATGI and Collada nodes
+            // Define DOM adapters for ATGI and Collada node types
             Register<RenderTransform>(Sce.Atf.Atgi.Schema.nodeType.Type);            
             Register<RenderPrimitives>(Sce.Atf.Atgi.Schema.vertexArray_primitives.Type);
 
@@ -101,8 +101,7 @@ namespace ModelViewerSample
         /// <summary>
         /// Makes the document visible to the user</summary>
         /// <param name="document">Document to show</param>
-        /// <remarks>This app only shows one document at a time and will always show the last opened
-        /// document</remarks>
+        /// <remarks>This application only shows one document at a time and always shows the last opened document</remarks>
         void IDocumentClient.Show(IDocument document)
         {
             
@@ -112,7 +111,7 @@ namespace ModelViewerSample
         /// Saves the document at the given URI</summary>
         /// <param name="document">Document to save</param>
         /// <param name="uri">New document URI</param>
-        /// <remarks>This app does not enable the Save command, since no modifications are allowed</remarks>
+        /// <remarks>This application does not enable the Save command, because no modifications are allowed</remarks>
         void IDocumentClient.Save(IDocument document, Uri uri)
         {
             
@@ -121,8 +120,7 @@ namespace ModelViewerSample
         /// <summary>
         /// Closes the document and removes any views of it from the UI</summary>
         /// <param name="document">Document to close</param>
-        /// <remarks>This app does not enable the Close command. The last opened model is always
-        /// displayed.</remarks>
+        /// <remarks>This application does not enable the Close command. The last opened model is always displayed.</remarks>
         void IDocumentClient.Close(IDocument document)
         {
             

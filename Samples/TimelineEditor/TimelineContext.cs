@@ -20,7 +20,7 @@ namespace TimelineEditorSample
 {
     /// <summary>
     /// This class provides a history context (for undo/redo) plus selection state. There is one of
-    /// these per TimelineControl and per "main" TimelineDocument. (There could be sub-documents that
+    /// these for each TimelineControl and for each "main" TimelineDocument. (There could be sub-documents that
     /// are referenced by the main document.)</summary>
     public class TimelineContext :
         EditingContext,
@@ -31,7 +31,8 @@ namespace TimelineEditorSample
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the editing context's DomNode.
-        /// Raises the EditingContext NodeSet event and performs custom processing.</summary>
+        /// Raises the EditingContext NodeSet event and performs custom processing to adapt objects
+        /// and subscribe to DomNode change and drag events.</summary>
         protected override void OnNodeSet()
         {
             m_timeline = this.As<Timeline>();
@@ -295,9 +296,9 @@ namespace TimelineEditorSample
                     TimelineControl.IsEditable(TimelineControl.TargetGroup));
         }
 
-        // Generic insert via IInstancingContext. Called from, for example, the standard paste command.
         /// <summary>
-        /// Inserts the data object into the context</summary>
+        /// Inserts the data object into the context.
+        /// Generic insert via IInstancingContext. Called from, for example, the standard paste command.</summary>
         /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
         public void Insert(object insertingObject)
         {
@@ -617,7 +618,7 @@ namespace TimelineEditorSample
 
         /// <summary>
         /// Edits objects using a transaction so the history context can be verified.
-        /// Called by automated scripts.</summary>
+        /// Called by automated scripts during testing.</summary>
         /// <param name="node">Object to modify</param>
         /// <param name="attr">Attribute to modify</param>
         /// <param name="newValue">New value</param>
@@ -633,7 +634,7 @@ namespace TimelineEditorSample
 
         /// <summary>
         /// Adds new object using a transaction so the history context can be verified.
-        /// Called by automated scripts.</summary>
+        /// Called by automated scripts during testing.</summary>
         /// <typeparam name="T">Type of object added</typeparam>
         /// <param name="objectToInsert">Object to add</param>
         /// <param name="objectToInsertTo">Parent object to add to</param>

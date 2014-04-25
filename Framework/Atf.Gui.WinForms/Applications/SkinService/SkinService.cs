@@ -29,6 +29,8 @@ namespace Sce.Atf.Applications
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class SkinService : IInitializable, ICommandClient
     {
+        /// <summary>
+        /// Skin changed or applied event</summary>
         public static event EventHandler SkinChangedOrApplied;
 
         /// <summary>
@@ -62,6 +64,7 @@ namespace Sce.Atf.Applications
 
             WinFormsUtil.WindowCreated += WindowCreated;
             WinFormsUtil.WindowDestroyed += WindowDestroyed;
+            
         }
 
         #region ICommandClient Members
@@ -88,6 +91,8 @@ namespace Sce.Atf.Applications
         /// Skin command group</summary>
         public enum SkinCommandGroup
         {
+            /// <summary>
+            /// Edit the current skin file command</summary>
             ViewSkin
         }
 
@@ -353,6 +358,8 @@ namespace Sce.Atf.Applications
             if (ActiveSkin == null)
                 return;
 
+            ApplySkinToNonClientArea();
+
             // restore the old values before applying the new values
             RestoreOriginalPropertyValues();
             s_originalPropertyValues.Clear();
@@ -376,6 +383,8 @@ namespace Sce.Atf.Applications
             ActiveSkin = null;
             m_mruSkinFile = ""; // Don't use null because that may not persist in the settings system
 
+            foreach (var nc in s_formNcRenderers.Values)
+                nc.CustomPaintDisabled = true;
             SkinChangedOrApplied.Raise(this, EventArgs.Empty);
         }
 
@@ -403,6 +412,7 @@ namespace Sce.Atf.Applications
             get { return SkinnableObjects.OfType<Control>(); }
         }
 
+        
         /// <summary>
         /// Gets the objects to which a skin can be applied. Might be the empty list, but won't be null.</summary>
         protected virtual IEnumerable<object> SkinnableObjects
@@ -432,6 +442,8 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether to show skin commands</summary>
         public bool ShowCommands
         {
             get { return m_showCommands; }
@@ -507,8 +519,12 @@ namespace Sce.Atf.Applications
                 if (m_mainForm != null && m_mainForm != value)
                     throw new InvalidOperationException("setting the MainForm multiple times is not currently supported");
                 m_mainForm = value;
-                m_mainForm.Load += m_mainForm_Load;
-                m_mainForm.FormClosing += m_mainForm_FormClosing;
+                m_mainForm.Load += m_mainForm_Load;                
+                m_mainForm.FormClosed  += m_mainForm_FormClosed;
+                var ncRenderer = new FormNcRenderer(m_mainForm);
+                ncRenderer.Skin = s_ncSkin;
+                ncRenderer.CustomPaintDisabled = ActiveSkin == null;
+                s_formNcRenderers.Add(new WeakKey<Form>(m_mainForm), ncRenderer);
 
                 // to-do: Seems like s_skinnableObjects should include MainForm and it probably does, too,
                 //  because we may get a notification of the MainForm being created. But there may be a
@@ -559,7 +575,7 @@ namespace Sce.Atf.Applications
                 ApplyActiveSkin();
         }
 
-        void m_mainForm_FormClosing(object sender, FormClosingEventArgs e)
+        void m_mainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Unhook everything to avoid a possible freeze in WinFormsUtil while the app shuts down.
             WinFormsUtil.WindowCreated -= WindowCreated;
@@ -587,15 +603,21 @@ namespace Sce.Atf.Applications
         }
         #endif
 
+        
         private static void WindowCreated(Form form)
-        {
+        {            
             ApplyActiveSkin(form, null);
             s_skinnableObjects.Add(new WeakKey<object>(form));
-        }
 
+            var ncRenderer = new FormNcRenderer(form);
+            ncRenderer.Skin = s_ncSkin;
+            ncRenderer.CustomPaintDisabled = ActiveSkin == null;
+            s_formNcRenderers.Add(new WeakKey<Form>(form), ncRenderer);            
+        }
         private static void WindowDestroyed(Form form)
         {
             s_skinnableObjects.Remove(new WeakKey<object>(form));
+            s_formNcRenderers.Remove(new WeakKey<Form>(form));
         }
 
         private void LoadSkin(XmlDocument xmlDoc)
@@ -636,7 +658,11 @@ namespace Sce.Atf.Applications
             // Make each SkinStyle contain all the Setters for both itself and from its base SkinStyle (if any).
             SetInheritedSetters(new List<Setter>(), rootStyles);
 
-            ActiveSkin.Styles.AddRange(rootStyles);
+            if (rootStyles.Count > 0)
+                ActiveSkin.Styles.AddRange(rootStyles);
+            else
+                ActiveSkin = null;
+            
         }
 
         /// <summary>
@@ -1053,12 +1079,12 @@ namespace Sce.Atf.Applications
                             if (!s_originalPropertyValues.ContainsKey(tuple))
                             {
                                 object propertyValue = propertyInfo.GetValue(obj, null);
-
+                                
                                 // 'null' is a valid property value in some cases. 
                                 if (propertyValue != null &&
                                     typeof (ICloneable).IsAssignableFrom(propertyInfo.PropertyType))
                                 {
-                                    propertyValue = ((ICloneable) propertyValue).Clone();
+                                    propertyValue = ((ICloneable)propertyValue).Clone();
                                 }
 
                                 s_originalPropertyValues.Add(tuple, propertyValue);
@@ -1086,14 +1112,47 @@ namespace Sce.Atf.Applications
                 control.ResumeLayout();
             }
         }
-        
+        private void ApplySkinToNonClientArea()
+        {
+            if (ActiveSkin == null) return;
+            SkinStyle style = null;
+            foreach (SkinStyle st in ActiveSkin.Styles)
+            {
+                if (s_ncSkin.GetType() == st.TargetType)
+                    style = st;
+            }
+            if (style != null)
+            {
+                foreach (Setter setter in style.Setters)
+                {
+                    // set the property to the new value
+                    PropertyInfo propertyInfo = style.TargetType.GetProperty(setter.PropertyName, PropertyLookupType);
+                    object newPropertyValue;
+                    if (setter.ValueInfo != null)
+                        newPropertyValue = GetInstance(setter.ValueInfo);
+                    else if (setter.ListInfo != null)
+                        newPropertyValue = GetInstance(setter.ListInfo);
+                    else
+                        throw new Exception("Setter '" + setter.PropertyName + "' does not have its ValueInfo nor ListInfo set");
+
+                    propertyInfo.SetValue(s_ncSkin, newPropertyValue, null);
+                }
+                foreach (var nc in s_formNcRenderers.Values)
+                {
+                    nc.Skin = s_ncSkin;
+                    nc.CustomPaintDisabled = false;
+                }
+            }
+
+
+            
+        }
         private static void ApplyNewPropertyValues(object obj, HashSet<object> skinnedControls)
         {
             if (obj == null)
                 return;
 
-            Control control = obj as Control;
-            
+            Control control = obj as Control;            
             if (control != null)
                 control.SuspendLayout();
 
@@ -1143,7 +1202,9 @@ namespace Sce.Atf.Applications
             if (control != null)
             {
                 foreach (Control child in control.Controls)
+                {                                     
                     ApplyNewPropertyValues(child, skinnedControls);
+                }
 
                 control.ResumeLayout();
             }
@@ -1309,6 +1370,7 @@ namespace Sce.Atf.Applications
         private bool m_mainFormLoaded;
         private bool m_showCommands = true;
 
+
         //[Import(AllowDefault = true)]
         //private IControlRegistry m_controlRegistry;
 
@@ -1316,7 +1378,13 @@ namespace Sce.Atf.Applications
         private ISettingsService m_settingsService;
         
         private static readonly DefaultTypeConverter s_defaultTypeConverter = new DefaultTypeConverter();
-        
+
+        // form to NcRenderer map.
+        private static Dictionary<WeakKey<Form>, FormNcRenderer>
+            s_formNcRenderers = new Dictionary<WeakKey<Form>, FormNcRenderer>();
+
+        private static FormNcRenderer.SkinInfo
+            s_ncSkin = new FormNcRenderer.SkinInfo();
         // This HashSet contains all Controls of this app that have native handles (and so are visible)
         //  that were created after our system hooks were put in place. So, it may not contain MainForm.
         //  When a Control's native handle is disposed of, then it will be removed from here. Other
@@ -1342,6 +1410,8 @@ namespace Sce.Atf.Applications
         private static Skin s_activeSkin;
         #endif
 
+        /// <summary>
+        /// String for embedded skin</summary>
         protected const string EmbeddedSkinString = "Embedded Skin";
 
         private const string SkinSchema = "Sce.Atf.Applications.SkinService.Schemas.skin.xsd";

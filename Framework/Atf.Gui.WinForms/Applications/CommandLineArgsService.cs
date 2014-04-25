@@ -85,6 +85,9 @@ namespace Sce.Atf.Applications
         /// Exception thrown when the ArgParser can't parse arguments</summary>
         public class ArgParserException : Exception
         {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="message">Message</param>
             public ArgParserException(string message) : base(message)
             {
             }

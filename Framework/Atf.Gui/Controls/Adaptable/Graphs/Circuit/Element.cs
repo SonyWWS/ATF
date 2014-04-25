@@ -108,6 +108,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             get { return DomNode.Ancestry.Count(); }
         }
 
+        /// <summary>
+        /// Tests if the element has a given input pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff the element has the given input pin</returns>
         public virtual bool HasInputPin(ICircuitPin pin)
         {
             if (this.Is<Group>())
@@ -115,6 +119,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return Type.Inputs.Contains(pin);       
         }
 
+        /// <summary>
+        /// Tests if the element has a given output pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff the element has the given output pin</returns>
         public virtual bool HasOutputPin(ICircuitPin pin)
         {
             if (this.Is<Group>())
@@ -138,10 +146,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Find the element and pin that matched the pin target</summary>
-        /// <returns> Return a pair of element & pin. As a element instance method, if there is a match, the element is self, 
-        /// and pin is one of its pins defined in Type. If there is no match, both are null </returns>
-        public virtual Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget,  bool inputSide)
+        /// Finds the element and pin that matched the pin target for this circuit container</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
+        public virtual Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();
             if (pinTarget.LeafDomNode == DomNode) // an element must be a leaf node in a circut hiearchy
@@ -163,9 +173,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Find the element and pin that fully matched the pin target</summary>
-        /// <returns> Return a pair of element & pin. As a element instance method, if there is a match, the element is self, 
-        /// and pin is one of its pins defined in Type. If there is no match, both are null </returns>
+        /// Finds the element and pin that fully matched the pin target for this circuit container, 
+        /// including the template instance node</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public virtual Pair<Element, ICircuitPin> FullyMatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             return MatchPinTarget(pinTarget, inputSide);

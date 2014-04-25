@@ -30,7 +30,7 @@ namespace FsmEditorSample
 
         /// <summary>
         /// Gets or sets the position of the module (backing DOM data)</summary>
-        /// <remarks>See remarks about Bounds property.</remarks>
+        /// <remarks>See the Bounds property.</remarks>
         public Point Position
         {
             get

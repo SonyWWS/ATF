@@ -2,6 +2,7 @@
 
 using System;
 using System.Windows.Forms;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -60,6 +61,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             NumericTextBox editingControl = new NumericTextBox(m_numericType, context);
             editingControl.ScaleFactor = m_scaleFactor;
+            SkinService.ApplyActiveSkin(editingControl);
             return editingControl;            
         }
 
@@ -75,9 +77,8 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 m_context = context;
 
-                BorderStyle = BorderStyle.None;
-
-                RefreshValue();
+                BorderStyle = BorderStyle.None;               
+                RefreshValue();               
             }
 
             protected override void OnValueEdited(EventArgs e)

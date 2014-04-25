@@ -241,6 +241,9 @@ namespace Sce.Atf.Applications.Controls
         /// mapping the Control's Paint event to the EventOccurred event</summary>
         public class ControlAdapter : IPerformanceTarget
         {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="control">Control adapter is on</param>
             public ControlAdapter(Control control)
             {
                 m_control = control;

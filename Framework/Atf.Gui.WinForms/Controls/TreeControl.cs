@@ -1033,8 +1033,11 @@ namespace Sce.Atf.Controls
             base.OnMouseWheel(e);
         }
 
-        // This doesn't work well. We only get called when the mouse leaves the Control and reenters.
-        // We want to be called whenever the mouse moves and then rests.
+        /// <summary>
+        /// Raises base MouseHover event and handles it by creating HitRecord and showing tool tip</summary>
+        /// <param name="e">Event arguments</param>
+        /// <remarks>This doesn't work well. We only get called when the mouse leaves the Control and reenters.
+        /// We want to be called whenever the mouse moves and then rests.</remarks>
         protected override void OnMouseHover(EventArgs e)
         {
             var clientMousePos = PointToClient(MousePosition);
@@ -1273,7 +1276,7 @@ namespace Sce.Atf.Controls
 
         /// <summary>
         /// Raises the KeyUp event</summary>
-        /// <param name="e"></param>
+        /// <param name="e">Key event arguments</param>
         protected override void OnKeyUp(KeyEventArgs e)
         {
             if (m_handleKeyUp)

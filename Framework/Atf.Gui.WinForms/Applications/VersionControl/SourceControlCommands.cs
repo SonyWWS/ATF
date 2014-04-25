@@ -39,20 +39,31 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Flags that determine which commands should appear in the "File/Source Conntrol"  menu</summary>
+        /// Flag bit maps that determine which commands should appear in the "File/Source Conntrol" menu</summary>
         [Flags]
         public enum CommandRegister
         {
+            /// <summary>No commands</summary>
             None =       0x0000,
-            Add =        0x0001,
-            CheckIn =    0x0002,
-            CheckOut =   0x0004,
-            Sync =       0x0008,
-            Revert =     0x0010,
-            Refresh =    0x0020,
-            Reconcile =  0x0040,
+            /// <summary>Add to source control command</summary>
+            Add = 0x0001,
+            /// <summary>Check in to source control command</summary>
+            CheckIn = 0x0002,
+            /// <summary>Check out from source control command</summary>
+            CheckOut = 0x0004,
+            /// <summary>Get latest version from source control command</summary>
+            Sync = 0x0008,
+            /// <summary>Revert add or check out from source control command</summary>
+            Revert = 0x0010,
+            /// <summary>Refresh status in source control command</summary>
+            Refresh = 0x0020,
+            /// <summary>Reconcile Offline Work command</summary>
+            Reconcile = 0x0040,
+            /// <summary>Open connection command</summary>
             Connection = 0x0080,
-            Enabled =    0x0100,
+            /// <summary>Enable source control command</summary>
+            Enabled = 0x0100,
+            /// <summary>Default command set</summary>
             Default = Add | CheckIn | CheckOut | Sync | Revert | Refresh | Reconcile | Connection | Enabled
         }
 
@@ -84,6 +95,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering source control commands</summary>
         public virtual void Initialize()
         {
             m_sourceControlEnableImage = ResourceUtil.GetImage24(Resources.SourceControlEnableImage);
@@ -770,15 +783,25 @@ namespace Sce.Atf.Applications
         /// in the user interface (menus, toolbars, context menus) by retrieving a CommandInfo.</remarks>
         public enum Command
         {
+            /// <summary>Invalid command</summary>
             Invalid,
+            /// <summary>Enable source control command</summary>
             Enabled,
+            /// <summary>Check in to source control command</summary>
             Add,
+            /// <summary>Check out from source control command</summary>
             CheckOut,
+            /// <summary>Check in to source control command</summary>
             CheckIn,
+            /// <summary>Get latest version from source control command</summary>
             Sync,
+            /// <summary>Revert add or check out from source control command</summary>
             Revert,
+            /// <summary>Refresh status in source control command</summary>
             Refresh,
+            /// <summary>Reconcile Offline Work command</summary>
             Reconcile,
+            /// <summary>Open connection command</summary>
             Connection
         }
 

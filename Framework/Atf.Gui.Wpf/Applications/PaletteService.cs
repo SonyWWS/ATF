@@ -21,6 +21,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by creating and registering PaletteContent control</summary>
         public void Initialize()
         {
             m_controlInfo = m_controlHostService.RegisterControl(

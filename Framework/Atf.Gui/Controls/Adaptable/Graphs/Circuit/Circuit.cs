@@ -18,10 +18,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     {
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for Elements (circuit elements with pins) in circuit</summary>
         protected abstract ChildInfo ElementChildInfo { get; }
+        /// <summary>
+        /// Gets ChildInfo for Wires (connections) in circuit</summary>
         protected abstract ChildInfo WireChildInfo { get; }
 
         // optional child info
+        /// <summary>
+        /// Gets ChildInfo for annotations (comments) in circuit.
+        /// Return null if annotations are not supported.</summary>
         protected virtual ChildInfo AnnotationChildInfo
         {
             get { return null; }
@@ -69,6 +76,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             get { return m_annotations ?? s_emptyAnnotations;}
         }
 
+        /// <summary>
+        /// Gets or sets whether the circuit is expanded</summary>
         public bool Expanded
         {
             get { return true; } // a circuit is always expanded
@@ -77,18 +86,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Gets/sets a value indicating whether or not the contents of the group have been changed.</summary>
+        /// Gets or sets whether or not the contents of the group have been changed</summary>
         public bool Dirty
         {
             get { return m_dirty; }
             set { m_dirty = value; }
         }
 
+        /// <summary>
+        /// Synchronize internal data and contents due to editing</summary>
         public void Update()
         {
             Dirty = false;
         }
 
+        /// <summary>
+        /// Finds the element and pin that matched the pin target for this circuit container</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget,  bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();
@@ -105,6 +122,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return result;
         }
 
+        /// <summary>
+        /// Finds the element and pin that fully matched the pin target for this circuit container, 
+        /// including the template instance node</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public Pair<Element, ICircuitPin> FullyMatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();

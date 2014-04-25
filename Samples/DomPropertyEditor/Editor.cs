@@ -19,6 +19,8 @@ namespace DomPropertyEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish MEF intialization for the component by creating DomNode tree for application data.</summary>
         void IInitializable.Initialize()
         {
             m_mainform.Shown += (sender, e) =>
@@ -37,10 +39,12 @@ namespace DomPropertyEditorSample
 
                     rootNode.InitializeExtensions();
 
-                    // set active context and select orc object.
-                    m_contextRegistry.ActiveContext = rootNode;
                     var edContext = rootNode.Cast<GameEditingContext>();
                     edContext.Set(orc);
+
+                    // set active context and select orc object.
+                    m_contextRegistry.ActiveContext = rootNode;
+                    
                 };
         }
 

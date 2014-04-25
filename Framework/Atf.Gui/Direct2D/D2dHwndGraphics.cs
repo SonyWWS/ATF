@@ -17,7 +17,7 @@ namespace Sce.Atf.Direct2D
         public void Resize(System.Drawing.Size pixelSize)
         {
             var rt = (WindowRenderTarget)D2dRenderTarget;
-            rt.Resize(new SharpDX.DrawingSize(pixelSize.Width, pixelSize.Height));
+            rt.Resize(new SharpDX.Size2(pixelSize.Width, pixelSize.Height));
         }
 
         /// <summary>
@@ -32,11 +32,10 @@ namespace Sce.Atf.Direct2D
         }
        
         /// <summary>
-        /// Indicates whether the HWND associated with this D2dGraphics is occluded.</summary>        
+        /// Indicates whether the HWND associated with this D2dGraphics is occluded</summary>        
         /// <returns>D2dWindowState value that indicates whether the HWND associated with
-        /// this D2dGraphics is occluded.</returns>
-        /// <remarks>
-        /// Note that if the window was occluded the last time EndDraw was called, the
+        /// this D2dGraphics is occluded</returns>
+        /// <remarks>Note that if the window was occluded the last time EndDraw was called, the
         /// next time the D2dGraphics calls CheckWindowState, it returns D2dWindowState.Occluded
         /// regardless of the current window state. If you want to use CheckWindowState
         /// to determine the current window state, you should call CheckWindowState after
@@ -48,6 +47,8 @@ namespace Sce.Atf.Direct2D
             return (D2dWindowState) rt.CheckWindowState();
         }
 
+        /// <summary>
+        /// Recreates the render target, if necessary, by calling SetRenderTarget</summary>
         protected override void RecreateRenderTarget()
         {
             var curRT = (WindowRenderTarget)D2dRenderTarget;

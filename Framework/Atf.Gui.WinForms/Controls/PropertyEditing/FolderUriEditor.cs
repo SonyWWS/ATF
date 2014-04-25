@@ -21,6 +21,9 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         #endregion
 
+        /// <summary>
+        /// Initialize folder browser dialog</summary>
+        /// <param name="dialog">Folder browser dialog</param>
         protected override void InitializeDialog(FolderNameEditor.FolderBrowser dialog)
         {
             base.InitializeDialog(dialog);

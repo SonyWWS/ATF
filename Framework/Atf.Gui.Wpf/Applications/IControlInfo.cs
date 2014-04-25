@@ -2,6 +2,9 @@
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Interface for Control information</summary>
+    /// <remarks>An IControlInfo instance is returned by ControlHostService.RegisterControl()</remarks>
     public interface IControlInfo
     {
         /// <summary>

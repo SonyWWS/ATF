@@ -23,8 +23,11 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             if (context.LastSelectedObject == null)
                 return null;
-
-            return new ArrayEditingControl(context);
+            var control = new ArrayEditingControl(context);
+            Sce.Atf.Applications.SkinService.ApplyActiveSkin(control);
+            return control;
+                 
+            
         }
 
         #endregion

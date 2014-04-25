@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -24,6 +25,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         public Control GetEditingControl(PropertyEditorControlContext context)
         {
             m_boolControl = new BoolControl(context);
+            SkinService.ApplyActiveSkin(m_boolControl);
             return m_boolControl;
         }
 

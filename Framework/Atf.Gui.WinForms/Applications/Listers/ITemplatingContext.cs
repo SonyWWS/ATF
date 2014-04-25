@@ -30,7 +30,8 @@ namespace Sce.Atf.Applications
         bool CanReference(object item);
 
         /// <summary>
-        /// Create a reference instance that references the specified target item</summary>
+        /// Creates a reference instance that references the specified target item</summary>
+        /// <param name="item">Item to create reference for</param>
         object CreateReference(object item);
     }
 }

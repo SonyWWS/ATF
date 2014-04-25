@@ -426,7 +426,11 @@ namespace Sce.Atf.Applications
             OnDeleted(EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Gets ICommandService</summary>
         protected ICommandService CommandService { get { return m_commandService; } }
+        /// <summary>
+        /// Gets IContextRegistry</summary>
         protected IContextRegistry ContextRegistry { get { return m_contextRegistry; } }
 
         private readonly ICommandService m_commandService;

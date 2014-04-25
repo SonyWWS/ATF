@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 
 namespace Sce.Atf
 {
@@ -126,6 +128,23 @@ namespace Sce.Atf
             sb.Replace("'", "\\'");
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Gets the separator string that should be used to separate numbers in a list when
+        /// converting a list of numbers to a string.</summary>
+        /// <param name="formatProvider">an optional format provider, which is typically a
+        /// CultureInfo object. If null, then the current thread's CurrentCulture is used.</param>
+        /// <returns>The number list separator that should be used</returns>
+        /// <remarks>
+        /// In cultures where the decimal separator is ".", then the list separator is probably ",".
+        /// If the decimal separator is ",", then the list separator is probably ";".
+        /// This separator is equivalent to the Windows 7 setting in Control Panel ->
+        /// Region and Language -> Formats -> Additional settings -> Numbers -> List separator.</remarks>
+        internal static string GetNumberListSeparator(IFormatProvider formatProvider)
+        {
+            var info = formatProvider as CultureInfo ?? Thread.CurrentThread.CurrentCulture;
+            return info.TextInfo.ListSeparator;
         }
     }
 }

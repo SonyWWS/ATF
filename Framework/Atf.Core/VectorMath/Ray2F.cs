@@ -95,34 +95,44 @@ namespace Sce.Atf.VectorMath
                 tmax = (min - origin) * recip;
             }
         }
+
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.Ray2F structure</summary>
-        /// <returns>A <see cref="T:System.String"></see> representing the 2D ray</returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary> Returns the string representation of this Scea.VectorMath.Ray2F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 2D ray</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return Origin.X.ToString("R") + ", " + Origin.Y.ToString("R") + ", " + Direction.X.ToString("R") + ", " + Direction.Y.ToString("R");
-            else
-                return String.Format
-                (
-                     "({0}, {1}, {2}, {3})",
-                     ((double)Origin.X).ToString(format, formatProvider),
-                     ((double)Origin.Y).ToString(format, formatProvider),
-                     ((double)Direction.X).ToString(format, formatProvider),
-                     ((double)Direction.Y).ToString(format, formatProvider)
-                  );
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
+
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            return String.Format(
+                "{0}{4} {1}{4} {2}{4} {3}",
+                ((double)Origin.X).ToString(format, formatProvider),
+                ((double)Origin.Y).ToString(format, formatProvider),
+                ((double)Direction.X).ToString(format, formatProvider),
+                ((double)Direction.Y).ToString(format, formatProvider),
+                listSeparator);
 
         }
+        #endregion
 
     }
 }

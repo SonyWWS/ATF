@@ -9,15 +9,23 @@ using Sce.Atf.Dom;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
+    /// <summary>
+    /// Class with static method circuit utilities</summary>
     public class CircuitUtil
     {
-
-        // returns a list of all modules, internal connections between them, and connections
-        //  to external modules
+        /// <summary>
+        /// Returns a list of all modules, internal connections between them, and connections
+        /// to external modules</summary>
+        /// <param name="graphContainer">Circuit container</param>
+        /// <param name="objects">Enumeration of all selected objects, edges possible</param>
+        /// <param name="modules">Modules in selected objects, filled by method</param>
+        /// <param name="internalConnections">Collection of all internal connections, filled by method</param>
+        /// <param name="incomingConnections">Collection of all incoming connections, filled by method</param>
+        /// <param name="outgoingConnections">Collection of all outgoing connections, filled by method</param>
         public static void GetSubGraph(
             ICircuitContainer graphContainer,
-            IEnumerable<object> objects, // [in] selected objects, edges possible
-            HashSet<Element> modules, // [out] elements in the selected objects
+            IEnumerable<object> objects,
+            HashSet<Element> modules,
             ICollection<Wire> internalConnections,
             ICollection<Wire> incomingConnections,
             ICollection<Wire> outgoingConnections)
@@ -47,10 +55,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Debugging Helper method
-        /// </summary>
-        /// <param name="domNode"></param>
-        /// <returns></returns>
+        /// Constructs descriptive name of circuit item. Debugging Helper method.</summary>
+        /// <param name="domNode">DomNode of circuit item</param>
+        /// <returns>Descriptive name of circuit item</returns>
         static public string GetDomNodeName(DomNode domNode)
         {
             string result = string.Empty;
@@ -85,23 +92,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return result;
         }
 
+        /// <summary>
+        /// Gets an empty circuit instance</summary>
         static public IGraph<Element, Wire, ICircuitPin> EmptyCircuit
         {
             get { return s_emptyGraph; }
         }
 
         /// <summary>
-        /// Gets a value indicating whether the object is a group template instance.
-        /// Returns:true if it is a template instance; otherwise, false.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// Indicates whether object is a group template instance</summary>
+        /// <param name="node">Object</param>
+        /// <returns>True iff it is group template instance</returns>
         static public bool IsGroupTemplateInstance(object node)
         {
             return node.Is<IReference<Group>>();
         }
 
-        ///<summary>Gets the graph path of the specified group.</summary>
+        /// <summary>
+        /// Obtains graph path of specified group</summary>
+        /// <param name="group">Group object</param>
+        /// <returns>Graph path</returns>
         static public string GetGroupPath(Group group)
         {
             var sb = new StringBuilder(); 
@@ -119,9 +129,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Get the group template the instance references.</summary>
-        /// <param name="templateInstance"></param>
-        /// <returns></returns>
+        /// Obtains group template that the instance references</summary>
+        /// <param name="templateInstance">Template instance</param>
+        /// <returns>Group template</returns>
         static public Group GetGroupTemplate(object templateInstance)
         {
             var instance = templateInstance.Cast<IReference<Group>>();
@@ -129,7 +139,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// The last item of hitPath is the picked item</summary> 
+        /// Traverses a given path of groups, starting at the last (picked) item through a given destination group, for the pin
+        /// that corresponds to the given group pin in the last group in the path. The last (innermost) group of "hitPath" is the picked item.</summary>
+        /// <typeparam name="TEdgeRoute">Pin</typeparam>
+        /// <param name="hitPath">Path of groups to traverse</param>
+        /// <param name="destNode">Destination group (last group to search) which contains the pin searched for</param>
+        /// <param name="startRoute">Pin in innermost group where search begins</param>
+        /// <returns>Group pin in destination group "destNode" corresponding to "startRoute" group pin in innermost group in path</returns>
         static public TEdgeRoute EdgeRouteTraverser<TEdgeRoute>(AdaptablePath<object> hitPath, object destNode, TEdgeRoute startRoute)
              where TEdgeRoute : class, ICircuitPin
         {
@@ -180,7 +196,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return circuitPin;
         }
 
-        // Empty graph to simplify code when there is no graph
+        /// <summary>
+        /// Empty graph to simplify code when there is no graph</summary>
         private class EmptyGraph : IGraph<Element, Wire, ICircuitPin>
         {
             public IEnumerable<Element> Nodes

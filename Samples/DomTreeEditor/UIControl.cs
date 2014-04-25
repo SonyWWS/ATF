@@ -11,7 +11,8 @@ namespace DomTreeEditorSample
     public class UIControl : UIObject
     {
         /// <summary>
-        /// Performs initialization when the adapter is connected to the diagram annotation's DomNode</summary>
+        /// Performs initialization when the adapter is connected to the diagram annotation's DomNode,
+        /// creating child DomNode for transform and setting its scale.</summary>
         protected override void OnNodeSet()
         {
             DomNode transform = DomNode.GetChild(UISchema.UIControlType.TransformChild);

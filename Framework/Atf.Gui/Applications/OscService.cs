@@ -39,7 +39,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Initializes this component, causing it to listen for OSC messages on the receiving
-        /// port and listening for changes in watched C# objects.</summary>
+        /// port and listening for changes in watched C# objects</summary>
         public virtual void Initialize()
         {
             InitializeServer();
@@ -97,7 +97,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets this application's receiving IP address. Is only valid after Initialize() is called.
+        /// Gets or sets this application's receiving IP address. Is only valid after Initialize() is called.
         /// When setting, consider using the static GetLocalIPAddresses to know what valid receiving
         /// IP addresses are available.</summary>
         public IPAddress ReceivingIPAddress
@@ -134,7 +134,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the local receiving endpoint, which is a combination of the ReceivingIPAddress and ReceivingPort</summary>
+        /// Gets or sets the local receiving endpoint, which is a combination of the ReceivingIPAddress and ReceivingPort</summary>
         public IPEndPoint ReceivingEndpoint
         {
             get { return m_receivingEndPoint; }
@@ -278,8 +278,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Adds an association of an OSC address with a particular C# property</summary>
-        /// <param name="propertyInfo"></param>
-        /// <param name="oscAddress"></param>
+        /// <param name="propertyInfo">C# property info</param>
+        /// <param name="oscAddress">OSC address</param>
         /// <returns>The possibly fixed oscAddress, if there were illegal characters in
         /// it or if it was a duplicate</returns>
         public string AddPropertyAddress(PropertyInfo propertyInfo, string oscAddress)
@@ -293,9 +293,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Adds an association of an OSC address with a particular C# property</summary>
-        /// <param name="classType"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="oscAddress"></param>
+        /// <param name="classType">Type with property</param>
+        /// <param name="propertyName">C# property name</param>
+        /// <param name="oscAddress">OSC address</param>
         /// <returns>The possibly fixed oscAddress, if there were illegal characters in
         /// it or if it was a duplicate</returns>
         public string AddPropertyAddress(Type classType, string propertyName, string oscAddress)
@@ -305,9 +305,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Adds an association of an OSC address with a particular C# property</summary>
-        /// <param name="typeName"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="oscAddress"></param>
+        /// <param name="typeName">Name of type with property</param>
+        /// <param name="propertyName">C# property name</param>
+        /// <param name="oscAddress">OSC address</param>
         /// <returns>The possibly fixed oscAddress, if there were illegal characters in
         /// it or if it was a duplicate</returns>
         public string AddPropertyAddress(string typeName, string propertyName, string oscAddress)
@@ -357,7 +357,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Returns whether or not Initialize has been called</summary>
+        /// Gets whether or not Initialize() has been called</summary>
         public bool IsInitialized
         {
             get { return m_udpServer != null; }
@@ -390,7 +390,7 @@ namespace Sce.Atf.Applications
         /// <param name="selected">The object to retrieve compatible OscAddressInfos for. It is assumed
         /// to be compatible with types of objects from the ISelectionContext.</param>
         /// <returns>A non-null, but possibly empty enumeration of all of the OscAddressInfo objects that
-        /// describe properties of the given selected object.</returns>
+        /// describe properties of the given selected object</returns>
         public IEnumerable<OscAddressInfo> GetInfos(object selected)
         {
             object common = SelectedToCommon(selected);
@@ -422,7 +422,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Notifies listeners that an OSC message has been received. The OSC address and data payload
+        /// Event that motifies listeners that an OSC message has been received. The OSC address and data payload
         /// will be provided and listeners can set the Handled property to true if no further processing
         /// should be done on this message.</summary>
         public event EventHandler<OscMessageReceivedArgs> MessageReceived
@@ -460,7 +460,7 @@ namespace Sce.Atf.Applications
         /// be sent due to changes in 'common'.</summary>
         /// <param name="common">The object whose properties or data are being broadcast. This would have
         /// come from ObservableToCommon().</param>
-        /// <returns></returns>
+        /// <returns>Set of OSC addresses and associated data payloads</returns>
         protected virtual IEnumerable<Tuple<string, object>> GetCustomDataToSend(object common)
         {
             yield break;
@@ -480,8 +480,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Sends the pairs of OSC addresses and data objects to the current destination endpoints
-        /// immediately, on the current thread.</summary>
-        /// <param name="addressesAndData"></param>
+        /// immediately, on the current thread</summary>
+        /// <param name="addressesAndData">Pairs of OSC addresses and data objects</param>
         protected virtual void SendSynchronously(IList<Tuple<string, object>> addressesAndData)
         {
             SendPacket(addressesAndData, 0, addressesAndData.Count);
@@ -753,7 +753,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Sets a value on an OSC-addressable property</summary>
         /// <param name="oscAddress">Original OSC address that might be different than OscAddressInfo's Address
-        /// due to wild card matching.</param>
+        /// due to wild card matching</param>
         /// <param name="addressable">Object that contains a property that matches 'oscAddress'</param>
         /// <param name="value">The new value to set the property to</param>
         /// <param name="info">The matching OscAddressInfo object which knows how to set the value on the addressable object</param>
@@ -849,7 +849,7 @@ namespace Sce.Atf.Applications
         internal long NumMessagesEverReceived;
 
         /// <summary>
-        /// Gets or sets the number of messages ever sent. This is for reporting to the user, for
+        /// Number of messages ever sent. This is for reporting to the user, for
         /// diagnostic purposes.</summary>
         internal long NumMessagesEverSent;
 
@@ -1158,8 +1158,8 @@ namespace Sce.Atf.Applications
         {
             /// <summary>
             /// Determines whether a string can be converted to an IPEndPoint</summary>
-            /// <param name="context">An System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
-            /// <param name="sourceType">A System.Type that represents the type you want to convert from</param>
+            /// <param name="context">System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
+            /// <param name="sourceType">System.Type that represents the type you want to convert from</param>
             /// <returns>True iff this instance can convert from the specified context</returns>
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
@@ -1171,8 +1171,8 @@ namespace Sce.Atf.Applications
 
             /// <summary>
             /// Converts the given string to an IPEndPoint</summary>
-            /// <param name="context">An System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
-            /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture.</param>
+            /// <param name="context">System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
+            /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture</param>
             /// <param name="value">The object to convert</param>
             /// <returns>An object that represents the converted value</returns>
             /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed</exception>

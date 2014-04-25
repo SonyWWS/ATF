@@ -228,14 +228,7 @@ namespace Sce.Atf.Controls
             base.OnResize(e);
         }
 
-        /// <summary>
-        /// Update child control background</summary>            
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            foreach (Control control in Controls)
-                control.BackColor = BackColor;           
-            base.OnBackColorChanged(e);
-        }
+        
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"></see> event</summary>
@@ -254,8 +247,7 @@ namespace Sce.Atf.Controls
             }
 
             int x = Margin.Left;
-            int width = Width - Margin.Left - Margin.Right;
-
+            
             for (int j = 0; j < m_columns; ++j)
             {
                 x += (m_coordinateWidth);

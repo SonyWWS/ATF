@@ -18,12 +18,12 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Recreates the render target, if necessary, by calling SetRenderTarget.</summary>
+        /// Recreates the render target, if necessary, by calling SetRenderTarget</summary>
         protected override void RecreateRenderTarget()
         {
-            // do not recreate D2dBitmapGraphics let the user do that 
-            // by handling RecreateResources event from the D2dGraphics 
-            // that created this D2dBitmapGraphics
+            // Do not recreate D2dBitmapGraphics. Let the user do that 
+            // by handling the RecreateResources event from the D2dGraphics 
+            // that created this D2dBitmapGraphics.
         }
 
         internal D2dBitmapGraphics(BitmapRenderTarget renderTarget)

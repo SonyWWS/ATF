@@ -1086,6 +1086,8 @@ namespace Sce.Atf.Wpf.Models
 
         #region IsInLabelEditMode Property
 
+        /// <summary>
+        /// Gets or sets whether label edit mode is active</summary>
         public bool IsInLabelEditMode
         {
             get { return m_isInLabelEditMode; }

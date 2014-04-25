@@ -59,6 +59,8 @@ namespace Sce.Atf.Wpf.Markup
     /// Multibinding that adds validation rules to begin and end transactions</summary>
     public class TransactionMultiBinding : MultiBinding
     {
+        /// <summary>
+        /// Constructor that creates TransactionBindingCore object</summary>
         public TransactionMultiBinding()
         {
             m_core = new TransactionBindingCore(ValidationRules);

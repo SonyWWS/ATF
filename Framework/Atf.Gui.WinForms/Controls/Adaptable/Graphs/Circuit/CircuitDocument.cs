@@ -15,6 +15,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class CircuitDocument : DomDocument
     {
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for sub-circuit object</summary>
         protected abstract ChildInfo SubCircuitChildInfo { get; }
       
         /// <summary>

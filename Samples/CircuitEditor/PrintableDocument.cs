@@ -14,7 +14,7 @@ using Sce.Atf.Dom;
 namespace CircuitEditorSample
 {
     /// <summary>
-    /// Adapter to make circuit printable</summary>
+    /// DOM adapter to make circuit printable</summary>
     public class PrintableDocument : DomNodeAdapter, IPrintableDocument
     {
         #region IPrintableDocument Implementation

@@ -256,7 +256,7 @@ namespace Sce.Atf
         ////////////////////////////////////////
 
         /// <summary>
-        /// Set dialog open flags</summary>
+        /// Sets dialog open flags</summary>
         /// <param name="mask">Flag mask</param>
         /// <param name="value">Flag value</param>
         protected void SetFlag(int mask, bool value)
@@ -268,7 +268,7 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Get dialog open flags</summary>
+        /// Gets dialog open flags</summary>
         /// <param name="mask">Flag mask</param>
         /// <returns>Masked flag value</returns>
         protected bool GetFlag(int mask)
@@ -286,9 +286,19 @@ namespace Sce.Atf
             return DialogResult.Cancel;
         }
 
-
+        /// <summary>
+        /// Callback function used with the Explorer-style Open and Save As dialog boxes</summary>
+        /// <param name="hWnd">Handle to the child dialog box of the Open or Save As dialog box</param>
+        /// <param name="msg">Identifier of the message being received</param>
+        /// <param name="wParam">Additional information about message</param>
+        /// <param name="lParam">Additional information about message</param>
+        /// <returns>0 iff default dialog box procedure processes message</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646931%28v=vs.85%29.aspx. </remarks>
         protected delegate int WndProcDelegate(IntPtr hWnd, uint msg, int wParam, int lParam);
 
+        /// <summary>
+        /// Bitmaps for dialog open flags</summary>
+        /// <remarks>For a description of these Windows flags, see http://msdn.microsoft.com/en-us/library/ms646839(VS.85).aspx. </remarks>
         protected const int OFN_ENABLEHOOK = 0x00000020;
         protected const int OFN_EXPLORER = 0x00080000;
         protected const int OFN_FILEMUSTEXIST = 0x00001000;
@@ -312,7 +322,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// Windows WINDOWINFO struct</summary>
-        /// <remarks>See http://msdn.microsoft.com/en-us/library/ms632610(VS.85).aspx .</remarks>
+        /// <remarks>For a description of this struct, see http://msdn.microsoft.com/en-us/library/ms632610(VS.85).aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct WINDOWINFO
         {

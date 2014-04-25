@@ -11,7 +11,7 @@ namespace StatechartEditorSample
 {
     /// <summary>
     /// DomNode adapter that tracks changes to states and updates their bounds to be big
-    /// enough to hold any child states and statecharts during validation.</summary>
+    /// enough to hold any child states and statecharts during validation</summary>
     public class BoundsValidator : Validator
     {
         /// <summary>

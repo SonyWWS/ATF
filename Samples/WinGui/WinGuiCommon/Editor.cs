@@ -13,7 +13,10 @@ using Sce.Atf.Dom;
 namespace WinGuiCommon
 {
     /// <summary>
-    /// Editor class component that creates and saves application documents</summary>
+    /// Editor class component that creates and saves application documents.
+    /// This document client handles file operations, such as opening and closing documents,
+    /// including persisting data. It registers a control (ListView) with a IControlHostService
+    /// so that the control appears in the Windows docking framework.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -53,6 +56,8 @@ namespace WinGuiCommon
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -229,7 +234,8 @@ namespace WinGuiCommon
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control.
+        /// Allows user to save document before it closes.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control can close, or false to cancel</returns>
         /// <remarks>

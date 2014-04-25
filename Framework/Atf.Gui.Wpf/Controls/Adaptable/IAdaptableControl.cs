@@ -26,6 +26,11 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
         /// <typeparam name="T">Desired type, must be ref type</typeparam>
         /// <returns>Converted reference for the given object or null</returns>
         T As<T>() where T : class;
+
+        /// <summary>
+        /// Gets all decorators that can convert a reference to the given type or null if none</summary>
+        /// <typeparam name="T">Decorator type, must be ref type</typeparam>
+        /// <returns>Enumerable returning all decorators of the given type or null if none</returns>
         IEnumerable<T> AsAll<T>() where T : class;
     }
 }

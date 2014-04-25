@@ -39,6 +39,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by subscribing to event</summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -483,7 +485,8 @@ namespace Sce.Atf.Applications
             IconClicked = false;
         }
 
-
+        /// <summary>
+        /// Gets or sets whether a context menu is triggering</summary>
         public static bool ContextMenuIsTriggering { get; set; }
 
         private void contextMenu_itemClick(object sender, EventArgs e)
@@ -992,7 +995,11 @@ namespace Sce.Atf.Applications
                 ToolStrip = toolStrip;
             }
 
+            /// <summary>
+            /// Gets ToolStripMenuItem in MenuControls</summary>
             public ToolStripMenuItem MenuItem { get; private set; }
+            /// <summary>
+            /// Gets ToolStripMenu in MenuControls</summary>
             public ToolStrip ToolStrip { get; private set; }
         }
 
@@ -1018,6 +1025,8 @@ namespace Sce.Atf.Applications
             /// Gets ToolStripButton</summary>
             public ToolStripButton Button { get; private set; }
 
+            /// <summary>
+            /// Disposes of resources</summary>
             public void Dispose()
             {
                 if (MenuItem != null) MenuItem.Dispose();

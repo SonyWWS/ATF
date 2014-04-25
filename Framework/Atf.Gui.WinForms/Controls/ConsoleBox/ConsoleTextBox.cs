@@ -26,7 +26,7 @@ namespace Sce.Atf.Controls.ConsoleBox
             ScrollBars = ScrollBars.Vertical;
             ShortcutsEnabled = true;
             WordWrap = true;
-
+            BorderStyle = BorderStyle.None;
             m_suggestionListBox = new SuggestionListBox
             {
                 InsertText = InsertTextAtCaret,

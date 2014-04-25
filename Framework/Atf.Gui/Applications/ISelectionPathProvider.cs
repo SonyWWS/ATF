@@ -11,19 +11,21 @@ namespace Sce.Atf.Applications
     public interface ISelectionPathProvider
     {
         /// <summary>
-        /// Get the selection path for the given item</summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// Gets the selection path for the given item</summary>
+        /// <param name="item">Item to get selection path for</param>
+        /// <returns>Selection path for item</returns>
         AdaptablePath<object> GetSelectionPath(object item);
 
         /// <summary>
-        /// Removes the selection path for the item </summary>
+        /// Removes the selection path for the item</summary>
+        /// <param name="item">Item to remove selection path on</param>
+        /// <returns>True iff selection path removed</returns>
         bool RemoveSelectionPath(object item);
 
         /// <summary>
-        /// Update the selection path for the item </summary>
-        /// <param name="item">The item to update for</param>
-        /// <param name="path">The path used to update for the item</param>
+        /// Updates the selection path for the item</summary>
+        /// <param name="item">Item to update for</param>
+        /// <param name="path">Path used to update for the item</param>
         void UpdateSelectionPath(object item, AdaptablePath<object> path);
 
         /// <summary>
@@ -42,6 +44,11 @@ namespace Sce.Atf.Applications
     /// Useful static methods on transaction contexts</summary>
     public static class SelectionPathProviders
     {
+        /// <summary>
+        /// Obtains the parent in the selection path for given item</summary>
+        /// <param name="selectionPathProvider">Selection path provider</param>
+        /// <param name="item">Item whose parent path is obtained</param>
+        /// <returns>Parent path of given item</returns>
         public static object Parent(this ISelectionPathProvider selectionPathProvider, object item)
         {
             if (selectionPathProvider != null)
@@ -54,8 +61,11 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the ancestry of the item in the selection path , 
-        /// starting with the item's parent, and ending with the top level</summary>
+        /// Gets the ancestry of the item in selection path, 
+        /// starting with the item's parent and ending with the top level</summary>
+        /// <param name="selectionPathProvider">Selection path provider</param>
+        /// <param name="item">Item whose ancestry is obtained</param>
+        /// <returns>Ancestry of the item in selection path</returns>
         public static IEnumerable<object> Ancestry(this ISelectionPathProvider selectionPathProvider, object item)
         {
             if (selectionPathProvider != null)
@@ -70,8 +80,12 @@ namespace Sce.Atf.Applications
         }
     }
 
+    /// <summary>
+    /// Selection path provider information</summary>
     public class SelectionPathProviderInfo
     {
+        /// <summary>
+        /// Gets or sets selection context</summary>
         public ISelectionContext SelectionContext
         {
             get; set;

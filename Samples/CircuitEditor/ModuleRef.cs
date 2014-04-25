@@ -12,7 +12,7 @@ namespace CircuitEditorSample
     public class ModuleRef : ElementRef
     {
         /// <summary>
-        /// Gets the AttributeInfo that represents the MinHeight property</summary>
+        /// Gets the AttributeInfo for a module reference</summary>
         protected override AttributeInfo RefAttribute
         {
             get { return Schema.moduleRefType.refAttribute; }

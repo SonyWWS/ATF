@@ -16,8 +16,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
         where TEdgeRoute : class, IEdgeRoute
     {
+        /// <summary>
+        /// Gets or sets edge thickness</summary>
         public float EdgeThickness { get; set; }
+        /// <summary>
+        /// Gets or sets minimum edge thickness</summary>
         public float MinimumEdgeThickness { get; set; }
+        /// <summary>
+        /// Gets or sets maximum edge thickness</summary>
         public float MaxiumEdgeThickness { get; set; }
 
 
@@ -246,8 +252,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Is called when the content of the graph object changes.
-        /// </summary>
+        /// Is called when the content of the graph object changes</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         public virtual void OnGraphObjectChanged(object sender, ItemChangedEventArgs<object> e)
         {
         }
@@ -277,6 +284,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// Obtain node's DiagramDrawingStyle</summary>
+        /// <param name="node">Node whose style to obtain</param>
+        /// <returns>Node's DiagramDrawingStyle</returns>
         public DiagramDrawingStyle GetCustomStyle(object node)
         {
             DiagramDrawingStyle style;

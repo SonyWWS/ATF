@@ -7,6 +7,8 @@ using System.IO;
 
 namespace Sce.Atf.Applications
 {
+    /// <summary>
+    /// Base class for window layout service commands</summary>
     public abstract class WindowLayoutServiceCommandsBase : IInitializable, ICommandClient
     {
         /// <summary>
@@ -22,7 +24,7 @@ namespace Sce.Atf.Applications
         #region IInitializable Implementation
 
         /// <summary>
-        /// Initialize</summary>
+        /// Finish initializing component</summary>
         public virtual void Initialize()
         {
             if (SettingsPathsProvider == null)
@@ -129,7 +131,9 @@ namespace Sce.Atf.Applications
         /// Commands that can be registered enum</summary>
         protected enum Command
         {
+            /// <summary>"Save layout as" command</summary>
             SaveLayoutAs,
+            /// <summary>"Manage layouts" command</summary>
             ManageLayouts,
         }
 
@@ -137,6 +141,7 @@ namespace Sce.Atf.Applications
         /// Command group to use for layout related commands</summary>
         protected enum Group
         {
+            /// <summary>"Base group</summary>
             WindowLayoutServiceCommandsBase,
         }
 
@@ -209,12 +214,18 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>Menu separator character</summary>
         protected const string MenuSeparator = "/";
+        /// <summary>Menu name</summary>
         protected static readonly string MenuName = "Layouts".Localize();
+        /// <summary>Menu item command for "Save layout as"</summary>
         protected static readonly string MenuSaveLayoutAs = "Save Layout As...".Localize();
+        /// <summary>Menu item command for "Manage Layouts"</summary>
         protected static readonly string MenuManageLayouts = "Manage Layouts...".Localize();
+        /// <summary>Directory name where layouts are saved</summary>
         protected const string LayoutDirectoryName = "Layouts";
 
+        /// <summary>Screenshot file extension</summary>
         public const string ScreenshotExtension = ".jpg";
     }
 }

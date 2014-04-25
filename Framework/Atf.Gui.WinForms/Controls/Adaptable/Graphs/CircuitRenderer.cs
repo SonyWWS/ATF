@@ -34,7 +34,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             SetPinSpacing();
         }
-        
+
+        /// <summary>
+        /// Disposes resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected override void Dispose(bool disposing)
         {
             DisposeElementInfo();
@@ -702,6 +707,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Size info for a CircuitElement Type</summary>
         public class ElementSizeInfo
         {
+            /// <summary>
+            /// Constructor with parameters</summary>
+            /// <param name="size">Size</param>
+            /// <param name="interior">Interior size</param>
+            /// <param name="outputLeftX">Horizontal offset of output pins in pixels</param>
             public ElementSizeInfo(Size size, Rectangle interior, IEnumerable<int> outputLeftX)
             {
                 m_size = size;

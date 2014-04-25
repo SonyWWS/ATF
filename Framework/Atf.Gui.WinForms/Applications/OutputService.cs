@@ -32,15 +32,18 @@ namespace Sce.Atf.Applications
             m_textBox.WordWrap = false;
             m_textBox.ReadOnly = true;
             m_textBox.MouseUp += textBox_MouseUp;
-            m_textBox.FontChanged += textBox_FontChanged;
-            m_textBox.ParentChanged += textBox_ParentChanged;
-
+            m_textBox.BorderStyle = BorderStyle.None;
+            //m_textBox.FontChanged += textBox_FontChanged;
+            //m_textBox.ParentChanged += textBox_ParentChanged;
+            
             // Force creation of the handle to be sure that the RichTextBox's handle is created on the GUI thread.
             var hwnd = m_textBox.Handle;
         }
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering Output window control</summary>
         public virtual void Initialize()
         {
             m_controlHostService.RegisterControl(m_textBox,
@@ -151,7 +154,7 @@ namespace Sce.Atf.Applications
             }
 
             textBox.SelectionColor = c;
-            textBox.AppendText(messageTypeText + ": " + message);
+            textBox.AppendText(messageTypeText + ": " + message);            
         }
 
         /// <summary>
@@ -304,19 +307,7 @@ namespace Sce.Atf.Applications
             }
         }
 
-        private void textBox_ParentChanged(object sender, EventArgs e)
-        {
-            m_content = m_textBox.Rtf;
-        }
-
-        private void textBox_FontChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(m_content))
-            {
-                m_textBox.Rtf = m_content;
-                m_content = null;
-            }
-        }
+       
 
         private readonly IControlHostService m_controlHostService;
 
@@ -324,6 +315,6 @@ namespace Sce.Atf.Applications
         private ICommandService m_commandService;
 
         private readonly RichTextBox m_textBox;
-        private string m_content;
+        
     }
 }

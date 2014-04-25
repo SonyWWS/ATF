@@ -71,6 +71,8 @@ namespace Sce.Atf.Controls.Adaptable
             Redraw.Raise(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Destructor</summary>
         ~DiagramTheme()
         {
             Dispose(false);

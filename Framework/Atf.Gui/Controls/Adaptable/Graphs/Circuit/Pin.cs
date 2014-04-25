@@ -8,8 +8,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// class for GroupPin</summary>
     public abstract class Pin : DomNodeAdapter, ICircuitPin
     {
+        /// <summary>
+        /// Gets type attribute of Pin</summary>
         protected abstract AttributeInfo TypeAttribute { get; }
 
+        /// <summary>
+        /// Gets name attribute of Pin</summary>
         protected abstract AttributeInfo NameAttribute { get; }
 
         #region ICircuitPin Members

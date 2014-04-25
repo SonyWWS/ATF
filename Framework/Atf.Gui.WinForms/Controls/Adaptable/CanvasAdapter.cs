@@ -27,7 +27,8 @@ namespace Sce.Atf.Controls.Adaptable
             m_bounds = bounds;
         }
 
-        // callback to custom update translation max/min 
+        /// <summary>
+        /// Callback to custom update translation maximum and minimum</summary>
         public Action<CanvasAdapter> UpdateTranslateMinMax; 
 
         /// <summary>

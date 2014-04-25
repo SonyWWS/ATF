@@ -61,6 +61,8 @@ namespace Sce.Atf.Applications
         }
     }
 
+    /// <summary>
+    /// Static methods for WebHelp</summary>
     public static class WebHelps
     {
         /// <summary>

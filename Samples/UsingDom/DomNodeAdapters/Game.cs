@@ -9,7 +9,8 @@ namespace UsingDom
     public class Game : DomNodeAdapter
     {
         /// <summary>
-        /// Performs initialization when the adapter is connected to the game's DomNode.
+        /// Performs initialization when the adapter is connected to the game's DomNode:
+        /// gets list of game objects.
         /// Raises the DomNodeAdapter NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {

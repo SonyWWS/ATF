@@ -161,10 +161,11 @@ namespace Sce.Atf.Collada
             set {throw new NotImplementedException();}
         }
 
-
+        /// <summary>
+        /// Primitive sizes array</summary>
         public int[] m_sizes;
         /// <summary>
-        /// Gets and sets the DOM object whose value is the primitive sizes array</summary>
+        /// Gets the DOM object whose value is the primitive sizes array</summary>
         public int[] PrimitiveSizes
         {
             get{return m_sizes;}

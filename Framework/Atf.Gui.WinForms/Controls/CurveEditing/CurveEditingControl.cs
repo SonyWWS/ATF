@@ -32,6 +32,8 @@ namespace Sce.Atf.Controls.CurveEditing
 
         #region public events
 
+        /// <summary>
+        /// Event for curves changed</summary>
         public event EventHandler CurvesChanged
         {
             add { m_curveControl.CurvesChanged += value; }

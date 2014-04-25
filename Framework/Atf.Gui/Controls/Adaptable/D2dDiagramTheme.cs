@@ -55,9 +55,17 @@ namespace Sce.Atf.Controls.Adaptable
             StrokeWidth = 2;
         }
        
+        /// <summary>
+        /// Gets row spacing in pixels between pins on element</summary>
         public virtual int RowSpacing { get { return m_rowSpacing; } }
+        /// <summary>
+        /// Gets pin offset in pixels from pin location</summary>
         public virtual int PinOffset { get { return m_pinOffset; } }
+        /// <summary>
+        /// Gets pin size in pixels</summary>
         public int PinSize { get { return m_pinSize; } }
+        /// <summary>
+        /// Gets margin in pixels around pins between pin and other markings, such as labels</summary>
         public int PinMargin { get { return m_pinMargin; } }
 
         private int m_rowSpacing;

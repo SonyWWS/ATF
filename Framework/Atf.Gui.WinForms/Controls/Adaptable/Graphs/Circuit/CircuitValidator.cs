@@ -1,4 +1,4 @@
-﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+﻿//Sony Computer Entertainment Confidential
 
 using System;
 using System.Collections.Generic;
@@ -7,19 +7,24 @@ using System.Drawing;
 using System.Linq;
 
 using Sce.Atf.Adaptation;
+
 using Sce.Atf.Dom;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
     /// Adapter that tracks changes to transitions and updates their routing during validation.
-    /// Update transitions on Ending event to be part of the transactions themselves, 
-    /// then validate all sub-graph in the current document on Ended event. Requires
+    /// Update transitions on Ending event are part of the transactions themselves, 
+    /// then validate all sub-graphs in the current document on Ended event. Requires
     /// Sce.Atf.Dom.ReferenceValidator to be available on the adapted DomNode.</summary>
     public abstract class CircuitValidator : Validator
     {
 
+        /// <summary>
+        /// Gets module label attribute</summary>
         protected abstract AttributeInfo ElementLabelAttribute { get; }
+        /// <summary>
+        /// Gets pin name attribute</summary>
         protected abstract AttributeInfo PinNameAttributeAttribute { get; }
 
 
@@ -98,10 +103,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ActiveHistoryContext = sender.Cast<HistoryContext>();
             m_undoingOrRedoing = m_historyContexts.Any(h => h.UndoingOrRedoing);
             m_nodesInserted.Clear();
-            var referenceValidator = DomNode.Cast<ReferenceValidator>();
-            referenceValidator.Suspended = m_undoingOrRedoing;
+            var referenceValidator = DomNode.As<ReferenceValidator>();
+            if (referenceValidator != null)
+                referenceValidator.Suspended = m_undoingOrRedoing;
 
-            MovingCrossContainer = false;
+            MovingCrossContainer = false;        
         }
 
         /// <summary>
@@ -231,8 +237,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="e">Event args</param>
         protected override void OnEnding(object sender, EventArgs e)
         {
-            var referenceValidator = DomNode.Cast<ReferenceValidator>();
-            referenceValidator.Suspended = false;
+            var referenceValidator = DomNode.As<ReferenceValidator>();
+            if (referenceValidator != null)
+                referenceValidator.Suspended = false;
+
 
             if (m_undoingOrRedoing)
             {
@@ -406,8 +414,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                        
                 }
             }       
-        }    
+        }
 
+        /// <summary>
+        /// Performs custom actions on validation Ended events</summary>
+        /// <param name="sender">Validation context</param>
+        /// <param name="e">Event args</param>
         protected override void OnEnded(object sender, EventArgs e)
         {
             ActiveHistoryContext = null;
@@ -555,7 +567,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Update the template info (to be reflected in UI)</summary>
+        /// Updates the template info (to be reflected in UI)</summary>
         /// <param name="template">Group template</param>
         /// <remarks>Currently only update group pin connectivity for the group template</remarks>
         public void UpdateTemplateInfo(Group template)
@@ -613,7 +625,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Update the pin external connectivity of the connecting group</summary>
+        /// Updates the pin external connectivity of the connecting group</summary>
         /// <param name="wire">Wire that has been added or removed in the DOM node tree</param>
         private void UpdateGroupPinConnectivity(Wire wire)
         {

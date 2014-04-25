@@ -4,6 +4,8 @@ using System.Drawing;
 
 namespace Sce.Atf.Controls.SyntaxEditorControl
 {
+    /// <summary>
+    /// Interface for breakpoint information</summary>
     public interface IBreakpoint
     {
         /// <summary>

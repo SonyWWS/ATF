@@ -11,7 +11,8 @@ namespace DomPropertyEditorSample
     public class GameEditingContext : EditingContext, IObservableContext
     {
         /// <summary>
-        /// Performs initialization when the adapter's node is set</summary>
+        /// Performs initialization when the adapter's node is set.
+        /// Subscribes to events for DomNode tree changes and raises Reloaded event.</summary>
         protected override void OnNodeSet()
         {
             DomNode.AttributeChanged += (sender, e) => ItemChanged.Raise(this, new ItemChangedEventArgs<object>(e.DomNode));
@@ -23,9 +24,17 @@ namespace DomPropertyEditorSample
         }
 
         #region IObservableContext Members
+        /// <summary>
+        /// Event handler for node inserted in DomNode tree.</summary>
         public event EventHandler<ItemInsertedEventArgs<object>> ItemInserted;
+        /// <summary>
+        /// Event handler for node removed from DomNode tree.</summary>
         public event EventHandler<ItemRemovedEventArgs<object>> ItemRemoved;
+        /// <summary>
+        /// Event handler for node changed in DomNode tree.</summary>
         public event EventHandler<ItemChangedEventArgs<object>> ItemChanged;
+        /// <summary>
+        /// Event that is raised when the DomNode tree has been reloaded.</summary>
         public event EventHandler Reloaded;
         #endregion
     }

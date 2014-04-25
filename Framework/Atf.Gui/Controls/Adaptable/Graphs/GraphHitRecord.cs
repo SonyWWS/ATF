@@ -90,7 +90,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets or sets the full path of the hit circuit element</summary>
-        /// <remarks>The path is inverted as we usually process from bottom up</remarks>
+        /// <remarks>The path is inverted as we usually process from bottom up.</remarks>
         public IEnumerable<TNode> HitPathInversed
         {
             get { return m_pathInversed; }
@@ -105,7 +105,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-        public TNode  SubNode 
+        /// <summary>
+        /// Gets or sets the subnode that was hit</summary>
+        /// <remarks>Subnodes are used to describe child objects in the hierarchical node.</remarks>
+        public TNode SubNode 
         {
             get { return SubItem.As<TNode>(); }
         }

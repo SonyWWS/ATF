@@ -9,7 +9,7 @@ using Sce.Atf.Dom;
 namespace SimpleDomEditorSample
 {
     /// <summary>
-    /// Component that populates the palette with the basic DOM types.</summary>
+    /// Component that populates the palette with the basic DOM types</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(PaletteClient))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -30,6 +30,8 @@ namespace SimpleDomEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding event and resource items to palette</summary>
         void IInitializable.Initialize()
         {
             string category = "Events and Resources";

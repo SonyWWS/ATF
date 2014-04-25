@@ -24,7 +24,7 @@ namespace FileExplorerSample
     public class FolderViewer : IInitializable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor creating a new TreeControl</summary>
         /// <param name="mainForm">Main form</param>
         /// <param name="fileViewer">File viewer</param>
         [ImportingConstructor]
@@ -48,6 +48,8 @@ namespace FileExplorerSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding tree control to panel</summary>
         void IInitializable.Initialize()
         {
             m_mainForm.SplitContainer.Panel1.Controls.Add(m_treeControl);

@@ -125,6 +125,9 @@ namespace Sce.Atf.Controls.Adaptable
             set { m_autoResetCursor = value; }
         }
 
+        /// <summary>
+        /// Raises MouseDown event and performs custom actions</summary>
+        /// <param name="e">Mouse event arguments</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             // allow adapters to determine whether we should capture the mouse

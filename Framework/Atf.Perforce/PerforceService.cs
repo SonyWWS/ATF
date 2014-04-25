@@ -61,6 +61,9 @@ namespace Sce.Atf.Perforce
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by performing common intialization
+        /// and setting up Settings Service</summary>
         void IInitializable.Initialize()
         {
             LoadFileStatusIcons();
@@ -1007,6 +1010,8 @@ namespace Sce.Atf.Perforce
             return false;
         }
 
+        /// <summary>
+        /// Performs common intialization by creating and intializing BackgroundWorker</summary>
         protected void InitCommon()
         {
             m_worker = new BackgroundWorker();
@@ -1070,6 +1075,9 @@ namespace Sce.Atf.Perforce
                 }
             }
         }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources</summary>
         public void Dispose()
         {
             if (m_worker != null)
@@ -1188,6 +1196,8 @@ namespace Sce.Atf.Perforce
 
 #pragma warning disable 649 // Field is never assigned to and will always have its default value null
 
+        /// <summary>
+        /// Gets or sets main form</summary>
         [Import(AllowDefault = true)] // optional service
         protected Form MainForm { get; set; }
 

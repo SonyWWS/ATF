@@ -17,6 +17,8 @@ namespace Sce.Atf.Wpf.Applications
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class CommandService : Sce.Atf.Wpf.Applications.ICommandService
     {
+        /// <summary>
+        /// Constructor that registers standard menus</summary>
         public CommandService()
         {
             RegisterMenu(StandardMenus.File);

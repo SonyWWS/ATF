@@ -1,6 +1,13 @@
 SharpDX Change Log
 ==================
 
+--------------------------
+Release Notes (2014-4-21)
+--------------------------
+Current stable version of SharpDX is 2.5.0.
+These binaries are against git head however
+	https://github.com/sharpdx/SharpDX @ 0c1bca75edaa576f9ec344d36ca4fda13b9ca36a
+
 Previous Release notes:
 
 --------------------------

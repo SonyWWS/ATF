@@ -13,7 +13,8 @@ namespace TimelineEditorSample.DomNodeAdapters
     public class Marker : BaseEvent, IMarker
     {
         /// <summary>
-        /// Performs custom processing after adapter successfully attaches to the Marker's DOM object</summary>
+        /// Performs custom processing after adapter successfully attaches to the Marker's DOM object:
+        /// sets Marker attributes</summary>
         protected override void OnNodeSet()
         {
             // initialize defaulted attributes

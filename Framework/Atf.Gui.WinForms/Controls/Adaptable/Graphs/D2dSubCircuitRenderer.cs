@@ -43,8 +43,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_VirtualLinkStrokeStyle = D2dFactory.CreateD2dStrokeStyle(props);
         }
 
+        /// <summary>
+        /// Gets or sets visible drawing bounds</summary>
         public RectangleF VisibleWorldBounds { get; set; }
 
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -92,6 +98,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             g.DrawEllipse(irisRect, pen, strokeWidth *1.8f);
         }
        
+        /// <summary>
+        /// Draws floating group pin</summary>
+        /// <param name="grpPin">Group pin</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <param name="style">DiagramDrawingStyle</param>
+        /// <param name="g">Graphics object</param>
         public void DrawFloatingGroupPin(ICircuitGroupPin<TElement> grpPin, bool inputSide, DiagramDrawingStyle style, D2dGraphics g)
         {
             SizeF pinNameSize = g.MeasureText(grpPin.Name, Theme.TextFormat);

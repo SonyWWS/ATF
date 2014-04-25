@@ -76,6 +76,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering control</summary>
         public void Initialize()
         {
             // on initialization, register our tree control with the hosting service

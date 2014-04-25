@@ -16,14 +16,14 @@ using Sce.Atf.Dom;
 namespace DomPropertyEditorSample
 {
     /// <summary>
-    /// The purpose of this sample is:
+    /// The purpose of this sample is to:
     /// 1- Show how to decorate a DomNode with property descriptors so it can be edited 
     ///    using the PropertyEditor component.
     /// 2- List most of the available property descriptors and type-editors.
     /// The most important file in this sample is SchemaLoader.
     /// SchemaLoader decorates the DomNodeTypes with descriptors and editors depending on 
     /// property type.
-    /// </summary>
+    /// For more information, see https://github.com/SonyWWS/ATF/wiki/ATF-DOM-Property-Editor-Sample. </summary>
     static class Program
     {
         /// <summary>
@@ -50,12 +50,14 @@ namespace DomPropertyEditorSample
                 typeof(AtfUsageLogger),                 // logs computer info to an ATF server
                 typeof(CrashLogger),                    // logs unhandled exceptions to an ATF server
                 typeof(UnhandledExceptionService),      // catches unhandled exceptions, displays info, and gives user a chance to save
-
+                typeof(FileDialogService),
+                typeof(SkinService),
                 typeof(StandardFileExitCommand),        // standard File exit menu command
                 typeof(StandardEditHistoryCommands),    // tracks document changes and updates main form title
                 typeof(HelpAboutCommand),               // Help -> About command
                 typeof(ContextRegistry),                // central context registry with change notification
                 typeof(PropertyEditor),                 // property grid for editing selected objects
+                typeof(GridPropertyEditor),             // grid control for editing selected objects
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
                 typeof(SettingsService),
                 typeof(PythonService),                  // scripting service for automated tests

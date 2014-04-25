@@ -41,6 +41,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up settings service and registering commands</summary>
         public virtual void Initialize()
         {
             if (m_settingsService != null)
@@ -364,7 +366,11 @@ namespace Sce.Atf.Applications
         /// Command tags that are used with CommandService</summary>
         public enum Command
         {
+            /// <summary>
+            /// "Pin file" command</summary>
             Pin,
+            /// <summary>
+            /// "Recent Files" command</summary>
             EmptyMru
         }
 

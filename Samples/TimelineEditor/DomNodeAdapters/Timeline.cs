@@ -40,7 +40,7 @@ namespace TimelineEditorSample.DomNodeAdapters
         }
 
         /// <summary>
-        /// Gets the list of all markers the timeline</summary>
+        /// Gets the list of all markers in the timeline</summary>
         public IList<IMarker> Markers
         {
             get { return GetChildList<IMarker>(Schema.timelineType.markerChild); }

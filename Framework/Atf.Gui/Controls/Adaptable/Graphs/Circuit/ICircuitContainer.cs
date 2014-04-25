@@ -13,7 +13,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     {
         /// <summary>
         /// Gets the modifiable list of circuit elements and circuit group elements (see Group) that are
-        /// contained within this ICircuitContainer.</summary>
+        /// contained within this ICircuitContainer</summary>
         IList<Element> Elements { get; }
 
         /// <summary>
@@ -26,14 +26,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         IList<Annotation> Annotations { get; }
 
         /// <summary>
-        /// Finds the element and pin that match the pin target for this circuit container.</summary>
-        /// <param name="pinTarget"></param>
-        /// <param name="inputSide"></param>
-        /// <returns></returns>
+        /// Finds the element and pin that matched the pin target</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide);
 
         /// <summary>
-        /// Find the element and pin that match the pin target, including the template instance node.</summary>
+        /// Finds the element and pin that fully matched the pin target for this circuit container, 
+        /// including the template instance node</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         Pair<Element, ICircuitPin> FullyMatchPinTarget(PinTarget pinTarget, bool inputSide);
 
         /// <summary>
@@ -41,11 +47,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         bool Expanded { get; set; }
 
         /// <summary>
-        /// Gets/sets a value indicating whether or not the contents of the container have been changed.</summary>
+        /// Gets or sets whether or not the contents of the container have been changed</summary>
         bool Dirty{ get; set; }
         
         /// <summary>
-        /// Synchronize internal data and contents due to editings</summary>
+        /// Synchronizes internal data and contents due to editing</summary>
         void Update();
     }
 }

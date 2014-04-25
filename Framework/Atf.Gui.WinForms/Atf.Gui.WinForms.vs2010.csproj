@@ -165,6 +165,7 @@
     <Compile Include="Applications\SkinService\ControlGradient.cs" />
     <Compile Include="Applications\SkinService\DockColors.cs" />
     <Compile Include="Applications\SkinService\EmbeddedImage.cs" />
+    <Compile Include="Applications\SkinService\FormNcRenderer.cs" />
     <Compile Include="Applications\SkinService\SkinService.cs" />
     <Compile Include="Applications\StandardEditCommands.cs" />
     <Compile Include="Applications\StandardFileCommands.cs" />
@@ -582,6 +583,18 @@
     <Compile Include="Dom\TemplateLister.cs" />
     <Compile Include="Dom\TemplatingCommands.cs" />
     <Compile Include="Dom\TemplatingContext.cs" />
+    <Compile Include="DragDrop\ComDataObjectExtensions.cs" />
+    <Compile Include="DragDrop\DragDataHelper.cs" />
+    <Compile Include="DragDrop\DragDropDataObject.cs" />
+    <Compile Include="DragDrop\DragDropExtender.cs" />
+    <Compile Include="DragDrop\DragDropHelper.cs" />
+    <Compile Include="DragDrop\DropDescription.cs" />
+    <Compile Include="DragDrop\DropDescriptionHelper.cs" />
+    <Compile Include="DragDrop\DropImageType.cs" />
+    <Compile Include="DragDrop\IDragSourceHelper2.cs" />
+    <Compile Include="DragDrop\IDropTargetHelper.cs" />
+    <Compile Include="DragDrop\IStream.cs" />
+    <Compile Include="DragDrop\OleConverter.cs" />
     <Compile Include="FileIconUtil.cs" />
     <Compile Include="FindFileResolver.cs" />
     <Compile Include="GdiUtil.cs" />

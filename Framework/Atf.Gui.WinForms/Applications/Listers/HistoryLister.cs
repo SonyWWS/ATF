@@ -30,6 +30,7 @@ namespace Sce.Atf.Applications
         {            
             m_listbox = new CommandList();
             m_listbox.DrawMode = DrawMode.OwnerDrawFixed;
+            m_listbox.BorderStyle = BorderStyle.None;
             m_listbox.SelectedIndexChanged += (sender, e) =>
                 {
                     try
@@ -114,6 +115,8 @@ namespace Sce.Atf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets maximum number of history commands</summary>
         [DefaultValue(150)]
         public int MaxCommandCount
         {

@@ -35,8 +35,12 @@ namespace Sce.Atf.Controls.Adaptable
         /// Preset annotation color</summary>
         public class ColorPreset
         {
-            public string Name { get; set; }     // annotation background color name 
-            public Color Color { get; set; }     // annotation background color value 
+            /// <summary>
+            /// Gets or sets annotation background color name</summary>
+            public string Name { get; set; }
+            /// <summary>
+            /// Gets or sets annotation background color value</summary>
+            public Color Color { get; set; }
         }
 
         /// <summary>

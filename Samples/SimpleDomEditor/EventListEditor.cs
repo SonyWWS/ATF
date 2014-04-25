@@ -57,6 +57,8 @@ namespace SimpleDomEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by initializing setting service</summary>
         void IInitializable.Initialize()
         {
             if (m_settingsService != null)

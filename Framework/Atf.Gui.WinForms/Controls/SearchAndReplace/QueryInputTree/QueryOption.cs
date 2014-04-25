@@ -10,6 +10,8 @@ namespace Sce.Atf.Applications
     /// ToolStrip drop down button for search query</summary>
     public class QueryOption : QueryNode
     {
+        /// <summary>
+        /// Query option changed event</summary>
         public event EventHandler OptionChanged;
 
         /// <summary>

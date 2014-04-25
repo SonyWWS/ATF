@@ -9,7 +9,7 @@ namespace WinGuiCommon
     public class Resource : DomNodeAdapter
     {
         /// <summary>
-        /// Gets or set resource name, such as a label name</summary>
+        /// Gets or sets resource name, such as a label name</summary>
         public string Name
         {
             get { return GetAttribute<string>(Schema.resourceType.nameAttribute); }
@@ -17,7 +17,7 @@ namespace WinGuiCommon
         }
 
         /// <summary>
-        /// Gets or set resource size</summary>
+        /// Gets or sets resource size</summary>
         public int Size
         {
             get { return GetAttribute<int>(Schema.resourceType.sizeAttribute); }

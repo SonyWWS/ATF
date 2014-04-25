@@ -8,8 +8,12 @@ using Sce.Atf.Dom;
 
 namespace UsingDom
 {
+    /// <summary>
+    /// Loads the game schema and defines data extensions on the DOM types</summary>
     public class GameSchemaLoader : XmlSchemaTypeLoader
     {
+        /// <summary>
+        /// Constructor</summary>
         public GameSchemaLoader()
         {
             // set resolver to locate embedded .xsd file
@@ -17,18 +21,28 @@ namespace UsingDom
             Load("game.xsd");
         }
 
+        /// <summary>
+        /// Gets the game namespace</summary>
         public string NameSpace
         {
             get { return m_namespace; }
         }
         private string m_namespace;
 
+        /// <summary>
+        /// Gets the game type collection</summary>
         public XmlSchemaTypeCollection TypeCollection
         {
             get { return m_typeCollection; }
         }
         private XmlSchemaTypeCollection m_typeCollection;
 
+        /// <summary>
+        /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
+        /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
+        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.
+        /// Defines DOM adapters on the DOM types.</summary>
+        /// <param name="schemaSet">XML schema sets being loaded</param>
         protected override void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
         {
             foreach (XmlSchemaTypeCollection typeCollection in GetTypeCollections())

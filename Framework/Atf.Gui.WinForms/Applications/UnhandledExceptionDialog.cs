@@ -8,6 +8,8 @@ namespace Sce.Atf.Applications
     /// Class for unhandled exception dialogs</summary>
     public partial class UnhandledExceptionDialog : Form
     {
+        /// <summary>
+        /// Constructor that initializes component</summary>
         public UnhandledExceptionDialog()
         {
             InitializeComponent();

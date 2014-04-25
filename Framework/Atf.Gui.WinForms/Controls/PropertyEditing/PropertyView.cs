@@ -74,6 +74,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             // If we were not previously visible, build the properties and controls now
             // If we were previously visible, then mark existing properties as not being visible.
             UpdateEditingContext();
+            SkinService.ApplyActiveSkin(this);
         }
 
         #region Fonts
@@ -132,16 +133,18 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="descriptor">Property descriptor</param>
         protected void SetFont(Control control, PropertyDescriptor descriptor)
         {
-            Sce.Atf.Dom.AttributePropertyDescriptor attr_descriptor = descriptor as Sce.Atf.Dom.AttributePropertyDescriptor;
-            if ((attr_descriptor != null) && (attr_descriptor.AttributeInfo.Type.Type == Sce.Atf.Dom.AttributeTypes.String))
-            {
-                control.Font = null;
-            }
-            else
-            {
-                bool isOverride = descriptor.CanResetValue(LastSelectedObject);
-                control.Font = isOverride ? BoldFont : null;
-            }
+            // SkinService throws exception because 
+           //  Control.Font get disposed.  Alan
+            //Sce.Atf.Dom.AttributePropertyDescriptor attr_descriptor = descriptor as Sce.Atf.Dom.AttributePropertyDescriptor;
+            //if ((attr_descriptor != null) && (attr_descriptor.AttributeInfo.Type.Type == Sce.Atf.Dom.AttributeTypes.String))
+            //{
+            //    control.Font = Font;
+            //}
+            //else
+            //{
+            //    bool isOverride = descriptor.CanResetValue(LastSelectedObject);
+            //    control.Font = isOverride ? BoldFont : Font;
+            //}
         }
 
         #endregion
@@ -227,6 +230,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     OnEditingContextChanged();
 
                     EditingContextChanged.Raise(this, EventArgs.Empty);
+                    
                 }
             }
         }
@@ -264,6 +268,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             UpdatePropertySorting();
 
             ResumeLayout(true);
+         
             Invalidate();
         }
 
@@ -766,16 +771,15 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                     property.Control = control;
                     Controls.Add(control);
+
                 }
             }
 
             if (control != null)
             {
                 // Not visible by default because toggling of property columns sets visibility.
-                control.Visible = false;
-                control.BackColor = SystemColors.Window;
+                control.Visible = false;               
                 SetFont(control, descriptor);
-
                 if (customizeAttribute != null)
                 {
                     control.Width = customizeAttribute.ColumnWidth;
@@ -788,6 +792,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             return property;
         }
 
+       
 
         private void AddChildProperty(Property property, bool reflected, ref int index)
         {
@@ -1241,21 +1246,49 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Class to hold information associated with each property</summary>
         public class Property
         {
+            /// <summary>
+            /// PropertyDescriptor</summary>
             public PropertyDescriptor Descriptor;
+            /// <summary>
+            /// Property category</summary>
             public Category Category;
+            /// <summary>
+            /// PropertyEditorControlContext</summary>
             public PropertyEditorControlContext Context;
+            /// <summary>
+            /// Index in list of properties in property editor</summary>
             public int DescriptorIndex;
+            /// <summary>
+            /// Whether listed first in its category</summary>
             public bool FirstInCategory;
+            /// <summary>
+            /// Whether sorting disabled for this property</summary>
             public bool DisableSort;
+            /// <summary>
+            /// Whether to disable dragging for this property</summary>
             public bool DisableDragging;
+            /// <summary>
+            /// Whether to disable resizing for this property</summary>
             public bool DisableResize;
+            /// <summary>
+            /// Whether to disable eiting for this property</summary>
             public bool DisableEditing;
+            /// <summary>
+            /// Whether to hide UI label for this property</summary>
             public bool HideDisplayName;
+            /// <summary>
+            /// Default width of property in property editor</summary>
             public int DefaultWidth;
 
             // for child properties
+            /// <summary>
+            /// Collection of PropertyDescriptors for child properties</summary>
             public PropertyDescriptorCollection ChildProperties;
+            /// <summary>
+            /// Parent property, may be null</summary>
             public Property Parent;
+            /// <summary>
+            /// Whether child properties expanded in property editor</summary>
             public bool ChildrenExpanded;
 
             /// <summary>
@@ -1369,7 +1402,11 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 get { return Parent == null || Parent.Expanded; }
             }
+            /// <summary>
+            /// Array of properties in this category</summary>
             public Property[] Properties;
+            /// <summary>
+            /// Parent category</summary>
             public Category Parent;
 
             /// <summary>
@@ -1457,6 +1494,8 @@ namespace Sce.Atf.Controls.PropertyEditing
             public readonly string PropertyName;
         }
 
+        /// <summary>
+        /// Gets or sets array of column attributes for property editing</summary>
         public CustomizeAttribute[] CustomizeAttributes { get; set; }
 
         private IPropertyEditingContext m_editingContext;

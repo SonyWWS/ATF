@@ -16,6 +16,8 @@ namespace Sce.Atf.Wpf
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component</summary>
         public void Initialize()
         {
         }

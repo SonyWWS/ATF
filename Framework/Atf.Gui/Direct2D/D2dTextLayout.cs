@@ -46,7 +46,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Gets and sets layout width</summary>
+        /// Gets or sets layout width</summary>
         public float LayoutWidth
         {
             get { return m_nativeTextLayout.MaxWidth; }
@@ -54,7 +54,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Gets and sets layout height</summary>
+        /// Gets or sets layout height</summary>
         public float LayoutHeight
         {
             get { return m_nativeTextLayout.MaxHeight; }
@@ -62,22 +62,22 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Get a value that indicates the width of the formatted text, while ignoring trailing whitespace at the end of each line.</summary>
+        /// Gets width of the formatted text, while ignoring trailing whitespace at the end of each line</summary>
         public float Width
         {
             get { return m_nativeTextLayout.Metrics.Width; }
         }
 
         /// <summary>
-        /// Get the height of the formatted text.</summary>
-        /// <remarks> The height of an empty string is set to the same value as that of the default font.</remarks>
+        /// Gets height of the formatted text</summary>
+        /// <remarks>The height of an empty string is set to the same value as that of the default font.</remarks>
         public float Height
         {
             get { return m_nativeTextLayout.Metrics.Height; }
         }
 
         /// <summary>
-        /// Get the total number of lines.</summary>
+        /// Gets total number of lines</summary>
         public int LineCount
         {
             get { return m_nativeTextLayout.Metrics.LineCount; }
@@ -111,8 +111,7 @@ namespace Sce.Atf.Direct2D
         /// given the text position and the logical side of the position. 
         /// This function is normally used as part of caret positioning of text where the caret is drawn 
         /// at the location corresponding to the current text editing position. 
-        /// It may also be used as a way to programmatically obtain the geometry of a particular text position in UI automation. 
-        /// </summary>
+        /// It may also be used as a way to programmatically obtain the geometry of a particular text position in UI automation.</summary>
         /// <param name="textPosition">The text position used to get the pixel location.</param>
         /// <param name="isTrailingHit">A Boolean flag that whether the pixel location is of the leading or 
         /// the trailing side of the specified text position.</param>
@@ -136,8 +135,7 @@ namespace Sce.Atf.Direct2D
 
         /// <summary>
         /// The application calls this function to get a set of hit-test metrics corresponding to a range of text positions. 
-        /// One of the main usages is to implement highlight selection of the text string. 
-        /// </summary>
+        /// One of the main usages is to implement highlight selection of the text string.</summary>
         /// <param name="textPosition">The first text position of the specified range.</param>
         /// <param name="textLength">The number of positions of the specified range.</param>
         /// <param name="originX">The origin pixel location X at the left of the layout box. 
@@ -162,7 +160,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Retrieves the information about each individual text line of the text string.</summary>
+        /// Retrieves information about each individual text line of the text string</summary>
         public LineMetrics[] GetLineMetrics()
         {
             var lineMetrics = NativeTextLayout.GetLineMetrics();
@@ -179,9 +177,8 @@ namespace Sce.Atf.Direct2D
             return result;
         }
         /// <summary>
-        /// Retrieves logical properties and measurements of each glyph cluster.
-        /// </summary>
-        /// <returns>Returns metrics, such as line-break or total advance width, for a glyph cluster. </returns>
+        /// Retrieves logical properties and measurements of each glyph cluster</summary>
+        /// <returns>Metrics, such as line-break or total advance width, for a glyph cluster</returns>
         public ClusterMetrics[] GetClusterMetrics()
         {
             var clusterMetrics = NativeTextLayout.GetClusterMetrics();
@@ -199,6 +196,10 @@ namespace Sce.Atf.Direct2D
             return result;
         }
 
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

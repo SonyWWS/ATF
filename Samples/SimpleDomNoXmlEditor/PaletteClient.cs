@@ -10,7 +10,7 @@ using Sce.Atf.Dom;
 namespace SimpleDomNoXmlEditorSample
 {
     /// <summary>
-    /// Component that populates the palette with the basic DOM types.</summary>
+    /// Component that populates the palette with the basic DOM types</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(PaletteClient))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -31,6 +31,8 @@ namespace SimpleDomNoXmlEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish component initialization by setting up palette items</summary>
         void IInitializable.Initialize()
         {
             string category = "Events and Resources";

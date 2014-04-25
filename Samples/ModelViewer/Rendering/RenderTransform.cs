@@ -26,11 +26,11 @@ namespace ModelViewerSample.Rendering
         }
 
         /// <summary>
-        /// Traverses the specified graph path.</summary>
-        /// <param name="graphPath">The graph path.</param>
-        /// <param name="action">The render action.</param>
-        /// <param name="camera">The camera.</param>
-        /// <param name="list">The list.</param>
+        /// Traverses the specified graph path</summary>
+        /// <param name="graphPath">The graph path</param>
+        /// <param name="action">The render action</param>
+        /// <param name="camera">The camera</param>
+        /// <param name="list">The list</param>
         /// <returns></returns>
         public override TraverseState Traverse(Stack<SceneNode> graphPath, IRenderAction action, Camera camera, ICollection<TraverseNode> list)
         {
@@ -69,10 +69,10 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Called after post visiting the SceneNode specified by the graph path</summary>
-        /// <param name="graphPath">The graph path.</param>
-        /// <param name="action">The render action.</param>
-        /// <param name="camera">The camera.</param>
-        /// <param name="list">The traverse list.</param>
+        /// <param name="graphPath">The graph path</param>
+        /// <param name="action">The render action</param>
+        /// <param name="camera">The camera</param>
+        /// <param name="list">The traverse list</param>
         /// <returns></returns>
         public override TraverseState PostTraverse(Stack<SceneNode> graphPath, IRenderAction action, Camera camera, ICollection<TraverseNode> list)
         {
@@ -82,7 +82,7 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Gets a collection of other render object interface types this class depends on.
-        /// This will determine the order of render objects on the SceneNode.</summary>
+        /// This determines the order of render objects on the SceneNode.</summary>
         /// <returns>A collection of render object types</returns>
         public override Type[] GetDependencies()
         {

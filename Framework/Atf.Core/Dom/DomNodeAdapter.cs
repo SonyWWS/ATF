@@ -214,6 +214,9 @@ namespace Sce.Atf.Dom
             return m_domNode.GetHashCode();
         }
 
+        /// <summary>
+        /// Gets string representation of DomNodeAdapter</summary>
+        /// <returns>String representation of DomNodeAdapter</returns>
         public override string ToString()
         {
             if (m_domNode != null)

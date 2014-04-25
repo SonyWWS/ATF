@@ -25,6 +25,8 @@ namespace Sce.Atf.Wpf.Controls
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component</summary>
         public void Initialize()
         {
         }

@@ -5,15 +5,21 @@ using System;
 namespace Sce.Atf.Input 
 {
     /// <summary>
-    /// Enum for drag and drop effects</summary>
+    /// Enumeration for drag and drop effects</summary>
     [Flags]
     public enum DragDropEffects
     {
+        /// <summary>Scrolling drag and drop</summary>
         Scroll = -2147483648,
+        /// <summary>All drag and drop effects</summary>
         All = -2147483645,
+        /// <summary>No drag and drop effects</summary>
         None = 0,
+        /// <summary>Copy drag and drop</summary>
         Copy = 1,
+        /// <summary>Move drag and drop</summary>
         Move = 2,
+        /// <summary>Link drag and drop</summary>
         Link = 4,
     }
 
@@ -45,8 +51,14 @@ namespace Sce.Atf.Input
         /// Initializes a new instance of the System.Windows.Forms.DragEventArgs class</summary>
         private DragDropEffects effect;
  
-        /// <summary> 
-        /// Constructor</summary>
+        /// <summary>
+        /// Constructor with parameters</summary>
+        /// <param name="data">System.Windows.Forms.IDataObject that contains the data associated with this event</param>
+        /// <param name="keyState">Current state of the Shift, Ctrl, and Alt keys</param>
+        /// <param name="x">X-coordinate of mouse pointer</param>
+        /// <param name="y">Y-coordinate of mouse pointer</param>
+        /// <param name="allowedEffect">>Drag and drop operations allowed by the originator (or source) of the drag and drop event</param>
+        /// <param name="effect">Drag and drop operations allowed by the target of the drag and drop event</param>
         public DragEventArgs(object data, int keyState, int x, int y, DragDropEffects allowedEffect, DragDropEffects effect) { 
             this.data = data;
             this.keyState = keyState; 

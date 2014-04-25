@@ -30,6 +30,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering commands</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(CommandInfo.ViewHide, this);
@@ -192,6 +194,8 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// Refreshes display after indicating to hide/show items</summary>
         protected virtual void Refresh()
         {            
         }

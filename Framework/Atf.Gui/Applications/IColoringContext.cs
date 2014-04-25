@@ -4,11 +4,16 @@ using System.Drawing;
 
 namespace Sce.Atf.Applications
 {
-
+    /// <summary>
+    /// Enumeration for coloring types</summary>
     public enum ColoringTypes
     {
-        ForeColor, // foreground color
-        BackColor, // background color
+        /// <summary>
+        /// Foreground color</summary>
+        ForeColor,
+        /// <summary>
+        /// Background color</summary>
+        BackColor,
     }
 
     /// <summary>

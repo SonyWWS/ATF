@@ -421,17 +421,17 @@ namespace Sce.Atf
                 return m_lambdaExpression;
             }
         }
+        /// <summary>
+        /// Single lambda expression from the list of expressions</summary>
         protected LambdaExpression m_lambdaExpression;
 
         #endregion
 
         /// <summary>
         /// Gets or sets the "replace template", that is, the search pattern in the Linq query that should be used 
-        /// to apply subsequent 'replace' operations on the search results.
-        /// 
-        /// NOTE: While it does contain part of the search predicate, MatchPattern is NOT involved in the query!
-        /// It should not be used to test matches during a search! That is the job of the LambdaExpression.</summary>
-        IReplacingQueryPattern m_matchPattern;
+        /// to apply subsequent "replace" operations on the search results.</summary>
+        /// <remarks>NOTE: While it does contain part of the search predicate, MatchPattern is NOT involved in the query!
+        /// It should not be used to test matches during a search! That is the job of the LambdaExpression.</remarks>
         public IReplacingQueryPattern MatchPattern
         {
             set
@@ -442,6 +442,9 @@ namespace Sce.Atf
             }
             get { return m_matchPattern; }
         }
+        /// <summary>
+        /// Search pattern in the Linq query for replace</summary>
+        IReplacingQueryPattern m_matchPattern;
 
         /// <summary>
         /// Class that defines the replacement template for string search patterns</summary>
@@ -536,34 +539,52 @@ namespace Sce.Atf
             double m_pattern2;
         }
 
+        /// <summary>
+        /// Named parameter expression on which to iterate</summary>
         protected ParameterExpression m_queryableData;
     }
 
     /// <summary>
-    /// Enum defining which string search types can be selected</summary>
+    /// Enum defining masks for which string search types can be selected</summary>
     public enum StringQuery
     {
+        /// <summary>No search</summary>
         None=0x00,
-        Matches=0x01,
-        Contains=0x02,
-        BeginsWith=0x04,
-        EndsWith=0x08,
-        RegularExpression=0x10,
-        All=0xFF
+        /// <summary>Look for matches</summary>
+        Matches = 0x01,
+        /// <summary>Contains text</summary>
+        Contains = 0x02,
+        /// <summary>Begins with text</summary>
+        BeginsWith = 0x04,
+        /// <summary>Ends with text</summary>
+        EndsWith = 0x08,
+        /// <summary>Search using regular expression</summary>
+        RegularExpression = 0x10,
+        /// <summary>Use all string searches</summary>
+        All = 0xFF
     }
 
     /// <summary>
-    /// Enum defining which numerical search types can be selected</summary>
+    /// Enum defining masks for which numerical search types can be selected</summary>
     public enum NumericalQuery
     {
-        None=0x00,
-        Equals=0x01,
-        Lesser=0x02,
-        LesserEqual=0x04,
-        Equal=0x08,
-        GreaterEqual=0x10,
-        Greater=0x20,
-        Between=0x40,
-        All=0xFF
+        /// <summary>No search</summary>
+        None = 0x00,
+        /// <summary>Equals</summary>
+        Equals = 0x01,
+        /// <summary>Less than</summary>
+        Lesser = 0x02,
+        /// <summary>Less than or equal</summary>
+        LesserEqual = 0x04,
+        /// <summary>Equals</summary>
+        Equal = 0x08,
+        /// <summary>Greater than or equal</summary>
+        GreaterEqual = 0x10,
+        /// <summary>Greater than</summary>
+        Greater = 0x20,
+        /// <summary>In between values</summary>
+        Between = 0x40,
+        /// <summary>Use all numerical search types</summary>
+        All = 0xFF
     }
 }

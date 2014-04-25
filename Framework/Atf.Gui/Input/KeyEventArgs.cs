@@ -4,6 +4,8 @@ using System;
 
 namespace Sce.Atf.Input
 {
+    /// <summary>
+    /// Key event arguments</summary>
     public class KeyEventArgs : EventArgs
     {
         /// <summary>

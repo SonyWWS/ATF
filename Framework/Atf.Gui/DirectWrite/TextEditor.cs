@@ -13,52 +13,70 @@ namespace Sce.Atf.DirectWrite
     /// </remarks>
     public class TextEditor
     {
+        /// <summary>
+        /// Selection mode enumeration</summary>
         public  enum SelectionMode
         {
-            Left,               // cluster left
-            Right,              // cluster right
-            Up,                 // line up
-            Down,               // line down
-            LeftChar,           // single character left (backspace uses it)
+            /// <summary>Select cluster of characters to the left</summary>
+            Left,
+            /// <summary>Select cluster of characters to the right</summary>
+            Right,
+            /// <summary>Select characters a line up</summary>
+            Up,
+            /// <summary>Select characters a line down</summary>
+            Down,
+            /// <summary>Select single character to left (backspace uses it)</summary>
+            LeftChar,
+            /// <summary>Select single character to right</summary>
             RightChar,          // single character right
-            LeftWord,           // single word left
-            RightWord,          // single word right
-            SingleWord,         // select single word
-            Home,               // front of line
-            End,                // back of line
-            First,              // very first position
-            Last,               // very last position
-            AbsoluteLeading,    // explicit position (for mouse click)
-            AbsoluteTrailing,   // explicit position, trailing edge
-            All                 // select all text
+            /// <summary>Select single word to left</summary>
+            LeftWord,
+            /// <summary>Select single word to right</summary>
+            RightWord,
+            /// <summary>Select single word</summary>
+            SingleWord,
+            /// <summary>Select characters from front of line</summary>
+            Home,
+            /// <summary>Select characters from end of line</summary>
+            End,
+            /// <summary>Select characters from very first position</summary>
+            First,
+            /// <summary>Select characters from very last position</summary>
+            Last,
+            /// <summary>Set caret position to absolute explicit position (for mouse click)</summary>
+            AbsoluteLeading,
+            /// <summary>Set caret position to explicit position, trailing edge</summary>
+            AbsoluteTrailing,
+            /// <summary>Select all text</summary>
+            All
         }
 
         /// <summary>
-        /// The formatted text.</summary>
+        /// Gets or sets formatted text</summary>
         public D2dTextLayout TextLayout { get; set; }
 
         /// <summary>
-        /// Text format object used for text layout.</summary>
+        /// Gets or sets text format object used for text layout</summary>
         public D2dTextFormat TextFormat { get; set; }
           
         /// <summary>
-        /// The starting position of text selected for editting. </summary>
+        /// Gets or sets starting position of text selected for editing</summary>
         public int SelectionStart { get; set; }  
         
         /// <summary>
-        /// The number of characters selected for editting. </summary>
+        /// Gets or sets number of characters selected for editing</summary>
         public int SelectionLength { get; set; }
 
         /// <summary>
-        /// Gets the position of the input caret.</summary>
+        /// Gets position of input caret</summary>
         public int CaretPosition
         {
             get { return m_caretPosition; }
-        
+
         }
 
         /// <summary>
-        /// Gets the anchor position of the input caret.</summary>
+        /// Gets anchor position of input caret</summary>
         public int CaretAnchorPosition
         {
             get { return m_caretAnchor; }
@@ -66,7 +84,7 @@ namespace Sce.Atf.DirectWrite
         }
 
         /// <summary>
-        /// Gets the absolute position of the input caret.</summary>
+        /// Gets absolute position of input caret</summary>
         public int CaretAbsolutePosition
         {
             get { return m_caretPosition + m_caretPositionOffset; }
@@ -74,20 +92,19 @@ namespace Sce.Atf.DirectWrite
         }
 
         /// <summary>
-        /// Top visible line number.</summary>
+        /// Gets or sets top visible line number</summary>
         public int TopLine { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the vertical scroll bar should be visible. </summary>
+        /// Gets or sets whether the vertical scroll bar should be visible</summary>
         public bool VerticalScrollBarVisibe { get; set; }
 
         /// <summary>
-        /// Update the text position corresponding to the position x,y in graph space.</summary>
-        /// <param name="x">mouse position x in graph space</param>
-        /// <param name="y">mouse position y in graph space</param>
-        /// <param name="extendSelection"></param>
-        /// <returns></returns>
-        /// <remarks>  If hitting the trailing side of a cluster, return the
+        /// Updates the text position corresponding to the position x,y in graph space</summary>
+        /// <param name="x">Mouse position x in graph space</param>
+        /// <param name="y">Mouse position y in graph space</param>
+        /// <param name="extendSelection">Whether to extend current selection to additional selection</param>
+        /// <remarks>If hitting the trailing side of a cluster, return the
         /// leading edge of the following text position.</remarks>
         public void SetSelectionFromPoint(float x, float y, bool extendSelection)
         {
@@ -128,7 +145,13 @@ namespace Sce.Atf.DirectWrite
             }
         }
 
-
+        /// <summary>
+        /// Sets text selection. This may possibly only move the caret, not selecting characters.</summary>
+        /// <param name="moveMode">Text selection mode</param>
+        /// <param name="advance">Number of characters to advance or start selection</param>
+        /// <param name="extendSelection">Whether to extend current selection to additional selection</param>
+        /// <param name="updateCaretFormat">Whether to update caret format based on selection</param>
+        /// <returns>True iff caret changed position as result of selection</returns>
         public bool SetSelection(SelectionMode moveMode, int advance, bool extendSelection, bool updateCaretFormat)
         {
 
@@ -452,7 +475,7 @@ namespace Sce.Atf.DirectWrite
       
        
         /// <summary>
-        /// Gets the current caret position (in untransformed space).</summary>
+        /// Obtains the current caret position (in untransformed space)</summary>
         public RectangleF GetCaretRect()
         {
              if (TextLayout == null)
@@ -476,7 +499,7 @@ namespace Sce.Atf.DirectWrite
 
         /// <summary>
         /// Returns a valid range of the current selection,
-        /// regardless of whether the caret or anchor is first.</summary>
+        /// regardless of whether the caret or anchor is first</summary>
         public void UpdateSelectionRange()
         {
             int caretBegin = m_caretAnchor;
@@ -495,6 +518,11 @@ namespace Sce.Atf.DirectWrite
             SelectionLength = caretEnd - caretBegin;
         }
 
+        /// <summary>
+        /// Inserts text at current caret position</summary>
+        /// <param name="originalText">Original text in editor</param>
+        /// <param name="textToInsert">Text to insert</param>
+        /// <returns>Text after insertion occurs</returns>
         public string InsertTextAt(string originalText, string textToInsert)
         {
             int absolutePosition = m_caretPosition + m_caretPositionOffset;
@@ -504,6 +532,12 @@ namespace Sce.Atf.DirectWrite
             return newValue;
         }
 
+        /// <summary>
+        /// Removes text with given length and position</summary>
+        /// <param name="originalText">Original text in editor</param>
+        /// <param name="startPosition">Position at which to remove text</param>
+        /// <param name="length">Number of characters to remove</param>
+        /// <returns>Text after deletion occurs</returns>
         public string RemoveTextAt(string originalText, int startPosition, int length)
         {
             startPosition = Math.Min(startPosition, originalText.Length);
@@ -513,6 +547,9 @@ namespace Sce.Atf.DirectWrite
             return newValue;
         }
 
+        /// <summary>
+        /// Resets the text in the editor</summary>
+        /// <param name="newText">New text for editor</param>
         public void ResetText(string newText)
         {
             RecreateLayout(newText);
@@ -534,9 +571,14 @@ namespace Sce.Atf.DirectWrite
             TextLayout = textLayout;
         }
 
-        // Given the line metrics, determines the current line and starting text
-        // position of that line by summing up the lengths. When the starting
-        // line position is beyond the given text position, we have our line.
+        /// <summary>
+        /// Given the line metrics, determines the current line and starting text
+        /// position of that line by summing up the lengths. When the starting
+        /// line position is beyond the given text position, we have our line.</summary>
+        /// <param name="lineMetrics">Line metrics</param>
+        /// <param name="textPosition">Text position</param>
+        /// <param name="line">Line text</param>
+        /// <param name="linePosition">Line position</param>
         private void  GetLineFromPosition(LineMetrics[] lineMetrics, int textPosition, out int line, out int linePosition)
         {
             line = 0;

@@ -10,7 +10,7 @@ namespace FsmEditorSample
     public class Transition : DomNodeAdapter, IGraphEdge<State, NumberedRoute>
     {
         /// <summary>
-        /// Gets the from state of the transition</summary>
+        /// Gets the "from" state of the transition</summary>
         public State FromState
         {
             get { return GetReference<State>(Schema.transitionType.sourceAttribute); }
@@ -18,7 +18,7 @@ namespace FsmEditorSample
         }
 
         /// <summary>
-        /// Gets the to state of the transition</summary>
+        /// Gets the "to" state of the transition</summary>
         public State ToState
         {
             get { return GetReference<State>(Schema.transitionType.destinationAttribute); }

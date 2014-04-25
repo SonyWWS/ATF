@@ -11,7 +11,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class ElementRef : DomNodeAdapter
     {
         /// <summary>
-        /// Gets the AttributeInfo that represents the MinHeight property</summary>
+        /// Gets the AttributeInfo for a module reference</summary>
         protected abstract AttributeInfo RefAttribute { get; }
         
         /// <summary>

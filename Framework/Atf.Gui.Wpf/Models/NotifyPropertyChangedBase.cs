@@ -28,6 +28,10 @@ namespace Sce.Atf.Wpf.Models
 
         #endregion
 
+        /// <summary>
+        /// Raises PropertyChanged event and checks property name,
+        /// raising an exception if name is invalid</summary>
+        /// <param name="propertyName">Property name</param>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
         protected void RaisePropertyChanged(string propertyName)
         {
@@ -45,6 +49,10 @@ namespace Sce.Atf.Wpf.Models
                 h(this, e);
         }
 
+        /// <summary>
+        /// Checks property name and raises an exception if name is invalid</summary>
+        /// <param name="propertyName">Property name</param>
+        /// <exception cref="InvalidOperationException">Property with property name does not exist</exception>
         [Conditional("DEBUG")]
         private void CheckPropertyName(string propertyName)
         {

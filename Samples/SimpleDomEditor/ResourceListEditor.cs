@@ -55,6 +55,9 @@ namespace SimpleDomEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by creating ListView and initializing it, subscribing to drag events,
+        /// and registering the control</summary>
         void IInitializable.Initialize()
         {
             m_resourcesListView = new ListView();

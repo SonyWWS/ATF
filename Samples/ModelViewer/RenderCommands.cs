@@ -11,7 +11,7 @@ using Sce.Atf.Rendering.Dom;
 namespace ModelViewerSample
 {   
     /// <summary>
-    /// A MEF component for providing user commands related to the RenderView component.</summary>
+    /// A MEF component for providing user commands related to the RenderView component</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(RenderCommands))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -134,7 +134,7 @@ namespace ModelViewerSample
         /// <summary>
         /// Can the client do the command?</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>true, iff client can do the command</returns>
+        /// <returns>True iff client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             if (!(commandTag is Command))

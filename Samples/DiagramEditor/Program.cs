@@ -81,14 +81,15 @@ namespace DiagramEditorSample
 
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
-                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
+                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
+                                                        //  Reset All, Copy Value, Paste Value, Copy All, Paste All
 
                 typeof(HistoryLister),                  // vistual list of undo/redo stack
                 typeof(PrototypeLister),                // editable palette of instantiable item groups
                 typeof(LayerLister),                    // editable tree view of layers
 
                 typeof(Outputs),                        // passes messages to all log writers
-                typeof(ErrorDialogService),             // displays errors to the user a in message box
+                typeof(ErrorDialogService),             // displays errors to the user in a message box
 
                 typeof(DiagramTheme),                   // rendering theme for diagrams
                 typeof(DefaultTabCommands),             // provides the default commands related to document tab Controls

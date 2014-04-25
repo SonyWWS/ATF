@@ -4,8 +4,13 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample
 {
+    /// <summary>
+    /// Adapts the circuit to IDocument and synchronizes URI and dirty bit changes to the
+    /// ControlInfo instance used to register the viewing control in the UI</summary>
     public class CircuitDocument : Sce.Atf.Controls.Adaptable.Graphs.CircuitDocument
     {
+        /// <summary>
+        /// Gets ChildInfo for subcircuits in circuit</summary>
         protected override ChildInfo SubCircuitChildInfo
         {
             get { return Schema.circuitDocumentType.subCircuitChild; }

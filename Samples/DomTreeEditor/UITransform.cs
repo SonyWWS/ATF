@@ -6,7 +6,7 @@ using Sce.Atf.VectorMath;
 namespace DomTreeEditorSample
 {
     /// <summary>
-    /// Adapts DomNode to a UI transform, with 3d translation, rotation, and scale vectors</summary>
+    /// Adapts DomNode to a UI transform, with 3D translation, rotation, and scale vectors</summary>
     public class UITransform : DomNodeAdapter
     {
         /// <summary>

@@ -22,6 +22,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up Scripting Service</summary>
         public virtual void Initialize()
         {
             if (m_scriptingService == null) return;

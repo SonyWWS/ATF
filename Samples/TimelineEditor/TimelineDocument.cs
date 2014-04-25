@@ -57,7 +57,7 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Gets or sets the document's timeline renderer</summary>
+        /// Gets or sets the document's timeline renderer. Creates a TimelineControl.</summary>
         public TimelineRenderer Renderer
         {
             get { return m_renderer; }
@@ -187,7 +187,8 @@ namespace TimelineEditorSample
         #endregion
 
         /// <summary>
-        /// Attaches manipulators to the TimelineControl to provide additional capabilities</summary>
+        /// Attaches manipulators to the TimelineControl to provide additional capabilities.
+        /// Order of adding manipulators matters.</summary>
         protected virtual void AttachManipulators()
         {
             // The order here determines the order of receiving Paint events and is the reverse

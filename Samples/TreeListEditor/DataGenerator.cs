@@ -25,7 +25,7 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Generated data items</summary>
+    /// Class to generate data items to be displayed in tree editors</summary>
     class DataItem : CustomTypeDescriptor
     {
         /// <summary>
@@ -90,11 +90,11 @@ namespace TreeListEditor
         }
 
         /// <summary>
-        /// PropertyDescriptor with additional information</summary>
+        /// PropertyDescriptor with additional information for a property</summary>
         public class PropertyPropertyDescriptor : PropertyDescriptor
         {
             /// <summary>
-            /// Constructor</summary>
+            /// Constructor with parameters</summary>
             /// <param name="property">PropertyInfo for property</param>
             /// <param name="ownerType">Owning type</param>
             public PropertyPropertyDescriptor(PropertyInfo property, Type ownerType)
@@ -259,11 +259,11 @@ namespace TreeListEditor
     }
 
     /// <summary>
-    /// Class to generate data items</summary>
+    /// Class to generate collection of data items (DataItem) to be displayed in tree editors</summary>
     class DataContainer : ITreeListView, IItemView, IObservableContext, ISelectionContext, IValidationContext
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor without parameters</summary>
         public DataContainer()
         {
             m_selection.Changing += TheSelectionChanging;
@@ -769,7 +769,7 @@ namespace TreeListEditor
     class DataComparer : IComparer<TreeListView.Node>
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with TreeListView</summary>
         /// <param name="control">Tree list view</param>
         public DataComparer(TreeListView control)
         {

@@ -10,10 +10,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class PrototypeFolder : DomNodeAdapter
     {
 
+        /// <summary>
+        /// Gets name attribute for prototype folder</summary>
         protected abstract AttributeInfo NameAttribute { get; }
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for prototypes in prototype folder</summary>
         protected abstract ChildInfo PrototypeChildInfo { get; }
+        /// <summary>
+        /// Gets ChildInfo for prototype folders in prototype folder</summary>
         protected abstract ChildInfo PrototypeFolderChildInfo { get; }
 
         /// <summary>

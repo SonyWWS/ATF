@@ -14,22 +14,39 @@ using Sce.Atf.Rendering;
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
-    /// A pin on a group module, with extra information needed to associate the pin
-    /// on the group with the internal module where it was connected before grouping</summary>
+    /// Adapter for a pin on a group module, with extra information needed to associate the pin
+    /// on the group with the internal module where it was connected before grouping.
+    /// A group pin is a pin on a grouped sub-circuit; it extends the information
+    /// of a pin to preserve the internal pin/module which is connected to the outside circuit.</summary>
     public abstract class GroupPin : Pin, ICircuitGroupPin<Element>, IVisible
     {
+        /// <summary>
+        /// Gets index (pin order in its sub-graph owner) attribute for group pin</summary>
         protected abstract AttributeInfo IndexAttribute { get; }
 
+        /// <summary>
+        /// Gets floating y-coordinate attribute for group pin. 
+        /// Floating pin location y value is user defined (x value is auto-generated).</summary>
         protected abstract AttributeInfo PinYAttribute { get; }
 
+        /// <summary>
+        /// Gets module (associated internal subelement) attribute for group pin</summary>
         protected abstract AttributeInfo ElementAttribute { get; }
 
+        /// <summary>
+        /// Gets pin (associated internal subpin) attribute for group pin</summary>
         protected abstract AttributeInfo PinAttribute { get; }
 
+        /// <summary>
+        /// Gets pinned attribute for group pin</summary>
         protected abstract AttributeInfo PinnedAttribute { get; }
 
+        /// <summary>
+        /// Gets visible attribute for group pin</summary>
         protected abstract AttributeInfo VisibleAttribute { get; }
      
+        /// <summary>
+        /// Constructor that subscribes to Changed event</summary>
         public GroupPin()
         {
             m_info = new CircuitGroupPinInfo();
@@ -79,7 +96,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the default group pin name</summary>
-        /// <remarks>The group pin default naming convention:  internal-element-name: internal-pin-name</remarks>
+        /// <remarks>The group pin default naming convention: internal-element-name: internal-pin-name</remarks>
         public virtual string DefaultName(bool inputSide)
         {
             string pinName;
@@ -100,7 +117,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets/sets a value indicating whether the current group pin name is the default value.</summary>
+        /// Gets or sets whether the current group pin name is the default value</summary>
         public bool IsDefaultName
         {
             get { return m_isDefaultName;  }
@@ -170,7 +187,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Gets or sets the pin target.</summary>
+        /// Gets or sets the pin target</summary>
         public PinTarget PinTarget
         {
             get
@@ -183,10 +200,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Update LeafDomNode & LeafPinIndex from the ultimate DomNode this group pin binds to
-        /// by recursively going down the nested group hierarchy
-        /// </summary>
-        /// <param name="inputSide">true if this is a input-side group pin</param>
+        /// Updates LeafDomNode and LeafPinIndex from the ultimate DomNode this group pin binds to
+        /// by recursively going down the nested group hierarchy</summary>
+        /// <param name="inputSide">True if this is an input-side group pin, false if output-side</param>
         public void SetPinTarget(bool inputSide)
         {
             m_inputSide = inputSide;
@@ -200,8 +216,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets a value that indicates whether this group pin is for input side.
-        /// </summary>
+        /// Gets whether this group pin is for input side</summary>
         public bool IsInputSide
         {
             get
@@ -211,8 +226,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
         /// <summary>
-        /// Returns the pins down the chain before the leaf level. </summary>
-        /// <param name="inputSide">true if this is a input-side group pin</param>
+        /// Returns the pins down the chain before the leaf level</summary>
+        /// <param name="inputSide">True if this is an input-side group pin</param>
         public IEnumerable<GroupPin> SinkChain(bool inputSide)
         {
             yield return this;
@@ -230,7 +245,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the lineage of this group pin, starting with the group pin, and ending with
-        /// the top-level group pin.</summary>
+        /// the top-level group pin</summary>
         private IEnumerable<GroupPin> GetLineage(bool inputSide)
         {
             GroupPin grpPin = this;
@@ -268,7 +283,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the ancestry of this group pin, starting with the parent group pin, and ending with
-        /// the top-level group pin.</summary>
+        /// the top-level group pin</summary>
         public IEnumerable<GroupPin> GetAncestry(bool inputSide)
         {
             bool firstTime = true;
@@ -283,6 +298,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// Performs initialization when the adapter's node is set.
+        /// This method is called each time the adapter is connected to its underlying node.
+        /// Subscribes to attibute changed event. Sets up CircuitGroupPinInfo and group.</summary>
         protected override void OnNodeSet()
         {
             DomNode.AttributeChanged += DomNode_AttributeChanged;
@@ -308,7 +327,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-        // Desired position
+        /// <summary>
+        /// Gets or sets desired group pin position</summary>
         public Point DesiredLocation { get; set; }
 
         // complements InfoChanged()
@@ -354,9 +374,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Returns the ultimate DomNode this group pin binds by recursively going down the nested group hierarchy.</summary>
-        /// <param name="inputSide">true if this is a input-side group pin</param>
-        /// <param name="instancingNode">for template reference instances, the owner node</param>
+        /// Returns the ultimate DomNode this group pin binds by recursively going down the nested group hierarchy</summary>
+        /// <param name="inputSide">True if this is an input-side group pin</param>
+        /// <param name="instancingNode">For template reference instances, the owner node</param>
         private DomNode GetLeafDomNode(bool inputSide, out DomNode instancingNode)
         {
             var current = this;
@@ -387,7 +407,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns the ultimate pin index (in the binding module) this group pin binds by recursively
         /// going down the nested group hierarchy</summary>
-        /// <param name="inputSide">true if this is a input-side group pin</param>
+        /// <param name="inputSide">True if this is an input-side group pin</param>
         private int GetLeafPinIndex(bool inputSide)
         {
             var current = this;

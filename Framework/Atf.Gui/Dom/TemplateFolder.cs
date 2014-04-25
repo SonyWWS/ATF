@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Sce.Atf.Dom
 {
     /// <summary>
-    /// A template folder allows a hierarchy containing references to subgraphs.</summary>
-    public abstract  class TemplateFolder : DomNodeAdapter
+    /// Adapts a DomNode to a template folder, which holds a hierarchy containing references to subgraphs</summary>
+    public abstract class TemplateFolder : DomNodeAdapter
     {
         /// <summary>
         /// Gets and sets the template folder name</summary>

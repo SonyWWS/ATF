@@ -9,6 +9,8 @@ using System.Threading;
 
 namespace Sce.Atf.Applications
 {
+    /// <summary>
+    /// Base testing facilities</summary>
     public abstract class FunctionalTestBase
     {
         /// <summary>
@@ -459,8 +461,13 @@ namespace Sce.Atf.Applications
             return path;
         }
 
+        /// <summary>
+        /// Functional tests exception class</summary>
         public class FunctionalTestException : Exception
         {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="message">Exception message</param>
             public FunctionalTestException(string message) : base(message)
             { }
         }
@@ -474,8 +481,8 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Accumulates the log output from the process as it runs.  If this is only collected
         /// at the end, the process will freeze if the buffer fills up</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Data received event arguments</param>
         protected void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             m_scriptOutput.AppendLine(e.Data);

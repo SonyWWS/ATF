@@ -1,6 +1,7 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Globalization;
 
 namespace Sce.Atf.VectorMath
 {
@@ -146,33 +147,41 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Gets the fully qualified type name of this instance</summary>
-        /// <returns>A string containing a fully qualified type name</returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return Angle + ", " + Axis.X + ", " + Axis.Y + ", " + Axis.Z;
+            return ToString(null, null);
         }
 
-        /// <summary>Gets the string representation of this Scea.VectorMath.AngleAxisF structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the Angle/axis representation</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return Angle.ToString("R") + ", " + Axis.X.ToString("R") + ", " + Axis.Y.ToString("R") + ", " + Axis.Z.ToString("R");
-            else
-                return String.Format
-                (
-                     "({0}, {1}, {2}, {3})",
-                     ((double)Angle).ToString(format, formatProvider),
-                     ((double)Axis.X).ToString(format, formatProvider),
-                     ((double)Axis.Y).ToString(format, formatProvider),
-                     ((double)Axis.Z).ToString(format, formatProvider)
-                 );
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            return String.Format(
+                "{1}{0} {2}{0} {3}{0} {4}",
+                listSeparator,
+                Angle.ToString(format, formatProvider),
+                Axis.X.ToString(format, formatProvider),
+                Axis.Y.ToString(format, formatProvider),
+                Axis.Z.ToString(format, formatProvider));
         }
+        #endregion
 
         private static double EPS = 0.000001;
     }

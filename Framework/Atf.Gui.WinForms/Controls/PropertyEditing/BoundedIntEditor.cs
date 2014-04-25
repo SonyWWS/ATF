@@ -7,6 +7,7 @@ using System.Drawing.Design;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -66,7 +67,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <returns>Control to edit the given context</returns>
         public virtual Control GetEditingControl(PropertyEditorControlContext context)
         { 
-            return new BoundedIntControl(context, m_min, m_max);          
+            var control = new BoundedIntControl(context, m_min, m_max);          
+            SkinService.ApplyActiveSkin(control);
+            return control;
         }
 
         #endregion
@@ -152,9 +155,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_context = context;
 
                 DrawBorder = false;
-                DoubleBuffered = true;
-                BackColor = SystemColors.Window;
-
+                DoubleBuffered = true;                
                 RefreshValue();
             }
 
@@ -221,92 +222,4 @@ namespace Sce.Atf.Controls.PropertyEditing
         private int m_min;
         private int m_max = 100;
     }
-
-
-
-    // /// <summary>
-    //    /// Control for editing bounded int</summary>
-    //    protected class BoundedIntControl : Sce.Atf.Controls.IntInputControl, ICacheablePropertyControl
-    //    {
-    //        /// <summary>
-    //        /// Constructor</summary>
-    //        /// <param name="context">Context for property editing control</param>
-    //        /// <param name="min">Minimum value</param>
-    //        /// <param name="max">Maximum value</param>
-    //        public BoundedIntControl(PropertyEditorControlContext context, int min, int max)
-
-    //            : base(min, min, max)
-    //        {
-    //            m_context = context;
-
-    //            DrawBorder = false;
-    //            DoubleBuffered = true;
-    //            BackColor = SystemColors.Window;
-
-    //            RefreshValue();
-    //        }
-
-    //        #region ICacheablePropertyControl
-
-    //        /// <summary>
-    //        /// Gets true iff this control can be used indefinitely, regardless of whether the associated
-    //        /// PropertyEditorControlContext's SelectedObjects property changes, i.e., the selection changes. 
-    //        /// This property must be constant for the life of this control.</summary>
-    //        public virtual bool Cacheable
-    //        {
-    //            get { return true; }
-    //        }
-
-    //        #endregion
-
-    //        /// <summary>
-    //        /// Raises the ValueChanged event</summary>
-    //        /// <param name="e">Event args</param>
-    //        protected override void OnValueChanged(EventArgs e)
-    //        {
-    //            if (!m_refreshing)
-    //            {
-    //                m_context.SetValue(Value);
-    //            }
-
-    //            base.OnValueChanged(e);
-    //        }
-
-    //        /// <summary>
-    //        /// Refreshes the control</summary>
-    //        public override void Refresh()
-    //        {
-    //            RefreshValue();
-
-    //            base.Refresh();
-    //        }
-
-    //        private void RefreshValue()
-    //        {
-    //            try
-    //            {
-    //                m_refreshing = true;
-
-    //                object value = m_context.GetValue();
-    //                if (value == null)
-    //                    Enabled = false;
-    //                else
-    //                {
-    //                    Value = (int)value;
-    //                    Enabled = !m_context.IsReadOnly;
-    //                }
-    //            }
-    //            finally
-    //            {
-    //                m_refreshing = false;
-    //            }
-    //        }
-
-    //        private readonly PropertyEditorControlContext m_context;
-    //        private bool m_refreshing;
-    //    }
-
-    //    private int m_min;
-    //    private int m_max = 100;
-    //}
 }

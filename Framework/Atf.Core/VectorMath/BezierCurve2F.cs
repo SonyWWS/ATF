@@ -171,40 +171,44 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Obtains the string representation of this Scea.VectorMath.BezierCurve2F structure</summary>
-        /// <returns>A <see cref="T:System.String"></see> representing the 2D Bezier curve</returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary>Obtains the string representation of this Scea.VectorMath.BezierCurve2F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 2D Bezier curve</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return P1.X.ToString("R") + ", " + P1.Y.ToString("R") + ", " +
-                    P2.X.ToString("R") + ", " + P2.Y.ToString("R") + ", " +
-                    P3.X.ToString("R") + ", " + P3.Y.ToString("R") + ", " +
-                    P4.X.ToString("R") + ", " + P4.Y.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-           (
-                "({0}, {1}, {2}, {3},{4}, {5}, {6}, {7}",
-                ((double)P1.X).ToString(format, formatProvider),
-                ((double)P1.Y).ToString(format, formatProvider),
-                ((double)P2.X).ToString(format, formatProvider),
-                ((double)P2.Y).ToString(format, formatProvider),
-                ((double)P3.X).ToString(format, formatProvider),
-                ((double)P3.Y).ToString(format, formatProvider),
-                ((double)P4.X).ToString(format, formatProvider),
-                ((double)P4.Y).ToString(format, formatProvider)
-           );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
 
+            return String.Format(
+                "{0}{8} {1}{8} {2}{8} {3}{8} {4}{8} {5}{8} {6}{8} {7}",
+                P1.X.ToString(format, formatProvider),
+                P1.Y.ToString(format, formatProvider),
+                P2.X.ToString(format, formatProvider),
+                P2.Y.ToString(format, formatProvider),
+                P3.X.ToString(format, formatProvider),
+                P3.Y.ToString(format, formatProvider),
+                P4.X.ToString(format, formatProvider),
+                P4.Y.ToString(format, formatProvider),
+                listSeparator);
         }
-
+        #endregion
     }
 }

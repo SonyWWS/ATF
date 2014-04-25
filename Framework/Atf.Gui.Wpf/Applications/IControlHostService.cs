@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Interface for control host services in WPF</summary>
+    /// <remarks>The control host service is responsible for exposing client Controls in the
+    /// application's main form.  It allows the client to specify a preferred location for the
+    /// form, and calls the client back when the Control gets or loses focus, or is closed by
+    /// the user. Implementers should also consider implementing IControlRegistry.</remarks>
     public interface IControlHostService
     {
         /// <summary>

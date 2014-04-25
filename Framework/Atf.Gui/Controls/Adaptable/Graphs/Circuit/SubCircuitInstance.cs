@@ -8,6 +8,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// Adapts DomNode to sub-circuit instance, which is an instance of a mastered SubCircuit</summary>
     public abstract class SubCircuitInstance : Element
     {
+        /// <summary>
+        /// Gets sub-circuit type attribute</summary>
         protected abstract AttributeInfo TypeAttribute { get; }
       
         /// <summary>

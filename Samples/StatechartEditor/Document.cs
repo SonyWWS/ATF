@@ -13,7 +13,7 @@ namespace StatechartEditorSample
 {
     /// <summary>
     /// Adapts the Statechart to IDocument and synchronizes URI and dirty bit changes to the
-    /// ControlInfo instance used to register the viewing control in the UI.</summary>
+    /// ControlInfo instance used to register the viewing control in the UI</summary>
     public class Document : DomDocument, IAnnotatedDiagram
     {
         /// <summary>

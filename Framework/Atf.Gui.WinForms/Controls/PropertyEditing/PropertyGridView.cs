@@ -40,7 +40,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_toolTip = new ToolTip();
 
             m_editingControl = new PropertyEditingControl();
-            m_editingControl.BackColor = SystemColors.Window;
+
             m_editingControl.TabStop = false;
             m_editingControl.EditButtonSize = new Size(17, 17);
 
@@ -61,17 +61,18 @@ namespace Sce.Atf.Controls.PropertyEditing
             PropertyExpanderPen = new Pen(SystemColors.ControlDarkDark);
             PropertyLinePen = new Pen(SystemColors.Control);
 
-            Controls.AddRange(new Control[]{                
-                m_editingControl,
-                m_scrollBar,                
-            });
+           
             
             EditingContext = null;
             Font = new Font("Segoe UI", 9.0f);
             ShowResetButton = true;
             ShowCopyButton = true;
+            Controls.AddRange(new Control[]{                
+                m_editingControl,
+                m_scrollBar,                
+            });
             ResumeLayout();
-
+            //m_editingControl            
             m_resetButton.Click += (sender, e) => SelectedProperty.Context.ResetValue();           
         }
 
@@ -603,6 +604,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_editingControl.Width = childWidth;
 
             m_editingControl.TabIndex = tabIndex++;
+            m_editingControl.Font = Font;
             // This isn't quite right. How do we know when a property editing has finished due to pressing the Enter key?
             // Let's get this figured out and then we can get rid of setting the TabIndex above, because the TabIndex
             //  only works if there is a custom property editing control.
@@ -1324,8 +1326,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                 property.Control.Refresh();                
             }
 
-            g.DrawLine(PropertyLinePen, middle, y, middle, y + height);
-            g.DrawLine(PropertyLinePen, x, y + height - 1, width, y + height - 1);
+            g.DrawLine(PropertyLinePen, middle, y-1, middle, y + height-1);
+            g.DrawLine(PropertyLinePen, x, y + height-1 , width, y + height-1);
 
             // show copy and reset buttons for the selected property.            
             if (SelectedProperty == property)

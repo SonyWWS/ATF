@@ -66,7 +66,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             Controls.Add(m_textBox);
 
             base.ResumeLayout();
-
+            m_textBox.SizeChanged += (sender, e) => Height = m_textBox.Height + 1;
             m_dropDownForm = new DropDownForm(this);
         }
 
@@ -213,7 +213,11 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Formatting to use for displaying the property value</summary>
         public class ExtendedStringFormat
         {
+            /// <summary>
+            /// StringFormat used by System.Drawing.System.Drawing to format string</summary>
             public System.Drawing.StringFormat Format;
+            /// <summary>
+            /// CustomStringFormatFlags used to format string</summary>
             public CustomStringFormatFlags CustomFlags;
         }
 
@@ -584,45 +588,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             base.OnLayout(levent);
         }
-
-        /// <summary>
-        /// Performs custom actions and raises the <see cref="E:System.Windows.Forms.Control.BackColorChanged"></see> event</summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"></see> that contains the event data</param>
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            m_textBox.BackColor = BackColor;
-
-            base.OnBackColorChanged(e);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"></see> event and performs custom actions</summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data</param>
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            if (m_context != null)
-            {
-                Rectangle bounds = base.ClientRectangle;
-                bounds.Width -= m_editButton.Width;
-
-                Brush brush = m_descriptor.IsReadOnly ? SystemBrushes.GrayText : SystemBrushes.ControlText;
-
-                try
-                {
-                    s_drawingEditableValue = true;
-
-                    PropertyEditingControl.DrawProperty(
-                        m_descriptor, this, bounds, Font, brush, e.Graphics);
-                }
-                finally
-                {
-                    s_drawingEditableValue = false;
-                }
-            }
-        }
-
+      
         /// <summary>
         /// Makes the TextBox in this property editor visible</summary>
         protected void EnableTextBox()
@@ -866,12 +832,9 @@ namespace Sce.Atf.Controls.PropertyEditing
                 string propertyText = PropertyUtils.GetPropertyText(m_context.LastSelectedObject, m_descriptor);
                 m_initialText = propertyText;
                 m_textBox.Text = propertyText;
-                m_textBox.ReadOnly = m_descriptor.IsReadOnly;
-
-                // We want read only text to continue to appear "grayed out", but we can't disable the control
-                // because we want to be able to select text for copying to the clipboard.
-                // TODO:  Update this so the ATF skinning code can apply to the control?
-                m_textBox.ForeColor = (m_descriptor.IsReadOnly) ? SystemColors.GrayText : SystemColors.ControlText;
+                m_textBox.Font = Font;
+                m_textBox.ReadOnly = m_descriptor.IsReadOnly;                
+                m_textBox.ForeColor = (m_descriptor.IsReadOnly) ? SystemColors.GrayText : ForeColor;
             }
         }
 

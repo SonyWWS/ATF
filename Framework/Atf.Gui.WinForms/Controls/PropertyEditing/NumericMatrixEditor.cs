@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -73,7 +74,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             // Controls[0] is the 1st TextBox for 1st matrix element
            // result.Height = result.Controls[0].Font.Height * m_rows + result.Margin.Top + result.Margin.Bottom + 2;
             result.ScaleFactor = m_scaleFactor;
-
+            SkinService.ApplyActiveSkin(result);
             return result;
         }
 

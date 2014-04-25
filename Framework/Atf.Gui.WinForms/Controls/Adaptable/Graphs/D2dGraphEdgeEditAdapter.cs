@@ -42,27 +42,49 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             get { return m_isConnecting; }
         }
 
+        /// <summary>
+        /// Traverses a given path of groups, starting at the last (picked) item through a given destination group, for the pin
+        /// that corresponds to the given group pin in the last group in the path. The last group of "hitPath" is the picked item.</summary>
         public Func<AdaptablePath<object>, object, TEdgeRoute, TEdgeRoute> EdgeRouteTraverser;
 
+        /// <summary>
+        /// Context providing facilities for dragging an edge for D2dGraphEdgeEditAdapter</summary>
         public class EdgeDraggingContext
         {
-
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="edgeEditAdapter">D2dGraphEdgeEditAdapter object</param>
             public EdgeDraggingContext(D2dGraphEdgeEditAdapter<TNode, TEdge, TEdgeRoute> edgeEditAdapter)
             {
                 m_edgeEditAdapter = edgeEditAdapter;
             }
 
+            /// <summary>
+            /// Gets or sets IGraphNode dragged from</summary>
             public TNode DragFromNode { get; set; }
 
+            /// <summary>
+            /// Gets or sets IEdgeRoute drag from route</summary>
             public TEdgeRoute DragFromRoute { get; set; }
 
+            /// <summary>
+            /// Gets or sets IGraphNode dragged to</summary>
             public TNode DragToNode { get; set; }
+            /// <summary>
+            /// Gets or sets IEdgeRoute drag to route</summary>
             public TEdgeRoute DragToRoute { get; set; }
+            /// <summary>
+            /// Gets or sets whether drag is from source to destination</summary>
             public bool FromSourceToDestination { get; set; }
+            /// <summary>
+            /// Gets or sets the existing edge to be dragged</summary>
             public TEdge ExistingEdge { get; set; }
+            /// <summary>
+            /// Gets or sets the existing edge to disconnect</summary>
             public TEdge DisconnectEdge { get; set; }
 
-
+            /// <summary>
+            /// Gets or sets GraphHitRecord</summary>
             public GraphHitRecord<TNode, TEdge, TEdgeRoute> MousePick { get; set; }
 
             internal IEditableGraph<TNode, TEdge, TEdgeRoute> EditableGraph
@@ -80,11 +102,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             internal AdaptablePath<object> DragToNodeHitPath { get; set; }
 
             /// <summary>
-            ///  fromRoute position in client space</summary>
+            /// From route position in client space</summary>
             public PointF FromRoutePos { get; set; }
 
             /// <summary>
-            ///  toRoute position in client space</summary>
+            /// To route position in client space</summary>
             public PointF ToRoutePos
             {
                get { return m_toRoutePos; }
@@ -188,6 +210,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private readonly EdgeDraggingContext m_draggingContext;
 
+        /// <summary>
+        /// Gets edge dragging context</summary>
         protected EdgeDraggingContext DraggingContext
         {
             get
@@ -222,12 +246,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             base.Unbind(control);
         }
 
+        /// <summary>
+        /// Context changed event handler</summary>
+        /// <param name="sender">Adaptable control</param>
+        /// <param name="e">Event args</param>
         protected virtual void control_ContextChanged(object sender, EventArgs e)
         {
             m_mainGraph = AdaptedControl.ContextAs<IGraph<TNode, TEdge, TEdgeRoute>>();
             m_mainEditableGraph = AdaptedControl.ContextAs<IEditableGraph<TNode, TEdge, TEdgeRoute>>();
         }
 
+        /// <summary>
+        /// DrawingD2d event handler</summary>
+        /// <param name="sender">Adaptable control</param>
+        /// <param name="e">Event args</param>
         protected virtual void control_Paint(object sender, EventArgs e)
         {
             if (!m_isConnecting)
@@ -358,7 +390,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Does the work of connecting and disconnecting wires. Is called by OnMouseUp(),
         /// but clients may want to call it from OnMouseClick().</summary>
-        /// <param name="e"></param>
+        /// <param name="e">Mouse event arguments</param>
         protected void DoMouseClick(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left &&
@@ -583,9 +615,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-        // Can the user create a connection by dragging, starting from the IGraphEdge's FromNode
-        //  (e.g., the Output pin of one node) to the IGraphEdge's ToNode (e.g., the Input pin
-        //  of another node)?
+        /// <summary>
+        /// Can the user create a connection by dragging, starting from the IGraphEdge's FromNode
+        /// (e.g., the Output pin of one node) to the IGraphEdge's ToNode (e.g., the Input pin
+        /// of another node)?</summary>
+        /// <returns>True iff user can create connection</returns>
         protected virtual bool CanConnectTo()
         {
             // m_dragFromNode contains the starting node of the drag operation -- the IGraphEdge's FromNode.
@@ -624,9 +658,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         }
 
-        // Can the user create a connection by dragging, starting from the IGraphEdge's ToNode
+        /// <summary>
+        /// Can the user create a connection by dragging, starting from the IGraphEdge's ToNode
         //  (e.g., Input pin of one node) to the IGraphEdge's FromNode (e.g., the Output pin of
-        //  another node)?
+        //  another node)?</summary>
+        /// <returns>True iff user can create connection</returns>
         protected virtual bool CanConnectFrom()
         {
             // m_mousePick.Node contains the ending node of the drag operation -- the IGraphEdge's FromNode.
@@ -677,6 +713,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return result;
         }
 
+        /// <summary>
+        /// Gets whether the edge can be disconnected</summary>
+        /// <param name="edge">Edge to disconnect</param>
+        /// <returns>Whether the edge can be disconnected</returns>
         protected bool CanDisconnect(TEdge edge)
         {
             return
@@ -684,6 +724,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 DraggingContext.EditableGraph.CanDisconnect(edge);
         }
 
+        /// <summary>
+        /// Gets the IGraphEdge to a given IGraphNode with given "to" IEdgeRoute</summary>
+        /// <param name="node">"To" IGraphNode</param>
+        /// <param name="toRoute">"To" IEdgeRoute</param>
+        /// <returns>IGraphEdge with given "to" IGraphNode and "to" IEdgeRoute</returns>
         protected TEdge GetFirstEdgeTo(TNode node, object toRoute)
         {
             if (m_mousePick.SubNode == null) // top level
@@ -720,6 +765,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return null;
         }
 
+        /// <summary>
+        /// Gets the IGraphEdge from a given IGraphNode with given "from" IEdgeRoute</summary>
+        /// <param name="node">"From" IGraphNode</param>
+        /// <param name="fromRoute">"From" IEdgeRoute</param>
+        /// <returns>IGraphEdge with given "from" IGraphNode and "from" IEdgeRoute</returns>
         protected TEdge GetFirstEdgeFrom(TNode node, object fromRoute)
         {
             if (m_mousePick.SubNode == null) // top level

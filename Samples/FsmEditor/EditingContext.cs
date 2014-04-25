@@ -28,7 +28,8 @@ namespace FsmEditorSample
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the editing context's DomNode.
-        /// Raises the EditingContext NodeSet event and performs custom processing.</summary>
+        /// Raises the EditingContext NodeSet event and performs custom processing:
+        /// subscribing to DomNode tree change events.</summary>
         protected override void OnNodeSet()
         {
             m_fsm = DomNode.Cast<Fsm>();
@@ -53,7 +54,7 @@ namespace FsmEditorSample
         #region IEnumerableContext Members
 
         /// <summary>
-        /// Gets an enumeration of all of the items of this context</summary>
+        /// Gets an enumeration of all of the items of this context: states, transitions, and annotations.</summary>
         IEnumerable<object> IEnumerableContext.Items
         {
             get

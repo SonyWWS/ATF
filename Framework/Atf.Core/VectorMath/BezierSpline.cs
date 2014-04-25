@@ -12,6 +12,18 @@ namespace Sce.Atf.VectorMath
     public struct BezierPoint : IFormattable
     {
         /// <summary>
+        /// Constructor for a point in a bezier curve</summary>
+        /// <param name="position">position of the point</param>
+        /// <param name="incomingTangent">incoming tangent</param>
+        /// <param name="outgoingTangent">outgoing tangent</param>
+        public BezierPoint(Vec3F position, Vec3F incomingTangent, Vec3F outgoingTangent)
+        {
+            Position = position;
+            Tangent1 = incomingTangent;
+            Tangent2 = outgoingTangent;
+        }
+
+        /// <summary>
         /// Position of Bezier control point</summary>
         public Vec3F Position;
 
@@ -38,27 +50,25 @@ namespace Sce.Atf.VectorMath
         /// <returns>A <see cref="T:System.String"></see> representing the 3D Bezier point</returns> 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return Position.X.ToString("R") + ", " + Position.Y.ToString("R") + ", " + Position.Z.ToString("R") + ", " +
-                    Tangent1.X.ToString("R") + ", " + Tangent1.Y.ToString("R") + ", " + Tangent1.Z.ToString("R") + ", " +
-                    Tangent2.X.ToString("R") + ", " + Tangent2.Y.ToString("R") + ", " + Tangent2.Z.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-           (
-                "({0}, {1}, {2}, {3},{4}, {5}, {6}, {7}, {8})",
-                ((double)Position.X).ToString(format, formatProvider),
-                ((double)Position.Y).ToString(format, formatProvider),
-                ((double)Position.Z).ToString(format, formatProvider),
-                ((double)Tangent1.X).ToString(format, formatProvider),
-                ((double)Tangent1.Y).ToString(format, formatProvider),
-                ((double)Tangent1.Z).ToString(format, formatProvider),
-                ((double)Tangent2.X).ToString(format, formatProvider),
-                ((double)Tangent2.Y).ToString(format, formatProvider),
-                ((double)Tangent2.Z).ToString(format, formatProvider)
-            );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
 
+            return String.Format(
+                "{0}{9} {1}{9} {2}{9} {3}{9} {4}{9} {5}{9} {6}{9} {7}{9} {8}",
+                Position.X.ToString(format, formatProvider),
+                Position.Y.ToString(format, formatProvider),
+                Position.Z.ToString(format, formatProvider),
+                Tangent1.X.ToString(format, formatProvider),
+                Tangent1.Y.ToString(format, formatProvider),
+                Tangent1.Z.ToString(format, formatProvider),
+                Tangent2.X.ToString(format, formatProvider),
+                Tangent2.Y.ToString(format, formatProvider),
+                Tangent2.Z.ToString(format, formatProvider),
+                listSeparator);
         }
-
     }
 
     /// <summary>
@@ -278,31 +288,43 @@ namespace Sce.Atf.VectorMath
 
 
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.BezierSpline structure</summary>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D Bezier spline</returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary> Returns the string representation of this Scea.VectorMath.BezierSpline structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D Bezier spline</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            StringBuilder sb = new StringBuilder();
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider) + " ";
+
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            var sb = new StringBuilder();
             sb.Append(Count.ToString("D", formatProvider));
             for (int i = 0; i < Count; ++i)
             {
-                sb.Append(", ");
+                sb.Append(listSeparator);
                 sb.Append(this[i].ToString(format, formatProvider));//Convert each BezierPoint 
             }
+
             return sb.ToString();
-
         }
-
+        #endregion
 
         private readonly IList<BezierCurve> m_curves = new List<BezierCurve>();
         private bool m_isClosed = true;

@@ -8,10 +8,15 @@ using System.Windows.Forms;
 
 namespace Sce.Atf.Applications
 {
+    /// <summary>
+    /// Enumeration for image sizes</summary>
     public enum ImageSizes
     {
+        /// <summary>16 X 16 image</summary>
         e16x16 = 0,
+        /// <summary>24 X 24 image</summary>
         e24x24,
+        /// <summary>32 X 32 image</summary>
         e32x32
     }
 
@@ -60,17 +65,24 @@ namespace Sce.Atf.Applications
                 throw new ArgumentException("No image registered with this id and size");
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources</summary>
         public virtual void Dispose()
         {
             if (m_isOwner && Image != null)
                 Image.Dispose();
         }
 
+        /// <summary>
+        /// Registers the image</summary>
         public void Reregister()
         {
             ResourceUtil.RegisterImage(m_id, Image);
         }
 
+        /// <summary>
+        /// Gets the image</summary>
         public Image Image { get; private set; }
 
         private readonly string m_id;

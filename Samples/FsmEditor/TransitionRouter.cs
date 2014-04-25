@@ -15,7 +15,8 @@ namespace FsmEditorSample
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the TransitionRouter's DomNode.
-        /// Raises the Observer NodeSet event and performs custom processing.</summary>
+        /// Raises the Observer NodeSet event and performs custom processing:
+        /// subscribes to DomNode tree change events and sets up initial routing.</summary>
         protected override void OnNodeSet()
         {
             m_fsm = DomNode.Cast<Fsm>();

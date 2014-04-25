@@ -16,7 +16,7 @@ namespace DomTreeEditorSample
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the diagram annotation's DomNode.
-        /// Raises the DomNodeAdapter NodeSet event and performs custom processing.</summary>
+        /// Raises the DomNodeAdapter NodeSet event. Creates several curves, automatically added to the animation.</summary>
         protected override void OnNodeSet()
         {
             base.OnNodeSet();
@@ -241,6 +241,8 @@ namespace DomTreeEditorSample
 
         #region ICurveSet Members
 
+        /// <summary>
+        /// Gets list of the curves associated with an animation.</summary>
         public IList<ICurve> Curves
         {
             get { return m_curves; }

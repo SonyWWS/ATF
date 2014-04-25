@@ -13,8 +13,11 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// The 16 elements of the matrix. The translation component is [M41, M42, M43].</summary>
         public float M11, M12, M13, M14;
+        /// <summary>Second row of matrix</summary>
         public float M21, M22, M23, M24;
+        /// <summary>Third row of matrix</summary>
         public float M31, M32, M33, M34;
+        /// <summary>Fourth row of matrix</summary>
         public float M41, M42, M43, M44;
 
         /// <summary>
@@ -915,49 +918,56 @@ namespace Sce.Atf.VectorMath
         /// <returns>A <see cref="T:System.String"></see> that represents this matrix</returns>
         public override string ToString()
         {
-            return
-                M11.ToString() + ", " + M12.ToString() + ", " + M13.ToString() + ", " + M14.ToString() + Environment.NewLine +
-                M21.ToString() + ", " + M22.ToString() + ", " + M23.ToString() + ", " + M24.ToString() + Environment.NewLine +
-                M31.ToString() + ", " + M32.ToString() + ", " + M33.ToString() + ", " + M34.ToString() + Environment.NewLine +
-                M41.ToString() + ", " + M42.ToString() + ", " + M43.ToString() + ", " + M44.ToString() + Environment.NewLine + Environment.NewLine;
+            string s = StringUtil.GetNumberListSeparator(null) + " ";
 
+            return
+                M11 + s + M12 + s + M13 + s + M14 + Environment.NewLine +
+                M21 + s + M22 + s + M23 + s + M24 + Environment.NewLine +
+                M31 + s + M32 + s + M33 + s + M34 + Environment.NewLine +
+                M41 + s + M42 + s + M43 + s + M44 + Environment.NewLine + Environment.NewLine;
         }
 
-        /// <summary> Returns the string representation of this Scea.VectorMath.Matrix4F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 4x4 matrix</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return M11.ToString("R") + ", " + M12.ToString("R") + ", " + M13.ToString("R") + ", " + M14.ToString("R") +
-                       M21.ToString("R") + ", " + M22.ToString("R") + ", " + M23.ToString("R") + ", " + M24.ToString("R") +
-                       M31.ToString("R") + ", " + M32.ToString("R") + ", " + M33.ToString("R") + ", " + M34.ToString("R") +
-                       M41.ToString("R") + ", " + M42.ToString("R") + ", " + M43.ToString("R") + ", " + M44.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-                (
-                     "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})",
-                     ((double)M11).ToString(format, formatProvider),
-                     ((double)M12).ToString(format, formatProvider),
-                     ((double)M13).ToString(format, formatProvider),
-                     ((double)M14).ToString(format, formatProvider),
-                     ((double)M21).ToString(format, formatProvider),
-                     ((double)M22).ToString(format, formatProvider),
-                     ((double)M23).ToString(format, formatProvider),
-                     ((double)M24).ToString(format, formatProvider),
-                     ((double)M31).ToString(format, formatProvider),
-                     ((double)M32).ToString(format, formatProvider),
-                     ((double)M33).ToString(format, formatProvider),
-                     ((double)M34).ToString(format, formatProvider),
-                     ((double)M41).ToString(format, formatProvider),
-                     ((double)M42).ToString(format, formatProvider),
-                     ((double)M43).ToString(format, formatProvider),
-                     ((double)M44).ToString(format, formatProvider)
-                );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
 
+            return String.Format(
+                "{0}{16} {1}{16} {2}{16} {3}{16} {4}{16} {5}{16} {6}{16} {7}{16} {8}{16} {9}{16} " +
+                "{10}{16} {11}{16} {12}{16} {13}{16} {14}{16} {15}",
+                M11.ToString(format, formatProvider),
+                M12.ToString(format, formatProvider),
+                M13.ToString(format, formatProvider),
+                M14.ToString(format, formatProvider),
+                M21.ToString(format, formatProvider),
+                M22.ToString(format, formatProvider),
+                M23.ToString(format, formatProvider),
+                M24.ToString(format, formatProvider),
+                M31.ToString(format, formatProvider),
+                M32.ToString(format, formatProvider),
+                M33.ToString(format, formatProvider),
+                M34.ToString(format, formatProvider),
+                M41.ToString(format, formatProvider),
+                M42.ToString(format, formatProvider),
+                M43.ToString(format, formatProvider),
+                M44.ToString(format, formatProvider),
+                listSeparator);
         }
+        #endregion
+
         /// <summary>
         /// Tests exact equality with the given matrix</summary>
         /// <param name="m">Other matrix</param>

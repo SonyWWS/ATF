@@ -29,6 +29,8 @@ namespace DomTreeEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding types to palette</summary>
         void IInitializable.Initialize()
         {
             // add item types to palette

@@ -104,6 +104,8 @@ namespace Sce.Atf.Collada
         }
 
         private Source m_source;
+        /// <summary>
+        /// Gets data source DOM object</summary>
         public Source DataSource
         {
             get{ return m_source;}

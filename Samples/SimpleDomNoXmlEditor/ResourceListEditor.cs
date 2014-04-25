@@ -55,6 +55,8 @@ namespace SimpleDomNoXmlEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by creating ListView, and initializing it and subscribing it to events</summary>
         void IInitializable.Initialize()
         {
             m_resourcesListView = new ListView();

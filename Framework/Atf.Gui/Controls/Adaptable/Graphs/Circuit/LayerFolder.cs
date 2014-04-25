@@ -6,14 +6,21 @@ using Sce.Atf.Dom;
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
-    /// Adapts DomNode to a layer folder</summary>
+    /// Adapts DomNode to a layer folder. A layer folder allows a hierarchy of layers to be defined. 
+    /// Folders can be hidden by the user to allow layering.</summary>
     public abstract class LayerFolder : DomNodeAdapter
     {
 
+        /// <summary>
+        /// Gets name attribute for layer folder</summary>
         protected abstract AttributeInfo NameAttribute { get; }
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for folders in layer folder</summary>
         protected abstract ChildInfo LayerFolderChild { get; }
+        /// <summary>
+        /// Gets ChildInfo for references to layers in layer folder</summary>
         protected abstract ChildInfo ElementRefChildInfo { get; }
 
   

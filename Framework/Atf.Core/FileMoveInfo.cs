@@ -66,13 +66,15 @@ namespace Sce.Atf
         public readonly string DestinationPath;
 
         /// <summary>
-        /// Gets or sets a value indicating if files at destination path may be overwritten</summary>
+        /// Gets or sets if files at destination path may be overwritten</summary>
         public bool AllowOverwrites
         {
             get { return m_allowOverwrites; }
             set { m_allowOverwrites = value; }
         }
 
+        /// <summary>
+        /// Whether files at destination path may be overwritten</summary>
         public bool m_allowOverwrites;
     }
 }

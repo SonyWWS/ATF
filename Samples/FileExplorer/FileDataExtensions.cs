@@ -7,12 +7,12 @@ using System.IO;
 namespace FileExplorerSample
 {
     // Examples of file data extensions that can be added to the composition container
-    //  at startup to customize the FileViewer. These extensions are all discovered via
-    //  MEF by the FileViewer component
+    // at startup to customize the FileViewer. These extensions are all discovered via
+    // MEF by the FileViewer component.
 
     /// <summary>
     /// Name file data extension that can be added to the composition container
-    /// at startup to customize the FileViewer. This extensions is discovered via
+    /// at startup to customize the FileViewer. This extension is discovered with
     /// MEF by the FileViewer component.</summary>
     [Export(typeof(IFileDataExtension))]
     public class NameDataExtension : IFileDataExtension
@@ -35,8 +35,8 @@ namespace FileExplorerSample
     }
 
     /// <summary>
-    /// Creation Time file data extension that can be added to the composition container
-    /// at startup to customize the FileViewer. This extensions is discovered via
+    /// Creation time file data extension that can be added to the composition container
+    /// at startup to customize the FileViewer. This extension is discovered with
     /// MEF by the FileViewer component.</summary>
     [Export(typeof(IFileDataExtension))]
     public class CreationTimeDataExtension : IFileDataExtension
@@ -60,7 +60,7 @@ namespace FileExplorerSample
 
     /// <summary>
     /// Size file data extension that can be added to the composition container
-    /// at startup to customize the FileViewer. This extensions is discovered via
+    /// at startup to customize the FileViewer. This extension is discovered with
     /// MEF by the FileViewer component.</summary>
     [Export(typeof(IFileDataExtension))]
     public class SizeDataExtension : IFileDataExtension
@@ -75,7 +75,7 @@ namespace FileExplorerSample
         /// <summary>
         /// Gets the value for the column and given file system item</summary>
         /// <param name="fileSystemInfo">Info describing the file or directory</param>
-        /// <returns>value for the column and given file system item</returns>
+        /// <returns>Value for the column and given file system item</returns>
         public string GetValue(FileSystemInfo fileSystemInfo)
         {
             FileInfo fileInfo = fileSystemInfo as FileInfo;

@@ -26,6 +26,8 @@ namespace WpfApp
     /// https://github.com/SonyWWS/ATF/wiki/WinForms-and-WPF-Apps-Programming-Discussion. </summary>
     public partial class App : AtfApp
     {
+        /// <summary>
+        /// Gets MEF AggregateCatalog for application</summary>
         protected override AggregateCatalog GetCatalog()
         {
             var typeCatalog = new TypeCatalog(

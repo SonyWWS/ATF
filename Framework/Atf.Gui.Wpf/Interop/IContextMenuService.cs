@@ -22,6 +22,8 @@ namespace Sce.Atf.Wpf.Interop
         bool AutoCompact { get; set; }
     }
 
+    /// <summary>
+    /// Class with useful static methods for IContextMenuService</summary>
     public static class ContextMenuServiceExtensions
     {
         /// <summary>

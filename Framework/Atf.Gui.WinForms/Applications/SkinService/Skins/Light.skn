@@ -11,6 +11,34 @@
 -->
 <atfskin:skin xmlns:atfskin="atfskin" >
 
+    <!--Title bar Style -->
+    <style name="TitleBarStyle" targetType="Sce.Atf.Applications.FormNcRenderer+SkinInfo">
+
+        <setter propertyName="ActiveBorderColor">
+            <valueInfo type="System.Drawing.Color" value="#FF0079CB"/>
+        </setter>
+
+        <setter propertyName="InactiveBorderColor">
+            <valueInfo type="System.Drawing.Color" value="#FF46464B"/>
+        </setter>
+
+        <setter propertyName="TitleBarBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF808080"/>
+        </setter>
+
+        <setter propertyName="TitleBarForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFA0A0A0"/>
+        </setter>
+
+        <setter propertyName="ActiveTitleBarForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFAFAFA"/>
+        </setter>
+
+        <setter propertyName="CaptionButtonHoverColor">
+            <valueInfo type="System.Drawing.Color" value="#FF909090"/>
+        </setter>
+    </style>
+    
   <!--Base Control Style-->
   <style name="ControlStyle" targetType="System.Windows.Forms.Control">
 

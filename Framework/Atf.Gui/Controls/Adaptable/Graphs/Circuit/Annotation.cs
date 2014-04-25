@@ -12,11 +12,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     public abstract class Annotation : DomNodeAdapter, IAnnotation
     {
         // required  DOM attributes info
+        /// <summary>
+        /// Gets annotation text attribute</summary>
         protected abstract AttributeInfo TextAttribute { get; }
+        /// <summary>
+        /// Gets annotation x-coordinate position attribute</summary>
         protected abstract AttributeInfo XAttribute { get; }
+        /// <summary>
+        /// Gets annotation y-coordinate position attribute</summary>
         protected abstract AttributeInfo YAttribute { get; }
+        /// <summary>
+        /// Gets annotation width attribute</summary>
         protected abstract AttributeInfo WidthAttribute { get; }
+        /// <summary>
+        /// Gets annotation height attribute</summary>
         protected abstract AttributeInfo HeightAttribute { get; }
+        /// <summary>
+        /// Gets annotation background color attribute</summary>
         protected abstract AttributeInfo BackColorAttribute { get; }
  
         /// <summary>

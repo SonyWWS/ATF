@@ -14,7 +14,7 @@ using Sce.Atf.Input;
 namespace Sce.Atf.Dom
 {
     /// <summary>
-    /// Component to add "Add Template Folder" command to app.</summary>
+    /// Component to add "Add Template Folder" command to application</summary>
     [InheritedExport(typeof(IInitializable))]
     [InheritedExport(typeof(IContextMenuCommandProvider))]
     [InheritedExport(typeof(TemplatingCommands))]
@@ -37,35 +37,67 @@ namespace Sce.Atf.Dom
             m_templateLister = templateLister;
         }
 
+        /// <summary>
+        /// Gets most recent TemplatingContext</summary>
         public virtual TemplatingContext TemplatingContext
         {
             get { return ContextRegistry.GetMostRecentContext<TemplatingContext>(); }
         }
 
+        /// <summary>
+        /// Content imported from external file</summary>
         protected struct ImportedContent
         {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="rootNode">Root DomNode of imported content</param>
+            /// <param name="uri">URI of imported content</param>
             public ImportedContent(DomNode rootNode, Uri uri)
             {
                 RootNode = rootNode;
                 Uri = uri;
             }
 
+            /// <summary>
+            /// Root DomNode of imported content</summary>
             public readonly DomNode RootNode;
+            /// <summary>
+            /// URI of imported content</summary>
             public readonly Uri Uri;
         }
 
 
         // required  DomNodeType info
+        /// <summary>
+        /// Gets type of template folder</summary>
         protected abstract DomNodeType TemplateFolderType { get; }
 
-        // whether the target can be promoted to template library
+        /// <summary>
+        /// Gets whether the target can be promoted to template library.
+        /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
+        /// <param name="items">Items to promote</param>
+        /// <returns>True iff the target can be promoted to template library</returns>
         public abstract bool CanPromoteToTemplateLibrary(IEnumerable<object> items);
 
+        /// <summary>
+        /// Promotes objects to template library.
+        /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
+        /// <param name="items">Items to promote</param>
         public abstract void PromoteToTemplateLibrary(IEnumerable<object> items);
 
-        // whether the target can be demoted from reference instance to copy instance
+        /// <summary>
+        /// Gets whether the target can be demoted from reference instances to copy instances.
+        /// Items can be demoted when the active context is CircuitEditingContext and
+        /// all the items are selected references.</summary>
+        /// <param name="items">Items to demote</param>
+        /// <returns>True iff the target can be demoted</returns>
         public abstract bool CanDemoteToCopyInstance(IEnumerable<object> items);
 
+        /// <summary>
+        /// Demotes items from reference instances to copy instances.
+        /// Items can be demoted when the active context is CircuitEditingContext and
+        /// all the items are selected references.</summary>
+        /// <param name="items">Items to demote</param>
         public abstract DomNode[] DemoteToCopyInstance(IEnumerable<object> items);
 
         /// <summary>
@@ -80,21 +112,31 @@ namespace Sce.Atf.Dom
             return new ImportedContent(null, uri); 
         }
 
+        /// <summary>
+        /// Gets context registry</summary>
         protected IContextRegistry ContextRegistry
         {
             get { return m_contextRegistry; }
         }
 
+        /// <summary>
+        /// Enumeration for template commands</summary>
         protected enum CommandTag
         {
+            /// <summary>Add Template Folder command</summary>
             AddTemplateFolder,
+            /// <summary>Add External Template Folder command</summary>
             AddExternalTemplateFolder,
+            /// <summary>Promote To Template Library command</summary>
             PromoteToTemplateLibrary,
+            /// <summary>Demote To Copy Instance command</summary>
             DemoteToCopyInstance,
         }
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering template commands</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(
@@ -147,6 +189,10 @@ namespace Sce.Atf.Dom
 
         #region ICommandClient Members
 
+        /// <summary>
+        /// Can the client do the command?</summary>
+        /// <param name="commandTag">Command</param>
+        /// <returns>True iff client can do the command</returns>
         bool ICommandClient.CanDoCommand(object commandTag)
         {
             if (commandTag is CommandTag)
@@ -172,6 +218,9 @@ namespace Sce.Atf.Dom
 
         }
 
+        /// <summary>
+        /// Creates template folder</summary>
+        /// <returns>TemplateFolder object</returns>
         protected virtual TemplateFolder CreateTemplateFolder()
         {
             var newFolder = new DomNode(TemplateFolderType).As<TemplateFolder>();
@@ -194,6 +243,8 @@ namespace Sce.Atf.Dom
             return newFolder;
         }
 
+        /// <summary>
+        /// Creates template folder and add templates stored in an external file to it</summary>
         protected virtual void AddExternalTemplateFolder()
         {
             var importedLibaray = LoadExternalTemplateLibrary(null);
@@ -217,6 +268,9 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Does a command</summary>
+        /// <param name="commandTag">Command</param>
         public virtual void DoCommand(object commandTag)
         {
             var context = m_contextRegistry.GetActiveContext<ISelectionContext>();
@@ -247,6 +301,10 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Updates command state for given command</summary>
+        /// <param name="commandTag">Command</param>
+        /// <param name="commandState">Command state to update</param>
         void ICommandClient.UpdateCommand(object commandTag, CommandState commandState)
         {
         }
@@ -274,6 +332,10 @@ namespace Sce.Atf.Dom
 
         #endregion
 
+        /// <summary>
+        /// Imports templates and template folders stored in an external file</summary>
+        /// <param name="parentTemplateFolder">Template folder in which to import templates and template folders</param>
+        /// <param name="fromParent">Root of templates to import</param>
         protected virtual void ImportTemplates(TemplateFolder parentTemplateFolder,  DomNode fromParent)
         {
             // assume all templates and their containing folders are children of a root template folder 

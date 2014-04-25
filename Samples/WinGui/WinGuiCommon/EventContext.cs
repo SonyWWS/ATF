@@ -13,7 +13,8 @@ namespace WinGuiCommon
 {
     /// <summary>
     /// DomNode adapter that provides an event context for the DOM editor for updating the views.
-    /// It implements IObservableContext, IInstancingContext and IEnumerableContext.</summary>
+    /// It implements IObservableContext, IInstancingContext and IEnumerableContext to provide
+    /// services for the context.</summary>
     public class EventContext : EditingContext,
         IListView,
         IItemView,
@@ -30,7 +31,8 @@ namespace WinGuiCommon
 
         /// <summary>
         /// Performs initialization when the adapter is connected to the event context's DomNode.
-        /// Raises the HistoryContext NodeSet event and performs custom processing.</summary>
+        /// Raises the HistoryContext NodeSet event and performs custom processing:
+        /// subscribing to DomNode tree changes.</summary>
         protected override void OnNodeSet()
         {
             DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);

@@ -13,6 +13,8 @@ namespace Sce.Atf.Rendering.Dom
     /// wishes to be dispatched. This must be done in the IRenderObject.Traverse method.</summary>
     public class TraverseNode
     {
+        /// <summary>
+        /// Constructor</summary>
         public TraverseNode()
         {
         }

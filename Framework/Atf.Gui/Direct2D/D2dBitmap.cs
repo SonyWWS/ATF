@@ -153,13 +153,13 @@ namespace Sce.Atf.Direct2D
             props.DpiX = m_bitmap.HorizontalResolution;
             props.DpiY = m_bitmap.VerticalResolution;            
             props.PixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied);
-            m_nativeBitmap = new SharpDX.Direct2D1.Bitmap(m_owner.D2dRenderTarget, new DrawingSize(m_bitmap.Width, m_bitmap.Height), props);                        
+            m_nativeBitmap = new SharpDX.Direct2D1.Bitmap(m_owner.D2dRenderTarget, new Size2(m_bitmap.Width, m_bitmap.Height), props);                        
             Update();
         }
         
         private SharpDX.Direct2D1.Bitmap m_nativeBitmap;
         private System.Drawing.Bitmap m_bitmap;
-        private D2dGraphics m_owner;
+        private readonly D2dGraphics m_owner;
         private uint m_rtNumber; // rt number of the owner at ctor time
     }
 

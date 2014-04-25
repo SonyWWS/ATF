@@ -16,6 +16,9 @@ namespace Sce.Atf.Direct2D
         }
         private bool m_disposed;
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or 
+        /// resetting unmanaged resources</summary>
         public void Dispose()
         {
             if (m_disposed) return;
@@ -23,12 +26,16 @@ namespace Sce.Atf.Direct2D
             GC.SuppressFinalize(this);            
         }
 
-
+        /// <summary>
+        /// Sets dispose flag</summary>
+        /// <param name="disposing">Value to set dispose flag to</param>
         protected virtual void Dispose(bool disposing)
         {            
             m_disposed = true;
         }
 
+        /// <summary>
+        /// Destructor</summary>
         ~D2dResource()
         {
             Dispose(false);

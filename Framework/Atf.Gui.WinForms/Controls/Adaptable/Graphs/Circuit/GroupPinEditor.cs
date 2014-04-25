@@ -15,7 +15,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// Adapter for adding floating group pin location and label editing capabilities to a subgraph control</summary>
     public class GroupPinEditor: DraggingControlAdapter, IItemDragAdapter, IDisposable    
     {
-        public Func<ICircuitElement, int, bool, int> GetPinOffset; // callback to compute group pin y offset
+        /// <summary>
+        /// Callback to compute group pin y offset</summary>
+        public Func<ICircuitElement, int, bool, int> GetPinOffset;
 
         /// <summary>
         /// Constructor</summary>
@@ -175,7 +177,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
  
         /// <summary>
-        /// Set desired location for fake pins</summary>   
+        /// Sets desired location for fake pins</summary>   
         private void MeasureFakePins(IEnumerable<GroupPin> pinNodes, MeasurePinNode measureParts, Point offset, bool inputSide)
         {
             //int maximumNameWidth = 0;
@@ -241,7 +243,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             //return maximumNameWidth;
         }
 
-        // adjusting floating pins layout
+        /// <summary>
+        /// Adjusts floating group pins layout</summary>
+        /// <param name="nodesMoved">Elements moved</param>
+        /// <param name="floatingPinsMoved">Floating group pins moved</param>
+        /// <param name="offset">Offset to move pins</param>
         public void AdjustLayout(IEnumerable<Element> nodesMoved, IEnumerable<GroupPin> floatingPinsMoved, Point offset)
         {
             var movedNodes = nodesMoved.ToList();

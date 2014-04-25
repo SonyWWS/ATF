@@ -7,6 +7,7 @@ using System.Drawing.Design;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -67,7 +68,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <returns>Control to edit the given context</returns>
         public virtual Control GetEditingControl(PropertyEditorControlContext context)
         {
-            return new BoundedFloatControl(context, m_min, m_max);            
+            var control = new BoundedFloatControl(context, m_min, m_max);            
+            SkinService.ApplyActiveSkin(control);
+            return control;
         }
 
         #endregion
@@ -152,9 +155,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_context = context;
 
                 DrawBorder = false;
-                DoubleBuffered = true;
-                BackColor = SystemColors.Window;
-
+                DoubleBuffered = true;                
                 RefreshValue();
             }
 

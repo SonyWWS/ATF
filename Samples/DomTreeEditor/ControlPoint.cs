@@ -23,7 +23,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets x coordinate</summary>
+        /// Gets or sets x-coordinate</summary>
         public float X
         {
             get { return GetAttribute<float>(UISchema.controlPointType.xAttribute); }
@@ -40,7 +40,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets y coordinate</summary>
+        /// Gets or sets y-coordinate</summary>
         public float Y
         {
             get { return GetAttribute<float>(UISchema.controlPointType.yAttribute); }
@@ -58,7 +58,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets tangent in value</summary>
+        /// Gets or sets "tangent in" value</summary>
         public Vec2F TangentIn
         {
             get 
@@ -74,7 +74,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets tangent in type</summary>
+        /// Gets or sets "tangent in" type</summary>
         public CurveTangentTypes TangentInType
         {
             get 
@@ -86,7 +86,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets tangent out</summary>
+        /// Gets or sets "tangent out"</summary>
         public Vec2F TangentOut
         {
             get 
@@ -102,7 +102,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Gets or sets tanget out type</summary>
+        /// Gets or sets "tanget out" type</summary>
         public CurveTangentTypes TangentOutType
         {
             get 

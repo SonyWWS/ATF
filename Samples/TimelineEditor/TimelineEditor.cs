@@ -20,7 +20,12 @@ using Sce.Atf.Controls.Timelines.Direct2D;
 namespace TimelineEditorSample
 {
     /// <summary>
-    /// Timeline editor component</summary>
+    /// Editor class that creates and saves timeline documents. 
+    /// There is just one instance of this class in this application.
+    /// It creates a D2dTimelineRenderer and D2dTimelineControl to render and display timelines.
+    /// It registers this control with the hosting service so that the control appears in the Windows docking framework.
+    /// This document client handles file operations, such as saving and closing a document, and
+    /// handles application data persistence.</summary>
     [Export(typeof(TimelineEditor))]
     [Export(typeof(IDocumentClient))]
     [Export(typeof(IPaletteClient))]
@@ -29,7 +34,7 @@ namespace TimelineEditorSample
     public class TimelineEditor : IDocumentClient, IControlHostClient, IPaletteClient, IInitializable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor that subscribes to document events and adds palette information</summary>
         /// <param name="controlHostService">Control host service</param>
         /// <param name="commandService">Command service</param>
         /// <param name="contextRegistry">Context registry</param>
@@ -66,7 +71,7 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Gets the currently active TimelineControl or null if there is none</summary>
+        /// Gets the currently active D2dTimelineControl or null if there is none</summary>
         public D2dTimelineControl ActiveControl
         {
             get
@@ -114,6 +119,9 @@ namespace TimelineEditorSample
 
         #region IInitializable
 
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service, subscribing to document
+        /// events, and creating PropertyDescriptors for settings</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -215,8 +223,7 @@ namespace TimelineEditorSample
 
         /// <summary>
         /// Gets editor's information about the document client, such as the file type and file
-        /// extensions it supports, whether or not it allows multiple documents to be open,
-        /// etc.</summary>
+        /// extensions it supports, whether or not it allows multiple documents to be open, etc.</summary>
         public DocumentClientInfo Info
         {
             get { return s_info; }
@@ -232,7 +239,8 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Opens or creates a document at the given URI</summary>
+        /// Opens or creates a document at the given URI.
+        /// Uses LoadOrCreateDocument() to create a D2dTimelineRenderer and D2dTimelineControl.</summary>
         /// <param name="uri">Document URI</param>
         /// <returns>Document, or null if the document couldn't be opened or created</returns>
         public IDocument Open(Uri uri)
@@ -263,7 +271,7 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Saves the document at the given URI</summary>
+        /// Saves the document at the given URI. Persists document data.</summary>
         /// <param name="document">Document to save</param>
         /// <param name="uri">New document URI</param>
         public void Save(IDocument document, Uri uri)
@@ -402,8 +410,9 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Loads the document at the given URI. If isMasterDocument is true and if the file doesn't exist,
-        /// a new document is created.</summary>
+        /// Loads the document at the given URI. Creates a D2dTimelineRenderer and D2dTimelineControl 
+        /// (through TimelineDocument's Renderer property) to render and display timelines. 
+        /// If isMasterDocument is true and if the file doesn't exist, a new document is created.</summary>
         /// <param name="uri">URI of document to load</param>
         /// <param name="isMasterDocument">True iff is master document</param>
         /// <returns>TimelineDocument loaded</returns>
@@ -674,7 +683,8 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Performs custom actions when FileChanged event occurs</summary>
+        /// Performs custom actions when FileChanged event occurs. 
+        /// Updates current document if necessary.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">FileSystemEventArgs containing event data</param>
         void fileWatcherService_FileChanged(object sender, FileSystemEventArgs e)
@@ -778,7 +788,7 @@ namespace TimelineEditorSample
         /// A collection of all ITimelineDocuments that have been loaded. This is necessary so that we can 
         /// track if the same ITimelineDocument has been loaded as a main document and as a sub-document, 
         /// so that we have only one copy in memory. The ActiveDocument property of this DocumentRegistry
-        /// will always be a "master" ITimelineDocument.</summary>
+        /// is always a "master" ITimelineDocument.</summary>
         private static DocumentRegistry s_repository = new DocumentRegistry();
 
         private IControlHostService m_controlHostService;

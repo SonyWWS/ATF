@@ -232,7 +232,7 @@ namespace DomTreeEditorSample
 
         /// <summary>
         /// Gets/Sets if curve must enforce limits on control points.
-        /// if true, control points cannot be translated outside curve limits.</summary>
+        /// If true, control points cannot be translated outside curve limits.</summary>
         public static bool EnforceCurveLimits
         {
             get;

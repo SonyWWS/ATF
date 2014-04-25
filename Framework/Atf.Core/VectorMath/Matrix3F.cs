@@ -11,7 +11,9 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// The 9 elements of the matrix. The translation component is [M31, M32, M33].</summary>
         public float M11, M12, M13;
+        /// <summary>Second row of matrix</summary>
         public float M21, M22, M23;
+        /// <summary>Third row of matrix</summary>
         public float M31, M32, M33;
 
         /// <summary>
@@ -543,42 +545,46 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see></summary>
-        /// <returns>A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see></returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
+        #region IFormattable
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.Matrix3F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3x3 matrix</returns> 
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return
-                    M11.ToString("R") + ", " + M12.ToString("R") + ", " + M13.ToString("R") + ", " +
-                    M21.ToString("R") + ", " + M22.ToString("R") + ", " + M23.ToString("R") + ", " +
-                    M31.ToString("R") + ", " + M32.ToString("R") + ", " + M33.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-                (
-                     "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})",
-                     ((double)M11).ToString(format, formatProvider),
-                     ((double)M12).ToString(format, formatProvider),
-                     ((double)M13).ToString(format, formatProvider),
-                     ((double)M21).ToString(format, formatProvider),
-                     ((double)M22).ToString(format, formatProvider),
-                     ((double)M23).ToString(format, formatProvider),
-                     ((double)M31).ToString(format, formatProvider),
-                     ((double)M32).ToString(format, formatProvider),
-                     ((double)M33).ToString(format, formatProvider)
-                 );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
 
+            return String.Format(
+                "{0}{9} {1}{9} {2}{9} {3}{9} {4}{9} {5}{9} {6}{9} {7}{9} {8}",
+                M11.ToString(format, formatProvider),
+                M12.ToString(format, formatProvider),
+                M13.ToString(format, formatProvider),
+                M21.ToString(format, formatProvider),
+                M22.ToString(format, formatProvider),
+                M23.ToString(format, formatProvider),
+                M31.ToString(format, formatProvider),
+                M32.ToString(format, formatProvider),
+                M33.ToString(format, formatProvider),
+                listSeparator);
         }
+        #endregion
 
         /// <summary>
         /// Tests exact equality with the given matrix</summary>

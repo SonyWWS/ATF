@@ -13,6 +13,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     [GroupAttribute("TcpIpTargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]
     public class TcpIpTargetInfo : TargetInfo, IPropertyValueValidator
     {
+        /// <summary>
+        /// Constructor</summary>
         public TcpIpTargetInfo()
         {
             Name = "LocalHost";
@@ -29,6 +31,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// The port number in the endpoint string value will be ignored even it includes one.</remarks>
         public int FixedPort { get; set; }
 
+        /// <summary>
+        /// Protocol name for TCP</summary>
         public const string ProtocolName = @"Tcp";
 
         /// <summary>
@@ -185,8 +189,12 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     [GroupAttribute("X86TargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]
     public class X86TargetInfo : TcpIpTargetInfo, IPropertyValueValidator
     {
+        /// <summary>
+        /// Platform name for X86</summary>
         public const string PlatformName = @"x86";
 
+        /// <summary>
+        /// Constructor</summary>
         public X86TargetInfo()
             : base()
         {
@@ -201,8 +209,12 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     [GroupAttribute("Ps3TargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]
     public class Ps3TargetInfo : TcpIpTargetInfo, IPropertyValueValidator
     {
+        /// <summary>
+        /// PS3 platform name</summary>
         public const string PlatformName = @"Ps3";
 
+        /// <summary>
+        /// Constructor</summary>
         public Ps3TargetInfo()
             : base()
         {
@@ -217,8 +229,12 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     [GroupAttribute("Ps4TargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]
     public class Ps4TargetInfo : TcpIpTargetInfo, IPropertyValueValidator
     {
+        /// <summary>
+        /// PS4 platform name</summary>
         public const string PlatformName = @"Ps4";
 
+        /// <summary>
+        /// Constructor</summary>
         public Ps4TargetInfo()
             : base()
         {

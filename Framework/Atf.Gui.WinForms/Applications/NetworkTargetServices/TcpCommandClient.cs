@@ -10,8 +10,14 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     /// Generic command packet structure</summary>
     public class TCPCommand
     {
+        /// <summary>
+        /// Command opcode</summary>
         public int m_opcode;
+        /// <summary>
+        /// Command payload size</summary>
         public int m_payloadSize;
+        /// <summary>
+        /// Command payload data</summary>
         public byte[] m_payload;
     };
 

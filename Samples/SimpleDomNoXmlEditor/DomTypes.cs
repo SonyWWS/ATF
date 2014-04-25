@@ -12,8 +12,9 @@ using Sce.Atf.Dom;
 namespace SimpleDomNoXmlEditorSample
 {
     /// <summary>
-    /// Contains the DomNodeType, ChildInfo, and AttributeInfo types describing this sample app's Document Object Model (DOM).
-    /// Normally, these would be defined by a schema file. This sample shows how to define the types without a schema file.</summary>
+    /// Contains the DomNodeType, ChildInfo, and AttributeInfo types describing this sample application's Document Object Model (DOM).
+    /// Normally, these would be defined by a schema file and set up in a schema loader, as in the Simple DOM Editor sample. 
+    /// This sample shows how to define the types without a schema file.</summary>
     [Export(typeof(DomTypes))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class DomTypes
@@ -34,7 +35,7 @@ namespace SimpleDomNoXmlEditorSample
         }
 
         /// <summary>
-        /// Static constructor</summary>
+        /// Static constructor, add type information for palette and setting up property descriptors</summary>
         static DomTypes()
         {
             // register extensions
@@ -195,7 +196,11 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(eventChild);
                 eventChild.AddRule(new ChildCountRule(1, int.MaxValue));
             }
+            /// <summary>
+            /// Type for event sequence</summary>
             public readonly static DomNodeType Type = new DomNodeType("eventSequenceType");
+            /// <summary>
+            /// ChildInfo for event in sequence</summary>
             public readonly static ChildInfo eventChild = new ChildInfo("event", eventType.Type, true);
         }
 
@@ -222,13 +227,23 @@ namespace SimpleDomNoXmlEditorSample
                 resourceChild.AddRule(new ChildCountRule(1, int.MaxValue));
             }
 
+            /// <summary>
+            /// Type for event</summary>
             public readonly static DomNodeType Type = new DomNodeType("eventType");
+            /// <summary>
+            /// AttributeInfo for event name</summary>
             public readonly static AttributeInfo nameAttribute =
                 new AttributeInfo("name", new AttributeType(AttributeTypes.String.ToString(), typeof(string)));
+            /// <summary>
+            /// AttributeInfo for event time</summary>
             public readonly static AttributeInfo timeAttribute =
                 new AttributeInfo("time", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
+            /// <summary>
+            /// AttributeInfo for event duration</summary>
             public readonly static AttributeInfo durationAttribute =
                 new AttributeInfo("duration", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
+            /// <summary>
+            /// ChildInfo for resources associated with event</summary>
             public readonly static ChildInfo resourceChild = new ChildInfo("resource", Type, true);
         }
 
@@ -251,11 +266,19 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(compressedAttribute);
             }
 
+            /// <summary>
+            /// Type for resource in general; there are several resource types</summary>
             public readonly static DomNodeType Type = new DomNodeType("resourceType");
+            /// <summary>
+            /// AttributeInfo for resource name</summary>
             public readonly static AttributeInfo nameAttribute =
                 new AttributeInfo("name", new AttributeType(AttributeTypes.String.ToString(), typeof(string)));
+            /// <summary>
+            /// AttributeInfo for resource size</summary>
             public readonly static AttributeInfo sizeAttribute =
                 new AttributeInfo("size", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
+            /// <summary>
+            /// AttributeInfo for whether resource compressed</summary>
             public readonly static AttributeInfo compressedAttribute =
                 new AttributeInfo("compressed", new AttributeType(AttributeTypes.Boolean.ToString(), typeof(bool)));
         }
@@ -284,15 +307,27 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(durationAttribute);
             }
 
+            /// <summary>
+            /// Type for animation resource</summary>
             public readonly static DomNodeType Type = new DomNodeType("animationResourceType");
+            /// <summary>
+            /// AttributeInfo for animation resource name</summary>
             public readonly static AttributeInfo nameAttribute =
                 new AttributeInfo("name", new AttributeType(AttributeTypes.String.ToString(), typeof(string)));
+            /// <summary>
+            /// AttributeInfo for animation size</summary>
             public readonly static AttributeInfo sizeAttribute =
                 new AttributeInfo("size", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
+            /// <summary>
+            /// AttributeInfo for whether animation compressed</summary>
             public readonly static AttributeInfo compressedAttribute =
                 new AttributeInfo("compressed", new AttributeType(AttributeTypes.Boolean.ToString(), typeof(bool)));
+            /// <summary>
+            /// AttributeInfo for number of animation tracks</summary>
             public readonly static AttributeInfo tracksAttribute =
                 new AttributeInfo("tracks", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
+            /// <summary>
+            /// AttributeInfo for animation duration</summary>
             public readonly static AttributeInfo durationAttribute =
                 new AttributeInfo("duration", new AttributeType(AttributeTypes.Int32.ToString(), typeof(int)));
         }

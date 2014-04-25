@@ -62,6 +62,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by subscribing to event, registering control, and setting up Settings Service</summary>
         public virtual void Initialize()
         {
             ContextRegistry.ActiveContextChanged += contextRegistry_ActiveContextChanged;
@@ -186,11 +188,19 @@ namespace Sce.Atf.Applications
         }
 
         // Imported MEF Components
+        /// <summary>
+        /// Gets IControlHostService</summary>
         protected IControlHostService ControlHostService { get; private set; }
+        /// <summary>
+        /// Gets IContextRegistry</summary>
         protected IContextRegistry ContextRegistry { get; private set; }
+        /// <summary>
+        /// Gets ICommandService</summary>
         protected ICommandService CommandService { get; private set; }
 
         // Optional MEF Imports
+        /// <summary>
+        /// Gets or sets ISettingsService</summary>
         [Import(AllowDefault = true)]
         public ISettingsService SettingsService { get; set; }
 

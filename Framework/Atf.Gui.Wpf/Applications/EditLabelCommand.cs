@@ -44,6 +44,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering Rename command</summary>
         public void Initialize()
         {
             m_commandService.RegisterCommand(s_renameCommandDef, this);

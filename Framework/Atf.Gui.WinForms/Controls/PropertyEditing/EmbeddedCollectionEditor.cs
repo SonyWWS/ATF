@@ -45,7 +45,9 @@ namespace Sce.Atf.Controls.PropertyEditing
                 return null;
 
             bool toolStripLabelEnabled = (Parameters != null && Parameters.Length > 2 && Boolean.Parse(Parameters[2]));
-            return new CollectionControl(this, context, toolStripLabelEnabled);
+            var control =  new CollectionControl(this, context, toolStripLabelEnabled);
+            SkinService.ApplyActiveSkin(control);
+            return control;
         }
 
         #endregion
@@ -625,7 +627,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                         {
                             itemControl = new ItemControl(m_itemControls.Count, item,
                                 m_singletonMode, m_indexColumnWidth, TransactionContext);
-                            Controls.Add(itemControl);
+                            SkinService.ApplyActiveSkin(itemControl);
+                            Controls.Add(itemControl);                            
                             itemControl.MouseUp += itemControl_MouseUp;
                         }
                         itemControl.Width = m_toolStrip.Width;
@@ -639,6 +642,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                         top += itemControl.Height;
                         m_itemControls.Add(item, itemControl);
                         SubscribeItemEvents(itemControl);
+                        
+                        itemControl.Selected = false;
                     }
 
                     Height = top; // update height of main collection control
@@ -1197,7 +1202,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_editControl.MouseUp += editControl_MouseUp;
                 Controls.Add(m_editControl);
 
-                Init(index, item, singletonMode, indexColumnWidth, context);
+                Init(index, item, singletonMode, indexColumnWidth, context);                
             }
 
             protected override void Dispose(bool disposing)
@@ -1236,8 +1241,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_selectButton.Width = indexColumnWidth;
                     m_selectButton.Dock = DockStyle.Left;
                     m_selectButton.Text = Index.ToString();
-                    m_selectButton.TextAlign = ContentAlignment.MiddleCenter;
-                    m_selectButton.BackColor = UnselectedColor;
+                    m_selectButton.TextAlign = ContentAlignment.MiddleCenter;                    
                     m_selectButton.FlatStyle = FlatStyle.Flat;
                     m_selectButton.MouseDown += selectButton_MouseDown;
                 }
@@ -1299,7 +1303,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         if (m_selectButton != null)
                         {
                             m_selectButton.Text = value.ToString();
-                            m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : SystemColors.ControlText;
+                            m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : ForeColor;
                             m_selectButton.BackColor = m_selected ? SystemColors.Highlight : UnselectedColor;
                         }
                     }
@@ -1330,7 +1334,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     if (m_singletonMode)
                         return;                
                     m_selected = value;
-                    m_selectButton.ForeColor = value ? SystemColors.HighlightText : SystemColors.ControlText;
+                    m_selectButton.ForeColor = value ? SystemColors.HighlightText : ForeColor;
                     m_selectButton.BackColor = value ? SystemColors.Highlight : UnselectedColor;
 
                     if (!value)
@@ -1344,7 +1348,13 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// Gets the color used when the item is not selected, alternating for odd and even indexed items</summary>
             private Color UnselectedColor
             {
-                get { return Index % 2 == 0 ? SystemColors.Control : SystemColors.ControlLight; }
+                get 
+                {
+                    Color alternate = BackColor;
+                    alternate = alternate.GetBrightness() > 0.5f ? ControlPaint.Dark(alternate, 0.2f)
+                        : ControlPaint.Light(alternate, 0.2f);                   
+                    return Index % 2 == 0 ? BackColor : alternate; 
+                }
             }
 
             public bool CanChangeSize { get; private set; }

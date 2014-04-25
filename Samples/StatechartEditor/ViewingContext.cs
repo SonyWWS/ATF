@@ -102,7 +102,7 @@ namespace StatechartEditorSample
 
         /// <summary>
         /// Gets the sequence of all items visible in the control</summary>
-        /// <returns>all items visible in the control</returns>
+        /// <returns>All items visible in the control</returns>
         public IEnumerable<object> GetVisibleItems()
         {
             Rectangle windowBounds = m_control.As<ICanvasAdapter>().WindowBounds;            

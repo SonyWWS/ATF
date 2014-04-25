@@ -57,7 +57,8 @@ namespace TreeListEditor
                         typeof(VersionUpdateService),           // updates to latest version on SHIP
                         typeof(ContextRegistry),                // central context registry with change notification
                         typeof(PropertyEditor),                 // property grid for editing selected objects
-                        typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
+                        typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
+                                                                //  Reset All, Copy Value, Paste Value, Copy All, Paste All
                         
                         /* Different styles of TreeListView */
                         typeof(List),                           // list view editor component

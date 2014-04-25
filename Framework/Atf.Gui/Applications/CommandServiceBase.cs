@@ -32,6 +32,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up settings service and registering command</summary>
         public virtual void Initialize()
         {
             if (m_settingsService != null)
@@ -273,7 +275,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets and sets toolbar image size</summary>
+        /// Gets or sets toolbar image size</summary>
         [DefaultValue(ImageSizes.Size24x24)]
         public ImageSizes UserSelectedImageSize
         {
@@ -293,7 +295,7 @@ namespace Sce.Atf.Applications
         protected virtual void OnImageSizeChanged() { }
 
         /// <summary>
-        /// Gets and sets XML string representing command/shortcut pairs</summary>
+        /// Gets or sets XML string representing command/shortcut pairs</summary>
         public string CommandShortcuts
         {
             get
@@ -386,7 +388,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets and sets whether the context menu should automatically remove disabled items</summary>
+        /// Gets or sets whether the context menu should automatically remove disabled items</summary>
         public bool ContextMenuAutoCompact
         {
             get { return m_contextMenuAutoCompact; }
@@ -450,7 +452,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the registered command info objects</summary>
+        /// Gets the registered commands' info objects</summary>
         /// <returns></returns>
         public IEnumerable<CommandInfo> GetCommandInfos()
         {
@@ -863,36 +865,58 @@ namespace Sce.Atf.Applications
             m_statusService = statusService;
         }
 
+        /// <summary>
+        /// Imported IStatusService</summary>
         [Import(AllowDefault = true)]
         protected IStatusService m_statusService;
 
+        /// <summary>
+        /// Imported ISettingsService</summary>
         [Import(AllowDefault = true)]
         protected ISettingsService m_settingsService;
 
+        /// <summary>
+        /// Toolbar image size</summary>
         protected ImageSizes m_imageSize = ImageSizes.Size24x24;
 
+        /// <summary>
+        /// List of menus</summary>
         protected List<MenuInfo> m_menus =
             new List<MenuInfo>();
 
+        /// <summary>
+        /// Registered commands' info objects</summary>
         protected List<CommandInfo> m_commands =
             new List<CommandInfo>();
 
+        /// <summary>
+        /// Dictionary for CommandInfo, keyed by command tag</summary>
         protected Dictionary<object, CommandInfo> m_commandsById =
             new Dictionary<object, CommandInfo>();
 
+        /// <summary>
+        /// Multimap of command clients, keyed by command tag</summary>
         protected Multimap<object, ICommandClient> m_commandClients =
             new Multimap<object, ICommandClient>();
 
+        /// <summary>
+        /// Dictionary for command tags, keyed by command shortcut</summary>
         protected Dictionary<Keys, object> m_shortcuts =
             new Dictionary<Keys, object>();
 
+        /// <summary>
+        /// Dictionary for reasons why shortcut key is not available, keyed by shortcut key</summary>
         protected Dictionary<Keys, string> m_reservedKeys =
             new Dictionary<Keys, string>();
 
+        /// <summary>
+        /// Active command client</summary>
         protected ICommandClient m_activeClient;
 
         private bool m_contextMenuAutoCompact = true;
 
+        /// <summary>
+        /// Path delimiter strings</summary>
         protected static char[] s_pathDelimiters = new[] { '/', '\\' };
 
         private static readonly HashSet<object> m_beginningTags = new HashSet<object>();

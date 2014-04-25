@@ -4,7 +4,7 @@
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
-    /// Contains default rendering settings for circuit render.</summary>
+    /// Contains default rendering settings for circuit render</summary>
     public class CircuitDefaultStyle
     {
         /// <summary>
@@ -16,7 +16,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show the group pins when the group is expanded.</summary>
+        /// Gets or sets whether to show the group pins when the group is expanded</summary>
         public static bool ShowExpandedGroupPins
         {
             get { return s_showExpandedGroupPins; }
@@ -24,7 +24,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show a link between a group pin and its associated internal node
+        /// Gets or sets whether to show a link between a group pin and its associated internal node
         /// when the group is expanded and the group pin is unconnected. When a group pin is connected to an external
         /// node, then a link (wire) is always shown. If this is false, ShowExpandedGroupPins should be false, too.</summary>
         public static bool ShowVirtualLinks

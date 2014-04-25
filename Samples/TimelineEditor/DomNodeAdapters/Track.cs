@@ -16,7 +16,7 @@ namespace TimelineEditorSample.DomNodeAdapters
         #region ITrack Members
 
         /// <summary>
-        /// Gets and sets the track name</summary>
+        /// Gets or sets the track name</summary>
         public string Name
         {
             get { return (string)DomNode.GetAttribute(Schema.trackType.nameAttribute); }

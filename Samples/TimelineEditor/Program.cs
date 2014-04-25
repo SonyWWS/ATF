@@ -79,7 +79,8 @@ namespace TimelineEditorSample
                 typeof(HistoryLister),                  // vistual list of undo/redo stack
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
-                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
+                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
+                                                        //  Reset All, Copy Value, Paste Value, Copy All, Paste All
                 typeof(PerformanceMonitor),             // displays the frame rate and memory usage
                 typeof(FileWatcherService),                // service to watch for changes to files
                 typeof(DefaultTabCommands),             // provides the default commands related to document tab Controls

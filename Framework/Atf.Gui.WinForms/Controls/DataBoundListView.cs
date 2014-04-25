@@ -1423,6 +1423,10 @@ namespace Sce.Atf.Controls
         /// Event arguments for cell operation cancel events</summary>
         public class ListViewCellCancelEventArgs : CancelEventArgs
         {
+            /// <summary>
+            /// Constructor with parameters</summary>
+            /// <param name="rowIndex">Row index</param>
+            /// <param name="columnIndex">Column index</param>
             public ListViewCellCancelEventArgs( int rowIndex, int columnIndex)
             {
                 RowIndex = rowIndex;
@@ -1443,6 +1447,11 @@ namespace Sce.Atf.Controls
         /// This is the value that you can validate before it is parsed into the cell Value property value.</summary>
         public class ListViewCellValidatingEventArgs : CancelEventArgs
         {
+            /// <summary>
+            /// Constructor with parameters</summary>
+            /// <param name="rowIndex">Row index</param>
+            /// <param name="columnIndex">Column index</param>
+            /// <param name="formattedValue">Formatted value</param>
             public ListViewCellValidatingEventArgs(int rowIndex, int columnIndex, object formattedValue)
             {
                 RowIndex = rowIndex;

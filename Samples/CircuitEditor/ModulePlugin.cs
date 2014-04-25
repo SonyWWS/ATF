@@ -77,6 +77,8 @@ namespace CircuitEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding palette information and defining module types</summary>
         void IInitializable.Initialize()
         {
             // add palette info to annotation type, and register with palette

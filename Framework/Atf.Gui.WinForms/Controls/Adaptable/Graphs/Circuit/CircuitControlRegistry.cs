@@ -19,6 +19,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class CircuitControlRegistry
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="controlHostService">Control hosting service</param>
+        /// <param name="contextRegistry">Context registry</param>
+        /// <param name="documentService">Document service</param>
         [ImportingConstructor]
         public CircuitControlRegistry(
             IControlHostService controlHostService,
@@ -41,7 +46,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Unregisters the Control from the context registry and closes and disposes it.</summary>
-        /// <param name="control"></param>
+        /// <param name="control">Control</param>
         /// <returns>True if the Control was previously passed in to RegisterControl. False if
         /// the Control was unrecognized in which case no change was made.</returns>
         public virtual bool UnregisterControl(Control control)
@@ -130,6 +135,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// AttributeChanged event handler for document DomNode</summary>
+        /// <param name="sender">Sender (root DOM node)</param>
+        /// <param name="e">Attribute change event args</param>
         protected virtual void OnDocumentNodeAttributeChanged(object sender, AttributeEventArgs e)
         {
             var group = e.DomNode.As<Group>();

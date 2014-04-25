@@ -179,6 +179,9 @@ namespace Sce.Atf.Direct2D
             return D2dResult.Ok;
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or 
+        /// resetting unmanaged resources</summary>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

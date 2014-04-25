@@ -28,7 +28,11 @@ namespace Sce.Atf.Controls.ConsoleBox
         /// <param name="cmd">Command</param>
         void EnterCommand(string cmd);
 
+        /// <summary>
+        /// Gets or sets background color</summary>
         Color BackColor { get; set; }
+        /// <summary>
+        /// Gets or sets foreground color</summary>
         Color ForeColor { get; set; }
 
         /// <summary>

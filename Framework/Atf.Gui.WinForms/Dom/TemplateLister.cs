@@ -126,6 +126,9 @@ namespace Sce.Atf.Dom
             TreeControl.DoDragDrop(dataObject, DragDropEffects.All | DragDropEffects.Link);
         }
 
+        /// <summary>
+        /// Raises LastHitChanged event and sets active item</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnLastHitChanged(EventArgs e)
         {
             if (m_templatingContext != null)
@@ -134,6 +137,9 @@ namespace Sce.Atf.Dom
             base.OnLastHitChanged(e);
         }
 
+        /// <summary>
+        /// Handles DragOver event and sets drag effect</summary>
+        /// <param name="e">Drag event arguments</param>
         protected override void OnDragOver(DragEventArgs e)
         {
             e.Effect = DragDropEffects.None;
@@ -145,6 +151,9 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Handles DragDrop event and performs data insertion in a transaction</summary>
+        /// <param name="e">Drag event arguments</param>
         protected override void OnDragDrop(DragEventArgs e)
         {
             if (m_templatingContext != null)

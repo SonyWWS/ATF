@@ -33,7 +33,7 @@ namespace Sce.Atf.Wpf.Behaviors
                 object[] data = ctx.Selection.ToArray();
                 if (data.Length > 0)
                 {
-                    DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.All);
+                    System.Windows.DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.All);
                 }
             }
         }

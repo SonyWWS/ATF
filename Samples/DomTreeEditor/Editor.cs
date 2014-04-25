@@ -15,7 +15,8 @@ namespace DomTreeEditorSample
 {
     /// <summary>
     /// DOM tree editor, responsible for loading and saving UI documents. The editor
-    /// can only open one document at a time.</summary>
+    /// can only open one document at a time.
+    /// This document client handles file operations, such as opening and closing documents.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -23,7 +24,7 @@ namespace DomTreeEditorSample
     public class Editor : IDocumentClient, IInitializable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor, initializing fields</summary>
         /// <param name="contextRegistry">Context registry</param>
         /// <param name="documentRegistry">Document registry</param>
         /// <param name="treeLister">Tree lister, which displays a tree view of UI data</param>
@@ -51,6 +52,8 @@ namespace DomTreeEditorSample
 
         #region IInitializable
         
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service and initializing curve editor settings</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)

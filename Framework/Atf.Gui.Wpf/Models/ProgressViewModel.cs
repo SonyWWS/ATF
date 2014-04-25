@@ -13,6 +13,8 @@ namespace Sce.Atf.Wpf.Models
     /// View model used for both progress dialog and for progress status item</summary>
     public class ProgressViewModel : DialogViewModelBase, IStatusItem
     {
+        /// <summary>
+        /// Constructor</summary>
         public ProgressViewModel()
         {
             m_worker.WorkerReportsProgress = true;

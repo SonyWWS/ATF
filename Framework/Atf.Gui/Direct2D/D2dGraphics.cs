@@ -307,7 +307,7 @@ namespace Sce.Atf.Direct2D
         public void DrawBitmap(D2dBitmap bmp, PointF point, float opacity = 1.0f)
         {
             SizeF bmpsize = bmp.PixelSize;
-            var rect = new SharpDX.RectangleF(point.X, point.Y, point.X + bmpsize.Width, point.Y + bmpsize.Height);
+            var rect = new SharpDX.RectangleF(point.X, point.Y, bmpsize.Width, bmpsize.Height);
             m_renderTarget.DrawBitmap(bmp.NativeBitmap, rect, opacity, BitmapInterpolationMode.Linear, null);
         }
 
@@ -358,7 +358,7 @@ namespace Sce.Atf.Direct2D
             var tmpEllipse = new Ellipse();
             tmpEllipse.RadiusX = rect.Width * 0.5f;
             tmpEllipse.RadiusY = rect.Height * 0.5f;
-            tmpEllipse.Point = new DrawingPointF(rect.X + tmpEllipse.RadiusX, rect.Y + tmpEllipse.RadiusY);
+            tmpEllipse.Point = new Vector2(rect.X + tmpEllipse.RadiusX, rect.Y + tmpEllipse.RadiusY);
             m_renderTarget.DrawEllipse(tmpEllipse, brush.NativeBrush, strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
         }
@@ -411,8 +411,8 @@ namespace Sce.Atf.Direct2D
         public void DrawLine(float pt1X, float pt1Y, float pt2X, float pt2Y, D2dBrush brush, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
             m_renderTarget.DrawLine(
-                new DrawingPointF(pt1X, pt1Y),
-                new DrawingPointF(pt2X, pt2Y),
+                new Vector2(pt1X, pt1Y),
+                new Vector2(pt2X, pt2Y),
                 brush.NativeBrush,
                 strokeWidth,
                 strokeStyle != null ? strokeStyle.NativeStrokeStyle : null);
@@ -765,7 +765,7 @@ namespace Sce.Atf.Direct2D
                 RadiusX = rect.Width * 0.5f, 
                 RadiusY = rect.Height * 0.5f
             };
-            tmpEllipse.Point = new DrawingPointF(rect.X + tmpEllipse.RadiusX, rect.Y + tmpEllipse.RadiusY);
+            tmpEllipse.Point = new Vector2(rect.X + tmpEllipse.RadiusX, rect.Y + tmpEllipse.RadiusY);
             m_renderTarget.FillEllipse(tmpEllipse, brush.NativeBrush);
         }
 
@@ -984,14 +984,14 @@ namespace Sce.Atf.Direct2D
                         var curve = edge.EdgeData.As<BezierCurve2F>();
                         if (firstPoint)
                         {
-                            sink.BeginFigure(new DrawingPointF(curve.P1.X, curve.P1.Y), FigureBegin.Hollow);
+                            sink.BeginFigure(curve.P1.ToSharpDX(), FigureBegin.Hollow);
                             firstPoint = false;
                         }
                         var seg = new BezierSegment
                         {
-                            Point1 = new DrawingPointF(curve.P2.X, curve.P2.Y),
-                            Point2 = new DrawingPointF(curve.P3.X, curve.P3.Y),
-                            Point3 = new DrawingPointF(curve.P4.X, curve.P4.Y)
+                            Point1 = curve.P2.ToSharpDX(),
+                            Point2 = curve.P3.ToSharpDX(),
+                            Point3 = curve.P4.ToSharpDX()
                         };
                         sink.AddBezier(seg);
                     }
@@ -1048,14 +1048,14 @@ namespace Sce.Atf.Direct2D
                         var curve = edge.EdgeData.As<BezierCurve2F>();
                         if (firstPoint)
                         {
-                            sink.BeginFigure(new DrawingPointF(curve.P1.X, curve.P1.Y), FigureBegin.Hollow);
+                            sink.BeginFigure(curve.P1.ToSharpDX(), FigureBegin.Hollow);
                             firstPoint = false;
                         }
                         var seg = new BezierSegment
                         {
-                            Point1 = new DrawingPointF(curve.P2.X, curve.P2.Y),
-                            Point2 = new DrawingPointF(curve.P3.X, curve.P3.Y),
-                            Point3 = new DrawingPointF(curve.P4.X, curve.P4.Y)
+                            Point1 = curve.P2.ToSharpDX(),
+                            Point2 = curve.P3.ToSharpDX(),
+                            Point3 = curve.P4.ToSharpDX()
                         };
                         sink.AddBezier(seg);
                     }
@@ -1149,8 +1149,7 @@ namespace Sce.Atf.Direct2D
         public void PushAxisAlignedClip(RectangleF clipRect, D2dAntialiasMode antialiasMode)
         {
             m_clipStack.Push(clipRect);
-            var rect = new SharpDX.RectangleF(clipRect.Left, clipRect.Top, clipRect.Right, clipRect.Bottom);
-            m_renderTarget.PushAxisAlignedClip(rect, (AntialiasMode)antialiasMode);
+            m_renderTarget.PushAxisAlignedClip(clipRect.ToSharpDX(), (AntialiasMode)antialiasMode);
         }
 
         /// <summary>    
@@ -1370,7 +1369,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>        
         public D2dBitmapGraphics CreateCompatibleGraphics(Size pixelSize, D2dCompatibleGraphicsOptions options)
         {
-            var dsize = new DrawingSize(pixelSize.Width, pixelSize.Height);
+            var dsize = new Size2(pixelSize.Width, pixelSize.Height);
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, null, dsize, null);
             return new D2dBitmapGraphics(rt);
         }
@@ -1499,7 +1498,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Recreates the render target, if necessary, by calling SetRenderTarget.</summary>
+        /// Recreates the render target, if necessary, by calling SetRenderTarget</summary>
         protected abstract void RecreateRenderTarget();
 
         /// <summary>

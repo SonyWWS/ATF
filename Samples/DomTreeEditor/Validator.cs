@@ -9,12 +9,13 @@ namespace DomTreeEditorSample
 {
     /// <summary>
     /// DomNode adapter that ensures certain constraints on the UI data are met:
-    /// 1) Resources that are referenced are available in the same package. If not
+    /// resources that are referenced are available in the same package. If not
     /// they are cloned and added to the package.</summary>
     public class Validator : Sce.Atf.Dom.Validator
     {
         /// <summary>
-        /// Performs custom actions on validation Beginning events</summary>
+        /// Performs custom actions on validation Beginning events, creating an empty list
+        /// of ChildEventArgs, added to when a DomNode is inserted.</summary>
         /// <param name="sender">Validation context</param>
         /// <param name="e">Event args</param>
         protected override void OnBeginning(object sender, System.EventArgs e)
@@ -23,7 +24,9 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Performs custom actions on validation Ending events</summary>
+        /// Performs custom actions on validation Ending events.
+        /// If resources referenced are not available in the same package,
+        /// they are cloned and added to the package.</summary>
         /// <param name="sender">Validation context</param>
         /// <param name="e">Event args</param>
         protected override void OnEnding(object sender, System.EventArgs e)

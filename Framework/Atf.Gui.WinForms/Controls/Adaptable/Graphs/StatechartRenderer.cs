@@ -49,6 +49,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        /// <summary>
+        /// Disposes resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected override void Dispose(bool disposing)
         {
             Theme = null;

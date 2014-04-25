@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace Sce.Atf
 {
+    /// <summary>
+    /// Class with static methods for iterating through IEnumerable collections</summary>
     public static class EnumerableUtil
     {
         /// <summary>

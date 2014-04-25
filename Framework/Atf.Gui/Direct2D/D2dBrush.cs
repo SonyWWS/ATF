@@ -35,6 +35,9 @@ namespace Sce.Atf.Direct2D
             internal set;
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or 
+        /// resetting unmanaged resources</summary>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

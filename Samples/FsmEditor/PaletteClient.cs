@@ -29,6 +29,8 @@ namespace FsmEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding state and annotation type to palette</summary>
         void IInitializable.Initialize()
         {
             string category = "FSM";

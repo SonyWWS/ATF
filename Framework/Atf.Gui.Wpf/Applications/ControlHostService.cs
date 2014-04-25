@@ -90,6 +90,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up Settings Service</summary>
         public void Initialize()
         {
             ShowDefaultContents();

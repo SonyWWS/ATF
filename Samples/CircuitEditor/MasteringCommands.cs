@@ -37,17 +37,24 @@ namespace CircuitEditorSample
         private ICommandService m_commandService;
         private IContextRegistry m_contextRegistry;
 
-
+        /// <summary>
+        /// Gets type of sub-circuit.
+        /// A sub-circuit is a circuit that defines a master module type, 
+        /// with custom input and output pins.</summary>
         public DomNodeType SubCircuitType
         {
             get { return Schema.subCircuitType.Type; }
         }
 
+        /// <summary>
+        /// Gets type of sub-circuit instance</summary>
         public DomNodeType SubCircuitInstanceType
         {
             get { return Schema.subCircuitInstanceType.Type; }
         }
 
+        /// <summary>
+        /// Gets type of circuit pin</summary>
         public DomNodeType CircuitPinType
         {
             get { return Schema.pinType.Type; }
@@ -62,6 +69,8 @@ namespace CircuitEditorSample
             ExpandMaster,
         }
 
+        /// <summary>
+        /// Finishes initializing component by registering master commands</summary>
         void IInitializable.Initialize()
         {
             m_commandService.RegisterCommand(

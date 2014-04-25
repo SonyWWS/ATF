@@ -48,6 +48,8 @@ namespace Sce.Atf.Applications
             OpenContainingFolder
         }
 
+        /// <summary>
+        /// Finishes initializing component by registering tab commands</summary>
         public virtual void Initialize()
         {
             m_commandService.RegisterCommand(
@@ -147,7 +149,20 @@ namespace Sce.Atf.Applications
 
                     case Command.CopyFullPath:
                     case Command.OpenContainingFolder:
-                        return File.Exists(GetDocumentPath(m_controlRegistry.ActiveControl));
+                        {
+                            string controlDescription = GetDocumentPath(m_controlRegistry.ActiveControl);
+                            bool exists = false;
+                            try
+                            {
+                                // for example, circuit group windows are titled "MyFileName:MyGroupName"
+                                if (PathUtil.IsValidPath(controlDescription))
+                                    exists = File.Exists(controlDescription);
+                            }
+                            catch (IOException)
+                            {
+                            }
+                            return exists;
+                        }
                 }
             }
 
@@ -242,6 +257,8 @@ namespace Sce.Atf.Applications
             return path;
         }
 
+        /// <summary>
+        /// Gets ICommandService</summary>
         protected ICommandService CommandService
         {
             get { return m_commandService; }

@@ -190,12 +190,16 @@ namespace Sce.Atf.Dom
             return base.GetEditor(editorBaseType);
         }
 
-        // The .NET property descriptor only takes into account the Name and PropertyType.
-        //  ATF needs to use Name, Category, and PropertyType. Overriding Equals() and GetHashCode()
-        //  lets us use this Sce.Atf.Dom.PropertyDescriptor as a key in a Dictionary. The downside
-        //  is that a System PropertyDescriptor in that Dictionary will never match ours even
-        //  though it probably should.
-        // http://tracker.ship.scea.com/jira/browse/CORETEXTEDITOR-401
+        /// <summary>
+        /// Test equality of property descriptors</summary>
+        /// <param name="obj">Property descriptor to compare to</param>
+        /// <returns>True iff property descriptors are equal</returns>
+        /// <remarks>The .NET property descriptor only takes into account the Name and PropertyType.
+        /// ATF needs to use Name, Category, and PropertyType. Overriding Equals() and GetHashCode()
+        /// lets us use this Sce.Atf.Dom.PropertyDescriptor as a key in a Dictionary. The downside
+        /// is that a System PropertyDescriptor in that Dictionary will never match ours even
+        /// though it probably should. For details, see
+        /// http://tracker.ship.scea.com/jira/browse/CORETEXTEDITOR-401 </remarks>
         public override bool Equals(object obj)
         {
             PropertyDescriptor other = obj as PropertyDescriptor;
@@ -208,9 +212,12 @@ namespace Sce.Atf.Dom
             return false;
         }
 
-        // The .NET property descriptor only takes into account the Name and PropertyType.
-        //  ATF needs to use Name, Category, and PropertyType.
-        // http://tracker.ship.scea.com/jira/browse/CORETEXTEDITOR-401
+        /// <summary>
+        /// Returns hash code</summary>
+        /// <returns>Hash code</returns>
+        /// <remarks>The .NET property descriptor only takes into account the Name and PropertyType.
+        /// ATF needs to use Name, Category, and PropertyType. For details, see
+        /// http://tracker.ship.scea.com/jira/browse/CORETEXTEDITOR-401 </remarks>
         public override int GetHashCode()
         {
             return this.GetPropertyDescriptorHash();

@@ -17,7 +17,7 @@ using PropertyDescriptor = Sce.Atf.Dom.PropertyDescriptor;
 namespace DomTreeEditorSample
 {
     /// <summary>
-    /// Loads the UI schema, registers data extensions on the DOM types, annotates
+    /// Loads the UI schema, registers data extensions on the DOM types, and annotates
     /// the types with display information and PropertyDescriptors.</summary>
     [Export(typeof(SchemaLoader))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -51,7 +51,8 @@ namespace DomTreeEditorSample
         /// <summary>
         /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
         /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
-        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.</summary>
+        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.
+        /// Adds property descriptors for types.</summary>
         /// <param name="schemaSet">XML schema sets being loaded</param>
         protected override void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
         {

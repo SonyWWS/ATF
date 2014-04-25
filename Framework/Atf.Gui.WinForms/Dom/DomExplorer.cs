@@ -92,6 +92,8 @@ namespace Sce.Atf.Dom
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering control</summary>
         public virtual void Initialize()
         {
             m_controlHostService.RegisterControl(m_splitContainer,

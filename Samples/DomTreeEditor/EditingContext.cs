@@ -124,7 +124,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Inserts a freference to an object of given type using a transaction. Called by automated scripts.</summary>
+        /// Inserts a reference to an object of given type using a transaction. Called by automated scripts during testing.</summary>
         /// <typeparam name="T">Type of object to insert</typeparam>
         /// <param name="insertingObject">DomNode that contains inserted object</param>
         /// <param name="insertionParent">Parent where object is inserted</param>
@@ -151,7 +151,7 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Inserts new object of given type using a transaction. Called by automated scripts.</summary>
+        /// Inserts new object of given type using a transaction. Called by automated scripts during testing.</summary>
         /// <typeparam name="T">Type of object to insert</typeparam>
         /// <param name="insertingObject">DomNode that contains inserted object</param>
         /// <param name="insertionParent">Parent where object is inserted</param>

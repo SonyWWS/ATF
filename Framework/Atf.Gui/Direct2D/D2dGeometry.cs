@@ -17,11 +17,17 @@ namespace Sce.Atf.Direct2D
     {
         private PathGeometry m_geometry;
 
+        /// <summary>
+        /// Constructor, creating PathGeometry object</summary>
         public D2dGeometry()
         {
             m_geometry = new PathGeometry(D2dFactory.NativeFactory);
         }
 
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && m_geometry != null)
@@ -38,40 +44,46 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Retrieves the number of figures in the path geometry.
-        /// </summary>
+        /// Retrieves the number of figures in the path geometry.</summary>
         public int FigureCount
         {
             get { return m_geometry.FigureCount; }
         }
 
         /// <summary>
-        /// Retrieves the number of segments in the path geometry.
-        /// </summary>
+        /// Retrieves the number of segments in the path geometry.</summary>
         public int SegmentCount
         {
             get { return m_geometry.SegmentCount; }
         }
 
         /// <summary>
-        /// Opens the mesh for population.
-        /// </summary>
+        /// Retrieves the bounds of the geometry.</summary>
+        public RectangleF Bounds
+        {
+            get
+            {
+                var rect = m_geometry.GetBounds();
+                return new RectangleF(rect.Left, rect.Top, rect.Width, rect.Height);
+            }
+        }
+
+        /// <summary>
+        /// Opens the mesh for population.</summary>
         public D2dGeometrySink Open()
         {
             return new D2dGeometrySink(m_geometry.Open());
         }
 
         /// <summary>
-        /// Indicates whether the area filled by the geometry would contain the specified point given the specified flattening tolerance. 	
-        /// </summary>
+        /// Indicates whether the area filled by the geometry would contain the specified point given the specified flattening tolerance.</summary>
         public bool FillContainsPoint(PointF point)
         {
             return m_geometry.FillContainsPoint(point.ToSharpDX());
         }
 
         /// <summary>	
-        /// Determines whether the geometry's stroke contains the specified point given the specified stroke thickness and style. 	
-        /// </summary>	
+        /// Determines whether the geometry's stroke contains the specified point given the specified stroke thickness and style.</summary>	
         public bool StrokeContainsPoint(PointF point, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
             return m_geometry.StrokeContainsPoint(point.ToSharpDX(), strokeWidth,

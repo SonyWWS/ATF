@@ -26,7 +26,7 @@ namespace FileExplorerSample
     public class FileViewer : IInitializable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor that creates a standard WinForms ListView control</summary>
         /// <param name="mainForm">Main form</param>
         [ImportingConstructor]
         public FileViewer(MainForm mainForm)
@@ -55,6 +55,8 @@ namespace FileExplorerSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by creating data extension list and set control parameters</summary>
         void IInitializable.Initialize()
         {
             // pass all file data extensions to adapter
@@ -226,12 +228,20 @@ namespace FileExplorerSample
 
             #region IObservableContext Members
 
+            /// <summary>
+            /// Event that is raised when an item is inserted</summary>
             public event EventHandler<ItemInsertedEventArgs<object>> ItemInserted;
 
+            /// <summary>
+            /// Event that is raised when an item is removed</summary>
             public event EventHandler<ItemRemovedEventArgs<object>> ItemRemoved;
 
+            /// <summary>
+            /// Event that is raised when an item is changed</summary>
             public event EventHandler<ItemChangedEventArgs<object>> ItemChanged;
 
+            /// <summary>
+            /// Event that is raised when the collection has been reloaded</summary>
             public event EventHandler Reloaded;
 
             #endregion

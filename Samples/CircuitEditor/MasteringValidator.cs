@@ -14,6 +14,9 @@ namespace CircuitEditorSample
     /// and throws an InvalidTransactionException for certain errors</summary>
     public class MasteringValidator : Validator
     {
+        /// <summary>
+        /// Performs initialization when the adapter is connected to the diagram annotation's DomNode.
+        /// Raises the DomNodeAdapter NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
             base.OnNodeSet();

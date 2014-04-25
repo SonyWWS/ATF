@@ -15,12 +15,12 @@ namespace SimpleDomNoXmlEditorSample
     /// This is a simple DOM editor sample application. 
     /// It is very similar to the SimpleDomEditor sample, except that it does not use XML.
     /// It does not define DOM types with a schema file.
-    /// This sample editor demonstrates the use of the DOM (Document Object Model), including defining a data model, 
-    /// how to implement IDocumentClient and use the document framework to manage multiple documents, implement File menu items and more; 
+    /// This sample editor demonstrates the use of the DOM (Document Object Model), including defining a data model; 
+    /// how to implement IDocumentClient and use the document framework to manage multiple documents; implement File menu items and more; 
     /// how to implement a UI parts palette; how to display editable lists of events and resources; how to adapt data to a list; 
     /// how to use ContextRegistry to track the active editing context; 
     /// how to adapt data so that ATF command components can be used to get undo/redo, cut/paste, and selection commands; 
-    /// how to enable property editing on selected UI elements, and how to implement a standard Help/About dialog.
+    /// how to enable property editing on selected UI elements; and how to implement a standard Help/About dialog.
     /// For more information, see https://github.com/SonyWWS/ATF/wiki/ATF-Simple-DOM-No-XML-Editor-Sample.
     /// For a discussion of this sample's programming, see 
     /// https://github.com/SonyWWS/ATF/wiki/Simple-DOM-No-XML-Editor-Programming-Discussion. </summary>
@@ -69,10 +69,11 @@ namespace SimpleDomNoXmlEditorSample
                 typeof(HistoryLister),                  // vistual list of undo/redo stack
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
-                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
+                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
+                                                        //  Reset All, Copy Value, Paste Value, Copy All, Paste All
 
                 typeof(Outputs),                        // passes messages to all log writers
-                typeof(ErrorDialogService),             // displays errors to the user a in message box
+                typeof(ErrorDialogService),             // displays errors to the user in a message box
 
                 typeof(HelpAboutCommand),               // custom command component to display Help/About dialog
                 typeof(DefaultTabCommands),             // provides the default commands related to document tab Controls

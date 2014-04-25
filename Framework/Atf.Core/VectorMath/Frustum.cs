@@ -387,29 +387,35 @@ namespace Sce.Atf.VectorMath
                 Right, Left, Top, Bottom, Near, Far);
         }
 
+        #region IFormattable
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.Frustum structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D viewing frustum</returns>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return Right.ToString("R") + ", " + Left.ToString("R") + ", " + Top.ToString("R") + ", " + Bottom.ToString("R") +
-                    ", " + Near.ToString("R") + ", " + Far.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-            (
-                 "({0}, {1}, {2}, {3}, {4}, {5})",
-                 ((double)Right).ToString(format, formatProvider),
-                 ((double)Left).ToString(format, formatProvider),
-                 ((double)Top).ToString(format, formatProvider),
-                 ((double)Bottom).ToString(format, formatProvider),
-                 ((double)Near).ToString(format, formatProvider),
-                 ((double)Far).ToString(format, formatProvider)
-             );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            return String.Format(
+                 "{0}{6} {1}{6} {2}{6} {3}{6} {4}{6} {5}",
+                 Right.ToString(format, formatProvider),
+                 Left.ToString(format, formatProvider),
+                 Top.ToString(format, formatProvider),
+                 Bottom.ToString(format, formatProvider),
+                 Near.ToString(format, formatProvider),
+                 Far.ToString(format, formatProvider),
+                 listSeparator);
         }
+        #endregion
 
         //(-0.5,-0.5) is the lower left corner and (0.5,0.5) is the upper right corner.
         private void ClipPerspective(float left, float right, float top, float bottom)

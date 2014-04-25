@@ -17,20 +17,33 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample
 {
+    /// <summary>
+    /// Component to add "Add Template Folder" command to application</summary>
     public class TemplatingCommands : Sce.Atf.Dom.TemplatingCommands
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="commandService">Command service</param>
+        /// <param name="contextRegistry">Context registry</param>
+        /// <param name="templateLister">Template library lister</param>
         [ImportingConstructor]
         public TemplatingCommands(ICommandService commandService, IContextRegistry contextRegistry, TemplateLister templateLister) : 
             base(commandService, contextRegistry, templateLister)
         {
         }
 
+        /// <summary>
+        /// Gets type of template folder</summary>
         protected override DomNodeType TemplateFolderType
         {
             get { return Schema.templateFolderType.Type; }
         }
 
-        // items can be promoted when the active context is CircuitEditingContext and all the items are selected modules 
+        /// <summary>
+        /// Gets whether the target can be promoted to template library.
+        /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
+        /// <param name="items">Items to promote</param>
+        /// <returns>True iff the target can be promoted to template library</returns>
         public override bool CanPromoteToTemplateLibrary(IEnumerable<object> items)
         {
             var circuitEditingContext = ContextRegistry.GetActiveContext<CircuitEditingContext>();
@@ -49,6 +62,10 @@ namespace CircuitEditorSample
             return false;
         }
 
+        /// <summary>
+        /// Promotes objects to template library.
+        /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
+        /// <param name="items">Items to promote</param>
         public override void PromoteToTemplateLibrary(IEnumerable<object> items)
         {
             var itemsArray = items.ToArray();
@@ -152,8 +169,12 @@ namespace CircuitEditorSample
             }
         }
 
-        // items can be demoted from reference instances to copy instances 
-        // when the active context is CircuitEditingContext and all the items are selected references 
+        /// <summary>
+        /// Gets whether the target can be demoted from reference instances to copy instances.
+        /// Items can be demoted when the active context is CircuitEditingContext and
+        /// all the items are selected references.</summary>
+        /// <param name="items">Items to demote</param>
+        /// <returns>True iff the target can be demoted</returns>
         public override bool CanDemoteToCopyInstance(IEnumerable<object> items)
         {
             var circuitEditingContext = ContextRegistry.GetActiveContext<CircuitEditingContext>();
@@ -178,6 +199,11 @@ namespace CircuitEditorSample
             return false;
         }
 
+        /// <summary>
+        /// Demotes items from reference instances to copy instances.
+        /// Items can be demoted when the active context is CircuitEditingContext and
+        /// all the items are selected references.</summary>
+        /// <param name="items">Items to demote</param>
         public override DomNode[] DemoteToCopyInstance(IEnumerable<object> items)
         {
             // cache the external connections
@@ -254,6 +280,9 @@ namespace CircuitEditorSample
 
         /// <summary>
         ///  Load circuit templates stored in an external file</summary>
+        /// <param name="uri">Document URI, or null to present file open dialog to user</param>
+        /// <returns>Returns the file path used to load the external templates.
+        /// An empty string indicates no templates were loaded</returns>
         protected override ImportedContent LoadExternalTemplateLibrary(Uri uri)
         {
             DomNode node = null;

@@ -61,6 +61,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up Settings Service</summary>
         public virtual void Initialize()
         {
             // Register settings to persist column widths

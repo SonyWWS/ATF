@@ -31,14 +31,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         IEditableGraphContainer<Element, Wire, ICircuitPin>
     {
         // required  DomNodeType info
+        /// <summary>
+        /// Gets type for Wire</summary>
         protected abstract DomNodeType WireType { get; }
 
         // callbacks needed for container-crossing elements moving (IEditableGraphContainer)
-        public Func<AdaptableControl, Element, RectangleF> GetLocalBound; //callback to get a bounding rectangle for the item in graph space
-        public Func<AdaptableControl, IEnumerable<Element>, Point> GetWorldOffset; //callback to get the drawing offset for the graph path in graph space
-        public Func<AdaptableControl, int> GetTitleHeight; // callback to get the title height at the top of an element
-        public Func<AdaptableControl, int> GetLabelHeight; // callback to get the label height at the bottom of an element
-        public Func<AdaptableControl, Point> GetSubContentOffset; // callback to get offset to be added to draw all sub-elements when the group is expanded inline
+        /// <summary>
+        /// Callback to get bounding rectangle for item in graph space</summary>
+        public Func<AdaptableControl, Element, RectangleF> GetLocalBound;
+        /// <summary>
+        /// Callback to get drawing offset for graph path in graph space</summary>
+        public Func<AdaptableControl, IEnumerable<Element>, Point> GetWorldOffset;
+        /// <summary>
+        /// Callback to get title height at top of element</summary>
+        public Func<AdaptableControl, int> GetTitleHeight;
+        /// <summary>
+        /// Callback to get label height at bottom of element</summary>
+        public Func<AdaptableControl, int> GetLabelHeight;
+        /// <summary>
+        /// Callback to get offset to be added to draw all sub-elements when group is expanded inline</summary>
+        public Func<AdaptableControl, Point> GetSubContentOffset;
   
         private enum MoveElementBehavior
         {
@@ -103,7 +115,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets/Sets a value indicating whether the editing context supports nested group</summary>
+        /// Gets or sets whether the editing context supports nested group</summary>
         public bool SupportsNestedGroup
         {
             get { return m_supportsNestedGroup; }
@@ -314,7 +326,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Edits objects using a transaction, so the history context can be verified.
-        /// Called by automated scripts.</summary>
+        /// Called by automated scripts during testing.</summary>
         /// <param name="node">Object to modify</param>
         /// <param name="attr">Attribute to modify</param>
         /// <param name="newValue">New value</param>
@@ -329,7 +341,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Adds new object of given type to circuit using a transaction. Called by automated scripts.</summary>
+        /// Adds new object of given type to circuit using a transaction. Called by automated scripts during testing.</summary>
         /// <typeparam name="T">Type of object to add</typeparam>
         /// <param name="domNode">DomNode that contains added object</param>
         /// <param name="xPos">X-coordinate at center of insertion position</param>
@@ -717,6 +729,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         #region IColoringContext Members
 
+        /// <summary>
+        /// Gets the item's specified color in the context</summary>
+        /// <param name="kind">Coloring type</param>
+        /// <param name="item">Item</param>
         Color IColoringContext.GetColor(ColoringTypes kind, object item)
         {
             if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
@@ -724,6 +740,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return s_zeroColor;          
         }
 
+        /// <summary>
+        /// Returns whether the item can be colored</summary>
+        /// <param name="kind">Coloring type</param>
+        /// <param name="item">Item to color</param>
+        /// <returns>True iff the item can be colored</returns>
         bool IColoringContext.CanSetColor(ColoringTypes kind, object item)
         {
             if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
@@ -731,6 +752,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return false;
         }
 
+        /// <summary>
+        /// Sets the item's color</summary>
+        /// <param name="kind">Coloring type</param>
+        /// <param name="item">Item to name</param>
+        /// <param name="newValue">Item new color</param>
         void IColoringContext.SetColor(ColoringTypes kind, object item, Color newValue)
         {
             if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
@@ -745,9 +771,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the given module's two pins can be connected. "from" and "to" refer to the corresponding
         /// properties in IGraphEdge, not to a dragging operation, for example.</summary>
-        /// <param name="fromNode">From node</param>
+        /// <param name="fromNode">"From" node</param>
         /// <param name="outputPin">Output pin</param>
-        /// <param name="toNode">To node</param>
+        /// <param name="toNode">"To" node</param>
         /// <param name="inputPin">Input pin</param>
         /// <returns>Whether the "from" node pin can be connected to the "to" node pin</returns>
         bool IEditableGraph<Element, Wire, ICircuitPin>.CanConnect(
@@ -779,11 +805,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Connects the "from" module's pin to the "to" module's pin by creating an IGraphEdge whose
-        /// FromNode is 'fromNode', ToNode is 'toNode', etc.</summary>
-        /// <param name="fromNode">From module</param>
-        /// <param name="fromRoute">From pin</param>
-        /// <param name="toNode">To module</param>
-        /// <param name="toRoute">To pin</param>
+        /// "from" node is "fromNode", "to" node is "toNode", etc.</summary>
+        /// <param name="fromNode">"From" module</param>
+        /// <param name="fromRoute">"From" pin</param>
+        /// <param name="toNode">"To" module</param>
+        /// <param name="toRoute">"To" pin</param>
         /// <param name="existingEdge">Existing connection that is being reconnected, or null if new connection</param>
         /// <returns>New connection from the "from" module's pin to the "to" module's pin</returns>
         Wire IEditableGraph<Element, Wire, ICircuitPin>.Connect(
@@ -851,8 +877,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         #region IEditableGraphContainer<Module, Connection, ICircuitPin> Members
 
         /// <summary>
-        /// Can move the given modules into this container
-        /// </summary>
+        /// Can given modules be moved into a new container</summary>
+        /// <param name="newParent">New module parent</param>
+        /// <param name="movingObjects">Objects being moved</param>
+        /// <returns>True iff objects can be moved to new parent</returns>
         bool IEditableGraphContainer<Element, Wire, ICircuitPin>.CanMove(object newParent, IEnumerable<object> movingObjects)
         {
             if (newParent == null)
@@ -903,6 +931,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         }
 
+        /// <summary>
+        /// Moves the given nodes into a container</summary>
+        /// <param name="newParent">New container</param>
+        /// <param name="movingObjects">Nodes to move</param>
         void IEditableGraphContainer<Element, Wire, ICircuitPin>.Move(object newParent, IEnumerable<object> movingObjects)
         {
             if (newParent == null)
@@ -953,6 +985,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             graphValidator.MovingCrossContainer = true;
         }
 
+        /// <summary>
+        /// Can a container be resized</summary>
+        /// <param name="container">Container to resize</param>
+        /// <param name="borderPart">Part of border to resize</param>
+        /// <returns>True iff the container border can be resized</returns>
         bool IEditableGraphContainer<Element, Wire, ICircuitPin>.CanResize(object container, DiagramBorder borderPart)
         {
             if (container.Is<Group>())
@@ -967,6 +1004,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return false;
         }
 
+        /// <summary>
+        /// Resizes a container</summary>
+        /// <param name="container">Container to resize</param>
+        /// <param name="newWidth">New container width</param>
+        /// <param name="newHeight">New container height</param>
         void IEditableGraphContainer<Element, Wire, ICircuitPin>.Resize(object container, int newWidth, int newHeight)
         {
             var group = container.Cast<Group>();
@@ -980,8 +1022,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         #endregion
 
-        /// Get loation offset from oldContainer to newContainer, compensate renderer displacements for element title and margin
-        /// sub-nodes location are defined relative to the parent container
+        /// Gets location offset from oldContainer to newContainer, compensate renderer displacements for element title
+        /// and margin sub-nodes location are defined relative to the parent container
         private Point GetRelativeOffset(ICircuitContainer oldContainer, ICircuitContainer newContainer)
         {
             AdaptableControl control = m_viewingContext.Cast<AdaptableControl>();

@@ -14,7 +14,9 @@ namespace SimpleDomEditorSample
 {
     /// <summary>
     /// Editor class that creates and saves event sequence documents. It also registers
-    /// the event sequence ListView controls with the hosting service.</summary>
+    /// the event sequence ListView controls with the hosting service.
+    /// This document client handles file operations, such as saving and closing a document, and
+    /// handles application data persistence.</summary>
     [Export(typeof(IDocumentClient))]
     [Export(typeof(Editor))]
     [Export(typeof(IInitializable))]
@@ -55,6 +57,8 @@ namespace SimpleDomEditorSample
 
         #region IInitializable Members        
 
+        /// <summary>
+        /// Finishes initializing component by setting up scripting service</summary>
         void IInitializable.Initialize()
         {
             if (m_scriptingService != null)
@@ -72,8 +76,7 @@ namespace SimpleDomEditorSample
 
         /// <summary>
         /// Gets information about the document client, such as the file type and file
-        /// extensions it supports, whether or not it allows multiple documents to be open,
-        /// etc.</summary>
+        /// extensions it supports, whether or not it allows multiple documents to be open, etc.</summary>
         public DocumentClientInfo Info
         {
             get { return DocumentClientInfo; }
@@ -227,7 +230,7 @@ namespace SimpleDomEditorSample
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control. Allows user to save document before it closes.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control can close, or false to cancel</returns>
         /// <remarks>

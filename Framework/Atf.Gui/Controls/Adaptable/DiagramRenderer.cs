@@ -35,16 +35,24 @@ namespace Sce.Atf.Controls.Adaptable
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources</summary>
         public void Dispose()
         {
             if (m_disposed) return;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        /// <summary>
+        /// Sets dispose flag</summary>
+        /// <param name="disposing">Value to set dispose flag to</param>
         protected virtual void Dispose(bool disposing)
         {
             m_disposed = true;
         }
+        /// <summary>
+        /// Destructor</summary>
         ~DiagramRenderer()
         {
             Dispose(false);

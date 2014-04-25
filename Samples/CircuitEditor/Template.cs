@@ -7,6 +7,8 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample
 {
+    /// <summary>
+    /// Adapts DomNode to a template, which is is a module that can be referenced into a circuit</summary>
     public class Template : Sce.Atf.Dom.Template
     {
         /// <summary>
@@ -17,6 +19,8 @@ namespace CircuitEditorSample
             set { DomNode.SetAttribute(Schema.templateType.labelAttribute, value); }
         }
 
+        /// <summary>
+        /// Gets or sets DomNode module that represents the template</summary>
         public override DomNode Model
         {
             get { return GetChild<DomNode>(Schema.templateType.moduleChild); }
@@ -41,6 +45,8 @@ namespace CircuitEditorSample
             set { DomNode.SetAttribute(Schema.templateType.guidAttribute, value.ToString()); }
         }
 
+        /// <summary>
+        /// Returns true iff the template can reference the specified target item</summary>
         public override bool CanReference(DomNode item)
         {
             return item.Is<Module>();

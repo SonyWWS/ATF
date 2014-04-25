@@ -10,10 +10,13 @@ using Sce.Atf.Dom;
 namespace CircuitEditorSample
 {
     /// <summary>
-    /// Provides a surrogate  that delegates communications with the targeted group on behalf of the group referencing instance. 
-    /// </summary>
+    /// Provides a surrogate that delegates communications with the targeted group on behalf of the group referencing instance</summary>
     public class ProxyGroup: Group, ICircuitGroupType<Module, Connection, ICircuitPin>
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="owner">Group owner</param>
+        /// <param name="target">Target Group</param>
         public ProxyGroup(GroupInstance owner, Group target)
         {
             m_owner = owner;
@@ -30,9 +33,13 @@ namespace CircuitEditorSample
             thisAdapter.Adaptee = target.DomNode;
         }
 
-        // For template instances,  dom attribute changed events that lead to ItemChanged in the target group 
-        // will bubble up along the templates dom tree that is likely separated from the graph dom tree; 
-        // need to reroute target group  ItemChanged from template tree to graph tree.
+        /// <summary>
+        /// ItemChanged event handler</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
+        /// <remarks>For template instances, DOM attribute changed events that lead to ItemChanged in the target group 
+        /// bubble up along the templates DOM node tree that is likely separate from the graph DOM node tree; 
+        /// need to reroute target group ItemChanged from template tree to graph tree.</remarks>
         void circuitEditingContext_ItemChanged(object sender, ItemChangedEventArgs<object> e)
         {
 
@@ -44,28 +51,36 @@ namespace CircuitEditorSample
             }
         }
 
+        /// <summary>
+        /// Gets ICircuitElementType of ProxyGroup</summary>
         public override ICircuitElementType Type
         {
             get { return this; }
         }
 
         /// <summary>
-        /// Gets or sets CircuitGroupInfo object which controls various options on this circuit group.</summary>
+        /// Gets or sets CircuitGroupInfo object which controls various options on this circuit group</summary>
         public override CircuitGroupInfo Info
         {
             get { return m_info; }
         }
 
+        /// <summary>
+        /// Gets owner's parent as IGraph</summary>
         public override IGraph<Element, Wire, ICircuitPin> ParentGraph
         {
             get { return m_owner.DomNode.Parent.As<IGraph<Element, Wire, ICircuitPin>>(); }
         }
 
+        /// <summary>
+        /// Gets local bounds information</summary>
         Rectangle IGraphNode.Bounds
         {
             get { return m_owner.Bounds; }
         }
 
+        /// <summary>
+        /// Gets or sets local bounds information</summary>
         public override Rectangle Bounds
         {
             get { return m_owner.Bounds; }
@@ -73,16 +88,22 @@ namespace CircuitEditorSample
         }
 
         // ICircuitElementType
+        /// <summary>
+        /// Gets desired interior size, in pixels, of target group</summary>
         public Size InteriorSize
         {
             get { return m_targetGroup.Type.InteriorSize; }
         }
 
+        /// <summary>
+        /// Gets image to draw for target group</summary>
         public Image Image
         {
             get { return m_targetGroup.Type.Image; }
         }
 
+        /// <summary>
+        /// Gets a list of the visible input pins in target group</summary>
         public override IList<ICircuitPin> Inputs
         {
             get
@@ -92,18 +113,24 @@ namespace CircuitEditorSample
             }
         }
 
+        /// <summary>
+        /// Gets a list of the visible output pins in target group</summary>
         public override IList<ICircuitPin> Outputs
         {
             get { return m_outputs.OrderBy(n => n.Index).Where(n => n.Visible).ToArray(); }
         }
 
         // ICircuitGroupType
+        /// <summary>
+        /// Gets or sets whether the owner is expanded</summary>
         public override bool Expanded
         {
             get { return m_owner.Expanded; }
             set { m_owner.Expanded= value; }
         }
 
+        /// <summary>
+        /// Gets or sets whether to show the group pins when the owner group is expanded</summary>
         public override bool ShowExpandedGroupPins
         {
             get { return m_owner.ShowExpandedGroupPins; }
@@ -114,17 +141,25 @@ namespace CircuitEditorSample
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the group container is automatically resized to display its entire contents</summary>
         public override bool AutoSize
         {
             get { return m_targetGroup.AutoSize; }
             set { m_targetGroup.AutoSize  = value; }
         }
 
+        /// <summary>
+        /// Handler for event that raised if any of the properties on group are changed</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         protected override void GroupInfoChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             ShowExpandedGroupPins = Info.ShowExpandedGroupPins;
         }
 
+        /// <summary>
+        /// Gets the group's (subgraph's) internal edges</summary>
         IEnumerable<Connection> ICircuitGroupType<Module, Connection, ICircuitPin>.SubEdges
         {
             get
@@ -145,6 +180,8 @@ namespace CircuitEditorSample
             }
         }
 
+        /// <summary>
+        /// Refresh group</summary>
         public void Refresh()
         {
             m_inputs.Clear(); 
@@ -192,6 +229,12 @@ namespace CircuitEditorSample
             get{ return m_outputs;}
         }
 
+        /// <summary>
+        /// Finds the element and pin that matched the pin target for this circuit container</summary>
+        /// <param name="pinTarget">Contains pin's element and pin index</param>
+        /// <param name="inputSide">True for input pin, false for output pin</param>
+        /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
+        /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public override Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             if (pinTarget.InstancingNode != DomNode)
@@ -202,6 +245,10 @@ namespace CircuitEditorSample
             return result;
         }
 
+        /// <summary>
+        /// Handler for target group Changed event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         void targetGroup_Changed(object sender, System.EventArgs e)
         {
             m_info.Offset = m_targetGroup.Info.Offset;

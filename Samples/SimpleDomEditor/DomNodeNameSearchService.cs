@@ -10,10 +10,10 @@ using Sce.Atf.Applications;
 namespace SimpleDomEditorSample
 {
     /// <summary>
-    /// Defines a simple GUI for searching and replacement of DomNode names on the currently 
+    /// Defines a simple GUI for search and replacement of DomNode names on the currently 
     /// active document. It comprises VERY loosely coupled elements, each managing a part 
     /// of this process, and in fact does little more than bind these elements to the currently 
-    /// active context</summary>
+    /// active context.</summary>
     [Export(typeof(DomNodeNameSearchService))]
     [Export(typeof(IInitializable))]
     public class DomNodeNameSearchService : IInitializable, IControlHostClient
@@ -39,6 +39,8 @@ namespace SimpleDomEditorSample
 
         #region IInitializable members
 
+        /// <summary>
+        /// Finishes initializing component by registering the control</summary>
         public void Initialize()
         {
             ControlHostServices.RegisterControl(m_controlHostService,

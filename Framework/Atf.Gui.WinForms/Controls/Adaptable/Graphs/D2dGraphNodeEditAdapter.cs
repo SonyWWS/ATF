@@ -48,6 +48,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             set { m_draggingSubNodes = value; }
         }
              
+        /// <summary>
+        /// Position node dragged to</summary>
+        /// <param name="node">Dragged node</param>
+        /// <returns>Point node dragged to or null if not dragged</returns>
         public Point? NodeDraggingPosition(TNode node)
         {
             if (m_draggingNodes != null)

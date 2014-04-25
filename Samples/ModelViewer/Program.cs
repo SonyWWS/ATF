@@ -14,22 +14,22 @@ using Sce.Atf.Dom;
 namespace ModelViewerSample
 {
     /// <summary>
-    /// This is a 3d model viewer sample application.
-    /// This sample shows all the required steps to load and render 3d models 
+    /// This is a 3D model viewer sample application.
+    /// This sample shows all the required steps to load and render 3D models 
     /// using ATF rendering subsystem.
     /// For more information, see https://github.com/SonyWWS/ATF/wiki/ATF-Model-Viewer-Sample.
     /// For a discussion of this sample's programming, see 
     /// https://github.com/SonyWWS/ATF/wiki/Model-Viewer-Programming-Discussion.
     /// 
-    /// If you are building game level editor please use the standalone LevelEditor
-    /// located at wws_shared\sdk\trunk\components\wws_leveleditor
-    /// For more info about the LevelEditor project, please visit the LevelEditor home page
+    /// If you are building a game level editor, use the standalone LevelEditor
+    /// located at wws_shared\sdk\trunk\components\wws_leveleditor.
+    /// For more info about the LevelEditor project, visit the LevelEditor home page
     /// http://wiki.ship.scea.com/confluence/display/WWSSDKLEVELEDITOR/LevelEditor
     /// </summary>
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.</summary>
+        /// The main entry point for the application</summary>
         [STAThread]
         static void Main()
         {

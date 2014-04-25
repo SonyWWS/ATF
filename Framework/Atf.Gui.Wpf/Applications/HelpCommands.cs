@@ -39,6 +39,7 @@ namespace Sce.Atf.Wpf.Applications
         /// Enum for Help command group</summary>
         public enum Groups
         {
+            /// <summary>Help command</summary>
             Help
         }
 
@@ -73,6 +74,9 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering Help command, setting default help path,
+        /// and setting up Settings Service</summary>
         public void Initialize()
         {
             ShowContextHelp = true;

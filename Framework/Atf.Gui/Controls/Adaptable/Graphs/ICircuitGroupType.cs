@@ -20,7 +20,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         bool Expanded { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the hierarchical container is automatically resized to display its entire contents.</summary>
+        /// Gets or sets whether the group container is automatically resized to display its entire contents</summary>
         bool AutoSize { get; set; }
 
 

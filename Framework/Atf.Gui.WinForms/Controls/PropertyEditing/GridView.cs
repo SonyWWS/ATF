@@ -2447,7 +2447,8 @@ namespace Sce.Atf.Controls.PropertyEditing
             private static int s_columnHeaderMouseDownPropertyIndex;
             private static bool s_columnHeaderMouseDown;
             private static bool s_draggingColumnHeader;
-
+            /// <summary>
+            /// Minimum column width</summary>
             public const int MinimumColumnWidth = 24;
         }
 

@@ -21,6 +21,8 @@ namespace Sce.Atf.Collada
      
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by loading schema</summary>
         public void Initialize()
         {
             if (m_initialized)

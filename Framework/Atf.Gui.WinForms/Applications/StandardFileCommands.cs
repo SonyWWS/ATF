@@ -747,9 +747,13 @@ namespace Sce.Atf.Applications
             return document;
         }
 
-        // 'Safe' in the sense that all exceptions are caught (and reported via OnSaveException).
-        // The implementer of IDocumentClient is responsible for ensuring that existing data is not lost
-        //  if the save fails.
+        /// <summary>
+        /// Save document safely. "Safe" in the sense that all exceptions are caught (and reported via OnSaveException).
+        /// The implementer of IDocumentClient is responsible for ensuring that existing data is not lost
+        /// if the save fails.</summary>
+        /// <param name="document">Document to save</param>
+        /// <param name="kind">Kind of document event associated with save</param>
+        /// <returns>True iff document is saved safely</returns>
         protected bool SafeSave(IDocument document, DocumentEventType kind)
         {
             IsSaving = true;

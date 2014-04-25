@@ -21,7 +21,7 @@ namespace Sce.Atf.Direct2D
             {
                 m_center = value;
                 var brush = (RadialGradientBrush)NativeBrush;
-                brush.Center = new SharpDX.DrawingPointF(value.X, value.Y);
+                brush.Center = value.ToSharpDX();
             }
         }
 
@@ -35,7 +35,7 @@ namespace Sce.Atf.Direct2D
             {
                 m_gradientOriginOffset = value;
                 var brush = (RadialGradientBrush)NativeBrush;
-                brush.GradientOriginOffset = new SharpDX.DrawingPointF(value.X, value.Y);
+                brush.GradientOriginOffset = value.ToSharpDX();
             }
         }
 

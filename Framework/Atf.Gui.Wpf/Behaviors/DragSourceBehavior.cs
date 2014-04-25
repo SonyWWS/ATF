@@ -30,7 +30,7 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewMouseLeftButtonUp += new MouseButtonEventHandler(OnMouseLeftButtonUp);
             AssociatedObject.MouseMove += new MouseEventHandler(OnMouseMove);
 
-            DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
         }
 
         #endregion

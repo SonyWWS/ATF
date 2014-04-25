@@ -20,6 +20,9 @@ namespace Sce.Atf.Wpf.Applications
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by calling base Initialize() and
+        /// subscribing to DispatcherUnhandledException</summary>
         public override void Initialize()
         {
             base.Initialize();

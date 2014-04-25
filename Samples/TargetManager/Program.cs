@@ -17,7 +17,8 @@ namespace TargetManager
     /// This is a target manager sample application.
     /// TargetManager shows how to use the TargetEnumerationService to discover, add, configure and select targets. 
     /// Targets are network endpoints, such as TCP/IP addresses, PS3 DevKits (to be added) or Vita DevKits. 
-    /// TargetEnumerationService is implemented as a MEF component that supports the ITargetConsumer interface for querying and enumerating targets. 
+    /// TargetEnumerationService is implemented as a MEF component that supports the ITargetConsumer interface 
+    /// for querying and enumerating targets. 
     /// It consumes target providers created by the application.
     /// For more information, see https://github.com/SonyWWS/ATF/wiki/ATF-Target-Manager-Sample.
     /// For a discussion of this sample's programming, see 

@@ -13,7 +13,7 @@ namespace StatechartEditorSample
     public class Statechart : DomNodeAdapter
     {
         /// <summary>
-        /// Gets or sets the bounding rectangle for the statechart. Not backed by DOM</summary>
+        /// Gets or sets the bounding rectangle for the statechart. Not backed by DOM.</summary>
         public Rectangle Bounds
         {
             get { return m_bounds; }

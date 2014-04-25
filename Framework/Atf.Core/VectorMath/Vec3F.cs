@@ -1,6 +1,7 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Globalization;
 
 namespace Sce.Atf.VectorMath
 {
@@ -423,11 +424,12 @@ namespace Sce.Atf.VectorMath
         /// </remarks>
         public static Vec3F Parse(string s)
         {
-            string[] components = s.Split(',');
+            string listSeparator = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+            string[] components = s.Split(new[] {listSeparator}, StringSplitOptions.RemoveEmptyEntries);
             if (components.Length != 3)
                 throw new System.FormatException();
 
-            Vec3F result = new Vec3F();
+            var result = new Vec3F();
             for (int i = 0; i < 3; i++)
                 result[i] = float.Parse(components[i]);
 
@@ -537,8 +539,6 @@ namespace Sce.Atf.VectorMath
 
         #endregion
 
-        #region Overrides
-
         /// <summary>
         /// Indicates whether this instance and a specified object are exactly equal</summary>
         /// <param name="obj">Another object to compare to</param>
@@ -566,34 +566,39 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.Vec3F structure</summary>
-        /// <returns> A <see cref="T:System.String"></see> representing the 3D vector</returns>        
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary> 
-        /// Returns the string representation of this Scea.VectorMath.Vec3F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D vector</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return X.ToString("R") + ",  " + Y.ToString("R") + ",  " + Z.ToString("R");
-            else
-                return String.Format
-                (
-                     "({0}, {1}, {2})",
-                     ((double)X).ToString(format, formatProvider),
-                     ((double)Y).ToString(format, formatProvider),
-                     ((double)Z).ToString(format, formatProvider)
-                 );
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            return String.Format(
+                "{1}{0} {2}{0} {3}",
+                listSeparator,
+                ((double)X).ToString(format, formatProvider),
+                ((double)Y).ToString(format, formatProvider),
+                ((double)Z).ToString(format, formatProvider));
         }
-
         #endregion
     }
 }

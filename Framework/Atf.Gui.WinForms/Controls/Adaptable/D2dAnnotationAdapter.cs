@@ -653,6 +653,10 @@ namespace Sce.Atf.Controls.Adaptable
                 AdaptedControl.Invalidate();
         }
 
+        /// <summary>
+        /// Handles mouse up event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Mouse event argumeents</param>
         protected override void OnMouseUp(object sender, MouseEventArgs e)
         {
             m_rmbPressed = false;
@@ -1344,7 +1348,9 @@ namespace Sce.Atf.Controls.Adaptable
 
         }
 
-        // Delete any existing selection
+        /// <summary>
+        /// Deletes any existing selection</summary>
+        /// <param name="annotation">IAnnotation with selection</param>
         public void DeleteTextSelection(IAnnotation annotation)
         {
             if (m_annotationEditors.ContainsKey(annotation))
@@ -1367,6 +1373,9 @@ namespace Sce.Atf.Controls.Adaptable
             }
         }
 
+        /// <summary>
+        /// Pastes clipboard contents to annotation text</summary>
+        /// <param name="annotation">IAnnotation text pasted to</param>
         public void PasteFromClipboard(IAnnotation annotation)
         {
             if (m_annotationEditors.ContainsKey(annotation))
@@ -1407,7 +1416,10 @@ namespace Sce.Atf.Controls.Adaptable
             }
         }
 
-        // return true when the annotation is selected and the adapted control has keyboard focus
+        /// <summary>
+        /// Indicates when the annotation is selected and the adapted control has keyboard focus</summary>
+        /// <param name="annotation">IAnnotation to test</param>
+        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanDeleteTextSelection(IAnnotation annotation)
         {           
             return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
@@ -1415,7 +1427,10 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
 
-        // return true when the annotation is selected and the adapted control has keyboard focus
+        /// <summary>
+        /// Tests when the annotation is selected and the adapted control has keyboard focus</summary>
+        /// <param name="annotation">IAnnotation to test</param>
+        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanInsertText(IAnnotation annotation)
         {
             return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
@@ -1423,13 +1438,20 @@ namespace Sce.Atf.Controls.Adaptable
 
         }
 
-        // return true when the annotation is selected and the adapted control has keyboard focus
+        /// <summary>
+        /// Tests when the annotation is selected and the adapted control has keyboard focus</summary>
+        /// <param name="annotation">IAnnotation to test</param>
+        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanCopyText(IAnnotation annotation)
         {
             return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
                 AdaptedControl.HasKeyboardFocus;
         }
 
+        /// <summary>
+        /// Obtains selected text</summary>
+        /// <param name="annotation">IAnnotation whose selected test is obtained</param>
+        /// <returns>Annotation's selected text</returns>
         public string TextSelected(IAnnotation annotation)
         {
             if (m_annotationEditors.ContainsKey(annotation))

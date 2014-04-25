@@ -1,11 +1,11 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using SharpDX.Direct2D1;
-using SharpDX.WIC;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Sce.Atf.Direct2D
 {
+    /// <summary>
+    /// A Direct2D Windows Imaging Component (WIC). See D2dFactory.CreateWicGraphics().</summary>
     public sealed class D2dWicGraphics : D2dGraphics
     {
         private readonly SharpDX.WIC.Bitmap m_wicBitmap;
@@ -17,14 +17,18 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Recreates the render target, if necessary, by calling SetRenderTarget.</summary>
+        /// Recreates the render target, if necessary, by calling SetRenderTarget</summary>
         protected override void RecreateRenderTarget()
         {
-            // do not recreate D2dBitmapGraphics let the user do that 
-            // by handling RecreateResources event from the D2dGraphics 
-            // that created this D2dBitmapGraphics
+            // Do not recreate D2dWicGraphics. Let the user do that
+            // by handling the RecreateResources event from the D2dGraphics 
+            // that created this D2dWicGraphics.
         }
 
+        /// <summary>
+        /// Returns a System.Drawing.Bitmap object that is a copy of the image stored in this
+        /// D2dWicGraphics object.</summary>
+        /// <returns></returns>
         public System.Drawing.Bitmap Copy()
         {
             var bitmap = new System.Drawing.Bitmap(m_wicBitmap.Size.Width, m_wicBitmap.Size.Height);

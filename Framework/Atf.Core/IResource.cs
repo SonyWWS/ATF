@@ -28,6 +28,8 @@ namespace Sce.Atf
         event EventHandler<UriChangedEventArgs> UriChanged;
     }
 
+    /// <summary>
+    /// Class with static methods for working with IResource objects</summary>
     public static class Resource
     {
         /// <summary>

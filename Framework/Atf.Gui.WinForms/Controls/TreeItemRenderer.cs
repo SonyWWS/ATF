@@ -434,22 +434,39 @@ namespace Sce.Atf.Controls
         private Color m_categoryEndColor = Color.FromArgb(0, 0, 0, 0);
     }
     
-    // test case to have wildly colorful alternating letters of the label and extra-big expanders.
+    /// <summary>
+    /// Test case to have wildly colorful alternating letters of the label and extra-big expanders</summary>
     [Obsolete("Is a temporary example. Will be removed or relocated.")]
     public class ChristmasTreeRenderer : TreeItemRenderer
     {
+        /// <summary>
+        /// Constructor</summary>
         public ChristmasTreeRenderer()
         {
             //ExpanderSize = new Size(16,32); //huge! drammatic!
             ExpanderSize = new Size(16, 8); //wide and short
             CheckBoxSize = new Size(40, 32);
         }
+        /// <summary>
+        /// Measures the dimensions of the label in pixels. Must be in sync with DrawLabel.</summary>
+        /// <param name="node">The tree node whose label is to be measured</param>
+        /// <param name="g">The current GDI+ Graphics object</param>
+        /// <returns>The width and height of a tight rectangle around the label in pixels. The
+        /// TreeControl provides the paddding in between items. Technically, the units of measure
+        /// are specified by Graphics.PageUnit.</returns>
         public override Size MeasureLabel(TreeControl.Node node, Graphics g)
         {
             Size result = base.MeasureLabel(node, g);
             result.Width += node.Label.Length; //throw in an extra pixel per char
             return result;
         }
+        /// <summary>
+        /// Draws the text of a tree node's label at the specified location and the same size
+        /// that MeasureLabel() would calculate for this node</summary>
+        /// <param name="node">The tree control's node whose label is to be drawn</param>
+        /// <param name="g">The current GDI+ graphics object</param>
+        /// <param name="x">The x-coordinate of the upper-left corner of the drawn text</param>
+        /// <param name="y">The y-coordinate of the upper-left corner of the drawn text</param>
         public override void DrawLabel(TreeControl.Node node, Graphics g, int x, int y)
         {
             RectangleF textRect = new RectangleF(x, y, node.LabelWidth, node.LabelHeight);
@@ -493,6 +510,13 @@ namespace Sce.Atf.Controls
                 g.DrawString(oneLetter, font, textBrush, oneCharRect, format);
             }
         }
+        /// <summary>
+        /// Draws the expander icon at the given location, in the state given by
+        /// the node's Expanded property and the size specified by ExpanderSize</summary>
+        /// <param name="node">The node to draw an expander icon for</param>
+        /// <param name="g">The current GDI+ graphics object</param>
+        /// <param name="x">The x-coordinate of the upper-left corner of the expander icon</param>
+        /// <param name="y">The y-coordinate of the upper-left corner of the expander icon</param>
         public override void DrawExpander(TreeControl.Node node, Graphics g, int x, int y)
         {
             g.DrawRectangle(s_expanderPen, x, y, ExpanderSize.Width, ExpanderSize.Height);
@@ -513,6 +537,12 @@ namespace Sce.Atf.Controls
                     x + center.X,
                     y + 1 + lineLength.Height);
         }
+        /// <summary>
+        /// Draws hierarchy lines for tree control styles that visually show parent-child relationships with
+        /// vertical and horizontal lines</summary>
+        /// <param name="g">The current GDI+ graphics object</param>
+        /// <param name="a">The desired starting point of the line, in pixels</param>
+        /// <param name="b">The desired ending point of the line, in pixels</param>
         public override void DrawHierarchyLine(Graphics g, Point a, Point b)
         {
             g.DrawLine(s_hierarchyPen, a.X, a.Y, b.X, b.Y);

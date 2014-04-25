@@ -15,7 +15,7 @@ using PropertyDescriptor = Sce.Atf.Dom.PropertyDescriptor;
 namespace WinGuiCommon
 {
     /// <summary>
-    /// Loads the event schema, registers data extensions on the DOM types, annotates
+    /// Loads the event schema, registers data extensions on the DOM types, and annotates
     /// the types with display information and PropertyDescriptors</summary>
     [Export(typeof(SchemaLoader))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -49,7 +49,9 @@ namespace WinGuiCommon
         /// <summary>
         /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
         /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
-        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.</summary>
+        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.
+        /// Defines DOM adapters for types. Adds information for palette to types.
+        /// Adds PropertyDescriptors to types for property editors.</summary>
         /// <param name="schemaSet">XML schema sets being loaded</param>
         protected override void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
         {

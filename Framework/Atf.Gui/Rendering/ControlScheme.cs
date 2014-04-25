@@ -71,14 +71,22 @@ namespace Sce.Atf.Rendering
         /// For keyboard input to camera controllers that allow for "strafing" (panning) left and right
         /// and for moving forward and backward in some way, these properties return the keys
         /// that should make the motion.</summary>
+        /// <summary>Camera button left 1</summary>
         public virtual Keys Left1   { get { return Keys.A; } }
-        public virtual Keys Left2   { get { return Keys.Left; } }
-        public virtual Keys Right1  { get { return Keys.D; } }
-        public virtual Keys Right2  { get { return Keys.Right; } }
-        public virtual Keys Forward1{ get { return Keys.W; } }
-        public virtual Keys Forward2{ get { return Keys.Up; } }
-        public virtual Keys Back1   { get { return Keys.S; } }
-        public virtual Keys Back2   { get { return Keys.Down; } }
+        /// <summary>Camera button left 2</summary>
+        public virtual Keys Left2 { get { return Keys.Left; } }
+        /// <summary>Camera button right 1</summary>
+        public virtual Keys Right1 { get { return Keys.D; } }
+        /// <summary>Camera button right 2</summary>
+        public virtual Keys Right2 { get { return Keys.Right; } }
+        /// <summary>Camera button forward 1</summary>
+        public virtual Keys Forward1 { get { return Keys.W; } }
+        /// <summary>Camera button forward 2</summary>
+        public virtual Keys Forward2 { get { return Keys.Up; } }
+        /// <summary>Camera button backward 1</summary>
+        public virtual Keys Back1 { get { return Keys.S; } }
+        /// <summary>Camera button backward 2</summary>
+        public virtual Keys Back2 { get { return Keys.Down; } }
 
         /// <summary>
         /// Is the keyboard being used to move the camera? If the camera controller allows

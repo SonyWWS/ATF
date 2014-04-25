@@ -421,6 +421,9 @@ namespace Sce.Atf.Controls.PropertyEditing
             itemControl.ValueChanged -= itemControl_ValueChanged;            
         }
 
+        /// <summary>
+        /// Raises and handles OnSizeChanged event, resizing controls</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnSizeChanged(EventArgs e)
         {
             // compute desired height.
@@ -601,7 +604,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     id++;
                 }
                 Controls.AddRange(controlsToAdd.ToArray());
-
+                              
                 Height = top; // update height of main collection control
 
                 UpdateAddButton();
@@ -636,6 +639,12 @@ namespace Sce.Atf.Controls.PropertyEditing
                 ResumeLayout();
                 m_toolStrip.Enabled = true;
             }
+
+            SkinService.ApplyActiveSkin(this);
+            // refreshes alternate back color for even/odd selected items.
+            foreach (ItemControl control in m_itemControls.Values)
+                control.Selected = control.Selected;
+
         }
         #endregion
 
@@ -725,7 +734,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         if (m_selectButton != null)
                         {
                             m_selectButton.Text = value.ToString();
-                            m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : SystemColors.ControlText;
+                            m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : ForeColor;
                             m_selectButton.BackColor = m_selected ? SystemColors.Highlight : UnselectedColor;
                         }
                     }
@@ -763,19 +772,25 @@ namespace Sce.Atf.Controls.PropertyEditing
                 set
                 {
                     m_selected = value;
-                    m_selectButton.ForeColor = value ? SystemColors.HighlightText : SystemColors.ControlText;
+                    m_selectButton.ForeColor = value ? SystemColors.HighlightText : ForeColor;
                     m_selectButton.BackColor = value ? SystemColors.Highlight : UnselectedColor;
                     m_selectButton.Refresh();
                 }
             }
 
             /// <summary>
-            /// Color used when the item is not selected, alternates for odd and even indexed items</summary>
+            /// Gets the color used when the item is not selected, alternating for odd and even indexed items</summary>
             private Color UnselectedColor
             {
-                get { return Index % 2 == 0 ? SystemColors.Control : SystemColors.ControlLight; }
+                get
+                {
+                    Color alternate = BackColor;
+                    alternate = alternate.GetBrightness() > 0.5f ? ControlPaint.Dark(alternate, 0.15f)
+                        : ControlPaint.Light(alternate, 0.15f);
+                    return Index % 2 == 0 ? BackColor : alternate;
+                }
             }
-            
+                       
             private int m_index;
             private bool m_selected;
             private Label m_selectButton;

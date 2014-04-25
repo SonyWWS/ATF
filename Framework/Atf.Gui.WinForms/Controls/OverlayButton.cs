@@ -34,6 +34,9 @@ namespace Sce.Atf.Controls
         }
         private bool m_disposed;
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources</summary>
         public void Dispose()
         {
             if (m_disposed) return;
@@ -41,7 +44,11 @@ namespace Sce.Atf.Controls
             GC.SuppressFinalize(this);            
         }
 
-
+        /// <summary>
+        /// Disposes resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected virtual void Dispose(bool disposing)
         {
             try
@@ -62,6 +69,9 @@ namespace Sce.Atf.Controls
                 m_disposed = true;
             }                        
         }
+
+        /// <summary>
+        /// Destructor</summary>
         ~OverlayButton()
         {
             Dispose(false);

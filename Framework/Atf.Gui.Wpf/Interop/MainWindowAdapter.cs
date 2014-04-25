@@ -45,6 +45,8 @@ namespace Sce.Atf.Wpf.Interop
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up Setting Services</summary>
         public void Initialize()
         {
             if (m_settingsService != null)

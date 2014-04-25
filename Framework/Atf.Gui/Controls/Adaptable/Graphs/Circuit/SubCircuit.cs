@@ -10,10 +10,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// Adapts DomNode to sub-circuit, which is created when mastering</summary>
     public abstract class SubCircuit : Circuit, ICircuitElementType
     {
+        /// <summary>
+        /// Gets name attribute for subcircuit</summary>
         protected abstract AttributeInfo NameAttribute { get; }
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for input pins in subcircuit</summary>
         protected abstract ChildInfo InputChildInfo { get; }
+        /// <summary>
+        /// Gets ChildInfo for output pins in subcircuit</summary>
         protected abstract ChildInfo OutputChildInfo { get; }
 
   

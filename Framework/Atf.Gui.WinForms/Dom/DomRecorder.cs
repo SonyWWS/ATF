@@ -199,6 +199,8 @@ namespace Sce.Atf.Dom
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component</summary>
         public virtual void Initialize()
         {
         }

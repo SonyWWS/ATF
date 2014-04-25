@@ -35,7 +35,7 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Raises OnRenderArrow event. Performs custom actions when arrow rendered.</summary>
+        /// Raises RenderArrow event. Performs custom actions when arrow rendered.</summary>
         /// <param name="e">ToolStrip arrow render event args</param>
         protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
         {

@@ -19,6 +19,8 @@ namespace Sce.Atf.Controls.Adaptable
             m_transformAdapter = transformAdapter;
         }
 
+        /// <summary>
+        /// Gets or sets bounding margin around objects</summary>
         public Size MarginSize { get; set; }
 
         #region IViewingContext Members
@@ -97,6 +99,10 @@ namespace Sce.Atf.Controls.Adaptable
             return false;
         }
 
+        /// <summary>
+        /// Computes a rectangle bounding a collection of objects</summary>
+        /// <param name="items">Enumeration of objects to find bounds for</param>
+        /// <returns>Rectangle bounding a collection of objects</returns>
         protected Rectangle GetBounds(IEnumerable<object> items)
         {
             Rectangle bounds = new Rectangle();

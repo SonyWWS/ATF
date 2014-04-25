@@ -6,10 +6,15 @@ namespace Sce.Atf.Applications
     /// Types for document events</summary>
     public enum DocumentEventType
     {
+        /// <summary>Unknown document event</summary>
         UnKnown,
+        /// <summary>Document opened event</summary>
         Opened,
+        /// <summary>Document saved event</summary>
         Saved,
+        /// <summary>Document saved as event</summary>
         SavedAs,
+        /// <summary>Document closed event</summary>
         Closed
     }
 }

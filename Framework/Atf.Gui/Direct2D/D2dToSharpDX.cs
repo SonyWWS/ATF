@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.Drawing;
+using Sce.Atf.VectorMath;
 using SharpDX;
 using SharpDX.Direct2D1;
 using RectangleF = System.Drawing.RectangleF;
@@ -10,24 +11,31 @@ namespace Sce.Atf.Direct2D
     internal static class D2dToSharpDX
     {
         /// <summary>
-        /// convert PointF to DrawingPointF.</summary>
-        internal static DrawingPointF ToSharpDX(this PointF point)
+        /// convert PointF to SharpDX.Vector2.</summary>
+        internal static Vector2 ToSharpDX(this PointF point)
         {
-            return new DrawingPointF(point.X, point.Y);
+            return new Vector2(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// convert Vec2F to SharpDX.Vector2.</summary>
+        internal static Vector2 ToSharpDX(this Vec2F point)
+        {
+            return new Vector2(point.X, point.Y);
         }
 
         /// <summary>
         /// convert SizeF to DrawingSizeF.</summary>
-        internal static DrawingSizeF ToSharpDX(this SizeF point)
+        internal static Size2F ToSharpDX(this SizeF point)
         {
-            return new DrawingSizeF(point.Width, point.Height);
+            return new Size2F(point.Width, point.Height);
         }
 
         /// <summary>
         /// convert RectangleF to SharpDX.RectangleF.</summary>
-        internal static SharpDX.RectangleF ToSharpDX(this RectangleF point)
+        internal static SharpDX.RectangleF ToSharpDX(this RectangleF rect)
         {
-            return new SharpDX.RectangleF(point.Left, point.Top, point.Right, point.Bottom);
+            return new SharpDX.RectangleF(rect.Left, rect.Top, rect.Width, rect.Height);
         }
 
         /// <summary>
@@ -42,7 +50,7 @@ namespace Sce.Atf.Direct2D
             };
         }
         /// <summary>
-        /// convert D2dEllipse to SharpDX.Ellipse.</summary>
+        /// Converts D2dEllipse to SharpDX.Ellipse</summary>
         internal static Ellipse ToSharpDX(this D2dEllipse ellipse)
         {
             return new Ellipse
@@ -54,7 +62,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// convert D2dBezierSegment to SharpDX.BezierSegment.</summary>
+        /// Converts D2dBezierSegment to SharpDX.BezierSegment</summary>
         internal static BezierSegment ToSharpDX(this D2dBezierSegment seg)
         {
             return new BezierSegment

@@ -60,7 +60,7 @@ namespace Sce.Atf.Rendering.OpenGL
         }
 
         /// <summary>
-        /// Begin painting</summary>
+        /// Begins painting</summary>
         /// <exception cref="InvalidOperationException">Can't make this panel's GL context to be current</exception>
         protected virtual void BeginPaint()
         {
@@ -78,7 +78,7 @@ namespace Sce.Atf.Rendering.OpenGL
         protected bool SwapBuffers = true;
 
         /// <summary>
-        /// End painting</summary>
+        /// Ends painting</summary>
         protected virtual void EndPaint()
         {
             if (SwapBuffers)

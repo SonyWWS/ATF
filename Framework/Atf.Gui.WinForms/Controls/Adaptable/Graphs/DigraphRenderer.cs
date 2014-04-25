@@ -30,7 +30,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Theme = theme;
         }
 
-
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             Theme = null;

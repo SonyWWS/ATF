@@ -97,6 +97,8 @@ namespace Sce.Atf.Applications
         /// Our command tags</summary>
         protected enum Commands
         {
+            /// <summary>
+            /// Open help page command</summary>
             OpenHelpPage
         }
 

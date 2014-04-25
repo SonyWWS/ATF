@@ -83,7 +83,8 @@ namespace TimelineEditorSample
         }
 
         /// <summary>
-        /// Parses annotations in schema sets. Override this to handle custom annotations.</summary>
+        /// Parses annotations in schema sets. Override this to handle custom annotations.
+        /// Supports annotations for property descriptors and palette items.</summary>
         /// <param name="schemaSet">XML schema sets being loaded</param>
         /// <param name="annotations">Dictionary of annotations in schema</param>
         protected override void ParseAnnotations(

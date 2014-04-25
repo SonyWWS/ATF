@@ -13,7 +13,7 @@ namespace WinGuiCommon
 {
     /// <summary>
     /// DomNode adapter that provides context functions for an application. It implements IObservableContext,
-    /// IInstancingContext and IEnumerableContext.</summary>
+    /// IInstancingContext and IEnumerableContext to provide services for context.</summary>
     public class WinGuiCommonDataContext : EditingContext,
         IListView,
         IItemView,

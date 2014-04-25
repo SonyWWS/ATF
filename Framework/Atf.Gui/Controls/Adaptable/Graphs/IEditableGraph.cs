@@ -17,12 +17,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 #endif
     {
         /// <summary>
-        /// Returns whether these two nodes can be connected. "from" and "to" refer to the corresponding
+        /// Returns whether two nodes can be connected. "from" and "to" refer to the corresponding
         /// properties in IGraphEdge, not to a dragging operation, for example.</summary>
-        /// <param name="fromNode">From node</param>
-        /// <param name="fromRoute">From edge route</param>
-        /// <param name="toNode">To node</param>
-        /// <param name="toRoute">To edge route</param>
+        /// <param name="fromNode">"From" node</param>
+        /// <param name="fromRoute">"From" edge route</param>
+        /// <param name="toNode">"To" node</param>
+        /// <param name="toRoute">"To" edge route</param>
         /// <returns>Whether the "from" node/route can be connected to the "to" node/route</returns>
         bool CanConnect(
             TNode fromNode,
@@ -32,11 +32,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Connects the "from" node/route to the "to" node/route by creating an IGraphEdge whose
-        /// FromNode is 'fromNode', ToNode is 'toNode', etc.</summary>
-        /// <param name="fromNode">From node</param>
-        /// <param name="fromRoute">From edge route</param>
-        /// <param name="toNode">To node</param>
-        /// <param name="toRoute">To edge route</param>
+        /// "from" node is "fromNode", "to" node is "toNode", etc.</summary>
+        /// <param name="fromNode">"From" node</param>
+        /// <param name="fromRoute">"From" edge route</param>
+        /// <param name="toNode">"To" node</param>
+        /// <param name="toRoute">"To" edge route</param>
         /// <param name="existingEdge">Existing edge that is being reconnected, or null if new edge</param>
         /// <returns>New edge connecting the "from" node/route to the "to" node/route</returns>
         TEdge Connect(

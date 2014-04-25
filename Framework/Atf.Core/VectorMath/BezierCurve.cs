@@ -53,44 +53,50 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Gets the string representation of this Scea.VectorMath.BezierCurve structure</summary>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3d Bezier curve</returns>
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary>Obtains the string representation of this Scea.VectorMath.BezierCurve structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D Bezier curve</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return m_ctrlPoints[0].X.ToString("R") + ", " + m_ctrlPoints[0].Y.ToString("R") + ", " + m_ctrlPoints[0].Z.ToString("R") + ", " +
-                    m_ctrlPoints[1].X.ToString("R") + ", " + m_ctrlPoints[1].Y.ToString("R") + ", " + m_ctrlPoints[1].Z.ToString("R") + ", " +
-                    m_ctrlPoints[2].X.ToString("R") + ", " + m_ctrlPoints[2].Y.ToString("R") + ", " + m_ctrlPoints[2].Z.ToString("R") + ", " +
-                    m_ctrlPoints[3].X.ToString("R") + ", " + m_ctrlPoints[3].Y.ToString("R") + ", " + m_ctrlPoints[3].Z.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            return String.Format
-           (
-                "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})",
-                ((double)m_ctrlPoints[0].X).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[0].Y).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[0].Z).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[1].X).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[1].Y).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[1].Z).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[2].X).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[2].Y).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[2].Z).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[3].X).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[3].Y).ToString(format, formatProvider),
-                ((double)m_ctrlPoints[3].Z).ToString(format, formatProvider)
-           );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
+
+            return String.Format(
+                "{1}{0} {2}{0} {3}{0} {4}{0} {5}{0} {6}{0} {7}{0} {8}{0} {9}{0} {10}{0} {11}{0} {12}",
+                listSeparator,
+                m_ctrlPoints[0].X.ToString(format, formatProvider),
+                m_ctrlPoints[0].Y.ToString(format, formatProvider),
+                m_ctrlPoints[0].Z.ToString(format, formatProvider),
+                m_ctrlPoints[1].X.ToString(format, formatProvider),
+                m_ctrlPoints[1].Y.ToString(format, formatProvider),
+                m_ctrlPoints[1].Z.ToString(format, formatProvider),
+                m_ctrlPoints[2].X.ToString(format, formatProvider),
+                m_ctrlPoints[2].Y.ToString(format, formatProvider),
+                m_ctrlPoints[2].Z.ToString(format, formatProvider),
+                m_ctrlPoints[3].X.ToString(format, formatProvider),
+                m_ctrlPoints[3].Y.ToString(format, formatProvider),
+                m_ctrlPoints[3].Z.ToString(format, formatProvider));
 
         }
+        #endregion
 
         readonly Vec3F[] m_ctrlPoints;
         readonly Vec3F[] m_coefficients;

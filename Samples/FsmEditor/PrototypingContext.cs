@@ -14,7 +14,7 @@ namespace FsmEditorSample
     /// <summary>
     /// Editing context for prototypes in the FSM document; this is the context that is
     /// bound to the PrototypeLister when an FSM document becomes the active context. This
-    /// context implements instancing differently than the main EditingContext. It inserts
+    /// context implements instancing differently than the EditingContext derived from. It inserts
     /// states and transitions by converting them into prototypes. It copies by converting
     /// prototypes back into their component states and transitions.</summary>
     public class PrototypingContext : Sce.Atf.Dom.EditingContext,

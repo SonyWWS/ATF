@@ -8,9 +8,14 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample.Tests
 {
+    /// <summary>
+    /// Class for testing Circuit Editor</summary>
     public class CircuitEditorTester
     {
-        // Create circuit DOM hierarchy programmatically
+        /// <summary>
+        /// Create circuit DOM hierarchy programmatically</summary>
+        /// <param name="schemaLoader">Schema loader</param>
+        /// <returns>Tree root DomNode</returns>
         static public DomNode CreateTestCircuitProgrammatically(SchemaLoader schemaLoader)
         {
             var rootNode = new DomNode(Schema.circuitDocumentType.Type, Schema.circuitRootElement);        

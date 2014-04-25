@@ -49,6 +49,10 @@ namespace DomTreeEditorSample
         private IDocumentRegistry m_documentRegistry;
         private IDocumentService m_documentService;
 
+        /// <summary>
+        /// Create and configure TreeControl</summary>
+        /// <param name="treeControl">New TreeControl</param>
+        /// <param name="treeControlAdapter">Adapter for TreeControl</param>
         protected override void Configure(out TreeControl treeControl, out TreeControlAdapter treeControlAdapter)
         {
             base.Configure(out treeControl, out treeControlAdapter);
@@ -93,7 +97,8 @@ namespace DomTreeEditorSample
         }
 
         /// <summary>
-        /// Requests permission to close the client's Control</summary>
+        /// Requests permission to close the client's Control.
+        /// Allows user to save document before closing.</summary>
         /// <param name="control">Client Control to be closed</param>
         /// <returns>True if the Control can close, or false to cancel</returns>
         /// <remarks>
@@ -124,6 +129,8 @@ namespace DomTreeEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering control</summary>
         void IInitializable.Initialize()
         {
             // on initialization, register our tree control with the hosting service

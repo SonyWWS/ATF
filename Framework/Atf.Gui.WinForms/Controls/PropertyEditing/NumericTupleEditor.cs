@@ -6,6 +6,7 @@ using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Drawing;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -114,6 +115,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             editingControl.ScaleFactor = m_scaleFactor;
             editingControl.HideAxisLabel = HideAxisLabel;
             editingControl.SetLabelBackColors(m_labelColors);
+            SkinService.ApplyActiveSkin(editingControl);
             return editingControl;            
         }
 

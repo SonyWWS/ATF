@@ -21,7 +21,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         where TWire : class, IGraphEdge<TElement, TPin>
         where TPin : class, ICircuitPin
     {
-
+        /// <summary>
+        /// Gets or sets graph edge style</summary>
         public EdgeStyle EdgeStyle
         {
             get

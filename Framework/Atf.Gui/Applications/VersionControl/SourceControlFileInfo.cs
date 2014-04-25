@@ -60,12 +60,26 @@ namespace Sce.Atf.Applications
             OtherLock = otherLock;
         }
         
+        /// <summary>
+        /// File URI</summary>
         public readonly Uri Uri;
+        /// <summary>
+        /// SourceControlStatus</summary>
         public readonly SourceControlStatus Status;
+        /// <summary>
+        /// Head revision number</summary>
         public readonly int HeadRevision;
+        /// <summary>
+        /// Revision number</summary>
         public readonly int Revision;
+        /// <summary>
+        /// Whether file is locked</summary>
         public readonly bool IsLocked;
-        public readonly IEnumerable<string> OtherUsers; // other users have the file checked out
-        public readonly string OtherLock;// if another user has the file locked
+        /// <summary>
+        /// Other users who have file checked out</summary>
+        public readonly IEnumerable<string> OtherUsers;
+        /// <summary>
+        /// Other user who has file locked</summary>
+        public readonly string OtherLock;
     }
 }

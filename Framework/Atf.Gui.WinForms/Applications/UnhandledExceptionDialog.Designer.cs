@@ -89,6 +89,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button ContinueBtn;
         private System.Windows.Forms.Button QuitBtn;
+        /// <summary>
+        /// TextBox containing text for exception</summary>
         public System.Windows.Forms.TextBox ExceptionTextBox;
     }
 }

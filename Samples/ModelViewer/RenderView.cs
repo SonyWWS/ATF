@@ -15,7 +15,7 @@ namespace ModelViewerSample
 
     /// <summary>
     /// MEF component that registers a Windows Control with IControlHostService that is used to
-    /// display a 3D scene. Builds the 3d scene from the active document. Consider also using
+    /// display a 3D scene. Builds the 3D scene from the active document. Consider also using
     /// RenderCommands.</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(RenderView))]
@@ -23,7 +23,7 @@ namespace ModelViewerSample
     public class RenderView : IInitializable
     {
         /// <summary>
-        /// Construct render view.</summary>
+        /// Construct render view</summary>
         public RenderView()
         {
             m_scene = new Scene();
@@ -38,7 +38,7 @@ namespace ModelViewerSample
         }
 
         /// <summary>
-        /// Fits current 3d scene</summary>
+        /// Fits current 3D scene</summary>
         public void Fit()
         {
             // calculate bounding sphere
@@ -63,8 +63,7 @@ namespace ModelViewerSample
         #region IInitializable Members
 
         /// <summary>
-        /// Registers rendering control 
-        /// and subscribes to ActiveDocumentChanged event</summary>
+        /// Registers rendering control and subscribes to ActiveDocumentChanged event</summary>
         void IInitializable.Initialize()
         {
             ControlInfo cinfo = new ControlInfo("3D View", "3d viewer", StandardControlGroup.CenterPermanent);

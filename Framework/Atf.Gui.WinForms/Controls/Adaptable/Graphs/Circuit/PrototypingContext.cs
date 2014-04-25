@@ -22,9 +22,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         INamingContext      
     {
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for prototype folders in prototype folder</summary>
         protected abstract ChildInfo PrototypeFolderChildInfo { get; }
 
         // required DomNodeType 
+        /// <summary>
+        /// Gets type of prototype</summary>
         protected abstract DomNodeType PrototypeType { get; }
          
         /// <summary>

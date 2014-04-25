@@ -33,41 +33,46 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Returns the string representation of this Scea.VectorMath.Triangle3F structure</summary>
-        /// <returns> A <see cref="T:System.String"></see> representing the 3D triangle</returns>        
+        /// Returns a string representation of this object for GUIs. For persistence, use
+        /// ToString("R", CultureInfo.InvariantCulture).</summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(null, null);
         }
 
-        /// <summary> 
-        /// Returns the string representation of this Scea.VectorMath.Triangle3F structure 
-        /// with the specified formatting information</summary>
-        /// <param name="format">Standard numeric format string characters valid for a floating point</param>
-        /// <param name="formatProvider">The culture specific formatting provider</param>
-        /// <returns>A <see cref="T:System.String"></see> representing the 3D triangle</returns> 
+        #region IFormattable
+        /// <summary>
+        /// Returns the string representation of this object</summary>
+        /// <param name="format">Optional standard numeric format string for a floating point number.
+        /// If null, "R" is used for round-trip support in case the string is persisted.
+        /// http://msdn.microsoft.com/en-us/library/vstudio/dwhawy9k(v=vs.100).aspx </param>
+        /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
+        /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
+        /// Use CultureInfo.InvariantCulture for persistence.</param>
+        /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format == null && formatProvider == null)
-                return V0.X.ToString("R") + ",  " + V0.Y.ToString("R") + ",  " + V0.Z.ToString("R") + ",  " +
-                       V1.X.ToString("R") + ",  " + V1.Y.ToString("R") + ",  " + V1.Z.ToString("R") + ",  " +
-                       V2.X.ToString("R") + ",  " + V2.Y.ToString("R") + ",  " + V2.Z.ToString("R");
+            string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);
 
-            else
-                return String.Format
-                (
-                     "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})",
-                     ((double)V0.X).ToString(format, formatProvider),
-                     ((double)V0.Y).ToString(format, formatProvider),
-                     ((double)V0.Z).ToString(format, formatProvider),
-                     ((double)V1.X).ToString(format, formatProvider),
-                     ((double)V1.Y).ToString(format, formatProvider),
-                     ((double)V1.Z).ToString(format, formatProvider),
-                     ((double)V2.X).ToString(format, formatProvider),
-                     ((double)V2.Y).ToString(format, formatProvider),
-                     ((double)V2.Z).ToString(format, formatProvider)
-                 );
+            // For historic reasons, use "R" for round-trip support, in case this string is persisted.
+            if (format == null)
+                format = "R";
 
+            return String.Format(
+                "{0}{9} {1}{9} {2}{9} {3}{9} {4}{9} {5}{9} {6}{9} {7}{9} {8}",
+                V0.X.ToString(format, formatProvider),
+                V0.Y.ToString(format, formatProvider),
+                V0.Z.ToString(format, formatProvider),
+                V1.X.ToString(format, formatProvider),
+                V1.Y.ToString(format, formatProvider),
+                V1.Z.ToString(format, formatProvider),
+                V2.X.ToString(format, formatProvider),
+                V2.Y.ToString(format, formatProvider),
+                V2.Z.ToString(format, formatProvider),
+                listSeparator);
         }
+        #endregion
+
     }
 }

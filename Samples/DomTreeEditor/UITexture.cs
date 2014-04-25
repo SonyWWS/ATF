@@ -8,7 +8,7 @@ namespace DomTreeEditorSample
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the diagram annotation's DomNode.
-        /// Set initial values for texture number array when it has none.</summary>
+        /// Sets initial values for texture number array when it has none.</summary>
         protected override void OnNodeSet()
         {
             float[] val = GetAttribute<float[]>(UISchema.UITextureType.TextureArrayAttribute);

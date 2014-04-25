@@ -26,6 +26,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by setting up to catch exceptions and establishing dialog owner</summary>
         public virtual void Initialize()
         {
             // Catch all the GUI thread unhandled exceptions. In a GUI app, this event will be raised

@@ -10,9 +10,12 @@ using Sce.Atf.VectorMath;
 using SharpDX.Direct2D1;
 using Matrix = System.Drawing.Drawing2D.Matrix;
 using RectangleF = System.Drawing.RectangleF;
+using Point = System.Drawing.Point;
 
 namespace Sce.Atf.Direct2D
 {
+    /// <summary>
+    /// Class with Direct2D utility static methods</summary>
     public static class D2dUtil
     {
 
@@ -228,7 +231,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Calculate tick anchor, i.e. the lowest value on an axis where a tick mark is placed</summary>
+        /// Calculates tick anchor, i.e. the lowest value on an axis where a tick mark is placed</summary>
         /// <param name="min">Minumum</param>
         /// <param name="max">Maximum</param>
         /// <returns>Tick anchor</returns>
@@ -393,7 +396,7 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Draws an icon that indicates a linked (referenced) item </summary>
+        /// Draws an icon that indicates a linked (referenced) item</summary>
         /// <param name="g">The Direct2D graphics object</param>
         /// <param name="x">X coordinate of icon top left corner</param>
         /// <param name="y">Y coordinate of icon top left corner</param>

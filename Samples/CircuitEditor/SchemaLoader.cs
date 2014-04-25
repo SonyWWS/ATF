@@ -19,7 +19,7 @@ namespace CircuitEditorSample
     public class SchemaLoader : XmlSchemaTypeLoader
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor that loads the schema</summary>
         public SchemaLoader()
         {
             // set resolver to locate embedded .xsd file
@@ -46,7 +46,8 @@ namespace CircuitEditorSample
         /// <summary>
         /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
         /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
-        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.</summary>
+        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.
+        /// Defines DOM adapters for types. Create PropertyDescriptors for types to use in property editors.</summary>
         /// <param name="schemaSet">XML schema sets being loaded</param>
         protected override void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
         {

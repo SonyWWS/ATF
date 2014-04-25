@@ -83,6 +83,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component</summary>
         public void Initialize()
         {
             // this will raise the CommandLineChanged event; any subscribers will get

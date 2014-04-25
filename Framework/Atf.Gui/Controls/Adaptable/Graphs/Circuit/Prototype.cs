@@ -10,10 +10,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// that can be instanced in a circuit</summary>
     public abstract class Prototype : DomNodeAdapter
     {
+        /// <summary>
+        /// Gets name attribute for prototype</summary>
         protected abstract AttributeInfo NameAttribute { get; }
 
         // required  child info
+        /// <summary>
+        /// Gets ChildInfo for modules in prototype</summary>
         protected abstract ChildInfo ElementChildInfo { get; }
+        /// <summary>
+        /// Gets ChildInfo for connections (wires) in prototype</summary>
         protected abstract ChildInfo WireChildInfo { get; }
 
         /// <summary>

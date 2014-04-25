@@ -21,6 +21,8 @@ namespace Sce.Atf
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by creating CrashReporter</summary>
         public void Initialize()
         {
             m_crashHandler = new Scea.CrashReporter(GetConnection());
@@ -29,8 +31,8 @@ namespace Sce.Atf
 
         #endregion
 
-        #region IInitializable Members
-        
+        #region ICrashLogger Members
+
         /// <summary>
         /// Logs the given exception to the remote server</summary>
         /// <param name="e">Exception</param>

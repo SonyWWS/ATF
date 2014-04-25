@@ -49,6 +49,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by registering OSC commands</summary>
         public virtual void Initialize()
         {
             CommandService.RegisterCommand(

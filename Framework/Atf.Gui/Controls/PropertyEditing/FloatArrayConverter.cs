@@ -88,19 +88,23 @@ namespace Sce.Atf.Controls.PropertyEditing
             object value,
             Type destinationType)
         {
-            float[] array = value as float[];
+            if (culture == null)
+                culture = CultureInfo.CurrentCulture;
+            string listSeparator = culture.TextInfo.ListSeparator;
+
+            var array = value as float[];
             if (array != null)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (float f in array)
                 {
                     float scaled = f * m_scaleFactor;
-                    sb.Append(scaled.ToString(m_format, CultureInfo.CurrentCulture));
-                    sb.Append(',');
+                    sb.Append(scaled.ToString(m_format, culture));
+                    sb.Append(listSeparator);
                 }
                 // removing trailing ','
                 if (sb.Length > 0)
-                    sb.Length--;
+                    sb.Length -= listSeparator.Length;
 
                 string result = sb.ToString();
 

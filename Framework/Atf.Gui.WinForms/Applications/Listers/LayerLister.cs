@@ -147,6 +147,10 @@ namespace Sce.Atf.Applications
             ShowLayer(e.Node.Tag, e.Node.CheckState == CheckState.Checked);
         }
 
+        /// <summary>
+        /// Shows or hides a specified layer</summary>
+        /// <param name="layer">Layer to show or hide</param>
+        /// <param name="show">True to show, false to hide layer</param>
         public void ShowLayer(object layer, bool show)
         {
             ITransactionContext transactionContext = m_layeringContext.As<ITransactionContext>();

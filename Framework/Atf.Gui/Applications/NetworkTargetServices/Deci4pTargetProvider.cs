@@ -302,6 +302,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 #endif
 
+        /// <summary>
+        /// Gets or sets target consumers</summary>
         [ImportMany(typeof(ITargetConsumer))]      
         protected IEnumerable<ITargetConsumer> TargetConsumers { get; set; }
 
@@ -322,7 +324,11 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     [GroupAttribute("Deci4pTargetInfo", Header = "Vita Targets", ExternalEditorProperties = "Name,Platform,Endpoint,Protocol,Scope")]
     public class Deci4pTargetInfo : TargetInfo
     {
+        /// <summary>
+        /// Platform string for Vita target</summary>
         public const string PlatformName = @"Vita";
+        /// <summary>
+        /// Platform string for Deci4p target</summary>
         public const string ProtocolName = @"Deci4p";
     }
 
@@ -414,41 +420,76 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             }
         }
 
-        
+        /// <summary>
+        /// Interface for targets</summary>
         [Guid("FF0B24DF-D981-400A-B842-E7E5565F5BBB")]
         [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
         public interface ITarget
         {        
+            /// <summary>
+            /// Gets target hardware ID</summary>
             [DispId(31)]
             string HardwareId { get; }
+            /// <summary>
+            /// Gets or sets target name</summary>
             [DispId(40)]
             string Name { get; set; }
             
         }
 
+        /// <summary>
+        /// Interface for target collection</summary>
         [Guid("B053B37D-81ED-4CDC-8F7A-8FE60A165CE7")]
         [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
         public interface ITargetCollection : IEnumerable
         {
+            /// <summary>
+            /// Gets number of targets</summary>
             [DispId(1610743808)]
             uint Count { get; }
+            /// <summary>
+            /// Gets default target</summary>
             [DispId(5)]
             ITarget DefaultTarget { get; }
+            /// <summary>
+            /// Gets first available target</summary>
             [DispId(3)]
             ITarget FirstAvailable { get; }
+            /// <summary>
+            /// Gets first connected target</summary>
             [DispId(4)]
             ITarget FirstConnected { get; }
 
+            /// <summary>
+            /// Gets target at zero-based index</summary>
+            /// <param name="Index">Zero-based index</param>
+            /// <returns>Target at zero-based index</returns>
             [DispId(0)]
             ITarget this[uint Index] { get; }
 
+            /// <summary>
+            /// Obtains target from its hardware ID</summary>
+            /// <param name="bstrId">Hardware ID</param>
+            /// <returns>Target with given hardware ID</returns>
             [DispId(1)]
             ITarget GetByHardwareId(string bstrId);
+            /// <summary>
+            /// Obtains target from its name</summary>
+            /// <param name="bstrName">Target name</param>
+            /// <returns>Target with given name</returns>
             [DispId(2)]
             ITarget GetByName(string bstrName);
          
+            /// <summary>
+            /// Obtains targets from hardware ID</summary>
+            /// <param name="bstrName">Hardware ID</param>
+            /// <returns>Targets with hardware ID</returns>
             [DispId(7)]
             ITargetCollection GetTargetsByHardwareId(string bstrName);
+            /// <summary>
+            /// Obtains targets from name</summary>
+            /// <param name="bstrName">Target name</param>
+            /// <returns>Targets with given name</returns>
             [DispId(6)]
             ITargetCollection GetTargetsByName(string bstrName);
         }

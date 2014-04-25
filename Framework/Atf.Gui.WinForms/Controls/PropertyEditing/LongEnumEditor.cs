@@ -113,6 +113,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             wrapper.EnumControl.ConvertIdToDisplayCallback = ConvertIdToDisplay;
             wrapper.EnumControl.ConvertDisplayToIdCallback = ConvertDisplayToId;
             UpdateEnumControl(wrapper.EnumControl);
+            Sce.Atf.Applications.SkinService.ApplyActiveSkin(wrapper);
             return wrapper;            
         }
 
@@ -202,16 +203,6 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             #endregion
 
-
-            /// <summary>
-            /// Update child control background</summary>            
-            protected override void OnBackColorChanged(EventArgs e)
-            {
-                foreach (Control control in Controls)
-                    control.BackColor = BackColor;
-                base.OnBackColorChanged(e);
-            }
-
             private LongEnumControl m_longEnumControl;
 
         }
@@ -227,7 +218,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             private Font m_defaultFont;
             private Font m_boldFont;
-            private Color m_defaultColor;
+           // private Color m_defaultColor;
 
             private DateTime m_lastHideTime = DateTime.Now;
             private bool m_keepDropDownOpen;
@@ -250,12 +241,14 @@ namespace Sce.Atf.Controls.PropertyEditing
                 this.FormattingEnabled = true;
                 m_context = context;
 
-                this.FlatStyle = System.Windows.Forms.FlatStyle.System;
+
+                //this.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
                 this.SelectedIndexChanged += comboBox_SelectedIndexChanged;
 
                 m_defaultFont = new Font(Font, FontStyle.Regular);
                 m_boldFont = new Font(Font, FontStyle.Bold);
-                m_defaultColor = this.ForeColor;
+               // m_defaultColor = this.ForeColor;
+               // ForeColorChanged += (sender, e) => m_defaultColor = ForeColor;
             }
 
             private void listBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -321,11 +314,12 @@ namespace Sce.Atf.Controls.PropertyEditing
                     AutoDropDown();
                     return;
                 }
-
+                
                 if (m.Msg == (Sce.Atf.User32.WM_REFLECT + Sce.Atf.User32.WM_COMMAND))
                 {
                     switch (Sce.Atf.User32.HIWORD((int)m.WParam))
                     {
+                       
                         case Sce.Atf.User32.CBN_DROPDOWN:
                             AutoDropDown();
                             return;
@@ -337,6 +331,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     }
                 }
 
+                
                 base.WndProc(ref m);
             }
 
@@ -464,18 +459,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 base.OnLostFocus(e);
             }
-
-            /// <summary>
-            /// Update child control background</summary>            
-            protected override void OnBackColorChanged(EventArgs e)
-            {
-                foreach (Control control in Controls)
-                    control.BackColor = BackColor;
-                DropDownControl.BackColor = BackColor;
-                     
-                base.OnBackColorChanged(e);
-            }
-
+          
             private void RefreshValue()
             {
                 try
@@ -507,26 +491,26 @@ namespace Sce.Atf.Controls.PropertyEditing
                             if (defaultValue)
                             {
                                 Font = m_defaultFont;
-                                this.ForeColor = m_defaultColor;
+                              //  this.ForeColor = m_defaultColor;
                             }
                             else
                             {
                                 if (textEditable)
                                 {
                                     Font = m_boldFont;
-                                    this.ForeColor = System.Drawing.Color.CadetBlue;
+                                   // this.ForeColor = System.Drawing.Color.CadetBlue;
                                 }
                                 else
                                 {
                                     Font = m_boldFont;
-                                    this.ForeColor = m_defaultColor;
+                                   // this.ForeColor = m_defaultColor;
                                 }
                             }
                         }
                         else
                         {
                             Font = m_boldFont;
-                            this.ForeColor = m_defaultColor;
+                          //  this.ForeColor = m_defaultColor;
                         }
                     }
                 }

@@ -10,8 +10,11 @@ namespace Sce.Atf
     /// Enum for supported key set types</summary>
     public enum SupportedTypes
     {
+        /// <summary>ATF key types</summary>
         Atf,
+        /// <summary>WinForms key types</summary>
         WinForms,
+        /// <summary>WPF key types</summary>
         Wpf
     }
 

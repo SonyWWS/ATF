@@ -22,6 +22,11 @@ namespace Sce.Atf.Direct2D
         {
             get { return m_strokeStyle; }
         }
+        
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

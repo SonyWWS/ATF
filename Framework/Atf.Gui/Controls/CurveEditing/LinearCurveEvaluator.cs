@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 
 namespace Sce.Atf.Controls.CurveEditing
 {
+    /// <summary>
+    /// Curve evaluator methods for linear curves</summary>
     public class LinearCurveEvaluator : ICurveEvaluator
     {
         #region ctor

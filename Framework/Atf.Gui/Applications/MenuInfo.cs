@@ -69,6 +69,11 @@ namespace Sce.Atf.Applications
         public static MenuInfo Help =
             new MenuInfo(StandardMenu.Help, "Help".Localize("this is the name of a menu"), "Help Commands".Localize());
 
+        /// <summary>
+        /// Constructor with parameters</summary>
+        /// <param name="menuTag">Menu tag object</param>
+        /// <param name="menuText">Menu text visible in UI</param>
+        /// <param name="description">Menu description</param>
         public MenuInfo(
             object menuTag,
             string menuText,

@@ -85,12 +85,13 @@ namespace StatechartEditorSample
                 typeof(HistoryLister),                  // vistual list of undo/redo stack
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
-                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor
+                typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
+                                                        //  Reset All, Copy Value, Paste Value, Copy All, Paste All
 
                 typeof(PrototypeLister),                // editable palette of instantiable item groups
 
                 typeof(Outputs),                        // service that provides static methods for writing to IOutputWriter objects.
-                typeof(ErrorDialogService),             // displays errors to the user a in message box. Implements IOutputWriter.
+                typeof(ErrorDialogService),             // displays errors to the user in a message box. Implements IOutputWriter.
                 typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.
 
                 typeof(DiagramTheme),                   // rendering theme for diagrams

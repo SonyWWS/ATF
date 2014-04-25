@@ -14,13 +14,13 @@ using Tao.OpenGl;
 namespace ModelViewerSample.Rendering
 {
     /// <summary>
-    /// RenderObject for rendering a primitive set implementing the IPrimitiveSet DomObjectInterface.
+    /// RenderObject for rendering a primitive set implementing the IPrimitiveSet interface.
     /// Builds the display lists (the OpenGl vertex buffer objects) the first time that this object
     /// is to be displayed. Updates rendering statistics.</summary>
     public class RenderPrimitives : RenderObject, IRenderPick, IRenderThumbnail
     {
         /// <summary>
-        /// Performs one-time initialization
+        /// Performs one-time initialization to create primitive and submesh lists
         /// when this adapter's DomNode property is set.</summary>
         protected override void OnNodeSet()
         {
@@ -31,10 +31,10 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Traverses the specified graph path.</summary>
-        /// <param name="graphPath">The graph path.</param>
-        /// <param name="action">The render action.</param>
-        /// <param name="camera">The camera.</param>
-        /// <param name="list">The list.</param>
+        /// <param name="graphPath">The graph path</param>
+        /// <param name="action">The render action</param>
+        /// <param name="camera">The camera</param>
+        /// <param name="list">The list</param>
         /// <returns></returns>
         public override TraverseState Traverse(Stack<SceneNode> graphPath, IRenderAction action,
             Camera camera, ICollection<TraverseNode> list)
@@ -47,20 +47,20 @@ namespace ModelViewerSample.Rendering
         }
 
         /// <summary>
-        /// Gets and sets the name of the array element representing the normals.</summary>
+        /// Gets and sets the name of the array element representing the normals</summary>
         public static string NormalsTag = "normal";
 
         /// <summary>
         /// Gets and sets the name of the array element representing the UV coordinates for
-        /// the diffuse texture.</summary>
+        /// the diffuse texture</summary>
         public static string TextureCoordinatesTag = "map1";
 
         /// <summary>
-        /// Gets and sets the name of the array element representing the vertex colors.</summary>
+        /// Gets and sets the name of the array element representing the vertex colors</summary>
         public static string ColorsTag = "color";
 
         /// <summary>
-        /// Gets and sets the name of the array element representing the vertices.</summary>
+        /// Gets and sets the name of the array element representing the vertices</summary>
         public static string VerticesTag = "position";
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Gets the object space bounding box</summary>
-        /// <returns>object space bounding box</returns>
+        /// <returns>Object space bounding box</returns>
         protected override Box GetBoundingBoxObjectSpace()
         {
             IMesh mesh = TryGetMesh();
@@ -132,11 +132,11 @@ namespace ModelViewerSample.Rendering
         }
 
         /// <summary>
-        /// Renders the specified graph path.</summary>
-        /// <param name="graphPath">The graph path.</param>
-        /// <param name="renderState">The render state.</param>
-        /// <param name="action">The render action.</param>
-        /// <param name="camera">The camera.</param>
+        /// Renders the specified graph path</summary>
+        /// <param name="graphPath">The graph path</param>
+        /// <param name="renderState">The render state</param>
+        /// <param name="action">The render action</param>
+        /// <param name="camera">The camera</param>
         protected override void Render(SceneNode[] graphPath, RenderState renderState, IRenderAction action, Camera camera)
         {
             // apply xform
@@ -171,10 +171,10 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Custom pick rendering</summary>
-        /// <param name="graphPath">The graph path.</param>
-        /// <param name="renderState">The render state.</param>
-        /// <param name="action">The render action.</param>
-        /// <param name="camera">The camera.</param>
+        /// <param name="graphPath">The graph path</param>
+        /// <param name="renderState">The render state</param>
+        /// <param name="action">The render action</param>
+        /// <param name="camera">The camera</param>
         public void PickDispatch(SceneNode[] graphPath, RenderState renderState, IRenderAction action, Camera camera)
         {
             action.RenderStateGuardian.Commit(renderState);

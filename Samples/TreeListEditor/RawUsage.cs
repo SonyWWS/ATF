@@ -21,7 +21,8 @@ namespace TreeListEditor
     class RawTreeListView : IInitializable, IControlHostClient
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with parameters. Creates and registers UserControl and adds buttons to it.
+        /// Creates a TreeListView to contain tree data.</summary>
         /// <param name="mainForm">Main form</param>
         /// <param name="contextRegistry">Context registry</param>
         /// <param name="settingsService">Settings service</param>
@@ -140,6 +141,8 @@ namespace TreeListEditor
 
         #region IInitialize Interface
 
+        /// <summary>
+        /// Initialize component so it is displayed</summary>
         void IInitializable.Initialize()
         {
             // So the GUI will show up since nothing else imports it...

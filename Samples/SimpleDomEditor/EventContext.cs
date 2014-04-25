@@ -13,7 +13,7 @@ namespace SimpleDomEditorSample
 {
     /// <summary>
     /// DomNode adapter that provides an event context for the DOM editor for updating the views.
-    /// It implements IObservableContext, IInstancingContext and IEnumerableContext.</summary>
+    /// It implements IObservableContext, IInstancingContext and IEnumerableContext to provide editing services.</summary>
     public class EventContext : EditingContext,
         IListView,
         IItemView,

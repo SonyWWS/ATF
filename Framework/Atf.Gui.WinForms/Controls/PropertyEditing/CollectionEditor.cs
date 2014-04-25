@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.Windows.Forms;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Controls.PropertyEditing
 {
@@ -20,7 +21,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <returns>Control to edit the given context</returns>
         public Control GetEditingControl(PropertyEditorControlContext context)
         {
-            return new CollectionEditingControl(context);
+            var control = new CollectionEditingControl(context);
+            SkinService.ApplyActiveSkin(control);
+            return control;
         }
 
         #endregion

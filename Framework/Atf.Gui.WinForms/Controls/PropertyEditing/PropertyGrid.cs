@@ -214,6 +214,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         public void Bind(IPropertyEditingContext context)
         {
             m_propertyGridView.EditingContext = context;
+            SkinService.ApplyActiveSkin(m_propertyGridView);
         }
 
         /// <summary>

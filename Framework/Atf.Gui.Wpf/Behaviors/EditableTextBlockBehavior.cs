@@ -18,16 +18,16 @@ namespace Sce.Atf.Wpf.Behaviors
         #region IsInEditMode Property
 
         /// <summary>
-        /// Gets whether text block is in edit mode</summary>
+        /// Returns whether text block is in edit mode (IsInEditMode dependency property)</summary>
         /// <param name="obj">Dependency object to obtain property for</param>
-        /// <returns>True iff text block is in edit mode</returns>
+        /// <returns>Whether text block is in edit mode</returns>
         public static bool GetIsInEditMode(DependencyObject obj)
         {
             return (bool)obj.GetValue(IsInEditModeProperty);
         }
 
         /// <summary>
-        /// Sets whether text block is in edit mode</summary>
+        /// Sets whether text block is in edit mode (IsInEditMode dependency property)</summary>
         /// <param name="obj">Dependency object to set property for</param>
         /// <param name="value">Whether text block is in edit mode</param>
         public static void SetIsInEditMode(DependencyObject obj, bool value)
@@ -44,16 +44,26 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #region EditOnDoubleClick Property
 
+        /// <summary>
+        /// Returns whether edit mode activated by double mouse click (EditOnDoubleClick dependency property)</summary>
+        /// <param name="obj">Dependency object with property</param>
+        /// <returns>Whether edit mode activated by double mouse click</returns>
         public static bool GetEditOnDoubleClick(DependencyObject obj)
         {
             return (bool)obj.GetValue(EditOnDoubleClickProperty);
         }
 
+        /// <summary>
+        /// Sets whether edit mode activated by double mouse click (EditOnDoubleClick dependency property)</summary>
+        /// <param name="obj">Dependency object to set property for</param>
+        /// <param name="value">Whether edit mode activated by double mouse click</param>
         public static void SetEditOnDoubleClick(DependencyObject obj, bool value)
         {
             obj.SetValue(EditOnDoubleClickProperty, value);
         }
 
+        /// <summary>
+        /// EditOnDoubleClick dependency property</summary>
         public static readonly DependencyProperty EditOnDoubleClickProperty =
             DependencyProperty.RegisterAttached("EditOnDoubleClick", typeof(bool), typeof(EditableTextBlockBehavior), new UIPropertyMetadata(false, OnEditOnDoubleClickPropertyChanged));
 

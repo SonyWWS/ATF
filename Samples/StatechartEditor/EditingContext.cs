@@ -17,8 +17,8 @@ using Sce.Atf.Dom;
 namespace StatechartEditorSample
 {
     /// <summary>
-    /// Main editing context for the statechart. This interface is registered on the
-    /// statechart document, and makes the root statechart observable and enumerable.
+    /// Main editing context for the statechart. This DOM adapter is defined on the
+    /// statechart document type, and makes the root statechart observable and enumerable.
     /// It also implements naming, locking, and instancing behavior, and adapts the
     /// statechart to a graph, and an editable graph of states and transitions.</summary>
     public class EditingContext : Sce.Atf.Dom.EditingContext,
@@ -249,7 +249,7 @@ namespace StatechartEditorSample
         }
 
         /// <summary>
-        /// Sets the item's locked state to the value</summary>
+        /// Sets the item's locked state to the given value</summary>
         /// <param name="item">Item to lock or unlock</param>
         /// <param name="value">True to lock, false to unlock</param>
         void ILockingContext.SetLocked(object item, bool value)
@@ -349,7 +349,8 @@ namespace StatechartEditorSample
         }
 
         /// <summary>
-        /// Adds new objects of given type to statechart using a transaction. Called by automated scripts.</summary>
+        /// Adds new objects of given type to statechart using a transaction. 
+        /// Called by automated scripts during testing.</summary>
         /// <typeparam name="T">Type of objects to add</typeparam>
         /// <param name="domNode">DomNode that contains added objects</param>
         /// <param name="xPos">X-coordinate at center of insertion position</param>
@@ -504,7 +505,7 @@ namespace StatechartEditorSample
         #region IEditableGraph Members
 
         /// <summary>
-        /// Returns whether these two states can be connected with a Transition. "from" and "to" refer to the corresponding
+        /// Returns whether two states can be connected with a Transition. "from" and "to" refer to the corresponding
         /// properties in IGraphEdge, not to a dragging operation, for example.</summary>
         /// <param name="fromNode">From state</param>
         /// <param name="fromRoute">From BoundaryRoute</param>
@@ -520,10 +521,10 @@ namespace StatechartEditorSample
         /// <summary>
         /// Connects the "from" state/BoundaryRoute to the "to" state/BoundaryRoute by creating a Transition whose
         /// FromNode is 'fromNode', ToNode is 'toNode', etc.</summary>
-        /// <param name="fromNode">From state</param>
-        /// <param name="fromRoute">From BoundaryRoute</param>
-        /// <param name="toNode">To state</param>
-        /// <param name="toRoute">To BoundaryRoute</param>
+        /// <param name="fromNode">"From" state</param>
+        /// <param name="fromRoute">"From" BoundaryRoute</param>
+        /// <param name="toNode">"To" state</param>
+        /// <param name="toRoute">"To" BoundaryRoute</param>
         /// <param name="existingEdge">Existing Transition that is being reconnected, or null if new Transition</param>
         /// <returns>New Transition connecting the "from" state/BoundaryRoute to the "to" state/BoundaryRoute</returns>
         Transition IEditableGraph<StateBase, Transition, BoundaryRoute>.Connect(

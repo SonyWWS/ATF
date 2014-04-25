@@ -26,7 +26,7 @@ namespace Sce.Atf.Direct2D
             {
                 m_start = value;
                 var brush = (LinearGradientBrush)NativeBrush;
-                brush.StartPoint = new SharpDX.DrawingPointF(value.X, value.Y);
+                brush.StartPoint = value.ToSharpDX();
             }
         }
        
@@ -44,7 +44,7 @@ namespace Sce.Atf.Direct2D
             {
                 m_end = value;
                 var brush = (LinearGradientBrush)NativeBrush;
-                brush.EndPoint = new SharpDX.DrawingPointF(value.X, value.Y);
+                brush.EndPoint = value.ToSharpDX();
             }
         }
 

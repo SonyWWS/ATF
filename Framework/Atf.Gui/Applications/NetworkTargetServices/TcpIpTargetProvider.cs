@@ -14,7 +14,7 @@ using Sce.Atf.Controls.PropertyEditing;
 namespace Sce.Atf.Applications.NetworkTargetServices
 {
     /// <summary>
-    /// Provides information about development devices available via TCP/IP</summary>
+    /// Provides information about development devices (targets) available for TCP/IP</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(ITargetProvider))]
     [Export(typeof(TcpIpTargetProvider))]
@@ -399,6 +399,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
  
         }
      
+        /// <summary>
+        /// Gets or sets target consumers</summary>
         [ImportMany]
         protected IEnumerable<ITargetConsumer> TargetConsumers { get; set; }
 
@@ -406,6 +408,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         private bool m_targetsLoaded;
     }
 
+    /// <summary>
+    /// Provides information about development devices (targets) available for X86</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(ITargetProvider))]
     [Export(typeof(X86TargetProvider))]
@@ -417,8 +421,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         public override string Name { get { return @"X86 Target".Localize(); } }
 
         /// <summary>
-        /// Gets the the identifier of the provider</summary>
-        /// <returns>A string that contains the identifier.</returns>
+        /// Gets identifier of provider</summary>
+        /// <returns>String that contains identifier</returns>
         public override string Id { get { return @"Sce.Atf.X86TcpIpTargetProvider"; } }
 
 
@@ -433,6 +437,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
     }
 
+    /// <summary>
+    /// Provides information about development devices (targets) available for PS3</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(ITargetProvider))]
     [Export(typeof(Ps3TargetProvider))]
@@ -444,8 +450,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         public override string Name { get { return "PS3 Target".Localize(); } }
 
         /// <summary>
-        /// Gets the the identifier of the provider</summary>
-        /// <returns>A string that contains the identifier.</returns>
+        /// Gets identifier of provider</summary>
+        /// <returns>String that contains identifier</returns>
         public override string Id { get { return @"Sce.Atf.Ps3TcpIpTargetProvider"; } }
 
 
@@ -460,6 +466,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
     }
 
+    /// <summary>
+    /// Provides information about development devices (targets) available for PS4</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(ITargetProvider))]
     [Export(typeof(Ps4TargetProvider))]
@@ -467,12 +475,12 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     public class Ps4TargetProvider : TcpIpTargetProvider
     {
         /// <summary>
-        /// Gets the provider's user-readable name</summary>
+        /// Gets provider's user-readable name</summary>
         public override string Name { get { return "PS4 Target".Localize(); } }
 
         /// <summary>
-        /// Gets the the identifier of the provider</summary>
-        /// <returns>A string that contains the identifier.</returns>
+        /// Gets identifier of provider</summary>
+        /// <returns>String that contains identifier</returns>
         public override string Id { get { return @"Sce.Atf.Ps4TcpIpTargetProvider"; } }
 
 

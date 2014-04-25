@@ -111,6 +111,19 @@ namespace Sce.Atf
             if (filePath.EndsWith("."))
                 return false;
 
+            // if the first ':' is not followed by a '\' or '/'
+            int first = filePath.IndexOf(':');
+            if (first >= 0)
+            {
+                if (filePath.Length > first + 1 &&
+                    filePath[first + 1] != '\\' && filePath[first + 1] != '/')
+                    return false;
+
+                // check that there isn't a second ':'!
+                if (filePath.LastIndexOf(':') != first)
+                    return false;
+            }
+
             return true;
         }
 

@@ -6,13 +6,16 @@ namespace Sce.Atf.Applications
     /// Arguments passed when a document is closing, allows subscribers to cancel the close operation</summary>
     public class DocumentClosingEventArgs : DocumentEventArgs
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="document">Closing document</param>
         public DocumentClosingEventArgs(IDocument document)
             : base(document)
         {
         }
 
         /// <summary>
-        /// Set to true in order to cancel the close operation</summary>
+        /// Gets or sets whether to cancel the close operation; set true to cancel</summary>
         public bool Cancel { get; set; }
     }
 }

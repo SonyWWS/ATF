@@ -106,12 +106,17 @@ namespace Sce.Atf.Controls.Adaptable
             }
         }
 
+        /// <summary>
+        /// Updates mouse position</summary>
+        /// <param name="e">Drag event arguments</param>
         protected void SetMousePosition(DragEventArgs e)
         {
             m_mousePosition = AdaptedControl.PointToClient(new Point(e.X, e.Y));
         }
 
         private readonly IStatusService m_statusService;
+        /// <summary>
+        /// Mouse position in the AdaptedControl's client coordinates</summary>
         protected Point m_mousePosition;
         private bool m_isDropping;
     }

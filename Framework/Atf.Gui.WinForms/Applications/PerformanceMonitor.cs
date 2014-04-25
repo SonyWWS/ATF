@@ -17,6 +17,10 @@ namespace Sce.Atf.Applications
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class PerformanceMonitor : IControlHostClient, IInitializable
     {
+        /// <summary>
+        /// Importing constructor with parameters</summary>
+        /// <param name="controlRegistry">IControlRegistry</param>
+        /// <param name="controlHostService">IControlHostService</param>
         [ImportingConstructor]
         public PerformanceMonitor(IControlRegistry controlRegistry, IControlHostService controlHostService)
         {
@@ -29,6 +33,8 @@ namespace Sce.Atf.Applications
             m_controlInfo.VisibleByDefault = false;
         }
 
+        /// <summary>
+        /// Constructor without parameters</summary>
         public PerformanceMonitor()
         {
         }

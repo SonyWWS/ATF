@@ -30,6 +30,8 @@ namespace StatechartEditorSample
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by adding information to types for palette</summary>
         void IInitializable.Initialize()
         {
             string statechartCategory = Localizer.Localize("Statecharts");

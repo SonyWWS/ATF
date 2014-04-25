@@ -29,6 +29,8 @@ namespace Sce.Atf
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finishes initializing component by sending usage information to an ATF logging server</summary>
         public void Initialize()
         {
             SendAtfUsageInfo();

@@ -17,7 +17,7 @@ namespace UsingDirect2D
     {
         private Canvas2d m_canvas;
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor for main form</summary>
         public Form1()
         {
             bool useD2d = true;
@@ -51,8 +51,12 @@ namespace UsingDirect2D
     }
 //#region Test Render target form
 
+    /// <summary>
+    /// Test Render target form</summary>
     public class TestRT : Form
     {
+        /// <summary>
+        /// Constructor that creates graphic objects needed</summary>
         public TestRT()
         {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint
@@ -209,7 +213,7 @@ namespace UsingDirect2D
 
 
         /// <summary>
-        /// Release resources created by D2dGraphics.</summary>
+        /// Release resources created by D2dGraphics</summary>
         private void ReleaseRTResources()
         {
             if (m_bitmapgraphics != null)
@@ -217,8 +221,7 @@ namespace UsingDirect2D
         }
 
         /// <summary>
-        /// Create resources using d2dgraphics.
-        /// </summary>
+        /// Create resources using D2dGraphics</summary>
         private void CreateRTResources()
         {
             // How to render to backbuffer.
@@ -373,8 +376,7 @@ namespace UsingDirect2D
         }
 
         /// <summary>
-        /// Release resources created by D2dFactory.
-        /// </summary>
+        /// Release resources created by D2dFactory</summary>
         private void ReleaseSharedResources()
         {
             m_bmp.Dispose();
@@ -1372,7 +1374,7 @@ namespace UsingDirect2D
         }
 
         /// <summary>
-        /// Starting timing an operation</summary>
+        /// Start timing an operation</summary>
         public void Start()
         {
             m_start = System.Diagnostics.Stopwatch.GetTimestamp();

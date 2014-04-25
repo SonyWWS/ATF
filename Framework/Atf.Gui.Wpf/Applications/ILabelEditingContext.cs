@@ -25,6 +25,10 @@ namespace Sce.Atf.Wpf.Applications
         /// <returns>Item's label</returns>
         string GetLabel(object item);
 
+        /// <summary>
+        /// Sets an item's label</summary>
+        /// <param name="item">Item whose label is set</param>
+        /// <param name="value">Item's label</param>
         void SetLabel(object item, string value);
 
         /// <summary>

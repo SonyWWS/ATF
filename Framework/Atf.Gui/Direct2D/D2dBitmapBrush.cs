@@ -102,6 +102,10 @@ namespace Sce.Atf.Direct2D
             Create();//to-do: it's dangerous to call a virtual method in a constructor; derived class may not be properly initialized!
         }
 
+        /// <summary>
+        /// Disposes of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

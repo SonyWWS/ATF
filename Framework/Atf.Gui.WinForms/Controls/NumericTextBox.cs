@@ -353,17 +353,27 @@ namespace Sce.Atf.Controls
     /// It is more compact and does not hold data like trackbar.</summary>
     public class CompactSpinner : Control
     {
+        /// <summary>
+        /// Spin direction changed event</summary>
         public event EventHandler<SpinDirectionEventArgs> Changed = delegate { };
+        /// <summary>
+        /// Constructor</summary>
         public CompactSpinner()
         {
             this.DoubleBuffered = true;
         }
 
+        /// <summary>
+        /// Handler for mouse enter event</summary>
+        /// <param name="e">Event args</param>
         protected override void OnMouseEnter(EventArgs e)
         {
             this.Cursor = Cursors.SizeWE;
         }
 
+        /// <summary>
+        /// Handler for mouse down event</summary>
+        /// <param name="e">Mouse event args</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             this.Capture = true;
@@ -373,6 +383,9 @@ namespace Sce.Atf.Controls
         }
 
         private int m_currentMouseX;
+        /// <summary>
+        /// Handler for mouse move event</summary>
+        /// <param name="e">Mouse event args</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
@@ -388,11 +401,14 @@ namespace Sce.Atf.Controls
 
         }
 
+        /// <summary>
+        /// Paint event handler</summary>
+        /// <param name="e">Paint event args</param>
         protected override void OnPaint(PaintEventArgs e)
         {            
             int midy = this.Height / 2;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            using (Pen pen = new Pen(ForeColor))
+            using (Pen pen = new Pen(Color.LightBlue))
             {
                 pen.Width = 4;
                 pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;

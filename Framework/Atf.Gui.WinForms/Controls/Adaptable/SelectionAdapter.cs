@@ -36,9 +36,10 @@ namespace Sce.Atf.Controls.Adaptable
         }
         private Keys m_extendModifierKey = Keys.Shift;
 
-
         /// <summary>
-        /// Removes the selection path for the item </summary>
+        /// Removes the selection path for the item</summary>
+        /// <param name="item">Item to remove selection path on</param>
+        /// <returns>True iff selection path removed</returns>
         public bool RemoveSelectionPath(object item)
         {
             if (m_selectionPathMap.ContainsKey(item))
@@ -49,7 +50,10 @@ namespace Sce.Atf.Controls.Adaptable
             return false;
         }
 
-        // update selection path for the given item based on the m_selectionContext state 
+        /// <summary>
+        /// Updates selection path for the given item</summary>
+        /// <param name="item">Item to update selection path for</param>
+        /// <param name="path">New path</param>
         public void UpdateSelectionPath(object item, AdaptablePath<object> path)
         {
             if (m_selectionContext.SelectionContains(item))
@@ -276,13 +280,21 @@ namespace Sce.Atf.Controls.Adaptable
         {
         }
 
+        /// <summary>
+        /// Called before a transaction is initiated and before EndDrag() is called, to
+        /// indicate that the drag will be ending. The implementor can use this opportunity
+        /// to prepare for being included in the caller's transaction.</summary>
+        /// <remarks>If the location of the dragged objects is backed by the DOM, use this
+        /// opportunity to relocate the selected objects to their original positions when
+        /// the drag began. Then, EndDrag() can move the objects to their final location
+        /// and the transaction will record the correct before and after positions.</remarks>
         void IItemDragAdapter.EndingDrag()
         {
         }
 
         /// <summary>
         /// Ends dragging any selected items managed by the adapter. May be called
-        /// by another adapter when it ends dragging.</summary>
+        /// by another adapter when it ends dragging. May be called from within a transaction.</summary>
         void IItemDragAdapter.EndDrag()
         {
             // An item may be moved after a drag, need to update its DefaultPart bound by raising SelectedItemHit
@@ -298,6 +310,10 @@ namespace Sce.Atf.Controls.Adaptable
             }
         }
 
+        /// <summary>
+        /// Returns selection path for item</summary>
+        /// <param name="item">Item to obtain selection path for</param>
+        /// <returns>Selection path for item</returns>
         public AdaptablePath<object> GetSelectionPath(object item)
         {
             if (item != null && m_selectionPathMap.ContainsKey(item))
@@ -305,11 +321,17 @@ namespace Sce.Atf.Controls.Adaptable
             return null;
         }
 
+        /// <summary>
+        /// Gets selection path provider info</summary>
         public SelectionPathProviderInfo Info
         {
             get { return m_selectionPathProviderInfo; }
         }
 
+        /// <summary>
+        /// Obtains full path that includes a given path for all context items with paths</summary>
+        /// <param name="item">Path to look for</param>
+        /// <returns>Full path including given path</returns>
         public AdaptablePath<object> IncludedPath(object item)
         {
             foreach (var path in m_selectionPathMap)

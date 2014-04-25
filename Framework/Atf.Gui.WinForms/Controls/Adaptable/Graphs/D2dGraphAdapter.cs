@@ -39,12 +39,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_renderer.GetStyle = GetStyle;
         }
 
+        /// <summary>
+        /// Enumeration for draw edge policy that determines when edges are drawn relative to nodes</summary>
         public enum DrawEdgePolicy
         {
-            Associated, // default,  draw an edge after its start and end nodes are drawn
-            AllFirst    // draw all edges first, followed by nodes
+            /// <summary>
+            /// Draw an edge after its start and end nodes are drawn (default)</summary>
+            Associated,
+            /// <summary>
+            /// Draw all edges first, followed by nodes</summary>            
+            AllFirst
         }
 
+        /// <summary>
+        /// Gets or sets draw edge policy that determines when edges are drawn relative to nodes</summary>
         public DrawEdgePolicy EdgeRenderPolicy { get; set; }
 
         #region IDisposable Members
@@ -57,6 +65,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
              Dispose(true);
         }
 
+        /// <summary>
+        /// Sets dispose flag</summary>
+        /// <param name="disposing">Value to set dispose flag to</param>
         protected virtual void Dispose(bool disposing)
         {         
         }
@@ -610,14 +621,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 d2dControl.Invalidate();
         }
 
-        // Empty graph to simplify code when there is no graph
+        /// <summary>
+        /// Empty graph to simplify code when there is no graph</summary>
         protected class EmptyGraph : IGraph<TNode, TEdge, TEdgeRoute>
         {
+            /// <summary>
+            /// Gets node enumeration as EmptyEnumerable</summary>
             public IEnumerable<TNode> Nodes
             {
                 get { return EmptyEnumerable<TNode>.Instance; }
             }
 
+            /// <summary>
+            /// Gets edges enumeration as EmptyEnumerable</summary>
             public IEnumerable<TEdge> Edges
             {
                 get { return EmptyEnumerable<TEdge>.Instance; }
@@ -651,7 +667,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private Dictionary<TEdge, int> m_edgeNodeEncounter = new Dictionary<TEdge, int>();
 
 
-
+        /// <summary>
+        /// EmptyGraph object</summary>
         protected static readonly EmptyGraph s_emptyGraph = new EmptyGraph();
     }
 }

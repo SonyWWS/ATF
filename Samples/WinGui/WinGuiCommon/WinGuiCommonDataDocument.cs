@@ -14,7 +14,7 @@ using System.Windows.Forms;
 namespace WinGuiCommon
 {
     /// <summary>
-    /// Sample document</summary>
+    /// Document class DOM adapter</summary>
     public class WinGuiCommonDataDocument : DomDocument
     {
         /// <summary>

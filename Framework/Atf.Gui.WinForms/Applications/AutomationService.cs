@@ -21,12 +21,35 @@ namespace Sce.Atf.Applications
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class AutomationService : MarshalByRefObject, IDisposable, IInitializable
     {
+        /// <summary>
+        /// Retrieves a handle to the top-level window whose class name and window name match the specified strings</summary>
+        /// <param name="lpClassName">Class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx function</param>
+        /// <param name="lpWindowName">Window name (the window's title)</param>
+        /// <returns>If the function succeeds, the return value is a handle to the window that has the specified class name and window name</returns>
+        /// <remarks>Description copied from http://msdn.microsoft.com/en-us/library/windows/desktop/ms633499%28v=vs.85%29.aspx. </remarks>
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern Int32 FindWindow(String lpClassName, String lpWindowName);
         
+        /// <summary>
+        /// Sends the specified message to a window or windows</summary>
+        /// <param name="hWnd">Handle to the window whose window procedure will receive the message</param>
+        /// <param name="msg">Message to be sent</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns>Result of the message processing</returns>
+        /// <remarks>Description copied from http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx. </remarks>
         [DllImport("User32.dll", EntryPoint = "SendMessage")]
         public static extern int SendMessage(int hWnd, int msg, int wParam, int lParam);
 
+        /// <summary>
+        /// Places (posts) a message in the message queue associated with the thread that created the specified window 
+        /// and returns without waiting for the thread to process the message</summary>
+        /// <param name="hWnd">Handle to the window whose window procedure is to receive the message</param>
+        /// <param name="msg">Message to be posted</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns>Additional message-specific information</returns>
+        /// <remarks>Description copied from http://msdn.microsoft.com/en-us/library/windows/desktop/ms644944%28v=vs.85%29.aspx. </remarks>
         [DllImport("User32.dll", EntryPoint = "PostMessage")]
         public static extern int PostMessage(int hWnd, int msg, int wParam, int lParam);
 
@@ -57,6 +80,8 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// Destructor</summary>
         ~AutomationService()
         {
             Dispose();
@@ -118,6 +143,9 @@ namespace Sce.Atf.Applications
             catch { }
         }
 
+        /// <summary>
+        /// Gets a unique port number</summary>
+        /// <returns>Unique port number</returns>
         public static int GetUniquePortNumber()
         {
             const int basePortNumber = 4000;
@@ -125,9 +153,13 @@ namespace Sce.Atf.Applications
             return basePortNumber + (DateTime.Now.Second + DateTime.Now.Millisecond) % rangeSize;
         }
 
-        //Eventually delete this public default Port, but leave for now to make older
-        //component version compatible with the ATF_WIP branch
+        /// <summary>
+        /// Port for .NET remoting service</summary>
+        /// <remarks>Eventually delete this public default Port, but leave for now to make older
+        /// component version compatible with the ATF_WIP branch.</remarks>
         public const string Port = "2334";
+        /// <summary>
+        /// URI for service type</summary>
         public const string TcpName = "AutomationChannel";
 
         /// <summary>
@@ -358,12 +390,16 @@ namespace Sce.Atf.Applications
         //Members used in a method called by a remote client must be static, since the remote
         //client creates its own instance of this class.  The ScriptingService must be
         //declared twice, since the MEF component won't initialize if it is a static member.
+        /// <summary>
+        /// ScriptingService</summary>
         protected static ScriptingService s_scriptingService;
         private static bool s_unhandledException;
         private static TcpChannel s_registeredChannel;
         private static Dispatcher s_dispatcher;
         private static LiveConnectService s_liveConnectService;
         private static string s_lastMessage;
+        /// <summary>
+        /// Indicates whether main form loaded</summary>
         protected static bool s_mainFormLoaded;
     }
 }

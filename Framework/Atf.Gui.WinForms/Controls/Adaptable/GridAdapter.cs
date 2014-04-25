@@ -170,6 +170,8 @@ namespace Sce.Atf.Controls.Adaptable
                 control.Paint -= control_Paint;
         }
 
+        /// <summary>
+        /// Sets grid to background color</summary>
         protected virtual void SetGridColor()
         {
             Color gridColor = AdaptedControl.BackColor;

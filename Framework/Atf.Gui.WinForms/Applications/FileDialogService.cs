@@ -133,6 +133,7 @@ namespace Sce.Atf.Applications
             dialog.YesButtonText = "&Save".Localize("The '&' is optional and means that Alt+S is the keyboard shortcut on this button");
             dialog.NoButtonText = "&Discard".Localize("The '&' is optional and means that Alt+D is the keyboard shortcut on this button");
             DialogResult result = dialog.ShowDialog(GetDialogOwner());
+            dialog.Dispose();
             return result;
         }
 

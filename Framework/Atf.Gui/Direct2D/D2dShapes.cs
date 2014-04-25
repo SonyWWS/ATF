@@ -84,35 +84,61 @@ namespace Sce.Atf.Direct2D
         }
     }
 
+    /// <summary>
+    /// Segment in Bezier curve</summary>
     public struct D2dBezierSegment
     {
+        /// <summary>
+        /// Control point 1</summary>
         public PointF Point1;
+        /// <summary>
+        /// Control point 2</summary>
         public PointF Point2;
+        /// <summary>
+        /// Control point 3</summary>
         public PointF Point3;
     }
 
+    /// <summary>
+    /// Direction in which arcs are drawn</summary>
     public enum D2dSweepDirection : int
     {
-        /// <summary>Arcs are drawn in a counterclockwise (negative-angle) direction.</summary>
+        /// <summary>Arcs are drawn in a counterclockwise (negative-angle) direction</summary>
         CounterClockwise = 0,
-        /// <summary>Arcs are drawn in a clockwise (positive-angle) direction.</summary>
+        /// <summary>Arcs are drawn in a clockwise (positive-angle) direction</summary>
         Clockwise = 1,
     }
 
+    /// <summary>
+    /// Sweep size of arc</summary>
     public enum D2dArcSize
     {
-        /// <summary>An arc's sweep should be 180 degrees or less.</summary>
+        /// <summary>An arc's sweep should be 180 degrees or less</summary>
         Small = 0,
-        /// <summary>An arc's sweep should be 180 degrees or greater.</summary>
+        /// <summary>An arc's sweep should be 180 degrees or greater</summary>
         Large = 1,
     }
 
+    /// <summary>
+    /// Arc segment
+    /// </summary>
     public struct D2dArcSegment
     {
+        /// <summary>
+        /// End point</summary>
         public PointF Point;
+        /// <summary>
+        /// Arc's bounding rectangle size
+        /// </summary>
         public SizeF Size;
+        /// <summary>
+        /// Arc rotation angle</summary>
         public float RotationAngle;
+        /// <summary>
+        /// Arc sweep direction</summary>
         public D2dSweepDirection SweepDirection;
+        /// <summary>
+        /// Arc sweep size</summary>
         public D2dArcSize ArcSize;
     }
 }

@@ -17,7 +17,7 @@ namespace TimelineEditorSample
     public class TimelineValidator : Validator
     {
         /// <summary>
-        /// Performs actions after attribute changed</summary>
+        /// Performs actions after attribute changed to validate events and intervals</summary>
         /// <param name="sender">Sender</param>
         /// <param name="e">AttributeEventArgs containing event data</param>
         protected override void OnAttributeChanged(object sender, AttributeEventArgs e)
