@@ -1,10 +1,10 @@
 ATF
 ===
-Authoring Tools Framework (ATF) is a set of C#/.NET components for making tools on Windows®. ATF has been used by most Sony first party game studios to make many custom tools such as Naughty Dog's level editor and shader editor for _The Last of Us™_, Guerrilla Game's sequence editor for Killzone™ games (including the _Killzone: Shadow Fall™_ PS4™ launch title), an animation blending tool at Santa Monica Studios, a level editor at Bend Studio, a visual state machine editor for Quantic Dream, sound editing tools, and many others. ATF has been in continuous development in Sony's Worldwide Studios central tools group since early 2006.
+Authoring Tools Framework (ATF) is a set of C#/.NET components for making tools on Windowsï¿½. ATF has been used by most Sony first party game studios to make many custom tools such as Naughty Dog's level editor and shader editor for _The Last of Usï¿½_, Guerrilla Game's sequence editor for Killzoneï¿½ games (including the _Killzone: Shadow Fallï¿½_ PS4ï¿½ launch title), an animation blending tool at Santa Monica Studios, a level editor at Bend Studio, a visual state machine editor for Quantic Dream, sound editing tools, and many others. ATF has been in continuous development in Sony's Worldwide Studios central tools group since early 2006.
 
 There are many types of components in ATF. ATF Managed Extensibility Framework (MEF) components can be added to a .NET TypeCatalog with a single line of code that can be found in most of our sample applications, as in \Samples\CircuitEditor\Program.cs. Other components, like the DOM, are really a collection of related classes. Components include:
 
-* Control Host Service -- for Windows® docking and tracking active Controls.
+* Control Host Service -- for Windowsï¿½ docking and tracking active Controls.
 * Command Service -- for registering commands in menus and on tool bars and associating keyboard shortcuts.
 * Property Editor -- 2-column property editor for editing selected objects.
 * Grid Property Editor -- spreadsheet-style property editor for selected objects.
@@ -13,14 +13,14 @@ There are many types of components in ATF. ATF Managed Extensibility Framework (
 * Many property editing controls -- bounded integer, bounded float, tuples, enums, flags, colors, collections of child properties.
 * Document Object Model (DOM) -- an in-memory observable database, to help support document persistence and copy/paste and undo/redo. It's currently required for circuit editing.
 * Direct2D -- a thin layer over native Direct2D resources.
-* OpenGL® 2.1 -- a thin wrapper to access native OpenGL® resources.
-* Open Sound Control (OSC) -- a general way of controlling a Windows® application using a tablet computer (e.g., iPad®), by sending name-value pairs.
+* OpenGLï¿½ 2.1 -- a thin wrapper to access native OpenGLï¿½ resources.
+* Open Sound Control (OSC) -- a general way of controlling a Windowsï¿½ application using a tablet computer (e.g., iPadï¿½), by sending name-value pairs.
 * Circuit Editing -- circuits and groups of circuits and templates, wires, annotations.
 * Timeline Editing -- timelines with intervals, keys, tracks, groups, and referenced child timelines.
 * Settings Service -- for persisting settings and user preferences, plus a settings command and dialog.
 * Window Layout Service -- allows user to switch between window layouts and to create or delete layouts.
 * Unhandled Exception Service -- catches unhandled exceptions, displays info, and gives user a chance to save.
-* File Dialog Service -- standard Windows® file dialogs.
+* File Dialog Service -- standard Windowsï¿½ file dialogs.
 * Document Registry -- central document registry with change notification.
 * Auto Document Service -- opens documents from last session, or creates a new document on startup.
 * Recent Document Commands -- standard recent document commands in File menu.
@@ -46,15 +46,15 @@ ATF is an open source project. See License.txt.
 You must have .NET Framework 4.0 or greater installed in order to run the ATF applications. You can download it here:
 http://www.microsoft.com/en-us/download/details.aspx?id=17851 
 
-You must have Windows® 7 or later to run the circuit, FSM, statechart, and timeline editors, due to their use of Direct2D.
+You must have Windowsï¿½ 7 or later to run the circuit, FSM, statechart, and timeline editors, due to their use of Direct2D.
 
-To use Live Connect, a local network broadcasting service, you must have Bonjour installed. Bonjour is installed with iTunes and some other products. The installers, Bonjour64.msi (for 64-bit Windows®) and Bonjour.msi (for 32-bit Windows®), can be provided within Sony upon request, and are located in our non-public directory: \NoDistro\ThirdParty\Wws.LiveConnect.
+To use Live Connect, a local network broadcasting service, you must have Bonjour installed. Bonjour is installed with iTunes and some other products. The installers, Bonjour64.msi (for 64-bit Windowsï¿½) and Bonjour.msi (for 32-bit Windowsï¿½), can be provided within Sony upon request, and are located in our non-public directory: \NoDistro\ThirdParty\Wws.LiveConnect.
 
 Visual Studio 2010 or later is required to compile the ATF solution and project files.
 
 
 ### Getting Started ###
-Our wiki-based documentation is extensive and it describes the different components that are available and how to make new Windows® tools.
+Our wiki-based documentation is extensive and it describes the different components that are available and how to make new Windowsï¿½ tools.
 http://github.com/SonyWWS/ATF/wiki
 
 Another good starting document is:
@@ -63,6 +63,8 @@ Another good starting document is:
 To try the ATF sample applications, open and build \Samples\Samples.vs2010.sln. The sample applications' executables are placed in the \bin folder.
 
 To build all the samples, development tools, and unit tests, open and build \Test\Everything.vs2010.sln.
+
+The roadmap showing upcoming planned work and past major features: http://github.com/SonyWWS/ATF/wiki/Roadmap
 
 
 ### Project Warnings ###
