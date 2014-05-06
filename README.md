@@ -68,20 +68,23 @@ To build all the samples, development tools, and unit tests, open and build \Tes
 ### Project Warnings ###
 Although we don't ship with any C# compile warnings, we are still shipping with two project warnings that you may see when you open up a couple of our projects in Visual Studio. These are unlikely to cause problems, but here is an explanation for what is happening.
 
-Atf.Core
+Atf.Core:  
 This project has a warning about a possible run-time error due to a mismatch between the processor architecture with Wws.LiveConnect.dll. This is a false warning, because this DLL is not actually copied to the output directory. (The copy local setting is set to false.) The application's project, like TimelineEditor, has to reference the correct version of Wws.LiveConnect.dll (x86 or x64). These sample apps provide an example of how to conditionally reference the correct DLL based on the target processor architecture. For a future release of ATF, a new Wws.LiveConnect.dll should be available that will target AnyCPU, and so this warning will go away.
 
-Atf.Gui.OpenGL
-This project has a warning about a possible run-time error due to a mismatch between the processor architecture with DDSUtils.dll. There has been a very long-standing requirement that to use this NVidia utility (like for opening certain image files), you have to target the x86 processor architecture. New clients should use the Direct3D native C++ rendering of the new LevelEditor component in the WWS SDK.
+Atf.Gui.OpenGL:  
+This project has a warning about a possible run-time error due to a mismatch between the processor architecture with DDSUtils.dll. There has been a very long-standing requirement that to use this NVidia utility (like for opening certain image files), you have to target the x86 processor architecture. New clients within Sony should use the Direct3D native C++ rendering of the new LevelEditor component in the WWS SDK.
 
-Atf.Perforce
+Atf.Perforce:  
 This project has a warning about not being able to link to the file p4bridge.dll. This is not a valid warning since there are two conditional links to p4bridge.dll, but both links can't be active at the same time. One conditional link is for 32-bit compiling and the other is for 64-bit.
 
 
 ### More Info ###
-Documentation:
-https://github.com/SonyWWS/ATF/wiki
+Documentation:  
+https://github.com/SonyWWS/ATF/wiki  
 Locally, we have PDF files in the /Docs directory.
 
-Bugs, feature requests, and questions:
+Bugs, feature requests, and questions:  
 https://github.com/SonyWWS/ATF/issues
+
+Contact, in English or Japanese:  
+atf_info@playstation.sony.com
