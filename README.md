@@ -87,4 +87,4 @@ Bugs, feature requests, and questions:
 https://github.com/SonyWWS/ATF/issues
 
 Contact, in English or Japanese:  
-atf_info@playstation.sony.com
+&#097;&#116;&#102;&#095;&#105;&#110;&#102;&#111;&#064;&#112;&#108;&#097;&#121;&#115;&#116;&#097;&#116;&#105;&#111;&#110;&#046;&#115;&#111;&#110;&#121;&#046;&#099;&#111;&#109;
