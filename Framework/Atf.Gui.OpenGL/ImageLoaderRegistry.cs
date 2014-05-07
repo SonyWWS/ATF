@@ -26,15 +26,6 @@ namespace Sce.Atf.Rendering
             RegisterImageLoader(".tif", new MsBitmapImageLoader());
 
             RegisterImageLoader(".dds", new DdsImageLoader());
-
-            // DevilImageLoader supports practically everything.
-            foreach (string ext in DevilImageLoader.GetSupportedExtensions())
-            {
-                if (TryGetLoader(ext) == null)
-                {
-                    RegisterImageLoader(ext, new DevilImageLoader(ext));
-                }
-            }
         }
 
         /// <summary>

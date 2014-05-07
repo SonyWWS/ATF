@@ -76,7 +76,7 @@ namespace Sce.Atf.Rendering
             // Rewind
             memStream.Seek(0, SeekOrigin.Begin);
 
-            DevilImageLoader loader = new DevilImageLoader(".dds");
+            var loader = new DdsImageLoader();
             ddsImage = loader.LoadImage(memStream);
 
             return ddsImage;

@@ -34,6 +34,7 @@ namespace Sce.Atf.Rendering
     /// .tga
     /// .tiff,.tif
     /// ...  and many more. Call the static GetSupportedExtensions() for all of them.</remarks>
+    [Obsolete("Has memory corruption problems. https://github.com/SonyWWS/ATF/issues/9")]
     public class DevilImageLoader : IImageLoader
     {
         /// <summary>
