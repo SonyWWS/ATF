@@ -52,6 +52,7 @@ namespace Sce.Atf.Wpf.Models
         /// <summary>
         /// Converts from palette items to actual items</summary>
         /// <param name="items">Items to convert</param>
+        /// <returns>Enumeration of items converted from palette items</returns>
         public IEnumerable<object> Convert(IEnumerable<object> items)
         {
             return m_paletteService.Convert(items);

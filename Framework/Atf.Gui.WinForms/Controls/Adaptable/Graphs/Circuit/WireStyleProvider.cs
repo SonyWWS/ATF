@@ -14,8 +14,10 @@ using Sce.Atf.Dom;
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
-    /// Provides information about an edge's shape and appearance
-    /// </summary>
+    /// Provides information about an edge's shape and appearance</summary>
+    /// <typeparam name="TElement">ICircuitElement element</typeparam>
+    /// <typeparam name="TWire">IGraphEdge wire</typeparam>
+    /// <typeparam name="TPin">ICircuitPin pin</typeparam>
     public class WireStyleProvider<TElement, TWire, TPin> : DomNodeAdapter, IEdgeStyleProvider
         where TElement : class, ICircuitElement
         where TWire : class, IGraphEdge<TElement, TPin>

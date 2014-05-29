@@ -176,22 +176,22 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Returns the maximum of two values.
-        /// </summary>
-        /// <param name="x">one of the two values to compare</param>
-        /// <param name="y">second of the two values to compare</param>
-        /// <returns>the maximum value</returns>
+        /// Return maximum of two values</summary>
+        /// <typeparam name="T">Type of compared values</typeparam>
+        /// <param name="x">One of two values to compare</param>
+        /// <param name="y">Second of two values to compare</param>
+        /// <returns>Maximum value</returns>
         public static T Max<T>(T x, T y) where T : IComparable<T>
         {
             return (Comparer<T>.Default.Compare(x, y) > 0) ? x : y;
         }
 
         /// <summary>
-        /// Returns the minimum of two values.
-        /// </summary>
-        /// <param name="x">one of the two values to compare</param>
-        /// <param name="y">second of the two values to compare</param>
-        /// <returns>the minimum value</returns>
+        /// Return minimum of two values</summary>
+        /// <typeparam name="T">Type of compared values</typeparam>
+        /// <param name="x">One of two values to compare</param>
+        /// <param name="y">Second of two values to compare</param>
+        /// <returns>Minimum value</returns>
         public static T Min<T>(T x, T y) where T : IComparable<T>
         {
             return (Comparer<T>.Default.Compare(x, y) < 0) ? x : y;

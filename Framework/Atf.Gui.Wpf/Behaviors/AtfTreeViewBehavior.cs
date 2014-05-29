@@ -26,6 +26,11 @@ namespace Sce.Atf.Wpf.Behaviors
 
         /// <summary>
         /// Attached property for multi-selection used on TreeViewItems</summary>
+        /// 
+        /// <AttachedPropertyComments>
+        /// <summary>
+        /// Attached property for multi-selection used on TreeViewItems</summary>
+        /// </AttachedPropertyComments>
         public static readonly DependencyProperty IsMultiSelectedProperty =
             DependencyProperty.RegisterAttached("IsMultiSelected", typeof(bool), typeof(AtfTreeViewBehavior),
             new PropertyMetadata(false, new PropertyChangedCallback(IsMultiSelected_PropertyChanged)));

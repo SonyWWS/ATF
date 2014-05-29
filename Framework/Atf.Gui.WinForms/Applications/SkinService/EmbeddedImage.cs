@@ -32,8 +32,10 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Constructor which creates, registers, and tracks the specified image.
         /// We would have preferred to require an actual assembly, instead of its string name.
-        /// However the purpose of this class, which is instantiated through xml data, prevents that.
-        /// </summary>
+        /// However the purpose of this class, which is instantiated through XML data, prevents that.</summary>
+        /// <param name="id">Image identifier</param>
+        /// <param name="assemblyName">Assembly name</param>
+        /// <param name="pathToImage">Full name of image resource</param>
         public EmbeddedImage(string id, string assemblyName, string pathToImage)
         {
             m_isOwner = true;
@@ -45,8 +47,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Constructor for simply tracking a pre-registered image.
-        /// As it was not created here, Image will not be disposed of in IDispose.Dispose()
-        /// </summary>
+        /// Because it was not created here, Image will not be disposed of in IDispose.Dispose().</summary>
+        /// <param name="id">Image identifier</param>
+        /// <param name="size">Image size</param>
         public EmbeddedImage(string id, ImageSizes size)
         {
             m_isOwner = false;

@@ -109,9 +109,10 @@ namespace Sce.Atf.Wpf.Applications
         #region IContextMenuCommandProvider Members
 
         /// <summary>
-        /// Gets tags for context menu (right click) commands</summary>
+        /// Gets command tags for context menu (right click) commands</summary>
         /// <param name="context">Context containing target object</param>
         /// <param name="target">Right clicked object, or null if none</param>
+        /// <returns>Command tags for context menu</returns>
         public IEnumerable<object> GetCommands(object context, object target)
         {
             if (target != null && context.Is<ILabelEditingContext>())

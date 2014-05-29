@@ -91,6 +91,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Adds instances of classes that implement IQueryPredicate to define what will be searched</summary>
+        /// <returns>IQueryPredicate search predicates</returns>
         public virtual IQueryPredicate GetPredicate()
         {
             return null;

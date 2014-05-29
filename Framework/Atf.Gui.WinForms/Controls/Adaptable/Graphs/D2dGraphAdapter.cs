@@ -144,6 +144,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_hiddenEdge = edge;
         }
+
         /// <summary>
         /// Performs a picking operation on the graph with the point</summary>
         /// <param name="p">Hit test point in screen space</param>
@@ -172,7 +173,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Performs hit test for a point, in client coordinates</summary>   
+        /// Performs hit test for a point, in client coordinates</summary>
+        /// <param name="nodes">Nodes to test if hit</param>
+        /// <param name="edges">Edges to test if hit</param>
+        /// <param name="pickPoint">Pick point, in client coordinates</param>
         /// <returns>Hit record for a point, in client coordinates</returns>
         public GraphHitRecord<TNode, TEdge, TEdgeRoute> Pick(IEnumerable<TNode> nodes, IEnumerable<TEdge> edges, Point pickPoint)
         {

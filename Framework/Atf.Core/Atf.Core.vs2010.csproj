@@ -76,6 +76,7 @@
     <Compile Include="AtfPluginAttribute.cs" />
     <Compile Include="AtfUsageLogger.cs" />
     <Compile Include="AtfVersion.cs" />
+    <Compile Include="AttributeUtils.cs" />
     <Compile Include="Cached.cs" />
     <Compile Include="CollectionAdapter.cs" />
     <Compile Include="ConsoleOutputWriter.cs" />

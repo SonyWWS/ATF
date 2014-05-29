@@ -82,6 +82,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Adds instances of classes that implement IQueryPredicate to define what is searched</summary>
+        /// <returns>IQueryPredicate search predicates</returns>
         public override IQueryPredicate GetPredicate()
         {
             // Parse query tree to build list of predicates, with which the search will be made

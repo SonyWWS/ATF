@@ -75,6 +75,7 @@ namespace Sce.Atf
         /// Method, to be implemented by derived classes, that creates an IQueryable object 
         /// that enumerates through the SEARCHABLE elements within the specified object</summary>
         /// <param name="queryItem">Item in which searchable elements should be enumerated</param>
+        /// <returns>IQueryable object that enumerates through SEARCHABLE elements within specified object</returns>
         protected abstract IQueryable GetQueryableElements(object queryItem);
 
         /// <summary>
@@ -82,6 +83,7 @@ namespace Sce.Atf
         /// IQueryable enumerates through the MATCHING elements of the specified query item.</summary>
         /// <param name="queryItem">Item in which elements are searched, from which the IQueryable object
         /// is produced</param>
+        /// <returns>IQueryable object from constructing Linq query expression</returns>
         protected IQueryable GetQueryable(object queryItem)
         {
             IQueryable returnValue = null;
@@ -109,6 +111,7 @@ namespace Sce.Atf
         /// specified matching element from the specified search item</summary>
         /// <param name="searchItem">Item for which the matching item was found</param>
         /// <param name="queryMatch">The matching element, which came from searchItem</param>
+        /// <returns>Encapsulation of specified matching element from specified search item</returns>
         public abstract IQueryMatch CreatePredicateMatch(object searchItem, object queryMatch);
 
         #region Linq Query Expression Creators
@@ -142,6 +145,7 @@ namespace Sce.Atf
         /// <summary>
         /// Gets an expression to test whether a string is null or empty</summary>
         /// <param name="matchString">The string to validate</param>
+        /// <returns>Expression to test whether string is null or empty</returns>
         protected BinaryExpression GetNullOrEmptyExpression(string matchString)
         {
             return Expression.Equal(

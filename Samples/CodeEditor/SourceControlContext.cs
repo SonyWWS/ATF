@@ -25,6 +25,8 @@ namespace CodeEditor
             m_contextRegistry = contextRegistry;
         }
 
+        #region ISourceControlContext member
+
         /// <summary>
         /// Gets an enumeration of the open documents</summary>
         public IEnumerable<IResource> Resources
@@ -36,6 +38,8 @@ namespace CodeEditor
                            : new IResource[] { m_documentRegistry.ActiveDocument };
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Initializes the object</summary>

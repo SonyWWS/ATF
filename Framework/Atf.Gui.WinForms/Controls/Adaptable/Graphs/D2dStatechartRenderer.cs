@@ -14,6 +14,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
     /// Class to handle rendering and hit testing state charts</summary>
+    /// <typeparam name="TNode">IState node</typeparam>
+    /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
     public class D2dStatechartRenderer<TNode, TEdge> : D2dGraphRenderer<TNode, TEdge, BoundaryRoute>, IDisposable
         where TNode : class, IState
         where TEdge : class, IGraphEdge<TNode, BoundaryRoute>

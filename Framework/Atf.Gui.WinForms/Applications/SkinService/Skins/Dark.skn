@@ -54,10 +54,8 @@
             <valueInfo type="System.Drawing.Font">
                 <constructorParams>
                     <valueInfo type="string" value="Verdana"/>
-                    <valueInfo type="float" value="11"/>
-                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>
-                    <valueInfo type="System.Drawing.GraphicsUnit" value="Pixel"/>
-                    <valueInfo type="byte" value="0"/>
+                    <valueInfo type="float" value="9.0"/>
+                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>                    
                 </constructorParams>
             </valueInfo>
         </setter>
@@ -433,9 +431,6 @@
 
     <!--Button Style-->
     <style name="ButtonStyle" targetType="System.Windows.Forms.Button">
-
-        
-
         <setter propertyName="ForeColor">
             <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
         </setter>
@@ -932,9 +927,7 @@
                 <constructorParams>
                     <valueInfo type="string" value="Verdana"/>
                     <valueInfo type="float" value="10"/>
-                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>
-                    <valueInfo type="System.Drawing.GraphicsUnit" value="Pixel"/>
-                    <valueInfo type="byte" value="0"/>
+                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>                    
                 </constructorParams>
             </valueInfo>
         </setter>

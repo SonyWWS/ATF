@@ -11,6 +11,7 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
         /// <summary>
         /// Converts from dragged and dropped items to actual items</summary>
         /// <param name="items">Items to convert</param>
+        /// <returns>Enumeration of items converted from palette items</returns>
         IEnumerable<object> Convert(IEnumerable<object> items);
     }
 }

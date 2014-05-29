@@ -14,6 +14,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Displays status of an operation (e.g., "File successfully saved.")</summary>
+        /// <param name="status">Operation status to display</param>
         void ShowStatus(string status);
 
         /// <summary>

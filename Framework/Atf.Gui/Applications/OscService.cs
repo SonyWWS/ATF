@@ -422,7 +422,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Event that motifies listeners that an OSC message has been received. The OSC address and data payload
+        /// Event that notifies listeners that an OSC message has been received. The OSC address and data payload
         /// will be provided and listeners can set the Handled property to true if no further processing
         /// should be done on this message.</summary>
         public event EventHandler<OscMessageReceivedArgs> MessageReceived
@@ -1233,6 +1233,9 @@ namespace Sce.Atf.Applications
         //  lock it before adding messages, and the main GUI thread will lock it before consuming messages.
         private readonly Dictionary<string, OscMessage> m_incomingQueue = new Dictionary<string, OscMessage>();
 
+        // All access to this "queue" must be by locking it first. The main GUI thread will post
+        //  data to the queue quickly. The helper thread (m_sendingThread) will quickly copy the
+        //  queue to a local list and then clear it.
         private readonly Dictionary<string, Tuple<string, object>> m_outgoingQueue = new Dictionary<string, Tuple<string, object>>();
 
         // A list of delegates that are listeners to the MessageReceived event. I could have used

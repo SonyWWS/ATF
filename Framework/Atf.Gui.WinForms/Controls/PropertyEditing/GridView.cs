@@ -187,6 +187,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Gets the PropertyDescriptor for the property under the client point, or null if none</summary>
         /// <param name="clientPoint">Client point</param>
+        /// <returns>PropertyDescriptor for property under client point, or null if none</returns>
         public PropertyDescriptor GetDescriptorAt(Point clientPoint)
         {
             Point offset;
@@ -196,7 +197,8 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Gets the PropertyDescriptor for the property under the client point, or null if none</summary>
         /// <param name="clientPoint">Client point</param>
-        /// <param name="offset">Returns a position relative to the property rectangle. This can be used to check where property is clicked.</param>
+        /// <param name="offset">Offset from client point</param>
+        /// <returns>Position relative to the property rectangle. This can be used to check where property is clicked.</returns>
         public PropertyDescriptor GetDescriptorAt(Point clientPoint, out Point offset)
         {
             HitRecord hitRecord = Pick(clientPoint);
@@ -211,6 +213,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Gets the row index for the row under the client point, or -1 if none</summary>
         /// <param name="clientPoint">Client point</param>
+        /// <returns>Row index for row under client point, or -1 if none</returns>
         public int GetRowIndexAt(Point clientPoint)
         {
             HitRecord hitRecord = Pick(clientPoint);
@@ -259,6 +262,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Returns the current sort order for the given property. This does not mean that data is actually sorted by this property.
         /// It is the current state of the UI sort direction. Use GetLastSortPropertyName to check if the data is sorted by a property.</summary>
+        /// <param name="propertyName">Property whose sort order is obtained</param>
         /// <returns>Current sort order for the given property</returns>
         public ListSortDirection GetPropertySortOrder(string propertyName)
         {
@@ -443,6 +447,8 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Returns true iff a property is visible. Considers user show/hide state as well as property visible value.</summary>
+        /// <param name="p">Property to test</param>
+        /// <returns>True iff a property is visible</returns>
         protected bool GetVisible(Property p)
         {
             return (!GetColumnInfo(p).UserHidden) && p.Visible;
@@ -1032,6 +1038,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Returns the ColumnHeaders</summary>
+        /// <returns>ColumnHeaders</returns>
         protected ColumnHeaders GetColumnHeaders()
         {
             return m_columnHeaders;

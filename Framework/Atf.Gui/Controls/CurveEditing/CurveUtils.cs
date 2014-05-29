@@ -389,7 +389,8 @@ namespace Sce.Atf.Controls.CurveEditing
 
         private static List<IControlPoint> s_points = new List<IControlPoint>();
         /// <summary>
-        /// Sort control points along x axis</summary>        
+        /// Sort control points along x axis</summary>       
+        /// <param name="curve">Curve whose control points are sorted</param>
         public static void Sort(ICurve curve)
         {
             if (curve == null) return;
@@ -501,6 +502,9 @@ namespace Sce.Atf.Controls.CurveEditing
       
         /// <summary>
         /// Snaps float value x to y</summary>
+        /// <param name="x">X-coordinate</param>
+        /// <param name="y">Y-coordinate</param>
+        /// <returns>Snapped y-coordinate</returns>
         public static float SnapTo(float x, float y)
         {
             double f = Math.Round(x / y);

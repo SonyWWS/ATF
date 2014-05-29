@@ -57,7 +57,7 @@ namespace CircuitEditorSample
         /// <returns>True iff the reference can reference the specified target item</returns>
         public override bool CanReference(object item)
         {
-            return item.Is<Template>() && item.Cast<Template>().Model.Is<Module>();
+            return item.Is<Template>() && item.Cast<Template>().Target.Is<Module>();
         }
 
         /// <summary>
@@ -70,7 +70,8 @@ namespace CircuitEditorSample
             {
                 var groupReference = new DomNode(Schema.groupTemplateRefType.Type).Cast<GroupInstance>();
                 groupReference.Target = template.Target.Cast<Module>();
-                groupReference.Id = template.Guid.ToString();
+                groupReference.SourceGuid = template.Guid;
+                groupReference.Id = template.Name;
                 groupReference.Name = template.Name;
                 return groupReference;
             }
@@ -78,7 +79,8 @@ namespace CircuitEditorSample
             {
                 var moduleReference = new DomNode(Schema.moduleTemplateRefType.Type).Cast<ModuleInstance>();
                 moduleReference.Target = template.Target.Cast<Module>();
-                moduleReference.Id = template.Guid.ToString();
+                moduleReference.SourceGuid = template.Guid;
+                moduleReference.Id = template.Name;
                 moduleReference.Name = template.Name;
                 return moduleReference;
             }

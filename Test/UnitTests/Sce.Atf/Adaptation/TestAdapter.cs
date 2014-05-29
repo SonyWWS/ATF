@@ -1,6 +1,10 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
+using System.Collections.Generic;
 using NUnit.Framework;
+using Sce.Atf.Adaptation;
+using Sce.Atf.Dom;
 
 namespace UnitTests.Atf.Adaptation
 {
@@ -61,6 +65,34 @@ namespace UnitTests.Atf.Adaptation
             test = new SimpleAdapter(adaptee); // wrap itself
             Utilities.TestSequenceEqual(test.GetDecorators(typeof(SimpleAdapter)), test, adaptee);
             Assert.True(test.AdaptCalled);
+
+            // If the adaptee can be adapted to the adapter, we want to make sure that
+            //  GetDecorators() doesn't return two identical decorators. http://tracker.ship.scea.com/jira/browse/WWSATF-1483
+            var decoratableAdaptee = new DecoratableAdaptee();
+            var decoratingAdapter = new DecoratingAdapter(decoratableAdaptee);
+            var adapters = new List<DecoratingAdapter>(decoratingAdapter.AsAll<DecoratingAdapter>());
+            Utilities.TestSequenceContainSameItems(adapters, decoratingAdapter);
+        }
+
+        private class DecoratableAdaptee : IDecoratable
+        {
+            public IEnumerable<object> GetDecorators(Type type)
+            {
+                if (typeof (Adapter).IsAssignableFrom(type))
+                    yield return Decorator;
+            }
+
+            internal Adapter Decorator;
+        }
+
+        // Knows how to tell its Adaptee about ourselves.
+        private class DecoratingAdapter : Adapter
+        {
+            public DecoratingAdapter(DecoratableAdaptee adaptee)
+                : base(adaptee)
+            {
+                adaptee.Decorator = this;
+            }
         }
     }
 }

@@ -95,7 +95,6 @@
       <DependentUpon>LoginDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PerforceRequest.cs" />
-    <Compile Include="PerforceRequestQueue.cs" />
     <Compile Include="PerforceService.cs">
       <SubType>Code</SubType>
     </Compile>

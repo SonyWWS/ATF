@@ -9,58 +9,58 @@ namespace Sce.Atf.Direct2D
     /// The D2dTextFormat describes the font and paragraph properties used to format text, 
     /// and it describes locale information</summary>
     public class D2dTextFormat : D2dResource
-    {       
+    {
         /// <summary>
         /// Gets the font family name</summary>
-        public string FontFamilyName 
+        public string FontFamilyName
         {
             get { return m_nativeTextFormat.FontFamilyName; }
         }
 
         /// <summary>
         /// Gets the font size in DIP (Device Independent Pixels) units</summary>
-        public float FontSize 
+        public float FontSize
         {
             get { return m_nativeTextFormat.FontSize; }
         }
-        
+
         /// <summary>
         /// Gets the height of the font</summary>
         public float FontHeight
         {
             get { return m_fontHeight; }
         }
-             
+
         /// <summary>
         /// Gets or sets the alignment option of a paragraph that is relative to the top and
         /// bottom edges of a layout box</summary>
-        public D2dParagraphAlignment ParagraphAlignment 
+        public D2dParagraphAlignment ParagraphAlignment
         {
             get { return (D2dParagraphAlignment)m_nativeTextFormat.ParagraphAlignment; }
-            set 
-            { 
+            set
+            {
                 m_nativeTextFormat.ParagraphAlignment = (ParagraphAlignment)value;
             }
         }
 
         /// <summary>
         /// Gets or sets the current reading direction for text in a paragraph</summary>
-        public D2dReadingDirection ReadingDirection 
+        public D2dReadingDirection ReadingDirection
         {
             get { return (D2dReadingDirection)m_nativeTextFormat.ReadingDirection; }
             set
             {
                 m_nativeTextFormat.ReadingDirection = (ReadingDirection)value;
-            }                
+            }
         }
-               
+
         /// <summary>
         /// Gets or sets the alignment option of text relative to the layout box's leading and
         /// trailing edge</summary>
-        public D2dTextAlignment TextAlignment 
+        public D2dTextAlignment TextAlignment
         {
             get { return (D2dTextAlignment)m_nativeTextFormat.TextAlignment; }
-            set 
+            set
             {
                 m_nativeTextFormat.TextAlignment = (TextAlignment)value;
             }
@@ -68,12 +68,12 @@ namespace Sce.Atf.Direct2D
 
         /// <summary>
         /// Gets or sets the word wrapping option</summary>
-        public D2dWordWrapping WordWrapping 
+        public D2dWordWrapping WordWrapping
         {
             get { return (D2dWordWrapping)m_nativeTextFormat.WordWrapping; }
-            set 
+            set
             {
-                m_nativeTextFormat.WordWrapping = (WordWrapping)value;                
+                m_nativeTextFormat.WordWrapping = (WordWrapping)value;
             }
         }
 
@@ -91,7 +91,8 @@ namespace Sce.Atf.Direct2D
                 m_nativeTextFormat.GetTrimming(out tmpTrimming, out trimmingSign);
                 trimmingOptions.Delimiter = tmpTrimming.Delimiter;
                 trimmingOptions.DelimiterCount = tmpTrimming.DelimiterCount;
-                trimmingOptions.Granularity =(D2dTrimmingGranularity) tmpTrimming.Granularity;
+                trimmingOptions.Granularity = (D2dTrimmingGranularity)tmpTrimming.Granularity;
+                trimmingSign.Dispose();
                 return trimmingOptions;
             }
 
@@ -102,11 +103,9 @@ namespace Sce.Atf.Direct2D
                 trimming.DelimiterCount = value.DelimiterCount;
                 trimming.Granularity = (TrimmingGranularity)value.Granularity;
 
-                IntPtr inlineObj = (value.Granularity != D2dTrimmingGranularity.None) ?
-                m_ellipsisTrimming.NativePointer : IntPtr.Zero;
-
-                object[] args = { trimming, inlineObj };
-                SetTrimmingInfo.Invoke(m_nativeTextFormat, args);
+                var inlineObj = (value.Granularity != D2dTrimmingGranularity.None) ?
+                m_ellipsisTrimming : null;
+                m_nativeTextFormat.SetTrimming(trimming, inlineObj);
             }
         }
 
@@ -117,7 +116,7 @@ namespace Sce.Atf.Direct2D
         ///   and it is clipped to the layout rectangle.</summary>
         public D2dDrawTextOptions DrawTextOptions
         {
-            get {return m_drawTextOptions; }
+            get { return m_drawTextOptions; }
             set { m_drawTextOptions = value; }
         }
 
@@ -148,8 +147,8 @@ namespace Sce.Atf.Direct2D
         /// <returns>If the method succeeds, it returns D2dResult.Ok. 
         /// Otherwise, it throws an exception.</returns>
         public D2dResult GetLineSpacing(
-            out D2dLineSpacingMethod lineSpacingMethod, 
-            out float lineSpacing, 
+            out D2dLineSpacingMethod lineSpacingMethod,
+            out float lineSpacing,
             out float baseline)
         {
             LineSpacingMethod tmpLineSpacingMethod;
@@ -182,12 +181,25 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or 
         /// resetting unmanaged resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;
-
-            m_ellipsisTrimming.Dispose();
-            m_nativeTextFormat.Dispose();
+            if (disposing)
+            {
+                if (m_ellipsisTrimming != null)
+                {
+                    m_ellipsisTrimming.Dispose();
+                    m_ellipsisTrimming = null;
+                }
+                if (m_nativeTextFormat != null)
+                {
+                    m_nativeTextFormat.Dispose();
+                    m_nativeTextFormat = null;
+                }
+            }
             base.Dispose(disposing);
         }
 
@@ -202,32 +214,21 @@ namespace Sce.Atf.Direct2D
                 throw new ArgumentNullException("textFormat");
             m_nativeTextFormat = textFormat;
 
-            m_ellipsisTrimming = new EllipsisTrimming(D2dFactory.NativeDwFactory
-                , m_nativeTextFormat);
-
-            // it seems SharpDX guys forgot to expose SetTrimming(..) method.
-            // for now use reflection to access it. 
-            if(SetTrimmingInfo == null)
-            {
-                SetTrimmingInfo = textFormat.GetType().GetMethod("SetTrimming_"
-                    , System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            }
-            
-            m_fontHeight =(float)Math.Ceiling(m_nativeTextFormat.FontSize * 1.2);
+            m_ellipsisTrimming = new EllipsisTrimming(D2dFactory.NativeDwFactory, m_nativeTextFormat);
+            m_fontHeight = D2dFactory.FontSizeToPixel(m_nativeTextFormat.FontSize);
         }
-       
-        private static System.Reflection.MethodInfo SetTrimmingInfo;
+
         private TextFormat m_nativeTextFormat;
         private EllipsisTrimming m_ellipsisTrimming;
         private D2dDrawTextOptions m_drawTextOptions = D2dDrawTextOptions.None;
-        private float m_fontHeight;
+        private readonly float m_fontHeight;
     }
-     
+
     /// <summary>
     /// Enum that specifies the alignment of paragraph text along the flow direction axis,
     /// relative to the top and bottom of the flow's layout box</summary>
     public enum D2dParagraphAlignment
-    {        
+    {
         /// <summary>
         /// The top of the text flow is aligned to the top edge of the layout box</summary>
         Near = 0,
@@ -240,11 +241,11 @@ namespace Sce.Atf.Direct2D
         /// The center of the flow is aligned to the center of the layout box</summary>
         Center = 2,
     }
-    
+
     /// <summary>
     /// Enum that specifies the direction in which reading progresses</summary>
     public enum D2dReadingDirection
-    {        
+    {
         /// <summary>
         /// Indicates that reading progresses from left to right</summary>
         LeftToRight = 0,
@@ -258,12 +259,12 @@ namespace Sce.Atf.Direct2D
     /// Enum that specifies the alignment of paragraph text along the reading direction axis,
     /// relative to the leading and trailing edge of the layout box</summary>
     public enum D2dTextAlignment
-    {     
+    {
         /// <summary>
         /// The leading edge of the paragraph text is aligned to the leading edge of
         /// the layout box</summary>
         Leading = 0,
-        
+
         /// <summary>
         /// The trailing edge of the paragraph text is aligned to the trailing edge of
         /// the layout box</summary>
@@ -273,7 +274,7 @@ namespace Sce.Atf.Direct2D
         /// The center of the paragraph text is aligned to the center of the layout box</summary>
         Center = 2,
     }
-    
+
     /// <summary>
     /// Enum that specifies the word wrapping to be used in a particular multiline paragraph</summary>
     public enum D2dWordWrapping
@@ -297,23 +298,23 @@ namespace Sce.Atf.Direct2D
     /// To get the current line spacing method of a text format or textlayout, use
     /// the GetLineSpacing method.</remarks>    
     public enum D2dLineSpacingMethod
-    {        
+    {
         /// <summary>
         /// Line spacing depends solely on the content, adjusting to accommodate the
         /// size of fonts and inline objects</summary>
         Default = 0,
-               
+
         /// <summary>
         /// Lines are explicitly set to uniform spacing, regardless of the size of fonts
         /// and inline objects. This can be useful to avoid the uneven appearance that
         /// can occur from font fallback.</summary>
         Uniform = 1,
     }
-    
+
     /// <summary>
     /// Enum that specifies the text granularity used to trim text overflowing the layout box</summary>
     public enum D2dTrimmingGranularity
-    {        
+    {
         /// <summary>
         /// No trimming occurs. Text flows beyond the layout width.</summary>
         None = 0,
@@ -331,7 +332,7 @@ namespace Sce.Atf.Direct2D
     /// <summary>
     /// Struct that specifies the trimming option for text overflowing the layout box</summary>
     public struct D2dTrimming
-    {               
+    {
         /// <summary>
         /// A character code used as the delimiter that signals the beginning of the
         /// portion of text to be preserved. Most useful for path ellipsis, where the
@@ -341,7 +342,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// A value that indicates how many occurrences of the delimiter to step back</summary>
         public int DelimiterCount;
-        
+
         /// <summary>
         /// A value that specifies the text granularity used to trim text overflowing
         /// the layout box</summary>
@@ -380,7 +381,7 @@ namespace Sce.Atf.Direct2D
     /// thickness that is associated with a given character in a typeface, as compared
     /// to a "normal" character from that same typeface.</remarks>
     public enum D2dFontWeight
-    {        
+    {
         /// <summary>
         /// Predefined font weight : Thin (100)</summary>
         Thin = 100,
@@ -408,7 +409,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Predefined font weight : Medium (500)</summary>
         Medium = 500,
-        
+
         /// <summary>
         /// Predefined font weight : Demi-bold (600)</summary>
         DemiBold = 600,
@@ -486,7 +487,7 @@ namespace Sce.Atf.Direct2D
     /// its normal aspect ratio, which is the original width to height ratio specified
     /// for the glyphs in the font.</remarks>
     public enum D2dFontStretch
-    {       
+    {
         /// <summary>
         /// Predefined font stretch : Not known (0)</summary>
         Undefined = 0,

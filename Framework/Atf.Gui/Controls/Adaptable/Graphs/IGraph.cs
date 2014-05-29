@@ -7,6 +7,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 #if CS_4
     /// <summary>
     /// Interface for a graph, a collection of nodes with connecting edges</summary>
+    /// <typeparam name="TNode">Node</typeparam>
+    /// <typeparam name="TEdge">Edge</typeparam>
+    /// <typeparam name="TEdgeRoute">Edge route</typeparam>
     public interface IGraph<out TNode, out TEdge, out TEdgeRoute>
 #else
     public interface IGraph<TNode, TEdge, TEdgeRoute>
@@ -75,6 +78,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets the "incoming" edges that connect to the given node. These are the edges whose ToNode
         /// matches the given node.</summary>
+        /// <typeparam name="TNode">IGraphNode node</typeparam>
+        /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
+        /// <typeparam name="TEdgeRoute">IEdgeRoute edge route</typeparam>
         /// <param name="graph">Graph that contains this node</param>
         /// <param name="node">Given node</param>
         /// <returns>"Incoming" edges that connect to the given node</returns>
@@ -91,6 +97,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets the "outgoing" nodes that connect to the given node via an outgoing edge.
         /// An outgoing edge is an edge whose FromNode matches the given node.</summary>
+        /// <typeparam name="TNode">IGraphNode node</typeparam>
+        /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
+        /// <typeparam name="TEdgeRoute">IEdgeRoute edge route</typeparam>
         /// <param name="graph">Graph that contains this node</param>
         /// <param name="node">Node</param>
         /// <returns>"Outgoing" nodes that connect to the given node via an outgoing edge</returns>
@@ -107,6 +116,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets the "incoming" nodes that connect to the given node via an incoming edge.
         /// An incoming edge is an edge whose ToNode matches the given node.</summary>
+        /// <typeparam name="TNode">IGraphNode node</typeparam>
+        /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
+        /// <typeparam name="TEdgeRoute">IEdgeRoute edge route</typeparam>
         /// <param name="graph">Graph that contains this node</param>
         /// <param name="node">Node</param>
         /// <returns>"Incoming" nodes that connect to the given node via an incoming edge</returns>
@@ -122,6 +134,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the nodes that connect to the given node</summary>
+        /// <typeparam name="TNode">IGraphNode node</typeparam>
+        /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
+        /// <typeparam name="TEdgeRoute">IEdgeRoute edge route</typeparam>
         /// <param name="graph">Graph that contains this node</param>
         /// <param name="node">Node</param>
         /// <returns>Nodes that connect to the given node</returns>

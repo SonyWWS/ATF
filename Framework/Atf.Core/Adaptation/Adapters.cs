@@ -171,7 +171,8 @@ namespace Sce.Atf.Adaptation
         /// Gets all decorators that can convert a reference to the given type</summary>
         /// <param name="reference">Reference to convert</param>
         /// <param name="type">Decorator type, should be ref type</param>
-        /// <returns>Enumerable returning all decorators of the given type</returns>
+        /// <returns>Enumerable returning all decorators of the given type.
+        /// Decorators are never null. The enumeration may be empty.</returns>
         public static IEnumerable<object> AsAll(this object reference, Type type)
         {
             if (reference != null)
@@ -193,7 +194,8 @@ namespace Sce.Atf.Adaptation
         /// Gets all decorators that can convert a reference to the given type</summary>
         /// <typeparam name="T">Decorator type, must be ref type</typeparam>
         /// <param name="reference">Reference to convert</param>
-        /// <returns>Enumerable returning all decorators of the given type</returns>
+        /// <returns>Enumerable returning all decorators of the given type.
+        /// Decorators are never null. The enumeration may be empty.</returns>
         public static IEnumerable<T> AsAll<T>(this object reference)
             where T : class
         {

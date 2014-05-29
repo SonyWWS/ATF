@@ -64,6 +64,9 @@ namespace Sce.Atf.Direct2D
 
         /// <summary>
         /// Copy raw memory into the bitmap.</summary>
+        /// <param name="bytes">Data to copy</param>
+        /// <param name="stride">Stride, or pitch, of source bitmap</param>
+        /// <remarks>Pitch = pixel width * bytes per pixel + memory padding</remarks>
         public void CopyFromMemory(byte[] bytes, int stride)
         {
             m_nativeBitmap.CopyFromMemory(bytes, stride);

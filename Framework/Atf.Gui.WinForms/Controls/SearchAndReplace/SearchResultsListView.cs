@@ -39,6 +39,7 @@ namespace Sce.Atf.Applications
         #region IResultsControl members
         /// <summary>
         /// Binds this search Control to a data set (that is wrapped in a class implementing IQueryableContext)</summary>
+        /// <param name="queryResultContext">Search results to bind to</param>
         public void Bind(IQueryableResultContext queryResultContext)
         {
             ClearResults();

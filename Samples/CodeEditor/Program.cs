@@ -52,6 +52,7 @@ namespace CodeEditor
                 typeof(HelpAboutCommand),               // Help -> About command
                 typeof(AtfUsageLogger),                 // logs computer info to an ATF server
                 typeof(CrashLogger),                    // logs unhandled exceptions to an ATF server
+                typeof(UnhandledExceptionService),      // catches unhandled exceptions, displays info, and gives user a chance to save
                 typeof(ContextRegistry),                // central context registry with change notification
                 typeof(DocumentRegistry),               // central document registry with change notification
                 typeof(MainWindowTitleService),         // tracks document changes and updates main form title
@@ -82,6 +83,12 @@ namespace CodeEditor
             batch.AddPart(mainForm);
             batch.AddPart(new WebHelpCommands("https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample".Localize()));
             container.Compose(batch);
+
+            // To make the tab commands (e.g., "Copy Full Path", "Open Containing Folder") available, we have to change
+            //  the default behavior to work with this sample app's unusual Editor. In most cases, an editor like this
+            //  would implement IDocumentClient and this customization of DefaultTabCommands wouldn't be necessary.
+            var tabCommands = container.GetExportedValue<DefaultTabCommands>();
+            tabCommands.IsDocumentControl = controlInfo => controlInfo.Client is Editor;
 
             // Initialize components that require it. Initialization often can't be done in the constructor,
             //  or even after imports have been satisfied by MEF, since we allow circular dependencies between

@@ -10,7 +10,8 @@ namespace Sce.Atf.Direct2D
     {
         /// <summary>
         /// Retrieves the bitmap for this D2dGraphics. The returned bitmap can be used
-        /// for drawing operations.</summary>        
+        /// for drawing operations.</summary>     
+        /// <returns>D2dBitmap for this D2dGraphics</returns>
         public D2dBitmap GetBitmap()
         {
             var rt = (BitmapRenderTarget)D2dRenderTarget;

@@ -33,10 +33,12 @@ namespace Sce.Atf.Dom
         #region IQueryMatch
         /// <summary>
         /// Gets value of the DomNode's matching property</summary>
+        /// <returns>Value of DomNode's matching property</returns>
         public object GetValue() { return m_propertyDescriptor.GetValue(m_domNode); }
 
         /// <summary>
         /// Sets value of the DomNode's matching property</summary>
+        /// <param name="value">Value to set</param>
         public void SetValue(object value)
         {
             object correctlyTypedValue = Convert.ChangeType(value, GetValue().GetType());

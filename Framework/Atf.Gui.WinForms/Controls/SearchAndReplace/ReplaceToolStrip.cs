@@ -42,6 +42,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns an object that defines how search matches are modified in replacement</summary>
+        /// <returns>Object that defines how search matches are modified in replacement</returns>
         public abstract object GetReplaceInfo();
 
         /// <summary>

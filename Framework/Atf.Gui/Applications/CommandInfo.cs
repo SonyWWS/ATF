@@ -248,6 +248,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Add a keyboard shortcut to the list of keyboard shortcuts for activating this command.  
         /// Subsequently updates the display string.</summary>
+        /// <param name="shortcut">Keys for shortcut</param>
         public void AddShortcut(Keys shortcut)
         {
             if (shortcut == Keys.None)
@@ -264,6 +265,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Remove a keyboard shortcut from the list of keyboard shortcuts for activating this command.  
         /// Subsequently updates the display string.</summary>
+        /// <param name="shortcut">Keys for shortcut</param>
         public void RemoveShortcut(Keys shortcut)
         {
             if (shortcut == Keys.None)

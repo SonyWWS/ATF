@@ -13,6 +13,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// <summary>
     /// OBSOLETE. Please use D2dStatechartRenderer instead.
     /// Class to handle rendering and hit testing Statecharts.</summary>
+    /// <typeparam name="TNode">Node</typeparam>
+    /// <typeparam name="TEdge">Edge</typeparam>
     public class StatechartRenderer<TNode, TEdge> : GraphRenderer<TNode, TEdge, BoundaryRoute>, IDisposable
         where TNode : class, IState
         where TEdge : class, IGraphEdge<TNode, BoundaryRoute>

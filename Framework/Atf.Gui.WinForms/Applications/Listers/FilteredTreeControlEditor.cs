@@ -83,8 +83,6 @@ namespace Sce.Atf.Applications
         }
 
 
-        #region filtering
-
         /// <summary>
         /// Callback to determine if an item in the tree is filtered in (return true) or out</summary>
         /// <param name="item">Item tested for filtering</param>
@@ -128,13 +126,12 @@ namespace Sce.Atf.Applications
             }
 
 
-            var itemRenderer = this.TreeControl.ItemRenderer;
+            TreeItemRenderer itemRenderer = this.TreeControl.ItemRenderer;
             itemRenderer.FilteringPattern = m_searchInput.SearchPattern;
 
-
-            if (TreeView is FilteredTreeView)
+            var filteredTreeView = TreeView as FilteredTreeView;
+            if (filteredTreeView != null)
             {
-                var filteredTreeView = TreeView as FilteredTreeView;
                 if (search)
                 {
                     filteredTreeView.BuildTreeCache();
@@ -148,7 +145,6 @@ namespace Sce.Atf.Applications
                 {
                     filteredTreeView.IsFiltering = false;
                 }
-
             }
 
             m_autoExpanding = true;
@@ -160,8 +156,8 @@ namespace Sce.Atf.Applications
             else if (m_searching) // Search stopped: restore expansion
             {
                 TreeControlAdapter.TreeView = TreeView; // Force reload
-                var currentSelection = RememberSelection();
-                if (currentSelection != null && currentSelection.Count() > 0) // if there are selected items during the searching
+                IEnumerable<object> currentSelection = RememberSelection();
+                if (currentSelection != null && currentSelection.Any()) // if there are selected items during the searching
                     m_selectedItems = currentSelection;
                 RestoreExpansion();
                 RestoreSelection();
@@ -227,7 +223,7 @@ namespace Sce.Atf.Applications
         {
             if (m_selectedItems != null)
             {
-                foreach (var item in m_selectedItems)
+                foreach (object item in m_selectedItems)
                 {
                     var path = item.As<Path<object>>();
                     if (path != null)
@@ -267,15 +263,15 @@ namespace Sce.Atf.Applications
                 // 3 states to toggle: 
                 if (filteredTreeView.IsNodeOpaque(e.Node) && filteredTreeView.IsNodeCurrentlyOpaque(e.Node))
                 {
-                    // two cases here: a) if  the node is expanding and all the child nodes are opaue, just expand all its children
+                    // two cases here: a) if  the node is expanding and all the child nodes are opaque, just expand all its children
                     // if some of the child nodes are visible, and the node is already expanded, then we need to expand all its children too
 
-                    var itsChildren = filteredTreeView.GetChildren(e.Node.Tag); // get visible children
+                    IEnumerable<object> itsChildren = filteredTreeView.GetChildren(e.Node.Tag); // get visible children
                     if (!itsChildren.Any())
                     {
                         if (!e.Node.Expanded)  /* case a*/
                         {
-                            foreach (var child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
+                            foreach (object child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
                                 filteredTreeView.AddCurrentVisibleNode(child);
                         }
                     }
@@ -283,7 +279,7 @@ namespace Sce.Atf.Applications
                     {
                         // this is a manual click-expanding case, make all children of the node visible 
                         bool added = false;
-                        foreach (var child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
+                        foreach (object child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
                         {
                             if (filteredTreeView.AddCurrentVisibleNode(child))
                                 added = true;
@@ -300,7 +296,7 @@ namespace Sce.Atf.Applications
                     // the opaque node is fakely(fully) expanded, restore to hide non-matched ones
                     filteredTreeView.AddOpaqueNode(e.Node);
                     filteredTreeView.RememberExpansion(e.Node);
-                    foreach (var child in e.Node.Children)
+                    foreach (TreeControl.Node child in e.Node.Children)
                     {
                         if (!filteredTreeView.IsNodeMatched(child))
                             filteredTreeView.RemoveVisibleNode(child.Tag);
@@ -310,10 +306,9 @@ namespace Sce.Atf.Applications
                     filteredTreeView.RememberExpansion(e.Node);
                 else if (!filteredTreeView.IsNodeOpaque(e.Node)) // check expanding a node with all childen invisible
                 {
-                    foreach (var child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
+                    foreach (object child in filteredTreeView.GetUnfilteredChildren(e.Node.Tag))
                     {
                         filteredTreeView.AddCurrentVisibleNode(child);
-
                     }
                 }
 
@@ -331,7 +326,7 @@ namespace Sce.Atf.Applications
             var filteredTreeView = TreeView as FilteredTreeView;
             if (m_nodeToExpand != null)
             {
-                var nodeToExpand = m_nodeToExpand;
+                TreeControl.Node nodeToExpand = m_nodeToExpand;
                 m_autoExpanding = true;
                 TreeControlAdapter.Expand(m_nodeToExpand.Tag);
                 filteredTreeView.RestoreExpansion(TreeControlAdapter, nodeToExpand);
@@ -343,9 +338,6 @@ namespace Sce.Atf.Applications
                 filteredTreeView.RestoreExpansion(TreeControlAdapter, e.Node);
             }
         }
-
-
-        #endregion
  
         private UserControl m_control;
         private StringSearchInputUI m_searchInput;

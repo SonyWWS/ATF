@@ -12,7 +12,7 @@ namespace Sce.Atf.DragDrop
     public static class DragDataHelper
     {
         /// <summary>
-        /// Call this method in the OnDragEnter if you wish to accept Shell Image drag/drop actions.</summary>
+        /// Call this method in the OnDragEnter if you wish to accept Shell Image drag/drop actions</summary>
         /// <param name="control">The control receiving the OnDragEnter event</param>
         /// <param name="e">The DragEventArgs from the OnDragEnter event</param>
         public static void DragEnter(Control control, DragEventArgs e)
@@ -22,14 +22,14 @@ namespace Sce.Atf.DragDrop
         }
 
         /// <summary>
-        /// Call this method in the OnDragLeave if you wish to accept Shell Image drag/drop actions.</summary>
+        /// Call this method in the OnDragLeave if you wish to accept Shell Image drag/drop actions</summary>
         public static void DragLeave()
         {
             DragDropHelper.DragLeave();
         }
 
         /// <summary>
-        /// Call this method in the OnDragOver if you wish to accept Shell Image drag/drop actions.</summary>
+        /// Call this method in the OnDragOver if you wish to accept Shell Image drag/drop actions</summary>
         /// <param name="e">The DragEventArgs from the OnDragOver event</param>
         public static void DragOver(DragEventArgs e)
         {
@@ -38,7 +38,7 @@ namespace Sce.Atf.DragDrop
         }
 
         /// <summary>
-        /// Call this method in the OnDrop if you wish to accept Shell Image drag/drop actions.</summary>
+        /// Call this method in the OnDrop if you wish to accept Shell Image drag/drop actions</summary>
         /// <param name="e">The DragEventArgs from the OnDrop event</param>
         public static void Drop(DragEventArgs e)
         {
@@ -52,7 +52,7 @@ namespace Sce.Atf.DragDrop
         /// in <paramref name="message"/>. 
         /// The characters %% and %1 are the subset of FormatMessage markers that are processed here.</summary>
         /// <param name="e">The DragEventArgs from the OnDragEnter/OnDragOver event</param>
-        /// <param name="message">Text such as "Move to %1".</param>
+        /// <param name="message">Text such as "Move to %1"</param>
         /// <param name="insert">Text such as "Documents", inserted as specified by <paramref name="message"/></param>
         public static void SetDescription(this DragEventArgs e, string message, string insert)
         {
@@ -60,29 +60,28 @@ namespace Sce.Atf.DragDrop
         }
 
         /// <summary>
-        /// Set the description on a Shell Image drag/drop action.
-        /// </summary>
+        /// Set the description on a Shell Image drag/drop action</summary>
+        /// <param name="e">DragEventArgs for event</param>
         public static void ClearDescription(this DragEventArgs e)
         {
             DropDescriptionHelper.SetDropDescription((IComDataObject)e.Data, DropImageType.Invalid, null, null);
         }
 
         /// <summary>
-        /// Tell the system that you are using a default description that can be cleared automatically.
-        /// </summary>
+        /// Tell the system that you are using a default description that can be cleared automatically</summary>
         /// <param name="e">The DragEventArgs from the OnDragEnter/OnDragOver event</param>
-        /// <param name="value">A boolean indicating whether the message is set as default or not.</param>
+        /// <param name="value">A boolean indicating whether the message is set as default or not</param>
         public static void SetDescriptionIsDefault(this DragEventArgs e, bool value)
         {
             DropDescriptionHelper.SetDropDescriptionIsDefault((IComDataObject)e.Data, value);
         }
 
         /// <summary>
-        /// Marshall a struct as raw data into the IDataObject.
-        /// </summary>
+        /// Marshal a struct as raw data into the IDataObject</summary>
+        /// <typeparam name="T">Type of data to marshal</typeparam>
         /// <param name="dataObject">The IDataObject to manipulate.</param>
         /// <param name="format">The format identifier to use</param>
-        /// <param name="data">The actual data.</param>
+        /// <param name="data">The actual data</param>
         public static void SetData<T>(this IDataObject dataObject, string format, T data)
             where T : struct
         {
@@ -90,11 +89,12 @@ namespace Sce.Atf.DragDrop
         }
 
         /// <summary>
-        /// Try to marshall a struct as raw data from the IDataObject.</summary>
-        /// <param name="dataObject">The IDataObject to manipulate.</param>
+        /// Try to marshal a struct as raw data from the IDataObject</summary>
+        /// <typeparam name="T">Type of data to marshal</typeparam>
+        /// <param name="dataObject">The IDataObject to manipulate</param>
         /// <param name="format">The format identifier to use</param>
-        /// <param name="data">The actual data.</param>
-        /// <returns>a boolean indicating whether the data was succesfully retreived.</returns>
+        /// <param name="data">Actual data</param>
+        /// <returns>True iff data successfully retrieved</returns>
         public static bool TryGetData<T>(this IDataObject dataObject, string format, out T data)
             where T : struct
         {

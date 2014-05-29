@@ -6,6 +6,7 @@ namespace Sce.Atf
 {
     /// <summary>
     /// Arguments for "item changed" event</summary>
+    /// <typeparam name="T">Type of changed item</typeparam>
     public class ItemChangedEventArgs<T> : EventArgs
         //where T : class
     {

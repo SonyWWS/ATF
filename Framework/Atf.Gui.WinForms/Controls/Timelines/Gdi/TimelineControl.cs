@@ -480,6 +480,7 @@ namespace Sce.Atf.Controls.Timelines
         /// <summary>
         /// Gets a bounding rectangle, in Windows client coordinates, containing all events (intervals, keys,
         /// and markers), and groups and tracks</summary>
+        /// <returns>Bounding rectangle, in Windows client coordinates</returns>
         public RectangleF GetBoundingRect()
         {
             return GetBoundingRect(false);
@@ -488,6 +489,7 @@ namespace Sce.Atf.Controls.Timelines
         /// <summary>
         /// Gets a bounding rectangle, in Windows client coordinates, containing only selected events (intervals,
         /// keys, and markers) and groups and tracks</summary>
+        /// <returns>Bounding rectangle, in Windows client coordinates</returns>
         public RectangleF GetSelectionBoundingRect()
         {
             return GetBoundingRect(true);
@@ -780,6 +782,7 @@ namespace Sce.Atf.Controls.Timelines
         /// <summary>
         /// Gets the specified types of ITimelineObjects. Does not look at any sub-documents or check if
         /// 'timeline' is IHierarchicalTimeline.</summary>
+        /// <typeparam name="T">Specified type to obtain</typeparam>
         /// <param name="timeline">The one timeline to examine</param>
         /// <returns>The enumeration of the objects of type T in 'timeline'</returns>
         public static IEnumerable<T> GetObjectsInOneDocument<T>(ITimeline timeline)
@@ -819,9 +822,10 @@ namespace Sce.Atf.Controls.Timelines
         /// <summary>
         /// Recursively gets the specified type of ITimelineObjects of this timeline and any
         /// resolved sub-timelines</summary>
+        /// <typeparam name="T">ITimelineObject type</typeparam>
         /// <param name="timeline">The hierarchical timeline to begin with</param>
         /// <returns>The enumeration of ITimelineObjects of 'timeline' and any resolved sub-timelines
-        /// within it, and their sub-timelines and so on</returns>
+        /// within it, and their sub-timelines, and so on</returns>
         public static IEnumerable<TimelinePath> GetObjects<T>(ITimeline timeline)
             where T : ITimelineObject
         {

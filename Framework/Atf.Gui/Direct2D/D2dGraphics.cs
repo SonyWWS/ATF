@@ -1342,7 +1342,8 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Creates a new D2dBitmapGraphics for use during intermediate offscreen drawing 
         /// that is compatible with the current D2dGraphics and has the same size, DPI, and pixel format
-        /// as the current D2dGraphics</summary>        
+        /// as the current D2dGraphics</summary>
+        /// <returns>D2dBitmapGraphics for use during intermediate offscreen drawing</returns>
         public D2dBitmapGraphics CreateCompatibleGraphics()
         {
             var rt = new BitmapRenderTarget(m_renderTarget, CompatibleRenderTargetOptions.None);
@@ -1353,7 +1354,8 @@ namespace Sce.Atf.Direct2D
         /// Creates a new D2dBitmapGraphics for use during intermediate offscreen drawing 
         /// that is compatible with the current D2dGraphics and has the same size, DPI, and pixel format
         /// as the current D2dGraphics and with the specified options</summary>        
-        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>        
+        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>    
+        /// <returns>D2dBitmapGraphics for use during intermediate offscreen drawing</returns>
         public D2dBitmapGraphics CreateCompatibleGraphics(D2dCompatibleGraphicsOptions options)
         {
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options);
@@ -1366,7 +1368,8 @@ namespace Sce.Atf.Direct2D
         /// that is compatible with the current D2dGraphics and has the same DPI, and pixel format
         /// as the current D2dGraphics and with the specified options</summary>        
         /// <param name="pixelSize">The desired size of the new D2dGraphics in pixels</param>
-        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>        
+        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>   
+        /// <returns>D2dBitmapGraphics with specified pixel size for use during intermediate offscreen drawing</returns>
         public D2dBitmapGraphics CreateCompatibleGraphics(Size pixelSize, D2dCompatibleGraphicsOptions options)
         {
             var dsize = new Size2(pixelSize.Width, pixelSize.Height);
@@ -1379,7 +1382,8 @@ namespace Sce.Atf.Direct2D
         /// that is compatible with the current D2dGraphics and has the same DPI, and pixel format
         /// as the current D2dGraphics and with the specified options</summary>        
         /// <param name="size">The desired size of the new D2dGraphics in pixels</param>
-        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param>        
+        /// <param name="options">Whether the new D2dBitmapGraphics must be compatible with GDI</param> 
+        /// <returns>D2dBitmapGraphics with specified DIP size for use during intermediate offscreen drawing</returns>
         public D2dBitmapGraphics CreateCompatibleGraphics(SizeF size, D2dCompatibleGraphicsOptions options)
         {
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, size.ToSharpDX(), null, null);
@@ -1475,8 +1479,8 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Sets the render target, releasing resources tied to previous render target if necessary.</summary>
-        /// <param name="renderTarget"></param>
+        /// Sets the render target, releasing resources tied to previous render target if necessary</summary>
+        /// <param name="renderTarget">RenderTarget to set</param>
         protected void SetRenderTarget(RenderTarget renderTarget)
         {
             if (renderTarget == null)

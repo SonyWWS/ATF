@@ -36,6 +36,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Evaluates point on curve</summary>
         /// <param name="x">X-coordinate for which y-coordinate is calculated</param>
+        /// <returns>Y-coordinate on curve corresponding to given x-coordinate</returns>
         /// <remarks>Calculates y-coordinate from x-coordinate using appropriate interpolation for a curve</remarks>
         public float Evaluate(float x)
         {

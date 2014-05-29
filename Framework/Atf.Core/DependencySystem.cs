@@ -8,6 +8,7 @@ namespace Sce.Atf
     /// Class that contains a dependency relation between objects. Dependencies can
     /// be invalidated, and a list of invalidated dependents can be retrieved to be
     /// updated by the client.</summary>
+    /// <typeparam name="T">Type of object with dependencies</typeparam>
     public class DependencySystem<T>
     {
         /// <summary>

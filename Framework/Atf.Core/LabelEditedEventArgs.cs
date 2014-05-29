@@ -5,7 +5,8 @@ using System;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Args for "label edited" event</summary>
+    /// Arguments for "label edited" event</summary>
+    /// <typeparam name="T">Type of relabeled item</typeparam>
     /// <remarks>No old label field is necessary, since the model has that information</remarks>
     public class LabelEditedEventArgs<T> : EventArgs
     {

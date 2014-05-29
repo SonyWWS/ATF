@@ -92,6 +92,7 @@ namespace Sce.Atf.Controls.Adaptable
 
         /// <summary>
         /// Performs one time action when drag starts</summary>
+        /// <param name="e">MouseEventArgs describing event</param>
         protected virtual void OnBeginDrag(MouseEventArgs e)
         {
         }
@@ -105,6 +106,7 @@ namespace Sce.Atf.Controls.Adaptable
 
         /// <summary>
         /// Performs one time action when drag ends</summary>
+        /// <param name="e">MouseEventArgs describing event</param>
         protected virtual void OnEndDrag(MouseEventArgs e)
         {
         }

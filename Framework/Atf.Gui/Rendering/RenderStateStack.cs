@@ -17,6 +17,7 @@ namespace Sce.Atf.Rendering
 
         /// <summary>
         /// Pushes the specified RenderState onto the stack</summary>
+        /// <param name="renderState">RenderState to push</param>
         public void Push(RenderState renderState)
         {
             m_contents.Add(renderState);

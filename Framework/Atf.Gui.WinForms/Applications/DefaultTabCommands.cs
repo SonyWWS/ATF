@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -97,6 +98,14 @@ namespace Sce.Atf.Applications
                 this);
         }
 
+        /// <summary>
+        /// Gets or sets the method used to test if a ControlInfo should have document-related
+        /// commands. If this method returns true, then the ControlInfo's Description should be
+        /// the file path of the document. By default, document commands are available for tabs
+        /// that are owned by an IDocumentClient. This field cannot be null.</summary>
+        public Func<ControlInfo, bool> IsDocumentControl =
+            controlInfo => controlInfo.Client.Is<IDocumentClient>();
+
         #region IContextMenuCommandProvider Members
 
         /// <summary>
@@ -106,7 +115,7 @@ namespace Sce.Atf.Applications
         /// <returns>Tags for context menu</returns>
         public virtual IEnumerable<object> GetCommands(object context, object target)
         {
-            ControlInfo info = target as ControlInfo;
+            var info = target as ControlInfo;
             if (info != null)
             {
                 // if the Name property of the control looks like a file path, return
@@ -225,27 +234,12 @@ namespace Sce.Atf.Applications
         // Gets info for all controls holding a document
         private ControlInfo[] GetDocumentControls()
         {
-            List<ControlInfo> infos = new List<ControlInfo>();
+            var infos = new List<ControlInfo>();
             foreach (ControlInfo info in m_controlHostService.Controls)
                 if (IsDocumentControl(info))
                     infos.Add(info);
 
             return infos.ToArray();
-        }
-
-        // Determines if control info represents a document
-        private bool IsDocumentControl(ControlInfo info)
-        {
-            return info.Client.Is<IDocumentClient>();
-
-            //if (info.Client.Is<IDocumentClient>())
-            //    return true;
-            // Path.HasExtension(name) is not enought to determine if control is
-            // the control is DocumentControl
-            //string name = info.Name;
-            //return
-            //    !string.IsNullOrEmpty(name) &&
-            //    Path.HasExtension(name);
         }
 
         // Gets the document's full path name, trimmed of invalid characters, like the '*' if the document

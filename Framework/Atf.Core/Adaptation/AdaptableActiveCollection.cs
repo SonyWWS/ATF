@@ -7,6 +7,7 @@ namespace Sce.Atf.Adaptation
     /// items in least-recently-active order. Provides change notification, and views
     /// filtered by item type. Uses adaptation on items implementing IAdaptable to
     /// convert them to other types.</summary>
+    /// <typeparam name="T">Type of items in collection</typeparam>
     public class AdaptableActiveCollection<T> : ActiveCollection<T>
         where T : class
     {

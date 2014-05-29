@@ -503,9 +503,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Process a command shortcut key. If the Control key needs to be held down,
         /// then this is the place to check for it.</summary>
-        /// <param name="msg"></param>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
+        /// <param name="msg">System.Windows.Forms.Message representing the window message to process</param>
+        /// <param name="keyData">System.Windows.Forms.Keys value for key to process</param>
+        /// <returns>True iff character was processed by control</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if ((keyData == (Keys.Down | Keys.Alt) || keyData == (Keys.Down | Keys.Control))
@@ -588,7 +588,47 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             base.OnLayout(levent);
         }
-      
+
+        /// <summary>
+        /// Performs custom actions and raises the <see cref="E:System.Windows.Forms.Control.BackColorChanged"></see> event</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"></see> that contains the event data</param>
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            m_textBox.BackColor = BackColor;
+
+            base.OnBackColorChanged(e);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"></see> event and performs custom actions</summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data</param>
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // This code below is required for display property values while editing a row in the spreadsheet-style GridView.
+            //  http://tracker.ship.scea.com/jira/browse/WWSATF-1485
+            if (m_context != null)
+            {
+                Rectangle bounds = base.ClientRectangle;
+                bounds.Width -= m_editButton.Width;
+
+                Brush brush = m_descriptor.IsReadOnly ? SystemBrushes.GrayText : SystemBrushes.ControlText;
+
+                try
+                {
+                    s_drawingEditableValue = true;
+
+                    PropertyEditingControl.DrawProperty(
+                        m_descriptor, this, bounds, Font, brush, e.Graphics);
+                }
+                finally
+                {
+                    s_drawingEditableValue = false;
+                }
+            }
+        }
+
         /// <summary>
         /// Makes the TextBox in this property editor visible</summary>
         protected void EnableTextBox()

@@ -69,21 +69,28 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Opens the mesh for population.</summary>
+        /// Opens the mesh for population</summary>
+        /// <returns>D2dGeometrySink object</returns>
         public D2dGeometrySink Open()
         {
             return new D2dGeometrySink(m_geometry.Open());
         }
 
         /// <summary>
-        /// Indicates whether the area filled by the geometry would contain the specified point given the specified flattening tolerance.</summary>
+        /// Indicates whether the area filled by the geometry would contain the specified point given the specified flattening tolerance</summary>
+        /// <param name="point">Specified point</param>
+        /// <returns>True iff area filled by the geometry contains point</returns>
         public bool FillContainsPoint(PointF point)
         {
             return m_geometry.FillContainsPoint(point.ToSharpDX());
         }
 
         /// <summary>	
-        /// Determines whether the geometry's stroke contains the specified point given the specified stroke thickness and style.</summary>	
+        /// Determines whether the geometry's stroke contains the specified point given the specified stroke thickness and style.</summary>
+        /// <param name="point">Specified point</param>
+        /// <param name="strokeWidth">Stroke width</param>
+        /// <param name="strokeStyle">D2dStrokeStyle</param>
+        /// <returns>True iff geometry's stroke contains specified point</returns>
         public bool StrokeContainsPoint(PointF point, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
             return m_geometry.StrokeContainsPoint(point.ToSharpDX(), strokeWidth,

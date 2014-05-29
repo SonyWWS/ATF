@@ -1,5 +1,6 @@
 <?xml version='1.0'?>
-<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "XMLSchema.dtd" >
+<!-- Disabled this !DOCTYPE because it causes an exception to be thrown in the .NET XmlSchemaSet.Add(XmlSchema) method. -->
+<!-- !DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "XMLSchema.dtd" -->
 <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en">
 
  <xs:annotation>

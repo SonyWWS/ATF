@@ -290,7 +290,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Returns a string representation of this object for GUIs. For persistence, use
         /// ToString("R", CultureInfo.InvariantCulture).</summary>
-        /// <returns></returns>
+        /// <returns>String representation of object</returns>
         public override string ToString()
         {
             return ToString(null, null);
@@ -305,7 +305,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
         /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
         /// Use CultureInfo.InvariantCulture for persistence.</param>
-        /// <returns></returns>
+        /// <returns>String representation of object</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             string listSeparator = StringUtil.GetNumberListSeparator(formatProvider) + " ";

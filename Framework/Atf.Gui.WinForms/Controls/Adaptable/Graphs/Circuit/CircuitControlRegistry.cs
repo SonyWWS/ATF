@@ -38,6 +38,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Registers the control for the circuit node</summary>
+        /// <param name="circuitNode">Circuit DomNode</param>
+        /// <param name="control">Control registered for DomNode</param>
+        /// <param name="controlInfo">ControlInfo for control</param>
+        /// <param name="client">Control IControlHostClient</param>
         public virtual void RegisterControl(DomNode circuitNode, Control control, ControlInfo controlInfo, IControlHostClient client)
         {
             m_circuitNodeControls.Add(circuitNode, new Pair<Control, ControlInfo>(control, controlInfo));
@@ -72,6 +76,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Get the ControlInfo of the circuit control associated with the DomNode</summary>
+        /// <param name="domNode">DomNode to obtain ControlInfo for</param>
+        /// <returns>ControlInfo associated with DomNode</returns>
         public ControlInfo GetCircuitControlInfo(DomNode domNode)
         {
             return (from ctrol in m_circuitNodeControls where ctrol.Key == domNode select ctrol.Value.Second).FirstOrDefault();
@@ -79,6 +85,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         
         /// <summary>
         ///  Get the associated DomNode for the circuit control</summary>
+        ///  <param name="control">Circuit control</param>
+        ///  <returns>DomNode associated with circuit control</returns>
         public DomNode GetDomNode(Control control)
         {
             return (from ctrol in m_circuitNodeControls where ctrol.Value.Second.Control == control select ctrol.Key).FirstOrDefault();

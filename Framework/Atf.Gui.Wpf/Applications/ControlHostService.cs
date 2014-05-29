@@ -279,7 +279,8 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Closes the content host</summary>
-        /// <returns>True if user did not cancel close operation</returns>
+        /// <param name="mainWindowClosing">Content host window that is closing</param>
+        /// <returns>True iff user did not cancel close operation</returns>
         public bool Close(bool mainWindowClosing)
         {
             foreach (var info in m_registeredContents.ToArray())

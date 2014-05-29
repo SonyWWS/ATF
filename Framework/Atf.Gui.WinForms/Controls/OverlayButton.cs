@@ -12,7 +12,7 @@ namespace Sce.Atf.Controls
     {
         /// <summary>
         /// Construct new instance for the given parent Control.</summary>
-        /// <param name="parent"></param>
+        /// <param name="parent">Parent Control</param>
         public OverlayButton(Control parent)
         {
             Parent = parent;           
@@ -200,10 +200,9 @@ namespace Sce.Atf.Controls
         #region mouse handling and drawing  methods.
         
         /// <summary>
-        /// When the left mouse button is pressed,
-        /// show pressed image if it is not null.
-        /// </summary>
-        /// <returns>true if the mouse event is handled</returns>        
+        /// When the left mouse button is pressed, show pressed image if it is not null</summary>
+        /// <param name="e">MouseEventArgs describing event</param>
+        /// <returns>True iff the mouse event is handled</returns>        
         public bool MouseDown(MouseEventArgs e)
         {
             if (!Visible) return false;
@@ -219,8 +218,9 @@ namespace Sce.Atf.Controls
 
         private bool m_tooltipActive;
         /// <summary>
-        /// When mouse enters show hover image unless it is pressed.</summary>        
-        /// <returns>true if the mouse event is handled</returns>        
+        /// When mouse enters show hover image unless it is pressed</summary>
+        /// <param name="e">MouseEventArgs describing event</param>
+        /// <returns>True iff the mouse event is handled</returns>        
         public bool MouseMove(MouseEventArgs e)
         {
             if (!Visible) return false;
@@ -243,8 +243,9 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// When mouse button is released, show hover image</summary>        
-        /// <returns>true if the mouse event is handled</returns>        
+        /// When mouse button is released, show hover image</summary>     
+        /// <param name="e">MouseEventArgs describing event</param>
+        /// <returns>True iff the mouse event is handled</returns>        
         public bool MouseUp(MouseEventArgs e)
         {
             m_pressed = false;
@@ -253,7 +254,8 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Draws button depending on its state</summary>        
+        /// Draws button depending on its state</summary>
+        /// <param name="g">Current GDI+ Graphics object</param>
         public void Draw(Graphics g)
         {
             if (Parent == null || !Visible)

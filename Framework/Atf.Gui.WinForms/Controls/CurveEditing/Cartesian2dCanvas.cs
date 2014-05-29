@@ -134,6 +134,7 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Pans so the origin is at the center of the control</summary>
+        /// <param name="invalidate">Whether to invalidate entire surface of control, causing it to be redrawn</param>
         public void PanToOrigin(bool invalidate = true)
         {
             switch(m_lockorg)
@@ -185,6 +186,8 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms point from graph space to client space</summary>
+        /// <param name="p">Point to be transformed</param>
+        /// <returns>Vec2F representing transformed point in client space</returns>
         public Vec2F GraphToClient(Vec2F p)
         {
             Vec2F result = new Vec2F();
@@ -195,6 +198,9 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms x and y-coordinates from graph space to client space</summary>        
+        /// <param name="x">X-coordinate to be transformed</param>
+        /// <param name="y">Y-coordinate to be transformed</param>
+        /// <returns>Vec2F representing transformed x and y-coordinates in client space</returns>
         public Vec2F GraphToClient(double x, double y)
         {
             Vec2F result = new Vec2F();
@@ -205,6 +211,9 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms x and y-coordinates from graph space to client space</summary>        
+        /// <param name="x">X-coordinate to be transformed</param>
+        /// <param name="y">Y-coordinate to be transformed</param>
+        /// <returns>Vec2F representing transformed x and y-coordinates in client space</returns>
         public Vec2F GraphToClient(float x, float y)
         {
             Vec2F result = new Vec2F();
@@ -215,6 +224,8 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms x-coordinate from graph space to client space</summary>        
+        /// <param name="x">X-coordinate to be transformed</param>
+        /// <returns>Transformed x-coordinate in client space</returns>
         public float GraphToClient(double x)
         {
             return (float)(m_trans.X + x * m_scale.X);
@@ -222,19 +233,26 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms x-coordinate from graph space to client space</summary>        
+        /// <param name="x">X-coordinate to be transformed</param>
+        /// <returns>Transformed x-coordinate in client space</returns>
         public float GraphToClient(float x)
         {
             return (float)(m_trans.X + x * m_scale.X);
         }
 
         /// <summary>
-        /// Transforms tangent from graph space to client space</summary>        
+        /// Transforms tangent from graph space to client space</summary>  
+        /// <param name="tan">Tangent to transform</param>
+        /// <returns>Transformed tangent in client space</returns>
         public Vec2F GraphToClientTangent(Vec2F tan)
         {
             return new Vec2F(tan.X * (float)m_scale.X, tan.Y * (float)m_scale.Y);
         }
         /// <summary>
-        /// Transforms x and y-coordinates from client space to graph space</summary>        
+        /// Transforms x and y-coordinates from client space to graph space</summary>      
+        /// <param name="px">X-coordinate to convert</param>
+        /// <param name="py">Y-coordinate to convert</param>
+        /// <returns>Vec2F representing transformed point in graph space</returns>
         public Vec2F ClientToGraph(float px, float py)
         {
             Vec2F result = new Vec2F();
@@ -245,6 +263,9 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Transforms x and y-coordinates from client space to graph space</summary>        
+        /// <param name="px">X-coordinate in client space</param>
+        /// <param name="py">Y-coordinate in client space</param>
+        /// <returns>Point in graph space</returns>
         public PointD ClientToGraph_d(double px, double py)
         {
             double gX = (px - m_trans.X) / m_scale.X;
@@ -253,14 +274,18 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Transforms x-coordinate from client space to graph space</summary>                        
+        /// Transforms x-coordinate from client space to graph space</summary>   
+        /// <param name="px">X-coordinate in client space</param>
+        /// <returns>X-coordinate in graph space</returns>
         public double ClientToGraph_d(double px)
         {
             return (px - m_trans.X) / m_scale.X;            
         }
 
         /// <summary>
-        /// Transforms point from client space to graph space</summary>        
+        /// Transforms point from client space to graph space</summary>   
+        /// <param name="p">Point to be transformed</param>
+        /// <returns>Vec2F representing transformed point in graph space</returns>
         public Vec2F ClientToGraph(Vec2F p)
         {
             Vec2F result = new Vec2F();
@@ -270,7 +295,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Transforms x-coordinate from client space to graph space</summary>        
+        /// Transforms x-coordinate from client space to graph space</summary>   
+        /// <param name="px">X-coordinate to be transformed</param>
+        /// <returns>Transformed x-coordinate in graph space</returns>
         public float ClientToGraph(float px)
         {
             return (float)((px - m_trans.X) / m_scale.X);
@@ -964,6 +991,8 @@ namespace Sce.Atf.Controls.CurveEditing
     {
         /// <summary>
         /// Constructor</summary>        
+        /// <param name="x">X-coordinate</param>
+        /// <param name="y">Y-coordinate</param>
         public PointD(double x, double y)
         {
             X = x;
@@ -971,7 +1000,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Auto converts vec2F to pointD</summary>               
+        /// Auto converts vec2F to PointD</summary> 
+        /// <param name="v">Vec2F to convert to PointD</param>
+        /// <returns>Converted PointD</returns>
         public static implicit operator PointD(Vec2F v)
         {
             PointD p = new PointD();
@@ -981,7 +1012,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Auto converts PointF to PointD</summary>        
+        /// Auto converts PointF to PointD</summary>     
+        /// <param name="v">PointF to convert to PointD</param>
+        /// <returns>Converted PointD</returns>
         public static implicit operator PointD(PointF v)
         {
             PointD p = new PointD();
@@ -991,7 +1024,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Converts PointD to Vec2F. Data loss may occur.</summary>        
+        /// Converts PointD to Vec2F. Data loss may occur.</summary>   
+        /// <param name="p">PointD to convert to Vec2F</param>
+        /// <returns>Converted Vec2F</returns>
         public static explicit operator Vec2F(PointD p)
         {
             Vec2F t = new Vec2F();
@@ -1001,7 +1036,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Convert PointD to PointF. Data loss may occur.</summary>        
+        /// Convert PointD to PointF. Data loss may occur.</summary>     
+        /// <param name="p">PointD to convert to PointF</param>
+        /// <returns>Converted PointF</returns>
         public static explicit operator PointF(PointD p)
         {
             PointF t = new PointF();

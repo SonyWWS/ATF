@@ -110,12 +110,12 @@ namespace Sce.Atf.Dom
             if (item.Is<TemplateFolder>() || item.Is<Template>())
                 m_activeItem = item;
             else
-                m_activeItem = RootFolder; // so we can drag items in a folder out to root folder(which is hidden bu default)
+                m_activeItem = RootFolder; // so we can drag items in a folder out to root folder(which is hidden by default)
         }
 
         /// <summary>
-        /// Gets the IDataObject for the items being dragged from a prototype lister, for
-        /// use in a drag-and-drop operation</summary>
+        /// Gets the IDataObject for the items being dragged or selected, for
+        /// use in a drag-and-drop or copy-paste operation</summary>
         /// <param name="items">Objects being dragged</param>
         /// <returns>IDataObject representing the dragged items</returns>
         public IDataObject GetInstances(IEnumerable<object> items)
@@ -140,6 +140,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Creates a reference instance that references the specified target item</summary>
         /// <param name="item">Item to create reference for</param>
+        /// <returns>Reference instance that references specified target item</returns>
         public abstract object CreateReference(object item);
 
         #endregion
@@ -207,6 +208,9 @@ namespace Sce.Atf.Dom
 
             if (IsMovingItems)
             {
+                // Note: since both templates and template folders are implemented as DomNodes, 
+                // inserting a DomNode to a new parent will auto-remove from the node from its old parent, 
+                // so we only need to take care of the insertion part
                 foreach (var item in itemCopies)
                 {
                     if (item.Is<Template>())
@@ -222,7 +226,7 @@ namespace Sce.Atf.Dom
                 {
                     var item = itemCopies[index];
                     var template = new DomNode(TemplateType).Cast<Template>();
-                    template.Model = item;
+                    template.Target = item;
                     template.Guid = Guid.NewGuid();
                     folder.Templates.Add(template);
                     m_lastPromoted.Add(items[index], template);
@@ -379,7 +383,7 @@ namespace Sce.Atf.Dom
         /// Searches for a template by its GUID</summary>
         /// <param name="parentFolder">Template's parent folder to search through</param>
         /// <param name="guid">GUID to search for</param>
-        /// <returns></returns>
+        /// <returns>Template matching given GUID</returns>
         public Template SearchForTemplateByGuid(TemplateFolder parentFolder, Guid guid)
         {        
             foreach (var template in parentFolder.Templates)
@@ -407,13 +411,14 @@ namespace Sce.Atf.Dom
         /// <param name="sourceModel">Template to replace it by as DomNode</param>
         public void ReplaceTemplateModel(Template template,  DomNode sourceModel)
         {
-            template.Model = DomNode.Copy(new[] { sourceModel }).First(); // DOM deep copy;
+            template.Target = DomNode.Copy(new[] { sourceModel }).First(); // DOM deep copy;
             m_lastPromoted.Add(sourceModel, template);
         }
 
         /// <summary>
         /// Validate template folder URI.
         /// Folder invalid if the specified file URI is already used in one of the template folders</summary>
+        /// <param name="uri">Template folder URI</param>
         /// <returns>True iff folder is valid</returns>
         public bool ValidateNewFolderUri(Uri uri)
         {

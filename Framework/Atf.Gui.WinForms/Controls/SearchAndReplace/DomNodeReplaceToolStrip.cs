@@ -65,6 +65,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Returns an object that defines how search matches are modified in replacement</summary>
+        /// <returns>Object that defines how search matches are modified in replacement</returns>
         public override object GetReplaceInfo()
         {
             return m_replaceTextInput.InputText;

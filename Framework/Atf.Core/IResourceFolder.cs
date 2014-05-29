@@ -34,7 +34,7 @@ namespace Sce.Atf
         bool ReadOnlyName { get; }
 
         /// <summary>
-        /// Gets or sets the name of the folder</summary>
+        /// Get or set the name of the folder</summary>
         string Name { get; set; }
 
         /// <summary>

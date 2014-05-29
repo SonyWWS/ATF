@@ -115,7 +115,8 @@ namespace Sce.Atf.DragDrop
         {
             if (direction == DATADIR.DATADIR_GET)
             {
-                return new FormatEnumerator(m_oleStorage.Select(data => data.Format));
+                var list = m_oleStorage.Select(data => data.Format).ToArray();
+                return new FormatEnumerator(list);
             }
             throw new NotImplementedException("OLE_S_USEREG");
         }
@@ -213,8 +214,9 @@ namespace Sce.Atf.DragDrop
             var ret = DV_E_TYMED;
 
             // Try to locate the data
-            foreach (var pair in m_oleStorage)
+            for (var i = 0; i < m_oleStorage.Count; ++i)
             {
+                var pair = m_oleStorage[i];
                 if ((pair.Format.tymed & format.tymed) > 0)
                 {
                     if (pair.Format.cfFormat == format.cfFormat)
@@ -251,8 +253,9 @@ namespace Sce.Atf.DragDrop
         public void SetData(ref FORMATETC formatIn, ref STGMEDIUM medium, bool release)
         {
             // If the format exists in our storage, remove it prior to resetting it
-            foreach (var pair in m_oleStorage)
+            for (var i = 0; i < m_oleStorage.Count; ++i)
             {
+                var pair = m_oleStorage[i];
                 var format = pair.Format;
                 if (IsFormatCompatible(ref formatIn, ref format))
                 {
@@ -290,7 +293,14 @@ namespace Sce.Atf.DragDrop
 
         public object GetData(Type format)
         {
-            return GetData(format.FullName);
+            var tymed = GetCompatibleFormat(format.FullName, format);
+            if (tymed != TYMED.TYMED_NULL)
+            {
+                return GetData(format.FullName);
+            }
+
+            object obj;
+            return m_managedStorage.TryGetValue(format.FullName, out obj) ? obj : null;
         }
 
         public object GetData(string format)
@@ -312,13 +322,18 @@ namespace Sce.Atf.DragDrop
                 return OleConverter.Convert(format, ref medium);
             }
 
-            //Debug.WriteLine("GetData: {0}", (object)format);
             return null;
         }
 
         public bool GetDataPresent(Type format)
         {
-            return GetDataPresent(format.FullName);
+            var tymed = GetCompatibleFormat(format.FullName, format);
+            if (tymed != TYMED.TYMED_NULL)
+            {
+                return GetDataPresent(format.FullName);
+            }
+
+            return m_managedStorage.ContainsKey(format.FullName);
         }
 
         public bool GetDataPresent(string format)
@@ -335,7 +350,6 @@ namespace Sce.Atf.DragDrop
             if (QueryGetData(ref formatEtc) == 0)
                 return true;
 
-            //Debug.WriteLine("GetDataPresent: {0}", (object)format);
             return false;
         }
 
@@ -347,8 +361,9 @@ namespace Sce.Atf.DragDrop
         public string[] GetFormats(bool autoConvert)
         {
             var formats = new HashSet<string>(m_managedStorage.Keys);
-            foreach (var item in m_oleStorage)
+            for (var i = 0; i < m_oleStorage.Count; ++i)
             {
+                var item = m_oleStorage[i];
                 var name = DataFormats.GetFormat(item.Format.cfFormat).Name;
                 formats.Add(name);
             }
@@ -369,7 +384,7 @@ namespace Sce.Atf.DragDrop
 
         public void SetData(Type format, object data)
         {
-            SetData(format.FullName, data);
+            SetData(format.FullName, format, true, data);
         }
 
         public void SetData(string format, object data)
@@ -379,7 +394,13 @@ namespace Sce.Atf.DragDrop
 
         public void SetData(string format, bool autoConvert, object data)
         {
-            var tymed = GetCompatibleFormat(format, data);
+            var type = (data != null) ? data.GetType() : typeof(object);
+            SetData(format, type, autoConvert, data);
+        }
+
+        public void SetData(string format, Type type, bool autoConvert, object data)
+        {
+            var tymed = GetCompatibleFormat(format, type);
             if (tymed != TYMED.TYMED_NULL)
             {
                 var formatEtc = OleConverter.CreateFormat(format);
@@ -411,13 +432,13 @@ namespace Sce.Atf.DragDrop
             }
         }
 
-        private TYMED GetCompatibleFormat(string format, object data)
+        private static TYMED GetCompatibleFormat(string format, Type type)
         {
-            if (IsFormatEqual(format, DataFormats.Bitmap) && data is Bitmap)
+            if (IsFormatEqual(format, DataFormats.Bitmap) && typeof(Bitmap).IsAssignableFrom(type))
                 return TYMED.TYMED_GDI;
             if (IsFormatEqual(format, DataFormats.EnhancedMetafile))
                 return TYMED.TYMED_ENHMF;
-            if (data is Stream ||
+            if (typeof(Stream).IsAssignableFrom(type) ||
                 IsFormatEqual(format, DataFormats.Html) ||
                 IsFormatEqual(format, DataFormats.Text) ||
                 IsFormatEqual(format, DataFormats.Rtf) ||
@@ -428,13 +449,13 @@ namespace Sce.Atf.DragDrop
                 IsFormatEqual(format, "FileName") ||
                 IsFormatEqual(format, "FileNameW"))
                 return TYMED.TYMED_HGLOBAL;
-            if (IsFormatEqual(format, DataFormats.Dib) && data is Image)
+            if (IsFormatEqual(format, DataFormats.Dib) && typeof(Image).IsAssignableFrom(type))
                 return TYMED.TYMED_NULL;
             if (IsFormatEqual(format, typeof(Bitmap).FullName))
                 return TYMED.TYMED_HGLOBAL;
             if (IsFormatEqual(format, DataFormats.Serializable) ||
-                (data is ISerializable) ||
-                ((data != null) && data.GetType().IsSerializable))
+                typeof(ISerializable).IsAssignableFrom(type) ||
+                type.IsSerializable)
                 return TYMED.TYMED_HGLOBAL;
 
             return TYMED.TYMED_NULL;
@@ -465,8 +486,9 @@ namespace Sce.Atf.DragDrop
 
         private void ClearStorage()
         {
-            foreach (var pair in m_oleStorage)
+            for (var i = 0; i < m_oleStorage.Count; ++i)
             {
+                var pair = m_oleStorage[i];
                 var medium = pair.Medium;
                 ReleaseStgMedium(ref medium);
             }
@@ -497,8 +519,9 @@ namespace Sce.Atf.DragDrop
 
         private bool GetDataEntry(ref FORMATETC pFormatetc, out OleData dataEntry)
         {
-            foreach (var entry in m_oleStorage)
+            for (var i = 0; i < m_oleStorage.Count; ++i)
             {
+                var entry = m_oleStorage[i];
                 var format = entry.Format;
                 if (IsFormatCompatible(ref pFormatetc, ref format))
                 {

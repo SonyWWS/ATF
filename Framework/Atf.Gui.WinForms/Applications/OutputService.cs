@@ -271,9 +271,10 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets tags for context menu (right click) commands</summary>
+        /// Gets command tags for context menu (right click) commands</summary>
         /// <param name="target">Command target that owns the popup menu</param>
         /// <param name="clicked">Object clicked on by mouse right click</param>
+        /// <returns>Enumeration of command tags for context menu</returns>
         public  IEnumerable<object> GetPopupCommandTags(object target, object clicked)
         {
             return new object[]

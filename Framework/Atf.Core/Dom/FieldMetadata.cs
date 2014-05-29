@@ -47,8 +47,8 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Gets a stable hash code that correlates with Equivalent().</summary>
-        /// <returns></returns>
+        /// Gets a stable hash code that correlates with Equivalent()</summary>
+        /// <returns>Hash code</returns>
         /// <remarks>If two hash codes are the same, the FieldMetadata objects might be equivalent, and
         /// if two FieldMetadata objects are equivalent, the hash codes are guaranteed to be the same.</remarks>
         public int GetEquivalentHashCode()

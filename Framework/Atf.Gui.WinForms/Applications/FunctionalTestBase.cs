@@ -195,10 +195,10 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Connects to the AutomationService.  Tries multiple times, to allow the application
-        /// time to launch and initialize</summary>
-        /// <param name="port"></param>
-        /// <returns>The AutomationService when successfully connected</returns>
+        /// Connects to the AutomationService. Tries multiple times, to allow the application
+        /// time to launch and initialize.</summary>
+        /// <param name="port">Port number to use in connection</param>
+        /// <returns>AutomationService, when successfully connected</returns>
         protected AutomationService Connect(int port)
         {
             Console.WriteLine("PortNumber: {0}", port);
@@ -265,9 +265,9 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Executes script and verifies the result succeeded.  The last
-        /// message from the script needs to be "Success" to succeed</summary>
-        /// <param name="scriptPath"></param>
+        /// Executes script and verifies the result succeeded. The last
+        /// message from the script needs to be "Success" to succeed.</summary>
+        /// <param name="scriptPath">Script's path</param>
         protected void ProcessScript(string scriptPath)
         {
             string fullResult = ExecuteScriptSafe(scriptPath);
@@ -451,9 +451,9 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Constructs the script path.  Assumes the calling method is the test name,
+        /// Constructs the script path. Assumes the calling method is the test name,
         /// which matches the script name.</summary>
-        /// <returns></returns>
+        /// <returns>Script path constructed</returns>
         protected string ConstructScriptPath()
         {
             string testName = new StackTrace().GetFrame(1).GetMethod().Name;

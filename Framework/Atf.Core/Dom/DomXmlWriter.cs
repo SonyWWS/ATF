@@ -377,7 +377,9 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Determines whether the attribute's value should be persisted</summary>
-        /// <returns>true if the attribute's value should be persisted; otherwise, false.</returns>
+        /// <param name="node">Node with attribute</param>
+        /// <param name="attributeInfo">AttributeInfo for attribute</param>
+        /// <returns>True iff attribute's value should be persisted</returns>
         protected virtual bool ShouldWriteAttribute(DomNode node, AttributeInfo attributeInfo)
         {
             return PersistDefaultAttributes || !node.IsAttributeDefault(attributeInfo);

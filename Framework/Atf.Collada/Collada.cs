@@ -14,7 +14,9 @@ namespace Sce.Atf.Collada
     public class Collada : DomNodeAdapter,  ISceneGraphHierarchy
     {
         /// <summary>
-        /// Computes absolute path from the given URI</summary>        
+        /// Computes absolute path from the given URI</summary>
+        /// <param name="uri">URI representing path to get absolute path for</param>
+        /// <returns>Absolute path for given URI</returns>
         public string GetAbsolutePath(Uri uri)
         {            
             string texPath = null;

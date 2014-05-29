@@ -96,6 +96,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the default group pin name</summary>
+        /// <param name="inputSide">True iff pin is on input side</param>
+        /// <returns>Default group pin name</returns>
         /// <remarks>The group pin default naming convention: internal-element-name: internal-pin-name</remarks>
         public virtual string DefaultName(bool inputSide)
         {
@@ -228,6 +230,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns the pins down the chain before the leaf level</summary>
         /// <param name="inputSide">True if this is an input-side group pin</param>
+        /// <returns>Enumeration of pins down the chain before the leaf level</returns>
         public IEnumerable<GroupPin> SinkChain(bool inputSide)
         {
             yield return this;
@@ -284,6 +287,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets the ancestry of this group pin, starting with the parent group pin, and ending with
         /// the top-level group pin</summary>
+        /// <param name="inputSide">True iff pin is on input side</param>
+        /// <returns>Enumeration of group pin's ancestry pins</returns>
         public IEnumerable<GroupPin> GetAncestry(bool inputSide)
         {
             bool firstTime = true;

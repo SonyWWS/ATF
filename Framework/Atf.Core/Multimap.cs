@@ -7,6 +7,8 @@ namespace Sce.Atf
 {
     /// <summary>
     /// A class to map a key to one or more values</summary>
+    /// <typeparam name="Key">Key to map values to</typeparam>
+    /// <typeparam name="Value">Value to map to key</typeparam>
     [Serializable]
     public class Multimap<Key, Value>
     {

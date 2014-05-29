@@ -34,6 +34,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Returns a DomNodeNamePredicate specifying the input text as the string to match</summary>
+        /// <returns>DomNodeNamePredicate specifying input text as string to match</returns>
         public override IQueryPredicate GetPredicate()
         {
             m_predicate.StringToMatch = Text;

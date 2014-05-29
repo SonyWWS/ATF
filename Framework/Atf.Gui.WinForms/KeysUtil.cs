@@ -16,6 +16,7 @@ namespace Sce.Atf
     {
         /// <summary>Converts numeric pad AtfKeys to digit AtfKeys</summary>   
         /// <param name="keys">AtfKeys number pad keys</param>
+        /// <returns>AtfKeys digit equivalent</returns>
         public static AtfKeys NumPadToNum(AtfKeys keys)
         {
             return Input.KeysUtil.NumPadToNum(keys);
@@ -23,6 +24,7 @@ namespace Sce.Atf
 
         /// <summary>Converts numeric pad WfKeys to digit WfKeys</summary>   
         /// <param name="keys">WfKeys number pad keys</param>
+        /// <returns>WfKeys digit equivalent</returns>
         public static WfKeys NumPadToNum(WfKeys keys)
         {
             return KeysInterop.ToWf(Input.KeysUtil.NumPadToNum(KeysInterop.ToAtf(keys)));

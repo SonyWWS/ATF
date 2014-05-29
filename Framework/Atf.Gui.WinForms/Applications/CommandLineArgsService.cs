@@ -75,6 +75,8 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Adds an "alias" to an existing option; this alias can be used
         /// instead of the option name</summary>
+        /// <param name="aliasName">Alias name</param>
+        /// <param name="optionName">Option name</param>
         public void AddAlias(string aliasName, string optionName)
         {
             Debug.Assert(m_options.ContainsKey(optionName));
@@ -218,6 +220,7 @@ namespace Sce.Atf.Applications
 
     /// <summary>
         /// Parses the command line</summary>
+        /// <param name="args">Command line arguments</param>
         /// <remarks>Throws an exception if the command line could not be parsed</remarks>
         public void Parse(string[] args)
         {

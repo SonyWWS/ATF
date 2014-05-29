@@ -26,7 +26,7 @@ namespace Sce.Atf.Applications.WebServices
         }
 
         /// <summary>
-        /// Gets or sets the name that is used to identify the file package and bug database in SourceForge.
+        /// Get or set the name that is used to identify the file package and bug database in SourceForge.
         /// This name is not necessarily the package name; it often starts with "com.scea"
         /// (for example, "com.scea.screamtool").
         /// See http://wiki.ship.scea.com/confluence/display/SUPPORT/Bug+Submit+and+Version+Check+services </summary>

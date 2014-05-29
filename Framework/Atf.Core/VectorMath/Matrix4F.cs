@@ -40,6 +40,22 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Constructor, uses 16 floats</summary>
+        /// <param name="m11">First row component</param>
+        /// <param name="m12">First row component</param>
+        /// <param name="m13">First row component</param>
+        /// <param name="m14">First row component</param>
+        /// <param name="m21">Second row component</param>
+        /// <param name="m22">Second row component</param>
+        /// <param name="m23">Second row component</param>
+        /// <param name="m24">Second row component</param>
+        /// <param name="m31">Third row component</param>
+        /// <param name="m32">Third row component</param>
+        /// <param name="m33">Third row component</param>
+        /// <param name="m34">Third row component</param>
+        /// <param name="m41">Fourth row component</param>
+        /// <param name="m42">Fourth row component</param>
+        /// <param name="m43">Fourth row component</param>
+        /// <param name="m44">Fourth row component</param>
         public Matrix4F(
             float m11, float m12, float m13, float m14,
             float m21, float m22, float m23, float m24,
@@ -142,6 +158,22 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Sets the matrix to the given components</summary>
+        /// <param name="m11">First row component 1</param>
+        /// <param name="m12">First row component 2</param>
+        /// <param name="m13">First row component 3</param>
+        /// <param name="m14">First row component 4</param>
+        /// <param name="m21">Second row component 1</param>
+        /// <param name="m22">Second row component 2</param>
+        /// <param name="m23">Second row component 3</param>
+        /// <param name="m24">Second row component 4</param>
+        /// <param name="m31">Third row component 1</param>
+        /// <param name="m32">Third row component 2</param>
+        /// <param name="m33">Third row component 3</param>
+        /// <param name="m34">Third row component 4</param>
+        /// <param name="m41">Fourth row component 1</param>
+        /// <param name="m42">Fourth row component 2</param>
+        /// <param name="m43">Fourth row component 3</param>
+        /// <param name="m44">Fourth row component 4</param>
         public void Set(
             float m11, float m12, float m13, float m14,
             float m21, float m22, float m23, float m24,
@@ -348,7 +380,8 @@ namespace Sce.Atf.VectorMath
 
 
         /// <summary>
-        /// Sets this matrix to a non-uniform scale by the given vector</summary>        
+        /// Sets this matrix to a non-uniform scale by the given number</summary>
+        /// <param name="s">Scale</param>
         public void Scale(float s)
         {
             M12 = M13 = M14 =
@@ -363,7 +396,10 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Sets this matrix to a non-uniform scale by the given vector</summary>        
+        /// Sets this matrix to a non-uniform scale by the given vector</summary>
+        /// <param name="x">Vector x component</param>
+        /// <param name="y">Vector y component</param>
+        /// <param name="z">Vector z component</param>
         public void Scale(float x, float y, float z)
         {
             M12 = M13 = M14 =
@@ -936,7 +972,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
         /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
         /// Use CultureInfo.InvariantCulture for persistence.</param>
-        /// <returns></returns>
+        /// <returns>String that represents matrix</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);

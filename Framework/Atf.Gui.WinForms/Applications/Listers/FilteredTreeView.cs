@@ -27,6 +27,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Indicates whether two ITreeView instances are equal</summary>
+        /// <param name="first">First ITreeView to compare</param>
+        /// <param name="second">Second ITreeView to compare</param>
+        /// <returns>True iff ITreeView instances are equal</returns>
         public static bool Equals(ITreeView first, ITreeView second)
         {
             FilteredTreeView f1 = first.As<FilteredTreeView>();
@@ -53,9 +56,9 @@ namespace Sce.Atf.Applications
         /// <returns>Children objects</returns>
         public IEnumerable<object> GetChildren(object parent)
         {
-            var originalChildren = m_treeView.GetChildren(parent);
+            IEnumerable<object> originalChildren = m_treeView.GetChildren(parent);
             if (IsFiltering)
-                return originalChildren.Where(child => m_currentVisibleNodes.Contains(child));
+                return originalChildren.Intersect(m_currentVisibleNodes);
             return originalChildren;
         }
 
@@ -82,9 +85,9 @@ namespace Sce.Atf.Applications
 
         #region IDecoratable Members
         /// <summary>
-        /// Gets all decorators of the specified type, or null</summary>
+        /// Gets all decorators of the specified type</summary>
         /// <param name="type">Decorator type</param>
-        /// <returns>Enumeration of decorators that are of the specified type</returns>
+        /// <returns>Enumeration of non-null decorators that are of the specified type. The enumeration may be empty.</returns>
         public IEnumerable<object> GetDecorators(Type type)
         {
             object  adapter = GetAdapter(type);
@@ -130,7 +133,7 @@ namespace Sce.Atf.Applications
                 {
                     if (m_filterFunc(node.Value))// node is a direct match
                     {
-                        var curNode = node;
+                        Tree<object> curNode = node;
                         while (curNode != null && !m_visibleNodes.Contains(curNode.Value)) // its parents should be visible too
                         {
                             m_visibleNodes.Add(curNode.Value);
@@ -209,7 +212,7 @@ namespace Sce.Atf.Applications
         {
             // a node is opaque if one, but not all,  of its children is not visible
             int numChildrenInvisible = 0;
-            foreach (var child in parent.Children)
+            foreach (Tree<object> child in parent.Children)
             {
                 if (!m_visibleNodes.Contains(child.Value)) // if the child's is not visible
                     ++numChildrenInvisible;
@@ -222,8 +225,7 @@ namespace Sce.Atf.Applications
 
             }
 
-
-            foreach (var child in parent.Children)
+            foreach (Tree<object> child in parent.Children)
                 BuildOpacity(child);
         }
 
@@ -255,7 +257,7 @@ namespace Sce.Atf.Applications
             if (parent.Tag != null)
             {
                 var expandedItems = new List<object>();
-                foreach (var node in GetSubtree(parent))
+                foreach (TreeControl.Node node in GetSubtree(parent))
                 {
                     if (node.Expanded)
                         expandedItems.Add(node.Tag);
@@ -280,8 +282,8 @@ namespace Sce.Atf.Applications
         private IEnumerable<TreeControl.Node> GetSubtree(TreeControl.Node parent)
         {
             yield return parent;
-            foreach (var child in parent.Children)
-                foreach (var decendent in GetSubtree(child))
+            foreach (TreeControl.Node child in parent.Children)
+                foreach (TreeControl.Node decendent in GetSubtree(child))
                     yield return decendent;
         }
 

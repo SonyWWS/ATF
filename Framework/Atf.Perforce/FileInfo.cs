@@ -14,38 +14,20 @@ namespace Sce.Atf.Perforce
     /// Last cache update is timestamped, allowing queries of whether it is time to refresh</summary>
     internal class FileInfo
     {
-        internal FileInfo(Uri uri) { Uri = uri; }
+        public FileInfo(Uri uri) { Uri = uri; }
 
-        internal readonly Uri Uri;
+        public readonly Uri Uri;
 
-        private List<PerforceRequest> m_requests = new List<PerforceRequest>();
-
-        internal void RegisterRequest(PerforceRequest request)
-        {
-            if (m_requests.Contains(request))
-                throw new ArgumentException("Request has already been registered");
-            m_requests.Add(request);
-        }
-        internal void UnregisterRequest(PerforceRequest request)
-        {
-            if (!m_requests.Contains(request))
-                throw new ArgumentException("Request wasn't registered with this instance");
-            m_requests.Remove(request);
-        }
-
-        internal SourceControlStatus Status
+        public SourceControlStatus Status
         {
             get
             {
                 if (m_cachedStatus != SourceControlStatus.Unknown)
                     return m_cachedStatus;
 
-                if (m_requests.Count > 0)
-                    return SourceControlStatus.Unknown;
-
                 var result = SourceControlStatus.Unknown;
 
-                  if (NotControlled)
+                if (NotControlled)
                 {
                     result = SourceControlStatus.NotControlled;
                 }
@@ -160,10 +142,6 @@ namespace Sce.Atf.Perforce
 
         internal bool RequiresRefresh(double expireTime)
         {
-            // Can't refresh until all requests are processed
-            if (m_requests.Count > 0)
-                return false;
-
             // No record forces refresh, or one marked as dirty
             if (m_cachedRecord == null || m_dirty)
                 return true;

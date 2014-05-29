@@ -6,6 +6,7 @@ namespace Sce.Atf.Adaptation
     /// Collection representing a selection. Maintains a LastSelected item, and enumerates
     /// items in least-recently-selected order. Provides change notification, and views
     /// filtered by item type. Uses adaptation to convert to other types.</summary>
+    /// <typeparam name="T">Type of items in selection</typeparam>
     public class AdaptableSelection<T> : Selection<T>
         where T : class
     {

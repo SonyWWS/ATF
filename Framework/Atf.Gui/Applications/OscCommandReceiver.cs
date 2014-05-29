@@ -48,7 +48,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets the OSC addresses that can trigger commands in this service</summary>
-        /// <returns></returns>
+        /// <returns>Enumeration of OSC addresses that can trigger commands</returns>
         public IEnumerable<string> GetOscAddresses()
         {
             return m_addressesToCommands.Keys;

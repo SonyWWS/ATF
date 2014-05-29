@@ -149,6 +149,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Undo the last "done" command</summary>
+        /// <returns>Last Command done</returns>
         public Command Undo()
         {
             if (!CanUndo)
@@ -166,6 +167,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Redo the last "undone" command</summary>
+        /// <returns>Last Command undone</returns>
         public Command Redo()
         {
             if (!CanRedo)

@@ -11,7 +11,8 @@ namespace Sce.Atf.Perforce
     public partial class Connections : Form
     {
         /// <summary>
-        /// Constuctor</summary>
+        /// Constructor with ConnectionManager</summary>
+        /// <param name="connectionManager">Perforce ConnectionManager</param>
         public Connections(ConnectionManager connectionManager)
         {
             InitializeComponent();

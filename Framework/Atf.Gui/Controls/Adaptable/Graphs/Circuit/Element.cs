@@ -217,9 +217,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Convert pin index to display order </summary> 
+        /// Convert pin index to display order</summary>
+        /// <param name="pinIndex">Pin index to convert</param>
+        /// <param name="inputSide">Whether input side or not</param>
+        /// <returns>Integer representing display order</returns>
         /// <remarks>Usually ICircuitPin.Index also indicates the display order. 
-        /// Override this method if pin’s index does not correspond to display order</remarks>
+        /// Override this method if pin's index does not correspond to display order.</remarks>
         public virtual int PinDisplayOrder(int pinIndex, bool inputSide)
         {
             return pinIndex;

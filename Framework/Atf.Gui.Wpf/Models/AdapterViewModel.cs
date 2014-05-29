@@ -57,6 +57,7 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Raises PropertyChanged event</summary>
+        /// <param name="e">PropertyChangedEventArgs for event</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             var h = PropertyChanged;

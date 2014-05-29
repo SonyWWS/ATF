@@ -47,7 +47,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the list of circuit modules that belong to this layer</summary>
+        /// Gets list of circuit modules that belong to this layer</summary>
+        /// <returns>List of circuit modules that belong to this layer</returns>
         public IEnumerable<Element> GetElements()
         {
             foreach (ElementRef reference in ElementRefs)

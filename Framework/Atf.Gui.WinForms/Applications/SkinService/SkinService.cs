@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
@@ -72,12 +73,9 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Skin commands enum</summary>
         public enum SkinCommands
-        {
+        {            
             /// <summary>
-            /// Create a new skin file</summary>
-            SkinCreate,
-            /// <summary>
-            /// Edit the current skin file</summary>
+            /// Show Skin Editor</summary>
             SkinEdit,
             /// <summary>
             /// Load and apply a skin file</summary>
@@ -103,8 +101,8 @@ namespace Sce.Atf.Applications
                 SkinCommands.SkinEdit,
                 StandardMenu.View,
                 SkinCommandGroup.ViewSkin,
-                "Edit Current Skin...".Localize("Edit the current skin file."),
-                "Edit the current skin file.".Localize());
+                "Skin Editor...".Localize("Show Skin Editor and open current skin file."),
+                "Edit skin.".Localize());
 
         /// <summary>
         /// SkinLoad command</summary>
@@ -116,15 +114,7 @@ namespace Sce.Atf.Applications
                 "Load Skin...".Localize("Load and apply a skin file."),
                 "Load and apply a skin file.".Localize());
 
-        /// <summary>
-        /// SkinCreate command</summary>
-        public static CommandInfo SkinCreate =
-            new CommandInfo(
-                SkinCommands.SkinCreate,
-                StandardMenu.View,
-                SkinCommandGroup.ViewSkin,
-                "Create New Skin...".Localize("Create a new skin file."),
-                "Create a new skin file.".Localize());
+        
 
         /// <summary>
         /// SkinReset command</summary>
@@ -150,9 +140,9 @@ namespace Sce.Atf.Applications
             switch((SkinCommands)commandTag)
             {
                 case SkinCommands.SkinEdit:
-                case SkinCommands.SkinCreate:
+                    enabled = true;
                     break;
-
+                
                 case SkinCommands.SkinLoad:
                     enabled = (FileDialogService != null);
                     break;
@@ -176,6 +166,8 @@ namespace Sce.Atf.Applications
             switch ((SkinCommands)commandTag)
             {
                 case SkinCommands.SkinEdit:
+                    var editor = new SkinEditor();
+                    editor.Show(MainForm);                    
                     break;
 
                 case SkinCommands.SkinLoad:
@@ -185,11 +177,9 @@ namespace Sce.Atf.Applications
                     string newSkinPath = null;
                     FileDialogService.OpenFileName(ref newSkinPath, Info.GetFilterString(), forcedDirectory);
                     OpenAndApplySkin(newSkinPath);
+                    SkinsDirectory = Directory.GetParent(newSkinPath).FullName;
                     break;
-
-                case SkinCommands.SkinCreate:
-                    break;
-
+               
                 case SkinCommands.SkinReset:
                     ResetSkin();
                     break;
@@ -251,6 +241,12 @@ namespace Sce.Atf.Applications
 
             ApplyActiveSkin();
 
+            //if (ActiveSkin != null)
+            //{
+            //    SkinEditor editor = new SkinEditor();
+            //    editor.LoadSkin(ActiveSkin.SkinFile);
+            //}
+
             return true;
         }
 
@@ -288,7 +284,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Loads the specified skin file and sets the active skin to it.</summary>
+        /// Loads the specified skin file and sets the active skin to it</summary>
         /// <param name="filePath">Skin file path</param>
         /// <remarks>No return value, but side effect is to set ActiveSkin upon success</remarks>
         public void OpenSkinFile(string filePath)
@@ -303,36 +299,23 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Loads the skin from the specified stream and sets the active skin to it.</summary>
+        /// Loads the skin from the specified stream and sets the active skin to it</summary>
         /// <param name="stream">Stream containing the skin</param>
-        /// <param name="skinFileDisplayText"></param>
+        /// <param name="skinFileDisplayText">Skin file path</param>
         /// <remarks>No return value, but side effect is to set ActiveSkin upon success</remarks>
         public void OpenSkinFile(Stream stream, string skinFileDisplayText)
         {           
             try
-            {
-                // Create the schema
-                var schemaReader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(SkinSchema));
-                var schema = XmlSchema.Read(schemaReader, (s, e) => Outputs.WriteLine(OutputMessageType.Error, e.Message));
-
-                // Initialize the validation settings
-                var settings = new XmlReaderSettings { ValidationType = ValidationType.Schema };
-                settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
-                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-                settings.Schemas.Add(schema);
-                settings.Schemas.Compile();
-                settings.ValidationEventHandler +=
-                    (s, e) =>
-                    {
-                        throw new FileFormatException("The skin file is corrupt." + e.Message);
-                    };
-
+            {                
                 // Open the skin file and validate it against the schema
-                ActiveSkin = new Skin { SkinFile = skinFileDisplayText, Styles = new List<SkinStyle>() };
-                var skinFileReader = XmlReader.Create(stream, settings);
-                var skinFile = new XmlDocument();
-                skinFile.Load(skinFileReader);
-
+                ActiveSkin = new Skin { SkinFile = skinFileDisplayText, Styles = new List<SkinStyle>() };               
+                var skinFile = new XmlDocument();               
+                using (XmlTextReader reader = new XmlTextReader(stream))
+                {
+                    reader.Namespaces = false;
+                    skinFile.Load(reader);                   
+                }
+                                
                 // If the skin file passed validation, load it up
                 LoadSkin(skinFile);
 
@@ -349,6 +332,7 @@ namespace Sce.Atf.Applications
                 ActiveSkin = null;
             }
         }
+
 
         /// <summary>
         /// Applies the active skin to the main form and to all other skinnable Controls</summary>
@@ -472,9 +456,8 @@ namespace Sce.Atf.Applications
 
                 // Disable GUI-based skin creation and editing
                 // until it is fully ready in 3.5
-                //CommandService.RegisterCommand(SkinEdit, this);
-                //CommandService.RegisterCommand(SkinCreate, this);
-
+                CommandService.RegisterCommand(SkinEdit, this);
+                
                 CommandService.RegisterCommand(SkinReset, this);
             }
         }
@@ -487,12 +470,9 @@ namespace Sce.Atf.Applications
             if (CommandService != null)
             {
                 CommandService.UnregisterCommand(SkinLoad, this);
-
                 // Disable GUI-based skin creation and editing
                 // until it is fully ready in 3.5
-                //CommandService.UnregisterCommand(SkinEdit, this);
-                //CommandService.UnregisterCommand(SkinCreate, this);
-
+                //CommandService.UnregisterCommand(SkinEdit, this);                
                 CommandService.UnregisterCommand(SkinReset, this);
             }
         }
@@ -524,7 +504,7 @@ namespace Sce.Atf.Applications
                 var ncRenderer = new FormNcRenderer(m_mainForm);
                 ncRenderer.Skin = s_ncSkin;
                 ncRenderer.CustomPaintDisabled = ActiveSkin == null;
-                s_formNcRenderers.Add(new WeakKey<Form>(m_mainForm), ncRenderer);
+                s_formNcRenderers.Add(m_mainForm, ncRenderer);
 
                 // to-do: Seems like s_skinnableObjects should include MainForm and it probably does, too,
                 //  because we may get a notification of the MainForm being created. But there may be a
@@ -545,7 +525,7 @@ namespace Sce.Atf.Applications
             }
             set
             {
-                if (String.CompareOrdinal(m_mruSkinFile, value) == 0)
+              if (string.IsNullOrWhiteSpace(value) || String.CompareOrdinal(m_mruSkinFile, value) == 0)
                     return;
 
                 //Trace.WriteLine("MruSkinFile set, probably by settings service", "SkinService");
@@ -558,9 +538,10 @@ namespace Sce.Atf.Applications
                     //  the MainForm.Load event is raised. But in ATF 3 apps, the MainForm.Load event (mostly?) fires
                     //  first and then the settings are loaded!
                     if (m_mainFormLoaded)
-                        OpenAndApplySkin(m_mruSkinFile);
+                        OpenAndApplySkin(m_mruSkinFile);                        
                     else
                         OpenSkinFile(m_mruSkinFile);
+                    SkinsDirectory = Directory.GetParent(m_mruSkinFile).FullName;
                 }
             }
         }
@@ -572,7 +553,7 @@ namespace Sce.Atf.Applications
             //Trace.WriteLine("m_mainForm_Load", "SkinService");
             m_mainFormLoaded = true;
             if (m_settingsLoaded)
-                ApplyActiveSkin();
+                ApplyActiveSkin();            
         }
 
         void m_mainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -612,16 +593,16 @@ namespace Sce.Atf.Applications
             var ncRenderer = new FormNcRenderer(form);
             ncRenderer.Skin = s_ncSkin;
             ncRenderer.CustomPaintDisabled = ActiveSkin == null;
-            s_formNcRenderers.Add(new WeakKey<Form>(form), ncRenderer);            
+            s_formNcRenderers.Add(form, ncRenderer);
         }
         private static void WindowDestroyed(Form form)
         {
             s_skinnableObjects.Remove(new WeakKey<object>(form));
-            s_formNcRenderers.Remove(new WeakKey<Form>(form));
+            s_formNcRenderers.Remove(form);
         }
 
         private void LoadSkin(XmlDocument xmlDoc)
-        {
+        {           
             ActiveSkin.Styles.Clear();
             var rootStyles = new List<SkinStyle>();
 
@@ -630,11 +611,12 @@ namespace Sce.Atf.Applications
 
             // get all the styles
             XmlNodeList styles = root.SelectNodes(StyleElement);
+            
             if (styles == null)
                 throw new FileFormatException("Error loading the skin file.");
 
             foreach (XmlElement style in styles)
-            {
+            {                
                 try
                 {
                     string targetTypeValue = style.GetAttribute(TargetTypeAttribute);
@@ -1380,8 +1362,8 @@ namespace Sce.Atf.Applications
         private static readonly DefaultTypeConverter s_defaultTypeConverter = new DefaultTypeConverter();
 
         // form to NcRenderer map.
-        private static Dictionary<WeakKey<Form>, FormNcRenderer>
-            s_formNcRenderers = new Dictionary<WeakKey<Form>, FormNcRenderer>();
+        private static Dictionary<Form, FormNcRenderer>
+            s_formNcRenderers = new Dictionary<Form, FormNcRenderer>();
 
         private static FormNcRenderer.SkinInfo
             s_ncSkin = new FormNcRenderer.SkinInfo();

@@ -61,7 +61,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Sends a single OSC message to each destination endpoint, asynchronously</summary>
-        /// <param name="service"></param>
+        /// <param name="service">IOscService</param>
         /// <param name="oscAddress">The OSC address to which the data will be assigned to</param>
         /// <param name="data">The data object or "value" to set the OSC address to</param>
         public static void Send(this IOscService service, string oscAddress, object data)

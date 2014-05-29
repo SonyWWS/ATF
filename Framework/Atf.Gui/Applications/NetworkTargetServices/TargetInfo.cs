@@ -9,7 +9,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     public abstract class TargetInfo: INotifyPropertyChanged
     {
         /// <summary>
-        /// Gets or sets the name of the target</summary>
+        /// Get or set the name of the target</summary>
         public string Name
         {
             get { return m_name; }
@@ -24,7 +24,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 
         /// <summary>
-        /// Gets or sets the type of protocol the target can use</summary>
+        /// Get or set the type of protocol the target can use</summary>
         public string Platform
         {
             get { return m_platform; }
@@ -39,7 +39,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 
         /// <summary>
-        /// Gets or sets the network endpoint in string format</summary>
+        /// Get or set the network endpoint in string format</summary>
         public string Endpoint
         {
             get { return m_endPoint; }
@@ -54,7 +54,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 
         /// <summary>
-        /// Gets or sets the type of protocol the target can use</summary>
+        /// Get or set the type of protocol the target can use</summary>
         public string Protocol
         {
             get { return m_protocol; }
@@ -69,7 +69,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 
         /// <summary>
-        /// Gets or sets whether the target is persisted for the current application only, current user, 
+        /// Get or set whether the target is persisted for the current application only, current user, 
         /// or all users on a machine</summary>
         public TargetScope Scope
         {

@@ -54,6 +54,9 @@ namespace Sce.Atf.Rendering
 
         /// <summary>
         /// Clears keymap entry corresponding to the key up code</summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">KeyEventArgs for event</param>
+        /// <returns>True</returns>
         public override bool KeyUp(object sender, KeyEventArgs e)
         {
             m_keyMap[e.KeyValue] = false;

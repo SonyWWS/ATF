@@ -153,7 +153,8 @@ namespace Sce.Atf
         public const int HDM_GETITEM = 0x1200 + 11;  // HDM_FIRST + 11
         public const int HDM_SETITEM = 0x1200 + 12;
 
-        // Contains information about an item in a header control
+        /// <summary>
+        /// Contains information about an item in a header control</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct HDITEM
         {
@@ -255,6 +256,8 @@ namespace Sce.Atf
 
         // structs
 
+        /// <summary>
+        /// POINT structure to interoperate with user32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
@@ -262,6 +265,8 @@ namespace Sce.Atf
             public int Y;
         }
 
+        /// <summary>
+        /// RECT structure to interoperate with user32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -271,6 +276,8 @@ namespace Sce.Atf
             public int Bottom;
         }
 
+        /// <summary>
+        /// MINMAXINFO structure to interoperate with user32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct MINMAXINFO
         {
@@ -281,7 +288,8 @@ namespace Sce.Atf
             public POINT ptMaxTrackSize;
         }
 
-        // The message structure for Windows messages to controls and applications. Defined in winuser.h.
+        /// <summary>
+        /// Message structure for Windows messages to controls and applications. Defined in winuser.h.</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct MSG
 
@@ -294,6 +302,8 @@ namespace Sce.Atf
             public POINT p;
         }
 
+        /// <summary>
+        /// TRACKMOUSEEVENT structure to interoperate with user32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct TRACKMOUSEEVENT
         {
@@ -310,6 +320,8 @@ namespace Sce.Atf
             }
         }
 
+        /// <summary>
+        /// NMHDR structure to interoperate with user32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct NMHDR
         {
@@ -325,23 +337,29 @@ namespace Sce.Atf
         /// <param name="Msg">Message to be sent</param>
         /// <param name="wParam">Additional message-specific information</param>
         /// <param name="lParam">Additional message-specific information</param>
-        /// <returns></returns>
+        /// <returns>Specifies result of message processing, depending on message sent</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Auto)]
         public static extern uint SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         /// <summary>
-        /// Sends specified message to a window or windows.
-        /// </summary>
+        /// Sends specified message to a window or windows</summary>
         /// <param name="hWnd">Handle to the window</param>
         /// <param name="msg">Message to be sent</param>
         /// <param name="wParam">Additional message-specific information</param>
         /// <param name="lParam">Additional message-specific information</param>
-        /// <returns></returns>
+        /// <returns>Specifies result of message processing, depending on message sent</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
+        /// <summary>
+        /// Sends specified message to a window or windows</summary>
+        /// <param name="Handle">Handle to the window</param>
+        /// <param name="msg">Message to be sent</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns>Specifies result of message processing, depending on message sent</returns>
         [DllImport(DllName, EntryPoint = "SendMessage")]
         public static extern IntPtr SendMessageITEM(IntPtr Handle, Int32 msg, IntPtr wParam, ref HDITEM lParam);
 
@@ -461,7 +479,7 @@ namespace Sce.Atf
         /// <summary>
         /// Gets device context for client area of specified window</summary>
         /// <param name="hwnd">Window handle</param>
-        /// <returns>window's device context</returns>
+        /// <returns>Window's device context</returns>
         [DllImport(DllName, EntryPoint = "GetDC")]
         public static extern IntPtr GetDC(IntPtr hwnd);
 
@@ -574,7 +592,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// Retrieves the clipboard sequence number, which is incremented each time the system
-        /// clipboard changes. See http://msdn.microsoft.com/en-us/library/ms649042(v=vs.85).aspx </summary>
+        /// clipboard changes. For details, see http://msdn.microsoft.com/en-us/library/ms649042(v=vs.85).aspx. </summary>
         /// <returns>Clipboard sequence number</returns>
         [DllImport(DllName)]
         public static extern uint GetClipboardSequenceNumber();
@@ -620,19 +638,20 @@ namespace Sce.Atf
 
 
         /// <summary>
-        /// This delegate is used with SetWindowsHookEx. http://msdn.microsoft.com/en-us/library/ms644990 </summary>
+        /// This delegate is used with SetWindowsHookEx(). For more details, see 
+        /// http://msdn.microsoft.com/en-us/library/ms644990. </summary>
         /// <param name="code">The message ID depends on the HookType that was used. It will be ShellEvents
         /// for WH_SHELL or it will be CbtEvents for WH_CBT, for example. If it's less than zero, then that
         /// typically means that no processing should be done and the results of calling CallNextHookEx should
         /// be returned.</param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns>The result of calling CallNextHookEx is typically returned.</returns>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns>The result of calling CallNextHookEx() is typically returned.</returns>
         public delegate int WindowsHookCallback(int code, int wParam, int lParam);
 
         /// <summary>
-        /// These are the different hook types when registering a callback with SetWindowsHookEx
-        /// http://msdn.microsoft.com/en-us/library/ms644990 </summary>
+        /// These are the different hook types when registering a callback with SetWindowsHookEx().
+        /// For more details, see http://msdn.microsoft.com/en-us/library/ms644990. </summary>
         public enum HookType
         {
             WH_JOURNALRECORD = 0,
@@ -675,7 +694,7 @@ namespace Sce.Atf
         /// <summary>
         /// These are the message IDs that can be passed in as the code parameter
         /// of the WindowsHookCallback that was registered with HookType.WH_CBT.
-        /// http://msdn.microsoft.com/en-us/library/ms644977 </summary>
+        /// For details, see http://msdn.microsoft.com/en-us/library/ms644977. </summary>
         public enum CbtEvents
         {
             HCBT_MOVESIZE = 0,
@@ -691,18 +710,19 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Sets a callback function to receive certain kinds of Windows events
-        /// http://msdn.microsoft.com/en-us/library/ms644990 </summary>
+        /// Sets a callback function to receive certain kinds of Windows events.
+        /// For details, see http://msdn.microsoft.com/en-us/library/ms644990. </summary>
         /// <param name="code">The type of hook</param>
         /// <param name="func">The callback method delegate. Be sure to create this delegate explicitly and to
         /// hold on to it explicitly because otherwise the implicit delegate can get garbage collected. For example:
         /// private static readonly User32.WindowsHookCallback s_callbackDelegate = ShellHookCallback;</param>
         /// <param name="hInstance">Should be IntPtr.Zero unless the hook type is WH_KEYBOARD_LL or
-        /// WH_MOUSE_LL. http://pinvoke.net/default.aspx/user32/SetWindowsHookEx.html </param>
+        /// WH_MOUSE_LL. For details, see http://pinvoke.net/default.aspx/user32/SetWindowsHookEx.html. </param>
         /// <param name="threadID">The thread ID from calling AppDomain.GetCurrentThreadId().
         /// Use the pragma "warning disable 612,618" and "warning restore 612,618" to get rid
         /// of the compiler warning.</param>
-        /// <returns></returns>
+        /// <returns>If successful, handle to the hook procedure. If fails, NULL. 
+        /// To get extended error information, call GetLastError().</returns>
         [DllImport(DllName)]
         public static extern IntPtr SetWindowsHookEx(HookType code, WindowsHookCallback func, IntPtr hInstance, int threadID);
 
@@ -745,14 +765,6 @@ namespace Sce.Atf
         /// <returns>Nonzero iff function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648399%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
-        /// <summary>
-        /// Creates new shape for system caret and assigns ownership of caret to specified window</summary>
-        /// <param name="hWnd">Handle to window that owns caret</param>
-        /// <param name="hBitmap">Handle to bitmap that defines caret shape</param>
-        /// <param name="nWidth">Width of caret</param>
-        /// <param name="nHeight">Height of caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
-        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648399%28v=vs.85%29.aspx </remarks>
         public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
         /// <summary>
         /// Makes caret visible on screen at caret's current position</summary>

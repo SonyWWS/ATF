@@ -281,7 +281,8 @@ namespace Sce.Atf.VectorMath
         }
 
         /// <summary>
-        /// Computes determinant of matrix</summary>        
+        /// Computes determinant of matrix</summary>
+        /// <returns>Matrix determinant</returns>
         public float Determinant()
         {
             return ((this.M22 * this.M11) - (this.M21 * this.M12));
@@ -381,6 +382,7 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Compute hash code</summary>        
+        /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
             return M11.GetHashCode() + M12.GetHashCode()

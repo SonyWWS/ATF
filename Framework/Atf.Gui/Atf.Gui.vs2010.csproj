@@ -316,10 +316,12 @@
     <Compile Include="GroupAttribute.cs" />
     <Compile Include="Input\DragEventArgs.cs" />
     <Compile Include="Input\KeyEventArgs.cs" />
+    <Compile Include="Input\KeyPressEventArgs.cs" />
     <Compile Include="Input\Keys.cs" />
     <Compile Include="Input\Message.cs" />
     <Compile Include="Input\MouseButtons.cs" />
     <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="Input\PreviewKeyDownEventArgs.cs" />
     <Compile Include="IPerformanceTarget.cs" />
     <Compile Include="Rendering\AxisSystemType.cs">
       <SubType>Code</SubType>

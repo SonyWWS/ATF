@@ -46,7 +46,6 @@ namespace CodeEditor
             m_xmlDocumentClient = new DocumentClient(this, ".xml");
             m_daeDocumentClient = new DocumentClient(this, ".dae");
             m_cgDocumentClient = new DocumentClient(this, ".cg");
-
         }
 
         [Import(AllowDefault = true)]

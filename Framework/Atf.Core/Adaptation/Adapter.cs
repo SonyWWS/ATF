@@ -58,9 +58,9 @@ namespace Sce.Atf.Adaptation
         }
 
         /// <summary>
-        /// Gets all decorators of the specified type or null</summary>
+        /// Gets all decorators of the specified type</summary>
         /// <param name="type">Decorator type</param>
-        /// <returns>Enumeration of decorators that are of the specified type or null</returns>
+        /// <returns>Enumeration of non-null decorators that are of the specified type. The enumeration may be empty.</returns>
         public IEnumerable<object> GetDecorators(Type type)
         {
             // see if this can adapt
@@ -69,7 +69,10 @@ namespace Sce.Atf.Adaptation
                 yield return adapter;
 
             foreach (object obj in m_adaptee.AsAll(type))
-                yield return obj;
+            {
+                if (obj != adapter)
+                    yield return obj;
+            }
         }
 
         // implement the following members as a convenience when extension methods aren't available

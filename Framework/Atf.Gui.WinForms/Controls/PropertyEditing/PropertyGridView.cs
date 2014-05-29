@@ -286,15 +286,15 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        ///     Processes a command key. This method is called during message
-        ///     pre-processing to handle command keys. Command keys are keys that always
-        ///     take precedence over regular input keys. Examples of command keys
-        ///     include accelerators and menu shortcuts. The method must return true to 
-        ///     indicate that it has processed the command key, or false to indicate
-        ///     that the key is not a command key. </summary>
-        /// <param name="msg"></param>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
+        /// Processes a command key. This method is called during message
+        /// pre-processing to handle command keys. Command keys are keys that always
+        /// take precedence over regular input keys. Examples of command keys
+        /// include accelerators and menu shortcuts. The method must return true to 
+        /// indicate that it has processed the command key, or false to indicate
+        /// that the key is not a command key.</summary>
+        /// <param name="msg">System.Windows.Forms.Message representing the window message to process</param>
+        /// <param name="keyData">System.Windows.Forms.Keys value for key to process</param>
+        /// <returns>True iff character was processed by control</returns>
         /// <remarks>Guerrilla's CoreText Editor uses the Tab key as a command shortcut
         /// but the property editor should take precedence and use the Tab key to toggle
         /// between properties. So that's why we're doing this work in this method rather

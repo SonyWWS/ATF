@@ -18,6 +18,8 @@ namespace Sce.Atf.Applications
     public class FormNcRenderer : NativeWindow
     {
         #region skinInfo
+        /// <summary>
+        /// Class for skin information</summary>
         public class SkinInfo
         {
             /// <summary>
@@ -35,37 +37,38 @@ namespace Sce.Atf.Applications
             }
 
             /// <summary>
-            /// Gets and sets color used for 
+            /// Get or set color used for 
             /// drawing active border</summary>
             public Color ActiveBorderColor { get; set; }
 
             /// <summary>
-            /// Gets and sets color used for 
+            /// Get or set color used for 
             /// drawing inactive border</summary>
             public Color InactiveBorderColor { get; set; }
 
             /// <summary>
-            /// Gets and sets color of the title bar and frame.</summary>
+            /// Get or set color of the title bar and frame.</summary>
             public Color TitleBarBackColor { get; set; }
 
             /// <summary>
-            /// Gets and sets title bar foreground color.
+            /// Get or set title bar foreground color.
             /// </summary>
             public Color TitleBarForeColor { get; set; }
 
             /// <summary>
-            /// Gets and sets title bar foreground color 
+            /// Get or set title bar foreground color 
             /// for active title bar</summary>
             public Color ActiveTitleBarForeColor { get; set; }
 
             /// <summary>
-            /// Gets and sets caption button hover color</summary>
+            /// Get or set caption button hover color</summary>
             public Color CaptionButtonHoverColor { get; set; }
         }
         #endregion
 
         /// <summary>
-        /// Construct new instance.</summary>        
+        /// Construct new instance</summary>
+        /// <param name="form">Form</param>
         public FormNcRenderer(Form form)
         {
             if (form == null)
@@ -96,6 +99,7 @@ namespace Sce.Atf.Applications
             };
 
             // disable custom painting for parented form.
+            m_disabled = form.Parent != null;
             m_form.ParentChanged += (sender, e) =>
             {
                 CustomPaintDisabled = m_form == null || m_form.Parent != null;
@@ -112,7 +116,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets and sets skin used for
+        /// Gets or sets skin used for
         /// drawing title bar and caption buttons</summary>
         public SkinInfo Skin
         {
@@ -122,32 +126,34 @@ namespace Sce.Atf.Applications
                 if (value != null)
                 {
                     m_skin = value;
-                    PaintTitleBar();
+                    PaintTitleBar(m_active);
                 }
             }
 
         }
 
+        /// <summary>
+        /// Get or set whether custom painting disabled</summary>
         public bool CustomPaintDisabled
         {
             get { return m_disabled; }
             set
-            {
-                m_disabled = value;
+            {       
+                m_disabled = m_form == null || m_form.Parent != null || value;
+                    
                 if (m_form != null)
-                {
+                {                    
                     if (m_disabled)
                     {
                         SetWindowTheme(m_form.Handle, "Explorer", null);
                     }
                     else
                     {
+                        m_active = Form.ActiveForm == m_form;
                         SetWindowTheme(m_form.Handle, "", "");
-                        UpdateBounds();
-                        CreateCaptionButtons();
-                        UpdateCaptionButtons();
+                        CreateCaptionButtons();                       
                     }
-                }
+                }                
             }
 
         }
@@ -164,28 +170,29 @@ namespace Sce.Atf.Applications
             switch ((uint)m.Msg)
             {
                 case WinMessages.WM_NCPAINT:
-                    handled = PaintTitleBar();
+                    handled = PaintTitleBar(m_active);
                     if (handled) m.Result = IntPtr.Zero;
                     break;
 
                 case WinMessages.WM_ACTIVATEAPP:
-                    handled = PaintTitleBar();
+                    m_active = m.WParam != IntPtr.Zero;
+                    handled = PaintTitleBar(m_active);
                     if (handled) m.Result = IntPtr.Zero;
                     break;
 
                 case WinMessages.WM_ACTIVATE:
-                    handled = PaintTitleBar();
+                    int lwp = LowWord(m.WParam.ToInt32());
+                    m_active = lwp != 0;
+                    handled = PaintTitleBar(m_active);
                     if (handled) m.Result = IntPtr.Zero;
                     break;
                 case WinMessages.WM_NCACTIVATE:
                     if (m.WParam != IntPtr.Zero)
-                    {
-                        handled = true;
-                        m.Result = IntPtr.Zero;
-                    }
+                        m.Result = IntPtr.Zero;                        
                     else
                         m.Result = (IntPtr)1;
-                    PaintTitleBar();
+                    handled = true;                    
+                    PaintTitleBar(m.WParam != IntPtr.Zero);
                     break;
                 case WinMessages.WM_NCUAHDRAWCAPTION:
                 case WinMessages.WM_NCUAHDRAWFRAME:
@@ -193,13 +200,11 @@ namespace Sce.Atf.Applications
                     break;
                
                 case WinMessages.WM_SIZE:
-                    {
-                        UpdateBounds();
-                        UpdateCaptionButtons();
+                    {                       
                         if (m_paintOnResize)
                         {                          
                             m_paintOnResize = false;
-                            PaintTitleBar();
+                            PaintTitleBar(m_active);
                         }
                     }
                     break;
@@ -210,25 +215,22 @@ namespace Sce.Atf.Applications
                             || (flags & SYSCOMMANDWPARAM.SC_MAXIMIZE) != 0;
                     break;
                 case WinMessages.WM_EXITSIZEMOVE:
-                    PaintTitleBar();
+                    PaintTitleBar(m_active);
                     break;
 
                 case WinMessages.WM_STYLECHANGED:
-                    CreateCaptionButtons();
-                    UpdateBounds();
-                    UpdateCaptionButtons();
+                    CreateCaptionButtons();                   
                     m.Result = IntPtr.Zero;
                     handled = true;
                     break;
 
                 case WinMessages.WM_SETICON:
-                    CreateCaptionButtons();
-                    UpdateCaptionButtons();
+                    CreateCaptionButtons();                    
                     break;
 
                 case WinMessages.WM_SETTEXT:
                     base.WndProc(ref m);
-                    PaintTitleBar();
+                    PaintTitleBar(m_active);
                     handled = true;
                     break;
 
@@ -251,9 +253,9 @@ namespace Sce.Atf.Applications
                     handled = OnNcMouseMove(ref m);
                     break;
 
-            }           
-            if (!handled)
-                base.WndProc(ref m);            
+            }
+            if (!handled)            
+                base.WndProc(ref m);
         }        
         #endregion
 
@@ -285,7 +287,7 @@ namespace Sce.Atf.Applications
                 handled = true;
             }
 
-            PaintTitleBar();
+            PaintTitleBar(m_active);
             return handled;
         }
 
@@ -314,10 +316,11 @@ namespace Sce.Atf.Applications
             {
                 handled = true;
                 msg.Result = (IntPtr)0;
-                PaintTitleBar();
+                PaintTitleBar(m_active);
                 m_paintOnResize = true;
                 btn.PerformAction(m_form);                                
             }
+            PaintTitleBar(m_active);
             return handled;
         }
 
@@ -353,7 +356,7 @@ namespace Sce.Atf.Applications
             }
             if (repaint)
             {
-                PaintTitleBar();
+                PaintTitleBar(m_active);
             }
         }
         
@@ -453,8 +456,7 @@ namespace Sce.Atf.Applications
         }
         private void UpdateCaptionButtons()
         {
-            int capSize = GetCaptionButtonSize().Height;
-
+            int capSize = GetCaptionButtonSize().Height;           
             int top = Math.Min(4, m_titleAndBorderSize - (capSize + 1));
             int iconSize = m_titleAndBorderSize - 2;
             int iconTop = 2;
@@ -468,7 +470,7 @@ namespace Sce.Atf.Applications
                 iconSize -= top;
             }
 
-            Rectangle btnBound = new Rectangle(m_form.Width - (capSize + 3), top, capSize, capSize);
+            Rectangle btnBound = new Rectangle(m_winRect.Width - (capSize + 3), top, capSize, capSize);
             foreach (var btn in m_captionButtons)
             {
                 btn.Bound = btnBound;
@@ -492,23 +494,25 @@ namespace Sce.Atf.Applications
         {
             if (m_form.Parent == null)
             {
-                SetWindowTheme(m_form.Handle, "", "");
-                UpdateBounds();
-                CreateCaptionButtons();
-                UpdateCaptionButtons();
+                SetWindowTheme(m_form.Handle, "", "");               
+                CreateCaptionButtons();               
             }
+            else
+                m_disabled = true;
             AssignHandle(m_form.Handle);
         }
 
-        private bool PaintTitleBar()
+        private bool PaintTitleBar(bool active)
         {
-            if (CustomPaintDisabled) return false;
-            
+            if (CustomPaintDisabled || m_form == null || !m_form.Visible)
+                return false;
+           
+            UpdateBounds();
+            UpdateCaptionButtons();           
             IntPtr hdc = GetDCEx(m_form.Handle, IntPtr.Zero,
                  (uint)(DCXFlags.DCX_CACHE | DCXFlags.DCX_CLIPSIBLINGS | DCXFlags.DCX_WINDOW));
             if (hdc == IntPtr.Zero)
                 return false;
-
 
             ExcludeClipRect(hdc,
                 m_winClientRect.X,
@@ -523,20 +527,19 @@ namespace Sce.Atf.Applications
             }
 
             var backbuffer = s_context.Allocate(hdc, m_winRect);
-            backbuffer.Graphics.SetClip(m_winClientRect, CombineMode.Exclude);            
-            PaintTitleBar(backbuffer.Graphics);            
+            backbuffer.Graphics.SetClip(m_winClientRect, CombineMode.Exclude);
+            PaintTitleBar(backbuffer.Graphics, active);          
             backbuffer.Render();
             backbuffer.Dispose();
             ReleaseDC(m_form.Handle, hdc);
             return true;
         }
 
-        private void PaintTitleBar(Graphics g)
+        private void PaintTitleBar(Graphics g, bool active)
         {            
             g.Clear(m_skin.TitleBarBackColor);
             
-            s_genPen.Color
-                = Form.ActiveForm == m_form ? m_skin.ActiveBorderColor
+            s_genPen.Color = active ? m_skin.ActiveBorderColor
                 : m_skin.InactiveBorderColor;
 
             Rectangle borderRect = m_winRect;
@@ -551,7 +554,7 @@ namespace Sce.Atf.Applications
             
             // draw caption buttoon.
             foreach (var button in m_captionButtons)
-                button.Draw(g, m_skin, m_form);
+                button.Draw(g, m_skin, m_form, active);
 
             if (m_showIcon)
                 g.DrawIcon(m_form.Icon, m_iconRect);
@@ -575,7 +578,7 @@ namespace Sce.Atf.Applications
                 }
 
 
-                s_genBrush.Color = Form.ActiveForm == m_form ? m_skin.ActiveTitleBarForeColor
+                s_genBrush.Color = active ? m_skin.ActiveTitleBarForeColor
                : m_skin.TitleBarForeColor;
 
                 Rectangle strRect = new Rectangle(x, top, w, height);
@@ -588,7 +591,7 @@ namespace Sce.Atf.Applications
         }
 
         private void UpdateBounds()
-        {            
+        {           
             RECT scrRect = new RECT();
             GetWindowRect(m_form.Handle, ref scrRect);
             int w = scrRect.Width;
@@ -607,6 +610,7 @@ namespace Sce.Atf.Applications
                     cw, ch);
         }
 
+        private bool m_active; // is m_form active.
         private bool m_paintOnResize;
         private bool m_disabled;
         private SkinInfo m_skin = new SkinInfo();
@@ -639,7 +643,6 @@ namespace Sce.Atf.Applications
         private List<CustomCaptionButton> m_captionButtons = new List<CustomCaptionButton>();
         private class CustomCaptionButton
         {
-
             public CustomCaptionButton(int id)
             {
                 Id = id;
@@ -662,10 +665,9 @@ namespace Sce.Atf.Applications
                 {
                     form.WindowState = FormWindowState.Minimized; ;
                 }
-
-
             }
-            public void Draw(Graphics g, SkinInfo skin, Form form)
+
+            public void Draw(Graphics g, SkinInfo skin, Form form, bool active)
             {
                 if (MouseIn)
                 {
@@ -676,10 +678,9 @@ namespace Sce.Atf.Applications
                 {
                     s_genBrush.Color = skin.TitleBarBackColor;
                 }
-                if (form == Form.ActiveForm)
-                    s_genPen.Color = skin.ActiveTitleBarForeColor;
-                else
-                    s_genPen.Color = skin.TitleBarForeColor;
+
+                s_genPen.Color = active ? skin.ActiveTitleBarForeColor
+                    : skin.TitleBarForeColor;
 
                 int margin = (int)(Bound.Height * 0.3f);
                 Rectangle rect = Bound;
@@ -833,6 +834,9 @@ namespace Sce.Atf.Applications
         }
 
         // note: bitwisse and the flag with 0xFFF0
+        /// <summary>
+        /// WM_SYSCOMMAND message flags</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646360%28v=vs.85%29.aspx. </remarks>
         public static class SYSCOMMANDWPARAM
         {
             public const uint SC_MAXIMIZE = 0xF030;
@@ -926,6 +930,8 @@ namespace Sce.Atf.Applications
             int nRightRect,
             int nBottomRect);
 
+        /// <summary>
+        /// Rendering flags</summary>
         [Flags]
         public enum DCXFlags : uint
         {
@@ -945,6 +951,9 @@ namespace Sce.Atf.Applications
             DCX_UNDOCUMENTED = 0x10000
         }
 
+        /// <summary>
+        /// Window positioning flags</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612%28v=vs.85%29.aspx. </remarks>
         [Flags]
         public enum SWPFlags
         {
@@ -956,6 +965,8 @@ namespace Sce.Atf.Applications
             SWP_FRAMECHANGED = 0x0020,
         }
 
+        /// <summary>
+        /// GetWindowLong() value indexes</summary>
         public enum GetWindowLongIndex : int
         {
             GWL_STYLE = -16,
@@ -963,6 +974,8 @@ namespace Sce.Atf.Applications
             // see GetWindowLong  Docs for more indices.
         }
 
+        /// <summary>
+        /// Enumeration for window styles</summary>
         public enum WindowStyles : ulong
         {
             WS_CAPTION = 0x00C00000,
@@ -973,6 +986,8 @@ namespace Sce.Atf.Applications
             WS_POPUP = 0x80000000,
         }
 
+        /// <summary>
+        /// Structure for point</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
@@ -980,6 +995,8 @@ namespace Sce.Atf.Applications
             public int Y;
         }
 
+        /// <summary>
+        /// Structure for rectangle</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -998,6 +1015,10 @@ namespace Sce.Atf.Applications
 
         }
 
+        /// <summary>
+        /// Information about a window's maximized size and position and its minimum and maximum tracking size.
+        /// </summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632605%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct MINMAXINFO
         {
@@ -1008,6 +1029,10 @@ namespace Sce.Atf.Applications
             public POINT ptMaxTrackSize;
         }
 
+        /// <summary>
+        /// Information that an application can use while processing the WM_NCCALCSIZE message to calculate 
+        /// the size, position, and valid contents of the client area of a window</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632606%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct NCCALCSIZE_PARAMS
         {
@@ -1017,6 +1042,9 @@ namespace Sce.Atf.Applications
             public WINDOWPOS IntPtr;
         };
 
+        /// <summary>
+        /// Structure with information about the size and position of a window</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct WINDOWPOS
         {

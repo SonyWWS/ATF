@@ -15,6 +15,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// arcs. For this graph renderer, edge routes are integer indices, indicating which
     /// line or arc to draw for the edge. This allows multiple edges between a pair of states
     /// to be distinguished.</summary>
+    /// <typeparam name="TNode">Node to draw</typeparam>
+    /// <typeparam name="TEdge">Edge between nodes</typeparam>
     public class D2dDigraphRenderer<TNode, TEdge> :
         D2dGraphRenderer<TNode, TEdge, NumberedRoute>,
         IDisposable

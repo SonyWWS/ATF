@@ -59,6 +59,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Make the viewing control accessible via DomNode IAdaptable</summary>
+        /// <param name="type">Type for which to obtain adapter</param>
+        /// <returns>Adapter for given type</returns>
         public override object GetAdapter(Type type)
         {
             if (type == typeof(AdaptableControl))

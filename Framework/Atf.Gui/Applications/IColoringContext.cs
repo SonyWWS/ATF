@@ -21,9 +21,10 @@ namespace Sce.Atf.Applications
     public interface IColoringContext
     {
         /// <summary>
-        /// Gets the item's specified color in the context</summary>
+        /// Gets the specified item's color in the context</summary>
         /// <param name="type">Coloring type</param>
         /// <param name="item">Item</param>
+        /// <returns>Specified item's Color</returns>
         Color GetColor(ColoringTypes type, object item);
 
         /// <summary>

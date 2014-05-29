@@ -13,7 +13,7 @@ namespace Sce.Atf.Controls.Adaptable
     public class D2dDiagramTheme : D2dResource
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with no parameters</summary>
         public D2dDiagramTheme()
             : this("Microsoft Sans Serif", 10)
         {
@@ -21,7 +21,9 @@ namespace Sce.Atf.Controls.Adaptable
         }
         
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with parameters</summary>
+        /// <param name="fontFamilyName">Font family name for theme</param>
+        /// <param name="fontSize">Font size</param>
         public D2dDiagramTheme(string fontFamilyName, float fontSize)
         {            
             m_d2dTextFormat = D2dFactory.CreateTextFormat(fontFamilyName, fontSize);            

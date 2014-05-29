@@ -28,7 +28,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Returns a System.Drawing.Bitmap object that is a copy of the image stored in this
         /// D2dWicGraphics object.</summary>
-        /// <returns></returns>
+        /// <returns>System.Drawing.Bitmap copy of image</returns>
         public System.Drawing.Bitmap Copy()
         {
             var bitmap = new System.Drawing.Bitmap(m_wicBitmap.Size.Width, m_wicBitmap.Size.Height);

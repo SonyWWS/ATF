@@ -25,6 +25,7 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Constructor with CurveCanvas</summary>
+        /// <param name="curveCanvas">CurveCanvas control to use</param>
         public CurveEditingControl(CurveCanvas curveCanvas)
         {
             Init(curveCanvas);

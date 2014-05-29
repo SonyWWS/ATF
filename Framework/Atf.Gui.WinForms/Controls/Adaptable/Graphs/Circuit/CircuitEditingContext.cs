@@ -567,8 +567,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Explicitly notify the graph object has been changed. This is useful when some changes, 
-        /// such as group pin connectivity, are computed at runtime, outside dom attribute mechanism.</summary>
+        /// Explicitly notify that the graph object has been changed. This is useful when some changes, 
+        /// such as group pin connectivity, are computed at runtime, outside the DOM attribute mechanism.</summary>
+        /// <param name="element">Changed graph object</param>
         public void NotifyObjectChanged(object element)
         {
             ItemChanged.Raise(this, new ItemChangedEventArgs<object>(element));

@@ -198,6 +198,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         /// <summary>
         /// Constructor with increments</summary>
+        /// <param name="smallChange">Small change increment</param>
+        /// <param name="largeChange">Large change increment</param>
         public NumberIncrementsAttribute(double smallChange, double largeChange)
         {
             this.smallChange = smallChange;

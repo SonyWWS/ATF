@@ -8,7 +8,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// <summary>
     /// Interface for group pins, which are virtual pins that expose real pins of elements of the
     /// group to other circuit elements outside the group</summary>
-    /// <typeparam name="TElement"></typeparam>
+    /// <typeparam name="TElement">ICircuitElement element</typeparam>
     public interface ICircuitGroupPin<out TElement>: ICircuitPin
          where TElement : class, ICircuitElement
 #else

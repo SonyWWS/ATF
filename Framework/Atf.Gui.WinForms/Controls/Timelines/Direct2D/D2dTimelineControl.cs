@@ -574,6 +574,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         /// <summary>
         /// Gets a bounding rectangle, in Windows client coordinates, containing all events (intervals, keys,
         /// and markers), and groups and tracks</summary>
+        /// <returns>Bounding rectangle, in Windows client coordinates</returns>
         public RectangleF GetBoundingRect()
         {
             return GetBoundingRect(false);
@@ -582,6 +583,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         /// <summary>
         /// Gets a bounding rectangle, in Windows client coordinates, containing only selected events (intervals,
         /// keys, and markers) and groups and tracks</summary>
+        /// <returns>Bounding rectangle, in Windows client coordinates</returns>
         public RectangleF GetSelectionBoundingRect()
         {
             return GetBoundingRect(true);

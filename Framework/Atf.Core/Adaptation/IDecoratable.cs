@@ -10,9 +10,9 @@ namespace Sce.Atf.Adaptation
     public interface IDecoratable
     {
         /// <summary>
-        /// Gets all decorators of the specified type, or null</summary>
+        /// Gets all decorators of the specified type</summary>
         /// <param name="type">Decorator type</param>
-        /// <returns>Enumeration of decorators that are of the specified type</returns>
+        /// <returns>Enumeration of non-null decorators that are of the specified type. The enumeration may be empty.</returns>
         IEnumerable<object> GetDecorators(Type type);
     }
 }

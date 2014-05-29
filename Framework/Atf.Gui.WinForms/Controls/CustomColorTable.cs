@@ -205,11 +205,9 @@ namespace Sce.Atf.Controls
         /// <summary>Gets the border color to use with ButtonCheckedHighlight</summary>
         public override Color ButtonCheckedHighlightBorder { get { return SettableButtonCheckedHighlightBorder; } }
         /// <summary>Gets the border color to use with the ButtonPressedGradientBegin, ButtonPressedGradientMiddle, and ButtonPressedGradientEnd colors</summary>
-        //public override Color ButtonPressedBorder { get { return SettableButtonPressedBorder; } }
-        public override Color ButtonPressedBorder { get { return SettableButtonCheckedHighlightBorder; } }
+        public override Color ButtonPressedBorder { get { return SettableButtonPressedBorder; } }
         /// <summary>Gets the border color to use with the ButtonSelectedGradientBegin, ButtonSelectedGradientMiddle, and ButtonSelectedGradientEnd colors</summary>
-        //public override Color ButtonSelectedBorder { get { return SettableButtonSelectedBorder; } }
-        public override Color ButtonSelectedBorder { get { return SettableButtonPressedBorder; } }
+        public override Color ButtonSelectedBorder { get { return SettableButtonSelectedBorder; } }
         /// <summary>Gets the starting color of the gradient used when the button is checked</summary>
         public override Color ButtonCheckedGradientBegin { get { return SettableButtonCheckedGradientBegin; } }
         /// <summary>Gets the middle color of the gradient used when the button is checked</summary>
@@ -254,11 +252,9 @@ namespace Sce.Atf.Controls
         //public override Color ImageMarginRevealedGradientBegin { get { return SettableImageMarginRevealedGradientBegin; } }
         public override Color ImageMarginRevealedGradientBegin { get { return SettableImageMarginGradientBegin; } }
         /// <summary>Gets the middle color of the gradient used in the image margin of a ToolStripDropDownMenu when an item is revealed</summary>
-        //public override Color ImageMarginRevealedGradientMiddle { get { return SettableImageMarginRevealedGradientMiddle; } }
-        public override Color ImageMarginRevealedGradientMiddle { get { return SettableImageMarginGradientMiddle; } }
+        public override Color ImageMarginRevealedGradientMiddle { get { return SettableImageMarginRevealedGradientMiddle; } }
         /// <summary>Gets the end color of the gradient used in the image margin of a ToolStripDropDownMenu when an item is revealed</summary>
-        //public override Color ImageMarginRevealedGradientEnd { get { return SettableImageMarginRevealedGradientEnd; } }
-        public override Color ImageMarginRevealedGradientEnd { get { return SettableImageMarginGradientEnd; } }
+        public override Color ImageMarginRevealedGradientEnd { get { return SettableImageMarginRevealedGradientEnd; } }
 
         // Menus
         /// <summary>Gets the starting color of the gradient used in the MenuStrip</summary>

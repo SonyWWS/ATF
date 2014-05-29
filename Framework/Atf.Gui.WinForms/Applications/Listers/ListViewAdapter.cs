@@ -396,7 +396,7 @@ namespace Sce.Atf.Applications
 
         private void list_ItemInserted(object sender, ItemInsertedEventArgs<object> e)
         {
-            if (m_inTransaction)
+            if (m_inTransaction && !m_itemsInserted.ContainsKey(e.Item))
                 m_itemsInserted.Add(e.Item, e.Index);
             else
                 OnItemInserted(e.Item, e.Index);
@@ -404,8 +404,14 @@ namespace Sce.Atf.Applications
 
         private void OnItemInserted(object item, int index)
         {
-            ListViewItem listViewItem = CreateItem(item);
-            m_control.Items.Insert(index, listViewItem);
+            if (GetListViewItem(item) == null)
+            {
+                ListViewItem listViewItem = CreateItem(item);
+                if (index < m_control.Items.Count)
+                    m_control.Items.Insert(index, listViewItem);
+                else
+                    m_control.Items.Add(listViewItem);
+            }
         }
 
         private void list_ItemRemoved(object sender, ItemRemovedEventArgs<object> e)

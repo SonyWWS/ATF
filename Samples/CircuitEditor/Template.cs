@@ -21,7 +21,7 @@ namespace CircuitEditorSample
 
         /// <summary>
         /// Gets or sets DomNode module that represents the template</summary>
-        public override DomNode Model
+        public override DomNode Target
         {
             get { return GetChild<DomNode>(Schema.templateType.moduleChild); }
             set
@@ -29,7 +29,7 @@ namespace CircuitEditorSample
                 SetChild(Schema.templateType.moduleChild, value);
                 if (value != null) // initialize  model name
                 {
-                    var module = Model.Cast<Module>();
+                    var module = Target.Cast<Module>();
                     Name = module.Name;
                     if (string.IsNullOrEmpty(Name))
                         Name = module.Type.Name;

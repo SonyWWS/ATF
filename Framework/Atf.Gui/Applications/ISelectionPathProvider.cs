@@ -11,29 +11,31 @@ namespace Sce.Atf.Applications
     public interface ISelectionPathProvider
     {
         /// <summary>
-        /// Gets the selection path for the given item</summary>
+        /// Get the selection path for the given item</summary>
         /// <param name="item">Item to get selection path for</param>
         /// <returns>Selection path for item</returns>
         AdaptablePath<object> GetSelectionPath(object item);
 
         /// <summary>
-        /// Removes the selection path for the item</summary>
+        /// Remove the selection path for the item</summary>
         /// <param name="item">Item to remove selection path on</param>
         /// <returns>True iff selection path removed</returns>
         bool RemoveSelectionPath(object item);
 
         /// <summary>
-        /// Updates the selection path for the item</summary>
+        /// Update the selection path for the item</summary>
         /// <param name="item">Item to update for</param>
         /// <param name="path">Path used to update for the item</param>
         void UpdateSelectionPath(object item, AdaptablePath<object> path);
 
         /// <summary>
-        ///  Get the selection path where the given item is part of the  path but not the last</summary>
+        /// Obtain the selection path where the given item is part of the path but not the last</summary>
+        /// <param name="item">Part of path, not last part</param>
+        /// <returns>Selection path containing given item</returns>
         AdaptablePath<object> IncludedPath(object item);
  
         /// <summary>
-        /// Gets the SelectionPathProviderInfo object</summary>
+        /// Get the SelectionPathProviderInfo object</summary>
         SelectionPathProviderInfo Info
         {
             get;

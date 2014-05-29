@@ -16,6 +16,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// OBSOLETE. Please use D2dGraphAdapter instead.
     /// Control adapter to reference and render a graph diagram; also provides hit testing
     /// with the Pick method, and viewing support with the Frame and EnsureVisible methods.</summary>
+    /// <typeparam name="TNode">Node</typeparam>
+    /// <typeparam name="TEdge">Edge</typeparam>
+    /// <typeparam name="TEdgeRoute">Edge route</typeparam>
     public class GraphAdapter<TNode, TEdge, TEdgeRoute> : ControlAdapter,
         IGraphAdapter<TNode, TEdge, TEdgeRoute>,
         IPickingAdapter,
@@ -151,8 +154,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Performs a picking operation and returns enumeration of Nodes intersecting the region</summary>
         /// <param name="pickRegion">Hit test region</param>
+        /// <typeparam name="T">Type of objects intersecting pick region</typeparam>
         /// <returns>Objects of type T intersecting the pick region</returns>
-        /// <remarks>The default implementation only returns intersecting Nodes but derived
+        /// <remarks>The default implementation only returns intersecting Nodes, but derived
         /// classes can override this method to return Edges or EdgeRoutes as well.</remarks>
         public virtual IEnumerable<T> Pick<T>(Region pickRegion) where T : class
         {

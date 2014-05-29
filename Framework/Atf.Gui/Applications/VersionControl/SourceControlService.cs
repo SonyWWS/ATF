@@ -163,6 +163,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Refreshes the status of given items</summary>
+        /// <param name="uris">Enumeration of URIs representing paths to items</param>
+        /// <remarks>It is much more efficient to refresh the status of many items at once
+        /// by calling RefreshStatus(uris).</remarks>
         public abstract void RefreshStatus(IEnumerable<Uri> uris);
 
         /// <summary>
@@ -173,6 +176,9 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Exports a file of the specified reversion to a designated location</summary>
+        /// <param name="sourceUri">URI of file to be exported</param>
+        /// <param name="destUri">URI of export location</param>
+        /// <param name="revision">Source control revision</param>
         public abstract void Export(Uri sourceUri, Uri destUri, SourceControlRevision revision);
 
         #endregion
@@ -184,11 +190,10 @@ namespace Sce.Atf.Applications
         public abstract SourceControlFileInfo GetFileInfo(Uri uri);
 
         /// <summary>
-        /// Gets source control staus icon
-        /// </summary>
-        /// <param name="uri">file uri</param>
-        /// <param name="status">source control status</param>
-        /// <returns></returns>
+        /// Gets source control status icon</summary>
+        /// <param name="uri">File URI</param>
+        /// <param name="status">Source control status</param>
+        /// <returns>Source control status icon image</returns>
         public virtual Image GetSourceControlStatusIcon(Uri uri, SourceControlStatus status)
         {
             return null;

@@ -5,6 +5,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 #if CS_4
     /// <summary>
     /// Interface for a graph that can be edited by a control</summary>
+    /// <typeparam name="TNode">IGraphNode node</typeparam>
+    /// <typeparam name="TEdge">IGraphEdge edge</typeparam>
+    /// <typeparam name="TEdgeRoute">IEdgeRoute edge route</typeparam>
     public interface IEditableGraph<in TNode, TEdge, in TEdgeRoute>
         where TNode : class, IGraphNode
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>

@@ -396,7 +396,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
         /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
         /// Use CultureInfo.InvariantCulture for persistence.</param>
-        /// <returns></returns>
+        /// <returns>String representation of object</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);

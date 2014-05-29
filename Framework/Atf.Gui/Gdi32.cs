@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Structures to interoperate with Gdi32.dll</summary>
+    /// BITMAP structure to interoperate with Gdi32.dll</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct BITMAP
     {
@@ -19,6 +19,8 @@ namespace Sce.Atf
         public IntPtr bmBits;
     }
 
+    /// <summary>
+    /// BITMAPINFO_FLAT structure to interoperate with Gdi32.dll</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct BITMAPINFO_FLAT
     {
@@ -37,6 +39,8 @@ namespace Sce.Atf
         public byte[] bmiColors;
     }
 
+    /// <summary>
+    /// BITMAPINFOHEADER class to interoperate with Gdi32.dll</summary>
     [StructLayout(LayoutKind.Sequential)]
     public class BITMAPINFOHEADER 
     {
@@ -53,6 +57,8 @@ namespace Sce.Atf
         public int      biClrImportant;
     }
 
+    /// <summary>
+    /// BITMAPINFO class to interoperate with Gdi32.dll</summary>
     [StructLayout(LayoutKind.Sequential)]
     public class BITMAPINFO 
     {

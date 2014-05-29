@@ -252,21 +252,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             var movedNodes = nodesMoved.ToList();
             var subGraph = m_graph.As<Group>();
-            if (subGraph == null || nodesMoved.Count() == 0)
+            if (subGraph == null || movedNodes.Count == 0)
                 return;
 
             for (int pass = 0; pass < 2; ++pass) //pass 0 for input side, pass 1 for output side
             {
-                var grpPins = pass == 0 ? subGraph.InputGroupPins : subGraph.OutputGroupPins;
+                var grpPins = (pass == 0 ? subGraph.InputGroupPins : subGraph.OutputGroupPins).ToList();
                 // calculate all free pins of moving nodes' natural position,then ordered bottom up
                 // note for selected floating pins( group pins being directly dragged) should sync the move with the mouse
                 var freePinsToAdjust = grpPins
-                    .Where(x => !m_draggingGroupPins.Contains(x) && movedNodes.Contains(x.InternalElement) && !x.Info.Pinned)
+                    .Where(x => !x.Info.Pinned)
+                    .Except(m_draggingGroupPins)
+                    .Where(x => movedNodes.Contains(x.InternalElement))
                     .ToList();
 
                 // now adjust free pins
                 var againstPins = grpPins
-                    .Where(x => !freePinsToAdjust.Contains(x))
+                    .Except(freePinsToAdjust)
                     .OrderBy(y => y.Bounds.Location.Y).ToList();
 
                 MeasureFakePins(freePinsToAdjust, MeasurePinNode.DesiredLocation, offset, pass==0);

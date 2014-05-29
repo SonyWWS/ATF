@@ -86,8 +86,8 @@ namespace CircuitEditorSample
             }
 
             // check source guid for templates to be replaced
-
             var templatingItems = new List<object>();
+            var replacingItems = new List<object>();
             foreach (var item in itemsArray)
             {
                 if (item.Is<Module>())
@@ -110,7 +110,7 @@ namespace CircuitEditorSample
                             if (result == DialogResult.Yes)
                             {
                                 TemplatingContext.ReplaceTemplateModel(existingTemplate, module.Cast<DomNode>());
-                                templatingItems.Add(item);
+                                replacingItems.Add(item);
                             }
                             else if (result == DialogResult.No)
                                 templatingItems.Add(item);
@@ -130,7 +130,7 @@ namespace CircuitEditorSample
             TemplatingContext.Insert(dataObject);
 
             // replace the original items with the template instances 
-            foreach (var originalItem in templatingItems)
+            foreach (var originalItem in templatingItems.Concat(replacingItems))
             {
                 var template = TemplatingContext.LastPromoted(originalItem);
                 var instance = TemplatingContext.CreateReference(template);
@@ -204,6 +204,7 @@ namespace CircuitEditorSample
         /// Items can be demoted when the active context is CircuitEditingContext and
         /// all the items are selected references.</summary>
         /// <param name="items">Items to demote</param>
+        /// <returns>Array of copy instances</returns>
         public override DomNode[] DemoteToCopyInstance(IEnumerable<object> items)
         {
             // cache the external connections
@@ -228,8 +229,11 @@ namespace CircuitEditorSample
                 var copy = itemCopies[i];
                 copy.Cast<Module>().Bounds = originalRefs[i].Cast<Module>().Bounds;
                 copy.Cast<Module>().Position = originalRefs[i].Cast<Module>().Position;
+                copy.Cast<Module>().SourceGuid = originalRefs[i].Cast<Module>().SourceGuid;
                 if (originalRefs[i].Is<GroupInstance>())
+                {
                     copy.Cast<Group>().Expanded = originalRefs[i].Cast<GroupInstance>().Expanded;
+                }
 
                 // reroute external connections from original modules to replaced template instances.
                 externalConnections = externalConnectionsDict[originalRefs[i].Cast<Module>()];

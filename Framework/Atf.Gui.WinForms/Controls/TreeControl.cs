@@ -709,6 +709,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Raises the NodeExpandedChanging event</summary>
         /// <param name="e">Event args</param>
+        /// <returns>True iff the event was cancelled</returns>
         protected virtual bool OnNodeExpandedChanging(CancelNodeEventArgs e)
         {
             return NodeExpandedChanging.RaiseCancellable(this, e);

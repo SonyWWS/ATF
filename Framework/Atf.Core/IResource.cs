@@ -33,7 +33,8 @@ namespace Sce.Atf
     public static class Resource
     {
         /// <summary>
-        /// Gets a local operating system representation of this resource's URI</summary>
+        /// Get local operating system representation of this resource's URI</summary>
+        /// <param name="resource">Resource's URI</param>
         /// <returns>Uri.LocalPath</returns>
         public static string GetPathName(this IResource resource)
         {

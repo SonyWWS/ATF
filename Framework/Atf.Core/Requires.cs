@@ -11,6 +11,7 @@ namespace Sce.Atf
     {
         /// <summary>
         /// If <paramref name="truth"/> is false, throw the exception type specified by the generic T</summary>
+        /// <typeparam name="T">The <see cref="Exception"/> derived type to throw if <paramref name = "truth"/> is false</typeparam>
         /// <param name="truth">The 'truth' to evaluate</param>
         [DebuggerStepThrough]
         public static void Require<T>(bool truth)

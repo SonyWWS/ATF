@@ -22,7 +22,10 @@ namespace Sce.Atf.Applications
     public class PropertyEditor : IInitializable, IControlHostClient, IDisposable
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with paramters</summary>
+        /// <param name="commandService">ICommandService</param>
+        /// <param name="controlHostService">IControlHostService</param>
+        /// <param name="contextRegistry">IContextRegistry</param>
         [ImportingConstructor]
         public PropertyEditor(
             ICommandService commandService,

@@ -11,6 +11,7 @@ namespace Sce.Atf.Input
     {
         /// <summary>Converts numeric pad keys to digit keys</summary>   
         /// <param name="keys">Number pad keys</param>
+        /// <returns>Digit key codes</returns>
         public static Keys NumPadToNum(Keys keys)
         {
             // extract keycode from Keys

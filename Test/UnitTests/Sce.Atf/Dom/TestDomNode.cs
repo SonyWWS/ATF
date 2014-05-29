@@ -875,7 +875,8 @@ namespace UnitTests.Atf.Dom
             ChildInfo infoList = new ChildInfo("childList", type, true);
             type.Define(info);
             type.Define(infoList);
-            DomNode test = new DomNode(type);
+            ChildInfo rootInfo = new ChildInfo("root", type, true);
+            DomNode test = new DomNode(type, rootInfo);
             DomNode child1 = new DomNode(type);
             test.SetChild(info, child1);
             DomNode child2 = new DomNode(type);
@@ -987,6 +988,8 @@ namespace UnitTests.Atf.Dom
             if (n1 == null || n2 == null)
                 return n1 == n2;
             if (n1.Type != n2.Type)
+                return false;
+            if (n1.ChildInfo != n2.ChildInfo)
                 return false;
 
             foreach (AttributeInfo info in n1.Type.Attributes)

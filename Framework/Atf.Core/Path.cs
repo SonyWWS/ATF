@@ -9,6 +9,7 @@ namespace Sce.Atf
     /// <summary>
     /// Class to represent a path in a tree or graph. Path supports a limited form
     /// of IList, not allowing add, remove, insert, or clear.</summary>
+    /// <typeparam name="T">Type of items in path</typeparam>
     public class Path<T> : IList<T>, IEquatable<Path<T>>
     {
         /// <summary>

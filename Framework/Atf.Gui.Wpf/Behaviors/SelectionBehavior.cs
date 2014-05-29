@@ -133,6 +133,8 @@ namespace Sce.Atf.Wpf.Behaviors
 
         /// <summary>
         /// Performs custom actions on AssociatedObjectSelectionChanged events</summary>
+        /// <param name="addeditems">List of items added</param>
+        /// <param name="removedItems">List of items removed</param>
         protected virtual void OnAssociatedObjectSelectionChanged(IList addeditems, IList removedItems)
         {
         }

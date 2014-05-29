@@ -291,7 +291,7 @@ namespace Sce.Atf.Dom
         public class ChildRemovedOperation : Operation
         {
             /// <summary>
-            /// Constructor</summary>
+            /// Default constructor</summary>
             /// <param name="e">Event args</param>
             public ChildRemovedOperation(ChildEventArgs e)
             {
@@ -302,9 +302,9 @@ namespace Sce.Atf.Dom
             }
 
             /// <summary>
-            /// Constructor</summary>
-            /// <param name="parent"></param>
-            /// <param name="child"></param>
+            /// Constructor with parameters</summary>
+            /// <param name="parent">Parent DomNode</param>
+            /// <param name="child">Child DomNode</param>
             public ChildRemovedOperation(DomNode parent, DomNode child)
             {
                 m_parent = parent;

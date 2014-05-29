@@ -37,7 +37,7 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Constructor from another matrix</summary>
-        /// <param name="m">matrix to copy</param>
+        /// <param name="m">Matrix to copy</param>
         public Matrix3F(Matrix3F m)
         {
             M11 = m.M11; M12 = m.M12; M13 = m.M13;
@@ -47,6 +47,15 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Constructor from float components</summary>
+        /// <param name="m00">First row component</param>
+        /// <param name="m01">First row component</param>
+        /// <param name="m02">First row component</param>
+        /// <param name="m10">Second row component</param>
+        /// <param name="m11">Second row component</param>
+        /// <param name="m12">Second row component</param>
+        /// <param name="m20">Third row component</param>
+        /// <param name="m21">Third row component</param>
+        /// <param name="m22">Third row component</param>
         public Matrix3F(
             float m00, float m01, float m02,
             float m10, float m11, float m12,
@@ -547,7 +556,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Returns a string representation of this object for GUIs. For persistence, use
         /// ToString("R", CultureInfo.InvariantCulture).</summary>
-        /// <returns></returns>
+        /// <returns>String representation of object</returns>
         public override string ToString()
         {
             return ToString(null, null);
@@ -562,7 +571,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="formatProvider">Optional culture-specific formatting provider. This is usually
         /// a CultureInfo object or NumberFormatInfo object. If null, the current culture is used.
         /// Use CultureInfo.InvariantCulture for persistence.</param>
-        /// <returns></returns>
+        /// <returns>String representation of object</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
             string listSeparator = StringUtil.GetNumberListSeparator(formatProvider);

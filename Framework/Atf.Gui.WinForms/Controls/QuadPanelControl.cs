@@ -19,7 +19,7 @@ namespace Sce.Atf.Controls
 
         /// <summary>
         /// Constructor with context</summary>
-        /// <remarks>Context associated with this control</remarks>
+        /// <param name="context">Context associated with this control</param>
         public QuadPanelControl(object context)
         {
             m_context = context;

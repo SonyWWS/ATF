@@ -166,6 +166,10 @@
     <Compile Include="Applications\SkinService\DockColors.cs" />
     <Compile Include="Applications\SkinService\EmbeddedImage.cs" />
     <Compile Include="Applications\SkinService\FormNcRenderer.cs" />
+    <Compile Include="Applications\SkinService\Schemas\SkinSchema.cs" />
+    <Compile Include="Applications\SkinService\SkinEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Applications\SkinService\SkinService.cs" />
     <Compile Include="Applications\StandardEditCommands.cs" />
     <Compile Include="Applications\StandardFileCommands.cs" />
@@ -746,6 +750,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Applications\SkinService\Skin.tmpl" />
     <None Include="Applications\SkinService\Skins\Classic.skn" />
     <None Include="Applications\SkinService\Skins\Dark.skn" />
     <None Include="Applications\SkinService\Skins\Light.skn" />

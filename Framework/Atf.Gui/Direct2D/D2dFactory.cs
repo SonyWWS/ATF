@@ -23,9 +23,11 @@ namespace Sce.Atf.Direct2D
     public static class D2dFactory
     {
         /// <summary>
-        /// Creates D2dHwndGraphics for the given handle</summary>
-        /// <remarks>Important: This factory forces 1 dip = 1 pixel
-        /// regardless of current dpi settings.</remarks>                
+        /// Creates D2dHwndGraphics for given handle</summary>
+        /// <param name="hwnd">Window handle</param>
+        /// <returns>D2dHwndGraphics object for given handle</returns>
+        /// <remarks>Important: This factory forces 1 DIP (device independent pixel) = 1 pixel
+        /// regardless of current DPI settings.</remarks>                
         public static D2dHwndGraphics CreateD2dHwndGraphics(IntPtr hwnd)
         {
             CheckForRecreateTarget();
@@ -80,11 +82,11 @@ namespace Sce.Atf.Direct2D
         }
 
         /// <summary>
-        /// Creates an instance of D2dWicGraphics 
-        /// which can be used for rendering to offscreen surfaces 
-        /// that can be copied to main memory</summary>
-        /// <param name="width">width of the offscreen surface.</param>
-        /// <param name="height">height of the offscreen surface.</param>
+        /// Creates an instance of D2dWicGraphics that can be used for rendering to off screen surfaces
+        /// and can be copied to main memory</summary>
+        /// <param name="width">Width of the off screen surface.</param>
+        /// <param name="height">Height of the off screen surface.</param>
+        /// <returns>D2dWicGraphics that can be used for rendering to off screen surfaces</returns>
         public static D2dWicGraphics CreateWicGraphics(int width, int height)
         {
             var wicBitmap = new SharpDX.WIC.Bitmap(s_wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPBGRA,
@@ -110,6 +112,7 @@ namespace Sce.Atf.Direct2D
         /// and other features of a stroke</summary>
         /// <param name="props">A structure that describes the stroke's line cap, 
         /// dash offset, and other details of a stroke</param>    
+        /// <returns>D2dStrokeStyle that describes stroke features</returns>
         public static D2dStrokeStyle CreateD2dStrokeStyle(D2dStrokeStyleProperties props)
         {
             return CreateD2dStrokeStyle(props, new float[0]);
@@ -125,6 +128,7 @@ namespace Sce.Atf.Direct2D
         /// sets the length of a space, the third element sets the length of a dash,
         /// and so on. The length of each dash and space in the dash pattern is the product
         /// of the element value in the array and the stroke width.</param>
+        /// <returns>D2dStrokeStyle that describes stroke features</returns>
         public static D2dStrokeStyle CreateD2dStrokeStyle(D2dStrokeStyleProperties props, float[] dashes)
         {
             var nativeProps = new StrokeStyleProperties();

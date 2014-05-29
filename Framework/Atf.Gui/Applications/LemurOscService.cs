@@ -84,8 +84,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Sends the pairs of OSC addresses and data objects to the current destination endpoints
-        /// immediately, on the current thread.</summary>
-        /// <param name="addressesAndData"></param>
+        /// immediately, on the current thread</summary>
+        /// <param name="addressesAndData">List of OSC address and data object pairs</param>
         /// <remarks>
         /// Liine Lemur specific problem? Bundles don't seem to always work. It's as if there's a limit
         /// to the number of OscMessages that can be contained in an OscBundle.</remarks>

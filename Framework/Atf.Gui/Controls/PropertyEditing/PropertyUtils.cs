@@ -170,9 +170,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Gets whether two property descriptors should be considered equal, for the purposes of ATF
         /// property editing. The default .NET Equals() method doesn't take into account the Category.</summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">First PropertyDescriptor to compare</param>
+        /// <param name="b">Second PropertyDescriptor to compare</param>
+        /// <returns>True iff PropertyDescriptors equal, i.e., the name, category and type are the same</returns>
         public static bool PropertyDescriptorsEqual(PropertyDescriptor a, PropertyDescriptor b)
         {
             return

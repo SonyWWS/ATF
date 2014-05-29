@@ -5,7 +5,8 @@ using System;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Args for "item removed" event</summary>
+    /// Arguments for "item removed" event</summary>
+    /// <typeparam name="T">Type of removed item</typeparam>
     public class ItemRemovedEventArgs<T> : EventArgs
     {
         /// <summary>

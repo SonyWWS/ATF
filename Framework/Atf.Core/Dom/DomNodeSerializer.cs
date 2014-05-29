@@ -19,6 +19,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Constructs the stream from nodes</summary>
         /// <param name="nodes">Nodes to serialize; there should be no duplicates</param>
+        /// <returns>Data stream constructed from nodes</returns>
         public byte[] Serialize(IEnumerable<DomNode> nodes)
         {
             if (nodes == null)

@@ -73,6 +73,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Gets the root DomNode of this DomNode's subtree</summary>
+        /// <returns>Root DomNode of given DomNode's subtree</returns>
         public DomNode GetRoot()
         {
             DomNode node = this;
@@ -613,9 +614,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Gets all decorators of the specified type, or null</summary>
+        /// Gets all decorators of the specified type</summary>
         /// <param name="type">Decorator type</param>
-        /// <returns>Enumeration of decorators that are of the specified type</returns>
+        /// <returns>Enumeration of non-null decorators that are of the specified type. The enumeration may be empty.</returns>
         public IEnumerable<object> GetDecorators(Type type)
         {
             return DomNodeType.GetAdapters(this, type);
@@ -628,7 +629,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Creates a deep copy of the graph of the original DomNodes</summary>
         /// <param name="originals">Original nodes</param>
-        /// <param name="originalToCopyMap">for each DomNode, the passed-in dictionary will be filled so orginal DomNode will be mapped to copied DomNode </param>
+        /// <param name="originalToCopyMap">for each DomNode, the passed-in dictionary will be filled so original DomNode will be mapped to copied DomNode </param>
         /// <returns>Array of copies of original nodes</returns>
         /// <remarks>Extensions are not copied</remarks>
         public static DomNode[] Copy(IEnumerable<DomNode> originals, Dictionary<DomNode, DomNode> originalToCopyMap=null)
@@ -655,7 +656,7 @@ namespace Sce.Atf.Dom
         private DomNode Copy(IDictionary<DomNode, DomNode> originalToCopyMap)
         {
             // copy the adapted DomNode and all its descendants
-            DomNode copy = new DomNode(m_type);
+            DomNode copy = new DomNode(m_type, m_childInfo);
             originalToCopyMap.Add(this, copy);
 
             // clone local attributes

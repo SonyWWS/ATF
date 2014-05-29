@@ -34,6 +34,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Creates the Python engine with some default options and common assembly imports.
         /// Called by the constructor.</summary>
+        /// <returns>ScriptEngine created</returns>
         protected virtual ScriptEngine CreateEngine()
         {
             // create and init scripting engine. 

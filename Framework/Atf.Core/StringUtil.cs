@@ -118,7 +118,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// Inserts a backslash ('\') before all single and double quotes</summary>
-        /// <param name="source"></param>
+        /// <param name="source">String to insert backslashes in</param>
         /// <returns>String with quotes escaped</returns>
         public static string EscapeQuotes(string source)
         {

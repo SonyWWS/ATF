@@ -71,6 +71,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Executes a single script statement. The statement does not need a carriage return.</summary>
         /// <param name="statement">Script statement</param>
+        /// <returns>String that statement returns</returns>
         public string ExecuteStatement(string statement)
         {
             return ExecuteStatement(statement, false);
@@ -78,7 +79,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Executes multiple script statements</summary>
-        /// <param name="statements">Script statements</param>
+        /// <param name="statements">Script statements to execute</param>
+        /// <returns>String that last statement returns</returns>
         public string ExecuteStatements(string statements)
         {
             return ExecuteStatement(statements, true);
@@ -86,7 +88,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Executes a statement directly on the script engine, returning the actual object the statement returns</summary>
-        /// <param name="statement"></param>
+        /// <param name="statement">Script statements to silently execute</param>
         /// <returns>A dynamic type, whatever the type the statement returns</returns>
         public dynamic ExecuteSilent(string statement)
         {

@@ -609,8 +609,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// update group pins based on the configuration of current sub-nodes and sub-edge.
-        /// currently automatic expose those pins that can be connected to outside</summary>
+        /// Update group pins based on the configuration of current sub-nodes and sub-edge.
+        /// Currently, automatically expose those pins that can be connected to outside.</summary>
+        /// <param name="modules">Modules in group</param>
+        /// <param name="internalConnections">Internal connections of the owner group</param>
+        /// <param name="externalConnections">Wires with external connections</param>
         public void UpdateGroupPins(IEnumerable<Element> modules, List<Wire> internalConnections, List<Wire> externalConnections)
         {
             // 1) expose all internal pins that have external connections(TODO: this step seems not needed)
@@ -791,7 +794,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Initalize group pin's indexes</summary>
+        /// Initialize group pin's indexes</summary>
+        /// <param name="internalConnections">Internal connections of the owner group</param>
         public void InitializeGroupPinIndexes(IEnumerable<Wire> internalConnections)
         {
             if (DefaultPinOrder == PinOrderStyle.NodeY)
@@ -1249,6 +1253,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Returns true iff the specified attribute is name or label</summary>
+        /// <param name="attributeInfo">AttributeInfo for attribute</param>
+        /// <returns>True iff the specified attribute is name or label</returns>
         public bool IsNameAttribute(AttributeInfo attributeInfo)
         {
             return (attributeInfo == NameAttribute || attributeInfo == LabelAttribute);

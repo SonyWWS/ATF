@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Drawing;
@@ -35,11 +34,9 @@ namespace Sce.Atf.Perforce
         {
             CacheExpireTimeInSeconds = 60;
             m_connectionManager = new ConnectionManager();
-            m_connectionManager.ConnectionChanged += new EventHandler(connection_ConnectionChanged);
-            m_connectionManager.LoginCanceled += new EventHandler(connectionManager_LoginCanceled);
+            m_connectionManager.ConnectionChanged += connection_ConnectionChanged;
+            m_connectionManager.LoginCanceled += connectionManager_LoginCanceled;
         }
-
-
 
         /// <summary> Gets or sets whether the source control server is connected</summary>
         public override bool IsConnected
@@ -47,7 +44,6 @@ namespace Sce.Atf.Perforce
             get { return m_connectionManager.IsConnected; }
             set { throw new InvalidOperationException("Connection status is readonly for Perforce"); }
         }
-          
 
         /// <summary>
         /// Gets or sets the settings service used to persist user settings. Is optional and
@@ -62,19 +58,19 @@ namespace Sce.Atf.Perforce
         #region IInitializable Members
 
         /// <summary>
-        /// Finishes initializing component by performing common intialization
-        /// and setting up Settings Service</summary>
-        void IInitializable.Initialize()
+        /// Finishes initializing component by performing common initialization
+        /// and setting up Settings Service.</summary>
+        public void Initialize()
         {
             LoadFileStatusIcons();
 
-            InitCommon();
+            CreateBackgroundThread();
 
             if (m_settingsService == null)
                 return;
 
-            m_settingsService.Loading += new EventHandler(m_settingsService_Loading);
-            m_settingsService.Reloaded += new EventHandler(m_settingsService_Reloaded);
+            m_settingsService.Loading += m_settingsService_Loading;
+            m_settingsService.Reloaded += m_settingsService_Reloaded;
 
             m_settingsService.RegisterSettings(
                 this,
@@ -111,8 +107,6 @@ namespace Sce.Atf.Perforce
                     "File Status Cache Timeout".Localize(),
                     null,
                     "Rate at which cached Perforce file records are updated".Localize()));
-
-          
         }
 
         #endregion
@@ -174,8 +168,6 @@ namespace Sce.Atf.Perforce
 
             if (Enabled && m_connectionManager.InitializeConnection())
             {
-                //m_connectionManager.Connect();
-
                 var path = uri.Path();
 
                 var p4RecordSet =
@@ -273,10 +265,7 @@ namespace Sce.Atf.Perforce
 
             CheckUri(uri);
         
-            AddPerforceFileRequest(
-                uri,
-                u => RunCommand("add", u.Path()),
-                u => TestForStatus(u, SourceControlStatus.Added));
+            AddPerforceFileRequest(uri, u => RunCommand("add", u.Path()));
         }
 
         /// <summary>
@@ -286,10 +275,7 @@ namespace Sce.Atf.Perforce
         {
             CheckUri(uri);
 
-            AddPerforceFileRequest(
-                uri,
-                u => RunCommand("delete", u.Path()),
-                u => TestForStatus(u, SourceControlStatus.Deleted));
+            AddPerforceFileRequest(uri, u => RunCommand("delete", u.Path()));
         }
 
         /// <summary>
@@ -378,12 +364,9 @@ namespace Sce.Atf.Perforce
 
             AddPerforceFileRequest(
                 uri,
-                u => RunCommand("edit", uri.Path()) 
+                u => RunCommand("edit", uri.Path())
                      && AllowMultipleCheckout
-                     || RunCommand("lock", uri.Path()),
-                u => TestForStatus(u, SourceControlStatus.CheckedOut, 
-                                      SourceControlStatus.FileDoesNotExist,
-                                      SourceControlStatus.NotControlled));
+                     || RunCommand("lock", uri.Path()));
         }
 
         /// <summary>
@@ -393,10 +376,7 @@ namespace Sce.Atf.Perforce
         {
             CheckUri(uri);
 
-            AddPerforceFileRequest(
-                uri,
-                u => RunCommand("sync", u.Path()),
-                u => !TestForStatus(u, SourceControlStatus.Unknown));
+            AddPerforceFileRequest(uri, u => RunCommand("sync", u.Path()));
         }
 
         /// <summary>
@@ -405,12 +385,7 @@ namespace Sce.Atf.Perforce
         public override void Revert(Uri uri)
         {
             CheckUri(uri);
-            AddPerforceFileRequest(
-                uri,
-                u => RunCommand("revert", u.Path()), 
-                u => !TestForStatus(u, SourceControlStatus.CheckedOut, 
-                                       SourceControlStatus.Added,
-                                       SourceControlStatus.Deleted));
+            AddPerforceFileRequest(uri, u => RunCommand("revert", u.Path()));
         }
 
         /// <summary>
@@ -545,7 +520,7 @@ namespace Sce.Atf.Perforce
         /// Exports a file of the specified revision to a designated location</summary>
         /// <param name="sourceUri">Source file URI</param>
         /// <param name="destUri">Designated location URI</param>
-        /// <param name="revision">Source control revison of file</param>
+        /// <param name="revision">Source control revision of file</param>
         public override void Export(Uri sourceUri, Uri destUri, SourceControlRevision revision)
         {
             if (!(Enabled && m_connectionManager.InitializeConnection()))
@@ -721,7 +696,6 @@ namespace Sce.Atf.Perforce
             {
                 results = cmd.Run();
             }
-
             catch (P4Exception ex)
             {
                 switch (ex.ErrorLevel)
@@ -766,9 +740,10 @@ namespace Sce.Atf.Perforce
         }
 
         /// <summary>
-        /// Gets source control staus icon</summary>
-        /// <param name="uri">file uri</param>
-        /// <param name="status">source control status</param>
+        /// Gets source control status icon</summary>
+        /// <param name="uri">File URI</param>
+        /// <param name="status">Source control status</param>
+        /// <returns>Source control status icon image</returns>
         public override Image GetSourceControlStatusIcon(Uri uri, SourceControlStatus status)
         {
             Image result = null;
@@ -843,7 +818,8 @@ namespace Sce.Atf.Perforce
                     return;
                 }
 
-                m_infoCache.Clear();
+                lock (m_infoCache)
+                    m_infoCache.Clear();
                 ValidateConnection(false);
                 m_enabled = value;
                 OnEnabledChanged(EventArgs.Empty);
@@ -864,35 +840,38 @@ namespace Sce.Atf.Perforce
             var getInfoFromPerforce = Enabled && m_connectionManager.InitializeConnection();
 
             var refreshList = new List<string>();
-            foreach (Uri uri in uris)
+            lock (m_infoCache)
             {
-                string path = uri.Path();
+                foreach (Uri uri in uris)
+                {
+                    string path = uri.Path();
 
-                FileInfo info;
-                if (!m_infoCache.TryGetValue(path, out info))
-                    m_infoCache[path] = info = new FileInfo(uri);
+                    FileInfo info;
+                    if (!m_infoCache.TryGetValue(path, out info))
+                        m_infoCache[path] = info = new FileInfo(uri);
 
-                if (!info.NotInClientView && info.RequiresRefresh(CacheExpireTimeInSeconds))
-                    refreshList.Add(info.Uri.Path());
+                    if (!info.NotInClientView && info.RequiresRefresh(CacheExpireTimeInSeconds))
+                        refreshList.Add(info.Uri.Path());
 
-                result.Add(info);
+                    result.Add(info);
+                }
             }
-
             if (refreshList.Count > 0)
             {
                 var oldExcLevel = P4Exception.MinThrowLevel;
                 P4Exception.MinThrowLevel = ErrorSeverity.E_NOEXC;
                 // update FileInfo cache with latest P4 records for selected files
-                var output = (getInfoFromPerforce) ? RunP4Command("fstat", refreshList.ToArray())
-                                                   : new DummyCommandResult(true, refreshList.ToArray());
+                var output = (getInfoFromPerforce)
+                    ? RunP4Command("fstat", refreshList.ToArray())
+                    : new DummyCommandResult(true, refreshList.ToArray());
                 if (output != null)
                 {
                     if (output.Success)
                         UpdateFileInfoCache(refreshList, output.TaggedOutput);
                     else
                     {
-                        //if (output.ErrorList.Count == refreshList.Count)
-                        if (refreshList.Count == 1 // only one file (not sure ErrorList has one-to-one correspondence for multiple files 
+                        if (refreshList.Count == 1
+                            // only one file (not sure ErrorList has one-to-one correspondence for multiple files 
                             && output.ErrorList != null)
                         {
                             var filePath = refreshList[0];
@@ -912,14 +891,16 @@ namespace Sce.Atf.Perforce
                                 }
                                 if (error.ErrorCode == P4ClientError.NotUnderRoot)
                                 {
-                                    m_infoCache[filePath].NotInClientView = true;
+                                    lock(m_infoCache)
+                                        m_infoCache[filePath].NotInClientView = true;
                                 }
                                 else if (error.ErrorCode == P4ClientError.NotUnderClient)
                                 {
-                                    m_infoCache[filePath].NotInClientView = true;
+                                    lock(m_infoCache)
+                                        m_infoCache[filePath].NotInClientView = true;
                                 }
                             }
-                                
+
                         }
                     }
                 }
@@ -927,7 +908,6 @@ namespace Sce.Atf.Perforce
             }
 
             return result;
-             
         }
 
         private void UpdateFileInfoCache(List<string> refreshList, TaggedObjectList records)
@@ -939,33 +919,43 @@ namespace Sce.Atf.Perforce
                 {
                     FileInfo info;
                     string filePath = PathUtil.GetCanonicalPath(record["clientFile"]);
-                    if (m_infoCache.TryGetValue(filePath, out info))
+                    bool foundInfo;
+                    lock (m_infoCache) //keep the lock for as short a time as possible; can't lock around OnStatusChanged().
+                        foundInfo = m_infoCache.TryGetValue(filePath, out info);
+                    if (foundInfo)
                     {
                         SourceControlStatus oldStatus = info.Status;
                         info.UpdateRecord(record);
-                        if (info.Status != oldStatus)                
+                        if (info.Status != oldStatus)
                             OnStatusChanged(new SourceControlEventArgs(info.Uri, info.Status));
                         refreshList.Remove(filePath);
                     }
                 }
             }
-            foreach (var filePath in refreshList) //P4API.NET does not output records for files not under version control              
+            foreach (var filePath in refreshList)
             {
-                SourceControlStatus oldStatus = m_infoCache[filePath].Status;
+                //P4API.NET does not output records for files not under version control
+                FileInfo info;
+                lock (m_infoCache) //keep the lock for as short a time as possible; can't lock around OnStatusChanged().
+                    info = m_infoCache[filePath];
+                SourceControlStatus oldStatus = info.Status;
                 if (oldStatus != SourceControlStatus.NotControlled)
                 {
-                    m_infoCache[filePath].NotControlled = true;
-                    OnStatusChanged(new SourceControlEventArgs(m_infoCache[filePath].Uri, SourceControlStatus.NotControlled));
+                    info.NotControlled = true;
+                    OnStatusChanged(new SourceControlEventArgs(info.Uri,
+                        SourceControlStatus.NotControlled));
                 }
             }
-
         }
 
         private void Uncache(Uri uri)
         {
-            FileInfo info;
-            if (m_infoCache.TryGetValue(uri.Path(), out info))
-                info.ClearRecord();
+            lock (m_infoCache)
+            {
+                FileInfo info;
+                if (m_infoCache.TryGetValue(uri.Path(), out info))
+                    info.ClearRecord();
+            }
         }
 
         private static void CheckUri(Uri uri)
@@ -981,124 +971,85 @@ namespace Sce.Atf.Perforce
 
   
 
-        private void AddPerforceFileRequest(Uri uri, Func<Uri, bool> doRequest, Func<Uri, bool> requestComplete)
+        private void AddPerforceFileRequest(Uri uri, Func<Uri, bool> doRequest)
         {
             var path = uri.Path();
             FileInfo info;
-            if (!m_infoCache.TryGetValue(path, out info))
-                m_infoCache[path] = info = new FileInfo(uri);
-            RequestProcessed = false;
-            m_pendingRequests.Enqueue(new PerforceRequest(info, doRequest, requestComplete));
-        }
-
-        private bool TestForStatus(Uri uri, params SourceControlStatus[] statuses)
-        {
-            var fileStatus = SourceControlStatus.Unknown;
-            var info = GetInfo(uri);
-            if (info != null)
-                fileStatus = info.Status;
-
-            foreach (var statusToMatch in statuses)
-            {
-                if (fileStatus == statusToMatch)
-                {
-                    OnStatusChanged(new SourceControlEventArgs(uri, GetStatus(uri)));
-                    return true;
-                }
-            }
-
-            return false;
+            lock (m_infoCache)
+                if (!m_infoCache.TryGetValue(path, out info))
+                    m_infoCache[path] = info = new FileInfo(uri);
+            lock (m_pendingRequests)
+                m_pendingRequests.Enqueue(new PerforceRequest(info, doRequest));
+            m_queryRequestedEvent.Set(); // Trigger the worker thread to talk to the Perforce server.
         }
 
         /// <summary>
-        /// Performs common intialization by creating and intializing BackgroundWorker</summary>
+        /// This is meant for internal use only, to be used by the legacy PerforceService.</summary>
         protected void InitCommon()
         {
-            m_worker = new BackgroundWorker();
-            m_worker.WorkerSupportsCancellation = true;
-            m_worker.DoWork += BgwDoWork;
-            m_worker.RunWorkerCompleted += BgwRunWorkerCompleted;
-            //m_worker.RunWorkerAsync(this);
-
-            int dueTime = 100;// The amount of time to delay before callback is invoked, in millisecond
-            int period = 2000; // The time interval between invocations of callback, in milliseconds. 
-            // the callback parameter is invoked once after dueTime elapses, and thereafter each time the period time interval elapses.
-            m_timer = new System.Threading.Timer(TimerTick, "PerforceServiceTicker", dueTime, period);
+            CreateBackgroundThread();
         }
 
-        private void BgwDoWork(object sender, DoWorkEventArgs e)
+        private void CreateBackgroundThread()
         {
-            // Execute all requests made since last idle
-            if (m_pendingRequests.Count > 0)
+            m_perforceThread = new Thread(PerforceThreadStart);
+            m_perforceThread.Name = "Perforce querying thread";
+            m_perforceThread.IsBackground = true; //so that the thread can be killed if app dies.
+            m_perforceThread.SetApartmentState(ApartmentState.STA);
+            m_perforceThread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
+            m_perforceThread.Start();
+        }
+
+        // A separate thread is used to execute the Perforce commands, to avoid freezing the main GUI thread.
+        private void PerforceThreadStart()
+        {
+            while (m_queryRequestedEvent.WaitOne())
             {
-                while (m_pendingRequests.Count > 0)
+                // Clear the pending request queue quickly, by copying to a local array. We don't
+                //  want to lock the queue for a long time because we might block the GUI thread.
+                PerforceRequest[] requests;
+                lock (m_pendingRequests)
                 {
-                    var request = m_pendingRequests.Peek();
-
-                    if (!request.Executed)
-                        request.Execute();
-
-                    m_pendingRequests.Dequeue();
-                    GetInfo(request.Uri);
+                    requests = new PerforceRequest[m_pendingRequests.Count];
+                    m_pendingRequests.CopyTo(requests, 0);
+                    m_pendingRequests.Clear();
                 }
-            }
-        }
 
-        /// <summary>
-        /// Called when background work ends</summary>
-        /// <param name="sender">Sender</param>
-        /// <param name="e">Event args</param>
-        private void BgwRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            RequestProcessed = true; 
+                // Execute all of the Perforce commands.
+                foreach (PerforceRequest request in requests)
+                    request.Execute();
+
+                // Update the status of the paths.
+                GetInfo(requests.Select(x => x.Uri));
+            }
         }
 
         /// <summary>
         /// Gets or sets whether the requested commands have been processed completely</summary>
-        public bool RequestProcessed { get; set; }
-
-        private void TimerTick(object data)
+        public bool RequestProcessed
         {
-            if (m_worker == null)
-                return;
-
-            if (Monitor.TryEnter(m_worker))
+            get
             {
-                try
-                {
-                    if (!m_worker.IsBusy)
-                        m_worker.RunWorkerAsync(this);
-                }
-                finally
-                {
-                    Monitor.Exit(m_worker);
-                }
+                lock (m_pendingRequests)
+                    return m_pendingRequests.Count > 0;
             }
         }
+
+        #region IDisposable
+        
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or
         /// resetting unmanaged resources</summary>
         public void Dispose()
         {
-            if (m_worker != null)
-            {
-                m_worker.CancelAsync();
-                m_worker.DoWork -= BgwDoWork;
-                m_worker.RunWorkerCompleted -= BgwRunWorkerCompleted;
-                m_worker = null;
-            }
-
-            if (m_timer != null)
-            {
-                m_timer.Dispose();
-                m_timer = null;
-            }
         }
 
+        #endregion
 
         private void connection_ConnectionChanged(object sender, EventArgs e)
         {
-            m_infoCache.Clear();
+            lock (m_infoCache)
+                m_infoCache.Clear();
             OnConnectionChanged(e);
             OnStatusChanged(new SourceControlEventArgs(null, SourceControlStatus.Unknown));
         }
@@ -1145,6 +1096,8 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Turns on caching of values assigned to select properties. Values will be applied later, 
         /// in the right order, when m_settingsService_Reloaded() is called.</summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">EventArgs for event</param>
         protected void m_settingsService_Loading(object sender, EventArgs e)
         {
             m_settingsLoading = true;
@@ -1154,8 +1107,10 @@ namespace Sce.Atf.Perforce
         }
 
         /// <summary>
-        /// Assigns cached property values to their respective properties, in the correct order.  It
+        /// Assigns cached property values to their respective properties, in the correct order. It
         /// then disables property caching.</summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">EventArgs for event</param>
         protected void m_settingsService_Reloaded(object sender, EventArgs e)
         {
             if (!m_settingsLoading)
@@ -1166,6 +1121,15 @@ namespace Sce.Atf.Perforce
             ConnectionHistory = m_requestedConnectionHistory;
             Enabled = m_requestedEnabled;
         }
+
+#pragma warning disable 649 // Field is never assigned to and will always have its default value null
+
+        /// <summary>
+        /// Gets or sets main form</summary>
+        [Import(AllowDefault = true)] // optional service
+        protected Form MainForm { get; set; }
+
+#pragma warning restore 649
 
         private const int NumFileStatusIcons = 7;
         private const int P4VFileAdd = 0;
@@ -1181,30 +1145,26 @@ namespace Sce.Atf.Perforce
 
         private static string s_resourceRoot;
 
+        // All access to this dictionary must be by locking it first. The dictionary maps
+        //  a file path (not case sensitive) to the last known Perforce status of that file.
         private readonly Dictionary<string, FileInfo> m_infoCache =
             new Dictionary<string, FileInfo>(StringComparer.InvariantCultureIgnoreCase);
 
-        private readonly PerforceRequestQueue m_pendingRequests = new PerforceRequestQueue();
+        // All access to this queue must be by locking it first. 'm_perforceThread' locks it
+        //  to copy its contents and then synchronously query the Perforce server. The main
+        //  GUI thread locks it to append new requests.
+        private readonly Queue<PerforceRequest> m_pendingRequests = new Queue<PerforceRequest>();
 
         private Image[] m_statusImages;
 
         private bool m_enabled;
-        private bool m_settingsLoading = false;              // when true, cache off assignment to select properties
-        private bool m_requestedEnabled = false;            // cached 'Enabled' property value
+        private bool m_settingsLoading;                     // when true, cache off assignment to select properties
+        private bool m_requestedEnabled;                    // cached 'Enabled' property value
         private string m_requestedDefaultConnection = "";   // cached 'DefaultConnection' property value
         private string m_requestedConnectionHistory = "";   // cached 'ConnectionHistory' property value
 
-#pragma warning disable 649 // Field is never assigned to and will always have its default value null
-
-        /// <summary>
-        /// Gets or sets main form</summary>
-        [Import(AllowDefault = true)] // optional service
-        protected Form MainForm { get; set; }
-
-#pragma warning restore 649
-
-        private BackgroundWorker m_worker;
-        private System.Threading.Timer m_timer;
+        private Thread m_perforceThread; // Runs the actual query to the Perforce server, so that the GUI thread isn't blocked.
+        private readonly AutoResetEvent m_queryRequestedEvent = new AutoResetEvent(false); // Used to trigger m_perforceThread.
 
         // interface to exposing only those members of Perforce.P4.P4CommandResult we require
         private interface IP4CommandResult

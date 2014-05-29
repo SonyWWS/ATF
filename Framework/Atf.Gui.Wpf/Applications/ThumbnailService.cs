@@ -88,6 +88,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Resolves the Resource into a path to a thumbnail image file</summary>
         /// <param name="resourceUri">URI of the resource to resolve</param>
+        /// <returns>Path to thumbnail image file</returns>
         public object ResolveThumbnailBlocking(Uri resourceUri)
         {
             object thumbnailImage = null;

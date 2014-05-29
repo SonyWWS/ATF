@@ -280,7 +280,9 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
-        /// Applies CurveTangentTypes to all selected tangents for all selected control points</summary>        
+        /// Applies CurveTangentTypes to all selected tangents for all selected control points</summary>   
+        /// <param name="selectedTan">Selected tangents</param>
+        /// <param name="tanType">CurveTangentTypes type to apply to selected tangents</param>
         public void SetTangent(TangentSelection selectedTan, CurveTangentTypes tanType)
         {
             if (m_selection.Count == 0 || selectedTan == TangentSelection.None)

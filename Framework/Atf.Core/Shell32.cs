@@ -12,6 +12,9 @@ namespace Sce.Atf
         /// <summary>
         /// Maximum path character length</summary>
         public const int MAX_PATH = 260;
+
+        /// <summary>
+        /// SHITEMID structure to interoperate with Shell32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct SHITEMID
         {
@@ -20,12 +23,16 @@ namespace Sce.Atf
             public byte[] abID;
         }
 
+        /// <summary>
+        /// ITEMIDLIST structure to interoperate with Shell32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct ITEMIDLIST
         {
             public SHITEMID mkid;
         }
 
+        /// <summary>
+        /// BROWSEINFO structure to interoperate with Shell32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct BROWSEINFO
         {
@@ -55,6 +62,8 @@ namespace Sce.Atf
         public const uint BIF_BROWSEINCLUDEFILES = 0x4000;
         public const uint BIF_SHAREABLE = 0x8000;
 
+        /// <summary>
+        /// SHFILEINFO structure to interoperate with Shell32.dll</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct SHFILEINFO
         {

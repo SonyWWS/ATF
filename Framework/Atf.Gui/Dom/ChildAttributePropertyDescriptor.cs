@@ -168,6 +168,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Gets node from component</summary>
         /// <param name="component">Component being edited</param>
+        /// <returns>DomNode for component</returns>
         public override DomNode GetNode(object component)
         {
             var node = component.As<DomNode>();

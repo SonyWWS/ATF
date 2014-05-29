@@ -358,11 +358,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Finds node and/or edge hit by the given rect</summary>
+        /// Finds node and/or edge hit by the given rectangle</summary>
         /// <param name="graph">Graph to test</param>
-        /// <param name="rect">given rect in graph space</param>
+        /// <param name="rect">Given rectangle in graph space</param>
         /// <param name="g">D2dGraphics object</param>
-        /// <returns>Hit record containing node and/or edge hit by the given rect</returns>
+        /// <returns>Hit record containing node and/or edge hit by the given rectangle</returns>
         public override IEnumerable<object> Pick(
             IGraph<TElement, TWire, TPin> graph,
             RectangleF rect,
@@ -414,8 +414,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Finds node and/or edge hit by the given point</summary>
-        /// <param name="nodes">nodes to test, usually in reverse order of rendering</param>
-        /// <param name="edges">edges to test</param>
+        /// <param name="nodes">Nodes to test, usually in reverse order of rendering</param>
+        /// <param name="edges">Edges to test</param>
         /// <param name="priorityEdge">Graph edge to test before others</param>
         /// <param name="p">Point to test in graph space</param>
         /// <param name="g">D2dGraphics object</param>
@@ -849,10 +849,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Returns if the given element is picked by the given point</summary>
-        /// <param name="element"></param>
-        /// <param name="g"></param>
-        /// <param name="p"></param>
-        /// <returns></returns>
+        /// <param name="element">Element to test</param>
+        /// <param name="g">D2dGraphics object</param>
+        /// <param name="p">Point to test in graph space</param>
+        /// <returns>True iff given element is picked by given point</returns>
         protected virtual bool Pick(TElement element, D2dGraphics g, PointF p)
         {
             RectangleF bounds = GetBounds(element, g);
@@ -1538,16 +1538,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 DrawWire(g, pen, end.X, end.Y, x, y, 0, null);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="pen"></param>
-        /// <param name="x1"></param>
-        /// <param name="y1"></param>
-        /// <param name="x2"></param>
-        /// <param name="y2"></param>
-        /// <param name="strokeWidth">Use 0 to get the default stroke width</param>
-        /// <param name="strokeStyle">Use null to get default behavior</param>
+        /// <summary>Draw a wire</summary>
+        /// <param name="g">Graphics object</param>
+        /// <param name="pen">D2dBrush pen</param>
+        /// <param name="x1">X-coordinate of starting point of wire</param>
+        /// <param name="y1">Y-coordinate of starting point of wire</param>
+        /// <param name="x2">X-coordinate of ending point of wire</param>
+        /// <param name="y2">Y-coordinate of ending point of wire</param>
+        /// <param name="strokeWidth">Stroke width; use 0 to get the default stroke width</param>
+        /// <param name="strokeStyle">D2dStrokeStyle; use null to get default behavior</param>
         protected void DrawWire(D2dGraphics g, D2dBrush pen, float x1, float y1, float x2, float y2, float strokeWidth, D2dStrokeStyle strokeStyle)
         {
             float thickness = strokeWidth == 0 ? EdgeThickness : strokeWidth;
@@ -1708,6 +1707,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Accumulated world offset of given drawing stack</summary>
+        /// <param name="graphPath">Elements in drawing stack</param>
+        /// <returns>Accumulated world offset of elements</returns>
         public Point WorldOffset(IEnumerable<TElement> graphPath)
         {
 

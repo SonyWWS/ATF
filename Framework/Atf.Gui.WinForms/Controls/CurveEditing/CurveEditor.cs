@@ -22,6 +22,9 @@ namespace Sce.Atf.Controls.CurveEditing
     {
         /// <summary>
         /// Constructor</summary>
+        /// <param name="commandService">ICommandService</param>
+        /// <param name="controlHostService">IControlHostService</param>
+        /// <param name="contextRegistry">IContextRegistry</param>
         [ImportingConstructor]
         public CurveEditor(ICommandService commandService,
             IControlHostService controlHostService,
@@ -42,6 +45,11 @@ namespace Sce.Atf.Controls.CurveEditing
 
         /// <summary>
         /// Constructor that a derived class can use to provide additional customizations</summary>
+        /// <param name="commandService">ICommandService</param>
+        /// <param name="controlHostService">IControlHostService</param>
+        /// <param name="contextRegistry">IContextRegistry</param>
+        /// <param name="curveEditingControl">CurveEditingControl to use</param>
+        /// <param name="controlInfo">ControlInfo for CurveEditingControl</param>
         public CurveEditor(ICommandService commandService,
             IControlHostService controlHostService,
             IContextRegistry contextRegistry,

@@ -56,8 +56,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Sets the user-readable (and thus, localizable) circuit document file type name,
-        /// which can be read using the Type property.</summary>
-        /// <param name="fileType"></param>
+        /// which can be read using the Type property</summary>
+        /// <param name="fileType">String representing circuit document file type</param>
         public void SetEditorFileType(string fileType)
         {
             m_editorFileType = fileType;

@@ -61,6 +61,7 @@ namespace Sce.Atf.Dom
         #region IQueryableReplaceContext members
         /// <summary>
         /// Applies a replacement on the results of the last Query</summary>
+        /// <param name="replaceInfo">Replacement information</param>
         /// <returns>The list of objects on which we just performed a replacement</returns>
         public IEnumerable<object> Replace(object replaceInfo)
         {

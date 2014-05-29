@@ -98,6 +98,7 @@ namespace Sce.Atf.Dom
         /// Items can be demoted when the active context is CircuitEditingContext and
         /// all the items are selected references.</summary>
         /// <param name="items">Items to demote</param>
+        /// <returns>Array of copy instances</returns>
         public abstract DomNode[] DemoteToCopyInstance(IEnumerable<object> items);
 
         /// <summary>
@@ -314,9 +315,10 @@ namespace Sce.Atf.Dom
         #region IContextMenuCommandProvider Members
 
         /// <summary>
-        /// Gets tags for context menu (right click) commands</summary>
+        /// Gets command tags for context menu (right click) commands</summary>
         /// <param name="context">Context containing target object</param>
         /// <param name="target">Right clicked object, or null if none</param>
+        /// <returns>Enumeration of command tags for context menu</returns>
         public virtual IEnumerable<object> GetCommands(object context, object target)
         {
             m_targetRef = null;

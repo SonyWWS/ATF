@@ -23,8 +23,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     {
         /// <summary>
         /// Can move the given nodes into the new container</summary>    
-        /// <param name="newParent">the new container</param>
-        /// <param name="movingObjects">nodes to move</param>
+        /// <param name="newParent">New container</param>
+        /// <param name="movingObjects">Nodes to move</param>
+        /// <returns>True iff can move nodes into new container</returns>
         bool CanMove(object newParent, IEnumerable<object> movingObjects);
 
         /// <summary>

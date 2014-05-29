@@ -90,6 +90,7 @@ namespace Sce.Atf.Direct2D
         /// the function sets the output value IsInside to False.</summary>
         /// <param name="x">The pixel location X to hit-test, relative to the top-left location of the layout box.</param>
         /// <param name="y">The pixel location Y to hit-test, relative to the top-left location of the layout box.</param>
+        /// <returns>HitTestMetrics of text string where hit test occurs</returns>
         public HitTestMetrics HitTestPoint(float x, float y)
         {
             Bool isTrailingHit;
@@ -112,10 +113,10 @@ namespace Sce.Atf.Direct2D
         /// This function is normally used as part of caret positioning of text where the caret is drawn 
         /// at the location corresponding to the current text editing position. 
         /// It may also be used as a way to programmatically obtain the geometry of a particular text position in UI automation.</summary>
-        /// <param name="textPosition">The text position used to get the pixel location.</param>
+        /// <param name="textPosition">The text position used to get the pixel location</param>
         /// <param name="isTrailingHit">A Boolean flag that whether the pixel location is of the leading or 
-        /// the trailing side of the specified text position.</param>
-        /// <returns></returns>
+        /// the trailing side of the specified text position</param>
+        /// <returns>HitTestMetrics of given text position</returns>
         public HitTestMetrics HitTestTextPosition(int textPosition, bool isTrailingHit)
         {
         
@@ -161,6 +162,7 @@ namespace Sce.Atf.Direct2D
 
         /// <summary>
         /// Retrieves information about each individual text line of the text string</summary>
+        /// <returns>Array of LineMetrics for each text line</returns>
         public LineMetrics[] GetLineMetrics()
         {
             var lineMetrics = NativeTextLayout.GetLineMetrics();
@@ -195,17 +197,7 @@ namespace Sce.Atf.Direct2D
             }
             return result;
         }
-
-        /// <summary>
-        /// Disposes of resources</summary>
-        /// <param name="disposing">True to release both managed and unmanaged resources;
-        /// false to release only unmanaged resources</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed) return;
-            m_nativeTextLayout.Dispose();
-        }
-
+       
         internal D2dTextLayout(string text, TextLayout textLayout)
             : base(textLayout)
         {

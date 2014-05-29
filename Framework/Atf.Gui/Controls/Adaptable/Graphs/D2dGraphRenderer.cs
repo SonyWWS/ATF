@@ -11,6 +11,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
     /// Abstract base class for graph renderers, which render and hit-test a graph</summary>
+    /// <typeparam name="TNode">Node</typeparam>
+    /// <typeparam name="TEdge">Edge between nodes</typeparam>
+    /// <typeparam name="TEdgeRoute">Edge route</typeparam>
     public abstract class D2dGraphRenderer<TNode, TEdge, TEdgeRoute> : DiagramRenderer
         where TNode : class, IGraphNode
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
@@ -19,13 +22,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets or sets edge thickness</summary>
         public float EdgeThickness { get; set; }
+
         /// <summary>
         /// Gets or sets minimum edge thickness</summary>
         public float MinimumEdgeThickness { get; set; }
+
         /// <summary>
         /// Gets or sets maximum edge thickness</summary>
-        public float MaxiumEdgeThickness { get; set; }
-
+        public float MaximumEdgeThickness { get; set; }
 
         /// <summary>
         /// Draws a graph node</summary>
@@ -273,9 +277,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Clear a custom style that was registered for the given object
-        /// </summary>
-        /// <param name="node"></param>
+        /// Clear a custom style that was registered for the given object</summary>
+        /// <param name="node">Node style registered for</param>
         public void ClearCustomStyle(object node)
         {
             if (node != null)

@@ -660,8 +660,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Can the user create a connection by dragging, starting from the IGraphEdge's ToNode
-        //  (e.g., Input pin of one node) to the IGraphEdge's FromNode (e.g., the Output pin of
-        //  another node)?</summary>
+        ///  (e.g., Input pin of one node) to the IGraphEdge's FromNode (e.g., the Output pin of
+        ///  another node)?</summary>
         /// <returns>True iff user can create connection</returns>
         protected virtual bool CanConnectFrom()
         {

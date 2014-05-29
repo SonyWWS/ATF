@@ -338,8 +338,8 @@ namespace Sce.Atf.Controls.Adaptable
 
         /// <summary>
         /// Register preferred adapter for the given type</summary>
-        /// <param name="type"></param>
-        /// <param name="adapter"></param>
+        /// <param name="type">Type to register adapter for</param>
+        /// <param name="adapter">Adapter to register</param>
         public void RegisterContextAdapter(Type type, object adapter)
         {
             m_contextAdapterPreferred.Add(type, adapter);

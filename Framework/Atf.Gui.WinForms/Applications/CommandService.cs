@@ -89,6 +89,7 @@ namespace Sce.Atf.Applications
         /// Creates and returns a context (right click popup) menu.
         /// Does not raise any events.</summary>
         /// <param name="commandTags">Commands in menu; nulls indicate separators</param>
+        /// <returns>ContextMenuStrip for context menu</returns>
         public ContextMenuStrip CreateContextMenu(IEnumerable<object> commandTags)
         {
             ContextMenuStrip contextMenu = new ContextMenuStrip();
@@ -225,6 +226,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Helper function to return properly sized images based on user preferences</summary>
+        /// <param name="imageName">Image name</param>
+        /// <returns>Image of given name</returns>
         public Image GetProperlySizedImage(string imageName)
         {
             Image image = null;
@@ -1035,8 +1038,9 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the "dummy" WinForms ToolStripMenuItem for a given MenuInfo instance</summary>
+        /// Obtains the "dummy" WinForms ToolStripMenuItem for a given MenuInfo instance</summary>
         /// <param name="info">MenuInfo instance</param>
+        /// <returns>"Dummy" ToolStripMenuItem for a given MenuInfo instance</returns>
         public ToolStripMenuItem GetMenuToolStripItem(MenuInfo info)
         {
             if (info == null)

@@ -10,6 +10,7 @@ namespace Sce.Atf
     /// Collection representing a selection. Maintains a LastSelected item, and enumerates
     /// items in least-recently-selected order. Provides change notification, and views
     /// filtered by item type. Uses simple casting to convert to other types.</summary>
+    /// <typeparam name="T">Type of selected items</typeparam>
     public class Selection<T> : IList<T>
     {
         /// <summary>

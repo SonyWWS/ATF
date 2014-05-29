@@ -8,6 +8,8 @@ namespace Sce.Atf.Controls
 {
     /// <summary>
     /// Arguments for hover events</summary>
+    /// <typeparam name="TObject">Object under hover</typeparam>
+    /// <typeparam name="TPart">Object part under hover</typeparam>
     public class HoverEventArgs<TObject, TPart> : EventArgs
     {
         /// <summary>

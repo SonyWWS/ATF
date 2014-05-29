@@ -12,6 +12,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Converts from palette items to actual items</summary>
         /// <param name="items">Items to convert</param>
+        /// <returns>Enumeration of actual items, converted from palette items</returns>
         IEnumerable<object> Convert(IEnumerable<object> items);
     }
 }

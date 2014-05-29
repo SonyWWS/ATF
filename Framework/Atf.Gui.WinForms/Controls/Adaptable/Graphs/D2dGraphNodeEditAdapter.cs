@@ -289,7 +289,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 // look for drop target
                 if (m_editableGraphContainer != null)
                 {
-                    var nodes = m_graph.Nodes.Where(x => !m_draggingNodes.Contains(x));
+                    var nodes = m_graph.Nodes.Except(m_draggingNodes);
                     var hitRecord = m_graphAdapter.Pick(nodes, EmptyEnumerable<TEdge>.Instance, e.Location);
                     if (hitRecord.Item != null)
                     {

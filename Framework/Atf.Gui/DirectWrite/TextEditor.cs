@@ -476,6 +476,7 @@ namespace Sce.Atf.DirectWrite
        
         /// <summary>
         /// Obtains the current caret position (in untransformed space)</summary>
+        /// <returns>Current caret position rectangle (in untransformed space)</returns>
         public RectangleF GetCaretRect()
         {
              if (TextLayout == null)

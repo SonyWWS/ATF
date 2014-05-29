@@ -317,6 +317,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Gets all schema type collections</summary>
+        /// <returns>Enumeration of DOM metadata collections for schema types</returns>
         public IEnumerable<XmlSchemaTypeCollection> GetTypeCollections()
         {
             return m_typeCollections.Values;
@@ -379,7 +380,8 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Gets all node types derived from base type</summary>
-        /// <remarks>Base type is not returned in the array</remarks>t
+        /// <param name="baseType">Base type</param>
+        /// <remarks>Base type is not returned in the array.</remarks>
         /// <returns>Enumeration of all node types derived from baseType</returns>
         public IEnumerable<DomNodeType> GetNodeTypes(DomNodeType baseType)
         {

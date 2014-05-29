@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Skin template used by SkinEditor for creating new skin.
+-->
+<skin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="atfskin">
+
+    <style name="TitleBarStyle" targetType="Sce.Atf.Applications.FormNcRenderer+SkinInfo">
+
+        <setter propertyName="ActiveBorderColor">
+            <valueInfo type="System.Drawing.Color" value="#FF0079CB"/>
+        </setter>
+
+        <setter propertyName="InactiveBorderColor">
+            <valueInfo type="System.Drawing.Color" value="#FF46464B"/>
+        </setter>
+
+        <setter propertyName="TitleBarBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF202020"/>
+        </setter>
+
+        <setter propertyName="TitleBarForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFA0A0A0"/>
+        </setter>
+
+        <setter propertyName="ActiveTitleBarForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFAFAFA"/>
+        </setter>
+
+        <setter propertyName="CaptionButtonHoverColor">
+            <valueInfo type="System.Drawing.Color" value="#FF46464B"/>
+        </setter>        
+    </style>
+    
+    <style name="ControlStyle" targetType="System.Windows.Forms.Control">
+        
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+        </setter>
+
+        <setter propertyName="ForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+
+        <setter propertyName="Font">
+            <valueInfo type="System.Drawing.Font">
+                <constructorParams>
+                    <valueInfo type="string" value="Verdana"/>
+                    <valueInfo type="float" value="9.0"/>
+                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>                    
+                </constructorParams>
+            </valueInfo>
+        </setter>
+    </style>
+
+    <style name="ButtonStyle" targetType="System.Windows.Forms.Button">
+        <setter propertyName="ForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+
+        <setter propertyName="FlatStyle">
+            <valueInfo type="System.Windows.Forms.FlatStyle" value="Flat"/>
+        </setter>
+
+    </style>
+    
+    <style name="GroupBoxStyle" targetType="System.Windows.Forms.GroupBox">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#00000000"/>
+        </setter>
+    </style>
+    
+    <style name="LabelStyle" targetType="System.Windows.Forms.Label">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#00000000"/>
+        </setter>
+    </style>
+    
+    <style name="RadioButtonStyle" targetType="System.Windows.Forms.RadioButton">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#00000000"/>
+        </setter>
+    </style>
+    
+    <style name="CheckBoxStyle" targetType="System.Windows.Forms.CheckBox">
+        <setter propertyName="FlatStyle">
+            <valueInfo type="System.Windows.Forms.FlatStyle" value="Flat"/>
+        </setter>
+    </style>
+    
+    <style name="SplitContainerStyle" targetType="System.Windows.Forms.SplitContainer">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+        </setter>
+    </style>
+       
+    <style name="Atf3DockStyle" targetType="Sce.Atf.Applications.ControlHostService+DockPanel">
+
+        <setter propertyName="DockBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF383838"/>
+        </setter>
+
+        <setter propertyName="DockColors">
+            <valueInfo type="Sce.Atf.Applications.DockColors">
+
+                <setter propertyName="AutoHideDockStripGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF636361"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF42433D"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="AutoHideTabGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF636361"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF42433D"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="DocumentActiveTabGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF636361"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF42433D"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="DocumentInactiveTabGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF656660"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF40413B"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="DocumentDockStripGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF141414"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF141414"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ToolWindowActiveCaptionGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF4e7192"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ToolWindowInactiveCaptionGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF656660"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF40413B"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ToolWindowActiveTabGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF4e7192"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ToolWindowInactiveTabGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF656660"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF40413B"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ToolWindowDockStripGradient">
+                    <valueInfo type="Sce.Atf.Applications.ControlGradient">
+                        <setter propertyName="StartColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF141414"/>
+                        </setter>
+                        <setter propertyName="EndColor">
+                            <valueInfo type="System.Drawing.Color" value="#FF141414"/>
+                        </setter>
+                        <setter propertyName="LinearGradientMode">
+                            <valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical"/>
+                        </setter>
+                        <setter propertyName="TextColor">
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </setter>
+                    </valueInfo>
+                </setter>
+
+            </valueInfo>
+        </setter>
+    </style>
+   
+    <style name="PropertyGridDescriptionControlStyle" targetType="Sce.Atf.Controls.PropertyEditing.PropertyGrid+DescriptionControl">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+        </setter>
+        <setter propertyName="TextBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+    </style>
+    
+    <style name="PropertyGridViewStyle" targetType="Sce.Atf.Controls.PropertyEditing.PropertyGridView">
+
+        <setter propertyName="PropertyBackgroundBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="PropertyTextBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="PropertyReadOnlyTextBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FF888888"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="PropertyLinePen">
+            <valueInfo type="System.Drawing.Pen">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FF888888"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="CategoryBackgroundBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FF666666"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="CategoryNameBrush">
+            <valueInfo type="System.Drawing.SolidBrush">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="CategoryLinePen">
+            <valueInfo type="System.Drawing.Pen">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FF888888"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+        <setter propertyName="CategoryExpanderPen">
+            <valueInfo type="System.Drawing.Pen">
+                <constructorParams>
+                    <valueInfo type="System.Drawing.Color" value="#FFDDDDDD"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+        <setter propertyName="Font">
+            <valueInfo type="System.Drawing.Font">
+                <constructorParams>
+                    <valueInfo type="string" value="Segoe UI"/>
+                    <valueInfo type="float" value="9.0"/>
+                    <valueInfo type="System.Drawing.FontStyle" value="Regular"/>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+
+    </style>
+    
+    <style name="TreeStyle" targetType="Sce.Atf.Controls.TreeControl">
+        <setter propertyName="ItemRenderer">
+            <valueInfo type="Sce.Atf.Controls.TreeItemRenderer">
+                <setter propertyName="TextBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="ExpanderPen">
+                    <valueInfo type="System.Drawing.Pen">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="HierarchyLinePen">
+                    <valueInfo type="System.Drawing.Pen">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="HighlightBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="DeactiveHighlightBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFA9A9A9"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="HighlightTextBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="DeactiveHighlightTextBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFF5F5F5"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="CategoryStartColor">
+                    <valueInfo type="System.Drawing.Color" value="#FF737373"/>
+                </setter>
+
+                <setter propertyName="CategoryEndColor">
+                    <valueInfo type="System.Drawing.Color" value="#FF444444"/>
+                </setter>
+
+            </valueInfo>
+        </setter>
+    </style>
+
+    <style name="ToolStripStyle" targetType="System.Windows.Forms.ToolStrip">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+        </setter>
+        <setter propertyName="ForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+        <setter propertyName="Renderer">
+            <valueInfo type="Sce.Atf.Controls.CustomToolStripRenderer">
+                <constructorParams>
+                    <valueInfo type="Sce.Atf.Controls.CustomColorTable">
+
+                        <!-- toolstrip  -->
+                        <setter propertyName="SettableToolStripBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+
+                        <setter propertyName="SettableToolStripDropDownBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                        
+                        <setter propertyName="SettableGripDark">
+                            <valueInfo type="System.Drawing.Color" value="#FF444444"/>
+                        </setter>
+                        <setter propertyName="SettableGripLight">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                        
+                        <setter propertyName="SettableOverflowButtonGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                        <setter propertyName="SettableOverflowButtonGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FF555555"/>
+                        </setter>
+                        <setter propertyName="SettableOverflowButtonGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+                        </setter>
+
+
+                        <!-- image margin gradient -->
+                        <setter propertyName="SettableImageMarginGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                        <setter propertyName="SettableImageMarginGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                        <setter propertyName="SettableImageMarginGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                                                
+                        <!-- menu bar and menu items -->
+                        <setter propertyName="SettableMenuItemSelected">
+                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        </setter>
+                        <setter propertyName="SettableMenuItemBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF4E7192"/>
+                        </setter>
+                        <setter propertyName="SettableMenuBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                        
+                        <setter propertyName="SettableMenuItemPressedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                         
+                        <setter propertyName="SettableMenuItemPressedGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FF555555"/>
+                        </setter>
+                         
+                        <setter propertyName="SettableMenuItemPressedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+                        </setter>
+                         
+                        <setter propertyName="SettableMenuItemSelectedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#006eb2f1"/>
+                        </setter>
+                         
+                        <setter propertyName="SettableMenuItemSelectedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#006eb2f1"/>
+                        </setter>
+
+                        <!-- Separator -->
+                        <setter propertyName="SettableSeparatorDark">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                        <setter propertyName="SettableSeparatorLight">
+                            <valueInfo type="System.Drawing.Color" value="#FF999999"/>
+                        </setter>
+
+                        <!-- check button -->
+                        <setter propertyName="SettableCheckBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        </setter>
+                        <setter propertyName="SettableCheckSelectedBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF4e7192"/>
+                        </setter>
+                        <setter propertyName="SettableCheckPressedBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF2c5F70"/>
+                        </setter>
+                    </valueInfo>
+                </constructorParams>
+            </valueInfo>
+        </setter>
+    </style>
+
+    <style name="DataBoundListViewStyle" targetType="Sce.Atf.Controls.DataBoundListView">
+        <setter propertyName="AlternatingRowColor1">
+            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
+        </setter>
+        <setter propertyName="AlternatingRowColor2">
+            <valueInfo type="System.Drawing.Color" value="#FF3a3a3a"/>
+        </setter>
+        <setter propertyName="NormalTextColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+        <setter propertyName="ExternalEditorTextColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+    </style>
+
+    <style name="LinkLabelStyle" targetType="System.Windows.Forms.LinkLabel">
+        <setter propertyName="LinkColor">
+            <valueInfo type="System.Drawing.Color" value="#FF5EBEFF"/>
+        </setter>
+    </style>
+        
+    <style name="SyntaxEditorControlStyle" targetType="Sce.Atf.Controls.SyntaxEditorControl.SyntaxEditorControl">
+
+        <setter propertyName="TextAreaBackgroundFill">
+            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+        </setter>
+
+        <setter propertyName="TextAreaDisabledBackgroundFill">
+            <valueInfo type="System.Drawing.Color" value="#FF282828"/>
+        </setter>
+
+        <setter propertyName="SelectionFocusedBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF1818FF"/>
+        </setter>
+
+        <setter propertyName="SelectionFocusedForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+        </setter>
+
+        <setter propertyName="SelectionUnfocusedBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF181888"/>
+        </setter>
+
+        <setter propertyName="SelectionUnfocusedForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFAAAAAA"/>
+        </setter>
+
+        <setter propertyName="LineNumberMarginBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF686868"/>
+        </setter>
+
+        <setter propertyName="LineNumberForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FF999999"/>
+        </setter>
+
+        <setter propertyName="LineSelectMarginBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+        </setter>
+
+        <setter propertyName="OutlineIndicatorBackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF888822"/>
+        </setter>
+
+        <setter propertyName="OutlineIndicatorForeColor">
+            <valueInfo type="System.Drawing.Color" value="#FFFFFF88"/>
+        </setter>
+
+        <setter propertyName="TextHighlightStyles">
+            <listInfo>
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="DefaultStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="ReservedWordStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FF88DDFF"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="CommentDefaultStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FF50F057"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="CommentDefaultStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FF50F057"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="CommentDelimiterStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FF50F057"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="StringDelimiterStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFEE4444"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="StringDefaultStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFEE4444"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="NumberStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFBB3AFF"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="FunctionStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFFF33FF"/>
+                    </constructorParams>
+                </valueInfo>
+
+                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
+                    <constructorParams>
+                        <valueInfo type="string" value="OperatorStyle"/>
+                        <valueInfo type="System.Drawing.Color" value="#FFFFFFFF"/>
+                    </constructorParams>
+                </valueInfo>
+
+            </listInfo>
+        </setter>
+
+    </style>
+</skin>

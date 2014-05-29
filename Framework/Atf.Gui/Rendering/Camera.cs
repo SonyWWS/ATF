@@ -764,6 +764,7 @@ namespace Sce.Atf.Rendering
 
         /// <summary>
         /// Raises the CameraChanged event</summary>
+        /// <param name="e">EventArgs for event</param>
         protected void OnCameraChanged(EventArgs e)
         {
             if (m_changingCamera)

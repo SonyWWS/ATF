@@ -38,6 +38,9 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or 
         /// resetting unmanaged resources</summary>
+        /// <param name="disposing">If true, then Dispose() called this method and managed resources should
+        /// be released in addition to unmanaged resources. If false, then the finalizer called this method
+        /// and no managed objects should be called and only unmanaged resources should be released.</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed) return;

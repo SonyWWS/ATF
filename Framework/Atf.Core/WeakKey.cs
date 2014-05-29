@@ -26,9 +26,9 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Gets the hash code of the target object, regardless if the target object is still alive.
+        /// Obtains the hash code of the target object, regardless if the target object is still alive.
         /// (It's important that the hash code be stable.)</summary>
-        /// <returns></returns>
+        /// <returns>Hash code of target object</returns>
         public override int GetHashCode()
         {
             return m_hashCode;
@@ -38,8 +38,8 @@ namespace Sce.Atf
         /// Compares our target object to 'obj'. If 'obj' is also a WeakKey of type T, then the two
         /// target objects will be compared. If either target has been garbage collected, then false
         /// is returned.</summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">Object compared to</param>
+        /// <returns>True iff objects are equal</returns>
         public override bool Equals(object obj)
         {
             // Seems like under all circumstances that myWeakKey.Equals(myWeakKey) should be true.
@@ -63,8 +63,8 @@ namespace Sce.Atf
 
         /// <summary>
         /// Implicitly converts a WeakKey object to its target object</summary>
-        /// <param name="reference"></param>
-        /// <returns></returns>
+        /// <param name="reference">WeakKey object to convert</param>
+        /// <returns>WeakKey object's target object</returns>
         public static implicit operator T(WeakKey<T> reference)
         {
             return (T)reference.Target;

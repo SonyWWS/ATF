@@ -11,6 +11,7 @@ namespace Sce.Atf.Adaptation
     /// the DOM property descriptors (like AttributePropertyDescriptor) try to adapt
     /// an AdaptablePath object to a DomNode and this succeeds if the last element of
     /// the path can be adapted to a DomNode.</summary>
+    /// <typeparam name="T">Type of items in path</typeparam>
     public class AdaptablePath<T> : Path<T>, IAdaptable, IDecoratable
     {
         /// <summary>
@@ -56,9 +57,9 @@ namespace Sce.Atf.Adaptation
         }
 
         /// <summary>
-        /// Gets an enumeration of all decorators of the specified type or null</summary>
+        /// Gets all decorators of the specified type</summary>
         /// <param name="type">Decorator type</param>
-        /// <returns>Enumeration of decorators that are of the specified type or null</returns>
+        /// <returns>Enumeration of non-null decorators that are of the specified type. The enumeration may be empty.</returns>
         public IEnumerable<object> GetDecorators(Type type)
         {
             foreach (object obj in Last.AsAll(type))

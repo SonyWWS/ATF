@@ -5,7 +5,8 @@ using System;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Args for "item inserted" event</summary>
+    /// Arguments for "item inserted" event</summary>
+    /// <typeparam name="T">Type of inserted item</typeparam>
     public class ItemInsertedEventArgs<T> : EventArgs
     {
         /// <summary>

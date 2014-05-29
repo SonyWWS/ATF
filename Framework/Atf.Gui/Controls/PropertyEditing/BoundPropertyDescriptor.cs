@@ -359,7 +359,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Returns the Owner's value (if the Owner is not null) or the component's value of the property</summary>
-        /// <param name="component"></param>
+        /// <param name="component">Component to examine</param>
         /// <returns>The value of a property</returns>
         public override object GetValue(object component)
         {
@@ -370,7 +370,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Sets the value of the Owner (if not null) or component</summary>
-        /// <param name="component"></param>
+        /// <param name="component">Component</param>
         /// <param name="value">The new value</param>
         public override void SetValue(object component, object value)
         {

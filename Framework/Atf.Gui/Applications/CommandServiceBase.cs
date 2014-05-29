@@ -452,8 +452,8 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the registered commands' info objects</summary>
-        /// <returns></returns>
+        /// Obtains the registered commands' info objects</summary>
+        /// <returns>Enumeration of CommandInfo for registered commands</returns>
         public IEnumerable<CommandInfo> GetCommandInfos()
         {
             return m_commands;
@@ -857,6 +857,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Sets StatusService</summary>
+        /// <param name="statusService">IStatusService to be set</param>
         /// <remarks>Used in ATF2.9. There could be a cleaner way to do that.</remarks>
         public void SetStatusService(IStatusService statusService)
         {
