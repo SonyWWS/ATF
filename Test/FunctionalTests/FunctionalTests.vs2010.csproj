@@ -62,23 +62,9 @@
   <ItemGroup>
     <Compile Include="DomPropertyEditorTests.cs" />
     <Compile Include="ModelViewerTests.cs" />
-    <Compile Include="LegacyTests\CodeEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\HelloWorldLegacyTests.cs" />
     <Compile Include="DiagramEditorTests.cs" />
     <Compile Include="DomTreeEditorTests.cs" />
     <Compile Include="FileExplorerTests.cs" />
-    <Compile Include="LegacyTests\AnnotationLegacyTests.cs" />
-    <Compile Include="LegacyTests\AssetManagerLegacyTests.cs" />
-    <Compile Include="LegacyTests\CircuitEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\DomTreeEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\FileExplorerLegacyTests.cs" />
-    <Compile Include="LegacyTests\FsmEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\PipelineEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\SimpleDomEditorTests.cs" />
-    <Compile Include="LegacyTests\StatechartEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\THC_ClientLegacyTests.cs" />
-    <Compile Include="LegacyTests\TimelineEditorLegacyTests.cs" />
-    <Compile Include="LegacyTests\UsingDomLegacyTests.cs" />
     <Compile Include="LiveConnectServiceTests.cs" />
     <Compile Include="SimpleDomEditorTests.cs" />
     <Compile Include="TestBase.cs" />
@@ -193,15 +179,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="FsmEditorTestScripts\InsertUndoAndRedoTransitions.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LegacyTests\CircuitEditorLegacyTestScripts\TestGetBounds.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LegacyTests\CodeEditorLegacyTestScripts\CreateNewDocument.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LegacyTests\FsmEditorLegacyTestScripts\TestGetBounds.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AutomationSettings.xml">
