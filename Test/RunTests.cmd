@@ -1,5 +1,4 @@
-:: Copyright (c) Sony Computer Entertainment 2011.
-:: All rights Reserved. Confidential.
+:: Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 @echo off
 
@@ -20,7 +19,7 @@ SET TEST_CATEGORY=%3
 IF (%TEST_CATEGORY%)==() SET TEST_CATEGORY=SmokeTest
 
 pushd "%~dp0"
-cd "%~dp0/../../../bin/wws_atf/Release.vs%VS_VERSION%/tests"
+cd "%~dp0/../bin/Release.vs%VS_VERSION%/tests"
 
 :: Bamboo doesn't delete test results, so delete it ourselves to prevent the last
 :: build's test results from being reported if an earlier step fails
@@ -35,16 +34,6 @@ echo ==== Testing ATF VS %VS_VERSION% - Release, unit tests and functional tests
 echo.
 
 pushd "%cd%"
-echo Run legacy unit tests
-cd Legacy
-UnitTests.exe
-popd
-if not %errorlevel% == 0 (
-  echo Error running legacy unit tests
-  popd
-  if %PAUSE%==true pause
-  exit /b %errorlevel%
-)
 
 echo Run unit tests
 UnitTests.exe
