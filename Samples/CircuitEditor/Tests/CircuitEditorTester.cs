@@ -128,35 +128,44 @@ namespace CircuitEditorSample.Tests
             structure.Update();
 
             circuit.Elements.Add(structure);
+			
+			// first make all group pins are visible so we can connect them
+	        foreach (var groupPin in inputFiles.InputGroupPins)
+		        groupPin.Visible = true;
+			foreach (var groupPin in inputFiles.OutputGroupPins)
+				groupPin.Visible = true;
+			foreach (var groupPin in structure.InputGroupPins)
+				groupPin.Visible = true;
+			foreach (var groupPin in structure.OutputGroupPins)
+				groupPin.Visible = true;
 
-            // Note on 11/12/2013: adding wires currently crashes. Nested circuit groups aren't officially supported anyways.
-            // make some edges betwen InputFiles & structure
-            //var connection0 = CircuitAddEdge(inputFiles, 0, structure, 0);
-            //circuit.Wires.Add(connection0);
-            //var connection1 = CircuitAddEdge(inputFiles, 1, structure, 1);
-            //circuit.Wires.Add(connection1);
-            //var connection2 = CircuitAddEdge(inputFiles, 2, structure, 3);
-            //circuit.Wires.Add(connection2);
-            //var connection3 = CircuitAddEdge(inputFiles, 3, structure, 5);
-            //circuit.Wires.Add(connection3);
+			// make some edges betwen InputFiles & structure
+			var connection0 = CircuitAddEdge(inputFiles, 0, structure, 0);
+			circuit.Wires.Add(connection0);
+			var connection1 = CircuitAddEdge(inputFiles, 1, structure, 1);
+			circuit.Wires.Add(connection1);
+			var connection2 = CircuitAddEdge(inputFiles, 2, structure, 3);
+			circuit.Wires.Add(connection2);
+			var connection3 = CircuitAddEdge(inputFiles, 3, structure, 5);
+			circuit.Wires.Add(connection3);
 
             return rootNode;
         }
 
-        //private static Wire CircuitAddEdge(Element fromNode, int fromPinIndex, Element toNode, int toPinIndex)
-        //{
-        //    DomNode domNode = new DomNode(Schema.connectionType.Type);
+		private static Wire CircuitAddEdge(Element fromNode, int fromPinIndex, Element toNode, int toPinIndex)
+		{
+			DomNode domNode = new DomNode(Schema.connectionType.Type);
 
-        //    Wire connection = domNode.As<Wire>();
-        //    connection.OutputElement = fromNode;
-        //    connection.OutputPin = fromNode.Type.Outputs[fromPinIndex];
-        //    connection.InputElement = toNode;
-        //    connection.InputPin = toNode.Type.Inputs[toPinIndex]; 
-        //    connection.SetPinTarget();
-        //    connection.Cast<WireStyleProvider<Module, Connection, ICircuitPin>>().EdgeStyle = EdgeStyle.DirectCurve;
-           
-        //    return connection;
-        //}
+			Wire connection = domNode.As<Wire>();
+			connection.OutputElement = fromNode;
+			connection.OutputPin = fromNode.Type.Outputs[fromPinIndex];
+			connection.InputElement = toNode;
+			connection.InputPin = toNode.Type.Inputs[toPinIndex];
+			connection.SetPinTarget();
+			connection.Cast<WireStyleProvider<Module, Connection, ICircuitPin>>().EdgeStyle = EdgeStyle.DirectCurve;
+
+			return connection;
+		}
 
         private const string ButtonTypeName = ":buttonType";
         private const string LightTypeName = ":lightType";

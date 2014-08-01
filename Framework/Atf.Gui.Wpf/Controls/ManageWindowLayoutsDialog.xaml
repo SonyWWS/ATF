@@ -1,0 +1,108 @@
+﻿<lc:CommonDialog x:Class="Sce.Atf.Wpf.Controls.WindowLayoutManageDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:Sce.Atf.Wpf"
+             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+             xmlns:lc="clr-namespace:Sce.Atf.Wpf.Controls"
+             xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors"
+             xmlns:c="clr-namespace:Sce.Atf.Wpf.ValueConverters"
+             mc:Ignorable="d" 
+             Width="650"
+             Height="400"
+             ShowInTaskbar="False"
+             d:DesignHeight="300" d:DesignWidth="400"
+             MinWidth="250">
+
+    <lc:CommonDialog.Resources>
+        <ResourceDictionary>
+            <l:CommandReference x:Key="RenameCommandRef" Command="{Binding RenameCommand}"/>
+            <l:CommandReference x:Key="DeleteCommandRef" Command="{Binding DeleteCommand}"/>
+        </ResourceDictionary>
+    </lc:CommonDialog.Resources>
+
+    <lc:CommonDialog.InputBindings>
+        <KeyBinding Key="F2" Command="{StaticResource RenameCommandRef}" />
+        <KeyBinding Key="Delete" Command="{StaticResource DeleteCommandRef}" />
+    </lc:CommonDialog.InputBindings>
+
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView ItemsSource="{Binding LayoutView}" IsSynchronizedWithCurrentItem="True">
+            <ListView.Resources>
+                <Style x:Key="EditableTextBox" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                    <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                    <Setter Property="b:EditableTextBlockBehavior.IsInEditMode" Value="{Binding IsInEditMode, Mode=TwoWay}"/>
+                </Style>
+            </ListView.Resources>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
+                    <Style.Resources>
+                        <ContextMenu x:Key="ContextMenu">
+                            <MenuItem Command="{Binding DeleteCommand}" Header="{m:Loc Delete}"/>
+                            <MenuItem Command="{Binding RenameCommand}" Header="{m:Loc Rename}"/>
+                        </ContextMenu>
+                    </Style.Resources>
+                    <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="{m:Loc Layout Name}" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Text="{Binding Name, Mode=TwoWay, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
+                                    HorizontalAlignment="Stretch" Style="{DynamicResource EditableTextBox}">
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{m:Loc Shortcut}" DisplayMemberBinding="{Binding Shortcut, Converter={c:InputGestureTextConverter}}" Width="100"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        
+        <Border Grid.Column="2" BorderThickness="1" Padding="4" BorderBrush="{x:Static SystemColors.ControlDarkBrush}">
+            <ContentControl>
+                <Viewbox>
+                    <Image Source="{Binding LayoutView.CurrentItem.Image}"/>
+                </Viewbox>
+            </ContentControl>
+        </Border>
+
+        <DockPanel Grid.Row="1" Grid.ColumnSpan="3" LastChildFill="False" Margin="0,12,0,0">
+            <Button Command="{Binding DeleteCommand}" Margin="0" Content="{m:Loc Delete}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <!--<Button Command="{Binding MoveUpCommand}" Content="{m:Loc Move Up}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>-->
+            <!--<Button Command="{Binding MoveDownCommand}" Content="{m:Loc Move Down}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>-->
+            <Button Command="{Binding RenameCommand}" Content="{m:Loc Rename}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <Button DockPanel.Dock="Right" Command="{Binding OkCommand}" IsDefault="True" Content="{m:Loc OK}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+        </DockPanel>
+        
+    </Grid>
+    
+</lc:CommonDialog>

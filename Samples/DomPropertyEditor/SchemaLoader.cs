@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -228,10 +229,51 @@ namespace DomPropertyEditorSample
                           false,                          
                           new BoundedFloatEditor(80, 400)
                           ));
+                   
 
+                // Enum can be stored as string or as int.
+                //  OrcLevel is stored as int
+                //  OrcEmotion is stored as string.
+                //  please see the schema.
                 
-                // store the value of enum as string.
-                LongEnumEditor emotionEditor = new LongEnumEditor(typeof(OrcEmotion));
+                
+                // Create image for showing character level.                
+                var levVals = Enum.GetValues(typeof(OrcLevel));
+                Image[] levImages = new Image[levVals.Length];
+                foreach (var en in levVals)
+                {
+                    levImages[(int)en] = new Bitmap(this.GetType(),
+                            "Resources." + en + ".png");
+                }
+
+
+                // show usage for enum stored as int.
+                // Shows how to edit enum that is stored as string.
+                var lvEnumEditor = new LongEnumEditor(typeof(OrcLevel), levImages);
+                var lvTypeConverter = new IntEnumTypeConverter(typeof(OrcLevel));
+
+                orcDescriptors.Add(
+                  new AttributePropertyDescriptor(
+                         "Level".Localize(),
+                         Schema.orcType.levelAttribute,
+                         chCategory,
+                         "Character level".Localize(),
+                         false,
+                         lvEnumEditor,
+                         lvTypeConverter
+                         ));
+
+                // create images used for showing emotion
+                // for enum OrcEmotion 
+                var emoVals = Enum.GetValues(typeof(OrcEmotion));
+                Image[] emoImages = new Image[emoVals.Length];
+                foreach (var en in emoVals)
+                {
+                    emoImages[(int)en] = new Bitmap(this.GetType(),
+                            "Resources." + en + ".png");
+                }
+                // Shows how to edit enum that is stored as string.
+                var emotionEditor = new LongEnumEditor(typeof(OrcEmotion), emoImages);
                 orcDescriptors.Add(
                   new AttributePropertyDescriptor(
                          "Emotion".Localize(),
@@ -442,9 +484,19 @@ namespace DomPropertyEditorSample
                 Schema.orcType.Type.SetTag(orcDescriptors);
                 // only one namespace
                 break;
-            }
+            }            
         }
 
+
+        /// <summary>
+        /// Enum used for orc character level.</summary>
+        private enum OrcLevel
+        {
+            Apprentice,
+            Journeyman,
+            Adept,
+            Master,
+        }
 
         /// <summary>
         /// Enum used for OrcType.</summary>

@@ -1,4 +1,5 @@
-:: Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+:: Copyright (c) Sony Computer Entertainment 2011.
+:: All rights Reserved. Confidential.
 
 :: This script builds all 4 configurations: 
 ::   - VS2010 Debug

@@ -71,7 +71,6 @@
     <Compile Include="Applications\Dialogs.cs" />
     <Compile Include="Applications\ErrorDialogService.cs" />
     <Compile Include="Applications\FileDialogService.cs" />
-    <Compile Include="Applications\FileWatcherService.cs" />
     <Compile Include="Applications\FunctionalTestBase.cs" />
     <Compile Include="Applications\GridPropertyEditor.cs" />
     <Compile Include="Applications\HelpAboutCommand.cs" />
@@ -79,13 +78,14 @@
     <Compile Include="Applications\IControlHostService.cs" />
     <Compile Include="Applications\IControlRegistry.cs" />
     <Compile Include="Applications\IDialogService.cs" />
-    <Compile Include="Applications\IFileDialogService.cs" />
     <Compile Include="Applications\ILayoutConstraint.cs" />
     <Compile Include="Applications\ILayoutContext.cs" />
     <Compile Include="Applications\ImageThumbnailResolver.cs" />
     <Compile Include="Applications\IMainWindow.cs" />
     <Compile Include="Applications\Listers\FilteredTreeControlEditor.cs" />
-    <Compile Include="Applications\Listers\FilteredTreeView.cs" />
+    <Compile Include="Applications\Listers\FilteredTreeView.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Applications\Listers\HistoryLister.cs" />
     <Compile Include="Applications\Listers\IPrototypingContext.cs" />
     <Compile Include="Applications\Listers\ItemInfos.cs" />
@@ -172,7 +172,6 @@
     </Compile>
     <Compile Include="Applications\SkinService\SkinService.cs" />
     <Compile Include="Applications\StandardEditCommands.cs" />
-    <Compile Include="Applications\StandardFileCommands.cs" />
     <Compile Include="Applications\StandardFileExitCommand.cs" />
     <Compile Include="Applications\StandardLayoutCommands.cs" />
     <Compile Include="Applications\StandardPrintCommands.cs" />
@@ -751,9 +750,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Applications\SkinService\Skin.tmpl" />
-    <None Include="Applications\SkinService\Skins\Classic.skn" />
-    <None Include="Applications\SkinService\Skins\Dark.skn" />
-    <None Include="Applications\SkinService\Skins\Light.skn" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ja\Localization.xml">
@@ -761,7 +757,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\ja\Atf.Gui.WinForms.resources.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

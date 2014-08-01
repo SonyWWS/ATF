@@ -148,6 +148,19 @@ namespace CircuitEditorSample
             subCircuitInstanceType.sourceGuidAttribute = subCircuitInstanceType.Type.GetAttributeInfo("sourceGuid");
             subCircuitInstanceType.typeAttribute = subCircuitInstanceType.Type.GetAttributeInfo("type");
 
+            missingTemplateType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "missingTemplateType");
+            missingTemplateType.guidAttribute = missingTemplateType.Type.GetAttributeInfo("guid");
+            missingTemplateType.labelAttribute = missingTemplateType.Type.GetAttributeInfo("label");
+            missingTemplateType.moduleChild = missingTemplateType.Type.GetChildInfo("module");
+
+            missingModuleType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "missingModuleType");
+            missingModuleType.nameAttribute = missingModuleType.Type.GetAttributeInfo("name");
+            missingModuleType.labelAttribute = missingModuleType.Type.GetAttributeInfo("label");
+            missingModuleType.xAttribute = missingModuleType.Type.GetAttributeInfo("x");
+            missingModuleType.yAttribute = missingModuleType.Type.GetAttributeInfo("y");
+            missingModuleType.visibleAttribute = missingModuleType.Type.GetAttributeInfo("visible");
+            missingModuleType.sourceGuidAttribute = missingModuleType.Type.GetAttributeInfo("sourceGuid");
+
             moduleTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "moduleTemplateRefType");
             moduleTemplateRefType.nameAttribute = moduleTemplateRefType.Type.GetAttributeInfo("name");
             moduleTemplateRefType.labelAttribute = moduleTemplateRefType.Type.GetAttributeInfo("label");
@@ -155,6 +168,7 @@ namespace CircuitEditorSample
             moduleTemplateRefType.yAttribute = moduleTemplateRefType.Type.GetAttributeInfo("y");
             moduleTemplateRefType.visibleAttribute = moduleTemplateRefType.Type.GetAttributeInfo("visible");
             moduleTemplateRefType.sourceGuidAttribute = moduleTemplateRefType.Type.GetAttributeInfo("sourceGuid");
+            moduleTemplateRefType.guidRefAttribute = moduleTemplateRefType.Type.GetAttributeInfo("guidRef");
             moduleTemplateRefType.typeRefAttribute = moduleTemplateRefType.Type.GetAttributeInfo("typeRef");
 
             groupTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "groupTemplateRefType");
@@ -164,6 +178,7 @@ namespace CircuitEditorSample
             groupTemplateRefType.yAttribute = groupTemplateRefType.Type.GetAttributeInfo("y");
             groupTemplateRefType.visibleAttribute = groupTemplateRefType.Type.GetAttributeInfo("visible");
             groupTemplateRefType.sourceGuidAttribute = groupTemplateRefType.Type.GetAttributeInfo("sourceGuid");
+            groupTemplateRefType.guidRefAttribute = groupTemplateRefType.Type.GetAttributeInfo("guidRef");
             groupTemplateRefType.typeRefAttribute = groupTemplateRefType.Type.GetAttributeInfo("typeRef");
             groupTemplateRefType.refExpandedAttribute = groupTemplateRefType.Type.GetAttributeInfo("refExpanded");
             groupTemplateRefType.refShowExpandedGroupPinsAttribute = groupTemplateRefType.Type.GetAttributeInfo("refShowExpandedGroupPins");
@@ -339,6 +354,25 @@ namespace CircuitEditorSample
             public static AttributeInfo typeAttribute;
         }
 
+        public static class missingTemplateType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo guidAttribute;
+            public static AttributeInfo labelAttribute;
+            public static ChildInfo moduleChild;
+        }
+
+        public static class missingModuleType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo nameAttribute;
+            public static AttributeInfo labelAttribute;
+            public static AttributeInfo xAttribute;
+            public static AttributeInfo yAttribute;
+            public static AttributeInfo visibleAttribute;
+            public static AttributeInfo sourceGuidAttribute;
+        }
+
         public static class moduleTemplateRefType
         {
             public static DomNodeType Type;
@@ -348,6 +382,7 @@ namespace CircuitEditorSample
             public static AttributeInfo yAttribute;
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo guidRefAttribute;
             public static AttributeInfo typeRefAttribute;
         }
 
@@ -360,6 +395,7 @@ namespace CircuitEditorSample
             public static AttributeInfo yAttribute;
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo guidRefAttribute;
             public static AttributeInfo typeRefAttribute;
             public static AttributeInfo refExpandedAttribute;
             public static AttributeInfo refShowExpandedGroupPinsAttribute;

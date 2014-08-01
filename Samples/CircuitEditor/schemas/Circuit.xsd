@@ -203,14 +203,32 @@
     <xs:attribute name="label" type="xs:string" />
   </xs:complexType>
 
+  <xs:complexType name ="missingTemplateType" >
+    <xs:complexContent>
+      <xs:extension base="templateType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name ="missingModuleType" >
+    <xs:complexContent>
+      <xs:extension base="moduleType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+
   <!--
   A module reference is a reference instance to a module.
   -->
   <xs:complexType name ="moduleTemplateRefType" >
     <xs:complexContent>
       <xs:extension base="moduleType">
-        <!--<xs:IDREF is based on guid of a template/>-->
-        <xs:attribute name="typeRef" type="xs:IDREF" use="required" />
+        <!--<xs:IDREF value should be the guid of the template/>-->
+        <xs:attribute name="guidRef" type="xs:IDREF" use="required" />
+        <!--typeRef is obsolete, replaced by guidRef; keep it so we can read older circuit docs before ATF3.8 -->
+        <xs:attribute name="typeRef" type="xs:IDREF"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -221,8 +239,10 @@
   <xs:complexType name ="groupTemplateRefType" >
     <xs:complexContent>
       <xs:extension base="moduleType">
-        <!--<xs:IDREF is based on guid of a template/>-->
-        <xs:attribute name="typeRef" type="xs:IDREF" use="required" />
+        <!--<xs:IDREF value should be the guid of the template/>-->
+        <xs:attribute name="guidRef" type="xs:IDREF" use="required" />
+        <!--typeRef is obsolete, replaced by guidRef; keep it so we can read older circuit docs before ATF3.8 -->
+        <xs:attribute name="typeRef" type="xs:IDREF"/>
         <xs:attribute name="refExpanded" type="xs:boolean" default="false"/>
         <xs:attribute name="refShowExpandedGroupPins" type="xs:boolean" default="true"/>
       </xs:extension>

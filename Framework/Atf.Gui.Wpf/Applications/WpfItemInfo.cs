@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System.Windows;
 using Sce.Atf.Applications;
 
 namespace Sce.Atf.Wpf.Applications
@@ -41,5 +42,60 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Gets or sets the resource key for associated item state image</summary>
         public object StateImageKey { get; set; }
+
+        public FontWeight FontWeight
+        {
+            get
+            {
+                var boldFontSet = (FontStyle & System.Drawing.FontStyle.Bold) == System.Drawing.FontStyle.Bold;
+                return (boldFontSet) ? FontWeights.Bold : FontWeights.Normal;
+            }
+            set
+            {
+                if (value == FontWeights.Bold)
+                    FontStyle |= System.Drawing.FontStyle.Bold;
+                else
+                    FontStyle &= ~System.Drawing.FontStyle.Bold;
+            }
+        }
+
+        public FontStyle FontItalicStyle
+        {
+            get
+            {
+                var italicsBitSet = (FontStyle & System.Drawing.FontStyle.Italic) == System.Drawing.FontStyle.Italic;
+                return (italicsBitSet) ? FontStyles.Italic : FontStyles.Normal;
+            }
+            set
+            {
+                if (value == FontStyles.Italic)
+                    FontStyle |= System.Drawing.FontStyle.Italic;
+                else
+                    FontStyle &= ~System.Drawing.FontStyle.Italic;
+            }
+        }
+
+        /// <summary>
+        /// Resource key for associated item overlay image
+        /// </summary>
+        public object OverlayImageKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the enabled flag</summary>
+        public bool IsEnabled
+        {
+            get { return m_isEnabled; }
+            set { m_isEnabled = value; }
+        }
+        private bool m_isEnabled = true;
+
+        /// <summary>
+        /// Gets or sets the visibility flag</summary>
+        public bool IsVisible
+        {
+            get { return m_isVisible; }
+            set { m_isVisible = value; }
+        }
+        private bool m_isVisible = true;
     }
 }

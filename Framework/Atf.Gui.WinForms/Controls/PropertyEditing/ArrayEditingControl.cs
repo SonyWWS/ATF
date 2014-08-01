@@ -57,19 +57,59 @@ namespace Sce.Atf.Controls.PropertyEditing
             base.Dispose(disposing);
         }
         
+       
+        /// <summary>
+        /// Processes a dialog key</summary>
+        /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
+        /// <returns>True iff the key was processed by the control</returns>
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            // Note, this code is duplicated in EmbeddedCollectionEditor.
+            int index = 0; //0 means "no child item has focus".
+            for (int i = 1; i < Controls.Count; i++) // Controls[0] is the toolstrip
+            {
+                if (Controls[i].ContainsFocus)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (keyData == Keys.Tab || keyData == Keys.Enter)
+            {
+                // if on last item then don't process tab
+                if (index < Controls.Count - 1)
+                {
+                    Controls[index + 1].Select();
+                    return true;                   
+                }
+            }            
+            else if (keyData == (Keys.Tab | Keys.Shift))
+            {
+                if (index > 1)
+                {
+                    Controls[index - 1].Select();                    
+                    return true;
+                }
+            }           
+            return base.ProcessDialogKey(keyData);
+        }
+
         #region ToolStrip
 
         /// <summary>
         /// Initialize toolstrip</summary>
         void InitToolStrip()
         {
+            m_toolStrip.TabStop = false;
+            
             // add button
             m_addButton = new ToolStripButton
             {
                 Text = "Add".Localize(),
                 Image = s_addImage,
                 ToolTipText = "Add array element".Localize()
-            };
+                
+            };            
             m_addButton.Click += addButton_Click;
             m_toolStrip.Items.Add(m_addButton);
             
@@ -381,12 +421,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         #endregion
         
         #region ItemControl Events and Selection
-        private void SubscribeItemEvents(ItemControl itemControl)
-        {
-            itemControl.SelectionBoxClicked += itemControl_SelectionBoxClicked;
-            itemControl.GotFocus += itemControl_GotFocus;
-            itemControl.ValueChanged += itemControl_ValueChanged;            
-        }
+        
 
         /// <summary>
         /// Performs custom actions on ItemControl ValueChanged events</summary>
@@ -414,10 +449,14 @@ namespace Sce.Atf.Controls.PropertyEditing
                 }, "edit array element".Localize());
         }
 
+        private void SubscribeItemEvents(ItemControl itemControl)
+        {        
+            itemControl.ValueChanged += itemControl_ValueChanged;
+        }
+
         private void UnsubscribeItemEvents(ItemControl itemControl)
         {
-            itemControl.SelectionBoxClicked -= itemControl_SelectionBoxClicked;
-            itemControl.GotFocus -= itemControl_GotFocus;
+           
             itemControl.ValueChanged -= itemControl_ValueChanged;            
         }
 
@@ -446,32 +485,11 @@ namespace Sce.Atf.Controls.PropertyEditing
             base.OnSizeChanged(e);
 
         }
-       
-        /// <summary>
-        /// Performs custom actions on ItemControl SelectionBoxClicked events.
-        /// The number label on an ItemControl has been clicked:
-        /// Select it respecting pressed modifyer keys.</summary>
-        /// <param name="sender">Sender</param>
-        /// <param name="e">Event args</param>
-        void itemControl_SelectionBoxClicked(object sender, EventArgs e)
+        
+        private void SelectItemControl(ItemControl selectedControl, bool useModifierKeys = false)
         {
-            SelectItemControl(sender as ItemControl);
-        }
-
-        /// <summary>
-        /// Performs custom actions on ItemControl SelectionBoxClicked events.
-        /// Select the number label part of an ItemControl when the editing part gets the focus.</summary>
-        /// <param name="sender">Sender</param>
-        /// <param name="e">Event args</param>
-        void itemControl_GotFocus(object sender, EventArgs e)
-        {
-            SelectItemControl(sender as ItemControl);
-        }
-
-        private void SelectItemControl(ItemControl selectedControl)
-        {
-            bool shiftKeyDown = (ModifierKeys & Keys.Shift) != 0;
-            bool ctrlKeyDown = (ModifierKeys & Keys.Control) != 0;
+            bool shiftKeyDown = useModifierKeys && (ModifierKeys & Keys.Shift) != 0;
+            bool ctrlKeyDown =  useModifierKeys && (ModifierKeys & Keys.Control) != 0;
 
             int index = -1;
             if (selectedControl != null)
@@ -655,7 +673,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             public ItemControl(int index, object item, int indexColumnWidth)
             {
-               
+                               
                 m_index = index;
                               
                 m_editControl = new NumericTextBox(item.GetType())
@@ -665,8 +683,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                 };
 
                 m_editControl.Width = Width - indexColumnWidth;
-                m_editControl.GotFocus += editControl_GotFocus;
-
+              
+                
                 m_editControl.Value = item;
                 m_editControl.Invalidated += editControl_Invalidated;
                 m_editControl.ValueEdited += m_editControl_ValueChanged;
@@ -693,8 +711,17 @@ namespace Sce.Atf.Controls.PropertyEditing
                     {
                         Height = m_editControl.Height;
                     };
+
+                GotFocus += (sender, e) => m_editControl.Focus();
+                m_editControl.GotFocus += (sender, e) => UpdateSelection();                                       
             }
 
+            private bool m_useModifierKeys;
+            private void UpdateSelection()
+            {
+                ArrayEditingControl p = (ArrayEditingControl)Parent;
+                p.SelectItemControl(this, m_useModifierKeys);             
+            }
             void m_editControl_ValueChanged(object sender, EventArgs e)
             {
                 ValueChanged.Raise(this, e);
@@ -707,12 +734,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 Height = m_editControl.Height;
             }
 
-            // Forward focus event from edit control
-            void editControl_GotFocus(object sender, EventArgs e)
-            {
-                OnGotFocus(e);
-            }
-
+           
             // Forward the refresh call to the contained edit control
             public override void Refresh()
             {
@@ -740,21 +762,24 @@ namespace Sce.Atf.Controls.PropertyEditing
                     }
                 }
             }
-
-            /// <summary>
-            /// Event that is raised when the user clicks the index box on the left and thereby
-            /// selects or unselects one or more items</summary>
-            /// <remarks>The event has to be handled by the parent CollectionControl, because
-            /// clicking on the SelectionBox may also select or unselect other items,
-            /// depending on current selection and modifier keys (Ctrl, Shift).</remarks>
-            public event EventHandler SelectionBoxClicked;
-
+           
             public event EventHandler ValueChanged;
 
             void selectButton_MouseDown(object sender, EventArgs e)
             {
-                m_selectButton.Focus();
-                SelectionBoxClicked.Raise(this, e);
+                try
+                {
+                    m_useModifierKeys = true;
+                    if (!m_editControl.Focused)
+                        m_editControl.Focus();
+                    else
+                        UpdateSelection();
+                }
+                finally
+                {
+                    m_useModifierKeys = false;
+                }
+                
             }
 
             public object Value
@@ -770,7 +795,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 get { return m_selected; }
                 set
-                {
+                {                  
                     m_selected = value;
                     m_selectButton.ForeColor = value ? SystemColors.HighlightText : ForeColor;
                     m_selectButton.BackColor = value ? SystemColors.Highlight : UnselectedColor;

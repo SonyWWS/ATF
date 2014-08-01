@@ -53,3 +53,12 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.sce.net/Atf.Gui.Wpf", "Sce.Atf.Wpf.ValueConverters")]
 [assembly: XmlnsDefinition("http://www.sce.net/Atf.Gui.Wpf", "Sce.Atf.Wpf.Behaviors")]
 [assembly: XmlnsDefinition("http://www.sce.net/Atf.Gui.Wpf", "Sce.Atf.Wpf.Applications")]
+[assembly: XmlnsDefinition("http://www.sce.net/Atf.Gui.Wpf", "Sce.Atf.Wpf.Skins")]
+[assembly: XmlnsDefinition("http://www.sce.net/Atf.Gui.Wpf", "Sce.Atf.Wpf.Docking")]
+
+#if !CS_4
+// This line adds the public classes in this assembly and the System.Windows namespace to 
+// the default WPF namespace. This makes it XAML compatible with Silverlight where VisualStateManager
+// is part of the default namespace.
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows")]
+#endif

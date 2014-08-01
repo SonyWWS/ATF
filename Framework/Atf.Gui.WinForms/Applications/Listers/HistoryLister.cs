@@ -104,7 +104,7 @@ namespace Sce.Atf.Applications
                         () => MaxCommandCount,
                         "Max Visual Command History Count".Localize(),
                         null,
-                        "Maximum number of commands in the visual command history".Localize());
+                        "Maximum number of commands in the visual command history. Minimum value is 10".Localize());
 
                 m_settingsService.RegisterSettings(this, descriptor);
                 m_settingsService.RegisterUserSettings("Application", descriptor);
@@ -120,10 +120,15 @@ namespace Sce.Atf.Applications
         [DefaultValue(150)]
         public int MaxCommandCount
         {
-            get;
-            set;
+            get { return m_maxCommandCount; }
+            set
+            {
+                m_maxCommandCount  = value;
+                if (m_maxCommandCount < 10)
+                    m_maxCommandCount = 10;
+            }
         }
-
+        private int m_maxCommandCount;
         private void m_documentRegistry_ActiveDocumentChanged(object sender, EventArgs e)
         {
             if (m_commandHistory != null)

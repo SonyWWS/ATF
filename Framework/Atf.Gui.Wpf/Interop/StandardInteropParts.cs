@@ -14,15 +14,14 @@ namespace Sce.Atf.Wpf.Interop
         /// Gets type catalog for all components</summary>
         public static ComposablePartCatalog Catalog
         {
-            get 
-            { 
+            get
+            {
                 return new TypeCatalog(
                     typeof(MainWindowAdapter),
-                    typeof(CommandServiceAdapter),
-                    typeof(ContextMenuService),
-                    typeof(DialogService),
-                    typeof(ControlHostServiceAdapter)
-                );
+                    typeof(ContextMenuService)
+                    //typeof(DialogService),
+                    //typeof(ControlHostServiceAdapter)
+                    );
             }
         }
     }

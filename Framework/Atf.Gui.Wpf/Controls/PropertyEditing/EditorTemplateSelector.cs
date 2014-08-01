@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows;
 
@@ -11,13 +12,28 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
     /// Provides a way to select a value editor</summary>
     public class EditorTemplateSelector : DataTemplateSelector
     {
-        /// <summary>
-        /// Constructor with editors</summary>
-        /// <param name="editors">Enumeration of available editors</param>
+        public static EditorTemplateSelector Default
+        {
+            get { return s_default ?? (s_default = new EditorTemplateSelector(new ObservableCollection<ValueEditor>())); }
+        }
+        private static EditorTemplateSelector s_default;
+
+        public static EditorTemplateSelector DefaultNonEdit
+        {
+            get { return s_defaultNonEdit ?? (s_defaultNonEdit = new EditorTemplateSelector(new ObservableCollection<ValueEditor>()) { SelectNonEditingTemplates = true }); }
+        }
+        private static EditorTemplateSelector s_defaultNonEdit;
+
         public EditorTemplateSelector(IEnumerable<ValueEditor> editors)
         {
             Editors = editors;
         }
+
+        /// <summary>
+        /// Setting this flag causes selection of special non editing templates if available
+        /// This is used for the data grid when cells are not in edit mode
+        /// </summary>
+        public bool SelectNonEditingTemplates { get; set; }
 
         /// <summary>
         /// Gets the available editors</summary>
@@ -42,34 +58,54 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                     else if (!customEditor.UsesCustomContext)
                         node.EditorContext = null;
 
-                    return customEditor.GetTemplate(node);
+                    if (SelectNonEditingTemplates)
+                        return customEditor.GetNonEditingTemplate(node, container);
+                    return customEditor.GetTemplate(node, container);
                 }
 
                 // If this fails, try to get an editor from the editors list
                 if(Editors != null)
                 {
-                    // TODO: need to guard against editors being changed mid-enumeration
                     foreach (ValueEditor editor in Editors)
                     {
                         if (editor.CanEdit(node))
-                            return editor.GetTemplate(node);
+                        {
+                            if (SelectNonEditingTemplates)
+                                return editor.GetNonEditingTemplate(node, container);
+
+                            if (editor.UsesCustomContext && node.EditorContext == null)
+                                node.EditorContext = editor.GetCustomContext(node);
+                            else if (!editor.UsesCustomContext)
+                                node.EditorContext = null;
+
+                            return editor.GetTemplate(node, container);
+                        }
                     }
                 }
 
                 // If this fails then use a default template
-                return GetDefaultTemplate(node);
+                return GetDefaultTemplate(node, container);
             }
 
-            return null;
+            return new DataTemplate();
         }
 
-        private static DataTemplate GetDefaultTemplate(PropertyNode node)
+        private DataTemplate GetDefaultTemplate(PropertyNode node, DependencyObject container)
         {
             if (node != null)
             {
-                object key = GetEditorKey(node, node.IsWriteable, EditorKeyType.Template);
+                // If node is readonly Or SelectNonEditingTemplates is set then
+                // get a readonly template
+                bool isWriteable = node.IsWriteable && !SelectNonEditingTemplates;
+
+                object key = GetEditorKey(node, isWriteable, EditorKeyType.Template);
                 if (key != null)
+                {
+                    var fwe = container as FrameworkElement;
+                    if (fwe != null)
+                        return fwe.FindResource(key) as DataTemplate;
                     return Application.Current.FindResource(key) as DataTemplate;
+                }
             }
             return null;
         }
@@ -77,9 +113,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         private static object GetEditorKey(PropertyNode node, bool editable, EditorKeyType keyType)
         {
             Type propertyType = node.PropertyType;
-            object obj2 = node.Value;
 
-            if (editable && propertyType != null)
+            if (propertyType != null)
             {
                 if (propertyType == typeof(bool))
                 {
@@ -87,17 +122,22 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                         return PropertyGrid.BoolEditorStyleKey;
                     return PropertyGrid.BoolEditorTemplateKey;
                 }
-                if (((propertyType != null) && node.StandardValues != null))
+                
+                if (editable)
                 {
-                    if (keyType == EditorKeyType.Style)
-                        return PropertyGrid.ComboEditorStyleKey;
-                    return PropertyGrid.ComboEditorTemplateKey;
-                }
-                if (s_simpleTypes.Contains(propertyType))
-                {
-                    if (keyType == EditorKeyType.Style)
-                        return PropertyGrid.DefaultTextEditorStyleKey;
-                    return PropertyGrid.DefaultTextEditorTemplateKey;
+                    if (node.StandardValues != null)
+                    {
+                        if (keyType == EditorKeyType.Style)
+                            return PropertyGrid.ComboEditorStyleKey;
+                        return PropertyGrid.ComboEditorTemplateKey;
+                    }
+
+                    if (s_simpleTypes.Contains(propertyType))
+                    {
+                        if (keyType == EditorKeyType.Style)
+                            return PropertyGrid.DefaultTextEditorStyleKey;
+                        return PropertyGrid.DefaultTextEditorTemplateKey;
+                    }
                 }
             }
 

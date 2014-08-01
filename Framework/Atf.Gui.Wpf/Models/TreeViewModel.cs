@@ -2,12 +2,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
+using Sce.Atf.Dom;
+using Sce.Atf.Models;
 using Sce.Atf.Wpf.Applications;
+
+
 
 namespace Sce.Atf.Wpf.Models
 {
@@ -15,6 +20,21 @@ namespace Sce.Atf.Wpf.Models
     /// View model for a TreeView</summary>
     public class TreeViewModel : AdapterViewModel
     {
+        /// <summary>
+        /// Constructor with a null Adaptee. Use the TreeView property to set the Adaptee.</summary>
+        public TreeViewModel()
+        {
+        }
+
+        /// <summary>
+        /// Constructor with adaptee</summary>
+        /// <param name="adaptee">Object that is adapted. The adaptee should implement ITreeView.</param>
+        public TreeViewModel(object adaptee)
+            : base(adaptee)
+        {
+            TreeView = adaptee as ITreeView;
+        }
+
         /// <summary>
         /// Gets or sets the tree displayed in the control. When setting, consider having the
         /// ITreeView object also implement IItemView, IObservableContext, IValidationContext,
@@ -123,8 +143,6 @@ namespace Sce.Atf.Wpf.Models
         }
         private bool m_multiSelectEnabled = true;
 
-        #region ShowRoot Property
-
         /// <summary>
         /// Gets or sets whether to display the root node</summary>
         public bool ShowRoot
@@ -144,6 +162,31 @@ namespace Sce.Atf.Wpf.Models
         }
 
         private bool m_showRoot = true;
+
+        #region SynchronisingSelection Property
+
+        /// <summary>
+        /// Gets or sets whether selection is being synchronized</summary>
+        public bool SynchronisingSelection
+        {
+            get { return m_synchronisingSelection; }
+            set
+            {
+                if (m_synchronisingSelection != value)
+                {
+                    m_synchronisingSelection = value;
+                    OnPropertyChanged(s_synchronisingSelectionArgs);
+                    SynchronisingSelectionChanged.Raise(this, EventArgs.Empty);
+                    //System.Diagnostics.Debug.WriteLine(Label + " Selected=" + value);
+                }
+            }
+        }
+
+        private bool m_synchronisingSelection;
+        private static readonly PropertyChangedEventArgs s_synchronisingSelectionArgs
+            = ObservableUtil.CreateArgs<TreeViewModel>(x => x.SynchronisingSelection);
+
+        internal event EventHandler SynchronisingSelectionChanged;
 
         #endregion
 
@@ -183,7 +226,8 @@ namespace Sce.Atf.Wpf.Models
                     // mess up the tree view binding
                     if (m_ensureVisiblePath != null
                         && !m_showRoot
-                        && m_ensureVisiblePath.First == Root)
+                        && m_ensureVisiblePath.First == Root
+                        && m_ensureVisiblePath.Count > 1)
                     {
                         m_ensureVisiblePath = m_ensureVisiblePath.Suffix(m_ensureVisiblePath.Count - 1);
                     }
@@ -224,8 +268,7 @@ namespace Sce.Atf.Wpf.Models
         /// <param name="item">Item which is to be refreshed</param>
         public void Refresh(object item)
         {
-            Node node;
-            if (m_itemToNodeMap.TryGetValue(item, out node))
+            foreach (var node in m_itemToNodesMap[item])
             {
                 RefreshNode(node);
             }
@@ -236,8 +279,7 @@ namespace Sce.Atf.Wpf.Models
         /// <param name="item">Node whose parents are refreshed</param>
         public void RefreshParents(object item)
         {
-            Node node;
-            if (m_itemToNodeMap.TryGetValue(item, out node))
+            foreach (var node in m_itemToNodesMap[item])
             {
                 if (node.Parent != null)
                     RefreshNode(node.Parent);
@@ -245,10 +287,34 @@ namespace Sce.Atf.Wpf.Models
         }
 
         /// <summary>
-        /// Makes sure the tree nodes corresponding to a given path are visible</summary>
-        /// <param name="path">Path, identifying tree nodes to show</param>
-        /// <param name="select">Whether node specified by the path should be selected</param>
-        /// <returns>The node specified by the path or null if it could not be found</returns>
+        /// Expands tree to first leaf node in tree.</summary>
+        public Node ExpandToFirstLeaf()
+        {
+            Node node = Root;
+            if (node == null)
+                return null;
+
+            Node last;
+            do
+            {
+                last = node;
+                last.Expanded = true;
+                foreach (Node child in node.Children)
+                {
+                    node = child;
+                    break;
+                }
+            }
+            while (last != node);
+
+            return node;
+        }
+
+        /// <summary>
+        /// Makes sure the tree nodes corresponding to the path are visible (by expanding their parents)</summary>
+        /// <param name="path">Path, identifying tree nodes</param>
+        /// <param name="select">Value indicating whether node should be selected</param>
+        /// <returns>The node specified by the path or null if it could not be found.</returns>
         public Node Show(Path<object> path, bool select)
         {
             Node node = null;
@@ -292,8 +358,8 @@ namespace Sce.Atf.Wpf.Models
         /// Expands all nodes in the tree</summary>
         public void ExpandAll()
         {
-            foreach(var node in GetAllNodesInTree())
-                    node.Expanded = true;
+            foreach (var node in GetAllNodesInTree())
+                node.Expanded = true;
         }
 
         /// <summary>
@@ -305,33 +371,76 @@ namespace Sce.Atf.Wpf.Models
                 m_synchronizingSelection = true;
                 if (Root != null)
                 {
-                    if (ShowRoot)
-                    {
-                        Root.Expanded = false;
-                    }
-                    else
-                    {
-                        foreach (var node in Roots)
-                            node.Expanded = false;
-                    }
+                    // We want all nodes to be collapsed so that when the user expands a node
+                    // the child nodes are not expanded.
+                    foreach (var node in GetAllNodesInTree())
+                        node.Expanded = false;
                 }
             }
             finally
             {
                 m_synchronizingSelection = false;
             }
+        }
 
+        /// <summary>
+        /// Gets the enumeration of expanded nodes, in a depth-first traversal. The root node will be included, even if it's
+        /// not visible. Leaf nodes may or may not be considered expanded.</summary>
+        /// <returns></returns>
+        public IEnumerable<object> GetExpandedItems()
+        {
+            if (m_treeView != null)
+            {
+                Stack<object> items = new Stack<object>();
+                items.Push(m_treeView.Root);
+
+                while (items.Count > 0)
+                {
+                    object item = items.Pop();
+                    foreach (var node in m_itemToNodesMap[item])
+                    {
+                        if (node.Expanded)
+                        {
+                            yield return item;
+                            foreach (var child in m_treeView.GetChildren(item))
+                                items.Push(child);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Expand(object item)
+        {
+            foreach (var node in m_itemToNodesMap[item])
+            {
+                node.Expanded = true;
+            }
+        }
+
+        public void Expand(IEnumerable<object> items)
+        {
+            foreach (var item in items)
+            {
+                Expand(item);
+            }
         }
 
         #endregion
+
+        /// <summary>
+        /// Raises AdapteeChanged event and performs custom actions after the adapted object has been set</summary>
+        /// <param name="oldAdaptee">Previous adaptee reference</param>
+        protected override void OnAdapteeChanged(object oldAdaptee)
+        {
+            base.OnAdapteeChanged(oldAdaptee);
+            TreeView = Adaptee as ITreeView;
+        }
 
         #region Private Methods
 
         private void RefreshNode(Node node)
         {
-            // Update node properties
-            UpdateNode(node);
-
             // Sync any added/removed children
             if (node.ChildrenInternal != null)
             {
@@ -353,6 +462,9 @@ namespace Sce.Atf.Wpf.Models
                 foreach (Node child in node.ChildrenInternal)
                     ExpandPaths(child, path, paths);
             }
+
+            // Update node properties recursively
+            UpdateNodeSubTree(node);
         }
 
         private void AddPaths(Node node, List<object> path, HashSet<Path<object>> paths)
@@ -362,7 +474,7 @@ namespace Sce.Atf.Wpf.Models
                 path.Add(node);
                 paths.Add(new AdaptablePath<object>(path));
 
-                foreach (Node child in node.ChildrenInternal)
+                foreach (Node child in node.Children)
                     AddPaths(child, path, paths);
 
                 path.RemoveAt(path.Count - 1);
@@ -388,17 +500,23 @@ namespace Sce.Atf.Wpf.Models
             foreach (var child in TreeView.GetChildren(treeNodeViewModel.Adaptee))
             {
                 Node node = CreateNode(child, treeNodeViewModel);
-                result.Add(node);
+                if(node != null)
+                    result.Add(node);
             }
             return result;
         }
 
         private Node CreateNode(object adaptee, Node parent)
         {
-            var node = new Node(adaptee, this, parent);
-            node.IsSelectedChanged += new EventHandler(node_IsSelectedChanged);
-            m_itemToNodeMap.Add(adaptee, node);
-            UpdateNode(node);
+            var node = m_itemToNodesMap[adaptee].FirstOrDefault(n => n.Parent == parent);
+            if (node != null)
+                return node;
+
+            node = new Node(adaptee, this, parent);
+            node.IsSelectedChanged += node_IsSelectedChanged;
+            m_itemToNodesMap.Add(adaptee, node);
+            UpdateNode(node); //to-do: make the caller do this. We're not calling UpdateNode on the cached version above.
+
             return node;
         }
 
@@ -409,9 +527,16 @@ namespace Sce.Atf.Wpf.Models
             if (m_treeView != null)
             {
                 object rootObj = m_treeView.Root;
-                Root = CreateNode(rootObj, null);
-                Root.Expanded = true;
-                UpdateNode(Root);
+                if (rootObj != null)
+                {
+                    Root = CreateNode(rootObj, null);
+                    Root.Expanded = true;
+                    UpdateNode(Root);
+                }
+                else
+                {
+                    Root = null;
+                }
                 OnPropertyChanged(new PropertyChangedEventArgs("Root"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Roots"));
             }
@@ -421,8 +546,8 @@ namespace Sce.Atf.Wpf.Models
         {
             EnsureVisiblePath = null;
             Root = null;
-            m_itemToNodeMap.Clear();
-            m_previousSelection = null;
+            m_itemToNodesMap.Clear();
+            m_previousSelection = new Path<object>[] { };
             OnPropertyChanged(new PropertyChangedEventArgs("Root"));
             OnPropertyChanged(new PropertyChangedEventArgs("Roots"));
             OnPropertyChanged(new PropertyChangedEventArgs("EnsureVisiblePath"));
@@ -430,16 +555,18 @@ namespace Sce.Atf.Wpf.Models
 
         private void InsertObject(object child, object parent, int index)
         {
-            Node parentNode;
-            if (m_itemToNodeMap.TryGetValue(parent, out parentNode))
+            foreach (var parentNode in m_itemToNodesMap[parent])
             {
                 if (parentNode.ChildrenInternal != null)
                 {
                     Node childNode = CreateNode(child, parentNode);
-                    if (index >= 0)
-                        parentNode.ChildrenInternal.Insert(index, childNode);
-                    else
-                        parentNode.ChildrenInternal.Add(childNode);
+                    if (childNode != null)
+                    {
+                        if (index >= 0)
+                            parentNode.ChildrenInternal.Insert(index, childNode);
+                        else
+                            parentNode.ChildrenInternal.Add(childNode);
+                    }
                 }
 
                 if (!parentNode.Expanded)
@@ -457,17 +584,24 @@ namespace Sce.Atf.Wpf.Models
 
         private void RemoveObject(object tree)
         {
-            // copy to List since unbind modifies the item-to-node map
-            Node node;
-            if (m_itemToNodeMap.TryGetValue(tree, out node))
+            foreach (var node in m_itemToNodesMap[tree])
             {
-                Unbind(node);
+                var pathsToRemove = new HashSet<Path<object>>();
+
+                foreach (var item in GetSubtree(node))
+                {
+                    m_itemToNodesMap.Remove(item);
+                    pathsToRemove.Add(MakePath(item));
+                }
+
                 node.Parent.ChildrenInternal.Remove(node);
 
                 try
                 {
                     m_synchronizingSelection = true;
-                    m_selectionContext.Remove(MakePath(node));
+                    if (m_selectionContext != null)
+                        m_selectionContext.RemoveRange(pathsToRemove);
+
                 }
                 finally
                 {
@@ -476,16 +610,19 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
-        // Remove all chilren as atomic operation
+        // Remove all children as atomic operation
         private void RemoveChildren(Node node)
         {
-            var pathsToRemove = new List<Path<object>>();
+            var pathsToRemove = new HashSet<Path<object>>();
 
             // copy to List since unbind modifies the item-to-node map
             foreach (Node child in node.ChildrenInternal)
             {
-                Unbind(child);
-                pathsToRemove.Add(MakePath(child));
+                foreach (var item in GetSubtree(child))
+                {
+                    m_itemToNodesMap.Remove(item);
+                    pathsToRemove.Add(MakePath(child));
+                }
             }
             
             node.ChildrenInternal.Clear();
@@ -493,7 +630,8 @@ namespace Sce.Atf.Wpf.Models
             try
             {
                 m_synchronizingSelection = true;
-                m_selectionContext.RemoveRange(pathsToRemove);
+                if (m_selectionContext != null)
+                    m_selectionContext.RemoveRange(pathsToRemove);
             }
             finally
             {
@@ -506,6 +644,7 @@ namespace Sce.Atf.Wpf.Models
             if (m_itemView != null)
             {
                 m_itemView.GetInfo(node.Adaptee, node.ItemInfo);
+                OnNodeInfoUpdated(node);
                 node.ItemInfoChanged();
             }
 
@@ -524,14 +663,32 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        private void UpdateNodeSubTree(Node node)
+        {
+            UpdateNode(node);
+            if (node.Expanded)
+            {
+                foreach (Node child in node.Children)
+                    UpdateNodeSubTree(child);
+            }
+        }
+
+        /// <summary>
+        /// This method is called after each GetInfo(), which updates a node's ItemInfo based on its Adaptee.</summary>
+        /// <param name="node"></param>
+        /// <remarks>Derived classes may want to further modify the ItemInfo of the node, before it responds to those modifications.
+        /// Override method to do so.</remarks>
+        protected virtual void OnNodeInfoUpdated(Node node)
+        {
+        }
+
         private void UpdateChangedParents()
         {
             if (m_parentsWithRemovedChildren != null)
             {
                 foreach (object parent in m_parentsWithRemovedChildren)
                 {
-                    Node node;
-                    if (m_itemToNodeMap.TryGetValue(parent, out node))
+                    foreach (var node in m_itemToNodesMap[parent])
                     {
                         RefreshNode(node);
                     }
@@ -539,8 +696,7 @@ namespace Sce.Atf.Wpf.Models
 
                 foreach (object parent in m_parentsWithAddedChildren)
                 {
-                    Node node;
-                    if (m_itemToNodeMap.TryGetValue(parent, out node))
+                    foreach (var node in m_itemToNodesMap[parent])
                     {
                         // Pre expand parents if required
                         if (!node.Expanded)
@@ -562,20 +718,34 @@ namespace Sce.Atf.Wpf.Models
 
             // if last hit is no longer in tree, clear it
             //if (m_lastHit != null &&
-            //    !m_itemToNodeMap.ContainsKey(m_lastHit))
+            //    !m_itemToNodesMap.ContainsKey(m_lastHit))
             //{
             //    SetLastHit(null);
             //}
         }
 
-        private void Unbind(Node node)
+        private IEnumerable<Node> GetSubtree(Node node)
         {
-            m_itemToNodeMap.Remove(node.Adaptee);
-
-            if (node.ChildrenInternal != null)
+            if (node.ChildrenInternal == null || node.ChildrenInternal.Count == 0)
             {
-                foreach (Node child in node.ChildrenInternal)
-                    Unbind(child);
+                yield return node;
+                yield break;
+            }
+
+            var nodes = new Queue<Node>();
+            nodes.Enqueue(node);
+            while (nodes.Count > 0)
+            {
+                var item = nodes.Dequeue();
+                yield return item;
+
+                if (item.ChildrenInternal != null)
+                {
+                    foreach (var child in item.ChildrenInternal)
+                    {
+                        nodes.Enqueue(child);
+                    }
+                }
             }
         }
 
@@ -620,21 +790,31 @@ namespace Sce.Atf.Wpf.Models
         }
 
         /// <summary>
-        /// Searches for a specific node.
-        /// This involves creating all nodes in subtree until node is found.</summary>
+        /// Returns all nodes associated with a given item.
+        /// If none found, all nodes in the tree will be generated</summary>
+        /// <param name="item">Object with which our desired Node(s) are associated</param>
+        /// <returns>The list of Nodes associated with the specified object, or an empty enumerable</returns>
+        private IEnumerable<Node> GetNodes(object item)
+        {
+            if (!m_itemToNodesMap[item].Any())
+            {
+            // Node not created - have to force creation of all children in tree
+            // until we find the item we are looking for!
+                GetAllNodesInTree();
+            }
+
+            return m_itemToNodesMap[item];
+        }
+
+        /// <summary>
+        /// Searches for a specific node, associated with the specified object
+        /// If not found, all nodes in the tree may be created.
+        /// If more than one node was found, the first will be returned.</summary>
         /// <param name="item">Node to search for</param>
         /// <returns>Node searched for, or null if not found</returns>
         private Node GetNode(object item)
         {
-            Node node = null;
-            if (!m_itemToNodeMap.TryGetValue(item, out node))
-            {
-                // Node not created - have to force creation of all children in tree
-                // until we find the item we are looking for!
-                node = GetAllNodesInTree().FirstOrDefault(x => x.Adaptee == item);
-
-            }
-            return node;
+            return GetNodes(item).FirstOrDefault();
         }
 
         /// <summary>
@@ -690,10 +870,12 @@ namespace Sce.Atf.Wpf.Models
 
         private void tree_ItemInserted(object sender, ItemInsertedEventArgs<object> e)
         {
+            if (e.Parent == null)
+                return;
+
             if (m_parentsWithAddedChildren != null)
             {
-                Node parentNode;
-                if (m_itemToNodeMap.TryGetValue(e.Parent, out parentNode))
+                foreach (var parentNode in m_itemToNodesMap[e.Parent])
                 {
                     if (!parentNode.Expanded)
                     {
@@ -716,7 +898,7 @@ namespace Sce.Atf.Wpf.Models
 
         private void tree_ItemRemoved(object sender, ItemRemovedEventArgs<object> e)
         {
-            if (m_parentsWithRemovedChildren != null)
+            if (m_parentsWithRemovedChildren != null && e.Parent != null)
             {
                 m_parentsWithRemovedChildren.Add(e.Parent);
             }
@@ -728,10 +910,9 @@ namespace Sce.Atf.Wpf.Models
 
         private void tree_ItemChanged(object sender, ItemChangedEventArgs<object> e)
         {
-            Node node;
-            if (m_itemToNodeMap.TryGetValue(e.Item, out node))
+            foreach (var node in m_itemToNodesMap[e.Item])
             {
-                UpdateNode(m_itemToNodeMap[e.Item]);
+                UpdateNode(node);
             }
         }
 
@@ -768,55 +949,8 @@ namespace Sce.Atf.Wpf.Models
                 try
                 {
                     m_synchronizingSelection = true;
-
-                    //foreach (var node in m_itemToNodeMap.Values)
-                    //    node.IsSelected = false;
-                    // Deselect the previous selection
-                    foreach (Path<object> path in m_previousSelection)
-                    {
-                        Node node;
-                        if(m_itemToNodeMap.TryGetValue(path.Last, out node))
-                        {
-                            //System.Diagnostics.Debug.Assert(node.IsSelected);
-                            node.IsSelected = false;
-                        }
-                    }
-
-                    Path<Node> lastNodePath = null;
-                    Path<object>[] selectedPaths = m_selectionContext.GetSelection<Path<object>>().ToArray();
-                    if (selectedPaths.Length > 0)
-                    {
-                        foreach (Path<object> path in selectedPaths)
-                        {
-                            // Expand as much of 'path' as possible, if m_autoExpand is true.
-                            Node node = null;
-
-                            if ((m_autoExpand & AutoExpandMode.ExpandSelected) > 0)
-                            {
-                                lastNodePath = ExpandPath(path);
-                                if(lastNodePath != null)
-                                    node = lastNodePath.Last;
-                            }
-                            else
-                            {
-                                m_itemToNodeMap.TryGetValue(path.Last, out node);
-                            }
-
-                            if (node != null)
-                            {
-                                node.IsSelected = true;
-                            }
-
-                            if (!m_multiSelectEnabled)
-                                break;
-                        }
-
-                        if (lastNodePath != null 
-                            && ((m_autoExpand & AutoExpandMode.ExpandSelected) > 0))
-                        {
-                            EnsureVisiblePath = lastNodePath;
-                        }
-                    }
+                    DeselectPreviousSelection();
+                    SelectCurrentSelection();
                 }
                 finally
                 {
@@ -836,8 +970,7 @@ namespace Sce.Atf.Wpf.Models
 
             // Issue here as item may be adapter
 
-            Node node;
-            if (m_itemToNodeMap.TryGetValue(item, out node))
+            foreach (var node in m_itemToNodesMap[item])
             {
                 node.IsInLabelEditMode = true;
             }
@@ -879,10 +1012,12 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
-        // Called after an atmoic selection operation is completed
+        // Called after an atomic selection operation is completed
         private void RefreshSelection()
         {
-            if (m_selectionChangedNodes != null && m_selectionChangedNodes.Count > 0)
+            if (m_selectionContext != null &&
+                m_selectionChangedNodes != null &&
+                m_selectionChangedNodes.Count > 0)
             {
                 try
                 {
@@ -890,13 +1025,21 @@ namespace Sce.Atf.Wpf.Models
 
                     if (!m_multiSelectEnabled)
                     {
-                        // TODO: test this
-                        Node lastSelected = m_selectionChangedNodes.LastOrDefault(x=>x.IsSelected);
-                        if(lastSelected != null)
+                        var lastSelected = m_selectionChangedNodes.LastOrDefault(x => x.IsSelected);
+
+                        // Deselect all other nodes
+                        foreach (var node in m_selectionChangedNodes)
                         {
-                            DeselectAll();
-                            m_selectionContext.Add(MakePath(lastSelected));
+                            if (node != lastSelected)
+                            {
+                                var path = MakePath(node);
+                                m_selectionContext.Remove(path);
+                            }
                         }
+
+                        // Select
+                        var selectedPath = MakePath(lastSelected);
+                        m_selectionContext.Add(selectedPath);
                     }
                     else
                     {
@@ -922,11 +1065,13 @@ namespace Sce.Atf.Wpf.Models
 
         private void DeselectAll()
         {
+            if (m_selectionContext == null)
+                return;
+
             var pathsToRemove = new List<Path<object>>();
             foreach (Path<object> selectedPath in m_selectionContext.GetSelection<Path<object>>().ToArray())
             {
-                Node selectedNode;
-                if (m_itemToNodeMap.TryGetValue(selectedPath.Last, out selectedNode))
+                foreach (var selectedNode in m_itemToNodesMap[selectedPath.Last])
                 {
                     pathsToRemove.Add(selectedPath);
                     selectedNode.IsSelected = false;
@@ -935,7 +1080,103 @@ namespace Sce.Atf.Wpf.Models
             m_selectionContext.RemoveRange(pathsToRemove);
         }
 
+        private void DeselectPreviousSelection()
+        {
+            //foreach (var node in m_itemToNodesMap.Values)
+            //    node.IsSelected = false;
+            // Deselect the previous selection
+            foreach (Path<object> path in m_previousSelection)
+            {
+                foreach (var node in m_itemToNodesMap[path.Last])
+                {
+                    //System.Diagnostics.Debug.Assert(node.IsSelected);
+                    node.IsSelected = false;
+                }
+            }
+        }
+
+        private void SelectCurrentSelection()
+        {
+            if (m_selectionContext == null || m_selectionContext.SelectionCount == 0)
+                return;
+
+            Path<Node> lastNodePath = null;
+            Path<object>[] selectedPaths = m_selectionContext.GetSelection<Path<object>>().ToArray();
+            if (selectedPaths.Length == 0)
+            {
+                // If no recognised paths were selected, this could be 
+                // a selection set externally of raw objects (not paths)
+                var selectedNodes = new HashSet<Node>();
+                object[] selectedObjects = m_selectionContext.GetSelection<object>().ToArray();
+                foreach (object selected in selectedObjects)
+                {
+                    // Check each selected object to see if has a mapped tree node
+                    foreach (var node in m_itemToNodesMap[selected])
+                    {
+                        // If so then store it and remove from selection context
+                        selectedNodes.Add(node);
+                        m_selectionContext.Remove(selected);
+                    }
+                }
+
+                if(selectedNodes.Count > 0)
+                {
+                    try
+                    {
+                        // Force a selection transaction and select all mapped
+                        // nodes, this will add them back into the selection context
+                        InSelectionTransaction = true;
+                        foreach (Node node in selectedNodes)
+                        {
+                            node.IsSelected = true;
+                            m_selectionChangedNodes.Add(node);
+                        }
+                    }
+                    finally
+                    {
+                        InSelectionTransaction = false;
+                    }
+                }
+            }
+            else
+            {
+                // If the selection contains valid paths then just deal with them directly
+                foreach (Path<object> path in selectedPaths)
+                {
+                    // Expand as much of 'path' as possible, if m_autoExpand is true.
+                    var nodes = new List<Node>();
+
+                    if ((m_autoExpand & AutoExpandMode.ExpandSelected) > 0)
+                    {
+                        lastNodePath = ExpandPath(path);
+                        if (lastNodePath != null)
+                            nodes.Add(lastNodePath.Last);
+                    }
+                    else
+                    {
+                        nodes.AddRange(m_itemToNodesMap[path.Last]);
+                    }
+
+                    foreach (var node in nodes)
+                    {
+                        node.IsSelected = true;
+                    }
+
+                    if (!m_multiSelectEnabled)
+                        break;
+                }
+
+                if (lastNodePath != null
+                    && ((m_autoExpand & AutoExpandMode.ExpandSelected) > 0))
+                {
+                    EnsureVisiblePath = lastNodePath;
+                }
+            }
+        }
+
         #endregion
+
+        protected ISelectionContext SelectionContext { get { return m_selectionContext; } }
 
         private ITreeView m_treeView;
         private IItemView m_itemView;
@@ -948,18 +1189,11 @@ namespace Sce.Atf.Wpf.Models
         private HashSet<object> m_parentsWithRemovedChildren;
         private HashSet<object> m_parentsWithAddedChildren;
         private Path<object>[] m_previousSelection;
-        private Dictionary<object, Node> m_itemToNodeMap = new Dictionary<object, Node>();
+        private readonly Multimap<object, Node> m_itemToNodesMap = new Multimap<object, Node>(null);
     }
 
-    /// <summary>
-    /// Tree node that can adapt an adaptee and provide a bindable As property</summary>
     public class Node : AdapterViewModel
     {
-        /// <summary>
-        /// Constructor</summary>
-        /// <param name="adaptee">Object that is adapted</param>
-        /// <param name="owner">Node's owner</param>
-        /// <param name="parent">Node's parent</param>
         public Node(object adaptee, TreeViewModel owner, Node parent)
             : base(adaptee)
         {
@@ -967,29 +1201,13 @@ namespace Sce.Atf.Wpf.Models
             Parent = parent;
         }
 
-        /// <summary>
-        /// Gets node's parent</summary>
         public Node Parent { get; private set; }
 
-        /// <summary>
-        /// Gets node's children</summary>
         public IEnumerable<Node> Children
         { 
-            get 
-            {
-                if (m_children == null)
-                {
-                    m_children = m_owner.CreateChildren(this);
-                }
-                return m_children; 
-            } 
+            get { return m_children ?? (m_children = m_owner.CreateChildren(this)); }
         }
 
-        #region Label Property
-
-        /// <summary>
-        /// Gets or sets node's label</summary>
-        /// <remarks>Default is empty string if node has no label</remarks>
         public string Label
         {
             get { return m_itemInfo.Label; }
@@ -999,24 +1217,11 @@ namespace Sce.Atf.Wpf.Models
                 if (context == null || !context.CanEditLabel(Adaptee))
                     return;
 
-                ITransactionContext transactionContext = m_owner.As<ITransactionContext>();
-                transactionContext.DoTransaction(
-                    delegate
-                    {
-                        context.SetLabel(Adaptee, value);
-                    }, "Edit Label".Localize());
+                var transactionContext = m_owner.As<ITransactionContext>();
+                transactionContext.DoTransaction(() => context.SetLabel(Adaptee, value), "Edit Label".Localize());
             }
         }
 
-        private static readonly PropertyChangedEventArgs s_labelArgs
-            = ObservableUtil.CreateArgs<Node>(x => x.Label);
-
-        #endregion
-
-        #region IsSelected Property
-
-        /// <summary>
-        /// Gets or sets whether node selected</summary>
         public bool IsSelected
         {
             get { return m_isSelected; }
@@ -1025,25 +1230,15 @@ namespace Sce.Atf.Wpf.Models
                 if (m_isSelected != value)
                 {
                     m_isSelected = value;
-                    OnPropertyChanged(s_isSelectedArgs);
+                    OnPropertyChanged(new PropertyChangedEventArgs("IsSelected"));
                     IsSelectedChanged.Raise(this, EventArgs.Empty);
-                    //System.Diagnostics.Debug.WriteLine(Label + " Selected=" + value);
                 }
             }
         }
 
-        private bool m_isSelected;
-        private static readonly PropertyChangedEventArgs s_isSelectedArgs
-            = ObservableUtil.CreateArgs<Node>(x => x.IsSelected);
 
         internal event EventHandler IsSelectedChanged;
 
-        #endregion
-
-        #region IsExpanded Property
-
-        /// <summary>
-        /// Gets or sets whether this node is expanded in the view</summary>
         public bool Expanded
         {
             get { return m_itemInfo.IsExpandedInView; }
@@ -1053,38 +1248,21 @@ namespace Sce.Atf.Wpf.Models
                 {
                     m_itemInfo.IsExpandedInView = value;
 
-                    //if (m_isExpanded)
-                    //{
-                    //    TODO: lazy loading
-                    //    var children = m_owner.CreateChildren(this);
-                    //    m_children = children;
-                    //}
+                    if (value)
+                    {
+                        // TODO: lazy loading
+                        m_children = m_owner.CreateChildren(this);
+                    }
 
-                    OnPropertyChanged(s_isExpandedArgs);
+                    OnPropertyChanged(new PropertyChangedEventArgs("Expanded"));
                 }
             }
         }
 
-        private static readonly PropertyChangedEventArgs s_isExpandedArgs
-            = ObservableUtil.CreateArgs<Node>(x => x.Expanded);
-
-        #endregion
-
-        #region IsLeaf Property
-
-        /// <summary>
-        /// Gets whether node is a leaf (has no sub-items)</summary>
         public bool IsLeaf
         {
             get { return m_itemInfo.IsLeaf; }
         }
-
-        private static readonly PropertyChangedEventArgs s_isLeafArgs
-            = ObservableUtil.CreateArgs<Node>(x => x.IsLeaf);
-
-        #endregion
-
-        #region IsInLabelEditMode Property
 
         /// <summary>
         /// Gets or sets whether label edit mode is active</summary>
@@ -1093,16 +1271,15 @@ namespace Sce.Atf.Wpf.Models
             get { return m_isInLabelEditMode; }
             set
             {
-                m_isInLabelEditMode = value;
-                OnPropertyChanged(s_isInLabelEditModeArgs);
+                if (m_itemInfo.AllowLabelEdit)
+                {
+                    m_isInLabelEditMode = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("IsInLabelEditMode"));
+                }
             }
         }
 
-        private bool m_isInLabelEditMode;
-        private static readonly PropertyChangedEventArgs s_isInLabelEditModeArgs
-            = ObservableUtil.CreateArgs<Node>(x => x.IsInLabelEditMode);
-
-        #endregion
+        #region ImageKey Property
 
         /// <summary>
         /// Gets the resource key for associated node image</summary>
@@ -1114,6 +1291,10 @@ namespace Sce.Atf.Wpf.Models
         private static readonly PropertyChangedEventArgs s_imageKeyArgs
             = ObservableUtil.CreateArgs<Node>(x => x.ImageKey);
 
+        #endregion
+
+        #region StateImageKey Property
+
         /// <summary>
         /// Gets the resource key for associated node state image</summary>
         public object StateImageKey
@@ -1123,9 +1304,90 @@ namespace Sce.Atf.Wpf.Models
 
         private static readonly PropertyChangedEventArgs s_stateImageKeyArgs
             = ObservableUtil.CreateArgs<Node>(x => x.StateImageKey);
-        
+
+        #endregion
+
+        #region FontWeight Property
+
         /// <summary>
-        /// Gets index of node in list of its parent's nodes</summary>
+        /// Gets or sets node's label</summary>
+        /// <remarks>Default is empty string if node has no label</remarks>
+        public FontWeight FontWeight
+        {
+            get { return ItemInfo.FontWeight; }
+        }
+
+        #endregion
+
+        #region FontItalicsStyle Property
+
+        /// <summary>
+        /// Gets or sets node's label</summary>
+        /// <remarks>Default is empty string if node has no label</remarks>
+        public FontStyle FontItalicStyle
+        {
+            get { return ItemInfo.FontItalicStyle; }
+        }
+
+        #endregion
+
+        #region HoverText Property
+
+        /// <summary>
+        /// Gets or sets node's label</summary>
+        /// <remarks>Default is empty string if node has no label</remarks>
+        public string HoverText
+        {
+            get { return m_itemInfo.HoverText; }
+            set
+            {
+                if (m_itemInfo.HoverText == value)
+                    return;
+
+                m_itemInfo.HoverText = value;
+                OnPropertyChanged(s_hoverTextArgs);
+                HoverTextChanged.Raise(this, EventArgs.Empty);
+                //System.Diagnostics.Debug.WriteLine(Label + " HoverText=" + value);
+            }
+        }
+
+        private static readonly PropertyChangedEventArgs s_hoverTextArgs
+            = ObservableUtil.CreateArgs<Node>(x => x.HoverText);
+
+        internal event EventHandler HoverTextChanged;
+
+        #endregion
+
+        public bool HasCheck
+        {
+            get { return m_itemInfo.HasCheck; }
+        }
+
+        public bool? CheckState
+        {
+            get { return m_itemInfo.CheckState; }
+            set
+            {
+                m_itemInfo.CheckState = value;
+
+                var context = m_owner.As<ICheckableItemView>();
+                if (context == null)
+                    return;
+
+                var transactionContext = m_owner.As<ITransactionContext>();
+                transactionContext.DoTransaction(
+                    delegate
+                    {
+                        context.SetIsChecked(Adaptee, value);
+                    }, Localizer.Localize("Check/Uncheck"));
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get { return m_itemInfo.IsEnabled; }
+        }
+        
         public int Index
         {
             get
@@ -1136,16 +1398,62 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
-        internal WpfItemInfo ItemInfo { get { return m_itemInfo; } }
+        /// <summary>
+        /// Gets whether this Node should be visible to the user, unless this is the root node,
+        /// in which case TreeViewModel.ShowRoot must also be 'true' in order to make this node visible.</summary>
+        public bool IsVisible
+        {
+            get
+            {
+                if (this == m_owner.Root && !m_owner.ShowRoot)
+                    return false;
+
+                if (string.IsNullOrEmpty(m_filterString))
+                    return m_itemInfo.IsVisible;
+
+                if (!m_isFilterCached)
+                {
+                    if (m_itemInfo.IsVisible && Label.ToUpperInvariant().Contains(m_filterString.ToUpperInvariant()))
+                    {
+                        m_isFiltered = false;
+                    }
+                    else
+                    {
+                        m_isFiltered = !Children.Any(node => node.IsVisible);
+                    }
+                }
+
+                return !m_isFiltered;
+            }
+        }
+
+        public void ResetVisibilityFilter(string filter, bool isNewFilterASubstring, bool isOldFilterASubstring)
+        {
+            if (m_isFilterCached)
+            {
+                if (isNewFilterASubstring && m_isFiltered)
+                {
+                    m_isFilterCached = false;
+                }
+                else if (isOldFilterASubstring && !m_isFiltered)
+                {
+                    m_isFilterCached = false;
+                }
+                else if (!isOldFilterASubstring && !isNewFilterASubstring)
+                {
+                    m_isFilterCached = false;
+                }
+            }
+
+            m_filterString = filter;
+            OnPropertyChanged(new PropertyChangedEventArgs("IsVisible"));
+        }
+
+        public WpfItemInfo ItemInfo { get { return m_itemInfo; } }
 
         internal void ItemInfoChanged()
         {
-            // TODO: could do some checks for efficiency
-            OnPropertyChanged(s_isExpandedArgs);
-            OnPropertyChanged(s_labelArgs);
-            OnPropertyChanged(s_isLeafArgs);
-            OnPropertyChanged(s_imageKeyArgs);
-            OnPropertyChanged(s_stateImageKeyArgs);
+            OnPropertyChanged(ObservableUtil.AllChangedEventArgs);
         }
 
         internal IList<Node> ChildrenInternal { get { return m_children; } }
@@ -1153,28 +1461,41 @@ namespace Sce.Atf.Wpf.Models
         private readonly WpfItemInfo m_itemInfo = new WpfItemInfo();
         private readonly TreeViewModel m_owner;
         private ObservableCollection<Node> m_children;
+        private bool m_isFiltered;
+        private bool m_isFilterCached;
+        private string m_filterString;
+        private bool m_isSelected;
+        private bool m_isInLabelEditMode;
     }
 
     /// <summary>
-    /// Node auto expand enums</summary>
+    /// Context which has checkable items
+    /// </summary>
+    public interface ICheckableItemView
+    {
+        bool? GetIsChecked(object item);
+
+        void SetIsChecked(object item, bool? value);
+    }
+
     [Flags]
     public enum AutoExpandMode : byte
     {
         /// <summary>
-        /// Auto expand is disabled</summary>
+        /// Auto expand is disabled </summary>
         Disabled = 0,
         /// <summary>
-        /// Auto expands nodes if they become selected in the ISelectionContext</summary>
+        /// Auto expands nodes if they become selected in the ISelectionContext </summary>
         ExpandSelected = 1,
         /// <summary>
-        /// Auto expands newly inserted nodes</summary>
+        /// Auto expands newly inserted nodes </summary>
         ExpandInserted = 2,
         /// <summary>
         /// Auto expands newly inserted nodes only if the parent node is selected.
         /// This option overrides ExpandInserted</summary>
         ExpandInsertedIfParentSelected = 4,
         /// <summary>
-        /// Default mode</summary>
+        /// Default mode </summary>
         Default = ExpandSelected | ExpandInsertedIfParentSelected
     }
 }

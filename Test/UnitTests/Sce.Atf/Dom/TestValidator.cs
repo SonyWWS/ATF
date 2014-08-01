@@ -12,39 +12,42 @@ namespace UnitTests.Atf.Dom
     [TestFixture]
     public class TestValidator : DomTest
     {
-        private DomNodeType m_rootType;
-        private DomNodeType m_childType;
-        private AttributeInfo m_stringAttrInfo;
-        private AttributeInfo m_refAttrInfo;
-        private ChildInfo m_childInfo;
+        protected DomNodeType ChildType;
+        protected AttributeInfo StringAttrInfo;//defined on ChildType
+        protected AttributeInfo RefAttrInfo;//defined on ChildType
+        protected ChildInfo ChildInfo;//defined on ChildType
+        
+        protected DomNodeType RootType;//derives from ChildType
 
         public TestValidator()
         {
             // define a tree of validation contexts
-            m_childType = new DomNodeType("test");
-            m_stringAttrInfo = GetStringAttribute("string");
-            m_childType.Define(m_stringAttrInfo);
-            m_refAttrInfo = GetRefAttribute("ref");
-            m_childType.Define(m_refAttrInfo);
-            m_childInfo = new ChildInfo("child", m_childType);
-            m_childType.Define(m_childInfo);
-            m_childType.Define(new ExtensionInfo<ValidationContext>());
+            ChildType = new DomNodeType("test");
+            StringAttrInfo = GetStringAttribute("string");
+            ChildType.Define(StringAttrInfo);
+            RefAttrInfo = GetRefAttribute("ref");
+            ChildType.Define(RefAttrInfo);
+            ChildInfo = new ChildInfo("child", ChildType);
+            ChildType.Define(ChildInfo);
+            ChildType.Define(new ExtensionInfo<ValidationContext>());
 
             // define a distinct root type with the validator
-            m_rootType = new DomNodeType("root");
-            m_rootType.BaseType = m_childType;
-            m_rootType.Define(new ExtensionInfo<Validator>());
+            RootType = new DomNodeType("root");
+            RootType.BaseType = ChildType;
+            RootType.Define(new ExtensionInfo<Validator>());
+            AttributeInfo overriddenInfo = GetStringAttribute("string");
+            RootType.Define(overriddenInfo);
 
-            IEnumerable<AttributeInfo> attributes = m_rootType.Attributes; // freezes the types
+            IEnumerable<AttributeInfo> attributes = RootType.Attributes; // freezes the types
         }
 
-        private DomNode CreateTree()
+        protected DomNode CreateTree()
         {
-            DomNode root = new DomNode(m_rootType);
-            DomNode child = new DomNode(m_childType);
-            DomNode grandchild = new DomNode(m_childType);
-            child.SetChild(m_childInfo, grandchild);
-            root.SetChild(m_childInfo, child);
+            DomNode root = new DomNode(RootType);
+            DomNode child = new DomNode(ChildType);
+            DomNode grandchild = new DomNode(ChildType);
+            child.SetChild(ChildInfo, grandchild);
+            root.SetChild(ChildInfo, child);
             return root;
         }
 
@@ -53,8 +56,8 @@ namespace UnitTests.Atf.Dom
         {
             DomNode root = CreateTree();
             Validator validator = root.As<Validator>();
-            DomNode grandchild = root.GetChild(m_childInfo).GetChild(m_childInfo);
-            grandchild.SetAttribute(m_stringAttrInfo, "foo");
+            DomNode grandchild = root.GetChild(ChildInfo).GetChild(ChildInfo);
+            grandchild.SetAttribute(StringAttrInfo, "foo");
             Assert.AreSame(validator.Sender, root);
             AttributeEventArgs e = (AttributeEventArgs)validator.E;
             Assert.NotNull(e);
@@ -64,10 +67,10 @@ namespace UnitTests.Atf.Dom
         [Test]
         public void TestOnChildInserted()
         {
-            DomNode root = new DomNode(m_rootType);
+            DomNode root = new DomNode(RootType);
             Validator validator = root.As<Validator>();
-            DomNode child = new DomNode(m_childType);
-            root.SetChild(m_childInfo, child);
+            DomNode child = new DomNode(ChildType);
+            root.SetChild(ChildInfo, child);
             Assert.AreSame(validator.Sender, root);
             ChildEventArgs e = (ChildEventArgs)validator.E;
             Assert.NotNull(e);
@@ -77,11 +80,11 @@ namespace UnitTests.Atf.Dom
         [Test]
         public void TestOnChildRemoved()
         {
-            DomNode root = new DomNode(m_rootType);
+            DomNode root = new DomNode(RootType);
             Validator validator = root.As<Validator>();
-            DomNode child = new DomNode(m_childType);
-            root.SetChild(m_childInfo, child);
-            root.SetChild(m_childInfo, null);
+            DomNode child = new DomNode(ChildType);
+            root.SetChild(ChildInfo, child);
+            root.SetChild(ChildInfo, null);
             Assert.AreSame(validator.Sender, root);
             ChildEventArgs e = (ChildEventArgs)validator.E;
             Assert.NotNull(e);
@@ -144,13 +147,13 @@ namespace UnitTests.Atf.Dom
         [Test]
         public void TestSubscribeAndUnsubscribe()
         {
-            DomNode root = new DomNode(m_rootType);
+            DomNode root = new DomNode(RootType);
             Validator validator = root.As<Validator>();
 
-            DomNode child = new DomNode(m_childType);
-            DomNode grandchild = new DomNode(m_childType);
-            child.SetChild(m_childInfo, grandchild);
-            root.SetChild(m_childInfo, child);
+            DomNode child = new DomNode(ChildType);
+            DomNode grandchild = new DomNode(ChildType);
+            child.SetChild(ChildInfo, grandchild);
+            root.SetChild(ChildInfo, child);
 
             ValidationContext context = grandchild.As<ValidationContext>();
             context.RaiseBeginning();
@@ -159,7 +162,7 @@ namespace UnitTests.Atf.Dom
             Assert.AreSame(validator.E, EventArgs.Empty);
             context.RaiseEnded();
 
-            root.SetChild(m_childInfo, null);
+            root.SetChild(ChildInfo, null);
             context.RaiseBeginning();
             Assert.False(validator.IsValidating);
         }

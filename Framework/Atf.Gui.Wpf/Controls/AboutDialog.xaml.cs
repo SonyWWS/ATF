@@ -1,6 +1,9 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.Diagnostics;
+using System.Text;
+using System.Windows;
+using Sce.Atf.Wpf.Models;
 
 namespace Sce.Atf.Wpf.Controls
 {
@@ -26,6 +29,22 @@ namespace Sce.Atf.Wpf.Controls
                 string uri = e.Uri.AbsoluteUri;
                 Process.Start(new ProcessStartInfo(uri));
                 e.Handled = true;
+            }
+        }
+
+        // Note: Should really use delegate command and add this code to the view model.
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var vm = DataContext as AboutDialogViewModel;
+            if (vm != null)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine(vm.ProductTitle);
+                sb.AppendLine(vm.Version);
+                foreach (var assembly in vm.Assemblies)
+                    sb.AppendLine(assembly);
+                
+                Clipboard.SetDataObject(sb.ToString());
             }
         }
     }

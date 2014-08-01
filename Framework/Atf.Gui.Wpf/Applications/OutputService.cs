@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Windows.Threading;
 
+using Sce.Atf.Applications;
 using Sce.Atf.Wpf.Controls;
 using Sce.Atf.Wpf.Models;
 

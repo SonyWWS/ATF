@@ -65,7 +65,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathName">File name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <returns>Dialog result</returns>
-        public DialogResult OpenFileName(ref string pathName, string filter)
+        public FileDialogResult OpenFileName(ref string pathName, string filter)
         {
             CustomOpenFileDialog dialog = new CustomOpenFileDialog();
             dialog.Filter = filter;
@@ -76,7 +76,7 @@ namespace Sce.Atf.Applications
             if (result == DialogResult.OK)
                 pathName = dialog.FileName;
 
-            return result;
+            return DialogResultToFileDialogResult(result);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathNames">File names</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <returns>Dialog result</returns>
-        public DialogResult OpenFileNames(ref string[] pathNames, string filter)
+        public FileDialogResult OpenFileNames(ref string[] pathNames, string filter)
         {
             CustomOpenFileDialog dialog = new CustomOpenFileDialog();
             dialog.Filter = filter;
@@ -96,7 +96,7 @@ namespace Sce.Atf.Applications
             if (result == DialogResult.OK)
                 pathNames = dialog.FileNames;
 
-            return result;
+            return DialogResultToFileDialogResult(result);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathName">File name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <returns>Dialog result</returns>
-        public DialogResult SaveFileName(ref string pathName, string filter)
+        public FileDialogResult SaveFileName(ref string pathName, string filter)
         {
             CustomSaveFileDialog dialog = new CustomSaveFileDialog();
             dialog.Filter = filter;
@@ -120,21 +120,21 @@ namespace Sce.Atf.Applications
             if (result == DialogResult.OK)
                 pathName = dialog.FileName;
 
-            return result;
+            return DialogResultToFileDialogResult(result);
         }
 
         /// <summary>
         /// Confirms that file should be closed</summary>
         /// <param name="message">Confirmation message</param>
         /// <returns>Dialog result</returns>
-        public DialogResult ConfirmFileClose(string message)
+        public FileDialogResult ConfirmFileClose(string message)
         {
             ConfirmationDialog dialog = new ConfirmationDialog("Close".Localize("Close file"), message);
             dialog.YesButtonText = "&Save".Localize("The '&' is optional and means that Alt+S is the keyboard shortcut on this button");
             dialog.NoButtonText = "&Discard".Localize("The '&' is optional and means that Alt+D is the keyboard shortcut on this button");
             DialogResult result = dialog.ShowDialog(GetDialogOwner());
             dialog.Dispose();
-            return result;
+            return DialogResultToFileDialogResult(result);
         }
 
         /// <summary>
@@ -252,6 +252,26 @@ namespace Sce.Atf.Applications
                 return InitialDirectory;
 
             return null; //let the operating system decide
+        }
+
+        /// <summary>Utility function to convert WinForms DialogResult to the platform agnostic FileDialogResult</summary>
+        /// <param name="result">DialogResult to convert to FileDialogResult</param>
+        /// <returns>FileDialogResult corresponding to the argument value, or FileDialogResult.Cancel if no match is found</returns>
+        private FileDialogResult DialogResultToFileDialogResult(DialogResult result)
+        {
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    return FileDialogResult.Yes;
+                case DialogResult.No:
+                    return FileDialogResult.No;
+                case DialogResult.OK:
+                    return FileDialogResult.OK;
+                case DialogResult.Cancel:
+                    return FileDialogResult.Cancel;
+                default:
+                    return FileDialogResult.Cancel;
+            }
         }
 
         private string m_firstRunInitialDirectory;

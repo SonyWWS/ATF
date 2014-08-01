@@ -5,26 +5,59 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Sce.Atf.Applications;
 
 namespace Sce.Atf.Wpf.Behaviors
 {
     /// <summary>
-    /// ItemsControl drop target behavior</summary>
+    /// Drop target behavior for items control to accept drag drop operations
+    /// Drop target is selected using this order of preference:
+    /// 1. If drop is over an item from the control, this is used as the target
+    /// 2. If not then the RootTarget is used
+    /// 3. If RootTarget is not set then the DataContext of the items control is used
+    /// </summary>
     public class ItemsControlDropTargetBehavior : DropTargetBehavior<ItemsControl>
     {
-        /// <summary>
-        /// Method called on DragOver events</summary>
-        /// <param name="e">DragEventArgs containing event information</param>
-        protected override void OnDragOver(DragEventArgs e)
+        public static readonly DependencyProperty RootTargetProperty =
+            DependencyProperty.Register("RootTarget", typeof(object), typeof(ItemsControlDropTargetBehavior), new PropertyMetadata(default(object)));
+
+        public object RootTarget
+        {
+            get { return (object)GetValue(RootTargetProperty); }
+            set { SetValue(RootTargetProperty, value); }
+        }
+
+        protected virtual object GetDropTarget(DragEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
-            var parent = AssociatedObject.GetItemAtPoint(pos);
-            
-            if (parent == null)
-                parent = AssociatedObject.DataContext;
+            object parent = AssociatedObject.GetItemAtPoint(pos);
 
-            if (Sce.Atf.Applications.ApplicationUtil.CanInsert(AssociatedObject.DataContext, parent, e.Data))
-                e.Effects = DragDropEffects.Move;
+            if (parent == null)
+            {
+                parent = RootTarget ?? AssociatedObject.DataContext;
+            }
+            return parent;
+        }
+
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            object target = GetDropTarget(e);
+
+            if (ApplicationUtil.CanInsert(AssociatedObject.DataContext, target, e.Data))
+            {
+                if ((e.AllowedEffects & DragDropEffects.Copy) > 0 && 
+                    (e.KeyStates & DragDropKeyStates.ControlKey) > 0)
+                {
+                    e.Effects = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.Move;
+                }
+            }
+            else
+                e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
         /// <summary>
@@ -32,14 +65,34 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <param name="e">DragEventArgs containing event information</param>
         protected override void OnDrop(DragEventArgs e)
         {
-            var pos = e.GetPosition(AssociatedObject);
-            var parent = AssociatedObject.GetItemAtPoint(pos);
-            
-            if (parent == null)
-                parent = AssociatedObject.DataContext;
+            object target = GetDropTarget(e);
 
-            Sce.Atf.Applications.ApplicationUtil.Insert(AssociatedObject.DataContext, parent, e.Data,
-                "Drag and Drop".Localize(), null);
+            if (!ApplicationUtil.CanInsert(AssociatedObject.DataContext, target, e.Data))
+                return;
+
+            IDataObject dataObject = e.Data;
+
+            if ((e.AllowedEffects & DragDropEffects.Copy) > 0 &&
+                    (e.KeyStates & DragDropKeyStates.ControlKey) > 0)
+            {
+                var registry = Composer.Current.Container.GetExportedValueOrDefault<IContextRegistry>();
+                if(registry != null)
+                {
+                    // Attempt to get context which was the source of this drag operation
+                    var ctx = registry.GetActiveContext<IInstancingContext>();
+                    if(ctx != null && ctx.CanCopy())
+                    {
+                        object rawObject = ctx.Copy();
+                        dataObject = rawObject as IDataObject ?? new DataObject(rawObject);
+                    }
+                }
+            }
+
+            var statusService = Composer.Current.Container.GetExportedValueOrDefault<IStatusService>();
+            ApplicationUtil.Insert(AssociatedObject.DataContext, target, dataObject, "Drag Drop".Localize(), statusService);
+
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
     }
@@ -108,13 +161,21 @@ namespace Sce.Atf.Wpf.Behaviors
 
             object parentData = container != null ? container.DataContext : AssociatedObject.DataContext;
 
-            if (Sce.Atf.Applications.ApplicationUtil.CanInsert(AssociatedObject.DataContext, parentData, e.Data))
-                e.Effects = DragDropEffects.Move;
+            if (ApplicationUtil.CanInsert(AssociatedObject.DataContext, parentData, e.Data))
+            {
+                if ((e.AllowedEffects & DragDropEffects.Copy) > 0 &&
+                   (e.KeyStates & DragDropKeyStates.ControlKey) > 0)
+                {
+                    e.Effects = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.Move;
+                }
+                e.Handled = true;
+            }
         }
 
-        /// <summary>
-        /// Method called on Drop events</summary>
-        /// <param name="e">DragEventArgs containing event information</param>
         protected override void OnDrop(DragEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
@@ -123,8 +184,13 @@ namespace Sce.Atf.Wpf.Behaviors
             if (parent == null)
                 parent = AssociatedObject.DataContext;
 
-            Sce.Atf.Applications.ApplicationUtil.Insert(AssociatedObject.DataContext, parent, e.Data,
-                "Drag and Drop".Localize(), null);
+            if (ApplicationUtil.CanInsert(AssociatedObject.DataContext, parent, e.Data))
+            {
+                var statusService = Composer.Current.Container.GetExportedValueOrDefault<IStatusService>();
+                ApplicationUtil.Insert(AssociatedObject.DataContext, parent, e.Data, "Drag Drop".Localize(), statusService);
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
         }
 
         private static bool HasVerticalOrientation(FrameworkElement itemContainer)

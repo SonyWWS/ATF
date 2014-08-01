@@ -365,6 +365,7 @@ namespace UnitTests.Atf.Dom
             test.SetAttribute(info, 0);
             Assert.AreEqual(test.GetAttribute(info), 0);
             Assert.True(test.IsAttributeDefault(info));
+            Assert.AreEqual(test.GetLocalAttribute(info), 0);
         }
 
         [Test]
@@ -865,6 +866,9 @@ namespace UnitTests.Atf.Dom
 
             DomNode[] result = DomNode.Copy(new DomNode[] { test });
             Assert.True(Equals(result[0], test));
+
+            DomNode singleResult = DomNode.Copy(test);
+            Assert.True(Equals(singleResult, test));
         }
 
         [Test]
@@ -888,6 +892,9 @@ namespace UnitTests.Atf.Dom
             DomNode[] result = DomNode.Copy(new DomNode[] { test });
             Assert.AreEqual(result.Length, 1);
             Assert.True(Equals(result[0], test));
+
+            DomNode singleResult = DomNode.Copy(test);
+            Assert.True(Equals(singleResult, test));
         }
 
         private class DomTypes

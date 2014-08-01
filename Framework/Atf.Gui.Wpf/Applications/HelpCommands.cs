@@ -8,7 +8,9 @@ using System.Windows;
 using System.Windows.Input;
 
 using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
 using Sce.Atf.Controls.PropertyEditing;
+using Sce.Atf.Input;
 using Sce.Atf.Wpf.Controls;
 using Sce.Atf.Wpf.Models;
 
@@ -30,6 +32,9 @@ namespace Sce.Atf.Wpf.Applications
             /// <summary>
             /// General Help command</summary>
             Help,
+            /// <summary>
+            /// Release Notes Help command</summary>
+            HelpReleaseNotes,
             /// <summary>
             /// Help About...</summary>
             HelpAbout,
@@ -56,8 +61,26 @@ namespace Sce.Atf.Wpf.Applications
         public string HelpFilePath { get; set; }
 
         /// <summary>
+        /// Gets or sets the help file path</summary>
+        public string ReleaseNotesFilePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to make ShowContextHelp user setting visible</summary>
+        public bool EnableContextHelpUserSetting
+        {
+            get { return m_enableContextHelpUserSetting; }
+            set { m_enableContextHelpUserSetting = value; }
+        }
+        private bool m_enableContextHelpUserSetting = true;
+
+        /// <summary>
         /// Gets or sets whether to show context-sensitive help</summary>
-        public bool ShowContextHelp { get; set; }
+        public bool ShowContextHelp
+        {
+            get { return m_showContextHelp; }
+            set { m_showContextHelp = value; }
+        }
+        private bool m_showContextHelp = true;
 
         /// <summary>
         /// Gets or sets the application help is obtained for</summary>
@@ -67,8 +90,9 @@ namespace Sce.Atf.Wpf.Applications
             set
             {
                 m_applicationName = value;
-                m_aboutCommand.Text = "About".Localize() + " " + ApplicationName;
-                m_aboutCommand.Description = m_aboutCommand.Text;
+                var commandItem = s_helpAboutCommand.GetCommandItem();
+                commandItem.Text = "_About".Localize() + " " + ApplicationName;
+                commandItem.Description = commandItem.Text;
             }
         }
 
@@ -79,25 +103,29 @@ namespace Sce.Atf.Wpf.Applications
         /// and setting up Settings Service</summary>
         public void Initialize()
         {
-            ShowContextHelp = true;
             m_commandService.RegisterCommand(s_helpCommand, this);
-            m_aboutCommand = m_commandService.RegisterCommand(s_helpAboutCommand, this);
+            m_commandService.RegisterCommand(s_helpAboutCommand, this);
+
+            if (!string.IsNullOrEmpty(ReleaseNotesFilePath))
+            {
+                m_commandService.RegisterCommand(s_releaseNotesCommand, this);
+            }
 
             for (int i = 0; i < kMaxContextHelpKeys; i++)
             {
-                var commandItem = m_commandService.RegisterCommand(
-                    new CommandDef(
-                    new ContextMenuHelpTag() { Index = i },
+                var tag = new ContextMenuHelpTag() { Index = i };
+
+                CommandInfo info = m_commandService.RegisterCommand(
+                    tag,
                     null,
                     Groups.Help,
+                    "Help/Help".Localize() + " " + (i + 1),
                     "Help".Localize(),
-                    new string[] { "Help".Localize() },
-                    "Help".Localize(),
+                    Keys.None,
                     null,
-                    null,
-                    Sce.Atf.Applications.CommandVisibility.None), this);
+                    Sce.Atf.Applications.CommandVisibility.None, this);
 
-                m_contextMenuHelpCommands.Add(commandItem);
+                m_contextMenuHelpCommands.Add(info);
             }
 
             // Set up a default help path
@@ -108,7 +136,7 @@ namespace Sce.Atf.Wpf.Applications
             // Set up a default application name
 
             // Register help setting
-            if(m_settingsService != null)
+            if(m_settingsService != null && EnableContextHelpUserSetting)
             {
                 m_settingsService.RegisterUserSettings("Help".Localize(), 
                    new BoundPropertyDescriptor(this, () => ShowContextHelp, "Show Context Help".Localize(), "Help".Localize(), "Uncheck this to hide help commands in context menus".Localize()));
@@ -124,6 +152,14 @@ namespace Sce.Atf.Wpf.Applications
         {
             if (HelpFilePath != null)
                 System.Windows.Forms.Help.ShowHelp(null, HelpFilePath);
+        }
+
+        /// <summary>
+        /// Shows the application help file</summary>
+        public void ShowReleaseNotes()
+        {
+            if (ReleaseNotesFilePath != null)
+                System.Windows.Forms.Help.ShowHelp(null, ReleaseNotesFilePath);
         }
 
         /// <summary>
@@ -162,35 +198,31 @@ namespace Sce.Atf.Wpf.Applications
         /// Shows the application's About... dialog</summary>
         public virtual void ShowHelpAbout()
         {
-            var dlg = new AboutDialog();
-            dlg.DataContext = new AboutDialogViewModel();
-            dlg.Owner = Application.Current.MainWindow;
-            dlg.ShowDialog();
+            DialogUtils.ShowDialogWithViewModel<AboutDialog, AboutDialogViewModel>();
         }
 
         #region Sce.Atf.Applications.ICommandClient Members
 
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
-        /// <param name="commandObj">Command to be done</param>
+        /// <param name="tag">Command to be done</param>
         /// <returns>True iff client can do the command</returns>
-        public bool CanDoCommand(object commandObj)
+        public bool CanDoCommand(object tag)
         {
-            ICommandItem command = commandObj as ICommandItem;
-            Requires.NotNull(command, "Object specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            if (command.CommandTag is Commands)
+            if (tag is Commands)
             {
-                switch ((Commands)command.CommandTag)
+                switch ((Commands)tag)
                 {
                     case Commands.Help: return HelpFilePath != null;
+                    case Commands.HelpReleaseNotes: return ReleaseNotesFilePath != null;
                     case Commands.HelpAbout: return true;
                 }
             }
-            else if (ShowContextHelp && command.CommandTag is ContextMenuHelpTag)
+            else if (ShowContextHelp && tag is ContextMenuHelpTag)
             {
                 return m_lastContextMenuKeys != null
                     && HelpFilePath != null
-                    && ((ContextMenuHelpTag)command.CommandTag).Index < m_lastContextMenuKeys.Length;
+                    && ((ContextMenuHelpTag)tag).Index < m_lastContextMenuKeys.Length;
             }
 
             return false;
@@ -198,17 +230,18 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Does the command</summary>
-        /// <param name="commandObj">Command to be done</param>
-        public void DoCommand(object commandObj)
+        /// <param name="tag">Command to be done</param>
+        public void DoCommand(object tag)
         {
-            ICommandItem command = commandObj as ICommandItem;
-            Requires.NotNull(command, "Object specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            if (command.CommandTag is Commands)
+            if (tag is Commands)
             {
-                switch ((Commands)command.CommandTag)
+                switch ((Commands)tag)
                 {
                     case Commands.Help:
                         ShowHelp(System.Windows.Forms.HelpNavigator.TableOfContents);
+                        break;
+                    case Commands.HelpReleaseNotes:
+                        ShowReleaseNotes();
                         break;
                     case Commands.HelpAbout:
                         ShowHelpAbout();
@@ -216,9 +249,9 @@ namespace Sce.Atf.Wpf.Applications
 
                 }
             }
-            else if (command.CommandTag is ContextMenuHelpTag)
+            else if (tag is ContextMenuHelpTag)
             {
-                int index = ((ContextMenuHelpTag)command.CommandTag).Index;
+                int index = ((ContextMenuHelpTag)tag).Index;
                 if (index < m_lastContextMenuKeys.Length)
                 {
                     string key = m_lastContextMenuKeys[index];
@@ -231,7 +264,7 @@ namespace Sce.Atf.Wpf.Applications
         /// Updates command state for given command</summary>
         /// <param name="commandTag">Command</param>
         /// <param name="commandState">Command info to update</param>
-        public void UpdateCommand(object commandTag, Sce.Atf.Applications.CommandState commandState) { }
+        public void UpdateCommand(object commandTag, CommandState commandState) { }
 
         #endregion
 
@@ -257,7 +290,8 @@ namespace Sce.Atf.Wpf.Applications
                 {
                     for (int i = 0; i < m_lastContextMenuKeys.Length; i++ )
                     {
-                        m_contextMenuHelpCommands[i].Text = m_lastContextMenuKeys[i];
+                        ICommandItem command = m_contextMenuHelpCommands[i].GetCommandItem();
+                        command.Text = m_lastContextMenuKeys[i];
                         yield return m_contextMenuHelpCommands[i].CommandTag;
                     }
                 }
@@ -285,36 +319,43 @@ namespace Sce.Atf.Wpf.Applications
 
         private string[] m_lastContextMenuKeys;
         private string m_applicationName;
-        private ICommandItem m_aboutCommand;
 
-        private static CommandDef s_helpCommand = new CommandDef(
+        private static readonly CommandInfo s_helpCommand = new CommandInfo(
              Commands.Help,
-             Sce.Atf.Applications.StandardMenu.Help,
+             StandardMenu.Help,
              Groups.Help,
              "_Contents".Localize(),
-             null,
              "Help Contents".Localize(),
+             Keys.F1,
              null,
-             new InputGesture[]{new KeyGesture(Key.F1)},
-             Sce.Atf.Applications.CommandVisibility.Menu);
+             CommandVisibility.Menu);
 
-        private static CommandDef s_helpAboutCommand = new CommandDef(
+        private static readonly CommandInfo s_releaseNotesCommand = new CommandInfo(
+             Commands.HelpReleaseNotes,
+             StandardMenu.Help,
+             Groups.Help,
+             "_Release Notes".Localize(),
+             "Release Notes".Localize(),
+             Keys.None,
+             null,
+             CommandVisibility.Menu);
+
+        private static readonly CommandInfo s_helpAboutCommand = new CommandInfo(
             Commands.HelpAbout,
-            Sce.Atf.Applications.StandardMenu.Help,
+            StandardMenu.Help,
             Groups.Help,
-            "_About".Localize(), // TODO
+            "_About".Localize(),
+            "Shows Information About Application".Localize(),
+            Keys.None,
             null,
-            "Shows Information About Application".Localize(), // TODO
-            null,
-            null,
-            Sce.Atf.Applications.CommandVisibility.Menu);
+            CommandVisibility.Menu);
 
         private class ContextMenuHelpTag
         {
             public int Index { get; set; }
         }
 
-        private List<ICommandItem> m_contextMenuHelpCommands = new List<ICommandItem>();
+        private readonly List<CommandInfo> m_contextMenuHelpCommands = new List<CommandInfo>();
     }
 
 }

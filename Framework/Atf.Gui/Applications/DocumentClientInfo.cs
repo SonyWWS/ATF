@@ -69,6 +69,59 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
+        /// Constructor</summary>
+        /// <param name="fileType">File type name</param>
+        /// <param name="extension">File extension, without the '.'</param>
+        /// <param name="newIconKey">Name of 'New' icon, or null</param>
+        /// <param name="openIconKey">Name of 'Open' icon, or null</param>
+        public DocumentClientInfo(
+            string fileType,
+            string extension,
+            object newIconKey,
+            object openIconKey)
+            : this(fileType, new[] { extension }, newIconKey, openIconKey, true)
+        {
+        }
+
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="fileType">File type name</param>
+        /// <param name="extension">File extension, without the '.'</param>
+        /// <param name="newIconKey">Name of 'New' icon, or null</param>
+        /// <param name="openIconKey">Name of 'Open' icon, or null</param>
+        /// <param name="multiDocument">Whether client opens multiple documents simultaneously</param>
+        public DocumentClientInfo(
+            string fileType,
+            string extension,
+            object newIconKey,
+            object openIconKey,
+            bool multiDocument)
+            : this(fileType, new[] { extension }, newIconKey, openIconKey, multiDocument)
+        {
+        }
+
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="fileType">File type name</param>
+        /// <param name="extensions">File extensions, without the '.'</param>
+        /// <param name="newIconKey">Name of 'New' icon, or null</param>
+        /// <param name="openIconKey">Name of 'Open' icon, or null</param>
+        /// <param name="multiDocument">Whether client opens multiple documents simultaneously</param>
+        public DocumentClientInfo(
+            string fileType,
+            string[] extensions,
+            object newIconKey,
+            object openIconKey,
+            bool multiDocument)
+        {
+            m_fileType = fileType;
+            m_extensions = extensions;
+            m_newIconKey = newIconKey;
+            m_openIconKey = openIconKey;
+            m_multiDocument = multiDocument;
+        }
+
+        /// <summary>
         /// Gets and sets the document client's user-readable file type name</summary>
         /// <remarks>The type name should be unique within an application and can contain
         /// any characters except ','</remarks>
@@ -87,19 +140,45 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
+        /// Gets and sets the default new file extension that the editor can handle</summary>
+        /// <remarks>If the editor supports multiple extensions, setting the default extension 
+        /// will stop ATF from prompting the user to choose the extension, when creating a new file</remarks>
+        public string DefaultExtension
+        {
+            get { return m_defaultExtension; }
+            set { m_defaultExtension = value; }
+        }
+
+        /// <summary>
         /// Gets and sets the editor's 'New' icon name, or null</summary>
         public string NewIconName
         {
-            get { return m_newIconName; }
+            get { return (!String.IsNullOrEmpty(m_newIconName)) ? m_newIconName : (m_newIconKey as string); }
             set { m_newIconName = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the editor's 'New' icon resource key, or null</summary>
+        public object NewIconKey
+        {
+            get { return m_newIconKey; }
+            set { m_newIconKey = value; }
         }
 
         /// <summary>
         /// Gets and sets the editor's 'Open' icon name, or null</summary>
         public string OpenIconName
         {
-            get { return m_openIconName; }
+            get { return (!String.IsNullOrEmpty(m_openIconName)) ? m_openIconName : m_openIconKey as string; }
             set { m_openIconName = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the editor's 'Open' icon name, or null</summary>
+        public object OpenIconKey
+        {
+            get { return m_openIconKey; }
+            set { m_openIconKey = value; }
         }
 
         /// <summary>
@@ -125,6 +204,14 @@ namespace Sce.Atf.Applications
         {
             get { return m_initialDirectory; }
             set { m_initialDirectory = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets a value indicating whether the StandardFileCommands service should automatically create commands for this client's document</summary>
+        public bool AllowStandardFileCommands
+        {
+            get { return m_allowStandardFileCommands; }
+            set { m_allowStandardFileCommands = value; }
         }
 
         /// <summary>
@@ -166,9 +253,13 @@ namespace Sce.Atf.Applications
         private string m_fileType;
         private string m_newIconName;
         private string m_openIconName;
-        private string m_newDocumentName= "Untitled".Localize();
+        private object m_newIconKey;
+        private object m_openIconKey;
+        private string m_newDocumentName = "Untitled".Localize();
         private bool m_multiDocument;
         private string[] m_extensions;
+        private string m_defaultExtension;
         private string m_initialDirectory;
+        private bool m_allowStandardFileCommands = true;
     }
 }

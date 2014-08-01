@@ -39,10 +39,20 @@ namespace Sce.Atf.Wpf.Behaviors
             base.OnAttached();
 
             AssociatedObject.AllowDrop = true;
-            AssociatedObject.Drop += new DragEventHandler(OnDrop);
-            AssociatedObject.DragEnter += new DragEventHandler(OnDragEnter);
-            AssociatedObject.DragLeave += new DragEventHandler(OnDragLeave);
-            AssociatedObject.DragOver += new DragEventHandler(OnDragOver);
+            AssociatedObject.Drop += OnDrop;
+            AssociatedObject.DragEnter += OnDragEnter;
+            AssociatedObject.DragLeave += OnDragLeave;
+            AssociatedObject.DragOver += OnDragOver;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+
+            AssociatedObject.Drop -= OnDrop;
+            AssociatedObject.DragEnter -= OnDragEnter;
+            AssociatedObject.DragLeave -= OnDragLeave;
+            AssociatedObject.DragOver -= OnDragOver;
         }
 
         #endregion
@@ -53,9 +63,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <param name="e">DragEventArgs that contains the event data</param>
         void OnDragEnter(object sender, DragEventArgs e)
         {
-            e.Effects = DragDropEffects.None;
             OnDragEnter(e);
-            e.Handled = true;
         }
 
         /// <summary>
@@ -66,7 +74,6 @@ namespace Sce.Atf.Wpf.Behaviors
         {
             e.Effects = DragDropEffects.None;
             OnDragLeave(e);
-            e.Handled = true;
         }
 
         /// <summary>
@@ -75,9 +82,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <param name="e">DragEventArgs that contains the event data</param>
         void OnDragOver(object sender, DragEventArgs e)
         {
-            e.Effects = DragDropEffects.None;
             OnDragOver(e);
-            e.Handled = true;
         }
 
         /// <summary>
@@ -86,9 +91,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <param name="e">DragEventArgs that contains the event data</param>
         void OnDrop(object sender, DragEventArgs e)
         {
-            e.Effects = DragDropEffects.None;
             OnDrop(e);
-            e.Handled = true;
         }
     }
 

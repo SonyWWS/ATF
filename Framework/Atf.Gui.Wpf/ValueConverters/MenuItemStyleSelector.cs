@@ -18,18 +18,14 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <returns>Menu item's style</returns>
         public override Style SelectStyle(object item, DependencyObject container)
         {
-            ItemsControl ic = ItemsControl.ItemsControlFromItemContainer(container);
+            object key = Resources.SubMenuItemStyleKey;
 
             if (item is ICommandItem)
-            {
-                return ic.FindResource(Resources.CommandMenuItemStyleKey) as Style;
-            }
-            else if (item is Sce.Atf.Wpf.Models.Separator)
-            {
-                return ic.FindResource(Resources.MenuSeparatorStyleKey) as Style;
-            }
+                key = Resources.CommandMenuItemStyleKey;
+            else if (item is Models.Separator)
+                key = Resources.MenuSeparatorStyleKey;
 
-            return ic.FindResource(Resources.SubMenuItemStyleKey) as Style;
+            return Application.Current.FindResource(key) as Style;
         }    
     }
 }

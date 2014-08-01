@@ -1,9 +1,13 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
-
+using System.Windows;
+using System.Windows.Data;
 using Sce.Atf.Wpf.Applications;
 
 namespace Sce.Atf.Wpf.Models
@@ -13,64 +17,126 @@ namespace Sce.Atf.Wpf.Models
     [ExportViewModel(Contracts.ToolBarViewModel)]
     public class ToolBarViewModel : NotifyPropertyChangedBase
     {
-        /// <summary>
-        /// Constructor</summary>
-        /// <param name="commandService">Command service</param>
-        [ImportingConstructor]
-        public ToolBarViewModel(ICommandService commandService)
+        [ImportMany(AllowRecomposition = true)]
+        public IToolBar[] ToolBars
         {
-            m_commandService = commandService;
-
-            foreach (var menuDef in m_commandService.Menus)
-                AddMenu(menuDef);
-
-            foreach (var command in m_commandService.Commands)
-                AddCommand(command);
-
-            m_commandService.MenuAdded += (s, e) => AddMenu(e.Item);
-            m_commandService.CommandAdded += (s, e) => AddCommand(e.Item);
-            m_commandService.CommandRemoved += (s, e) => RemoveCommand(e.Item);
-        }
-
-        /// <summary>
-        /// Gets the collection of menus attached to tool bar</summary>
-        public ObservableCollection<IMenu> ToolBars { get { return m_toolbars; } }
-
-        private void AddMenu(MenuDef def)
-        {
-            var menu = new RootMenu(def);
-            if (menu.MenuTag is Sce.Atf.Applications.StandardMenu)
-                m_toolbars.Add(menu);
-            else
-                m_toolbars.Insert(m_toolbars.Count - 2, menu); // insert custom menus before Window, Help
-        }
-        
-        private void AddCommand(ICommandItem command)
-        {
-            if (command.IsVisible(Sce.Atf.Applications.CommandVisibility.Toolbar) && command.MenuTag != null)
+            get
             {
-                var menu = GetMenu(command.MenuTag) as RootMenu;
-                menu.ChildCollection.Add(command);
-                menu.Invalidate();
+                if (m_toolBars != null && m_toolBars.Length > 0 && m_toolBarsRequireRefresh)
+                {
+                    m_toolBarsRequireRefresh = false;
+
+                    // Must access ListCollectionView on UI thread
+                    Application.Current.Dispatcher.InvokeIfRequired(delegate
+                    {
+                        var cvs = (ListCollectionView)CollectionViewSource.GetDefaultView(m_toolBars);
+                        cvs.CustomSort = ToolBarComparer.Instance;
+                    });
+                }
+                return m_toolBars;
+            }
+            set
+            {
+                m_toolBars = value;
+                m_toolBarsRequireRefresh = true;
+                OnPropertyChanged(new PropertyChangedEventArgs("ToolBars"));
             }
         }
+        private IToolBar[] m_toolBars;
+        private bool m_toolBarsRequireRefresh;
 
-        private void RemoveCommand(ICommandItem command)
+        /// <summary>
+        /// Get items for a given toolbar
+        /// </summary>
+        /// <param name="toolBar"></param>
+        /// <returns></returns>
+        public IEnumerable<IToolBarItem> GetToolBarItems(IToolBar toolBar)
         {
-            if (command.IsVisible(Sce.Atf.Applications.CommandVisibility.Toolbar) && command.MenuTag != null)
+            if (toolBar == null || toolBar.Tag == null)
+                return EmptyEnumerable<IToolBarItem>.Instance;
+            var items = m_toolBarItems.Where(x => x.IsVisible
+                && CommandComparer.TagsEqual(x.ToolBarTag, toolBar.Tag)).ToList();
+            items.Sort(ToolBarItemComparer.Instance);
+            return items;
+        }
+
+        [ImportMany(AllowRecomposition = true)]
+        private IToolBarItem[] ToolBarItems
+        {
+            get { return m_toolBarItems; }
+            set
             {
-                var menu = GetMenu(command.MenuTag) as RootMenu;
-                menu.ChildCollection.Remove(command);
-                menu.Invalidate();
+                m_toolBarItems = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("ToolBars"));
             }
         }
+        private IToolBarItem[] m_toolBarItems;
 
-        private IMenu GetMenu(object menuTag)
+        private class ToolBarComparer : IComparer<IToolBar>, IComparer
         {
-            return m_toolbars.FirstOrDefault<IMenu>(x => CommandComparer.TagsEqual(x.MenuTag, menuTag));
+            public static ToolBarComparer Instance
+            {
+                get
+                {
+                    if(s_instance == null)
+                        s_instance = new ToolBarComparer();
+                    return s_instance;
+                }
+            }
+            private static ToolBarComparer s_instance;
+
+            #region IComparer<IToolBar> Members
+
+            public int Compare(IToolBar x, IToolBar y)
+            {
+                if (x != null && y != null)
+                {
+                    return CommandComparer.CompareTags(x.Tag, y.Tag);
+                }
+                return 0;
+            }
+
+            #endregion
+
+            #region IComparer Members
+
+            public int Compare(object x, object y)
+            {
+                var tX = x as IToolBar;
+                var tY = y as IToolBar;
+                if (tX != null && tY != null)
+                    return Compare(tX, tY);
+                return 0;
+            }
+
+            #endregion
         }
 
-        private ICommandService m_commandService;
-        private readonly ObservableCollection<IMenu> m_toolbars = new ObservableCollection<IMenu>();
+        private class ToolBarItemComparer : IComparer<IToolBarItem>
+        {
+            public static ToolBarItemComparer Instance
+            {
+                get
+                {
+                    if (s_instance == null)
+                        s_instance = new ToolBarItemComparer();
+                    return s_instance;
+                }
+            }
+            private static ToolBarItemComparer s_instance;
+
+            #region IComparer Members
+
+            public int Compare(IToolBarItem x, IToolBarItem y)
+            {
+                if (x != null && y != null)
+                {
+                    return CommandComparer.CompareTags(x.Tag, y.Tag);
+                }
+                return 0;
+            }
+
+            #endregion
+        }
     }
 }

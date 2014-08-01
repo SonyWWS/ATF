@@ -1,0 +1,139 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Sce.Atf.Wpf.Docking">
+    <Style TargetType="{x:Type local:SideBarButton}">
+        <Setter Property="Background" Value="#ffd7d7e3"/>    
+        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ControlDarkBrush}"/>        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SideBarButton}">
+                    <Grid>
+                        <Border x:Name="PART_Border" Background="#ffd7d7e3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="3">
+                            <ContentPresenter x:Name="PART_Content" Margin="2"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>                                
+                                <Condition Property="Dock" Value="Left"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,0,1,0"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="1,6,1,6"/>                            
+                            <Setter Property="GradientStartPoint" Value="0,0"/>
+                            <Setter Property="GradientEndPoint" Value="1,0"/>
+                            <Setter Property="Margin" Value="0,0,1,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Left"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="1,0,0,0"/>
+                            <Setter TargetName="PART_Border" Property="CornerRadius" Value="3,0,0,3"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="1,6,1,6"/>
+                            <Setter Property="GradientStartPoint" Value="1,0"/>
+                            <Setter Property="GradientEndPoint" Value="0,0"/>
+                            <Setter Property="Margin" Value="1,0,0,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Top"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="6,1,6,1"/>
+                            <Setter Property="GradientStartPoint" Value="0,0"/>
+                            <Setter Property="GradientEndPoint" Value="0,1"/>
+                            <Setter Property="Margin" Value="0,0,0,1"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Top"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,1,0,0"/>
+                            <Setter TargetName="PART_Border" Property="CornerRadius" Value="3,3,0,0"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="6,1,6,1"/>
+                            <Setter Property="GradientStartPoint" Value="0,1"/>
+                            <Setter Property="GradientEndPoint" Value="0,0"/>
+                            <Setter Property="Margin" Value="0,1,0,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Right"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="1,0,0,0"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="1,6,1,6"/>
+                            <Setter Property="GradientStartPoint" Value="1,0"/>
+                            <Setter Property="GradientEndPoint" Value="0,0"/>
+                            <Setter Property="Margin" Value="1,0,0,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Right"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,0,1,0"/>
+                            <Setter TargetName="PART_Border" Property="CornerRadius" Value="0,3,3,0"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="1,6,1,6"/>
+                            <Setter Property="GradientStartPoint" Value="0,0"/>
+                            <Setter Property="GradientEndPoint" Value="1,0"/>
+                            <Setter Property="Margin" Value="0,0,1,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Bottom"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,1,0,0"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="6,1,6,1"/>
+                            <Setter Property="GradientStartPoint" Value="0,1"/>
+                            <Setter Property="GradientEndPoint" Value="0,0"/>
+                            <Setter Property="Margin" Value="0,1,0,0"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Dock" Value="Bottom"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter TargetName="PART_Border" Property="CornerRadius" Value="0,0,3,3"/>
+                            <Setter TargetName="PART_Content" Property="Margin" Value="6,1,6,1"/>
+                            <Setter Property="GradientStartPoint" Value="0,0"/>
+                            <Setter Property="GradientEndPoint" Value="0,1"/>
+                            <Setter Property="Margin" Value="0,0,0,1"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=GradientStartPoint}" EndPoint="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=GradientEndPoint}">
+                                        <GradientStop Color="#ffd7d7e3" Offset="0.3"/>
+                                        <GradientStop Color="#ffffffff" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>                            
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Border" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=GradientStartPoint}" EndPoint="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=GradientEndPoint}">
+                                        <GradientStop Color="#ffffcc99" Offset="0.3"/>
+                                        <GradientStop Color="#ffffffff" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>                            
+                        </MultiTrigger>                       
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

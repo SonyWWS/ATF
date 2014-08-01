@@ -24,7 +24,7 @@ namespace Sce.Atf.Dom
             }
         }
 
-        #region IAdapter Members
+        #region IAdapter (which includes IAdaptable and IDecoratable) Members
 
         /// <summary>
         /// Gets or sets the object that is adapted. Note that the setter may only be called
@@ -51,11 +51,6 @@ namespace Sce.Atf.Dom
         {
             return m_domNode.GetDecorators(type);
         }
-
-
-        #endregion
-
-        #region IAdaptable, IDecoratable, and Related Methods
 
         /// <summary>
         /// Gets an adapter of the specified type, or null</summary>

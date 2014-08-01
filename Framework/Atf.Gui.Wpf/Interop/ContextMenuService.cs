@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using Sce.Atf.Applications;
 using Sce.Atf.Wpf.Applications;
 using Sce.Atf.Wpf.Models;
+using CommandService = Sce.Atf.Wpf.Applications.CommandService;
 
 namespace Sce.Atf.Wpf.Interop
 {
@@ -19,6 +20,11 @@ namespace Sce.Atf.Wpf.Interop
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ContextMenuService : IContextMenuService
     {
+        public ContextMenuService()
+        {
+            AutoCompact = true;
+        }
+
         #region IContextMenuService
 
         /// <summary>
@@ -27,31 +33,37 @@ namespace Sce.Atf.Wpf.Interop
         /// <returns>ContextMenu</returns>
         public ContextMenu GetContextMenu(IEnumerable<object> commandTags)
         {
-            m_commandService.SuggestRequery();
+            CommandManager.InvalidateRequerySuggested();
 
             var menu = new ContextMenu();
-            menu.SetResourceReference(ContextMenu.StyleProperty, Resources.MenuStyleKey);
-            //menu.Style = (Style)Application.Current.FindResource(Resources.MenuStyleKey);
+            menu.SetResourceReference(ContextMenu.StyleProperty, Resources.ContextMenuStyleKey);
 
             // Generate view model
-            List<ICommandItem> commands = new List<ICommandItem>();
-            foreach (var tag in commandTags)
+            var commands = new List<ICommandItem>();
+            foreach (object tag in commandTags)
             {
                 var command = m_commandService.GetCommand(tag);
                 if (command != null)
                 {
-                    if (!AutoCompact || ((ICommand)command).CanExecute(command))
+                    if (!AutoCompact || command.CanExecute(null))
                         commands.Add(command);
+                }
+                else
+                {
+                    // Allow direct display of ICommandItems which have not been registered
+                    // with the command service
+                    var commandItem = tag as ICommandItem;
+                    if (commandItem != null && (!AutoCompact || commandItem.CanExecute(null)))
+                        commands.Add(commandItem);
                 }
             }
             commands.Sort(new CommandComparer());
 
-            var dummyRootMenu = new Sce.Atf.Wpf.Models.Menu(null, null, null, null, null);
-            foreach (var command in commands)
-                MenuUtil.BuildSubMenus(command, dummyRootMenu);
+            var dummyRootMenu = new RootMenuModel(null, null, null);
+            foreach (ICommandItem command in commands)
+                dummyRootMenu.AddItem(command);
 
-            MenuUtil.InsertGroupSeparators(dummyRootMenu);
-            menu.ItemsSource = dummyRootMenu.ChildCollection;
+            menu.ItemsSource = dummyRootMenu.Children;
 
             return menu;
         }
@@ -63,6 +75,6 @@ namespace Sce.Atf.Wpf.Interop
         #endregion
 
         [Import]
-        private ICommandService m_commandService = null;
+        private CommandService m_commandService = null;
     }
 }

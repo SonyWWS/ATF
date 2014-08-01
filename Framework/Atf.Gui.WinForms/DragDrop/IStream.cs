@@ -4,7 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using STATSTG = System.Runtime.InteropServices.ComTypes.STATSTG;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     [ComVisible(true)]
     [ComImport]

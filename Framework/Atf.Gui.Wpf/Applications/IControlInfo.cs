@@ -3,7 +3,9 @@
 namespace Sce.Atf.Wpf.Applications
 {
     /// <summary>
-    /// Interface for Control information</summary>
+    /// Interface to provide information about a control, such as its name, description, 
+    /// associated image, initial control group, and the client that registered the
+    /// control.</summary>
     /// <remarks>An IControlInfo instance is returned by ControlHostService.RegisterControl()</remarks>
     public interface IControlInfo
     {

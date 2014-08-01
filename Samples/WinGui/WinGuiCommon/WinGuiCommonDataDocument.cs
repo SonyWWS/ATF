@@ -6,10 +6,6 @@ using System.IO;
 using Sce.Atf;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Dom;
-/*
-using System.Drawing;
-using System.Windows.Forms;
-*/
 
 namespace WinGuiCommon
 {
@@ -27,7 +23,7 @@ namespace WinGuiCommon
         /// Gets a string identifying the type of the resource to the end-user</summary>
         public override string Type
         {
-            get { return Editor.DocumentClientInfo.FileType; }
+            get { return EditorBase.DocumentClientInfo.FileType; }
         }
 
         /// <summary>

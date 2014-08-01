@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct ShDragImage

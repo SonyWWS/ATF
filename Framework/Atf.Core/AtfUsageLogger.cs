@@ -84,7 +84,7 @@ namespace Sce.Atf
                 bool appIs64Bit = (IntPtr.Size == 8);
                 string osVersion = GetOSFullName();
                 string clrVersion = Environment.Version.ToString();
-                int physicalMb = GetPhysicalMemoryMB();
+                int physicalMb = Kernel32.GetPhysicalMemoryMB();
 
                 // Analyze all loaded assemblies
                 StringBuilder loadedAssemblies = new StringBuilder();
@@ -169,31 +169,6 @@ namespace Sce.Atf
                 name = parts[0];
             if (parts.Length > 1)
                 version = parts[1].Trim();
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private class MEMORYSTATUSEX
-        {
-            public uint dwLength = 64;
-            public uint dwMemoryLoad;
-            public ulong ullTotalPhys; //The amount of actual physical memory, in bytes.
-            public ulong ullAvailPhys;
-            public ulong ullTotalPageFile;
-            public ulong ullAvailPageFile;
-            public ulong ullTotalVirtual;
-            public ulong ullAvailVirtual;
-            public ulong ullAvailExtendedVirtual;
-        }
-
-        [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool GlobalMemoryStatusEx(MEMORYSTATUSEX lpBuffer);
-
-        private static int GetPhysicalMemoryMB()
-        {
-            // Available from Windows 2000 and onward; i.e., Environment.OSVersion.Version.Major >= 5 .
-            var memoryStatus = new MEMORYSTATUSEX();
-            GlobalMemoryStatusEx(memoryStatus);
-            return (int)(memoryStatus.ullTotalPhys / (1024 * 1024));// convert bytes to megabytes
         }
 
         private static string GetInstalledVisualStudioVersions()

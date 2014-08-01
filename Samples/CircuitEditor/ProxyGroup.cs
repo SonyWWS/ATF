@@ -24,13 +24,16 @@ namespace CircuitEditorSample
             m_inputs = new List<Sce.Atf.Controls.Adaptable.Graphs.GroupPin>();
             m_outputs = new List<Sce.Atf.Controls.Adaptable.Graphs.GroupPin>();
             m_info = owner.Info;
-            m_targetGroup.Changed += new System.EventHandler(targetGroup_Changed);
-            var circuitEditingContext = target.Cast<CircuitEditingContext>();
-            circuitEditingContext.ItemChanged += circuitEditingContext_ItemChanged;
+            if (m_targetGroup != null) // target could be null if the template is missing
+            {
+                m_targetGroup.Changed += new System.EventHandler(targetGroup_Changed);
+                var circuitEditingContext = target.Cast<CircuitEditingContext>();
+                circuitEditingContext.ItemChanged += circuitEditingContext_ItemChanged;
 
-            // Setting Adaptee will set our DomNode property. Must come after m_info is set.
-            var thisAdapter = (IAdapter)this;
-            thisAdapter.Adaptee = target.DomNode;
+                // Setting Adaptee will set our DomNode property. Must come after m_info is set.
+                var thisAdapter = (IAdapter) this;
+                thisAdapter.Adaptee = target.DomNode;
+            }
         }
 
         /// <summary>
@@ -92,14 +95,24 @@ namespace CircuitEditorSample
         /// Gets desired interior size, in pixels, of target group</summary>
         public Size InteriorSize
         {
-            get { return m_targetGroup.Type.InteriorSize; }
+            get
+            {
+                if (m_targetGroup == null) //using MissingElementType
+                    return m_owner.Target.Type.InteriorSize;
+                return m_targetGroup.Type.InteriorSize;
+            }
         }
 
         /// <summary>
         /// Gets image to draw for target group</summary>
         public Image Image
         {
-            get { return m_targetGroup.Type.Image; }
+            get
+            {
+                if (m_targetGroup == null) //using MissingElementType
+                    return m_owner.Target.Type.Image;
+                return m_targetGroup.Type.Image;
+            }
         }
 
         /// <summary>
@@ -108,6 +121,9 @@ namespace CircuitEditorSample
         {
             get
             {
+                if (m_targetGroup == null) //using MissingElementType
+                     return m_owner.Target.Type.Inputs;
+             
                 var inputs = m_inputs.OrderBy(n => n.Index).Where(n => n.Visible).ToArray();
                 return inputs;
             }
@@ -117,7 +133,13 @@ namespace CircuitEditorSample
         /// Gets a list of the visible output pins in target group</summary>
         public override IList<ICircuitPin> Outputs
         {
-            get { return m_outputs.OrderBy(n => n.Index).Where(n => n.Visible).ToArray(); }
+            get
+            {
+                if (m_targetGroup == null)// using MissingElementType
+                    return m_owner.Target.Type.Outputs;
+             
+                return m_outputs.OrderBy(n => n.Index).Where(n => n.Visible).ToArray();
+            }
         }
 
         // ICircuitGroupType
@@ -125,7 +147,12 @@ namespace CircuitEditorSample
         /// Gets or sets whether the owner is expanded</summary>
         public override bool Expanded
         {
-            get { return m_owner.Expanded; }
+            get
+            {
+                if (m_targetGroup == null)
+                    return false;
+                return m_owner.Expanded;
+            }
             set { m_owner.Expanded= value; }
         }
 
@@ -145,8 +172,17 @@ namespace CircuitEditorSample
         /// Gets or sets whether the group container is automatically resized to display its entire contents</summary>
         public override bool AutoSize
         {
-            get { return m_targetGroup.AutoSize; }
-            set { m_targetGroup.AutoSize  = value; }
+            get
+            {
+                if (m_targetGroup == null)
+                    return true;
+                return m_targetGroup.AutoSize;
+            }
+            set
+            {
+                if (m_targetGroup != null)
+                    m_targetGroup.AutoSize  = value;
+            }
         }
 
         /// <summary>
@@ -184,6 +220,9 @@ namespace CircuitEditorSample
         /// Refresh group</summary>
         public void Refresh()
         {
+            if (m_targetGroup == null)
+                return;
+
             m_inputs.Clear(); 
             m_outputs.Clear();
 
@@ -219,14 +258,24 @@ namespace CircuitEditorSample
         /// Gets a list of the input pins in this group</summary>
         public override IEnumerable<Sce.Atf.Controls.Adaptable.Graphs.GroupPin> InputGroupPins
         {
-            get { return m_inputs;}
+            get
+            {
+                if (m_targetGroup == null)
+                    return EmptyEnumerable<Sce.Atf.Controls.Adaptable.Graphs.GroupPin>.Instance;
+                return m_inputs;
+            }
         }
 
         /// <summary>
         /// Gets a list of the output pins in this group</summary>
         public override IEnumerable<Sce.Atf.Controls.Adaptable.Graphs.GroupPin> OutputGroupPins
         {
-            get{ return m_outputs;}
+            get
+            {
+                if (m_targetGroup == null)
+                    return EmptyEnumerable<Sce.Atf.Controls.Adaptable.Graphs.GroupPin>.Instance;
+                return m_outputs;
+            }
         }
 
         /// <summary>

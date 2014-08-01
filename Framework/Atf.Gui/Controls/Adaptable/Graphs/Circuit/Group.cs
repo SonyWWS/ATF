@@ -170,8 +170,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             UpdateOffset();
             Changed.Raise(this, e);
 
-            if (DomNode.Parent != null && DomNode.Parent.Is<Group>())
-                DomNode.Parent.Cast<Group>().OnChanged(e);
+            if (DomNode.Parent != null && DomNode.Parent.Is<Group>()) // immediate update its parent too
+            {  
+                DomNode.Parent.Cast<Group>().Dirty = true;
+                DomNode.Parent.Cast<Group>().Update();
+            }
         }
 
         /// <summary>
@@ -199,6 +202,24 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             return OutputGroupPins.Contains(pin);
 
+        }
+
+        /// <summary>
+        /// Gets the input pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin InputPin(int pinIndex)
+        {
+            return m_inputs.FirstOrDefault(x => x.Index == pinIndex);
+        }
+
+        /// <summary>
+        /// Gets the output pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin OutputPin(int pinIndex)
+        {
+            return m_outputs.FirstOrDefault(x => x.Index == pinIndex);
         }
 
         /// <summary>
@@ -598,12 +619,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             UpdateGroupPins(m_elements, internalConnections, externalConnections);
 
 
-            if (DomNode.Parent != null && DomNode.Parent.Is<ICircuitContainer>()) // propagate changes up for newly added or removed floating pins
-                DomNode.Parent.Cast<ICircuitContainer>().Dirty = true;
+            //if (DomNode.Parent != null && DomNode.Parent.Is<ICircuitContainer>()) // propagate changes up for newly added or removed floating pins
+            //    DomNode.Parent.Cast<ICircuitContainer>().Dirty = true;
 
 
             //ConstrainCoords();
-            UpdatePinOrders(); // set pin index based on pinY         
+            UpdatePinOrders(); // set pin index based on pinY and visibility         
             Dirty = false;
             OnChanged(EventArgs.Empty); // notify changes to outside
         }
@@ -653,7 +674,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         groupPin.TypeName = outputPin.TypeName;
                         groupPin.InternalElement = connection.OutputElement;
                         groupPin.InternalPinIndex = outputPin.Index;
-                        groupPin.Index = m_inputs.Count;
+                        groupPin.Index = m_outputs.Count;
                         groupPin.Position = new Point(0, (groupPin.InternalPinIndex + 1) * 16 + connection.OutputElement.Bounds.Location.Y);
                         groupPin.IsDefaultName = true;
                         groupPin.Visible = true;
@@ -913,6 +934,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
+            UpdatePinOrders(); // order index by visibility 
         }
 
         /// <summary>

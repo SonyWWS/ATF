@@ -120,13 +120,16 @@ namespace Sce.Atf.Wpf.Behaviors
                 if ((bool)e.NewValue)
                 {
                     layer.Add(new EditableTextBlockAdorner(textBlock));
+                    textBlock.CaptureMouse();
                 }
                 else if ((bool)e.OldValue)
                 {
+                    textBlock.ReleaseMouseCapture();
                     var adorner = GetAdorner(textBlock);
                     if (adorner != null)
                     {
                         layer.Remove(adorner);
+                        adorner.Dispose();
                     }
 
                     // Update the textblock's text binding.
@@ -135,6 +138,7 @@ namespace Sce.Atf.Wpf.Behaviors
                     {
                         expression.UpdateTarget();
                     }
+
                 }
             }
         }
@@ -153,7 +157,7 @@ namespace Sce.Atf.Wpf.Behaviors
 
     /// <summary>
     /// Adorner class that shows TextBox over the text block when edit mode is on</summary>
-    public class EditableTextBlockAdorner : Adorner
+    public class EditableTextBlockAdorner : Adorner, IDisposable
     {
         private readonly VisualCollection m_collection;
         private readonly TextBox m_textBox;
@@ -180,7 +184,8 @@ namespace Sce.Atf.Wpf.Behaviors
             m_textBlock = adornedElement;
             Binding binding = new Binding("Text") { Source = adornedElement };
             m_textBox.SetBinding(TextBox.TextProperty, binding);
-            m_textBox.AcceptsReturn = true;
+            m_textBox.AcceptsReturn = false;
+            m_textBox.AcceptsTab = false;
             //_textBox.MaxLength = adornedElement.MaxLength;
             m_textBox.KeyUp += TextBox_KeyUp;
             m_textBox.LostFocus += new RoutedEventHandler(TextBox_LostFocus);
@@ -203,7 +208,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <param name="e">KeyEventArgs that contains the event data</param>
         void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter || e.Key == Key.Return)
             {
                 m_textBox.Text = m_textBox.Text.Replace("\r\n", string.Empty);
                 BindingExpression expression = m_textBox.GetBindingExpression(TextBox.TextProperty);
@@ -243,7 +248,7 @@ namespace Sce.Atf.Wpf.Behaviors
         protected override Size MeasureOverride(Size constraint)
         {
             //m_textBox.HorizontalAlignment = HorizontalAlignment.Left;
-            m_textBox.MinWidth = AdornedElement.DesiredSize.Width + 4;
+            m_textBox.MinWidth = Math.Max(45.0, AdornedElement.DesiredSize.Width + 4);
             m_textBox.Measure(new Size(double.PositiveInfinity, constraint.Height + 4));
             //Size size = m_textBox.DesiredSize;
             
@@ -260,11 +265,11 @@ namespace Sce.Atf.Wpf.Behaviors
         protected override Size ArrangeOverride(Size finalSize)
         {
 
-            double width = Math.Max(AdornedElement.DesiredSize.Width, m_textBox.DesiredSize.Width);
+            //double width = Math.Max(AdornedElement.DesiredSize.Width, m_textBox.DesiredSize.Width);
             //double height = Math.Min(AdornedElement.DesiredSize.Height, finalSize.Height);
 
             //double width = AdornedElement.DesiredSize.Width + 50;
-            double height = AdornedElement.DesiredSize.Height;
+            //double height = AdornedElement.DesiredSize.Height;
 
             var rect = new Rect(-4, -2, m_textBox.DesiredSize.Width, m_textBox.DesiredSize.Height + 2 + 4);
             
@@ -282,5 +287,11 @@ namespace Sce.Atf.Wpf.Behaviors
         //        Thickness = 2
         //    }, new Rect(0, 0, m_textBlock.DesiredSize.Width + 50, m_textBlock.DesiredSize.Height * 1.2));
         //}
+
+
+        public void Dispose()
+        {
+            BindingOperations.ClearBinding(m_textBox, TextBox.TextProperty);
+        }
     }
 }

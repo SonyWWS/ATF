@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
 
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
@@ -68,6 +67,7 @@ namespace Sce.Atf.Dom
 
 
         // required  DomNodeType info
+ 
         /// <summary>
         /// Gets type of template folder</summary>
         protected abstract DomNodeType TemplateFolderType { get; }
@@ -132,6 +132,8 @@ namespace Sce.Atf.Dom
             PromoteToTemplateLibrary,
             /// <summary>Demote To Copy Instance command</summary>
             DemoteToCopyInstance,
+            /// <summary>Reload External Templates</summary>
+            ReloadExternalTemplates,
         }
 
         #region IInitializable Members
@@ -154,8 +156,8 @@ namespace Sce.Atf.Dom
                   CommandTag.AddExternalTemplateFolder,
                   null,
                   null,
-                  "Add Global Template Folder".Localize(),
-                  "Creates a Global Template folder based off of a pre-existing .mcc".Localize()),
+                  "Import Templates from Document...".Localize(),
+                  "Import Templates from Document".Localize()),
               this);
 
             m_commandService.RegisterCommand(
@@ -180,6 +182,17 @@ namespace Sce.Atf.Dom
               CommandVisibility.ContextMenu,
               this);
 
+            m_commandService.RegisterCommand(
+                CommandTag.ReloadExternalTemplates,
+                null,
+                null,
+                "Rescan Template Documents".Localize(),
+                "Rescan Template Documents".Localize(),
+                Keys.None,
+                null,
+                CommandVisibility.ContextMenu,
+                this);
+
             if (m_scriptingService != null)
             {
                 m_scriptingService.SetVariable("templateCmds", this);
@@ -201,6 +214,8 @@ namespace Sce.Atf.Dom
                 if (CommandTag.AddTemplateFolder.Equals(commandTag))
                     return true;
                 if (CommandTag.AddExternalTemplateFolder.Equals(commandTag))
+                    return true;
+                if (CommandTag.ReloadExternalTemplates.Equals(commandTag))
                     return true;
                 if (CommandTag.PromoteToTemplateLibrary.Equals(commandTag))
                 {
@@ -238,11 +253,12 @@ namespace Sce.Atf.Dom
             if (parentFolder != null)
             {
                 parentFolder.Folders.Add(newFolder);
-                   
+
             }
 
             return newFolder;
         }
+
 
         /// <summary>
         /// Creates template folder and add templates stored in an external file to it</summary>
@@ -253,7 +269,8 @@ namespace Sce.Atf.Dom
             {
                 importedLibaray.RootNode.InitializeExtensions();
 
-                var templateFolder = CreateTemplateFolder();
+                var templateFolder = importedLibaray.RootNode.Cast<TemplateFolder>();
+                templateFolder.Url = importedLibaray.Uri;
                 templateFolder.Name = Path.GetFileNameWithoutExtension(importedLibaray.Uri.LocalPath);
 
                 // try make file uri relative to the current document uri, which is nornally 
@@ -263,11 +280,18 @@ namespace Sce.Atf.Dom
                 //    var doc = TemplatingContext.RootFolder.DomNode.GetRoot().Cast<IDocument>();
                 //    templateFolder.Url = importedLibaray.Uri.MakeRelativeUri(doc.Uri);
                 //}
-                //else
-                templateFolder.Url = importedLibaray.Uri;
-                ImportTemplates(templateFolder, importedLibaray.RootNode);
+           
             }
         }
+
+        /// <summary>
+        /// Rescan all referenced template documents </summary>
+        protected virtual void ReloadExternalTemplates()
+        {
+            // client code to override
+        }
+
+        
 
         /// <summary>
         /// Does a command</summary>
@@ -286,6 +310,12 @@ namespace Sce.Atf.Dom
                 transactionContext.DoTransaction(
                   AddExternalTemplateFolder, "Add External Template Folder".Localize());
              
+            }
+            else if (CommandTag.ReloadExternalTemplates.Equals(commandTag))
+            {
+                transactionContext.DoTransaction(
+                  ReloadExternalTemplates, "Reload External Templates".Localize());
+
             }
             else if (CommandTag.PromoteToTemplateLibrary.Equals(commandTag))
             {
@@ -327,41 +357,13 @@ namespace Sce.Atf.Dom
             {
                 m_targetRef = new WeakReference(target);
                 yield return CommandTag.AddTemplateFolder;
-                yield return CommandTag.AddExternalTemplateFolder;                
+                yield return CommandTag.AddExternalTemplateFolder;
+                yield return CommandTag.ReloadExternalTemplates;
             }
 
         }
 
         #endregion
-
-        /// <summary>
-        /// Imports templates and template folders stored in an external file</summary>
-        /// <param name="parentTemplateFolder">Template folder in which to import templates and template folders</param>
-        /// <param name="fromParent">Root of templates to import</param>
-        protected virtual void ImportTemplates(TemplateFolder parentTemplateFolder,  DomNode fromParent)
-        {
-            // assume all templates and their containing folders are children of a root template folder 
-            foreach (var domNode in fromParent.LevelSubtree) // add top-level folders
-            {
-                if (domNode.Is<TemplateFolder>()) // this should be the root template folder of the imported DOM tree
-                {
-                    foreach (var child in domNode.Children.ToArray())
-                    {
-                        if (child.Is<TemplateFolder>())
-                        {                        
-                            parentTemplateFolder.Folders.Add(child.Cast<TemplateFolder>());
-                        }
-                        else if (child.Is<Template>())
-                        {
-
-                            parentTemplateFolder.Templates.Add(child.Cast<Template>());
-                        }
-                    }                   
-                    break;
-                }
-              
-            }
-        }
 
         // scripting related members
         [Import(AllowDefault = true)]

@@ -2,7 +2,7 @@
 
 using System.Windows.Forms;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     internal enum DropImageType : int
     {

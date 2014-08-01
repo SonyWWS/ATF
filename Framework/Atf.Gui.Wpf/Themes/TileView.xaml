@@ -1,0 +1,87 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ct="clr-namespace:Sce.Atf.Wpf.Controls">
+
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type ct:TileView}, ResourceId=TileView}"
+           TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="BorderBrush" Value="Black"></Setter>
+        <Setter Property="BorderThickness" Value="0.5"></Setter>
+        <Setter Property="Grid.IsSharedSizeScope" Value="True"></Setter>
+
+        <!-- Alternative approach to changing the ItemsPanel -->
+        <!--<Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border 
+                        Name="bd" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}" Margin="{TemplateBinding Margin}">
+                        <ScrollViewer Margin="{TemplateBinding Padding}">
+                            <WrapPanel 
+                                ItemWidth="160" IsItemsHost="True" MinWidth="100"
+                                Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}">
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <ct:BalancedWrapPanel 
+                        ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}">
+                    </ct:BalancedWrapPanel>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <!-- Alternative approach to set the item ContentTemplate. -->
+        <Setter Property="ItemTemplate" Value="{Binding (ListView.View).ItemTemplate, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type ct:TileView}, ResourceId=TileViewItem}"
+           TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+        <!--<Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Background="Transparent" ToolTip="{Binding ToolTip}">
+                        <StackPanel>
+                            <Image Margin="3" Width="160" Height="120">
+                                <Image.Source>
+                                    <PriorityBinding>
+                                        <Binding Path="ThumbnailImage" IsAsync="True"/>
+                                        <Binding Path="DefaultImage"/>
+                                    </PriorityBinding>
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Text="{Binding Label}" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>-->
+        <!--<Setter Property="ContentTemplate" Value="{Binding Path=View.ItemTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border Name="Border" BorderThickness="1" CornerRadius="3" >
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{Binding Path=View.SelectedBackground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{Binding Path=View.SelectedBorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

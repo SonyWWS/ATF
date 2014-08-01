@@ -1,6 +1,5 @@
 ﻿<c:CommonDialog
     x:Class="Sce.Atf.Wpf.Controls.UnhandledExceptionDialog"
-    x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,8 +13,10 @@
     ShowInTaskbar="False"
     ResizeMode="CanResize">
 
-    <DockPanel Margin="4" LastChildFill="True">
+    <DockPanel LastChildFill="True">
         <StackPanel Margin="4" DockPanel.Dock="Bottom" >
+            <!--<CheckBox Content="{l:Loc Would you like to continue the application so that you can save your work?}"
+                      VerticalAlignment="Center"/>-->
             <DockPanel Margin="4" LastChildFill="False">
                 <Button Content="{l:Loc Quit}" Command="{Binding CancelCommand}"
                         DockPanel.Dock="Right" IsCancel="True"

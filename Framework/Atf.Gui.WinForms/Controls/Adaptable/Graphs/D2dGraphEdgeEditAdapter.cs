@@ -33,6 +33,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_renderer = renderer;
             m_graphAdapter = graphAdapter;
             m_draggingContext = new EdgeDraggingContext(this);
+
+            OverRouteCursor = Cursors.UpArrow;
+            FromPlaceCursor = Cursors.UpArrow;
+            ToPlaceCursor = Cursors.UpArrow;
+            InadmissibleCursor = Cursors.No;
+
+            //// For Santa Monica:
+            //OverRouteCursor = Cursors.Cross;
+            //FromPlaceCursor = Cursors.PanWest;
+            //ToPlaceCursor = Cursors.PanEast;
+            //InadmissibleCursor = Cursors.Cross;
         }
 
         /// <summary>
@@ -41,6 +52,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get { return m_isConnecting; }
         }
+
+        /// <summary>
+        /// Gets or sets the cursor that is displayed when the mouse pointer is over a route</summary>
+        public Cursor OverRouteCursor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cursor that is displayed when the mouse pointer is over a route that is admissible as a from route </summary>
+        public Cursor FromPlaceCursor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cursor that is displayed when the mouse pointer is over a route that is admissible as a to route</summary>
+        public Cursor ToPlaceCursor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cursor that is displayed when the mouse pointer is over a route that is inadmissible to form a new edge</summary>
+        public Cursor InadmissibleCursor { get; set; }
 
         /// <summary>
         /// Traverses a given path of groups, starting at the last (picked) item through a given destination group, for the pin
@@ -215,7 +242,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected EdgeDraggingContext DraggingContext
         {
             get
-            {  
+            {
+                m_draggingContext.MousePick = m_mousePick;
                 return m_draggingContext;
             }
         }
@@ -319,7 +347,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 if (wiring && AdaptedControl.Cursor == Cursors.Default)
                 {
-                    AdaptedControl.Cursor = Cursors.UpArrow;
+                    AdaptedControl.Cursor = OverRouteCursor;
                 }
             }
         }
@@ -512,7 +540,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                                 m_dragEdgeReversed = dragEdgeReversed;
                                 m_isConnecting = true;
-                                cursor = Cursors.UpArrow;
+                                cursor = OverRouteCursor;
                             }
                         }
                         else if (m_mousePick.FromRoute != null) // favor dragging from source to destination
@@ -525,7 +553,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                             m_dragEdgeReversed = true;
                             m_draggingContext.FromSourceToDestination = true;
                             m_isConnecting = true;
-                            cursor = Cursors.UpArrow;
+                            cursor = OverRouteCursor;
                         }
                         else if (m_mousePick.ToRoute != null)
                         {
@@ -535,7 +563,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                             m_draggingContext.ToRoutePos = m_mousePick.ToRoutePos;
                             m_dragEdgeReversed = false;
                             m_isConnecting = true;
-                            cursor = Cursors.UpArrow;
+                            cursor = OverRouteCursor;
                         }
 
                         if (m_isConnecting)
@@ -581,13 +609,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         m_draggingContext.DragToNodeHitPath = m_mousePick.HitPath;                   
                         m_draggingContext.DragToRoute = m_mousePick.ToRoute;
                         m_draggingContext.ToRoutePos = m_mousePick.ToRoutePos;
-                        cursor = Cursors.UpArrow;
+                        cursor = ToPlaceCursor;
                     }
                     else
                     {
                         m_draggingContext.DragToNode = null;
                         m_draggingContext.DragToRoute = null;
-                        cursor = Cursors.No;
+                        cursor = InadmissibleCursor;
                     }
                 }
                 else
@@ -598,13 +626,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         m_draggingContext.DragFromNodeHitPath = m_mousePick.HitPath;
                         m_draggingContext.DragFromRoute = m_mousePick.FromRoute;
                         m_draggingContext.FromRoutePos = m_mousePick.FromRoutePos;
-                        cursor = Cursors.UpArrow;
+                        cursor = FromPlaceCursor;
                     }
                     else
                     {
                         m_draggingContext.DragFromNode = null;
                         m_draggingContext.DragFromRoute = null;
-                        cursor = Cursors.No;
+                        cursor = InadmissibleCursor;
                     }
                 }
 
@@ -633,10 +661,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_draggingContext.ToRoutePos = m_mousePick.ToRoutePos;
             m_draggingContext.DragToNodeHitPath = m_mousePick.HitPath; // update DragToNodeHitPath for DraggingContext.EditableGraph
 
-            if (m_mainEditableGraph != DraggingContext.EditableGraph)
-                return false; // for now only support top-level edge editing
-
-
             TNode dragFromNode = m_draggingContext.ActualFromNode();
             TEdgeRoute dragFromRoute = m_draggingContext.ActualFromRoute(dragFromNode);
             TNode dragToNode = m_draggingContext.ActualToNode();
@@ -655,7 +679,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             //}// <-- debug
 
             return DraggingContext.EditableGraph.CanConnect(dragFromNode, dragFromRoute, dragToNode, dragToRoute);
-
         }
 
         /// <summary>
@@ -676,16 +699,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_draggingContext.FromRoutePos = m_mousePick.FromRoutePos;
             m_draggingContext.DragFromNodeHitPath = m_mousePick.HitPath;// update DragFromNodeHitPath for DraggingContext.EditableGraph
 
-            if (m_mainEditableGraph != DraggingContext.EditableGraph)
-                return false; // for now only support top-level edge editing
-
             TNode dragFromNode = m_draggingContext.ActualFromNode();
             TEdgeRoute dragFromRoute = m_draggingContext.ActualFromRoute(dragFromNode);
             TNode dragToNode = m_draggingContext.ActualToNode();
             TEdgeRoute dragToRoute = m_draggingContext.ActualToRoute(dragToNode);
       
             return DraggingContext.EditableGraph.CanConnect(dragFromNode, dragFromRoute, dragToNode, dragToRoute);
-
         }
 
         private TEdge GetDisconnectEdgeTo()

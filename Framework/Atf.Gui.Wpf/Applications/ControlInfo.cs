@@ -2,25 +2,53 @@
 
 using System.ComponentModel;
 
-using Wws.UI.Docking;
+using Sce.Atf.Wpf.Docking;
 
 namespace Sce.Atf.Wpf.Applications
 {
     /// <summary>
     /// Class that holds information about controls hosted by IControlHostService
     /// implementations.</summary>
-    internal class ControlInfo : IControlInfo
+    public class ControlInfo : IControlInfo
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="id">Unique ID for the control</param>
+        /// <param name="group">Initial control group for the control</param>
+        /// <param name="dockContent">The IDockContent representing the control</param>
+        /// <param name="client">The client that registered this control</param>
         public ControlInfo(string id, Sce.Atf.Applications.StandardControlGroup group, IDockContent dockContent, IControlHostClient client)
             : this(null, null, id, group, null, dockContent, client)
         {
         }
 
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="name">Control's name, which may be displayed as the title of 
+        /// the hosting control or form</param>
+        /// <param name="description">Control's description, which may be displayed as 
+        /// a tooltop when hovering over the control</param>
+        /// <param name="id">Unique ID for the control</param>
+        /// <param name="group">Initial control group for the control</param>
+        /// <param name="dockContent">The IDockContent representing the control</param>
+        /// <param name="client">The client that registered this control</param>
         public ControlInfo(string name, string description, string id, Sce.Atf.Applications.StandardControlGroup group, IDockContent dockContent, IControlHostClient client)
             : this(name, description, id, group, null, dockContent, client)
         {
         }
 
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="name">Control's name, which may be displayed as the title of 
+        /// the hosting control or form</param>
+        /// <param name="description">Control's description, which may be displayed as 
+        /// a tooltop when hovering over the control</param>
+        /// <param name="id">Unique ID for the control</param>
+        /// <param name="group">Initial control group for the control</param>
+        /// <param name="imageKey">The control's image, which may be displayed on the 
+        /// hosting control or form</param>
+        /// <param name="dockContent">The IDockContent representing the control</param>
+        /// <param name="client">The client that registered this control</param>
         public ControlInfo(string name, string description, string id, Sce.Atf.Applications.StandardControlGroup group, object imageKey, IDockContent dockContent, IControlHostClient client)
         {
             Requires.NotNullOrEmpty(id, "id");
@@ -74,7 +102,7 @@ namespace Sce.Atf.Wpf.Applications
             set
             {
                 m_imageKey = value;
-                //m_dockContent.Icon =  TODO
+                DockContent.Icon = m_imageKey;
             }
         }
 
@@ -96,8 +124,12 @@ namespace Sce.Atf.Wpf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Gets the DockContent representing the control</summary>
         public IDockContent DockContent { get; private set; }
         
+        /// <summary>
+        /// Gets and sets the menu/toolbar command for the control</summary>
         public ICommandItem Command 
         {
             get { return m_command; }
@@ -115,7 +147,7 @@ namespace Sce.Atf.Wpf.Applications
 
         private void DockContent_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "IsVisible")
+            if (Command != null && e.PropertyName == s_isVisiblePropertyName)
             {
                 Command.IsChecked = ((IDockContent)sender).IsVisible;
             }
@@ -124,5 +156,7 @@ namespace Sce.Atf.Wpf.Applications
         private string m_description;
         private object m_imageKey;
         private ICommandItem m_command;
+        private static readonly string s_isVisiblePropertyName
+            = TypeUtil.GetProperty<IDockContent>(x => x.IsVisible).Name;
     }
 }

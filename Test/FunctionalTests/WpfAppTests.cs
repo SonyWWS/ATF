@@ -12,13 +12,23 @@ namespace FunctionalTests
         {
             return "WpfApp";
         }
-        
+
         [Test]
         [Category(Consts.SmokeTestCategory)]
+        [Ignore("Fails on build machine when running as service, passes when ran as local user")]
         public void CreateNewDocument()
         {
             TimeOutInSecs = 60;
             string scriptPath = Path.GetFullPath(Path.Combine(@".\CommonTestScripts", "CreateNewDocument.py"));
+            ExecuteFullTest(scriptPath);
+        }
+
+        [Test]
+        [Category(Consts.SmokeTestCategory)]
+        public void LaunchApplication()
+        {
+            TimeOutInSecs = 60;
+            string scriptPath = Path.GetFullPath(Path.Combine(@".\CommonTestScripts", "LaunchApplication.py"));
             ExecuteFullTest(scriptPath);
         }
     }

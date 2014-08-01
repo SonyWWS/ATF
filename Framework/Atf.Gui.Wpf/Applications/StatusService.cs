@@ -92,10 +92,7 @@ namespace Sce.Atf.Wpf.Applications
 
             vm.RunWorkerThread(argument, workHandler);
 
-            ProgressDialog progressDialog = new ProgressDialog();
-            progressDialog.DataContext = vm;
-            progressDialog.Owner = DialogUtil.GetActiveWindow();
-            progressDialog.ShowDialog();
+            DialogUtils.ShowDialogWithViewModel<ProgressDialog>(vm);
 
             ProgressResult = vm.Result;
             ProgressError = vm.Error;
@@ -146,7 +143,10 @@ namespace Sce.Atf.Wpf.Applications
             m_composer.RemovePart(ctxt.StatusItemPart);
 
             var args = new ProgressCompleteEventArgs(statusItem.Error, statusItem.Result, statusItem.Cancelled);
+            
             ctxt.ProgressComplete.Raise(this, args);
+
+            statusItem.RunWorkerCompleted -= statusItem_RunWorkerCompleted;
         }
 
         private struct StatusBarProgressContext

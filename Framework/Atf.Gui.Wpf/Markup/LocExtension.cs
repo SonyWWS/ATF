@@ -42,7 +42,7 @@ namespace Sce.Atf.Wpf.Markup
             if (string.IsNullOrEmpty(Key))
                 return string.Empty;
 
-            return string.IsNullOrEmpty(Format) ? Key : string.Format(Format, Key);
+            return string.IsNullOrEmpty(Format) ? Key.Localize() : string.Format(Format, Key.Localize());
         }
     }
 }

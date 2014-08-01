@@ -29,10 +29,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets or sets the default pin order style</summary>
-        public Group.PinOrderStyle DefaultPinOderStyle
+        public Group.PinOrderStyle DefaultPinOrderStyle
         {
-            get { return m_defaultPinOderStyle; }
-            set { m_defaultPinOderStyle = value; }
+            get { return m_defaultPinOrderStyle; }
+            set { m_defaultPinOrderStyle = value; }
         }
 
         /// <summary>
@@ -409,6 +409,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         enabled = (lastSelected != null) && // at least one Module selected
                                   selectionContext.Selection.All( // selected elements should have a common parent(i.e. belong to the same container) 
                                       x => x.Is<Element>() && x.Cast<DomNode>().Parent == lastSelected.DomNode.Parent);
+                        if (enabled)
+                            enabled = selectionContext.Selection.All(x => !CircuitUtil.IsTemplateTargetMissing(x)); 
                         if (enabled && (!context.SupportsNestedGroup))
                         {    
                             // if nested group is not supported, then neither any selected item can be a group, 
@@ -437,10 +439,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     else if (CommandTag.ResetGroupPinNames.Equals(commandTag))
                     {
                         enabled = m_targetRef != null && m_targetRef.Target.Is<Group>() && (m_targetRef.Target is IReference<DomNode>);
+                        if (enabled)
+                            enabled = !CircuitUtil.IsTemplateTargetMissing(m_targetRef.Target);
                     }
                     else if (CommandTag.HideUnconnectedPins.Equals(commandTag))
                     {
                         enabled = m_targetRef != null && m_targetRef.Target.Is<Group>();
+                        if (enabled)
+                            enabled = !CircuitUtil.IsTemplateTargetMissing(m_targetRef.Target);
                     }
                     else if (CommandTag.TogglePinVisibility.Equals(commandTag))
                     {
@@ -525,7 +531,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (m_targetRef != null && m_targetRef.Target != null)
                     {
                         object target = m_targetRef.Target;
-                        if (target.Is<Group>())
+                        if (target.Is<Group>() && !CircuitUtil.IsTemplateTargetMissing(target))
                         {
                             var group = target.Cast<Group>();
                             state.Text = string.Format("Reset Pin Names on \"{0}\"".Localize(), group.Name);
@@ -550,7 +556,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (m_targetRef != null && m_targetRef.Target != null)
                     {
                         object target = m_targetRef.Target;
-                        if (target.Is<Group>())
+                        if (target.Is<Group>() && !CircuitUtil.IsTemplateTargetMissing(target))
                         {
                             var group = target.Cast<Group>();
                             var graphContainer = group.ParentGraph.As<ICircuitContainer>();
@@ -633,7 +639,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             // build the group
             var newGroup = new DomNode(GroupType).As<Group>();
-            newGroup.DefaultPinOrder = DefaultPinOderStyle;
+            newGroup.DefaultPinOrder = DefaultPinOrderStyle;
             newGroup.DomNode.Type.SetTag<ICircuitElementType>(newGroup);
             newGroup.Id = "Group".Localize("a noun");
             newGroup.Name = newGroup.Id;
@@ -832,6 +838,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (target.Is<Group>())
             {
+                if (CircuitUtil.IsTemplateTargetMissing(target))
+                    return false;
                 var viewingContext = context.Cast<CircuitEditingContext>().DomNode.Cast<ViewingContext>();
                 if (viewingContext.Control != null)
                 {
@@ -863,7 +871,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
  
-        private Group.PinOrderStyle m_defaultPinOderStyle;
+        private Group.PinOrderStyle m_defaultPinOrderStyle;
         private WeakReference m_targetRef;
         private bool m_allUnconnectedHidden;
     }

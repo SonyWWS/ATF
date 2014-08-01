@@ -52,7 +52,7 @@ namespace Sce.Atf.Controls.ColorEditing
         private AdobeColors.HSL        m_hsl;
         private Color                  m_rgb;
         private AdobeColors.CMYK       m_cmyk;
-        private readonly bool m_enableAlpha;
+        private bool m_enableAlpha;
 
         #endregion
 
@@ -117,7 +117,15 @@ namespace Sce.Atf.Controls.ColorEditing
         public ColorPicker(Color starting_color, bool enableAlpha)
         {
             InitializeComponent();
+            SetStartColor(starting_color, enableAlpha);
+        }
 
+        /// <summary>
+        /// Sets starting color</summary>
+        /// <param name="starting_color">The starting color</param>
+        /// <param name="enableAlpha">Enable the alpha channel iff true</param>
+        public void SetStartColor(Color starting_color, bool enableAlpha)
+        {
             m_enableAlpha = enableAlpha;
             if (enableAlpha)
             {
@@ -136,18 +144,18 @@ namespace Sce.Atf.Controls.ColorEditing
             m_rgb = starting_color;
             m_hsl = AdobeColors.RGB_to_HSL(m_rgb);
             m_cmyk = AdobeColors.RGB_to_CMYK(m_rgb);
-            
-            m_txt_Hue.Text =        Round(m_hsl.H * 360).ToString();
-            m_txt_Sat.Text =        Round(m_hsl.S * 100).ToString();
-            m_txt_Bright.Text =     Round(m_hsl.L * 100).ToString();
-            m_txt_Red.Text =        m_rgb.R.ToString();
-            m_txt_Green.Text =      m_rgb.G.ToString();
-            m_txt_Blue.Text =       m_rgb.B.ToString();
-            m_txt_Cyan.Text =       Round(m_cmyk.C * 100).ToString();
-            m_txt_Magenta.Text =    Round(m_cmyk.M * 100).ToString();
-            m_txt_Yellow.Text =     Round(m_cmyk.Y * 100).ToString();
-            m_txt_K.Text =          Round(m_cmyk.K * 100).ToString();
-            m_txt_A.Text =          m_rgb.A.ToString();
+
+            m_txt_Hue.Text = Round(m_hsl.H * 360).ToString();
+            m_txt_Sat.Text = Round(m_hsl.S * 100).ToString();
+            m_txt_Bright.Text = Round(m_hsl.L * 100).ToString();
+            m_txt_Red.Text = m_rgb.R.ToString();
+            m_txt_Green.Text = m_rgb.G.ToString();
+            m_txt_Blue.Text = m_rgb.B.ToString();
+            m_txt_Cyan.Text = Round(m_cmyk.C * 100).ToString();
+            m_txt_Magenta.Text = Round(m_cmyk.M * 100).ToString();
+            m_txt_Yellow.Text = Round(m_cmyk.Y * 100).ToString();
+            m_txt_K.Text = Round(m_cmyk.K * 100).ToString();
+            m_txt_A.Text = m_rgb.A.ToString();
 
             m_txt_Hue.Update();
             m_txt_Sat.Update();
@@ -165,12 +173,11 @@ namespace Sce.Atf.Controls.ColorEditing
 
             m_lbl_Primary_Color.BackColor = MakeOpaque(starting_color);
             m_lbl_Secondary_Color.BackColor = MakeOpaque(starting_color);
-            
+
             m_rbtn_Hue.Checked = true;
 
             WriteHexData(m_rgb);
         }
-
         /// <summary>
         /// Disposes of the resources (other than memory) used by the <see cref="T:System.Windows.Forms.Form"></see></summary>
         /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources</param>
@@ -373,6 +380,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Hue.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Hue.TabIndex = 20;
             this.m_rbtn_Hue.Text = "H:";
+            this.m_rbtn_Hue.AutoSize = true;            
             this.m_rbtn_Hue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Hue.CheckedChanged += new System.EventHandler(this.m_rbtn_Hue_CheckedChanged);
             // 
@@ -383,6 +391,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Sat.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Sat.TabIndex = 21;
             this.m_rbtn_Sat.Text = "S:";
+            this.m_rbtn_Sat.AutoSize = true;
             this.m_rbtn_Sat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Sat.CheckedChanged += new System.EventHandler(this.m_rbtn_Sat_CheckedChanged);
             // 
@@ -393,6 +402,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Bright.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Bright.TabIndex = 22;
             this.m_rbtn_Bright.Text = "B:";
+            this.m_rbtn_Bright.AutoSize = true;
             this.m_rbtn_Bright.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Bright.CheckedChanged += new System.EventHandler(this.m_rbtn_Bright_CheckedChanged);
             // 
@@ -403,6 +413,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Red.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Red.TabIndex = 23;
             this.m_rbtn_Red.Text = "R:";
+            this.m_rbtn_Red.AutoSize = true;
             this.m_rbtn_Red.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Red.CheckedChanged += new System.EventHandler(this.m_rbtn_Red_CheckedChanged);
             // 
@@ -413,6 +424,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Green.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Green.TabIndex = 24;
             this.m_rbtn_Green.Text = "G:";
+            this.m_rbtn_Green.AutoSize = true;
             this.m_rbtn_Green.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Green.CheckedChanged += new System.EventHandler(this.m_rbtn_Green_CheckedChanged);
             // 
@@ -423,6 +435,7 @@ namespace Sce.Atf.Controls.ColorEditing
             this.m_rbtn_Blue.Size = new System.Drawing.Size(38, 24);
             this.m_rbtn_Blue.TabIndex = 25;
             this.m_rbtn_Blue.Text = "B:";
+            this.m_rbtn_Blue.AutoSize = true;
             this.m_rbtn_Blue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.m_rbtn_Blue.CheckedChanged += new System.EventHandler(this.m_rbtn_Blue_CheckedChanged);
             // 
@@ -590,7 +603,7 @@ namespace Sce.Atf.Controls.ColorEditing
             // 
             // ColorPicker
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;            
             this.ClientSize = new System.Drawing.Size(513, 280);
             this.Controls.Add(this.m_lbl_A);
             this.Controls.Add(this.m_txt_A);
@@ -754,7 +767,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Hex must be a hex value between 00000000 and FFFFFFFF");
+                MessageBox.Show("Hex must be a hex value between 00000000 and FFFFFFFF".Localize());
                 WriteHexData(m_rgb);
                 return;
             }
@@ -944,7 +957,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Hue must be a number between 0 and 360");
+                MessageBox.Show("Hue must be a number between 0 and 360".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -995,7 +1008,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Saturation must be a number between 0 and 100");
+                MessageBox.Show("Saturation must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1046,7 +1059,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Brightness must be a number between 0 and 100");
+                MessageBox.Show("Brightness must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1097,7 +1110,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Red must be a number between 0 and 255");
+                MessageBox.Show("Red must be a number between 0 and 255".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1148,7 +1161,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Green must be a number between 0 and 255");
+                MessageBox.Show("Green must be a number between 0 and 255".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1199,7 +1212,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Blue must be a number between 0 and 255");
+                MessageBox.Show("Blue must be a number between 0 and 255".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1249,7 +1262,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Alpha must be a number between 0 and 255");
+                MessageBox.Show("Alpha must be a number between 0 and 255".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1299,7 +1312,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Cyan must be a number between 0 and 100");
+                MessageBox.Show("Cyan must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1348,7 +1361,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Magenta must be a number between 0 and 100");
+                MessageBox.Show("Magenta must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1399,7 +1412,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Yellow must be a number between 0 and 100");
+                MessageBox.Show("Yellow must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }
@@ -1450,7 +1463,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
             if ( has_illegal_chars )
             {
-                MessageBox.Show("Key must be a number between 0 and 100");
+                MessageBox.Show("Key must be a number between 0 and 100".Localize());
                 UpdateTextBoxes();
                 return;
             }

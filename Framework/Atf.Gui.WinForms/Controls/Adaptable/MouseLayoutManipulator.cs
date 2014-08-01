@@ -209,7 +209,7 @@ namespace Sce.Atf.Controls.Adaptable
             Matrix transform = GetTransform();
             for (int i = 0; i < m_draggingItems.Length; i++)
             {
-                Rectangle bounds = GdiUtil.Transform(transform, m_originalBounds[i]);
+                Rectangle bounds = GdiUtil.Transform(transform, m_originalBounds[i]);//all in world coordinates
                 m_layoutContext.SetBounds(m_draggingItems[i], bounds, BoundsSpecified.All);
             }
         }

@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -52,7 +53,7 @@ namespace Sce.Atf.Wpf.Markup
             return exception;
         }
 
-        private TransactionBindingCore m_core;
+        private readonly TransactionBindingCore m_core;
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace Sce.Atf.Wpf.Markup
             set { m_core.Transaction = value; }
         }
 
-        private TransactionBindingCore m_core;
+        private readonly TransactionBindingCore m_core;
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ namespace Sce.Atf.Wpf.Markup
         /// <summary>
         /// Constructor</summary>
         /// <param name="rules">Validation rules collection</param>
-        public TransactionBindingCore(Collection<ValidationRule> rules)
+        public TransactionBindingCore(ICollection<ValidationRule> rules)
         {
             rules.Add(new TransactionBeginEdit(this));
             rules.Add(new TransactionEndEdit(this));
@@ -102,19 +103,20 @@ namespace Sce.Atf.Wpf.Markup
         /// Cancels transaction</summary>
         public void CancelTransaction()
         {
-            m_currentTransactionContext = GetCurrentTransactionContext();
-            if (m_currentTransactionContext != null && m_currentTransactionContext.InTransaction)
+            if (m_currentTransactionContext != null)
             {
                 m_currentTransactionContext.Cancel();
+                m_currentTransactionContext = null;
             }
         }
 
         private void BeginTransaction()
         {
-            m_currentTransactionContext = GetCurrentTransactionContext();
-            if (m_currentTransactionContext != null)
+            var context = GetCurrentTransactionContext();
+            if (context != null && !context.InTransaction)
             {
-                m_currentTransactionContext.Begin(Transaction);
+                m_currentTransactionContext = context;
+                context.Begin(Transaction);
             }
         }
 
@@ -122,7 +124,7 @@ namespace Sce.Atf.Wpf.Markup
         {
             if (m_currentTransactionContext != null)
             {
-                if(m_currentTransactionContext.InTransaction)
+                if (m_currentTransactionContext.InTransaction)
                     m_currentTransactionContext.End();
                 m_currentTransactionContext = null;
             }
@@ -166,7 +168,7 @@ namespace Sce.Atf.Wpf.Markup
                 return ValidationResult.ValidResult;
             }
 
-            private TransactionBindingCore m_owner;
+            private readonly TransactionBindingCore m_owner;
 
         }
 
@@ -184,8 +186,7 @@ namespace Sce.Atf.Wpf.Markup
                 return ValidationResult.ValidResult;
             }
 
-            private TransactionBindingCore m_owner;
+            private readonly TransactionBindingCore m_owner;
         }
     }
-
 }

@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 //using System.Diagnostics;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     using IComDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
     using IDataObject = System.Windows.Forms.IDataObject;

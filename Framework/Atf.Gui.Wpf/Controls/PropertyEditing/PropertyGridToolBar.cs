@@ -23,6 +23,17 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region Properties Property
 
+        public bool IsCategorized
+        {
+            get { return (bool)GetValue(IsCategorizedProperty); }
+            set { SetValue(IsCategorizedProperty, value); }
+        }
+
+        /// <summary>
+        /// PropertyGridToolBar's Properties dependency property</summary>
+        public static readonly DependencyProperty IsCategorizedProperty =
+            DependencyProperty.Register("IsCategorized", typeof(bool), typeof(PropertyGridToolBar));
+
         /// <summary>
         /// Gets or sets PropertyGridToolBar's Properties dependency property</summary>
         public IEnumerable Properties
@@ -34,14 +45,15 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGridToolBar's Properties dependency property</summary>
         public static readonly DependencyProperty PropertiesProperty =
-            DependencyProperty.Register("Properties", typeof(IEnumerable), typeof(PropertyGridToolBar), new FrameworkPropertyMetadata(new PropertyChangedCallback(PropertiesProperty_Changed)));
+            DependencyProperty.Register("Properties", typeof(IEnumerable), typeof(PropertyGridToolBar),
+            new FrameworkPropertyMetadata(PropertiesProperty_Changed));
 
         private static void PropertiesProperty_Changed(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var tb = o as PropertyGridToolBar;
             if (tb != null && tb.Properties != null)
             {
-                if (tb.m_isCateegorized)
+                if (tb.IsCategorized)
                 {
                     if (tb.GetCollectionView().CanSort)
                     {
@@ -68,8 +80,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// Constructor</summary>
         public PropertyGridToolBar()
         {
-            base.CommandBindings.Add(new CommandBinding(ShowAlphaSorted, new ExecutedRoutedEventHandler(ExecuteSort), new CanExecuteRoutedEventHandler(CanExecuteSort)));
-            base.CommandBindings.Add(new CommandBinding(ShowCategorized, new ExecutedRoutedEventHandler(ExecuteGroup), new CanExecuteRoutedEventHandler(CanExecuteGroup)));
+            CommandBindings.Add(new CommandBinding(ShowAlphaSorted, ExecuteSort, CanExecuteSort));
+            CommandBindings.Add(new CommandBinding(ShowCategorized, ExecuteGroup, CanExecuteGroup));
         }
 
         private void CanExecuteSort(object sender, CanExecuteRoutedEventArgs e)
@@ -82,7 +94,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             Clear();
             var cv = GetCollectionView();
             cv.SortDescriptions.Add(s_alphaSort);
-            m_isCateegorized = true;
+            IsCategorized = true;
         }
 
         private void CanExecuteGroup(object sender, CanExecuteRoutedEventArgs e)
@@ -95,7 +107,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             Clear();
             var cv = GetCollectionView();
             cv.GroupDescriptions.Add(DefaultPropertyGrouping.ByCategory);
-            m_isCateegorized = false;
+            IsCategorized = false;
         }
 
         private void Clear()
@@ -113,7 +125,6 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             return CollectionViewSource.GetDefaultView(Properties);
         }
 
-        private bool m_isCateegorized;
         private static SortDescription s_alphaSort = new SortDescription("Descriptor.DisplayName", ListSortDirection.Ascending);
     }
 }

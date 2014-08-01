@@ -73,7 +73,7 @@
     <xs:complexContent>
       <xs:extension base="eventType">
         <xs:attribute name="name" type="xs:string" />
-        <xs:attribute name="length" type="xs:float"/>
+        <xs:attribute name="length" type="xs:float" default ="1.0"/>
         <xs:attribute name="color" type="xs:integer"/>
       </xs:extension>
     </xs:complexContent>

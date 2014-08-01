@@ -107,6 +107,7 @@ namespace FsmEditorSample
             var batch = new CompositionBatch();
             var mainForm = new MainForm(new ToolStripContainer())
             {
+                Text = Application.ProductName,
                 Icon = GdiUtil.CreateIcon(ResourceUtil.GetImage(Sce.Atf.Resources.AtfIconImage))
             };
             Sce.Atf.Direct2D.D2dFactory.EnableResourceSharing(mainForm.Handle);

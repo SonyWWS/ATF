@@ -15,7 +15,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns the smallest rectangle that bounds the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">Bounding rectangle of item</param>
+        /// <param name="bounds">Bounding rectangle of item, in world coordinates</param>
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified GetBounds(object item, out Rectangle bounds);
 
@@ -28,7 +28,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Sets the bounds of the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">New item bounds</param>
+        /// <param name="bounds">New item bounds, in world coordinates</param>
         /// <param name="specified">Which parts of bounds to set</param>
         void SetBounds(object item, Rectangle bounds, BoundsSpecified specified);
     }
@@ -41,7 +41,7 @@ namespace Sce.Atf.Applications
         /// Gets the smallest rectangle that bounds all of the items</summary>
         /// <param name="layoutContext">Layout context</param>
         /// <param name="items">Items</param>
-        /// <param name="bounds">Bounding rectangle (output parameter)</param>
+        /// <param name="bounds">Bounding rectangle, in world coordinates (output parameter)</param>
         /// <returns>Rectangle that bounds all the items</returns>
         public static BoundsSpecified GetBounds(this ILayoutContext layoutContext, IEnumerable<object> items, out Rectangle bounds)
         {
@@ -76,7 +76,7 @@ namespace Sce.Atf.Applications
         /// Moves the item so that the center of its bounding box is at the given point</summary>
         /// <param name="layoutContext">Layout context containing item</param>
         /// <param name="item">Item to center</param>
-        /// <param name="center">Center point</param>
+        /// <param name="center">Center point, in world coordinates</param>
         public static void Center(this ILayoutContext layoutContext, object item, Point center)
         {
             Rectangle bounds;
@@ -92,7 +92,7 @@ namespace Sce.Atf.Applications
         /// Moves all items so that the center of their bounding box is at the given point</summary>
         /// <param name="layoutContext">Layout context containing item</param>
         /// <param name="items">Items to center</param>
-        /// <param name="center">Center point</param>
+        /// <param name="center">Center point, in world coordinates</param>
         public static void Center(this ILayoutContext layoutContext, IEnumerable<object> items, Point center)
         {
             Rectangle bounds;

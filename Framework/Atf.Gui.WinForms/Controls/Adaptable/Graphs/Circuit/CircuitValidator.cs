@@ -1,4 +1,4 @@
-﻿//Sony Computer Entertainment Confidential
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
 using System.Collections.Generic;
@@ -40,8 +40,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (CircuitUtil.IsGroupTemplateInstance(node))
                 {
                     var template = CircuitUtil.GetGroupTemplate(node);
-                    m_templateInstances.Add(template.DomNode, node);
-                    m_subGraphs.Add(template);
+                    if (template != null)
+                    {
+                        m_templateInstances.Add(template.DomNode, node);
+                        m_subGraphs.Add(template);
+                    }
                 }
                 else if (node.Is<Group>())
                 {
@@ -56,7 +59,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             base.OnNodeSet();
 
-         }
+            // Since templates may be externally referenced & edited, better to validate and fix the dangling wires 
+            // that were connected to already deleted sub-nodes of a template
+            if (m_templateInstances.Keys.Any())
+            {
+                UpdateWires(m_subGraphs);
+                UpdateWires(m_circuits);
+            }
+        }
 
         /// <summary>
         /// Gets or sets whether the validation is suspended</summary>
@@ -160,18 +170,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         // ensure group pin names are unique at local level
                         UniqueNamer uniqueName = new UniqueNamer();
                         GroupPin childGrpPin = e.DomNode.Cast<GroupPin>();
-                        
-
-                        foreach (var pin in subGraph.Inputs)
+  
+                        foreach (var grpPin in subGraph.InputGroupPins)
                         {
-                            var grpPin = pin.Cast<GroupPin>();
                             if (grpPin != childGrpPin)
                                 uniqueName.Name(grpPin.Name);
                         }
 
-                        foreach (var pin in subGraph.Outputs)
+                        foreach (var grpPin in subGraph.OutputGroupPins)
                         {
-                            var grpPin = pin.Cast<GroupPin>();
                             if (grpPin != childGrpPin)
                                 uniqueName.Name(grpPin.Name);
                         }
@@ -334,6 +341,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                     if (input && output) // still an internal edge of the container (not a container-crossing link)
                     {
+                        if (wire.InputElement.Type is MissingElementType || wire.OutputElement.Type is MissingElementType)
+                            continue; // skip wires connected to missing types
+                        
                         var matchedInput = new Pair<Element, ICircuitPin>();
                         foreach (var module in container.Elements)
                         {
@@ -445,6 +455,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             foreach (var edge in graph.Edges)
             {
+                if (edge.InputElement.Type is MissingElementType || edge.OutputElement.Type is MissingElementType)
+                    continue; // skip wires connected to missing types
+
                 // an edge should connect two nodes at the same level
                 //Debug.Assert(edge.InputElement.Level == edge.OutputElement.Level,
                 //    string.Format(CircuitUtil.GetDomNodeName(edge.DomNode)) + "does not connect two nodes at the same level");
@@ -539,8 +552,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (CircuitUtil.IsGroupTemplateInstance(node))
                 {
                     var template = CircuitUtil.GetGroupTemplate(node);
-                    m_templateInstances.Add(template.DomNode, node);
-                    m_subGraphs.Add(template);
+                    if (template != null) // if the template is not missing
+                    {
+                        m_templateInstances.Add(template.DomNode, node);
+                        m_subGraphs.Add(template);
+                    }
                 }
                 else if (node.Is<Group>())
                     m_subGraphs.Add(node.Cast<Group>());
@@ -556,8 +572,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (CircuitUtil.IsGroupTemplateInstance(node))
                 {
                     var template = CircuitUtil.GetGroupTemplate(node);
-                    m_templateInstances.Remove(template.DomNode, node);
-                    
+                    if (template != null)// if the template is not missing
+                        m_templateInstances.Remove(template.DomNode, node);                 
                 }
                 else if (node.Is<Group>())
                     m_subGraphs.Remove(node.Cast<Group>());
@@ -636,8 +652,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             // need to update the pin external connectivity of the connecting group       
             if (CircuitUtil.IsGroupTemplateInstance(wire.InputElement.DomNode))
             {
-                updatedNodes.Add(CircuitUtil.GetGroupTemplate(wire.InputElement.DomNode).DomNode);
-                UpdateTemplateInfo(CircuitUtil.GetGroupTemplate(wire.InputElement.DomNode));
+                var template = CircuitUtil.GetGroupTemplate(wire.InputElement.DomNode);
+                if (template != null) // if the template is not missing
+                {
+                    updatedNodes.Add(template.DomNode);
+                    UpdateTemplateInfo(template);
+                }              
             }
             else if (wire.InputElement.DomNode.Is<Group>())
             {
@@ -647,8 +667,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             if (CircuitUtil.IsGroupTemplateInstance(wire.OutputElement.DomNode))
             {
-                updatedNodes.Add(CircuitUtil.GetGroupTemplate(wire.OutputElement.DomNode).DomNode);
-                UpdateTemplateInfo(CircuitUtil.GetGroupTemplate(wire.OutputElement.DomNode));
+                var template = CircuitUtil.GetGroupTemplate(wire.OutputElement.DomNode);
+                if (template != null) // if the template is not missing
+                {
+                    updatedNodes.Add(template.DomNode);
+                    UpdateTemplateInfo(template);
+                }              
             }
             else if (wire.OutputElement.DomNode.Is<Group>())
             {

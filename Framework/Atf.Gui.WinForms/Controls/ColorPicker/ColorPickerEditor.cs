@@ -41,6 +41,17 @@ namespace Sce.Atf.Controls
             if (editorService != null)
             {
                 ColorPicker picker = new ColorPicker((Color)value, m_enableAlpha);
+
+                // skin service,  skins this control
+                // when it shown so it override the labels
+                // used for primary and seconadary color.
+                // When it shown we need to reset the color property.
+                Color color = (Color)value;
+                picker.Shown += (sender, e) =>
+                    {
+                        var colorpicker = (ColorPicker)sender;
+                        colorpicker.SetStartColor(color, m_enableAlpha);
+                    };
                 if (DialogResult.OK == editorService.ShowDialog(picker))
                     value = picker.PrimaryColor;
             }

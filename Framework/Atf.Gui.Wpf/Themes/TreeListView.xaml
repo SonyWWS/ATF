@@ -1,9 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:l="clr-namespace:Sce.Atf.Wpf"
-    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
-    xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors">
+    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls" 
+    xmlns:l="clr-namespace:Sce.Atf.Wpf">
 
     <Style TargetType="{x:Type c:TreeListViewItem}">
         <Style.Triggers>
@@ -17,18 +16,7 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-        <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
-        <Setter Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-        <Setter Property="b:StyleBehaviors.Behaviors">
-            <Setter.Value>
-                <b:StyleBehaviorCollection>
-                    <b:TreeViewItemLabelEditBehavior />
-                </b:StyleBehaviorCollection>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Padding" Value="1,0,0,0" />
         <Setter Property="FocusVisualStyle">
             <Setter.Value>
@@ -74,17 +62,13 @@
                         <Trigger Property="HasItems" Value="False">
                             <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
                         </Trigger>
-                        <Trigger Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="True">
+                        <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Property="Background" />
                             <Setter Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" Property="Foreground" />
                         </Trigger>
-                        <!--Test-->
-                        <Trigger Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="False">
-                            <Setter Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Property="Foreground" />
-                        </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="true" />
+                                <Condition Property="IsSelected" Value="true" />
                                 <Condition Property="IsSelectionActive" Value="false" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Property="Background" />
@@ -99,7 +83,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="TreeListViewScrollStyle">
+    <Style x:Key="TreeListViewScrollStyle" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
         <Setter Property="UIElement.Focusable" Value="False"/>
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -153,30 +137,15 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style TargetType="{x:Type c:TreeListView}">
-        <Setter Property="ItemsSource" Value="{Binding Roots}"/>
-        <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
-        <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-        <Setter Property="ItemTemplate" Value="{DynamicResource {x:Static l:Resources.DefaultTreeViewItemTemplateKey}}"/>
-        <Setter Property="b:StyleBehaviors.Behaviors">
-            <Setter.Value>
-                <b:StyleBehaviorCollection>
-                    <b:AtfTreeViewBehavior EnsureVisiblePath="{Binding EnsureVisiblePath}" SynchronisingSelection="{Binding InSelectionTransaction, Mode=OneWayToSource}"/>
-                    <b:ContextMenuBehavior/>
-                    <b:SelectionContextDragSourceBehavior/>
-                    <b:ItemsControlDropTargetBehavior/>
-                    <b:DragAutoScrollBehavior/>
-                    <b:TreeViewDragHoverExpandBehavior />
-                </b:StyleBehaviorCollection>
-            </Setter.Value>
-        </Setter>
+
+    <Style TargetType="{x:Type c:TreeListView}" BasedOn="{StaticResource {x:Type TreeView}}">
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type c:TreeListView}">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                         <ScrollViewer 
-                            Style="{StaticResource TreeListViewScrollStyle}" Background="{TemplateBinding Background}"
+                            Style="{StaticResource TreeListViewScrollStyle}"
                             Focusable="False" CanContentScroll="False"
                             HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                             VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"

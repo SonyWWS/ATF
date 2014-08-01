@@ -11,7 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using STATSTG = System.Runtime.InteropServices.ComTypes.STATSTG;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     internal static class OleConverter
     {

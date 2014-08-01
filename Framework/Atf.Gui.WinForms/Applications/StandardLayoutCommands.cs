@@ -65,10 +65,7 @@ namespace Sce.Atf.Applications
             LayoutContexts.GetBounds(layoutContext, items, out bounds);
             foreach (object item in items)
             {
-                Rectangle itemBounds;
-                layoutContext.GetBounds(item, out itemBounds);
-                itemBounds.X = bounds.X;
-                layoutContext.SetBounds(item, itemBounds, BoundsSpecified.X);
+                layoutContext.SetBounds(item, bounds, BoundsSpecified.X);
             }
         }
 
@@ -83,10 +80,7 @@ namespace Sce.Atf.Applications
             LayoutContexts.GetBounds(layoutContext, items, out bounds);
             foreach (object item in items)
             {
-                Rectangle itemBounds;
-                layoutContext.GetBounds(item, out itemBounds);
-                itemBounds.Y = bounds.Y;
-                layoutContext.SetBounds(item, itemBounds, BoundsSpecified.Y);
+                layoutContext.SetBounds(item, bounds, BoundsSpecified.Y);
             }
         }
 

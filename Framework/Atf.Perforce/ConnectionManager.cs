@@ -344,10 +344,31 @@ namespace Sce.Atf.Perforce
             {
                 if (m_connection == null)
                     return false;
-                if (m_connection.Status == ConnectionStatus.Disconnected)
-                    m_connection.Connect(null); // try to connect
-                if (m_connection.Status == ConnectionStatus.Disconnected)
-                    return false;
+
+                try
+                {
+                    if (m_connection.Status == ConnectionStatus.Disconnected)
+                        m_connection.Connect(null); // try to connect
+                    if (m_connection.Status == ConnectionStatus.Disconnected)
+                        return false;
+                }
+                catch (P4Exception ex)
+                {
+                    switch (ex.ErrorLevel)
+                    {
+                        case ErrorSeverity.E_WARN:
+                            Outputs.WriteLine(OutputMessageType.Warning, ex.Message);
+                            break;
+                        case ErrorSeverity.E_FAILED:
+                            Outputs.WriteLine(OutputMessageType.Error, ex.Message);
+                            break;
+                        case ErrorSeverity.E_INFO:
+                            Outputs.WriteLine(OutputMessageType.Info, ex.Message);
+                            break;
+                    }
+                    if (ThrowExceptions)
+                        throw;
+                 }
             }
 
             bool result = true;

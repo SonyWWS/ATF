@@ -198,7 +198,7 @@ namespace StatechartEditorSample
                 control.AllowDrop = true;
 
                 var transformAdapter = new TransformAdapter();
-                transformAdapter.UniformScale = false;
+                transformAdapter.UniformScale = true;
                 transformAdapter.MinScale = new PointF(0.25f, 0.25f);
                 transformAdapter.MaxScale = new PointF(4, 4);
                 var viewingAdapter = new ViewingAdapter(transformAdapter);

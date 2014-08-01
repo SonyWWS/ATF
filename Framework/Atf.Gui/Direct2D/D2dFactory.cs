@@ -326,6 +326,21 @@ namespace Sce.Atf.Direct2D
             if (string.IsNullOrEmpty(text))
                 return SizeF.Empty;
             return s_gfx.MeasureText(text, textFormat);
+        }        
+        
+        /// <summary>
+        /// Measures the specified string when drawn with the specified System.Drawing.Font</summary>
+        /// <param name="text">String to measure</param>
+        /// <param name="textFormat">D2dTextFormat that defines the font and format of the string</param>
+        /// <param name="maxSize">The maximum x and y dimensions</param>
+        /// <returns>This method returns a System.Drawing.SizeF structure that represents the
+        /// size, in DIP (Device Independent Pixels) units of the string specified by the text parameter as drawn 
+        /// with the format parameter</returns>
+        public static SizeF MeasureText(string text, D2dTextFormat textFormat, SizeF maxSize)
+        {
+            if (string.IsNullOrEmpty(text))
+                return SizeF.Empty;
+            return s_gfx.MeasureText(text, textFormat, maxSize);
         }
 
         /// <summary>

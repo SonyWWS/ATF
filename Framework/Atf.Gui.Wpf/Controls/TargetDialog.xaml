@@ -1,0 +1,94 @@
+﻿<c:CommonDialog x:Class="Sce.Atf.Wpf.Controls.TargetDialog"
+                x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:Sce.Atf.Wpf"
+    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+    xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+    xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors"
+    ShowInTaskbar="False"
+    Height="200" Width="600"
+    MinWidth="600" MinHeight="200"
+    ResizeMode="CanResizeWithGrip"
+    Title="{m:Loc Targets}">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <l:CommandReference x:Key="DeleteCommandRef" Command="{Binding DeleteTargetCommand}"/>
+            <l:CommandReference x:Key="EditUserTargetCommandRef" Command="{Binding EditUserTargetCommand}"/>
+
+            <ContextMenu x:Key="itemContextMenu">
+                <MenuItem Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.AddUserTargetCommand}" Header="{m:Loc Add}"/>
+                <MenuItem Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditUserTargetCommand}" Header="{m:Loc Edit}"/>
+                <MenuItem Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteTargetCommand}" Header="{m:Loc Delete}"/>
+            </ContextMenu>
+
+            <Style x:Key="listViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
+                <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                <Setter Property="ContextMenu" Value="{StaticResource itemContextMenu}"/>
+                <Setter Property="b:CommandBehavior.Command" Value="{Binding ElementName=listView, Path=DataContext.EditUserTargetCommand}"/>
+                <Setter Property="b:CommandBehavior.RoutedEventName" Value="MouseDoubleClick"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="12">
+            <Button Content="{m:Loc Find Targets}" Command="{Binding FindTargetsCommand}" Margin="0"
+                Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <Button Content="{m:Loc Add}" Command="{Binding AddUserTargetCommand}"
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}" />
+            <Button Content="{m:Loc Edit}" Command="{Binding EditUserTargetCommand}"
+                Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <Button Content="{m:Loc Delete}" Command="{Binding DeleteTargetCommand}"
+                Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <!--<Label Content="{m:Loc Protocol:}" VerticalAlignment="Center" Margin="8,0,0,0"/>-->
+            <ComboBox ItemsSource="{Binding Protocols}" SelectedIndex="0" Margin="6,0,0,0"
+                      IsSynchronizedWithCurrentItem="True" Width="120"
+                      IsEnabled="{Binding RelativeSource={RelativeSource Self}, Path=HasItems, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Content="{m:Loc OK}" IsDefault="True" Command="{Binding OkCommand}" DockPanel.Dock="Right"
+                 Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+        </DockPanel>
+
+        <ListView DockPanel.Dock="Top"
+                  Name="listView"
+                  ItemsSource="{Binding Targets}"
+                  Margin="8,4,8,0"
+                  ItemContainerStyle="{DynamicResource listViewItem}"
+                  IsSynchronizedWithCurrentItem="True">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding AddUserTargetCommand}" Header="{m:Loc Add}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.InputBindings>
+                <KeyBinding Key="Delete" Command="{StaticResource DeleteCommandRef}" />
+                <KeyBinding Key="Enter" Command="{StaticResource EditUserTargetCommandRef}" />
+            </ListView.InputBindings>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="24" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <RadioButton GroupName="targetsRadioGroup" IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{m:Loc Target}" Width="100" DisplayMemberBinding="{Binding Target.Name}"/>
+                    <!--<GridViewColumn Header="{m:Loc Id}" Width="100" DisplayMemberBinding="{Binding HardwareId}"/>-->
+                    <GridViewColumn Header="{m:Loc Host}" Width="120" DisplayMemberBinding="{Binding Target.Host}"/>
+                    <GridViewColumn Header="{m:Loc Protocol}" Width="120" DisplayMemberBinding="{Binding Protocol.Name}"/>
+                    <GridViewColumn Header="{m:Loc Status}" Width="60" DisplayMemberBinding="{Binding Target.Status}"/>
+                    <GridViewColumn Header="{m:Loc Info}" Width="80" DisplayMemberBinding="{Binding Target.ConnectionInfo}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</c:CommonDialog>

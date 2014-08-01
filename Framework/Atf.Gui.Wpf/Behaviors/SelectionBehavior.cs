@@ -2,147 +2,54 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Interactivity;
-
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 
 namespace Sce.Atf.Wpf.Behaviors
 {
     /// <summary>
-    /// Selection behaviors</summary>
-    public static class SelectionBehaviors
+    /// Base class for Selection Behaviors
+    /// Can be used on Selectors or TreeViews
+    /// </summary>
+    public abstract class SelectionBehaviorBase : Behavior<Selector>
     {
-        #region SelectionContext Attached Property
-
-        /// <summary>
-        /// SelectionContext attached property.
-        /// This is used by several other behaviors.</summary>
         public static readonly DependencyProperty SelectionContextProperty =
-            DependencyProperty.RegisterAttached("SelectionContext", typeof(ISelectionContext), typeof(SelectionBehaviors), new PropertyMetadata(SelectionContextPropertyChanged));
+            DependencyProperty.Register("SelectionContext", 
+                typeof(ISelectionContext), typeof(SelectionBehaviorBase), 
+                    new PropertyMetadata(default(ISelectionContext), SelectionContextPropertyChanged));
 
-        /// <summary>
-        /// Gets SelectionContext attached property</summary>
-        /// <param name="obj">Dependency object to obtain property for</param>
-        /// <returns>SelectionContext attached property</returns>
-        public static ISelectionContext GetSelectionContext(DependencyObject obj)
-        {
-            return (ISelectionContext)obj.GetValue(SelectionContextProperty);
-        }
-
-        /// <summary>
-        /// Sets SelectionContext attached property</summary>
-        /// <param name="obj">Dependency object to set property for</param>
-        /// <param name="value">SelectionContext attached property</param>
-        public static void SetSelectionContext(DependencyObject obj, ISelectionContext value)
-        {
-            obj.SetValue(SelectionContextProperty, value);
-        }
-
-        #endregion
-
-        private static void SelectionContextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Base class for selection behaviors.
-    /// Can be used on Selectors or TreeViews.</summary>
-    /// <typeparam name="T">Selector or TreeView types</typeparam>
-    public abstract class SelectionBehaviorBase<T> : Behavior<T>
-        where T : System.Windows.FrameworkElement
-    {
-        /// <summary>
-        /// Gets SelectionContext</summary>
         public ISelectionContext SelectionContext
         {
-            get 
-            { 
-                var selection = (ISelectionContext)AssociatedObject.GetValue(SelectionBehaviors.SelectionContextProperty);
-                if (selection == null)
-                    selection = AssociatedObject.DataContext.As<ISelectionContext>();
-                return selection;
-            }
+            get { return (ISelectionContext)GetValue(SelectionContextProperty); }
+            set { SetValue(SelectionContextProperty, value); }
         }
 
         private static void SelectionContextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var behavior = d as SelectionBehaviorBase<T>;
-            behavior.ChangeContext(e.OldValue as ISelectionContext);
+           ((SelectionBehaviorBase)d).ChangedContext(e.OldValue as ISelectionContext);
         }
 
-        #region Overrides
-        
-        /// <summary>
-        /// Static constructor</summary>
-        static SelectionBehaviorBase()
+        public static readonly DependencyProperty EnableSelectionClearProperty =
+            DependencyProperty.Register("EnableSelectionClear", typeof(bool), typeof(SelectionBehaviorBase));
+
+        public bool EnableSelectionClear
         {
-            SelectionBehaviors.SelectionContextProperty.OverrideMetadata(typeof(Behavior<T>), new PropertyMetadata(SelectionContextPropertyChanged));
+            get { return (bool)GetValue(EnableSelectionClearProperty); }
+            set { SetValue(EnableSelectionClearProperty, value); }
         }
 
-        /// <summary>
-        /// Raises behavior Attached event and performs custom actions</summary>
-        protected override void OnAttached()
+        private void ChangedContext(ISelectionContext oldSelectionContext)
         {
-            base.OnAttached();
+            if (oldSelectionContext == SelectionContext)
+                return;
 
-            if (AssociatedObject is Selector)
-            {
-                (AssociatedObject as Selector).SelectionChanged 
-                    += (s, e) => OnAssociatedObjectSelectionChanged(e.AddedItems, e.RemovedItems);
-            }
-            else if (AssociatedObject is TreeView)
-            {
-                (AssociatedObject as TreeView).SelectedItemChanged
-                    += (s, e) => OnAssociatedObjectSelectionChanged(new object[] { e.NewValue }, new object[] { e.OldValue });
-            }
-            else
-            {
-                throw new InvalidOperationException("SelectionBehaviorBase does not support this object type");
-            }
-
-            ChangeContext(null);
-        }
-
-        #endregion
-
-        #region Virtuals
-
-        /// <summary>
-        /// Performs custom actions on SelectionContextChanged events</summary>
-        protected virtual void OnSelectionContextChanged()
-        {
-        }
-
-        /// <summary>
-        /// Performs custom actions on SelectionContextSelectionChanging events</summary>
-        protected virtual void OnSelectionContextSelectionChanging()
-        {
-        }
-
-        /// <summary>
-        /// Performs custom actions on SelectionContextSelectionChanged events</summary>
-        protected virtual void OnSelectionContextSelectionChanged()
-        {
-        }
-
-        /// <summary>
-        /// Performs custom actions on AssociatedObjectSelectionChanged events</summary>
-        /// <param name="addeditems">List of items added</param>
-        /// <param name="removedItems">List of items removed</param>
-        protected virtual void OnAssociatedObjectSelectionChanged(IList addeditems, IList removedItems)
-        {
-        }
-
-        #endregion
-
-        private void ChangeContext(ISelectionContext oldSelectionContext)
-        {
             if (oldSelectionContext != null)
             {
                 oldSelectionContext.SelectionChanging -= SelectionContext_SelectionChanging;
@@ -158,6 +65,48 @@ namespace Sce.Atf.Wpf.Behaviors
             OnSelectionContextChanged();
         }
 
+        #region Overrides
+        
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+
+            AssociatedObject.SelectionChanged += SelectorSelectionChanged;
+            AssociatedObject.PreviewMouseDown += SelectorMouseDown;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+
+            AssociatedObject.SelectionChanged -= SelectorSelectionChanged;
+            AssociatedObject.PreviewMouseDown -= SelectorMouseDown;
+        }
+
+        #endregion
+
+        #region Virtuals
+
+        protected virtual void OnSelectionContextChanged()
+        {
+        }
+
+        protected virtual void OnSelectionContextSelectionChanging()
+        {
+        }
+
+        protected virtual void OnSelectionContextSelectionChanged()
+        {
+        }
+
+        /// <param name="addeditems">List of items added</param>
+        /// <param name="removedItems">List of items removed</param>
+        protected virtual void OnAssociatedObjectSelectionChanged(IList addeditems, IList removedItems)
+        {
+        }
+
+        #endregion
+
         void SelectionContext_SelectionChanged(object sender, EventArgs e)
         {
             OnSelectionContextSelectionChanged();
@@ -168,15 +117,51 @@ namespace Sce.Atf.Wpf.Behaviors
             OnSelectionContextSelectionChanging();
         }
 
+        void SelectorSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.OriginalSource == AssociatedObject)
+                OnAssociatedObjectSelectionChanged(e.AddedItems, e.RemovedItems);
+        }
+
+        void SelectorMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!EnableSelectionClear)
+                return;
+            
+            var current = e.OriginalSource as DependencyObject;
+            while (current != null)
+            {
+                // If we get a ListBox before getting a ListBoxItem, then the mouse was not down on ListBoxItem.
+                var result = current as ListBox;
+                if (result != null)
+                {
+                    AssociatedObject.SelectedItem = null;
+                    break;
+                }
+
+                var item = current as ListBoxItem;
+                if (item != null)
+                    break;
+
+                current = current.GetVisualOrLogicalParent();
+            }
+        }
     }
 
     /// <summary>
     /// Behavior to bind the selection of items in a selector to an ISelectionContext.
     /// Note that binding is only one way, i.e., selection in the selector is mirrored
     /// into the ISelectionContext, but not the other way.</summary>
-    public class ToSourceSelectionBehavior : SelectionBehaviorBase<Selector>
+    public class ToSourceSelectionBehavior : SelectionBehaviorBase
     {
         #region Overrides
+
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+
+            Composer.Current.Container.SatisfyImportsOnce(this);
+        }
 
         /// <summary>
         /// Raises the AssociatedObjectSelectionChanged event and performs custom processing</summary>
@@ -202,7 +187,7 @@ namespace Sce.Atf.Wpf.Behaviors
     /// <summary>
     /// Behavior to add two way selection binding support between an 
     /// ISelectionContext and a selector or multi-selector</summary>
-    public class TwoWaySelectionBehavior : SelectionBehaviorBase<Selector>
+    public class TwoWaySelectionBehavior : SelectionBehaviorBase
     {
         #region Overrides
 
@@ -224,7 +209,7 @@ namespace Sce.Atf.Wpf.Behaviors
                     m_associatedObjectSelection = (AssociatedObject as ListBox).SelectedItems;
             }
 
-            m_associatedItemsControl = AssociatedObject as ItemsControl;
+            Composer.Current.Container.SatisfyImportsOnce(this);
         }
 
         /// <summary>
@@ -243,10 +228,19 @@ namespace Sce.Atf.Wpf.Behaviors
 
                     if (SelectionContext != null)
                     {
-                        if (removedItems.Count > 0)
+                        if (m_associatedObjectSelection != null)
                         {
-                            var converted = ConvertToSelectionContext(removedItems);
-                            SelectionContext.RemoveRange(converted);
+                            // In muti select mode remove specific items
+                            if (removedItems.Count > 0)
+                            {
+                                var converted = ConvertToSelectionContext(removedItems);
+                                SelectionContext.RemoveRange(converted);
+                            }
+                        }
+                        else
+                        {
+                            // In single select mode always clear selection
+                            SelectionContext.Clear();
                         }
 
                         if (addeditems.Count > 0)
@@ -304,9 +298,9 @@ namespace Sce.Atf.Wpf.Behaviors
         protected virtual object ConvertFromSelectionContext(object item)
         {
             // Check that this item exists in the ItemsSource of the AssociatedObject
-            if (m_associatedItemsControl != null)
+            if (AssociatedObject != null)
             {
-                if (!m_associatedItemsControl.Items.Contains(item))
+                if (!AssociatedObject.Items.Contains(item))
                     return null;
             }
 
@@ -330,7 +324,7 @@ namespace Sce.Atf.Wpf.Behaviors
         {
             // Remove items from AssociatedObject selection which are no
             // longer in the ISelectionContext
-            foreach (var item in m_associatedObjectSelection)
+            foreach (var item in m_associatedObjectSelection.Cast<object>().ToArray())
             {
                 object converted = ConvertToSelectionContext(item);
                 if (converted != null)
@@ -342,11 +336,11 @@ namespace Sce.Atf.Wpf.Behaviors
                 }
             }
 
-            // Add any new items in the ISelectionContext to the selection 
+            // Add any new items in the ISlectionContext to the selection 
             // in the AssociatedObject
             foreach (var item in newSelection)
             {
-                object converted = ConvertFromSelectionContextAndCheckExistence(item);
+                object converted = ConvertFromSelectionContextAndCheckExistance(item);
                 if (converted != null)
                 {
                     m_associatedObjectSelection.Add(converted);
@@ -358,25 +352,29 @@ namespace Sce.Atf.Wpf.Behaviors
         {
             // Find most recently selected item from ISelectionContext which exists in the ItemsSource
             // of the AssociatedObject
+            object selected = null;
+
             foreach (var item in newSelection)
             {
-                object converted = ConvertFromSelectionContextAndCheckExistence(item);
+                object converted = ConvertFromSelectionContextAndCheckExistance(item);
                 if (converted != null)
                 {
-                    AssociatedObject.SelectedItem = converted;
+                    selected = converted;
                     break;
                 }
             }
+
+            AssociatedObject.SelectedItem = selected;
         }
 
-        private object ConvertFromSelectionContextAndCheckExistence(object item)
+        private object ConvertFromSelectionContextAndCheckExistance(object item)
         {
             object result = ConvertFromSelectionContext(item);
 
             // Check that this item exists in the ItemsSource of the AssociatedObject
-            if (result != null && m_associatedItemsControl != null)
+            if (result != null && AssociatedObject != null)
             {
-                if (!m_associatedItemsControl.Items.Contains(item))
+                if (!AssociatedObject.Items.Contains(item))
                     return null;
             }
 
@@ -399,8 +397,21 @@ namespace Sce.Atf.Wpf.Behaviors
 
         private bool m_synchronising;
         private IList m_associatedObjectSelection;
-        private ItemsControl m_associatedItemsControl;
 
         #endregion
+    }
+
+    public class AdaptingTwoWaySelectionBehavior : TwoWaySelectionBehavior
+    {
+        public Type AdapterType { get; set; }
+
+        protected override object ConvertFromSelectionContext(object item)
+        {
+            if (AdapterType == null)
+                throw new InvalidOperationException("AdapterType must be set on AdaptingTwoWaySelectionBehavior");
+
+            var adaptable = item as IAdaptable;
+            return adaptable != null ? adaptable.As(AdapterType) : null;
+        }
     }
 }

@@ -187,6 +187,8 @@ namespace CircuitEditorSample
                         (item.Is<GroupInstance>() || item.Is<ModuleInstance>())  ;
                     if (!validCandiate)
                         return false;
+                    if (CircuitUtil.IsTemplateTargetMissing(item))
+                        return false;
 
                     var currentParent = item.Cast<DomNode>().Parent;
                     if (parent == null)
@@ -289,8 +291,7 @@ namespace CircuitEditorSample
         /// An empty string indicates no templates were loaded</returns>
         protected override ImportedContent LoadExternalTemplateLibrary(Uri uri)
         {
-            DomNode node = null;
-
+ 
             string filePath = string.Empty;
             if (uri == null)
             {
@@ -314,13 +315,122 @@ namespace CircuitEditorSample
                     // read existing document using standard XML reader
                     using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                     {
-                        DomXmlReader reader = new DomXmlReader(m_schemaLoader);
-                        node = reader.Read(stream, uri);
+                        var reader = new CircuitReader(m_schemaLoader);
+                        var root = reader.Read(stream, uri);
+                        var toFolder = CreateTemplateFolder();
+                        reader.ImportTemplates(toFolder.DomNode, root, uri);
+                        return new ImportedContent(toFolder.DomNode, uri);
+                    }                 
+                }
+            }
+
+            return new ImportedContent(null, null);           
+        }
+
+        /// <summary>
+        /// Rescan all referenced template documents </summary>
+        protected override void ReloadExternalTemplates()
+        {
+            // 1st, scan the template hierarchy tree and remember all the existing template's guid -> DomNode map
+            var oldNodeGuidDictionary = new Dictionary<string, DomNode>();
+            foreach (var node in TemplatingContext.RootFolder.DomNode.Subtree)
+            {
+                if (node.Is<Template>())
+                {
+                    var template = node.Cast<Template>();
+                    if (template.Guid != Guid.Empty)
+                        oldNodeGuidDictionary[template.Guid.ToString()] = node;
+                }
+            }
+
+            // 2nd, scan the template hierarchy tree again and reload all the external templates  
+            var newNodeGuidDictionary = new Dictionary<string, DomNode>();
+
+            foreach (var node in TemplatingContext.RootFolder.DomNode.Subtree)
+            {
+                var templateFolder = node.As<Sce.Atf.Dom.TemplateFolder>();
+                if (templateFolder == null || templateFolder.Url == null)
+                    continue;
+                if (File.Exists(templateFolder.Url.LocalPath))
+                {
+                    using (FileStream stream = new FileStream(templateFolder.Url.LocalPath, FileMode.Open, FileAccess.Read))
+                    {
+                        var reader = new CircuitReader(m_schemaLoader);
+                        var rootNode = reader.Read(stream, templateFolder.Url);
+
+                        foreach (var newnode in rootNode.Subtree)
+                        {
+                            var guidAttr = newnode.Type.GetAttributeInfo("guid");
+                            if (guidAttr == null)
+                                continue;
+                            var guidStr = newnode.GetAttribute(guidAttr) as string;
+                            if (!string.IsNullOrEmpty(guidStr))
+                                newNodeGuidDictionary[guidStr] = newnode;
+                        }
+                        reader.ImportTemplates(templateFolder.DomNode, rootNode, templateFolder.Url);
                     }
                 }
             }
 
-            return new ImportedContent(node, uri);
+            // 3rd, replace original nodes with newly loaded, matched by GUIDs
+            foreach (var node in TemplatingContext.RootFolder.DomNode.GetRoot().Subtree)
+            {
+                // currently two types that reference templates: GroupInstance or ModuleInstance
+                DomNode refNode;
+
+                var groupInstance = node.As<GroupInstance>();
+                if (groupInstance != null)
+                {
+                    if (newNodeGuidDictionary.TryGetValue(groupInstance.Template.Guid.ToString(), out refNode))
+                    {
+                        groupInstance.Template = refNode.As<Template>();
+                        groupInstance.ProxyGroup = null;// reset
+
+                        // need to reset pin targets due to DomNode replacements 
+                        var graphContainer = groupInstance.DomNode.Parent.Cast<ICircuitContainer>();
+                        foreach (var edge in graphContainer.Wires)
+                        {
+                            if (edge.OutputElement.DomNode == groupInstance.DomNode)
+                                edge.OutputPinTarget = null;
+
+                            if (edge.InputElement.DomNode == groupInstance.DomNode)
+                                edge.InputPinTarget = null;
+
+                        }
+                        continue;
+                    }                 
+                }
+
+                var moduleInstance = node.As<ModuleInstance>();
+                if (moduleInstance != null)
+                {
+                    if (newNodeGuidDictionary.TryGetValue(moduleInstance.Template.Guid.ToString(), out refNode))
+                    {
+                        moduleInstance.Template = refNode.As<Template>();
+
+                        // need to reset pin targets due to DomNode replacements 
+                        var graphContainer = moduleInstance.DomNode.Parent.Cast<ICircuitContainer>();
+                        foreach (var edge in graphContainer.Wires)
+                        {
+                            if (edge.OutputElement.DomNode == moduleInstance.DomNode)
+                                edge.OutputPinTarget = null;
+
+                            if (edge.InputElement.DomNode == moduleInstance.DomNode)
+                                edge.InputPinTarget = null;
+                        }
+                    }
+                }
+            }
+
+            // finally, prune the old nodes
+            foreach (var keyValue in newNodeGuidDictionary)
+            {
+                DomNode oldNode;
+                if (oldNodeGuidDictionary.TryGetValue(keyValue.Key, out oldNode))
+                {
+                    oldNode.RemoveFromParent();
+                }
+            }
         }
 
         [Import]

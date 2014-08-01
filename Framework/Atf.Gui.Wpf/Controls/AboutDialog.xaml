@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Sce.Atf.Wpf.Controls"
     xmlns:l="clr-namespace:Sce.Atf.Wpf.Markup"
-    Height="Auto" Width="500"
+    Height="300" Width="500"
     ShowInTaskbar="False"
     ResizeMode="NoResize"
     SizeToContent="Height">
@@ -24,7 +24,8 @@
     </Window.Resources>
     
     <StackPanel>
-        <StackPanel Margin="12">
+        <StackPanel>
+            <Image Source="{Binding Banner, Mode=OneTime}" Margin="0,0,0,4"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                 <Label Content="{l:Loc Version:}" Margin="0,0,4,0"/>
                 <Label Content="{Binding Mode=OneTime, Path=Version}" />
@@ -36,9 +37,12 @@
             <Label Content="{l:Loc All Rights Reserved}" />
             <Label Style="{StaticResource ParagraphSeparator}" Content="{l:Loc Product details:}" Margin="0,0,4,0" />
             <Label Content="{Binding Mode=OneTime, Path=Description}" />
+            <ListBox Height="150" Margin="0,4,0,0" ItemsSource="{Binding Assemblies}"/>
             <DockPanel>
-                <Button Content="{l:Loc OK}" 
-                        MinWidth="75" Margin="0,12,12,0" DockPanel.Dock="Right" IsDefault="True" IsCancel="True"/>
+                <Button Content="{l:Loc OK}"
+                        MinWidth="75" Margin="0,4,4,0" DockPanel.Dock="Right" IsDefault="True" IsCancel="True"/>
+                <Button Content="{l:Loc Copy Info}" Click="Button_Click"
+                        MinWidth="75" Margin="0,4,4,0" DockPanel.Dock="Right"/>
                 <Label Style="{StaticResource LinkLabelStyle}" >
                     <Hyperlink x:Name="hyperlink" x:Uid="hyperlink" NavigateUri="{Binding Mode=OneTime, Path=LinkUri}"  Style="{StaticResource LinkLabelStyle}"
                                Hyperlink.RequestNavigate="hyperlink_RequestNavigate">

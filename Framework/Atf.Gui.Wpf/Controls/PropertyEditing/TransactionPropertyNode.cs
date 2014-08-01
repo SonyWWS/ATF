@@ -1,39 +1,81 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
-using System.ComponentModel;
-using System.Windows;
-using Sce.Atf.Adaptation;
+using System;
 
 namespace Sce.Atf.Wpf.Controls.PropertyEditing
 {
     /// <summary>
-    /// PropertyNode where setting the property value is done as a transaction</summary>
-    public class TransactionPropertyNode : PropertyNode
+    /// PropertyNode where setting the property value is done as a transaction
+    /// Holds a weak reference to the TX context</summary>
+    public class TransactionPropertyNode : DynamicPropertyNode
     {
         /// <summary>
         /// Constructor</summary>
-        /// <param name="instance">Object or collection of objects that share a property</param>
-        /// <param name="descriptor">PropertyDescriptor of shared property</param>
-        /// <param name="isEnumerable">Whether the object is enumerable</param>
-        /// <param name="owner">Object(s) owner</param>
-        public TransactionPropertyNode(object instance, PropertyDescriptor descriptor, bool isEnumerable, FrameworkElement owner)
-           : base(instance, descriptor, isEnumerable, owner)
+        public TransactionPropertyNode(ITransactionContext context)
         {
+            if(context != null)
+                m_contextRef = new WeakReference(context);
+            else
+                IsReadOnly = true;
         }
 
         /// <summary>
-        /// Sets the value of the property for all object(s) in the TransactionPropertyNode, performing the set as a transaction</summary>
-        /// <param name="value">New value for property</param>
+        /// Gets the transaction context from the owner
+        /// Does not hold a strong reference to the context
+        /// </summary>
+        public ITransactionContext TransactionContext
+        {
+            get
+            {
+                if (m_contextRef != null && m_contextRef.IsAlive)
+                    return m_contextRef.Target as ITransactionContext;
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Stops handling property changed events</summary>
+        public override void UnBind()
+        {
+            base.UnBind();
+            if (m_contextRef != null)
+                m_contextRef.Target = null;
+        }
+
+        /// <summary>
+        /// Reset the property to its default value</summary>
+        public override void ResetValue()
+        {
+            var ctxt = TransactionContext;
+            if (ctxt == null)
+                throw new InvalidOperationException("No transaction context available for TransactionPropertyNode");
+
+            ctxt.DoTransaction(ResetValueInternal, "Reset Property".Localize());
+        }
+
+        /// <summary>
+        /// Sets the property to the given value</summary>
+        /// <param name="value">Value to set</param>
         protected override void SetValue(object value)
         {
-            // Due to use of anonymous lamda, we can't call directly into the base SetValue
-            Owner.DataContext.As<ITransactionContext>()
-                .DoTransaction(() => SetValueInternal(value), "Edit Property".Localize());
+            var ctxt = TransactionContext;
+            if (ctxt == null)
+                throw new InvalidOperationException("No transaction context available for TransactionPropertyNode");
+
+            // Due to use of anonymous lambda we can't call directly into the base SetValue
+            ctxt.DoTransaction(() => SetValueInternal(value), "Edit Property".Localize());
         }
 
         private void SetValueInternal(object value)
         {
             base.SetValue(value);
         }
+
+        private void ResetValueInternal()
+        {
+            base.ResetValue();
+        }
+
+        private readonly WeakReference m_contextRef;
     }
 }

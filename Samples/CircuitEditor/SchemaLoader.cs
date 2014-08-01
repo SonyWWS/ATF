@@ -66,8 +66,8 @@ namespace CircuitEditorSample
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<PrototypingContext>());        // document-wide prototype hierarchy
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<TemplatingContext>());         // document-wide template hierarchy
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<MasteringValidator>());        // validates sub-circuits
-                Schema.circuitDocumentType.Type.Define(new ExtensionInfo<UniqueIdValidator>());         // ensures all ids are unique throughout document
-                //Schema.circuitDocumentType.Type.Define(new ExtensionInfo<UniquePathIdValidator>());   // TODO: switch to UniquePathIdValidator to ensures all ids are local unique
+                //Schema.circuitDocumentType.Type.Define(new ExtensionInfo<UniqueIdValidator>());         // ensures all ids are unique throughout document
+                Schema.circuitDocumentType.Type.Define(new ExtensionInfo<CategoryUniqueIdValidator>());   // ensures all ids are local unique in its category
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<CircuitValidator>());          // validate group hierarchy
                 // ReferenceValidator should be the last validator attached to the root DomNode to fully track
                 // all the DOM editings of all other validators to update references properly 
@@ -159,6 +159,8 @@ namespace CircuitEditorSample
             Schema.templateType.Type.Define(new ExtensionInfo<Template>());
             Schema.moduleTemplateRefType.Type.Define(new ExtensionInfo<ModuleInstance>());
             Schema.groupTemplateRefType.Type.Define(new ExtensionInfo<GroupInstance>());
+            Schema.missingModuleType.Type.Define(new ExtensionInfo<MissingModule>());
+
 
             // set document editor information(DocumentClientInfo) for circuit editor:
             Schema.circuitDocumentType.Type.SetTag(Editor.EditorInfo);

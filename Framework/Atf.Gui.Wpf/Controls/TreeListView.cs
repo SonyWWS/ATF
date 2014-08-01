@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Reflection;
+using System.Windows.Data;
 using Sce.Atf.Wpf.Markup;
 using System.Globalization;
 using System.Windows.Media;
@@ -14,24 +15,12 @@ namespace Sce.Atf.Wpf.Controls
     /// Provides a TreeView ListView</summary>
     public class TreeListView : TreeView
     {
-        #region Ctors
-
         /// <summary>
         /// Static constructor</summary>
         static TreeListView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TreeListView), new FrameworkPropertyMetadata(typeof(TreeListView)));
         }
-
-        /// <summary>
-        /// Constructor</summary>
-        public TreeListView()
-        {
-        }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         /// Gets a collection of the GridViewColumn in the ListView</summary>
@@ -47,7 +36,6 @@ namespace Sce.Atf.Wpf.Controls
                 return m_columns;
             }
         }
-        private GridViewColumnCollection m_columns;
 
         /// <summary>
         /// Selects the given item</summary>
@@ -67,10 +55,6 @@ namespace Sce.Atf.Wpf.Controls
             return false;
         }
 
-        #endregion
-
-        #region Overrides
-
         /// <summary>
         /// Gets TreeListViewItem DependencyObject to serve as an item container in a TreeListView</summary>
         /// <returns>TreeListViewItem to serve as item container in a TreeListView</returns>
@@ -88,31 +72,34 @@ namespace Sce.Atf.Wpf.Controls
             return item is TreeListViewItem;
         }
 
-        #endregion
+        private GridViewColumnCollection m_columns;
+    }
+
+    public class AncestorTypeBinding<T> : Binding
+        where T : class
+    {
+        private AncestorTypeBinding() { }
+
+        public AncestorTypeBinding(string path)
+            : this(path, 1) { }
+
+        public AncestorTypeBinding(string path, int ancestorLevel)
+            : base(path)
+        {
+            RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(T), ancestorLevel);
+        }
     }
 
     /// <summary>
     /// Selectable item in a TreeListView</summary>
     public class TreeListViewItem : TreeViewItem
     {
-        #region Ctors
-
         /// <summary>
         /// Static constructor</summary>
         static TreeListViewItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TreeListViewItem), new FrameworkPropertyMetadata(typeof(TreeListViewItem)));
         }
-
-        /// <summary>
-        /// Constructor</summary>
-        public TreeListViewItem()
-        {
-        }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         /// Gets level of item in TreeListView</summary>
@@ -129,9 +116,13 @@ namespace Sce.Atf.Wpf.Controls
             }
         }
 
-        #endregion
-
-        #region Overrides
+        /// <summary>
+        /// Executes operations required after initialization</summary>
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+        }
 
         /// <summary>
         /// Gets TreeListViewItem DependencyObject to serve as an item container in a TreeListView</summary>
@@ -150,21 +141,29 @@ namespace Sce.Atf.Wpf.Controls
             return item is TreeListViewItem;
         }
 
-        #endregion
+        /// <summary>
+        /// Event handler for when the ItemContainerGenerator changes</summary>
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        {
+            if (ItemContainerGenerator.Status != System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+                return;
 
-        #region Private Fields
+            BindingOperations.SetBinding(this,
+                HorizontalContentAlignmentProperty,
+                new AncestorTypeBinding<ItemsControl>("HorizontalContentAlignment"));
+
+            BindingOperations.SetBinding(this,
+                VerticalContentAlignmentProperty,
+                new AncestorTypeBinding<ItemsControl>("VerticalContentAlignment"));
+        }
 
         private int m_level = -1;
-
-        #endregion
     }
 
     /// <summary>
     /// Represents an object that specifies the layout of a row of data in a TreeView ListView</summary>
     public class TreeGridViewRowPresenter : GridViewRowPresenter
     {
-        #region Dependency Properties
-
         /// <summary>
         /// Row first column indent dependency property</summary>
         public static DependencyProperty FirstColumnIndentProperty =
@@ -199,23 +198,12 @@ namespace Sce.Atf.Wpf.Controls
             set { this.SetValue(ExpanderProperty, value); }
         }
 
-        private static PropertyInfo ActualIndexProperty = typeof(GridViewColumn).GetProperty("ActualIndex", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static PropertyInfo DesiredWidthProperty = typeof(GridViewColumn).GetProperty("DesiredWidth", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        #endregion
-
-        #region Ctors
-
         /// <summary>
         /// Constructor</summary>
         public TreeGridViewRowPresenter()
         {
             m_children = new UIElementCollection(this, this);
         }
-
-        #endregion
-
-        #region Overrides
 
         /// <summary>
         /// Arranges (positions and determines size) of row of data in a TreeView ListView</summary>
@@ -312,46 +300,95 @@ namespace Sce.Atf.Wpf.Controls
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static void OnExpanderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // Use a second UIElementCollection so base methods work as original
-            TreeGridViewRowPresenter p = (TreeGridViewRowPresenter)d;
+            var p = (TreeGridViewRowPresenter)d;
 
-            p.m_children.Remove(e.OldValue as UIElement);
-            p.m_children.Add((UIElement)e.NewValue);
+            if (e.OldValue != null)
+            {
+                p.m_children.Remove(e.OldValue as UIElement);
+            }
+
+            if (e.NewValue != null)
+            {
+                p.m_children.Add((UIElement)e.NewValue);
+            }
         }
 
-        #endregion
-
-        #region Private Fields
+        private static PropertyInfo ActualIndexProperty = typeof(GridViewColumn).GetProperty("ActualIndex", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static PropertyInfo DesiredWidthProperty = typeof(GridViewColumn).GetProperty("DesiredWidth", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private UIElementCollection m_children;
+    }
+
+    /// <summary>
+    /// Converter to determine the width of the last column</summary>
+    public class LastColumnFillWidthConverter : MultiConverterMarkupExtension<LastColumnFillWidthConverter>
+    {
+        #region IMultiValueConverter Members
+
+        /// <summary>
+        /// Converter function to calculate how wide to make the final column</summary>
+        /// <param name="values">values[0] is the ListView. values[1] is the total width of the control.</param>
+        /// <param name="type">not used</param>
+        /// <param name="parameter">not used</param>
+        /// <param name="culture">not used</param>
+        /// <returns>The remaining width available for the final column</returns>
+        public override object Convert(object[] values, Type type, object parameter, CultureInfo culture)
+        {
+            if (ValuesPopulated(values))
+            {
+                ListView l = values[0] as ListView;
+                GridView g = l.View as GridView;
+                double total = 0;
+                for (int i = 0; i < g.Columns.Count - 1; i++)
+                {
+                    total += g.Columns[i].Width;
+                }
+
+                return (double)values[1] - total;
+            }
+
+            return 0.0;
+        }
+
+        static bool ValuesPopulated(object[] values)
+        {
+            foreach (object value in values)
+            {
+                if (value == null || value.Equals(DependencyProperty.UnsetValue))
+                    return false;
+            }
+            return true;
+        }
 
         #endregion
     }
-    
+
     /// <summary>
-    /// Converts level to indentation for control</summary>
+    /// Converter to calculate the amount to indent an item based on its level in the tree</summary>
     public class LevelToIndentConverter : ConverterMarkupExtension<LevelToIndentConverter>
     {
+        #region IValueConverter Members
+
         /// <summary>
-        /// Covmerts level to indentation for control</summary>
-        /// <param name="o">Level</param>
-        /// <param name="type">Type of level object (unused)</param>
-        /// <param name="parameter">String representation of a indentation scale, i.e., indention for one level</param>
-        /// <param name="culture">Local information (unused)</param>
-        /// <returns>Indentation for control</returns>
+        /// Converter function to calculate the amount to indent an item based on its level in the tree</summary>
+        /// <param name="o">The level of the item (as an integer)</param>
+        /// <param name="type">not used</param>
+        /// <param name="parameter">Optional: The indent size to use per level (as a string that will be parsed to a double)</param>
+        /// <param name="culture">not used</param>
+        /// <returns>The size to indent by</returns>
         public override object Convert(object o, Type type, object parameter, CultureInfo culture)
         {
-            double identScale = 20.0;
+            double indentScale = 20.0;
             if (parameter != null)
-                identScale = Double.Parse((string)parameter);
+                indentScale = Double.Parse((string)parameter);
 
-            return (int)o * identScale;
+            // return new Thickness((int)o * identScale, 0, 0, 0);
+            return (int)o * indentScale;
         }
+
+        #endregion
     }
 }

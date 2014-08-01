@@ -40,7 +40,8 @@ namespace Sce.Atf.Controls
             m_textBox.Name = "m_textBox";
 
             m_spinner = new CompactSpinner();
-            
+            m_spinner.GotFocus += (sender, e) => m_textBox.Focus();
+
             SuspendLayout();            
             UpdateTextBox();                        
             Controls.Add(m_textBox);            

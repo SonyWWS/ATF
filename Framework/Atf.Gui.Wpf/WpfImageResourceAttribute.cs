@@ -8,6 +8,7 @@ namespace Sce.Atf.Wpf
     /// <summary>
     /// Attribute to mark fields, for automatic loading of Resource Dictionaries by WpfResourceUtil</summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+    [Obsolete("Please use Sce.Atf.ImageResourceAttribute instead.")]
     public sealed class WpfImageResourceAttribute : Attribute
     {
         /// <summary>

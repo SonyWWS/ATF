@@ -155,7 +155,7 @@ namespace FsmEditorSample
         /// <summary>
         /// Returns the smallest rectangle that bounds the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">Bounding rectangle of item</param>
+        /// <param name="bounds">Bounding rectangle of item, in world coordinates</param>
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified ILayoutContext.GetBounds(object item, out Rectangle bounds)
         {
@@ -195,27 +195,22 @@ namespace FsmEditorSample
         /// <summary>
         /// Sets the bounds of the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">New item bounds</param>
-        /// <param name="specified">Which parts of bounds are being set</param>
+        /// <param name="bounds">New item bounds, in world coordinates</param>
+        /// <param name="specified">Which parts of bounds to set</param>
         void ILayoutContext.SetBounds(object item, Rectangle bounds, BoundsSpecified specified)
         {
             bounds = ConstrainBounds(bounds, specified);
 
-            State state = Adapters.As<State>(item);
+            var state = item.As<State>();
             if (state != null)
             {
-                if ((specified & BoundsSpecified.Width) != 0)
-                    bounds.Height = bounds.Width;
-                else if ((specified & BoundsSpecified.Height) != 0)
-                    bounds.Width = bounds.Height;
-
-                state.Bounds = bounds;
+                state.Bounds = WinFormsUtil.UpdateBounds(state.Bounds, bounds, specified);
             }
             else
             {
-                Annotation annotation = Adapters.As<Annotation>(item);
+                var annotation = item.As<Annotation>();
                 if (annotation != null)
-                    annotation.Bounds = bounds;
+                    annotation.Bounds = WinFormsUtil.UpdateBounds(annotation.Bounds, bounds, specified);
             }
         }
 

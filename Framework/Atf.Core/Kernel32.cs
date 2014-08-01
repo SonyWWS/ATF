@@ -22,6 +22,32 @@ namespace Sce.Atf
             [In] [MarshalAsAttribute(UnmanagedType.LPWStr)] string lpDeviceName,
             [Out] [MarshalAsAttribute(UnmanagedType.LPWStr)] System.Text.StringBuilder lpTargetPath,
             uint ucchMax);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        private class MEMORYSTATUSEX
+        {
+            public uint dwLength = 64;
+            public uint dwMemoryLoad;
+            public ulong ullTotalPhys; //The amount of actual physical memory, in bytes.
+            public ulong ullAvailPhys;
+            public ulong ullTotalPageFile;
+            public ulong ullAvailPageFile;
+            public ulong ullTotalVirtual;
+            public ulong ullAvailVirtual;
+            public ulong ullAvailExtendedVirtual;
+        }
+
+        [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool GlobalMemoryStatusEx(MEMORYSTATUSEX lpBuffer);
+
+        public static int GetPhysicalMemoryMB()
+        {
+            // Available from Windows 2000 and onward; i.e., Environment.OSVersion.Version.Major >= 5 .
+            var memoryStatus = new MEMORYSTATUSEX();
+            GlobalMemoryStatusEx(memoryStatus);
+            return (int)(memoryStatus.ullTotalPhys / (1024 * 1024));// convert bytes to megabytes
+        }
     }
 }
 

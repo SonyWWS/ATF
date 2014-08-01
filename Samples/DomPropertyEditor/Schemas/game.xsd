@@ -74,6 +74,7 @@
           <xs:element name="orc" type="orcType" minOccurs="0" maxOccurs="unbounded" />          
         </xs:sequence>
         <xs:attribute name="skill" type="xs:int" default="20"/>
+        <xs:attribute name="level" type="xs:int" default="1"/>
         <xs:attribute name="weight" type="xs:float" default="100" />        
         <xs:attribute name="emotion" type="xs:string" default="Happy" />
         <xs:attribute name="goals" type="xs:int" default ="12" />
@@ -84,8 +85,7 @@
         <xs:attribute name="textureArray" type="floatListType" default="33 12 56 43 54" />
         <xs:attribute name="textureTransform" type="matrixType" default="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
         <xs:attribute name="TextureRevDate" type="xs:dateTime" />
-        <xs:attribute name="resourceFolder" type="xs:string" use="required"/>
-        
+        <xs:attribute name="resourceFolder" type="xs:string" use="required"/>        
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

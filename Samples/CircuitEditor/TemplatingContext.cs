@@ -69,8 +69,8 @@ namespace CircuitEditorSample
             if (template.Target.Is<Group>())
             {
                 var groupReference = new DomNode(Schema.groupTemplateRefType.Type).Cast<GroupInstance>();
-                groupReference.Target = template.Target.Cast<Module>();
                 groupReference.SourceGuid = template.Guid;
+				groupReference.Template = template;
                 groupReference.Id = template.Name;
                 groupReference.Name = template.Name;
                 return groupReference;
@@ -78,8 +78,8 @@ namespace CircuitEditorSample
             if (template.Target.Is<Module>())
             {
                 var moduleReference = new DomNode(Schema.moduleTemplateRefType.Type).Cast<ModuleInstance>();
-                moduleReference.Target = template.Target.Cast<Module>();
                 moduleReference.SourceGuid = template.Guid;
+				moduleReference.Template = template;
                 moduleReference.Id = template.Name;
                 moduleReference.Name = template.Name;
                 return moduleReference;

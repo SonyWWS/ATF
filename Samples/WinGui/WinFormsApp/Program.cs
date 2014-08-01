@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+
+using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Threading;

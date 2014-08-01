@@ -1,0 +1,20 @@
+﻿<DrawingGroup xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DrawingGroup x:Name="DrawingLayer">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,512,512" />
+        </DrawingGroup.ClipGeometry>
+        <GeometryDrawing>
+            <GeometryDrawing.Brush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Offset="0.00" Color="#FF0083D7"/>
+                        <GradientStop Offset="1.00" Color="#FF0066CC"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+            <GeometryDrawing.Geometry>
+                <PathGeometry FillRule="Nonzero" Figures="M494.974,399.24L449.026,317.554C422.061,269.617,377.938,191.176,350.973,143.239L305.026,61.554C278.062,13.617,233.939,13.617,206.975,61.554L161.028,143.239C134.064,191.176,89.94,269.617,62.976,317.554L17.026,399.24C-9.938,447.177,13,486.397,68,486.397L156,486.397C211,486.397,301,486.397,356,486.397L444,486.397C499,486.397,521.938,447.177,494.974,399.24z M224.709,164.397C224.709,156.147,231.459,149.397,239.709,149.397L272.292,149.397C280.542,149.397,287.292,156.147,287.292,164.397L287.292,200.44C287.292,208.69,287.141,222.188,286.956,230.436L284.865,323.711C284.68,331.959,277.779,338.707,269.529,338.707L242.469,338.707C234.219,338.707,227.318,331.959,227.133,323.711L225.045,230.436C224.86,222.188,224.709,208.69,224.709,200.44L224.709,164.397z M288.211,412.397C288.211,420.647,281.461,427.397,273.211,427.397L238.79,427.397C230.54,427.397,223.79,420.647,223.79,412.397L223.79,381.378C223.79,373.128,230.54,366.378,238.79,366.378L273.211,366.378C281.461,366.378,288.211,373.128,288.211,381.378L288.211,412.397z" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+    </DrawingGroup>
+</DrawingGroup>

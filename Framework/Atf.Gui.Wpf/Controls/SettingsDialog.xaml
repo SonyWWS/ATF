@@ -1,0 +1,84 @@
+﻿<c:CommonDialog 
+    x:Class="Sce.Atf.Wpf.Controls.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:l="clr-namespace:Sce.Atf.Wpf"
+    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+    xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+    xmlns:pe="clr-namespace:Sce.Atf.Wpf.Controls.PropertyEditing" 
+    xmlns:atf="clr-namespace:Sce.Atf.Wpf.Behaviors"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    mc:Ignorable="d"
+    ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner"
+    Height="400" Width="640"
+    MinHeight="200" MinWidth="320"
+    d:DesignHeight="320" d:DesignWidth="480">
+
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="HiddenToolBarStyle" TargetType="{x:Type pe:PropertyGridToolBar}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="IsCategorized" Value="True"/>
+            </Style>
+            <HierarchicalDataTemplate x:Key="TreeViewItemTemplate" ItemsSource="{Binding Children}">
+                <Border BorderBrush="{x:Null}" Height="20">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Label, Mode=OneWay}"/>
+                </Border>
+            </HierarchicalDataTemplate>
+        </Grid.Resources>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="8,4,8,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="80"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="3*" MinWidth="120"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Padding="0" BorderThickness="0" CornerRadius="3">
+                <TreeView DataContext="{Binding TreeViewModel}">
+                    <i:Interaction.Behaviors>
+                        <atf:AtfTreeViewBehavior EnsureVisiblePath="{Binding EnsureVisiblePath}" SynchronisingSelection="{Binding InSelectionTransaction, Mode=OneWayToSource}"/>
+                    </i:Interaction.Behaviors>
+                    <TreeView.Style>
+                        <Style TargetType="TreeView" BasedOn="{StaticResource {x:Type TreeView}}">
+                            <Setter Property="atf:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                            <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Static l:Resources.TreeViewItemStyleKey}}" />
+                            <Setter Property="ItemsSource" Value="{Binding Roots}"/>
+                            <Setter Property="ItemTemplate" Value="{DynamicResource TreeViewItemTemplate}"/>
+                        </Style>
+                    </TreeView.Style>
+                </TreeView>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent"/>
+
+            <Border Grid.Column="2" Padding="0" BorderThickness="0" CornerRadius="3">
+                <pe:PropertyGrid Instances="{Binding Items}" CustomPropertyDescriptors="{Binding PropertyDescriptors}" 
+                                 Grouping="{x:Static pe:DefaultPropertyGrouping.None}"
+                                 Padding="2,8,2,2"
+                                 ToolBarStyle="{StaticResource HiddenToolBarStyle}"/>
+            </Border>
+        </Grid>
+
+        <DockPanel Grid.Row="1"  LastChildFill="False" Margin="12">
+
+            <Button Command="{Binding SetDefaultsCommand}" Content="{m:Loc Defaults}"
+                Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+
+            <Button DockPanel.Dock="Right" Command="{Binding CancelCommand}" IsCancel="True" Content="{m:Loc Cancel}"
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <Button DockPanel.Dock="Right" Command="{Binding OkCommand}" IsDefault="True" Content="{m:Loc OK}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+        </DockPanel>
+    </Grid>
+
+</c:CommonDialog>

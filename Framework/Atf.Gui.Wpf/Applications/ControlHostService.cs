@@ -6,13 +6,14 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Xml;
 
 using Sce.Atf.Applications;
 using Sce.Atf.Controls.PropertyEditing;
-using Sce.Atf.Wpf.Interop;
-
-using Wws.UI.Docking;
+using Sce.Atf.Input;
+using Sce.Atf.Wpf.Controls;
+using Sce.Atf.Wpf.Docking;
 
 namespace Sce.Atf.Wpf.Applications
 {
@@ -36,17 +37,19 @@ namespace Sce.Atf.Wpf.Applications
         /// Constructor</summary>
         /// <param name="mainWindowAdapter">Main application form</param>
         [ImportingConstructor]
-        public ControlHostService(MainWindowAdapter mainWindowAdapter)
+        public ControlHostService(IMainWindow mainWindow)
         {
-            m_mainWindow = mainWindowAdapter.MainWindow as Sce.Atf.Wpf.Controls.MainWindow;
-            m_dockPanel = new Wws.UI.Docking.DockPanel();
-            m_mainWindow.MainContent = m_dockPanel;
-            mainWindowAdapter.Closing += m_mainWindow_Closing;
-            mainWindowAdapter.Loaded += m_mainWindow_Loaded;
+            m_dockPanel = new Sce.Atf.Wpf.Docking.DockPanel();
+            m_mainWindow = mainWindow;
 
             // TODO: temporarily stop compiler warning
             // TODO: Needs to be implemented!
             if (DockStateChanged == null) return;
+        }
+
+        public Control DockPanel
+        {
+            get { return m_dockPanel; }
         }
 
         #region IDockStateProvider Members
@@ -73,19 +76,29 @@ namespace Sce.Atf.Wpf.Applications
 
         private void m_mainWindow_Loaded(object sender, EventArgs e)
         {
+            m_mainWindowLoaded = true;
+
             if (!m_stateApplied)
             {
                 SetDockPanelState(null);
             }
+
+            foreach(var content in m_contentToShowOnMainWindowLoad)
+                Show(content);
+
+            m_contentToShowOnMainWindowLoad.Clear();
         }
 
         private void m_mainWindow_Closing(object sender, CancelEventArgs e)
         {
-            // snapshot docking state before we close anything
-            m_cachedDockPanelState = GetDockPanelState();
-            // attempt to close all documents
-            m_closed = Close(true);
-            e.Cancel = !m_closed;
+            if (e.Cancel == false)
+            {
+                // snapshot docking state before we close anything
+                m_cachedDockPanelState = GetDockPanelState();
+                // attempt to close all documents
+                m_closed = Close(true);
+                e.Cancel = !m_closed;
+            }
         }
 
         #region IInitializable Members
@@ -94,6 +107,13 @@ namespace Sce.Atf.Wpf.Applications
         /// Finishes initializing component by setting up Settings Service</summary>
         public void Initialize()
         {
+            // subscribe as late as possible to allow other parts to load/save state before controls are created/destroyed
+            m_mainWindow.Closing += m_mainWindow_Closing;
+            m_mainWindow.Loaded += m_mainWindow_Loaded;
+
+            if (m_dockPanelSite != null)
+                m_dockPanelSite.MainContent = m_dockPanel;
+
             ShowDefaultContents();
 
             if (m_settingsService != null)
@@ -143,23 +163,17 @@ namespace Sce.Atf.Wpf.Applications
 
             if (m_commandService != null)
             {
-                var command = m_commandService.RegisterCommand(
-                    new CommandDef(
-                        dockContent,
-                        StandardMenu.Window,
-                        StandardCommandGroup.WindowDocuments,
-                        contentInfo.Name,
-                        null,
-                        "Activate Control".Localize(),
-                        null, null, CommandVisibility.Menu),
-                    this);
-
-                contentInfo.Command = command;
+                contentInfo.Command = m_commandService.RegisterCommand(
+                    dockContent,
+                    StandardMenu.Window,
+                    StandardCommandGroup.WindowDocuments,
+                    contentInfo.Name,
+                    Localizer.Localize("Activate Control"),
+                    Keys.None, null, CommandVisibility.Menu,
+                    this).GetCommandItem();
             }
 
             ActivateClient(client, true);
-
-            Show(control);
 
             return contentInfo;
         }
@@ -174,7 +188,7 @@ namespace Sce.Atf.Wpf.Applications
             {
                 if (m_commandService != null)
                 {
-                    m_commandService.UnregisterCommand(info.Command, this);
+                    m_commandService.UnregisterCommand(info.Command.CommandTag, this);
                 }
                 m_dockPanel.UnregisterContent(info.DockContent);
                 info.DockContent.IsFocusedChanged -= DockContent_IsFocusedChanged;
@@ -192,7 +206,10 @@ namespace Sce.Atf.Wpf.Applications
             var info = FindControlInfo(content);
             if (info != null)
             {
-                m_dockPanel.ShowContent(info.DockContent);
+                if (m_mainWindowLoaded)
+                    m_dockPanel.ShowContent(info.DockContent);
+                else
+                    m_contentToShowOnMainWindowLoad.Add(content);
             }
         }
 
@@ -232,22 +249,18 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Checks if the client can do the command</summary>
         /// <param name="command">command</param>
-        /// <returns>True iff client can do the command</returns>
-        public bool CanDoCommand(object command)
+        /// <returns>true, if client can do the command</returns>
+        public bool CanDoCommand(object tag)
         {
-            ICommandItem commandItem = command as ICommandItem;
-            Requires.NotNull(commandItem, "Command specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            return commandItem.CommandTag is IDockContent;
+            return tag is IDockContent;
         }
 
         /// <summary>
         /// Does a command</summary>
-        /// <param name="command">Command</param>
-        public void DoCommand(object command)
+        /// <param name="tag">Command</param>
+        public void DoCommand(object tag)
         {
-            ICommandItem commandItem = command as ICommandItem;
-            Requires.NotNull(commandItem, "Command specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            IDockContent dockContent = commandItem.CommandTag as IDockContent;
+            IDockContent dockContent = tag as IDockContent;
             if (dockContent != null)
             {
                 if (m_dockPanel.IsContentVisible(dockContent))
@@ -257,7 +270,10 @@ namespace Sce.Atf.Wpf.Applications
                 else
                 {
                     m_dockPanel.ShowContent(dockContent);
-                    commandItem.IsChecked = true;
+
+                    ControlInfo info = m_registeredContents.FirstOrDefault(x => x.Command.CommandTag == tag);
+                    if (info != null)
+                        info.Command.IsChecked = true;
                 }
             }
         }
@@ -449,18 +465,24 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         private string m_cachedDockPanelState;
+        private readonly IMainWindow m_mainWindow;
         private IControlHostClient m_activeClient;
         private List<ControlInfo> m_registeredContents = new List<ControlInfo>();
-        private Sce.Atf.Wpf.Controls.MainWindow m_mainWindow;
         private IDockContent m_activeDockControl;
-        private Wws.UI.Docking.DockPanel m_dockPanel;
+        private Sce.Atf.Wpf.Docking.DockPanel m_dockPanel;
         bool m_stateApplied;
-        bool m_closed = false;
-
+        bool m_mainWindowLoaded;
+        bool m_closed;
+        private HashSet<object> m_contentToShowOnMainWindowLoad = new HashSet<object>();
+            
         [Import(AllowDefault = true)]
         private Sce.Atf.Applications.ISettingsService m_settingsService = null;
 
         [Import(AllowDefault = true)]
         private ICommandService m_commandService = null;
+
+        [Import(AllowDefault = true)]
+        private IMainWindowContentSite m_dockPanelSite = null;
+
     }
 }

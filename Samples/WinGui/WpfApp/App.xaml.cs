@@ -10,8 +10,11 @@ using Sce.Atf.Wpf.Models;
 
 using WinGuiCommon;
 
+using AutoDocumentService = Sce.Atf.Wpf.Applications.AutoDocumentService;
 using CommandService = Sce.Atf.Wpf.Applications.CommandService;
 using ControlHostService = Sce.Atf.Wpf.Applications.ControlHostService;
+using FileDialogService = Sce.Atf.Wpf.Applications.FileDialogService;
+using SettingsService = Sce.Atf.Wpf.Applications.SettingsService;
 using UnhandledExceptionService = Sce.Atf.Wpf.Applications.UnhandledExceptionService;
 using WindowLayoutServiceCommands = Sce.Atf.Wpf.Applications.WindowLayoutServiceCommands;
 
@@ -30,6 +33,12 @@ namespace WpfApp
         /// Gets MEF AggregateCatalog for application</summary>
         protected override AggregateCatalog GetCatalog()
         {
+            // Because this app references both Atf.Gui.WinForms and Atf.Gui.Wpf, we need to explicitly call
+            // this function to register resources. If only one or the other assembly were referenced, this
+            // would be handled automatically by Atf.Gui.Resources, but since both are included it doesn't
+            // know which one to choose.
+            Sce.Atf.Wpf.Resources.Register();
+
             var typeCatalog = new TypeCatalog(
                 typeof(SettingsService),                // persistent settings and user preferences dialog
                 typeof(CommandService),                 // handles commands in menus and toolbars
@@ -45,8 +54,7 @@ namespace WpfApp
                 typeof(AutoDocumentService),            // opens documents from last session, or creates a new document, on startup
                 typeof(RecentDocumentCommands),         // standard recent document commands in File menu
                 typeof(MainWindowTitleService),         // tracks document changes and updates main form title
-                typeof(WindowLayoutService),            // service to allow multiple window layouts
-                typeof(WindowLayoutServiceCommands),    // command layer to allow easy switching between and managing of window layouts
+                typeof(WindowLayoutService),            // service to handle window layouts
                 typeof(SchemaLoader),                   // loads schema and extends types
                 typeof(MainWindow),                     // main app window (analog to 'MainForm' in WinFormsApp)
                 typeof(Editor),                         // Sample editor class that creates and saves application documents

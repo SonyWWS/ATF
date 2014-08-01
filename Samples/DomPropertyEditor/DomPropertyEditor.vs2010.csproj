@@ -93,6 +93,24 @@
       <Name>Atf.IronPython.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Adequate.png" />
+    <EmbeddedResource Include="Resources\Angry.png" />
+    <EmbeddedResource Include="Resources\Annoyed.png" />
+    <EmbeddedResource Include="Resources\Capable.png" />
+    <EmbeddedResource Include="Resources\Depressed.png" />
+    <EmbeddedResource Include="Resources\Enthusiastic.png" />
+    <EmbeddedResource Include="Resources\Frustrated.png" />
+    <EmbeddedResource Include="Resources\Happy.png" />
+    <EmbeddedResource Include="Resources\Hostile.png" />
+    <EmbeddedResource Include="Resources\Thrilled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Adept.png" />
+    <EmbeddedResource Include="Resources\Apprentice.png" />
+    <EmbeddedResource Include="Resources\Journeyman.png" />
+    <EmbeddedResource Include="Resources\Master.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

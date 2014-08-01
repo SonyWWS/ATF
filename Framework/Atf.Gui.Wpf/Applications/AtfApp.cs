@@ -1,12 +1,13 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
-
+using Sce.Atf.Collections;
 using Sce.Atf.Wpf.Interop;
 
 namespace Sce.Atf.Wpf.Applications
@@ -30,6 +31,11 @@ namespace Sce.Atf.Wpf.Applications
             FrameworkElement.LanguageProperty.OverrideMetadata(
               typeof(FrameworkElement), new FrameworkPropertyMetadata(
                   XmlLanguage.GetLanguage(System.Globalization.CultureInfo.CurrentCulture.IetfLanguageTag)));
+
+            m_initializables = new List<Lazy<IInitializable>>();
+            m_disposables = new List<Lazy<IDisposable>>();
+
+            this.Exit += AtfAppExit;
         }
 
         #region IComposer Members
@@ -41,7 +47,10 @@ namespace Sce.Atf.Wpf.Applications
         #endregion
 
         [ImportMany]
-        private Lazy<IInitializable>[] m_initializables = null;
+        private List<Lazy<IInitializable>> m_initializables = null;
+
+        [ImportMany]
+        private List<Lazy<IDisposable>> m_disposables = null;
 
         [Import]
         private MainWindowAdapter m_mainWindow = null;
@@ -71,7 +80,9 @@ namespace Sce.Atf.Wpf.Applications
                 OnCompositionBeginning();
 
                 foreach (var initializable in m_initializables)
+                {
                     initializable.Value.Initialize();
+                }
 
                 OnCompositionComplete();
 
@@ -90,6 +101,11 @@ namespace Sce.Atf.Wpf.Applications
         {
             base.OnExit(e);
 
+            foreach (var disposable in m_disposables)
+            {
+                disposable.Value.Dispose();
+            }
+            
             if (Container != null)
             {
                 Container.Dispose();
@@ -110,7 +126,15 @@ namespace Sce.Atf.Wpf.Applications
                 MessageBox.Show(compositionException.ToString());
                 return false;
             }
+            
             return true;
         }
+
+        void AtfAppExit(object sender, ExitEventArgs e)
+        {
+            IsShuttingDown = true;
+        }
+
+        internal bool IsShuttingDown { get; private set; }
     }
 }

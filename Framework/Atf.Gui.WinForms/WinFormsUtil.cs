@@ -274,6 +274,28 @@ namespace Sce.Atf
         }
 
         /// <summary>
+        /// Updates the specified parts of 'origRect'</summary>
+        /// <param name="origRect">The original rectangle</param>
+        /// <param name="newRect">The source for the parts specified in 'parts'</param>
+        /// <param name="parts">Flags specifying which parts of 'origRect' should be updated</param>
+        /// <returns>The updated rectangle</returns>
+        public static Rectangle UpdateBounds(Rectangle origRect, Rectangle newRect, BoundsSpecified parts)
+        {
+            Rectangle updatedOriginal = origRect;
+
+            if ((parts & BoundsSpecified.X) != 0)
+                updatedOriginal.X = newRect.X;
+            if ((parts & BoundsSpecified.Y) != 0)
+                updatedOriginal.Y = newRect.Y;
+            if ((parts & BoundsSpecified.Width) != 0)
+                updatedOriginal.Width = newRect.Width;
+            if ((parts & BoundsSpecified.Height) != 0)
+                updatedOriginal.Height = newRect.Height;
+
+            return updatedOriginal;
+        }
+
+        /// <summary>
         /// Delegate for the WindowCreated and WindowDestroyed events</summary>
         /// <param name="form">The form that was created or destroyed</param>
         public delegate void FormEventHandler(Form form);

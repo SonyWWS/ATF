@@ -93,11 +93,11 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Performs actions for renamed nodes</summary>
-        /// <param name="m_renamed">Renamed nodes and old ids</param>
-        protected override void RenameNodes(Dictionary<DomNode, string> m_renamed)
+        /// <param name="renamed">Renamed nodes and old ids</param>
+        protected override void RenameNodes(Dictionary<DomNode, string> renamed)
         {
             HashSet<DomNode> parents = new HashSet<DomNode>();
-            foreach (DomNode node in m_renamed.Keys)
+            foreach (DomNode node in renamed.Keys)
                 parents.Add(node.Parent);
 
             UniqueNamer uniqueNamer = new UniqueNamer(m_suffixSeparator);
@@ -107,7 +107,7 @@ namespace Sce.Atf.Dom
                 foreach (DomNode child in parent.Children)
                 {
                     if (child.Type.IdAttribute != null &&
-                        !m_renamed.ContainsKey(child))
+                        !renamed.ContainsKey(child))
                     {
                         string id = child.GetId();
                         uniqueNamer.Name(id);
@@ -118,7 +118,7 @@ namespace Sce.Atf.Dom
                 foreach (DomNode child in parent.Children)
                 {
                     if (child.Type.IdAttribute != null &&
-                        m_renamed.ContainsKey(child))
+                        renamed.ContainsKey(child))
                     {
                         NameNode(child, uniqueNamer);
                     }

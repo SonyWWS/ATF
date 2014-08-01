@@ -532,11 +532,10 @@ namespace Sce.Atf.Controls.Adaptable
             }
         }
 
+        // 'location' is in world coordinates
         private void MoveAnnotation(IAnnotation annotation, Point location)
         {
-            Rectangle bounds;
-            m_layoutContext.GetBounds(annotation, out bounds);
-            bounds.Location = location;
+            var bounds = new Rectangle(location.X, location.Y, 0, 0);
             m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location);
         }
 

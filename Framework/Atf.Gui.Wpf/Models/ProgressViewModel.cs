@@ -190,6 +190,7 @@ namespace Sce.Atf.Wpf.Models
 
                 //invoke the callback method with the designated argument
                 m_workerCallback(sender, e);
+                m_workerCallback = null;
             }
             catch (Exception ex)
             {
@@ -205,7 +206,9 @@ namespace Sce.Atf.Wpf.Models
         /// updating the dialog's progress bar</summary>
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage != int.MinValue)
+            if (e.ProgressPercentage == int.MaxValue)
+                IsIndeterminate = true;
+            else if (e.ProgressPercentage != int.MinValue)
                 Progress = e.ProgressPercentage;
 
             Content = e.UserState;
@@ -232,16 +235,15 @@ namespace Sce.Atf.Wpf.Models
 
             //set the dialog result, which closes the dialog
             //DialogResult = Error == null && !e.Cancelled;
-            Cancelled = e.Cancelled;
+            Cancelled = Cancelled || e.Cancelled;
 
             RunWorkerCompleted.Raise(this, EventArgs.Empty);
         }
 
         #endregion
 
-        private BackgroundWorker m_worker = new BackgroundWorker();
+        private readonly BackgroundWorker m_worker = new BackgroundWorker();
         private CultureInfo m_uiCulture;
         private DoWorkEventHandler m_workerCallback;
     }
-
 }

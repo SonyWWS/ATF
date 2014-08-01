@@ -2,8 +2,8 @@
 
 using System;
 using System.ComponentModel.Composition;
+using System.Threading;
 using System.Windows;
-
 using Sce.Atf.Wpf.Controls;
 
 namespace Sce.Atf.Wpf.Applications
@@ -16,56 +16,86 @@ namespace Sce.Atf.Wpf.Applications
     [Export(typeof(IInitializable))]
     [Export(typeof(UnhandledExceptionService))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class UnhandledExceptionService : Sce.Atf.Applications.UnhandledExceptionService, IInitializable
+    public class UnhandledExceptionService : IInitializable
     {
         #region IInitializable Members
 
         /// <summary>
         /// Finishes initializing component by calling base Initialize() and
         /// subscribing to DispatcherUnhandledException</summary>
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
+            // set UI exception handling mode
+            //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            System.Windows.Application.Current.DispatcherUnhandledException += Application_DispatcherUnhandledException;
+            // catch all the GUI thread unhandled exceptions
+            System.Windows.Forms.Application.ThreadException += Application_ThreadException;
+
+            // catch all the non-GUI thread unhandled exceptions
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            Application.Current.DispatcherUnhandledException += Application_DispatcherUnhandledException;
         }
 
         #endregion
 
-        /// <summary>
-        /// Shows the exception dialog that allows the user to choose whether or not to continue.
-        /// If the user chooses not to continue, Environment.Exit(1) is called.</summary>
-        /// <param name="exception">Exception raised</param>
-        protected override void ShowExceptionDialog(Exception exception)
+        protected virtual bool? ShowExceptionDialog(Exception exception)
         {
-            bool? result = null;
-            try
-            {
-                var dlg = new UnhandledExceptionDialog();
-                // Call ToString() to get the call stack. The Message property may not include that.
-                dlg.DataContext = new UnhandledExceptionViewModel(exception.ToString());
+            var dlg = new UnhandledExceptionDialog();
+            dlg.DataContext = new UnhandledExceptionViewModel(exception.Message);
+            if(Application.Current.MainWindow.IsVisible)
                 dlg.Owner = Application.Current.MainWindow;
-                result = dlg.ShowDialog();
+            return dlg.ShowDialog();
+        }
 
-                if (UserFeedbackService != null)
-                    UserFeedbackService.ShowFeedbackForm();
-            }
-            finally
-            {
-                if (result.HasValue && !result.Value)
-                    Environment.Exit(1);
-            }
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            Exception exception = e.Exception;
+            ShowExceptionDialogInternal(exception);
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exception = new Exception(e.ExceptionObject.ToString());
+            ShowExceptionDialogInternal(exception);
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            // For the GUI thread exception handling only, check if there's a crash logger available,
-            //  because we will have prevented it from seeing the AppDomain.CurrentDomain.UnhandledException event.
-            if (CrashLogger != null)
-                CrashLogger.LogException(e.Exception);
-
-            ShowExceptionDialog(e.Exception);
+            ShowExceptionDialogInternal(e.Exception);
             e.Handled = true;
         }
+
+        private void ShowExceptionDialogInternal(Exception exception)
+        {
+            bool? result = null;
+            try
+            {
+                var application = Application.Current as AtfApp;
+                if (application != null && !application.IsShuttingDown)
+                {
+                    // DAN: Invoke on UI thread
+                    application.Dispatcher.InvokeIfRequired(() =>
+                    {
+                        result = ShowExceptionDialog(exception);
+
+                        if (m_userFeedbackService != null)
+                        {
+                            m_userFeedbackService.ShowFeedbackForm();
+                        }
+                    });
+                }
+            }
+            finally
+            {
+                if (result.HasValue && !result.Value)
+                {
+                    Environment.Exit(1);
+                }
+            }
+        }
+
+        [Import(AllowDefault = true)]
+        private Atf.Applications.IUserFeedbackService m_userFeedbackService = null;
     }
 }

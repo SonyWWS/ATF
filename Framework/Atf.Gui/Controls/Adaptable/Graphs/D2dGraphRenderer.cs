@@ -52,7 +52,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="toNode">Destination node or null</param>
         /// <param name="toRoute">Destination route or null</param>
         /// <param name="label">Edge label</param>
-        /// <param name="endPoint">Endpoint to substitute for source or destination, if null</param>
+        /// <param name="endPoint">Endpoint to substitute for source or destination (in client coords), if either is null</param>
         /// <param name="g">D2dGraphics object</param>
         public abstract void Draw(
             TNode fromNode,
@@ -70,8 +70,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="toNode">Destination node or null</param>
         /// <param name="toRoute">Destination route or null</param>
         /// <param name="label">Edge label</param>
-        /// <param name="startPoint">Startpoint for source</param>
-        /// <param name="endPoint">Endpoint for source</param>
+        /// <param name="startPoint">Start point, in client coordinates</param>
+        /// <param name="endPoint">End point, in client coordinates</param>
         /// <param name="g">D2dGraphics object</param>
         public virtual void DrawPartialEdge(
             TNode fromNode,
@@ -82,7 +82,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             PointF startPoint,
             PointF endPoint,
             D2dGraphics g)
-        {}
+        {
+            // By default, use our existing abstract implementation to draw a partial edge.
+            Draw(fromNode, fromRoute, toNode, toRoute, label, new Point((int)endPoint.X, (int)endPoint.Y), g);
+        }
 
         /// <summary>
         /// Draws a graph, using an optional selection to determine which nodes should be

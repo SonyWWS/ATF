@@ -207,12 +207,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public virtual Rectangle GetBounds(IEnumerable<object> items)
         {
             RectangleF bounds = m_renderer.GetBounds(items.AsIEnumerable<TNode>(), m_d2dGraphics);
-            bounds = D2dUtil.Transform(m_d2dGraphics.Transform, bounds);
+            bounds = D2dUtil.Transform(m_d2dGraphics.Transform, bounds); 
             return Rectangle.Truncate(bounds);
         }
 
         /// <summary>
-        /// Gets a bounding rectangle for the item in graph space</summary>
+        /// Gets a bounding rectangle for the item in graph/world space</summary>
         /// <param name="elem">Item to bound</param>
         /// <returns>Bounding rectangle for the items, in world coordinates</returns>
         public virtual RectangleF GetLocalBound(TNode elem)

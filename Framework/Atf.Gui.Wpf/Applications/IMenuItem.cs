@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Sce.Atf.Wpf.Applications
 {
@@ -16,6 +17,8 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets menu item's description</summary>
         string Description { get; set; }
 
+        bool IsVisible { get; }
+
         /// <summary>
         /// Gets or sets menu item's unique ID</summary>
         object MenuTag { get; }
@@ -23,5 +26,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Gets or sets menu item's unique group ID</summary>
         object GroupTag { get; }
+
+        IEnumerable<string> MenuPath { get; }
     }
 }

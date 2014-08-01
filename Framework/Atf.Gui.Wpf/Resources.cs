@@ -1,4 +1,4 @@
-﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+﻿//Sony Computer Entertainment Confidential
 
 using System.Windows;
 
@@ -12,31 +12,44 @@ namespace Sce.Atf.Wpf
         /// Static constructor</summary>
         static Resources()
         {
-            Register();
+            ResourceUtil.RegistrationStarted = true;
+            ResourceUtil.Register(typeof(Sce.Atf.Resources), "Resources/");
+            ResourceUtil.Register(typeof(Resources), "Resources/");
         }
 
         /// <summary>
-        /// Registers resource keys. When resources are accessed in XAML it is possible that ResourceUtil.Register
-        /// will not have been called.
-        /// Call this dummy function on application start to force static registration.</summary>
+        /// Call this dummy function during your application's start to force the static constructor to
+        /// register the resources in this class.</summary>
         public static void Register()
         {
-            WpfResourceUtil.Register(typeof(Resources), ResourceDir);
         }
 
-        private const string ResourceDir = "Resources/";
-        
         /// <summary>
         /// Causes the resource utility to automatically load and merge Styles.xaml
         /// into the application resources</summary>
         [ResourceDictionaryResourceAttribute("Styles.xaml")]
-        public static readonly string StylesDictionary;
+        public static readonly string StylesDictionary = null;
 
         /// <summary>
         /// Causes the resource utility to automatically load and merge PropertyEditors.xaml
         /// into the application resources</summary>
         [ResourceDictionaryResourceAttribute("PropertyEditors.xaml")]
-        public static readonly string PropertyEditorsDictionary;
+        public static readonly string PropertyEditorsDictionary = null;
+
+        [ImageResource("dialog_error.xaml")]
+        public static readonly ResourceKey DialogErrorImageKey;
+        [ImageResource("dialog_information.xaml")]
+        public static readonly ResourceKey DialogInformationImageKey;
+        [ImageResource("dialog_question.xaml")]
+        public static readonly ResourceKey DialogQuestionImageKey;
+        [ImageResource("dialog_warning.xaml")]
+        public static readonly ResourceKey DialogWarningImageKey;
+
+        public static readonly ResourceKey DialogRootBorderStyleKey
+            = new ComponentResourceKey(typeof(Resources), "DialogRootBorderStyle");
+
+        public static readonly ResourceKey SwitchToDialogKey
+            = new ComponentResourceKey(typeof(Resources), "SwitchToDialog");
 
         /// <summary>
         /// Resource key used in XAML files for the toolbar tray style</summary>
@@ -54,9 +67,19 @@ namespace Sce.Atf.Wpf
             = new ComponentResourceKey(typeof(Resources), "ToolBarButtonStyle");
 
         /// <summary>
+        /// Resource key used in XAML files for the toolbar item style</summary>
+        public static readonly ResourceKey ToolBarItemTemplateKey
+            = new ComponentResourceKey(typeof(Resources), "ToolBarItemTemplate");
+
+        /// <summary>
         /// Resource key used in XAML files for the menu style</summary>
         public static readonly ResourceKey MenuStyleKey
             = new ComponentResourceKey(typeof(Resources), "MenuStyle");
+
+        /// <summary>
+        ///  Resource key used in XAML files for the context menu style</summary>
+        public static readonly ResourceKey ContextMenuStyleKey
+            = new ComponentResourceKey(typeof(Resources), "ContextMenuStyle");
 
         /// <summary>
         /// Resource key used in XAML files for the submenu item style</summary>
@@ -99,6 +122,11 @@ namespace Sce.Atf.Wpf
             = new ComponentResourceKey(typeof(Resources), "DialogButtonStyle");
 
         /// <summary>
+        /// Resource key used in XAML files for the list view item style</summary>
+        public static readonly ResourceKey ListViewItemStyleKey
+            = new ComponentResourceKey(typeof(Resources), "ListViewItemStyle");
+
+        /// <summary>
         /// Resource key used in XAML files for the treeview style</summary>
         public static readonly ResourceKey TreeViewStyleKey
             = new ComponentResourceKey(typeof(Resources), "TreeViewStyle");
@@ -129,9 +157,34 @@ namespace Sce.Atf.Wpf
             = new ComponentResourceKey(typeof(Resources), "TreeViewImageStyle");
 
         /// <summary>
+        /// Resource key used in XAML files for the treeview icon style</summary>
+        public static readonly ResourceKey TreeViewIconStyleKey
+            = new ComponentResourceKey(typeof(Resources), "TreeViewIconStyle");
+
+        /// <summary>
         /// Resource key used in XAML files for the treeview label text block style</summary>
         public static readonly ResourceKey TreeViewLabelTextBlockStyleKey
             = new ComponentResourceKey(typeof(Resources), "TreeViewLabelTextBlockStyle");
+
+        /// <summary>
+        /// Resource key used in XAML files for the tree list view style</summary>
+        public static readonly ResourceKey TreeListViewStyleKey
+            = new ComponentResourceKey(typeof(Resources), "TreeListViewStyle");
+
+        /// <summary>
+        /// Resource key used in XAML files for the tree list view item style</summary>
+        public static readonly ResourceKey TreeListViewItemStyleKey
+            = new ComponentResourceKey(typeof(Resources), "TreeListViewItemStyle");
+
+        /// <summary>
+        /// Resource key used in XAML files for the tile view style</summary>
+        public static readonly ResourceKey TileViewStyleKey
+            = new ComponentResourceKey(typeof(Resources), "TileView");
+
+        /// <summary>
+        /// Resource key used in XAML files for the tile view item style</summary>
+        public static readonly ResourceKey TileViewItemStyleKey
+            = new ComponentResourceKey(typeof(Resources), "TileViewItem");
 
         /// <summary>
         /// Resource key used in XAML files for the radio button list style</summary>
@@ -140,32 +193,32 @@ namespace Sce.Atf.Wpf
 
         /// <summary>
         /// Resource key used in XAML files for the error image</summary>
-        [WpfImageResource("error.ico")]
-        public static readonly ResourceKey ErrorImageKey;
+        [ImageResource("error.ico")]
+        public static readonly ResourceKey ErrorImageKey = null;
 
         /// <summary>
         /// Resource key used in XAML files for the info image</summary>
-        [WpfImageResource("info.ico")]
-        public static readonly ResourceKey InfoImageKey;
+        [ImageResource("info.ico")]
+        public static readonly ResourceKey InfoImageKey = null;
 
         /// <summary>
         /// Resource key used in XAML files for the warning image</summary>
-        [WpfImageResource("warning.ico")]
-        public static readonly ResourceKey WarningImageKey;
+        [ImageResource("warning.ico")]
+        public static readonly ResourceKey WarningImageKey = null;
 
         /// <summary>
         /// Resource key used in XAML files for the clear image</summary>
-        [WpfImageResource("clear.bmp")]
-        public static readonly ResourceKey ClearImageKey;
+        [ImageResource("clear.bmp")]
+        public static readonly ResourceKey ClearImageKey = null;
 
         /// <summary>
         /// Resource key used in XAML files for the alphabetical image</summary>
-        [WpfImageResource("Alphabetical.png")]
-        public static readonly ResourceKey AlphabeticalImageKey;
+        [ImageResource("Alphabetical.png")]
+        public static readonly ResourceKey AlphabeticalImageKey = null;
 
         /// <summary>
         /// Resource key used in XAML files for the by category image</summary>
-        [WpfImageResource("ByCategory.png")]
-        public static readonly ResourceKey ByCategoryImageKey;
+        [ImageResource("ByCategory.png")]
+        public static readonly ResourceKey ByCategoryImageKey = null;
     }
 }

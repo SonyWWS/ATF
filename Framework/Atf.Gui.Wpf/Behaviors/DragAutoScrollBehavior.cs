@@ -41,9 +41,16 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Performs custom actions on behavior Attached event</summary>
         protected override void OnAttached()
         {
-            AssociatedObject.PreviewDragOver += new DragEventHandler(AssociatedObject_PreviewDragOver);
-            AssociatedObject.Loaded += new RoutedEventHandler(AssociatedObject_Loaded);
-            m_scrollViewer = AssociatedObject.GetFrameworkElementByType<ScrollViewer>();
+            base.OnAttached();
+            AssociatedObject.Loaded += AssociatedObject_Loaded;
+            System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, OnQueryContinueDrag);
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
+            System.Windows.DragDrop.RemovePreviewQueryContinueDragHandler(AssociatedObject, OnQueryContinueDrag);
         }
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
@@ -51,34 +58,34 @@ namespace Sce.Atf.Wpf.Behaviors
             m_scrollViewer = AssociatedObject.GetFrameworkElementByType<ScrollViewer>();
         }
 
-        private void AssociatedObject_PreviewDragOver(object sender, DragEventArgs e)
+        void OnQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
         {
-            if (m_scrollViewer != null)
+            if (m_scrollViewer == null)
+                return;
+            
+            var pos = MouseUtilities.CorrectGetPosition(AssociatedObject);
+
+            if (CanAutoScrollY)
             {
-                Point pos = e.GetPosition(AssociatedObject);
-
-                if (CanAutoScrollY)
+                if (pos.Y < Tolerance)
                 {
-                    if (pos.Y < Tolerance)
-                    {
-                        m_scrollViewer.ScrollToVerticalOffset(m_scrollViewer.VerticalOffset - Tolerance);
-                    }
-                    else if (pos.Y > AssociatedObject.ActualHeight - Tolerance)
-                    {
-                        m_scrollViewer.ScrollToVerticalOffset(m_scrollViewer.VerticalOffset + Offset);
-                    }
+                    m_scrollViewer.ScrollToVerticalOffset(m_scrollViewer.VerticalOffset - Offset);
                 }
-
-                if (CanAutoScrollX)
+                else if (pos.Y > AssociatedObject.ActualHeight - Tolerance)
                 {
-                    if (pos.X < Tolerance)
-                    {
-                        m_scrollViewer.ScrollToHorizontalOffset(m_scrollViewer.HorizontalOffset - Tolerance);
-                    }
-                    else if (pos.X > AssociatedObject.ActualWidth - Tolerance)
-                    {
-                        m_scrollViewer.ScrollToHorizontalOffset(m_scrollViewer.HorizontalOffset + Offset);
-                    }
+                    m_scrollViewer.ScrollToVerticalOffset(m_scrollViewer.VerticalOffset + Offset);
+                }
+            }
+
+            if (CanAutoScrollX)
+            {
+                if (pos.X < Tolerance)
+                {
+                    m_scrollViewer.ScrollToHorizontalOffset(m_scrollViewer.HorizontalOffset - Offset);
+                }
+                else if (pos.X > AssociatedObject.ActualWidth - Tolerance)
+                {
+                    m_scrollViewer.ScrollToHorizontalOffset(m_scrollViewer.HorizontalOffset + Offset);
                 }
             }
         }

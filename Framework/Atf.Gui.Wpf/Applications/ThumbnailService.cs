@@ -4,11 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading;
+using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using System.Xml;
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Base class for providing information about a thumbnail resource</summary>
+    public class ThumbnailParameters
+    {
+        /// <summary>
+        /// URI for the thumbnail image</summary>
+        public Uri Source;
+    }
+
     /// <summary>
     /// Service that manages the transformation of Resources into thumbnail images and file paths</summary>
     [Export(typeof(ThumbnailService))]
@@ -20,7 +31,6 @@ namespace Sce.Atf.Wpf.Applications
         /// Constructor</summary>
         public ThumbnailService()
         {
-            ComponentDispatcher.ThreadIdle += new EventHandler(ComponentDispatcher_ThreadIdle);
         }
 
         #region IInitializable Members
@@ -29,7 +39,18 @@ namespace Sce.Atf.Wpf.Applications
         /// Initializes the service</summary>
         public void Initialize()
         {
-            // Empty implementation but the IInitializable interface is required by ATF's MEF architecture.
+            // Note: ThreadIdle isn't exactly what we're after: if there is no user interaction
+            // then the callback never gets called so thumbnails aren't generated.
+            //ComponentDispatcher.ThreadIdle += DispatcherThreadIdle;
+
+            // This seems to perform more efficiently.
+            m_timer = new DispatcherTimer
+                    (
+                    TimeSpan.FromSeconds(1),
+                    DispatcherPriority.ApplicationIdle,
+                    DispatcherThreadIdle,
+                    Application.Current.Dispatcher
+                    );
         }
 
         #endregion
@@ -66,12 +87,12 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Event that is raised when a thumbnail is ready</summary>
-        internal event EventHandler<ThumbnailReadyEventArgs> ThumbnailReady;
+        public event EventHandler<ThumbnailReadyEventArgs> ThumbnailReady;
 
         /// <summary>
         /// Resolves the Resource into a path to a thumbnail image file using a background thread</summary>
         /// <param name="resourceUri">URI of the resource to resolve</param>
-        public void ResolveThumbnail(Uri resourceUri)
+        public void ResolveThumbnail(ThumbnailParameters resourceUri)
         {
             // Push the resource onto the resolve queue
             lock (m_resourcesToResolve)
@@ -89,19 +110,15 @@ namespace Sce.Atf.Wpf.Applications
         /// Resolves the Resource into a path to a thumbnail image file</summary>
         /// <param name="resourceUri">URI of the resource to resolve</param>
         /// <returns>Path to thumbnail image file</returns>
-        public object ResolveThumbnailBlocking(Uri resourceUri)
-        {
+        public object ResolveThumbnailBlocking(ThumbnailParameters resourceUri)        {
             object thumbnailImage = null;
             
-            lock (m_resolvers)
+            foreach (IThumbnailResolver resolver in m_resolvers)
             {
-                foreach (IThumbnailResolver resolver in m_resolvers)
+                thumbnailImage = resolver.Resolve(resourceUri);
+                if (thumbnailImage != null)
                 {
-                    thumbnailImage = resolver.Resolve(resourceUri);
-                    if (thumbnailImage != null)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
@@ -111,7 +128,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Raises the ThumbnailReady event</summary>
         /// <param name="e">Event args</param>
-        internal virtual void OnThumbnailReady(ThumbnailReadyEventArgs e)
+        protected virtual void OnThumbnailReady(ThumbnailReadyEventArgs e)
         {
             EventHandler<ThumbnailReadyEventArgs> handler = ThumbnailReady;
             if (handler != null)
@@ -135,7 +152,7 @@ namespace Sce.Atf.Wpf.Applications
                 m_workThread.IsAlive;
         }
 
-        private void ComponentDispatcher_ThreadIdle(object sender, EventArgs e)
+        private void DispatcherThreadIdle(object sender, EventArgs e)
         {
             if (!IsThreadAlive())
             {
@@ -166,36 +183,37 @@ namespace Sce.Atf.Wpf.Applications
 
         private void ResolverThread()
         {
-            Uri resourceUri = null;
+            ThumbnailParameters thumbnailParameters = null;
             do
             {
                 lock (m_resourcesToResolve)
                 {
                     if (m_resourcesToResolve.Count > 0)
                     {
-                        resourceUri = m_resourcesToResolve.Dequeue();
+                        thumbnailParameters = m_resourcesToResolve.Dequeue();
                     }
                     else
                     {
-                        resourceUri = null;
+                        thumbnailParameters = null;
                     }
                 }
 
-                if (resourceUri != null)
+                if (thumbnailParameters != null)
                 {
                     lock (m_resolvers)
                     {
-                        foreach (IThumbnailResolver resolver in m_resolvers)
+                        object thumbnailImage = null;
+                        foreach (var resolver in m_resolvers)
                         {
                             try
                             {
-                                object thumbnailImage = resolver.Resolve(resourceUri);
+                                thumbnailImage = resolver.Resolve(thumbnailParameters);
                                 if (thumbnailImage != null)
                                 {
                                     // Add it to the resolved queue
                                     lock (m_resolvedResources)
                                     {
-                                        m_resolvedResources.Enqueue(new ResolvedThumbnail(resourceUri, thumbnailImage));
+                                        m_resolvedResources.Enqueue(new ResolvedThumbnail(thumbnailParameters.Source, thumbnailImage));
                                     }
                                     break;
                                 }
@@ -205,10 +223,19 @@ namespace Sce.Atf.Wpf.Applications
                                 Outputs.WriteLine(OutputMessageType.Warning, ex.Message);
                             }
                         }
+
+                        // Signal that no resolver managed to generate the image
+                        if (thumbnailImage == null)
+                        {
+                            lock (m_resolvedResources)
+                            {
+                                m_resolvedResources.Enqueue(new ResolvedThumbnail(thumbnailParameters.Source, thumbnailImage));
+                            }
+                        }
                     }
                 }
             }
-            while (resourceUri != null);
+            while (thumbnailParameters != null);
         }
 
         /// <summary>
@@ -221,8 +248,8 @@ namespace Sce.Atf.Wpf.Applications
                 Image = image;
             }
 
-            public Uri ResourceUri;
-            public object Image;
+            public readonly Uri ResourceUri;
+            public readonly object Image;
         }
 
         /// <summary>
@@ -231,8 +258,9 @@ namespace Sce.Atf.Wpf.Applications
         private IEnumerable<IThumbnailResolver> m_resolvers = null;
 
         private Thread m_workThread;
-        private Queue<Uri> m_resourcesToResolve = new Queue<Uri>();
-        private Queue<ResolvedThumbnail> m_resolvedResources = new Queue<ResolvedThumbnail>();
+        private DispatcherTimer m_timer;
+        private readonly Queue<ResolvedThumbnail> m_resolvedResources = new Queue<ResolvedThumbnail>();
+        private readonly Queue<ThumbnailParameters> m_resourcesToResolve = new Queue<ThumbnailParameters>();
 
         private static XmlResolver s_defaultXmlResolver = new FindFileResolver();
     }

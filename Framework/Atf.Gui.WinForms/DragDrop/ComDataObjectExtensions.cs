@@ -3,7 +3,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     /// <summary>
     /// Provides extended functionality for the COM IDataObject interface.

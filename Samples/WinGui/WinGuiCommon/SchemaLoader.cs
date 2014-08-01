@@ -64,6 +64,8 @@ namespace WinGuiCommon
                 // register extensions
                 Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<WinGuiCommonDataDocument>());
                 Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<WinGuiCommonDataContext>());
+                Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<WinGuiWpfDataDocument>());
+                Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<WinGuiWpfDataContext>());
                 Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<MultipleHistoryContext>());
                 Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<WinGuiCommonData>());
                 Schema.winGuiCommonDataType.Type.Define(new ExtensionInfo<ReferenceValidator>());

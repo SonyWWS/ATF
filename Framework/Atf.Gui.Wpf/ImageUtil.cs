@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Security;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -20,6 +21,11 @@ namespace Sce.Atf.Wpf
         /// <returns>Bitmap frame with rendered element</returns>
         public static BitmapFrame RenderToBitmapFrame(this UIElement visual, double scale)
         {
+            return BitmapFrame.Create(RenderToBitmapSource(visual, scale));
+        }
+
+        public static BitmapSource RenderToBitmapSource(this UIElement visual, double scale)
+        {
             Matrix m = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 
             int renderHeight = (int)(visual.RenderSize.Height * scale);
@@ -36,7 +42,47 @@ namespace Sce.Atf.Wpf
             }
 
             renderTarget.Render(drawingVisual);
-            return BitmapFrame.Create(renderTarget);
+            renderTarget.Freeze();
+
+            return renderTarget;
+        }
+
+        public static ImageSource CreateFromFile(string path)
+        {
+            Requires.NotNull(path, "Invalid path");
+
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+
+            try
+            {
+                image.StreamSource = new FileStream(path, FileMode.Open, FileAccess.Read);
+                image.EndInit();
+                image.StreamSource.Dispose();
+            }
+            catch (NotSupportedException)
+            {
+                return null;
+            }
+            catch (FileFormatException)
+            {
+                return null;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+            catch (SecurityException)
+            {
+                return null;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return null;
+            }
+
+            return image;
         }
 
         /// <summary>
@@ -50,6 +96,33 @@ namespace Sce.Atf.Wpf
             var encoder = new BmpBitmapEncoder();
             encoder.Frames.Add(frame);
             encoder.Save(stream);
+        }
+
+        public static System.Drawing.Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        {
+            System.Drawing.Bitmap bitmap;
+
+            // Note: Memory stream must be left open. Bitmap will close it when it is Disposed.
+            var outStream = new MemoryStream();
+            {
+                // from System.Media.BitmapImage to System.Drawing.Bitmap 
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                enc.Save(outStream);
+                bitmap = new System.Drawing.Bitmap(outStream);
+            }
+
+            return bitmap;
+        }
+
+        public static BitmapSource BitmapToSource(System.Drawing.Bitmap bitmap)
+        {
+            BitmapSource destination;
+            IntPtr hBitmap = bitmap.GetHbitmap();
+            BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromEmptyOptions();
+            destination = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, sizeOptions);
+            destination.Freeze();
+            return destination;
         }
 
         /// <summary>
@@ -87,6 +160,11 @@ namespace Sce.Atf.Wpf
             encoder.QualityLevel = quality;
             encoder.Frames.Add(frame);
             encoder.Save(stream);
+        }
+
+        public static BitmapSource CaptureWindow(Window w)
+        {
+            return RenderToBitmapSource(w, 1.0);
         }
 
         /// <summary>

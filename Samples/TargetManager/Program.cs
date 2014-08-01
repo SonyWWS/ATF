@@ -10,6 +10,7 @@ using Sce.Atf;
 using Sce.Atf.Applications;
 using Sce.Atf.Applications.NetworkTargetServices;
 
+using HelpAboutCommand = Sce.Atf.Applications.HelpAboutCommand;
 
 namespace TargetManager
 {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
 using Sce.Atf.Direct2D;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
@@ -25,8 +26,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Constructor</summary>
         /// <param name="defaultTheme">Diagram theme for rendering graph</param>
-        public D2dSubCircuitRenderer(D2dDiagramTheme defaultTheme)
-            : base(defaultTheme)
+        /// <param name="documentRegistry">An optional document registry, used to clear the internal
+        /// element type cache when a document is removed</param>
+        public D2dSubCircuitRenderer(D2dDiagramTheme defaultTheme, IDocumentRegistry documentRegistry = null)
+            : base(defaultTheme, documentRegistry)
         {
             m_fakeInputLinkPen = D2dFactory.CreateSolidBrush(Color.DarkOrchid);
             m_fakeOutputLinkPen = D2dFactory.CreateSolidBrush(Color.SlateGray);

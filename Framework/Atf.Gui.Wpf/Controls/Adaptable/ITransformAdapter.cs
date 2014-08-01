@@ -199,7 +199,7 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
             if (adapter.UniformScale)
                 scale.X = scale.Y = Math.Min(scale.X, scale.Y);
 
-            scale = TransformAdapters.ConstrainScale(adapter, scale);
+            scale = adapter.ConstrainScale(scale);
 
             // calculate translation needed to put bounds center at center of view
             Point worldBoundsCenter = new Point(
@@ -207,8 +207,8 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
                 worldBounds.Y + worldBounds.Height / 2);
 
             Point translation = new Point(
-                clientBounds.Width / 2 - worldBoundsCenter.X * scale.X,
-                clientBounds.Height / 2 - worldBoundsCenter.Y * scale.Y);
+                (clientBounds.Width / 2 - worldBoundsCenter.X * scale.X),
+                (clientBounds.Height / 2 - worldBoundsCenter.Y * scale.Y));
 
             adapter.SetTransform(scale.X, scale.Y, translation.X, translation.Y);
         }
@@ -228,7 +228,7 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
                 return;
             }
 
-            TransformAdapters.Frame(adapter, itemBounds, clientBounds);
+            adapter.Frame(itemBounds, clientBounds);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
         /// <param name="clientBounds">Client area</param>
         public static void ZoomAboutCenter(this ITransformAdapter adapter, Point scale, Rect itemBounds, Rect clientBounds)
         {
-            if (adapter == null || !adapter.Transform.HasInverse)
+            if (adapter == null || !adapter.Transform.HasInverse || itemBounds.IsEmpty)
                 return;
 
             Rect worldBounds = MathUtil.InverseTransform(adapter.Transform, itemBounds);
@@ -247,7 +247,7 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
             if (adapter.UniformScale)
                 scale.X = scale.Y = Math.Min(scale.X, scale.Y);
 
-            scale = TransformAdapters.ConstrainScale(adapter, scale);
+            scale = adapter.ConstrainScale(scale);
 
             // calculate translation needed to put bounds center at center of view
             Point worldBoundsCenter = new Point(
@@ -259,6 +259,39 @@ namespace Sce.Atf.Wpf.Controls.Adaptable
                 clientBounds.Height / 2 - worldBoundsCenter.Y * scale.Y);
 
             adapter.SetTransform(scale.X, scale.Y, translation.X, translation.Y);
+        }
+
+        /// <summary>
+        /// Pans the view the minimum necessary so that the given rectangle is visible</summary>
+        /// <param name="adapter">Adapter managing transform</param>
+        /// <param name="bounds">Rectangle to make visible, in Windows client coordinates</param>
+        /// <param name="clientRect">Rectangle to make visible, in Windows client coordinates</param>
+        public static void PanToRect(this ITransformAdapter adapter, Rect bounds, Rect clientRect)
+        {
+            if (clientRect.IsEmpty)
+                return;
+
+            double dx;
+            if (bounds.Right > clientRect.Right)
+                dx = bounds.Right - clientRect.Right;
+            else if (bounds.Left < clientRect.Left)
+                dx = bounds.Left - clientRect.Left;
+            else
+                dx = 0;
+
+            double dy;
+            if (bounds.Bottom > clientRect.Bottom)
+                dy = bounds.Bottom - clientRect.Bottom;
+            else if (bounds.Top < clientRect.Top)
+                dy = bounds.Top - clientRect.Top;
+            else
+                dy = 0;
+
+            if (dx == 0 && dy == 0)
+                return; // already visible
+
+            var currentTranslation = adapter.Translation;
+            adapter.Translation = new Point(currentTranslation.X - dx, currentTranslation.Y - dy);
         }
     }
 }

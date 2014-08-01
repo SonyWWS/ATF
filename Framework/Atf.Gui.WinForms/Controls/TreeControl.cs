@@ -1637,7 +1637,7 @@ namespace Sce.Atf.Controls
             }
             else
             {
-                g.DrawString(Text, Font, SystemBrushes.WindowText, ClientRectangle);
+                g.DrawString(Text, Font, ItemRenderer.TextBrush, ClientRectangle);
             }
         }
 

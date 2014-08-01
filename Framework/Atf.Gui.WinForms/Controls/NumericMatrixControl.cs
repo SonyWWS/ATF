@@ -73,9 +73,7 @@ namespace Sce.Atf.Controls
                 {
                     textBox = new NumericTextBox(m_numericType);
                     textBox.BorderStyle = BorderStyle.None;
-                    textBox.Name = "M" + i + j;
-                    textBox.TabStop = true;
-                    textBox.TabIndex = i;
+                    textBox.Name = "M" + i + j;                                      
                     textBox.ScaleFactor = m_scaleFactor;
                     textBox.ValueEdited += textBox_ValueEdited;
                     Controls.Add(textBox);
@@ -257,6 +255,45 @@ namespace Sce.Atf.Controls
             }
         }
 
+        /// <summary>
+        /// Processes a dialog key</summary>
+        /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
+        /// <returns>True iff the key was processed by the control</returns>
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            NumericTextBox focusTextBox = null;
+            foreach (NumericTextBox ctrl in Controls)
+            {
+                if (ctrl.Focused)
+                {
+                    focusTextBox = ctrl;
+                    break;
+                }
+            }
+
+            int index = focusTextBox == null ? -1 : Controls.IndexOf(focusTextBox);
+            if (keyData == Keys.Tab || keyData == Keys.Enter)
+            {
+                // if on last NumericTextBox then don't process tab
+                NumericTextBox last = (NumericTextBox)Controls[Controls.Count - 1];
+                if (focusTextBox != last)
+                {
+                    Controls[index + 1].Focus();
+                    return true;
+                }
+            }
+            else if (keyData == (Keys.Tab | Keys.Shift))
+            {
+                NumericTextBox first = (NumericTextBox)Controls[0];
+                if (focusTextBox != first && index != -1)
+                {
+                    Controls[index - 1].Focus();
+                    return true;
+
+                }
+            }
+            return base.ProcessDialogKey(keyData);
+        }
 
         /// <summary>
         /// Raises the ValueChanged event</summary>

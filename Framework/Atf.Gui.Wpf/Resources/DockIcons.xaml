@@ -1,0 +1,300 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Sce.Atf.Wpf.Docking">
+    <LinearGradientBrush x:Key="IconFrameBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#ff7a89a5" Offset="0" />
+        <GradientStop Color="#ff3b4963" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconTitleBrushH" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ff3b4963" Offset="0" />
+        <GradientStop Color="#ff4c77ce" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconTitleBrushV" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff3b4963" Offset="0" />
+        <GradientStop Color="#ff4c77ce" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconTitleFrameBrushH" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ff759ce5" Offset="0" />
+        <GradientStop Color="#ff4170ca" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconTitleFrameBrushV" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff759ce5" Offset="0" />
+        <GradientStop Color="#ff4170ca" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconFillBrushTB" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ffb4c9e1" Offset="0" />
+        <GradientStop Color="#ffd7e4f3" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconFillBrushLR" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ffb4c9e1" Offset="0" />
+        <GradientStop Color="#ffd7e4f3" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconFillBrushBT" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ffd7e4f3" Offset="0" />
+        <GradientStop Color="#ffb4c9e1" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconFillBrushRL" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ffd7e4f3" Offset="0" />
+        <GradientStop Color="#ffb4c9e1" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconArrowBrushLR" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ff52419c" Offset="0" />
+        <GradientStop Color="#ff4662bc" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconArrowBrushTB" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff52419c" Offset="0" />
+        <GradientStop Color="#ff4662bc" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconArrowBrushRL" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#ff4662bc" Offset="0" />
+        <GradientStop Color="#ff52419c" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="IconArrowBrushBT" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff4662bc" Offset="0" />
+        <GradientStop Color="#ff52419c" Offset="1.0" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="IconLineBrush" Color="#ff52419c"/>
+    <SolidColorBrush x:Key="IconBackgroundBrush" Color="#ffffffff"/>
+    <SolidColorBrush x:Key="IconFillBrush" Color="#ffd7e4f3"/>
+    
+    <Style x:Key="DockTopIcon" TargetType="{x:Type local:DockIcon}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockIcon}">
+                    <Grid Margin="0,0,-2,-2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="{StaticResource IconFrameBrush}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="7*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Background="{StaticResource IconTitleBrushH}" BorderBrush="{StaticResource IconTitleFrameBrushH}" BorderThickness="0,0,0,1"/>
+                            <Border Grid.Row="1" Background="{StaticResource IconFillBrushTB}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="0,0,0,1"/>
+                            <Border Grid.Row="2" Grid.RowSpan="3" Background="{StaticResource IconBackgroundBrush}"/>
+                            <Path Grid.Row="3" Data="M 10,0 L 20,10 0,10 Z" Fill="{StaticResource IconArrowBrushTB}" Stretch="Uniform"/>
+                        </Grid>
+                    </Border>
+                        <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Fill="Black" Opacity="0.2"/>
+                        <Rectangle Grid.Row="1" Grid.Column="2" Fill="Black" Opacity="0.2"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Highlight" Value="false">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="DockBottomIcon" TargetType="{x:Type local:DockIcon}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockIcon}">
+                    <Grid Margin="0,0,-2,-2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="{StaticResource IconFrameBrush}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="9*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Background="{StaticResource IconTitleBrushH}" BorderBrush="{StaticResource IconTitleFrameBrushH}" BorderThickness="0,0,0,1"/>
+                            <Border Grid.Row="1" Grid.RowSpan="3" Background="{StaticResource IconBackgroundBrush}"/>
+                            <Path Grid.Row="2" Data="M 10,10 L 20,0 0,0 Z" Fill="{StaticResource IconArrowBrushBT}" Stretch="Uniform"/>
+                            <Border Grid.Row="4" Background="{StaticResource IconFillBrushBT}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="0,1,0,0"/>
+                        </Grid>
+                    </Border>
+                        <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Fill="Black" Opacity="0.2"/>
+                        <Rectangle Grid.Row="1" Grid.Column="2" Fill="Black" Opacity="0.2"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Highlight" Value="false">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="DockLeftIcon" TargetType="{x:Type local:DockIcon}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockIcon}">
+                    <Grid Margin="0,0,-2,-2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="{StaticResource IconFrameBrush}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="16*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="{StaticResource IconTitleBrushH}" BorderBrush="{StaticResource IconTitleFrameBrushH}" BorderThickness="0,0,0,1"/>
+                            <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource IconFillBrushLR}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="0,0,1,0"/>
+                            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Background="{StaticResource IconBackgroundBrush}"/>
+                            <Path Grid.Row="1" Grid.Column="2" Data="M 10,0 L 10,20 0,10 Z" Fill="{StaticResource IconArrowBrushLR}" Stretch="Uniform"/>
+                        </Grid>
+                    </Border>
+                        <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Fill="Black" Opacity="0.2"/>
+                        <Rectangle Grid.Row="1" Grid.Column="2" Fill="Black" Opacity="0.2"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Highlight" Value="false">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                        <Trigger Property="Highlight" Value="true">
+                            <Setter Property="Opacity" Value="1.0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="DockRightIcon" TargetType="{x:Type local:DockIcon}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockIcon}">
+                    <Grid Margin="0,0,-2,-2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="{StaticResource IconFrameBrush}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="16*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="9*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="{StaticResource IconTitleBrushH}" BorderBrush="{StaticResource IconTitleFrameBrushH}" BorderThickness="0,0,0,1"/>
+                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="{StaticResource IconBackgroundBrush}"/>
+                            <Path Grid.Row="1" Grid.Column="1" Data="M 0,0 L 0,20 10,10 Z" Fill="{StaticResource IconArrowBrushRL}" Stretch="Uniform"/>
+                            <Border Grid.Row="1" Grid.Column="3" Background="{StaticResource IconFillBrushRL}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="1,0,0,0"/>
+                        </Grid>
+                    </Border>
+                        <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Fill="Black" Opacity="0.2"/>
+                        <Rectangle Grid.Row="1" Grid.Column="2" Fill="Black" Opacity="0.2"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Highlight" Value="false">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DockTabIcon" TargetType="{x:Type local:DockIcon}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockIcon}">
+                    <Grid Margin="0,0,-2,-2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="{StaticResource IconFrameBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="11*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Background="{StaticResource IconTitleBrushH}" BorderBrush="{StaticResource IconTitleFrameBrushH}" BorderThickness="0,0,0,1"/>
+                                <Border Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="6" Background="{StaticResource IconBackgroundBrush}"/>
+                                <Border Grid.Row="4" Grid.RowSpan="2" Grid.Column="3" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="1,1,0,0"/>
+                                <Border Grid.Row="4" Grid.RowSpan="2" Grid.Column="4" Grid.ColumnSpan="2" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="1,1,0,0"/>
+                                <Border Grid.Row="2" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="1" Background="{StaticResource IconFillBrush}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="1,1,0,0"/>
+                                <Border Grid.Row="2" Grid.RowSpan="1" Grid.Column="2" Grid.ColumnSpan="3" Background="{StaticResource IconFillBrush}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="0,1,1,1"/>
+                                <Border Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="1" Background="{StaticResource IconFillBrush}" BorderBrush="{StaticResource IconLineBrush}" BorderThickness="1,0,1,1"/>
+                            </Grid>
+                        </Border>
+                        <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Fill="Black" Opacity="0.2"/>
+                        <Rectangle Grid.Row="1" Grid.Column="2" Fill="Black" Opacity="0.2"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Highlight" Value="false">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

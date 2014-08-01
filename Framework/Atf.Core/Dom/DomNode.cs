@@ -398,14 +398,21 @@ namespace Sce.Atf.Dom
             if (oldValue == null) //'null' means "use default".
                 oldValue = attributeInfo.DefaultValue;
 
-            // Do nothing if 'value' is the same as either the local value or the default value.
+            // Don't raise events if 'value' is the same as either the local value or the default value.
             if (!attributeInfo.Type.AreEqual(oldValue, value))
             {
-                AttributeEventArgs e = new AttributeEventArgs(this, attributeInfo, oldValue, value);
+                var e = new AttributeEventArgs(this, attributeInfo, oldValue, value);
                 RaiseAttributeChanging(e);
                 m_data[index] = value;
                 DiagnosticAttributeChanged.Raise(this, e);
                 RaiseAttributeChanged(e);
+            }
+            else if (m_data[index] == null)
+            {
+                // Client code may rely on GetLocalAttribute() to tell the difference between an attribute
+                //  being at its default value (GetLocalAttribute() will return null) or if it was set to
+                //  a value that equals the default value (non-null).
+                m_data[index] = value;
             }
         }
 
@@ -651,6 +658,19 @@ namespace Sce.Atf.Dom
                 copy.UpdateReferences(originalToCopyMap);
 
             return copies.ToArray();
+        }
+
+        /// <summary>
+        /// Creates a deep copy of the given tree of DomNodes</summary>
+        /// <param name="original">Original node; the root of the tree</param>
+        /// <returns>Copy of the original node and all of the original node's children</returns>
+        /// <remarks>Extensions are not copied</remarks>
+        public static DomNode Copy(DomNode original)
+        {
+            var originalToCopyMap = new Dictionary<DomNode, DomNode>();
+            DomNode copy = original.Copy(originalToCopyMap);
+            copy.UpdateReferences(originalToCopyMap);
+            return copy;
         }
 
         private DomNode Copy(IDictionary<DomNode, DomNode> originalToCopyMap)
@@ -1484,5 +1504,31 @@ namespace Sce.Atf.Dom
                 private readonly ChildInfo m_childInfo;
             }
         }
+
+		/// <summary>
+		/// Sets a tag object on the metadata, under the key</summary>
+		/// <param name="key">Tag key</param>
+		/// <param name="value">Tag value</param>
+		public void SetTag(object key, object value)
+		{
+			if (m_tags == null)
+				m_tags = new Dictionary<object, object>();
+
+			m_tags[key] = value;
+		}
+
+		/// <summary>
+		/// Gets a tag object on the metadata corresponding to the key</summary>
+		/// <param name="key">Tag key</param>
+		/// <returns>Tag value</returns>
+		public object GetTag(object key)
+		{
+			object tag = null;
+			if (m_tags != null)
+				m_tags.TryGetValue(key, out tag);
+			return tag;
+		}
+
+		private Dictionary<object, object> m_tags;
     }
 }

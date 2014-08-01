@@ -184,5 +184,64 @@ namespace Sce.Atf.Applications
             info.Visibility = visibility;
             return info;
         }
+
+        /// <summary>
+        /// Registers a command for the command client</summary>
+        /// <param name="commandService">Command service</param>
+        /// <param name="commandTag">Command's unique ID</param>
+        /// <param name="menuTag">Containing menu's unique ID, or null</param>
+        /// <param name="groupTag">Containing menu group's unique ID, or null</param>
+        /// <param name="menuText">Command text as it appears in menu</param>
+        /// <param name="description">Command description</param>
+        /// <param name="shortcut">Command shortcut, or Keys.None if none</param>
+        /// <param name="imageKey">Object identifying image, or null if none</param>
+        /// <param name="client">Client that performs command</param>
+        /// <returns>CommandInfo object describing command</returns>
+        public static CommandInfo RegisterCommand(
+            this ICommandService commandService,
+            object commandTag,
+            object menuTag,
+            object groupTag,
+            string menuText,
+            string description,
+            Keys shortcut,
+            object imageKey,
+            ICommandClient client)
+        {
+            CommandInfo info = new CommandInfo(commandTag, menuTag, groupTag, menuText, description, shortcut, imageKey);
+            commandService.RegisterCommand(info, client);
+            return info;
+        }
+
+        /// <summary>
+        /// Registers a command for the command client</summary>
+        /// <param name="commandService">Command service</param>
+        /// <param name="commandTag">Command's unique ID</param>
+        /// <param name="menuTag">Containing menu's unique ID, or null</param>
+        /// <param name="groupTag">Containing menu group's unique ID, or null</param>
+        /// <param name="menuText">Command text as it appears in menu</param>
+        /// <param name="description">Command description</param>
+        /// <param name="shortcut">Command shortcut, or Keys.None if none</param>
+        /// <param name="imageKey">Object identifying image, or null if none</param>
+        /// <param name="visibility">Whether command is visible in menus and toolbars</param>
+        /// <param name="client">Client that performs command</param>
+        /// <returns>CommandInfo object describing command</returns>
+        public static CommandInfo RegisterCommand(
+            this ICommandService commandService,
+            object commandTag,
+            object menuTag,
+            object groupTag,
+            string menuText,
+            string description,
+            Keys shortcut,
+            object imageKey,
+            CommandVisibility visibility,
+            ICommandClient client)
+        {
+            CommandInfo info = new CommandInfo(commandTag, menuTag, groupTag, menuText, description, shortcut, imageKey, visibility);
+            commandService.RegisterCommand(info, client);
+            return info;
+        }
+
     }
 }

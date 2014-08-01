@@ -4,7 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     using IComDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
 

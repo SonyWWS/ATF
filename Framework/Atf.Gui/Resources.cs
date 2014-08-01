@@ -306,6 +306,12 @@ namespace Sce.Atf
         public static readonly string PackageImage;
 
         /// <summary>
+        /// Package image</summary>
+        [ImageResource("package_error.png")]
+        public static readonly string PackageErrorImage;
+
+
+        /// <summary>
         /// Layer image</summary>
         [ImageResource("layer.png")]
         public static readonly string LayerImage;
@@ -534,39 +540,74 @@ namespace Sce.Atf
         /// Constructor</summary>
         static Resources()
         {
-            // Because GUI framework-specific dependencies have been removed from Atf.Gui, resource
-            // registration has been moved to another assembly on which we cannot be dependent.  Use
-            // reflection to locate and invoke the "unknown" registration method.
+            // GUI framework-specific registration is done in assemblies on which this library shouldn't depend.
+            // Regardless, said assemblies still need to register the resources defined in here.
             //
-            // Create LINQ expression to collect all implementations of method 
-            //   public static void Register(Type type);
-            // defined in classes named "ResourceUtil"
-            var methodInfos = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                              where assembly.FullName.StartsWith("Atf.Gui.WinForms")
-                              from type in assembly.GetExportedTypes()
-                              where type.Name == "ResourceUtil"
-                              from methodInfo in type.GetMethods()
-                              where methodInfo.Name == "Register"
-                                  && methodInfo.IsStatic
-                                  && methodInfo.IsPublic
-                                  && methodInfo.ReturnType == typeof(void)
-                                  && methodInfo.GetParameters().Length == 1
-                                  && methodInfo.GetParameters()[0].ParameterType == typeof(Type)
-                              select methodInfo;
+            // Use reflection to:
+            //   - locate the any registration classes (hopefully there's at least one)
+            //   - determine whether they've begun registration (then nothing needs be done here)
+            //   - if they haven't, call their registration method from here
 
-            // Invoke the first found implementation of "public static void Register(Type type)"
-            // throw an assertion if there is more than one found
-            bool registerCalled = false;
-            foreach (var methodInfo in methodInfos)
+            const string kRegistrationStarted = "RegistrationStarted";
+            const string kRegister = "Register";
+
+            // all types named ResourceUtil
+            var types = (from a in AppDomain.CurrentDomain.GetAssemblies()
+                        where !a.IsDynamic
+                        from t in a.GetExportedTypes()
+                        where t.Name == "ResourceUtil"
+                        select t).ToArray();
+
+            // the results of calling ResourceUtil.RegistrationStarted, for each type
+            var regStarted =    from t in types 
+                                from p in t.GetProperties()
+                                where 
+                                    p.Name == kRegistrationStarted &&
+                                    p.PropertyType == typeof(bool) &&
+                                    p.GetGetMethod().IsPublic &&
+                                    p.GetGetMethod().IsStatic
+                                select (bool)(p.GetGetMethod().Invoke(null, new object[] {}));
+
+            // if registration has already begun in one of these, we don't need to initiate it
+            if (regStarted.Any(p => p))
+                return;
+
+            // otherwise, get the registration methods
+            var registerMethods =   (from t in types
+                                    from m in t.GetMethods()
+                                    where m.Name == kRegister &&
+                                            m.IsStatic &&
+                                            m.IsPublic &&
+                                            m.ReturnType == typeof(void) &&
+                                            m.GetParameters().Length == 1 &&
+                                            m.GetParameters()[0].ParameterType == typeof(Type)
+                                    select m).ToArray();
+
+            // if there's more than one registration method available, we have no idea which should be used.
+            // The application will have to determine this, by calling one of the methods explicitly,
+            // before execution arrives at this call path.
+            if (registerMethods.Count() > 1)
             {
-                if (registerCalled)
-                    throw new InvalidOperationException("More than one implementation of ResourceUtil.Register(Type type) has been found.  Only the first one will be called.");
-
-                var paramQueue = new System.Collections.Queue(1);
-                paramQueue.Enqueue(typeof(Resources));
-                methodInfo.Invoke(null, paramQueue.ToArray());
-                registerCalled = true;
+                throw new InvalidOperationException(
+                    "More than one library has implemented a ResourceUtil.Register(Type type).\n" +
+                    "This is allowed, but one or the other method must be called explicitly,\n" +
+                    "before the app calls this static constructor.");
             }
+
+            // Initiate registration. Set the RegistrationStarted property so we only auto-initiate once.
+            var setRegStarted = from t in types
+                                from p in t.GetProperties()
+                                where
+                                     p.Name == kRegistrationStarted &&
+                                     p.PropertyType == typeof(bool) &&
+                                     p.GetSetMethod().IsPublic &&
+                                     p.GetSetMethod().IsStatic
+                                select p;
+            setRegStarted.First().GetSetMethod().Invoke(null, new object[] { true });
+
+            var paramQueue = new System.Collections.Queue(1);
+            paramQueue.Enqueue(typeof(Resources));
+            registerMethods.First().Invoke(null, paramQueue.ToArray());
         }
     }
 }

@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-  This "Classic" skin is really just an empty skin file.
-  The reason is that skinning didn't exist in the original
-  releases of ATF, so we just accept the hardcoded
-  values and don't override anything.
--->
-<atfskin:skin xmlns:atfskin="atfskin" />

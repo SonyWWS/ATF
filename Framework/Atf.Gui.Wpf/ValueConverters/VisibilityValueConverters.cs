@@ -3,8 +3,9 @@
 using System;
 using System.Collections;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
-
+using System.Windows.Data;
 using Sce.Atf.Wpf.Markup;
 
 namespace Sce.Atf.Wpf.ValueConverters
@@ -37,7 +38,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)value > 0 ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -54,18 +55,24 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (bool)value ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        /// <summary>
-        /// Converts back from Visibility value to bool value</summary>
-        /// <param name="value">Visibility value</param>
-        /// <param name="targetType">Type of target (unused)</param>
-        /// <param name="parameter">Converter parameter to use (unused)</param>
-        /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>bool value</returns>
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (Visibility)value == Visibility.Visible;
+        }
+    }
+
+    public class BoolToHiddenVisibilityConverter : ConverterMarkupExtension<BoolToHiddenVisibilityConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Visibility.Visible : Visibility.Hidden;
+        }
+
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (Visibility)value == Visibility.Visible;
@@ -83,14 +90,27 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (bool)value ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
     /// <summary>
-    /// Converts a Visibility value to a bool</summary>
+    /// Converts an bool to a visibility value
+    /// value == true returns Hidden else visible
+    /// </summary>
+    public class InverseBoolToHiddenVisibilityConverter : ConverterMarkupExtension<InverseBoolToHiddenVisibilityConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Visibility.Hidden : Visibility.Visible;
+        }
+    }
+
+    /// <summary>
+    /// Converts an visibility value to a bool
+    /// </summary>
     public class VisibilityToBoolConverter : ConverterMarkupExtension<VisibilityToBoolConverter>
     {
         /// <summary>
@@ -100,7 +120,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>bool value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return ((Visibility)value) == Visibility.Visible;
         }
@@ -117,7 +137,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>bool value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return ((Visibility)value) == Visibility.Visible;
         }
@@ -131,7 +151,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <returns>Visibility value</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if((string)parameter == "Hidden")
+            if ((string)parameter == "Hidden")
                 return ((bool)value) ? Visibility.Visible : Visibility.Hidden;
 
             return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
@@ -155,12 +175,27 @@ namespace Sce.Atf.Wpf.ValueConverters
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var enumerable = value as IEnumerable;
-            if (enumerable != null)
-            {
-                foreach (var item in enumerable)
-                    return Visibility.Visible;
-            }
-            return Visibility.Collapsed;
+            return (enumerable != null && enumerable.Cast<object>().Any()) ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    /// <summary>
+    /// Converts from IEnumerable to Visibility value. Returns Visibility.Visible if it contains any items,
+    /// otherwise Visibility.Hidden.</summary>
+    public class EnumerableCountToVisibilityHiddenConverter : ConverterMarkupExtension<EnumerableCountToVisibilityHiddenConverter>
+    {
+        /// <summary>
+        /// Converts from IEnumerable to Visibility value. Returns Visibility.Visible if it contains any items,
+        /// otherwise Visibility.Hidden.</summary>
+        /// <param name="value">IEnumerable value</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Visibility value</returns>
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var enumerable = value as IEnumerable;
+            return (enumerable != null && enumerable.Cast<object>().Any()) ? Visibility.Visible : Visibility.Hidden;
         }
     }
 
@@ -169,7 +204,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     /// Value converter takes an IEnumerable and returns Visibility.Visible if it contains any items, otherwise Visibility.Collapsed.
     /// Also allows a multi binding to the Count property of the IEnumerable, which triggers re-evaluation
     /// if it changes.</summary>
-    public class EnumerableCountToVisibilityMultiConverter : MultiConverterMarkupExtension<EnumerableCountToVisibilityMultiConverter>
+    public class EnumerableAnyToVisibilityCollapsedConverter : MultiConverterMarkupExtension<EnumerableAnyToVisibilityCollapsedConverter>
     {
         /// <summary>
         /// Converts from IEnumerable to Visibility value. 
@@ -184,12 +219,16 @@ namespace Sce.Atf.Wpf.ValueConverters
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var enumerable = values[0] as IEnumerable;
-            if (enumerable != null)
-            {
-                foreach (var item in enumerable)
-                    return Visibility.Visible;
-            }
-            return Visibility.Collapsed;
+            return (enumerable != null && enumerable.Cast<object>().Any()) ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    public class EnumerableNoneToVisibilityCollapsedConverter : MultiConverterMarkupExtension<EnumerableNoneToVisibilityCollapsedConverter>
+    {
+        public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var enumerable = values[0] as IEnumerable;
+            return (enumerable != null && enumerable.Cast<object>().Any()) ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
@@ -204,14 +243,20 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value != null ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
-    /// <summary>
-    /// Value converter returns Visibility.Visible if the value is non-null, Visibility.Hidden otherwise</summary>
+    public class ItemNotNullToVisibilityConverter : ConverterMarkupExtension<ItemNotNullToVisibilityConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value == null ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
     public class ItemNullToHiddenVisibilityConverter : ConverterMarkupExtension<ItemNullToHiddenVisibilityConverter>
     {
         /// <summary>
@@ -221,14 +266,22 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value != null ? Visibility.Visible : Visibility.Hidden;
         }
     }
 
-    /// <summary>
-    /// Value converter returns Visibility.Visible if TimeSpan's Ticks > 0, Visibility.Collapsed otherwise</summary>
+    public class InvertVisbilityConverter : ConverterMarkupExtension<InvertVisbilityConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((value is Visibility) && (Visibility)value == Visibility.Visible)
+                return Visibility.Collapsed;
+            return Visibility.Visible;
+        }
+    }
+
     public class TimeSpanToVisibilityConverter : ConverterMarkupExtension<TimeSpanToVisibilityConverter>
     {
         /// <summary>
@@ -238,10 +291,30 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
         /// <returns>Visibility value</returns>
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            TimeSpan ts = (TimeSpan)value;
-            return (ts != null && ts.Ticks == 0) ? Visibility.Collapsed : Visibility.Visible;
+            if (value is TimeSpan)
+            {
+                var ts = (TimeSpan)value;
+                return ts.Ticks == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            if (value is double)
+            {
+                var ts = (double)value;
+                return Math.Abs(ts - 0.0) < 0.00001 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+    public class VisibilityAndConverter : MultiConverterMarkupExtension<VisibilityAndConverter>
+    {
+        public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return values.Any(obj2 => !(obj2 is Visibility) || (((Visibility)obj2) != Visibility.Visible)) 
+                ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

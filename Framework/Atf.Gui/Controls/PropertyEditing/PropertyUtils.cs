@@ -126,6 +126,43 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
+        /// DAN: the above method has been edited and broken! MultiPropertyDescriptor is specifc to Dom
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static IEnumerable<PropertyDescriptor> GetSharedPropertiesOriginal(IEnumerable<object> items)
+        {
+            List<PropertyDescriptor> result = new List<PropertyDescriptor>();
+            bool firstTime = true;
+            foreach (object item in items)
+            {
+                PropertyDescriptorCollection properties = GetDefaultProperties(item);
+                if (firstTime)
+                {
+                    firstTime = false;
+                    foreach (PropertyDescriptor property in properties)
+                        result.Add(property);
+                }
+                else
+                {
+                    // remove any descriptors in result that this owner doesn't have
+                    HashSet<PropertyDescriptor> propertySet = new HashSet<PropertyDescriptor>();
+                    foreach (PropertyDescriptor property in properties)
+                        propertySet.Add(property);
+                    for (int i = 0; i < result.Count; )
+                    {
+                        if (!propertySet.Contains(result[i]))
+                            result.RemoveAt(i);
+                        else
+                            i++;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets a hash code for a property descriptor that allows different PropertyDescriptor
         /// objects to be considered equivalent if their name, category, and property type match</summary>
         /// <param name="propertyDescriptor">Property descriptor to get hash code for</param>

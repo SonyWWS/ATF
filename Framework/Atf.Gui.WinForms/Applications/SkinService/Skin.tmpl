@@ -448,35 +448,72 @@
             <valueInfo type="Sce.Atf.Controls.CustomToolStripRenderer">
                 <constructorParams>
                     <valueInfo type="Sce.Atf.Controls.CustomColorTable">
-
-                        <!-- toolstrip  -->
-                        <setter propertyName="SettableToolStripBorder">
-                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        <setter propertyName="SettableButtonSelectedHighlight">
+                            <valueInfo type="System.Drawing.Color" value="#FFC4E1FF"/>
                         </setter>
-
-                        <setter propertyName="SettableToolStripDropDownBackground">
-                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        <setter propertyName="SettableButtonSelectedHighlightBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF3399FF"/>
                         </setter>
-                        
+                        <setter propertyName="SettableButtonPressedHighlight">
+                            <valueInfo type="System.Drawing.Color" value="#FF98CBFF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonPressedHighlightBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF3399FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonCheckedHighlight">
+                            <valueInfo type="System.Drawing.Color" value="#FFC4E1FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonCheckedHighlightBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF3399FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonPressedBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF3399FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonSelectedBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF3399FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonCheckedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#0"/>
+                        </setter>
+                        <setter propertyName="SettableButtonCheckedGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#0"/>
+                        </setter>
+                        <setter propertyName="SettableButtonCheckedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#0"/>
+                        </setter>
+                        <setter propertyName="SettableButtonSelectedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFC2E0FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonSelectedGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FFC2E0FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonSelectedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFC2E0FF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonPressedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FF99CCFF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonPressedGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FF99CCFF"/>
+                        </setter>
+                        <setter propertyName="SettableButtonPressedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FF99CCFF"/>
+                        </setter>
+                        <setter propertyName="SettableCheckBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF6EB2F1"/>
+                        </setter>
+                        <setter propertyName="SettableCheckSelectedBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF4E7192"/>
+                        </setter>
+                        <setter propertyName="SettableCheckPressedBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF2C5F70"/>
+                        </setter>
                         <setter propertyName="SettableGripDark">
                             <valueInfo type="System.Drawing.Color" value="#FF444444"/>
                         </setter>
                         <setter propertyName="SettableGripLight">
                             <valueInfo type="System.Drawing.Color" value="#FF777777"/>
                         </setter>
-                        
-                        <setter propertyName="SettableOverflowButtonGradientBegin">
-                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
-                        </setter>
-                        <setter propertyName="SettableOverflowButtonGradientMiddle">
-                            <valueInfo type="System.Drawing.Color" value="#FF555555"/>
-                        </setter>
-                        <setter propertyName="SettableOverflowButtonGradientEnd">
-                            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
-                        </setter>
-
-
-                        <!-- image margin gradient -->
                         <setter propertyName="SettableImageMarginGradientBegin">
                             <valueInfo type="System.Drawing.Color" value="#FF484848"/>
                         </setter>
@@ -486,10 +523,23 @@
                         <setter propertyName="SettableImageMarginGradientEnd">
                             <valueInfo type="System.Drawing.Color" value="#FF484848"/>
                         </setter>
-                                                
-                        <!-- menu bar and menu items -->
+                        <setter propertyName="SettableImageMarginRevealedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF9F9F9"/>
+                        </setter>
+                        <setter propertyName="SettableImageMarginRevealedGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FFF5F5F5"/>
+                        </setter>
+                        <setter propertyName="SettableImageMarginRevealedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFF2F2F2"/>
+                        </setter>
+                        <setter propertyName="SettableMenuStripGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
+                        </setter>
+                        <setter propertyName="SettableMenuStripGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
+                        </setter>
                         <setter propertyName="SettableMenuItemSelected">
-                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                            <valueInfo type="System.Drawing.Color" value="#FF6EB2F1"/>
                         </setter>
                         <setter propertyName="SettableMenuItemBorder">
                             <valueInfo type="System.Drawing.Color" value="#FF4E7192"/>
@@ -497,44 +547,74 @@
                         <setter propertyName="SettableMenuBorder">
                             <valueInfo type="System.Drawing.Color" value="#FF777777"/>
                         </setter>
-                        
+                        <setter propertyName="SettableMenuItemSelectedGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#6EB2F1"/>
+                        </setter>
+                        <setter propertyName="SettableMenuItemSelectedGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#6EB2F1"/>
+                        </setter>
                         <setter propertyName="SettableMenuItemPressedGradientBegin">
                             <valueInfo type="System.Drawing.Color" value="#FF777777"/>
                         </setter>
-                         
                         <setter propertyName="SettableMenuItemPressedGradientMiddle">
                             <valueInfo type="System.Drawing.Color" value="#FF555555"/>
                         </setter>
-                         
                         <setter propertyName="SettableMenuItemPressedGradientEnd">
                             <valueInfo type="System.Drawing.Color" value="#FF333333"/>
                         </setter>
-                         
-                        <setter propertyName="SettableMenuItemSelectedGradientBegin">
-                            <valueInfo type="System.Drawing.Color" value="#006eb2f1"/>
+                        <setter propertyName="SettableRaftingContainerGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
                         </setter>
-                         
-                        <setter propertyName="SettableMenuItemSelectedGradientEnd">
-                            <valueInfo type="System.Drawing.Color" value="#006eb2f1"/>
+                        <setter propertyName="SettableRaftingContainerGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
                         </setter>
-
-                        <!-- Separator -->
                         <setter propertyName="SettableSeparatorDark">
                             <valueInfo type="System.Drawing.Color" value="#FF777777"/>
                         </setter>
                         <setter propertyName="SettableSeparatorLight">
                             <valueInfo type="System.Drawing.Color" value="#FF999999"/>
                         </setter>
-
-                        <!-- check button -->
-                        <setter propertyName="SettableCheckBackground">
-                            <valueInfo type="System.Drawing.Color" value="#FF6eb2f1"/>
+                        <setter propertyName="SettableStatusStripGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
                         </setter>
-                        <setter propertyName="SettableCheckSelectedBackground">
-                            <valueInfo type="System.Drawing.Color" value="#FF4e7192"/>
+                        <setter propertyName="SettableStatusStripGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
                         </setter>
-                        <setter propertyName="SettableCheckPressedBackground">
-                            <valueInfo type="System.Drawing.Color" value="#FF2c5F70"/>
+                        <setter propertyName="SettableToolStripBorder">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripDropDownBackground">
+                            <valueInfo type="System.Drawing.Color" value="#FF484848"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FFF8F8F8"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripContentPanelGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripContentPanelGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripPanelGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FFF0F0F0"/>
+                        </setter>
+                        <setter propertyName="SettableToolStripPanelGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FFFCFCFC"/>
+                        </setter>
+                        <setter propertyName="SettableOverflowButtonGradientBegin">
+                            <valueInfo type="System.Drawing.Color" value="#FF777777"/>
+                        </setter>
+                        <setter propertyName="SettableOverflowButtonGradientMiddle">
+                            <valueInfo type="System.Drawing.Color" value="#FF555555"/>
+                        </setter>
+                        <setter propertyName="SettableOverflowButtonGradientEnd">
+                            <valueInfo type="System.Drawing.Color" value="#FF333333"/>
                         </setter>
                     </valueInfo>
                 </constructorParams>
@@ -638,14 +718,7 @@
                         <valueInfo type="System.Drawing.Color" value="#FF50F057"/>
                     </constructorParams>
                 </valueInfo>
-
-                <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
-                    <constructorParams>
-                        <valueInfo type="string" value="CommentDelimiterStyle"/>
-                        <valueInfo type="System.Drawing.Color" value="#FF50F057"/>
-                    </constructorParams>
-                </valueInfo>
-
+                
                 <valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
                     <constructorParams>
                         <valueInfo type="string" value="StringDelimiterStyle"/>

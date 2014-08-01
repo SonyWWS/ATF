@@ -31,7 +31,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_theme = theme;
             m_theme.TextFormat.ParagraphAlignment = D2dParagraphAlignment.Center;
             m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
-            m_theme.Redraw += new EventHandler(theme_Redraw);
+            m_theme.Redraw += theme_Redraw;
         }
 
                   
@@ -79,7 +79,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="toNode">Destination node, or null</param>
         /// <param name="toRoute">Destination route, or null</param>
         /// <param name="label">Edge label</param>
-        /// <param name="endPoint">Endpoint to substitute for source or destination, if either is null</param>
+        /// <param name="endPoint">Endpoint to substitute for source or destination (in client coords), if either is null</param>
         /// <param name="g">Graphics object</param>
         public override void Draw(
             TNode fromNode,
@@ -123,13 +123,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-       
+
         /// <summary>
         /// Finds node and/or edge hit by the given point</summary>
         /// <param name="graph">Graph to test</param>
         /// <param name="priorityEdge">Graph edge to test before others</param>
-        /// <param name="p">Point to test</param>
-        /// <param name="g">Graphics object</param>
+        /// <param name="p">Point to test in graph space</param>
+        /// <param name="g">D2dGraphics object</param>
         /// <returns>Hit record containing node and/or edge hit by the given point</returns>
         public override GraphHitRecord<TNode, TEdge, NumberedRoute> Pick(
             IGraph<TNode, TEdge, NumberedRoute> graph,
@@ -194,8 +194,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            GraphHitRecord<TNode, TEdge, NumberedRoute> result =
-                new GraphHitRecord<TNode, TEdge, NumberedRoute>(pickedNode, pickedEdge, fromRoute, toRoute);
+            var result = new GraphHitRecord<TNode, TEdge, NumberedRoute>(pickedNode, pickedEdge, fromRoute, toRoute);
+
+            PointF clientP = Matrix3x2F.TransformPoint(g.Transform, p);
+            if (fromRoute != null)
+                result.FromRoutePos = clientP;
+            if (toRoute != null)
+                result.ToRoutePos = clientP;
 
             if (pickedNode != null && pickedEdge == null)
             {
@@ -280,8 +285,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Vec2F endPoint = new Vec2F();
             CircleF c = new CircleF();
             bool moreThan180 = false;
-            int route = edge.FromRoute.Index;
-            if (GetEdgeGeometry(edge, route, ref startPoint, ref endPoint, ref c, ref moreThan180))
+            if (GetEdgeGeometry(edge, edge.FromRoute.Index, ref startPoint, ref endPoint, ref c, ref moreThan180))
             {
                 Seg2F seg = new Seg2F(startPoint, endPoint);
                 nearest = Seg2F.Project(seg, p);
@@ -436,13 +440,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 const double RadiansToDegrees = 360 / twoPi;
                 startAngle *= RadiansToDegrees;
                 sweepAngle *= RadiansToDegrees;
-               
+
                 g.DrawArc((D2dEllipse)rect,
                     brush,
                     (float)startAngle,
                     (float)sweepAngle,
                     m_theme.StrokeWidth);
-                
+
                 endTangent = endPoint - c.Center; endTangent = endTangent.Perp;
                 textPoint = (endPoint + startPoint) * 0.5f;
                 CircleF.Project(textPoint, c, ref textPoint);
@@ -467,46 +471,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             CircleF c = new CircleF();
             bool moreThan180 = false;
             Vec2F textPoint;
-            int route = edge.FromRoute.Index;
-            if (GetEdgeGeometry(edge, route, ref startPoint, ref endPoint, ref c, ref moreThan180))
+            if (GetEdgeGeometry(edge, edge.FromRoute.Index, ref startPoint, ref endPoint, ref c, ref moreThan180))
             {
                 textPoint = (endPoint + startPoint) * 0.5f;
             }
             else
             {
-                // prepare to draw arc
-                RectangleF rect = new RectangleF(c.Center.X - c.Radius, c.Center.Y - c.Radius, 2 * c.Radius, 2 * c.Radius);
-
-                double angle1 = Math.Atan2(startPoint.Y - c.Center.Y, startPoint.X - c.Center.X);
-                double angle2 = Math.Atan2(endPoint.Y - c.Center.Y, endPoint.X - c.Center.X);
-                const double twoPi = 2 * Math.PI;
-
-                // swap so we always go clockwise
-                if (angle1 > angle2)
-                {
-                    double temp = angle1;
-                    angle1 = angle2;
-                    angle2 = temp;
-                }
-
-                double startAngle = angle1;
-                double sweepAngle = angle2 - angle1;
-
-                if (moreThan180)
-                {
-                    if (sweepAngle < Math.PI)
-                        sweepAngle = -(twoPi - sweepAngle);
-                }
-                else
-                {
-                    if (sweepAngle > Math.PI)
-                        sweepAngle = -(twoPi - sweepAngle);
-                }
-
-                const double RadiansToDegrees = 360 / twoPi;
-                startAngle *= RadiansToDegrees;
-                sweepAngle *= RadiansToDegrees;
-
                 textPoint = (endPoint + startPoint) * 0.5f;
                 CircleF.Project(textPoint, c, ref textPoint);
                 if (moreThan180)
@@ -551,7 +521,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return new CircleF(c, r);
         }
 
-        private const int MinimumRadius = 32;
         private D2dDiagramTheme m_theme;
         private int m_routeOffset = 24;
         private int m_arrowSize = 8;

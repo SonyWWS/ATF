@@ -92,11 +92,8 @@ namespace Sce.Atf.Applications
                 HanldeCreated();
 
             m_form.HandleCreated += (sender, e) => HanldeCreated();
-            m_form.HandleDestroyed += (sender, e) =>
-            {
-                ReleaseHandle();
-                m_form = null;
-            };
+            m_form.HandleDestroyed += (sender, e) => ReleaseHandle();
+            
 
             // disable custom painting for parented form.
             m_disabled = form.Parent != null;
@@ -136,12 +133,15 @@ namespace Sce.Atf.Applications
         /// Get or set whether custom painting disabled</summary>
         public bool CustomPaintDisabled
         {
-            get { return m_disabled; }
+            get 
+            {
+                return m_disabled || (m_form != null && m_form.FormBorderStyle == FormBorderStyle.None);
+            }
             set
             {       
                 m_disabled = m_form == null || m_form.Parent != null || value;
                     
-                if (m_form != null)
+                if (m_form != null && !m_form.IsDisposed)
                 {                    
                     if (m_disabled)
                     {
@@ -185,6 +185,10 @@ namespace Sce.Atf.Applications
                     m_active = lwp != 0;
                     handled = PaintTitleBar(m_active);
                     if (handled) m.Result = IntPtr.Zero;
+
+                    // let the window process this message 
+                    // so the form can raise activated and deactivate events.
+                    handled = false; 
                     break;
                 case WinMessages.WM_NCACTIVATE:
                     if (m.WParam != IntPtr.Zero)

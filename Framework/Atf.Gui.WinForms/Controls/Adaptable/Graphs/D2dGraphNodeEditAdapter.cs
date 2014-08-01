@@ -310,6 +310,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 var d2dControl = this.AdaptedControl as D2dAdaptableControl;
                 Point currentPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, CurrentPoint);
+                // Calculate the delta in world coordinates.
                 Point delta = new Point(currentPoint.X - m_firstPoint.X, currentPoint.Y - m_firstPoint.Y);
                                 
                 // Constrain the movement to be parallel to the x-axis or y-axis?
@@ -344,7 +345,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 for (int i = 0; i < m_draggingNodes.Length; i++)
                 {                    
                     TNode node = m_draggingNodes[i];
-                    Rectangle bounds;
+
+                    Rectangle bounds; //world coordinates
                     m_layoutContext.GetBounds(node, out bounds);
                     bounds.X = m_oldPositions[i].X + delta.X;
                     bounds.Y = m_oldPositions[i].Y + delta.Y;
@@ -489,7 +491,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 if (node.Bounds.Location.X < -group.Info.Offset.X ||
                                     node.Bounds.Location.Y < -group.Info.Offset.Y)
                                 {
-                                    Rectangle bounds;
+                                    Rectangle bounds; //world coordinates
                                     m_layoutContext.GetBounds(group, out bounds);
                                     if (delta.X < 0)
                                         bounds.X += delta.X;
@@ -527,12 +529,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
         }
-       
+
+        // 'location' is in world space
         private void MoveNode(TNode node, Point location)
         {
-            Rectangle bounds;
-            m_layoutContext.GetBounds(node, out bounds);
-            bounds.Location = location;
+            var bounds = new Rectangle(location.X, location.Y, 0, 0);
             m_layoutContext.SetBounds(node, bounds, BoundsSpecified.Location);
         }
 
@@ -573,9 +574,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private GraphHitRecord<TNode, TEdge, TEdgeRoute> m_mousePick = new GraphHitRecord<TNode, TEdge, TEdgeRoute>();
         private TNode[] m_draggingNodes;
-        private Point[] m_newPositions;
-        private Point[] m_oldPositions;        
-        private Point m_firstPoint;
+        private Point[] m_newPositions; // in world space
+        private Point[] m_oldPositions; // in world space
+        private Point m_firstPoint; // in world space
         private bool m_draggingSubNodes = true;
 
         private object m_targetItem;

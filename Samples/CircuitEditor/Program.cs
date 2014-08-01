@@ -94,7 +94,8 @@ namespace CircuitEditorSample
                 typeof(LayerLister),                    // editable tree view of layers
 
                 typeof(Outputs),                        // passes messages to all log writers
-                typeof(ErrorDialogService),             // displays errors to the user in a message box
+                // typeof(ErrorDialogService),             // displays errors to the user in a message box
+                typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.
                 typeof(DomRecorder),                    // records and displays changes to the DOM for diagnostic purposes
 
                 typeof(DiagramTheme),                   // rendering theme for diagrams
@@ -132,6 +133,7 @@ namespace CircuitEditorSample
             var batch = new CompositionBatch();
             var mainForm = new MainForm(new ToolStripContainer())
             {
+                Text = Application.ProductName,
                 Icon = GdiUtil.CreateIcon(ResourceUtil.GetImage(Sce.Atf.Resources.AtfIconImage))
             };
             Sce.Atf.Direct2D.D2dFactory.EnableResourceSharing(mainForm.Handle);

@@ -1,8 +1,12 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
+using Sce.Atf.Wpf.Controls.Adaptable;
 
 namespace Sce.Atf.Wpf.Behaviors
 {
@@ -17,10 +21,23 @@ namespace Sce.Atf.Wpf.Behaviors
         protected override void BeginDrag(MouseEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
-            var data = AssociatedObject.GetItemAtPoint(pos);
+            object data = AssociatedObject.GetItemAtPoint(pos);
             if (data != null)
             {
-                System.Windows.DragDrop.DoDragDrop(AssociatedObject, new[]{data}, DragDropEffects.All);
+                object[] dataArray = new[] { data };
+
+                DragDropEffects effects = DragDropEffects.Move;
+                var instancingContext = AssociatedObject.DataContext.As<IInstancingContext>();
+                if (instancingContext != null && instancingContext.CanCopy())
+                    effects |= DragDropEffects.Copy;
+
+                var converter = AssociatedObject.DataContext.As<IDragDropConverter>();
+                if(converter != null)
+                {
+                    dataArray = converter.Convert(dataArray).ToArray();
+                }
+
+                System.Windows.DragDrop.DoDragDrop(AssociatedObject, dataArray, effects);
             }
         }
     }

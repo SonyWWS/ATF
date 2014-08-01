@@ -3,6 +3,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Sce.Atf.Controls
 {
@@ -110,7 +112,7 @@ namespace Sce.Atf.Controls
             m_labelWidth = new int[names.Length];
             m_labelWidth[0] = -1; // to indicate uninitialized state.
             SuspendLayout();
-            TabStop = false;
+            //TabStop = false;
             NumericTextBox textBox = null;
             for (int i = 0; i < names.Length; i++)
             {
@@ -320,47 +322,44 @@ namespace Sce.Atf.Controls
         }
 
 
-        
-
-
+       
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
         /// <returns>True iff the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
-            if (keyData == Keys.Tab)
+            NumericTextBox focusTextBox = null;
+            foreach (NumericTextBox ctrl in Controls)
             {
-                bool focusOnNext = false;
-                foreach (NumericTextBox textBox in Controls)
+                if (ctrl.Focused)
                 {
-                    if (focusOnNext)
-                    {
-                        textBox.Focus();
-                        return true;
-                    }
-                    if (textBox.Focused)
-                        focusOnNext = true;
+                    focusTextBox = ctrl;
+                    break;
+                }
+            }
+
+            int index = focusTextBox == null ? -1 : Controls.IndexOf(focusTextBox);                
+            if (keyData == Keys.Tab || keyData == Keys.Enter)
+            {                
+                // if on last NumericTextBox then don't process tab
+                NumericTextBox last = (NumericTextBox)Controls[Controls.Count - 1];                                                
+                if (focusTextBox != last)
+                {
+                    Controls[index + 1].Focus();
+                    return true;                    
                 }
             }
             else if (keyData == (Keys.Tab | Keys.Shift))
             {
-                NumericTextBox previous = null;
-                foreach (NumericTextBox textBox in Controls)
+                NumericTextBox first = (NumericTextBox)Controls[0];
+                if (focusTextBox != first && index != -1)
                 {
-                    if (textBox.Focused)
-                    {
-                        if (previous != null)
-                        {
-                            previous.Focus();
-                            return true;
-                        }
-                        break;
-                    }
-                    previous = textBox;
-                }
-            }
+                    Controls[index - 1].Focus();
+                    return true;
 
+                }               
+            }
             return base.ProcessDialogKey(keyData);
         }
 

@@ -37,5 +37,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Disable allowing user to reorder columns by dragging and dropping column headers</summary>
         DisableDragDropColumnHeaders = 64,
+
+        /// <summary>
+        /// Hide reset all button.</summary>
+        HideResetAllButton = 128,
     }
 }

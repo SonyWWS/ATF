@@ -14,13 +14,18 @@ namespace Sce.Atf.Wpf.Behaviors
     /// drag drop is initiated using current selection of items from the context</summary>
     public class SelectionContextDragSourceBehavior : DragSourceBehavior<FrameworkElement>
     {
-        /// <summary>
-        /// Performs custom processing on BeginDrag event</summary>
-        /// <param name="e">A MouseEventArgs that contains the event data</param>
+        public static readonly DependencyProperty SelectionContextProperty =
+           DependencyProperty.Register("SelectionContext", typeof(ISelectionContext), typeof(SelectionContextDragSourceBehavior), new PropertyMetadata(default(ISelectionContext)));
+
+        public ISelectionContext SelectionContext
+        {
+            get { return (ISelectionContext)GetValue(SelectionContextProperty); }
+            set { SetValue(SelectionContextProperty, value); }
+        }
+
         protected override void BeginDrag(MouseEventArgs e)
         {
-            // Get selection context from attached property
-            var ctx = (ISelectionContext)AssociatedObject.GetValue(SelectionBehaviors.SelectionContextProperty);
+            var ctx = SelectionContext;
             
             if (ctx == null)
             {
@@ -33,7 +38,13 @@ namespace Sce.Atf.Wpf.Behaviors
                 object[] data = ctx.Selection.ToArray();
                 if (data.Length > 0)
                 {
-                    System.Windows.DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.All);
+                    DragDropEffects effects = DragDropEffects.Move;
+
+                    var instancingContext = AssociatedObject.DataContext.As<IInstancingContext>();
+                    if (instancingContext != null && instancingContext.CanCopy())
+                        effects |= DragDropEffects.Copy;
+
+                    System.Windows.DragDrop.DoDragDrop(AssociatedObject, data, effects);
                 }
             }
         }

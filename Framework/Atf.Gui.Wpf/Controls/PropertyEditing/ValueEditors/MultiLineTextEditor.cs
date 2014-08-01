@@ -10,15 +10,15 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
     {
         /// <summary>
         /// Class name resource key</summary>
-        public static readonly ResourceKey TemplateKey = new ComponentResourceKey(typeof(SliderValueEditor), "MultiLineTextValueEditorTemplate");
+        public static readonly ResourceKey TemplateKey = new ComponentResourceKey(typeof(MultiLineTextValueEditor), "MultiLineTextValueEditorTemplate");
 
         /// <summary>
         /// Gets the DataTemplate resource for MultiLineTextValueEditor</summary>
         /// <param name="node">PropertyNode (unused)</param>
         /// <returns>DataTemplate resource for MultiLineTextValueEditor</returns>
-        public override DataTemplate GetTemplate(PropertyNode node)
+        public override DataTemplate GetTemplate(PropertyNode node, DependencyObject container)
         {
-            return Application.Current.FindResource(TemplateKey) as DataTemplate;
+            return FindResource<DataTemplate>(TemplateKey, container);
         }
     }
 }

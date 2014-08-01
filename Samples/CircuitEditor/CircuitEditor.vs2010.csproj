@@ -66,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotation.cs" />
+    <Compile Include="CategoryUniqueIdValidator.cs" />
+    <Compile Include="CircuitReader.cs" />
+    <Compile Include="CircuitWriter.cs" />
     <Compile Include="GroupingCommands.cs" />
     <Compile Include="HelpAboutCommand.cs" />
     <Compile Include="LayerFolder.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="LayeringCommands.cs" />
     <Compile Include="MasteringCommands.cs" />
     <Compile Include="MasteringValidator.cs" />
+    <Compile Include="MissingModule.cs" />
     <Compile Include="ModuleInstance.cs" />
     <Compile Include="Prototype.cs" />
     <Compile Include="PrototypeFolder.cs" />

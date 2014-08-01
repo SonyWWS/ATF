@@ -276,7 +276,7 @@ namespace Sce.Atf.Applications
                 //        See also other comments in this file labled SCREAM_TOOLBAR_STATE_ISSUE
                 if (!m_mainFormLoaded)
                     return;
-                
+
                 Dictionary<string, ToolStrip> toolStrips = new Dictionary<string, ToolStrip>();
                 Dictionary<string, ToolStripItem> toolStripItems = new Dictionary<string, ToolStripItem>();
 
@@ -328,22 +328,22 @@ namespace Sce.Atf.Applications
                         var orderedToolStrips = stripElements.OrderBy(s => s, new ElementSortComparer<XmlElement>()).ToList();
 
                         int maxX = 0;
-                        for (int s= orderedToolStrips.Count -1; s>=0; --s)  // remeber the rightmost visible toolstrip location so we can add new toolstrips after it 
+                        for (int s = orderedToolStrips.Count - 1; s >= 0; --s)  // remeber the rightmost visible toolstrip location so we can add new toolstrips after it 
                         {
-                           
+
                             ToolStrip toolStrip;
                             string toolStripName = orderedToolStrips[s].GetAttribute("Name");
-                            if ( toolStrips.TryGetValue(toolStripName, out toolStrip))
+                            if (toolStrips.TryGetValue(toolStripName, out toolStrip))
                             {
                                 if (orderedToolStrips[s].ChildNodes.Count <= 1)  // to exclude toolstrips that only has a Customize dropdown button  
                                     continue;
-                                  
+
                                 if (toolStrip.Location.X >= panel.Width) // invisisble
                                     continue;
                                 maxX = int.Parse(orderedToolStrips[s].GetAttribute("Location").Split(',')[0]);
                                 if (maxX < panel.Width)
                                     break;
-                                   
+
                             }
 
                         }
@@ -374,10 +374,10 @@ namespace Sce.Atf.Applications
                                 int newX = Math.Max(xPos, rowLengthsByY[yPos]);
                                 bool isMainMenu = toolStripName == "Main Menu";
                                 if (!isMainMenu && toolStripElement.ChildNodes.Count <= 1) // the toolstrip location has not been persisted previously
-                                {                                  
+                                {
                                     if (toolStrip.Items.Count > 1) // >1 to exclude the Customize dropdown button
                                     {
-                                     
+
                                         newX = maxX + 1;
                                         yPos = 24;
                                         ++maxX;
@@ -416,7 +416,7 @@ namespace Sce.Atf.Applications
                                             // Only if the attribute is available and is set to "true"...
                                             string isChecked = itemElement.GetAttribute("Checked");
                                             if (isChecked == "true")
-                                                button.Checked = true;                                            
+                                                button.Checked = true;
                                         }
 
                                         j++;
@@ -511,7 +511,7 @@ namespace Sce.Atf.Applications
                         itemElement.SetAttribute("Visible", "false");
                     }
 
-                    if ((item is ToolStripButton ) &&  ((ToolStripButton)item).Checked)
+                    if ((item is ToolStripButton) && ((ToolStripButton)item).Checked)
                         itemElement.SetAttribute("Checked", "true");
                 }
             }

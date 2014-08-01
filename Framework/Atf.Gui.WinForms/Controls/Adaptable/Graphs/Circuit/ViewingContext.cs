@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
+using Sce.Atf.Direct2D;
 using Sce.Atf.Dom;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
@@ -15,15 +16,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
     /// DomNode adapter that provides viewing functions for a Circuit. It holds a reference to
     /// the AdaptableControl for viewing the Circuit. It implements ILayoutContext,
     /// IViewingContext, and updates the control's canvas bounds during validation.</summary>
-    public class ViewingContext: Validator, IViewingContext, ILayoutContext
+    public class ViewingContext : Validator, IViewingContext, ILayoutContext
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the viewing context's DomNode.
         /// Raises the Observer NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-            m_graph = DomNode.As<IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>>();           
-            m_graphContainer = DomNode.As<ICircuitContainer>(); 
+            m_graph = DomNode.As<IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>>();
+            m_graphContainer = DomNode.As<ICircuitContainer>();
             base.OnNodeSet();
         }
 
@@ -50,7 +51,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     m_moduleEditAdapter = m_control.As<D2dGraphNodeEditAdapter<Element, Wire, ICircuitPin>>();
                     m_control.SizeChanged += new EventHandler(control_SizeChanged);
                     m_control.VisibleChanged += new EventHandler(control_VisibleChanged);
-                    
+
                 }
 
                 SetCanvasBounds();
@@ -117,8 +118,47 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     items.AddRange(m_graph.Nodes.AsIEnumerable<IGraphNode>().AsIEnumerable<object>());
                 //TODO: including Annotations 
             }
-        
+
             Rectangle bounds = GetBounds(items);
+            if (DomNode.Is<Group>()) // the view is associated with a group editor
+            {
+                // include group pins y range
+                var group = DomNode.Cast<Group>();
+
+                int yMin = int.MaxValue;
+                int yMax = int.MinValue;
+
+                foreach (var pin in group.InputGroupPins)
+                {
+                    var grpPin = pin.Cast<GroupPin>();
+                    if (grpPin.Bounds.Location.Y < yMin)
+                        yMin = grpPin.Bounds.Location.Y;
+                    if (grpPin.Bounds.Location.Y > yMax)
+                        yMax = grpPin.Bounds.Location.Y;
+                }
+
+                foreach (var pin in group.OutputGroupPins)
+                {
+                    var grpPin = pin.Cast<GroupPin>();
+                    if (grpPin.Bounds.Location.Y < yMin)
+                        yMin = grpPin.Bounds.Location.Y;
+                    if (grpPin.Bounds.Location.Y > yMax)
+                        yMax = grpPin.Bounds.Location.Y;
+                }
+
+                // transform y range to client space
+                if (yMin != int.MaxValue && yMax != int.MinValue)
+                {
+                    var transformAdapter = m_control.Cast<ITransformAdapter>();
+                    var yRange = D2dUtil.TransformVector(transformAdapter.Transform, new PointF(yMin, yMax));
+                    yMin = (int)Math.Min(yRange.X, yRange.Y);
+                    yMax = (int)Math.Max(yRange.X, yRange.Y);
+                    int width = bounds.Width;
+                    int height = yMax - yMin + 1;
+                    bounds = Rectangle.Union(bounds, new Rectangle(bounds.Location.X, yMin, width, height));
+                }
+
+            }
             return bounds;
         }
 
@@ -127,7 +167,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>An enumeration of all items visible in the control</returns>
         public IEnumerable<object> GetVisibleItems()
         {
-            Rectangle windowBounds = m_control.As<ICanvasAdapter>().WindowBounds;            
+            Rectangle windowBounds = m_control.As<ICanvasAdapter>().WindowBounds;
             foreach (IPickingAdapter2 pickingAdapter in m_control.AsAll<IPickingAdapter2>())
             {
                 foreach (object item in pickingAdapter.Pick(windowBounds))
@@ -179,19 +219,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns the smallest rectangle that bounds the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">Bounding rectangle of item</param>
+        /// <param name="bounds">Bounding rectangle of item, in world coordinates</param>
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified ILayoutContext.GetBounds(object item, out Rectangle bounds)
         {
             var element = item.As<Element>();
             if (element != null)
             {
-                Size size = GetBounds(element).Size; //Don't use element.Bounds for the size. Use the renderer.
-                bounds = new Rectangle(element.Bounds.Location, size);
+                bounds = GetBounds(element); // in client coordinates
+
+                // transform to world coordinates
+                var transformAdapter = m_control.Cast<ITransformAdapter>();
+                bounds = GdiUtil.InverseTransform(transformAdapter.Transform, bounds);
+
                 return BoundsSpecified.All;
             }
 
-            Annotation annotation = Adapters.As<Annotation>(item);
+            var annotation = Adapters.As<Annotation>(item);
             if (annotation != null)
             {
                 bounds = annotation.Bounds;
@@ -220,8 +264,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Sets the bounds of the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">New item bounds</param>
-        /// <param name="specified">Which parts of bounds are being set</param>
+        /// <param name="bounds">New item bounds, in world coordinates</param>
+        /// <param name="specified">Which parts of bounds to set</param>
         void ILayoutContext.SetBounds(object item, Rectangle bounds, BoundsSpecified specified)
         {
             var element = item.As<Element>();
@@ -232,34 +276,21 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             // layout constrains: the CanvasAdapter by default have (0,0) for Location which will clip away negative bounds, 
             // but negative location will be generated if we drag a sub-element to the left or above the group that owns it;  
             // D2dGridAdapter seems not needed to layout sub-elements inside its owner as the layout occurs at a lower level.
-            bool applyConstraints = !IsDraggingSubNode(element);   
+            bool applyConstraints = !IsDraggingSubNode(element);
             if (applyConstraints)
                 bounds = ConstrainBounds(bounds, specified);
 
             if (element != null)
             {
-                Rectangle moduleBounds = element.Bounds;
-                if ((specified & BoundsSpecified.X) != 0)
-                    moduleBounds.X = bounds.X;
-                if ((specified & BoundsSpecified.Y) != 0)
-                    moduleBounds.Y = bounds.Y;
-                if ((specified & BoundsSpecified.Width) != 0)
-                    moduleBounds.Width = bounds.Width;
-                else if ((specified & BoundsSpecified.Height) != 0)
-                    moduleBounds.Height = bounds.Height;
-
-                element.Bounds = moduleBounds;
+                element.Bounds = WinFormsUtil.UpdateBounds(element.Bounds, bounds, specified);
             }
             else
             {
-                Annotation annotation = Adapters.As<Annotation>(item);
+                var annotation = item.As<Annotation>();
                 if (annotation != null)
-                {
-                    annotation.Bounds = bounds;
-                }
+                    annotation.Bounds = WinFormsUtil.UpdateBounds(annotation.Bounds, bounds, specified);
             }
         }
-
 
         private bool IsDraggingSubNode(Element element)
         {
@@ -273,10 +304,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private Rectangle ConstrainBounds(Rectangle bounds, BoundsSpecified specified)
         {
-            foreach (ILayoutConstraint layoutConstraint in m_layoutConstraints)
-                if (layoutConstraint.Enabled)
-                    bounds = layoutConstraint.Constrain(bounds, specified);
+            if (m_layoutConstraints != null)
+            {
+                foreach (ILayoutConstraint layoutConstraint in m_layoutConstraints)
+                    if (layoutConstraint.Enabled)
+                        bounds = layoutConstraint.Constrain(bounds, specified);
 
+            }
             return bounds;
         }
 
@@ -331,7 +365,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         private IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute> m_graph;
-        private ICircuitContainer m_graphContainer; 
+        private ICircuitContainer m_graphContainer;
         private AdaptableControl m_control;
         private IEnumerable<ILayoutConstraint> m_layoutConstraints;
         private D2dGraphNodeEditAdapter<Element, Wire, ICircuitPin> m_moduleEditAdapter;

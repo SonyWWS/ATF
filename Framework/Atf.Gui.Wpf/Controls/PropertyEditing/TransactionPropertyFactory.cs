@@ -1,7 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.ComponentModel;
-using System.Windows;
 
 namespace Sce.Atf.Wpf.Controls.PropertyEditing
 {
@@ -26,11 +25,13 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="instance">Object or collection of objects that share a property</param>
         /// <param name="descriptor">PropertyDescriptor of shared property</param>
         /// <param name="isEnumerable">Whether the object is enumerable</param>
-        /// <param name="owner">Object(s) owner</param>
+        /// <param name="context">Transaction context</param>
         /// <returns>Initialized PropertyNode instance</returns>
-        public static PropertyNode CreateTransactionProperty(object instance, PropertyDescriptor descriptor, bool isEnumerable, FrameworkElement owner)
+        public static PropertyNode CreateTransactionProperty(object instance, PropertyDescriptor descriptor, bool isEnumerable, ITransactionContext context)
         {
-            return new TransactionPropertyNode(instance, descriptor, isEnumerable, owner);
+            var result = new TransactionPropertyNode(context);
+            result.Initialize(instance, descriptor, isEnumerable);
+            return result;
         }
 
         #region IPropertyFactory Members
@@ -40,11 +41,11 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="instance">Object or collection of objects that share a property</param>
         /// <param name="descriptor">PropertyDescriptor of shared property</param>
         /// <param name="isEnumerable">Whether the object is enumerable</param>
-        /// <param name="owner">Object(s) owner</param>
+        /// <param name="context">Transaction context</param>
         /// <returns>Initialized PropertyNode instance</returns>
-        public PropertyNode CreateProperty(object instance, PropertyDescriptor descriptor, bool isEnumerable, FrameworkElement owner)
+        public PropertyNode CreateProperty(object instance, PropertyDescriptor descriptor, bool isEnumerable, ITransactionContext context)
         {
-            return CreateTransactionProperty(instance, descriptor, isEnumerable, owner);
+            return CreateTransactionProperty(instance, descriptor, isEnumerable, context);
         }
 
         #endregion

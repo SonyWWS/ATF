@@ -168,20 +168,29 @@ namespace Sce.Atf.Dom
         /// Returns whether the context can insert the data object</summary>
         /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
         /// <returns>True iff the context can insert the data object</returns>
-        /// <remarks>ApplicationUtil calls this method in its CanInsert method, BUT
-        /// if the context also implements IHierarchicalInsertionContext,
-        /// IHierarchicalInsertionContext is preferred and the IInstancingContext
-        /// implementation is ignored for insertion.</remarks>
+        /// <remarks>Because non-template objects are promoted into the template library via command explicitly,
+        /// CanInsert() here only needs to deal moving items around inside the template lister; 
+        /// currently we do not allow drag items from outside then drop onto the template lister
+        /// </remarks>
         public bool CanInsert(object insertingObject)
         {
             var dataObject = (IDataObject)insertingObject;
             var items = dataObject.GetData(typeof(object[])) as object[];
-            if (items == null)
+            if (items == null || !items.Any())
                 return false;
 
             if (!m_activeItem.Is<TemplateFolder>())
                 return false;
-            return items.All(item => item.Is<Template>() || item.Is<TemplateFolder>());
+            bool moving = items.All(item => item.Is<Template>() || item.Is<TemplateFolder>());
+            if (!moving) 
+                return false;
+            // disallow moving any item inside an external template folder
+            if(items.Any(IsExternalTemplate))
+                return false;
+            // disallow cross-document moving
+            if (IsExternalTemplate(m_activeItem.Cast<TemplateFolder>()))
+                return false;
+            return true;
         }
 
         /// <summary>
@@ -209,7 +218,7 @@ namespace Sce.Atf.Dom
             if (IsMovingItems)
             {
                 // Note: since both templates and template folders are implemented as DomNodes, 
-                // inserting a DomNode to a new parent will auto-remove from the node from its old parent, 
+                // inserting a DomNode to a new parent will auto-remove the node from its old parent, 
                 // so we only need to take care of the insertion part
                 foreach (var item in itemCopies)
                 {
@@ -219,9 +228,11 @@ namespace Sce.Atf.Dom
                         folder.Folders.Add(item.Cast<TemplateFolder>());
                 }
             }
-            else
+            else //insert items as templates
             {
                 m_lastPromoted.Clear();
+                if (IsExternalTemplate(folder))
+                    folder = RootFolder; // perhaps shouldn't prompt items to an external folder directly, let's add to root folder 
                 for (int index = 0; index < itemCopies.Length; ++index)
                 {
                     var item = itemCopies[index];
@@ -232,7 +243,6 @@ namespace Sce.Atf.Dom
                     m_lastPromoted.Add(items[index], template);
                 }
             }
-
 
             IsMovingItems = false;
         }
@@ -297,8 +307,14 @@ namespace Sce.Atf.Dom
             if (folder != null)
             {
                 info.Label = folder.Name;
-                //if (folder.)
-                info.ImageIndex = info.GetImageList().Images.IndexOfKey(Sce.Atf.Resources.FolderIcon);
+                if (folder.Url != null)
+                {
+                    info.ImageIndex = info.GetImageList().Images.IndexOfKey(info.IsExpandedInView ? Sce.Atf.Resources.ReferenceFolderOpen : 
+                        Sce.Atf.Resources.ReferenceFolderClosed);
+                    info.HoverText = info.Description = folder.Url.LocalPath;                   
+                }
+                else
+                    info.ImageIndex = info.GetImageList().Images.IndexOfKey(Sce.Atf.Resources.FolderIcon);
             }
             else
             {
@@ -373,10 +389,18 @@ namespace Sce.Atf.Dom
         /// Returns whether an item is a global template</summary>
         /// <param name="item">Item to test</param>
         /// <returns>True iff item is a global template</returns>
-        public virtual bool IsGlobalTemplate(object item)
+        public bool IsExternalTemplate(object item)
         {
+            var domNode = item.As<DomNode>();
+            if (domNode == null)
+                return false;
+            foreach (var node in domNode.Lineage)
+            {
+                TemplateFolder templateFolder = node.As<TemplateFolder>();
+                if (templateFolder != null && templateFolder.Url != null)
+                    return true;
+            }
             return false;
-
         }
 
         /// <summary>
@@ -433,7 +457,7 @@ namespace Sce.Atf.Dom
             foreach (var templateFolder in parentFolder.Folders)
             {
                 if (templateFolder.Url == uri)
-                    return false;
+                    return false; //TODO: pop up warning dialog
                 if (!ValidateNewFolderUri(templateFolder, uri))
                     return false;
             }

@@ -14,7 +14,7 @@
     ResizeMode="CanResize"
     SizeToContent="Height">
 
-    <DockPanel Margin="12" LastChildFill="True">
+    <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Bottom" >
             <DockPanel LastChildFill="False">
                 <CheckBox Content="{l:Loc Do not show this message again}" 

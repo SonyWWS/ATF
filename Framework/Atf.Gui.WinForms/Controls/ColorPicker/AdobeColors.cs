@@ -121,7 +121,7 @@ namespace Sce.Atf.Controls.ColorEditing
 
         /// <summary> 
         /// Converts a color from HSL to RGB</summary> 
-        /// <remarks>Adapted from the algoritm in Foley and Van-Dam</remarks> 
+        /// <remarks>Adapted from the algorithm in Foley and Van-Dam</remarks> 
         /// <param name="hsl">The HSL value</param> 
         /// <returns>A Color structure containing the equivalent RGB values</returns> 
         public static Color HSL_to_RGB(HSL hsl) 
@@ -179,7 +179,7 @@ namespace Sce.Atf.Controls.ColorEditing
           
             hsl.A = (double)c.A/255;
 
-            int Max, Min, Diff, Sum;
+            int Max, Min, Diff;
 
             //  Of our RGB values, assign the highest value to Max, and the Smallest to Min
             if ( c.R > c.G )    { Max = c.R; Min = c.G; }
@@ -188,7 +188,6 @@ namespace Sce.Atf.Controls.ColorEditing
             else if ( c.B < Min ) Min = c.B;
 
             Diff = Max - Min;
-            Sum = Max + Min;
 
             //  Luminance - a.k.a. Brightness - Adobe photoshop uses the logic that the
             //  site VBspeed regards (regarded) as too primitive = superior decides the 

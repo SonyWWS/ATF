@@ -51,7 +51,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Callback to get offset to be added to draw all sub-elements when group is expanded inline</summary>
         public Func<AdaptableControl, Point> GetSubContentOffset;
-  
+
         private enum MoveElementBehavior
         {
             MoveConstrainToCursorContainment‎, // an element is eligible to move into the new container if current cursor position is contained by the new container
@@ -98,7 +98,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 node.Cast<Group>().Changed -= GroupChanged;
             }
         }
-    
+
         /// <summary>
         /// Gets the Circuit</summary>
         public ICircuitContainer CircuitContainer
@@ -233,7 +233,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             // copy selected text in the selected annotation?
             var annotationAdapter = m_viewingContext.Cast<AdaptableControl>().As<D2dAnnotationAdapter>();
-            if (annotationAdapter !=  null)
+            if (annotationAdapter != null)
             {
                 foreach (Annotation annotation in Selection.AsIEnumerable<Annotation>())
                 {
@@ -248,8 +248,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 }
             }
-          
-              
+
+
 
             if (m_instancingContext != null)
                 return m_instancingContext.Copy();
@@ -284,7 +284,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             dataObject.SetData(CircuitFormat, data);
 
 
-      
+
 
             return dataObject;
         }
@@ -366,7 +366,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="insertingObject">Object to insert</param>
         public void Insert(object insertingObject)
         {
-             // paste selected text in the selected annotation?
+            // paste selected text in the selected annotation?
             var annotationAdapter = m_viewingContext.Cast<AdaptableControl>().As<D2dAnnotationAdapter>();
             if (annotationAdapter != null)
             {
@@ -432,7 +432,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private DomNode InsertReference(Template template)
         {
-            var elementReference = m_templatingContext.CreateReference(template).Cast<Element>();        
+            var elementReference = m_templatingContext.CreateReference(template).Cast<Element>();
             m_circuitContainer.Elements.Add(elementReference);
             return elementReference.DomNode;
         }
@@ -492,15 +492,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Centers items in canvas at point</summary>
         /// <param name="items">Items to center</param>
-        /// <param name="p">Point at which to center items</param>
+        /// <param name="p">Point at which to center items, in client space</param>
         public void Center(IEnumerable<object> items, Point p)
         {
             // get bounds, convert to world coords
             Rectangle bounds;
             LayoutContexts.GetBounds(m_viewingContext.Cast<ILayoutContext>(), items, out bounds);
-            Matrix transform = m_viewingContext.Cast<AdaptableControl>().Cast<ITransformAdapter>().Transform;
-            p = GdiUtil.InverseTransform(transform, p);
 
+            Matrix transform = m_viewingContext.Cast<AdaptableControl>().Cast<ITransformAdapter>().Transform;
+            p = GdiUtil.InverseTransform(transform, p); // convert center to world coords
             m_viewingContext.Cast<ILayoutContext>().Center(items, p);
         }
 
@@ -567,12 +567,35 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Explicitly notify that the graph object has been changed. This is useful when some changes, 
-        /// such as group pin connectivity, are computed at runtime, outside the DOM attribute mechanism.</summary>
-        /// <param name="element">Changed graph object</param>
+        /// Raises the ItemInserted event and performs custom processing</summary>
+        /// <param name="e">ItemInsertedEventArgs containing event data</param>
+        protected virtual void OnObjectInserted(ItemInsertedEventArgs<object> e)
+        {
+            ItemInserted.Raise(this, e);
+        }
+
+        /// <summary>
+        /// Raises the ItemRemoved event and performs custom processing</summary>
+        /// <param name="e">ItemRemovedEventArgs containing event data</param>
+        protected virtual void OnObjectRemoved(ItemRemovedEventArgs<object> e)
+        {
+            ItemRemoved.Raise(this, e);
+        }
+
+        /// <summary>
+        /// Raises the ItemChanged event and performs custom processing</summary>
+        /// <param name="e">ItemChangedEventArgs containing event data</param>
+        protected virtual void OnObjectChanged(ItemChangedEventArgs<object> e)
+        {
+            ItemChanged.Raise(this, e);
+        }
+
+        /// <summary>
+        /// Explicitly notify the graph object has been changed. This is useful when some changes, 
+        /// such as group pin connectivity, are computed at runtime, outside dom attribute mechanism.</summary>
         public void NotifyObjectChanged(object element)
         {
-            ItemChanged.Raise(this, new ItemChangedEventArgs<object>(element));
+            OnObjectChanged(new ItemChangedEventArgs<object>(element));
         }
 
         private void DomNode_AttributeChanged(object sender, AttributeEventArgs e)
@@ -580,7 +603,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (IsCircuitItem(e.DomNode, e.DomNode.Parent))
             {
                 NotifyObjectChanged(e.DomNode); //required for Layers. http://tracker.ship.scea.com/jira/browse/WWSATF-1389
- 
+
                 // Editing the subgraph may cause changes in the parent graph, such as reordering group pins in a group needs 
                 // to change the pin indexes of the external edges in the parent graph. 
                 // Each circuit or group has its own local editing context, and the default TransactionContext implementation 
@@ -619,13 +642,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     var connection = e.Child.Cast<Wire>();
                     if (connection.InputElement.Is<Group>())  // set dirty to force update group pin connectivity                                     
-                        connection.InputElement.Cast<Group>().Dirty=true;                     
+                        connection.InputElement.Cast<Group>().Dirty = true;
 
                     if (connection.OutputElement.Is<Group>())
                         connection.OutputElement.Cast<Group>().Dirty = true;
                 }
-             
-                ItemInserted.Raise(this, new ItemInsertedEventArgs<object>(e.Index, e.Child, e.Parent));
+
+                OnObjectInserted(new ItemInsertedEventArgs<object>(e.Index, e.Child, e.Parent));
 
                 var circuitValidator = DomNode.GetRoot().As<CircuitValidator>();
                 if (circuitValidator != null)
@@ -661,13 +684,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     var connection = e.Child.Cast<Wire>();
                     if (connection.InputElement.Is<Group>())
-                        connection.InputElement.Cast<Group>().Dirty=true;
+                        connection.InputElement.Cast<Group>().Dirty = true;
                     if (connection.OutputElement.Is<Group>())
                         connection.OutputElement.Cast<Group>().Dirty = true;
                 }
- 
 
-                ItemRemoved.Raise(this, new ItemRemovedEventArgs<object>(e.Index, e.Child, e.Parent));
+                OnObjectRemoved(new ItemRemovedEventArgs<object>(e.Index, e.Child, e.Parent));
 
                 var circuitValidator = DomNode.GetRoot().As<CircuitValidator>();
                 if (circuitValidator != null)
@@ -709,7 +731,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                child.Is<Group>() || parent.Is<Circuit>() || parent.Is<Group>();
         }
 
- 
+
         private void GroupChanged(object sender, EventArgs eventArgs)
         {
 
@@ -723,7 +745,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (editingContext != null)
                     editingContext.ItemChanged.Raise(this, new ItemChangedEventArgs<object>(group.DomNode));
             }
-           
+
         }
 
         #endregion
@@ -738,7 +760,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
                 return item.Cast<Annotation>().BackColor;
-            return s_zeroColor;          
+            return s_zeroColor;
         }
 
         /// <summary>
@@ -787,14 +809,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 outputPin.TypeName != inputPin.TypeName)
                 return false;
 
-            //if (fromNode.Type.Outputs.Contains(outputPin) &&
-            //    toNode.Type.Inputs.Contains(inputPin))
-            //    return true;
-
-            //if (fromNode.Type.Inputs.Contains(outputPin) &&
-            //    toNode.Type.Outputs.Contains(inputPin))
-            //    return true;
-
             if (fromNode.HasOutputPin(outputPin) && toNode.HasInputPin(inputPin))
                 return true;
 
@@ -816,30 +830,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         Wire IEditableGraph<Element, Wire, ICircuitPin>.Connect(
             Element fromNode, ICircuitPin fromRoute, Element toNode, ICircuitPin toRoute, Wire existingEdge)
         {
-            // expose the group pin that the new edge will connected to 
-            if (toRoute.Is<GroupPin>())
-            {
-                var grpPin = toRoute.Cast<GroupPin>();
-                if (!grpPin.Visible)
-                {
-                    grpPin.Visible = true;
-                    toNode.Cast<Group>().Update();
-                }
-            }
+            var domNode = new DomNode(WireType);
 
-            if (fromRoute.Is<GroupPin>())
-            {
-                var grpPin = fromRoute.Cast<GroupPin>();
-                if (!grpPin.Visible)
-                {
-                    grpPin.Visible = true;
-                    fromNode.Cast<Group>().Update();
-                }
-            }
-
-            DomNode domNode = new DomNode(WireType);
-
-            Wire wire = domNode.As<Wire>();
+            var wire = domNode.As<Wire>();
             wire.OutputElement = fromNode;
             wire.OutputPin = fromRoute;
             wire.InputElement = toNode;
@@ -891,9 +884,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 return false;
 
             var newContainer = newParent.Cast<ICircuitContainer>();
-           
+
             // do not allow moving into a collpased container that is a child of the current editing context
-            if (newContainer !=  m_circuitContainer && !newContainer.Expanded)
+            if (newContainer != m_circuitContainer && !newContainer.Expanded)
                 return false;
 
             var modules = movingObjects.AsIEnumerable<Element>();
@@ -1012,6 +1005,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="newHeight">New container height</param>
         void IEditableGraphContainer<Element, Wire, ICircuitPin>.Resize(object container, int newWidth, int newHeight)
         {
+            // Subtract the label height because this isn't a part of the CircuitGroupInfo.MinimumSize or group.Bounds.
+            // The label height is added back in by D2dCircuitRenderer.GetBounds(). http://tracker.ship.scea.com/jira/browse/WWSATF-1504
+            var control = m_viewingContext.Cast<AdaptableControl>();
+            newHeight -= GetLabelHeight(control);
+
             var group = container.Cast<Group>();
             if (group.AutoSize)
                 group.Info.MinimumSize = new Size(newWidth, newHeight);
@@ -1028,7 +1026,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private Point GetRelativeOffset(ICircuitContainer oldContainer, ICircuitContainer newContainer)
         {
             AdaptableControl control = m_viewingContext.Cast<AdaptableControl>();
- 
+
             var offset = new Point();
             var oldDomContainer = oldContainer.Cast<DomNode>();
             var newDomContainer = newContainer.Cast<DomNode>();
@@ -1045,7 +1043,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return offset;
         }
 
-       
+
         // an element is eligible to move into another container only it first moves out its current container
         private bool IsSelfContainedOrIntersected(DomNode element, DomNode container)
         {
@@ -1061,22 +1059,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var containerLocalBound = GetLocalBound(control, currentContainer.Cast<Element>());
 
             containerLocalBound.Location = new PointF(0, GetTitleHeight(control));
-            containerLocalBound.Height -= GetLabelHeight(control);// exclude bottom lable area
+            containerLocalBound.Height -= GetLabelHeight(control);// exclude bottom label area
 
             elemLocalBound.Offset(GetSubContentOffset(control));
             bool contained = containerLocalBound.Contains(elemLocalBound);
             containerLocalBound.Height -= GetTitleHeight(control);// no subcontent offset if element is moved out of the current container
             bool intersected = containerLocalBound.IntersectsWith(elemLocalBound);
 
-            return  contained || intersected;
+            return contained || intersected;
 
         }
 
         private bool IsContained(DomNode element, DomNode container)
         {
             if (container.Is<Circuit>())
-                return true;    
-   
+                return true;
+
             if (m_moveElementBehavior == MoveElementBehavior.MoveConstrainToCursorContainment‎)
             {
                 // since container is the drop target, the cursor must be over the container when CanMove() is called
@@ -1085,7 +1083,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             else if (m_moveElementBehavior == MoveElementBehavior.MoveConstrainToContainerBounds)
             {
                 AdaptableControl control = m_viewingContext.Cast<AdaptableControl>();
- 
+
                 var offset = GetRelativeOffset(element.Parent.Cast<ICircuitContainer>(), container.Cast<ICircuitContainer>());
 
                 // get bound in local space
@@ -1095,7 +1093,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 elemLocalBound.Offset(offset);
 
                 containerLocalBound.Location = new PointF(0, GetTitleHeight(control));
-                containerLocalBound.Height -= GetLabelHeight(control);// exclude bottom lable area
+                containerLocalBound.Height -= GetLabelHeight(control);// exclude bottom label area
 
                 elemLocalBound.Offset(GetSubContentOffset(control));
 
@@ -1110,8 +1108,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private ICircuitContainer m_circuitContainer;
         private IViewingContext m_viewingContext;
         private XmlSchemaTypeLoader m_schemaLoader;
-        private MoveElementBehavior m_moveElementBehavior= MoveElementBehavior.MoveConstrainToCursorContainment‎;
+        private MoveElementBehavior m_moveElementBehavior = MoveElementBehavior.MoveConstrainToCursorContainment‎;
         private bool m_supportsNestedGroup = true;
-       
+
     }
 }

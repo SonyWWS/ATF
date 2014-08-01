@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Size = 1044)]
     internal struct DropDescription

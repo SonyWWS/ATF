@@ -1204,12 +1204,12 @@ namespace UsingDirect2D
             string msg = "Press T to run performance test and  up/down arrow keys to change drawings";
             if (m_fps == 0)
             {
-                Parent.Text = "Mouse move to compute Fps  " + m_drawInfo + msg;                    
+                Parent.Text = "Move mouse to compute FPS. " + m_drawInfo + ". " + msg;
             }
             else
             {
                 float tps = (1000.0f / m_fps);
-                string info = string.Format("Fps:{0}  Tpf:{1} ms    {2} {3}",
+                string info = string.Format("Fps:{0}  Tpf:{1} ms    {2}. {3}",
                     m_fps.ToString("F"),
                     tps.ToString("F2"),
                     m_drawInfo,

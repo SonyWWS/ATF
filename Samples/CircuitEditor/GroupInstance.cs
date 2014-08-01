@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
+using System.Linq;
 using Sce.Atf;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Controls.Adaptable.Graphs;
@@ -11,9 +11,9 @@ using Sce.Atf.Dom;
 
 namespace CircuitEditorSample
 {
-    /// <summary>
-    /// Adapter for an instance of a group template</summary>
-    public class GroupInstance :  Module, ICircuitGroupType<Module, Connection, ICircuitPin>,
+    /// <summary>Adapter for a reference instance of a group template</summary>
+    /// <remarks>TODO: rename to GroupReference</remarks>
+    public class GroupInstance : Module, ICircuitGroupType<Module, Connection, ICircuitPin>,
                                   IReference<Module>,
                                   IReference<DomNode>,
                                   IReference<Sce.Atf.Controls.Adaptable.Graphs.Group> // for circuit render
@@ -26,6 +26,39 @@ namespace CircuitEditorSample
             m_info.PropertyChanged += groupInfoChanged;
         }
 
+        /// <summary>Gets and sets  a globally unique identifier (GUID) that represents this template</summary>
+        public Template Template
+        {
+            get
+            {
+                var template = GetReference<Template>(Schema.groupTemplateRefType.guidRefAttribute);
+                if (template == null) // in case reading older circuit documents before ATF3.8
+                {
+                    var target = GetReference<DomNode>(Schema.groupTemplateRefType.typeRefAttribute);
+                    if (target != null)
+                    {
+                        template = target.Parent.As<Template>();
+                        if (template != null) // replace obsolete "typeRef" attribute with  guidRef
+                        {
+                            SetReference(Schema.groupTemplateRefType.guidRefAttribute, template.DomNode);
+                            SetAttribute(Schema.groupTemplateRefType.typeRefAttribute, null);
+
+                            Guid guid;
+                            if (Guid.TryParse(Id, out guid)) // avoid using GUID as ID too, because we want to resolve guid reference specially
+                                Id = "GroupInstance" + Id;                                    
+                        }
+                    }
+                }
+                return template;
+            }
+            set
+            {
+                SetReference(Schema.groupTemplateRefType.guidRefAttribute, value.DomNode);
+                OnTargetSet(Target);
+            }
+        }
+
+
         /// <summary>
         /// Gets an adapter of the specified type, or null if there is none</summary>
         /// <param name="type">Adapter type</param>
@@ -33,7 +66,7 @@ namespace CircuitEditorSample
         public override object GetAdapter(Type type)
         {
             // if type is assignable to group
-            if(typeof(Sce.Atf.Controls.Adaptable.Graphs.Group).IsAssignableFrom(type))
+            if (typeof(Sce.Atf.Controls.Adaptable.Graphs.Group).IsAssignableFrom(type))
                 return ProxyGroup;
 
             return base.GetAdapter(type);
@@ -44,9 +77,10 @@ namespace CircuitEditorSample
         /// Raises the DomNodeAdapter NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-             base.OnNodeSet();
-             OnTargetSet(Target);
-             Info.ShowExpandedGroupPins = ShowExpandedGroupPins;
+            base.OnNodeSet();
+            if (Template != null)
+                OnTargetSet(Target);
+            Info.ShowExpandedGroupPins = ShowExpandedGroupPins;
         }
 
 
@@ -68,11 +102,10 @@ namespace CircuitEditorSample
         /// throw an exception if the specified value cannot be targeted.</remarks>
         public Module Target
         {
-            get { return GetReference<Module>(RefAttribute); }
+            get { return Template.Target.As<Module>(); }
             set
             {
-                SetReference(RefAttribute, value);
-                OnTargetSet(value);
+                throw new InvalidOperationException("The group template determines the target");
             }
         }
 
@@ -93,8 +126,11 @@ namespace CircuitEditorSample
         /// throw an exception if the specified value cannot be targeted.</remarks>
         Sce.Atf.Controls.Adaptable.Graphs.Group IReference<Sce.Atf.Controls.Adaptable.Graphs.Group>.Target
         {
-            get { return GetReference<Sce.Atf.Controls.Adaptable.Graphs.Group>(RefAttribute); }
-            set { SetReference(RefAttribute, value); }
+            get { return Template.Target.As<Sce.Atf.Controls.Adaptable.Graphs.Group>(); }
+            set
+            {
+                throw new InvalidOperationException("The group template determines the target");
+            }
         }
 
         /// <summary>
@@ -114,11 +150,78 @@ namespace CircuitEditorSample
         /// throw an exception if the specified value cannot be targeted.</remarks>
         DomNode IReference<DomNode>.Target
         {
-            get { return GetReference<DomNode>(RefAttribute); }
-            set { SetReference(RefAttribute, value); }
+            get { return Template.Target; }
+            set
+            {
+                throw new InvalidOperationException("The group template determines the target");
+            }
         }
         #endregion
-        
+
+        /// <summary>
+        /// Tests if group has a given input pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff group contains the given input pin</returns>
+        public override bool HasInputPin(ICircuitPin pin)
+        {
+            if (Target.Type is MissingElementType)
+                return false; // disallow connecting to a missing type
+            if (ProxyGroup.InputGroupPins.Contains(pin)) // check group pins in the proxy
+                return true;
+            return Target.HasInputPin(pin); // check group pins in the original group target
+        }
+
+        /// <summary>
+        /// Tests if group has a given output pin</summary>
+        /// <param name="pin">Pin to test</param>
+        /// <returns>True iff group contains the given output pin</returns>
+        public override bool HasOutputPin(ICircuitPin pin)
+        {
+            if (Target.Type is MissingElementType) // disallow connecting to a missing type
+                return false;
+            if (ProxyGroup.OutputGroupPins.Contains(pin)) // check group pins in the proxy
+                return true;
+            return Target.HasOutputPin(pin); // check group pins in the original group target
+        }
+
+        /// <summary>
+        /// Gets the output pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin OutputPin(int pinIndex)
+        {
+            if (Target.Type is MissingElementType)
+                return Target.Type.Outputs[pinIndex];
+            var pin = ProxyGroup.OutputPin(pinIndex);
+            return pin;
+        }
+
+        /// <summary>
+        /// Gets the input pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin InputPin(int pinIndex)
+        {
+            if (Target.Type is MissingElementType)
+                return Target.Type.Inputs[pinIndex];
+            return ProxyGroup.InputPin(pinIndex);
+        }
+
+        /// <summary>
+        /// Gets all the input pins for this group, including hidden ones</summary>
+        public override IEnumerable<ICircuitPin> AllInputPins
+        {
+            get { return ProxyGroup.InputGroupPins; }
+        }
+
+        /// <summary>
+        /// Gets all the output pins for this group, including hidden ones</summary>
+        public override IEnumerable<ICircuitPin> AllOutputPins
+        {
+            get { return ProxyGroup.OutputGroupPins; }
+        }
+
+
         /// <summary>
         /// Gets a ProxyGroup, which provides a surrogate that delegates communications
         /// with the targeted group on behalf of the group referencing instance</summary>
@@ -128,11 +231,12 @@ namespace CircuitEditorSample
             {
                 if (m_proxyGroup == null)
                 {
-                    m_proxyGroup = new ProxyGroup(this, Target.As<Group>());                   
+                    m_proxyGroup = new ProxyGroup(this, Target.As<Group>());
                     m_proxyGroup.Refresh();
-                } 
+                }
                 return m_proxyGroup;
             }
+            set { m_proxyGroup = value; }
         }
 
         /// <summary>
@@ -189,9 +293,10 @@ namespace CircuitEditorSample
         /// <returns>Return a pair of element and pin. As an element instance method, if there is a match, the element is self, 
         /// and pin is one of its pins defined in Type. If there is no match, both are null.</returns>
         public override Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide)
-        {   
-            if (pinTarget.InstancingNode != DomNode)
+        {
+            if (pinTarget == null ||  pinTarget.InstancingNode != DomNode)
                 return new Pair<Element, ICircuitPin>(); // look no farthur
+
             var result = Target.Cast<Group>().MatchPinTarget(pinTarget, inputSide);
             if (result.First != null)
                 result.First = this;
@@ -210,17 +315,17 @@ namespace CircuitEditorSample
             return MatchPinTarget(pinTarget, inputSide);
         }
 
-        private AttributeInfo RefAttribute
-        {
-            get { return Schema.groupTemplateRefType.typeRefAttribute; }
-        }
+        //private AttributeInfo RefAttribute
+        //{
+        //    get { return Schema.groupTemplateRefType.typeRefAttribute; }
+        //}
 
 
         /// <summary>
         /// Gets an enumeration of subnodes in the group instance</summary>
         IEnumerable<Module> IHierarchicalGraphNode<Module, Connection, ICircuitPin>.SubNodes
         {
-            get {  return m_group != null ? m_group.SubNodes : EmptyEnumerable<Module>.Instance;  }
+            get { return m_group != null ? m_group.SubNodes : EmptyEnumerable<Module>.Instance; }
         }
 
         // ICircuitElementType
@@ -254,26 +359,26 @@ namespace CircuitEditorSample
             get { return ProxyGroup.Type.Outputs; }
         }
 
-
-        // ICircuitGroupType
-        //public bool Expanded
-        //{
-        //    get { return GetAttribute<bool>(Schema.groupTemplateRefType.refExpandedAttribute); }
-        //    set { SetAttribute(Schema.groupTemplateRefType.refExpandedAttribute, value); }
-        //}
-
         /// <summary>
         /// Gets whether the group (subgraph) is expanded</summary>
         /// <remarks>Overrides should call this base property for the setter, so that Changed event is raised.</remarks>
         public virtual bool Expanded
         {
-            get { return m_expanded; }
+            get
+            {
+                if (Target.Type is MissingElementType)
+                    return false;
+                return m_expanded;
+            }
             set
             {
                 if (value != m_expanded)
                 {
-                    m_expanded = value;
-                    OnChanged(EventArgs.Empty);
+                    if (!(Target.Type is MissingElementType))
+                    {
+                        m_expanded = value;
+                        OnChanged(EventArgs.Empty);
+                    }
                 }
             }
         }
@@ -298,7 +403,7 @@ namespace CircuitEditorSample
         /// Gets the group's (subgraph's) internal edges</summary>
         IEnumerable<Connection> ICircuitGroupType<Module, Connection, ICircuitPin>.SubEdges
         {
-            get { return m_group != null ? m_group.SubEdges : EmptyEnumerable<Connection>.Instance;  }
+            get { return m_group != null ? m_group.SubEdges : EmptyEnumerable<Connection>.Instance; }
         }
 
         /// <summary>
@@ -341,7 +446,7 @@ namespace CircuitEditorSample
         private void Target_ChildRemoved(object sender, ChildEventArgs e)
         {
             OnChanged(EventArgs.Empty);
-          
+
         }
 
 

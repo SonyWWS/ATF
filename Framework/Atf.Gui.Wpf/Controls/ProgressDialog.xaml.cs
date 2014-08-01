@@ -12,7 +12,7 @@ namespace Sce.Atf.Wpf.Controls
 {
     /// <summary>
     /// Interaction logic for ProgressDialog.xaml to display progress to the user</summary>
-    public partial class ProgressDialog : Window
+    public partial class ProgressDialog : CommonDialog
     {
         /// <summary>
         /// Constructor</summary>
@@ -33,7 +33,7 @@ namespace Sce.Atf.Wpf.Controls
 
             // If this close is due to Close button/cancel button/ Alt+F4
             // then DialogResult will not be set
-            if (!DialogResult.HasValue)
+            if (DialogResult == false && !m_runWorkerComplete)
             {
                 if (vm.Cancellable)
                 {
@@ -50,14 +50,14 @@ namespace Sce.Atf.Wpf.Controls
                 if (vm != null)
                 {
                     vm.RunWorkerCompleted -= DataContext_RunWorkerCompleted;
+                    m_runWorkerComplete = false;
                 }
             }
         }
 
-        #region Event Handlers
-
         private void ProgressDialog_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            m_runWorkerComplete = false;
             var vm = DataContext as ProgressViewModel;
             if (vm != null)
             {
@@ -74,6 +74,7 @@ namespace Sce.Atf.Wpf.Controls
         private void DataContext_RunWorkerCompleted(object sender, EventArgs e)
         {
             var vm = (ProgressViewModel)sender;
+            m_runWorkerComplete = true;
             DialogResult = vm.Error == null && !vm.Cancelled;
         }
 
@@ -81,8 +82,6 @@ namespace Sce.Atf.Wpf.Controls
         {
             Close();
         }
-
-        #endregion
 
         private void TrySetCancellable()
         {
@@ -99,6 +98,7 @@ namespace Sce.Atf.Wpf.Controls
             }
         }
 
+        private bool m_runWorkerComplete;
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x80000;
         [DllImport("user32.dll", SetLastError = true)]

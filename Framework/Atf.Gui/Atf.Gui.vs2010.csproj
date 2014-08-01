@@ -26,6 +26,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>
     </NoWarn>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -84,12 +86,23 @@
     <Compile Include="Applications\CommandId.cs" />
     <Compile Include="Applications\CommandServiceBase.cs" />
     <Compile Include="Applications\CommandState.cs" />
+    <Compile Include="Applications\Commands\ListChangeCommand.cs" />
+    <Compile Include="Applications\Commands\ListInsertCommand.cs" />
+    <Compile Include="Applications\Commands\ListRemoveCommand.cs" />
     <Compile Include="Applications\CommandVisibility.cs" />
     <Compile Include="Applications\ContentTypeService.cs" />
+    <Compile Include="Applications\DirectoryWatcherService.cs" />
     <Compile Include="Applications\DocumentClosingEventArgs.cs" />
     <Compile Include="Applications\DocumentEventType.cs" />
+    <Compile Include="Applications\FileWatcherService.cs" />
+    <Compile Include="Applications\HelpAboutCommand.cs" />
     <Compile Include="Applications\IColoringContext.cs" />
+    <Compile Include="Applications\IDirectoryWatcherService.cs" />
     <Compile Include="Applications\IDockStateProvider.cs" />
+    <Compile Include="Applications\IFileDialogService.cs" />
+    <Compile Include="Applications\IHelpContext.cs" />
+    <Compile Include="Applications\ILastHitAware.cs" />
+    <Compile Include="Applications\IMessageBoxService.cs" />
     <Compile Include="Applications\IOscService.cs" />
     <Compile Include="Applications\IPinnable.cs" />
     <Compile Include="Applications\ISelectionPathProvider.cs" />
@@ -97,6 +110,10 @@
     <Compile Include="Applications\ISubSelectionContext.cs" />
     <Compile Include="Applications\IWindowLayoutService.cs" />
     <Compile Include="Applications\LemurOscService.cs" />
+    <Compile Include="Applications\Listers\FilteredTreeView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Applications\Listers\IndependentFilteredTreeView.cs" />
     <Compile Include="Applications\Listers\ITreeListView.cs" />
     <Compile Include="Applications\DocumentEventArgs.cs" />
     <Compile Include="Applications\NetworkTargetServices\Deci4pTargetProvider.cs">
@@ -114,7 +131,10 @@
     <Compile Include="Applications\OscService.cs" />
     <Compile Include="Applications\PinnableActiveCollection.cs" />
     <Compile Include="Applications\ScriptingService.cs" />
+    <Compile Include="Applications\SettingsServiceBase.cs" />
     <Compile Include="Applications\StandardDockAreas.cs" />
+    <Compile Include="Applications\StandardFileCommands.cs" />
+    <Compile Include="Applications\VersionControl\SourceControlCommandsBase.cs" />
     <Compile Include="Applications\VersionControl\SourceControlFileInfo.cs" />
     <Compile Include="Applications\StandardEditHistoryCommands.cs" />
     <Compile Include="Applications\DocumentClientInfo.cs" />
@@ -150,6 +170,15 @@
     <Compile Include="Applications\WebServices\Web References\com.scea.ship.versionCheck\VersionCheckerService.cs" />
     <Compile Include="Applications\WindowLayoutService.cs" />
     <Compile Include="Applications\WindowLayoutServiceCommandsBase.cs" />
+    <Compile Include="AssemblyBannerAttribute.cs" />
+    <Compile Include="Collections\AdaptableObservableCollection.cs" />
+    <Compile Include="Collections\AdaptingCollection.cs" />
+    <Compile Include="Collections\CollectionChangedListener.cs" />
+    <Compile Include="Collections\LinkedListExtensions.cs" />
+    <Compile Include="Collections\ObservableCollectionAdapter.cs" />
+    <Compile Include="Collections\PriorityQueue.cs" />
+    <Compile Include="Collections\ReferenceCollectionAdapter.cs" />
+    <Compile Include="Collections\SortedObservableCollection.cs" />
     <Compile Include="Controls\Adaptable\D2dDiagramTheme.cs" />
     <Compile Include="Controls\Adaptable\DiagramBorder.cs" />
     <Compile Include="Controls\Adaptable\DiagramDrawingStyle.cs" />
@@ -172,6 +201,7 @@
     <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupPin.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\ICircuitContainer.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\LayerFolder.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\MissingElementType.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\Pin.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\PinTarget.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\Prototype.cs" />
@@ -213,8 +243,10 @@
     <Compile Include="Controls\PropertyEditing\BoundedFloatConverter.cs" />
     <Compile Include="Controls\PropertyEditing\BoundedIntConverter.cs" />
     <Compile Include="Controls\PropertyEditing\BoundPropertyDescriptor.cs" />
+    <Compile Include="Controls\PropertyEditing\CustomizeAttribute.cs" />
     <Compile Include="Controls\PropertyEditing\ExclusiveEnumTypeConverter.cs" />
     <Compile Include="Controls\PropertyEditing\IDynamicTypeDescriptor.cs" />
+    <Compile Include="Controls\PropertyEditing\IntEnumTypeConverter.cs" />
     <Compile Include="Controls\PropertyEditing\IPropertyCustomSorter.cs" />
     <Compile Include="Controls\PropertyEditing\IPropertyEditingControlOwner.cs" />
     <Compile Include="Controls\PropertyEditing\EnumTypeConverter.cs" />
@@ -277,11 +309,16 @@
     <Compile Include="DirectWrite\LineMetrics.cs" />
     <Compile Include="DirectWrite\TextEditor.cs" />
     <Compile Include="DirectWrite\HitTestMetrics.cs" />
+    <Compile Include="Dom\BindingAdapter.cs" />
     <Compile Include="Dom\ChildAttributeCollectionPropertyDescriptor.cs" />
+    <Compile Include="Dom\DomNodeHelpAdapter.cs" />
+    <Compile Include="Dom\DomNodeTypeExtensions.cs" />
     <Compile Include="Dom\GlobalHistoryContext.cs" />
     <Compile Include="Dom\HistoryContext.cs" />
+    <Compile Include="Dom\ListContext.cs" />
     <Compile Include="Dom\MultipleHistoryContext.cs" />
     <Compile Include="Dom\MultiPropertyDescriptor.cs" />
+    <Compile Include="Dom\ObservableCustomTypeDescriptorNodeAdapter.cs" />
     <Compile Include="Dom\SelectionContext.cs" />
     <Compile Include="Dom\EditingContext.cs" />
     <Compile Include="Dom\NodeTypePaletteItem.cs" />
@@ -293,7 +330,7 @@
     <Compile Include="Applications\Listers\ILayeringContext.cs" />
     <Compile Include="Applications\IHierarchicalInsertionContext.cs" />
     <Compile Include="Applications\Listers\ItemInfo.cs" />
-    <Compile Include="Applications\SetPropertyCommand.cs" />
+    <Compile Include="Applications\Commands\SetPropertyCommand.cs" />
     <Compile Include="Applications\StandardControlGroup.cs" />
     <Compile Include="Applications\Listers\IItemView.cs" />
     <Compile Include="Controls\PropertyEditing\ColorEditor.cs" />
@@ -303,6 +340,7 @@
     </Compile>
     <Compile Include="Dom\Template.cs" />
     <Compile Include="Dom\TemplateFolder.cs" />
+    <Compile Include="EnumUtil.cs" />
     <Compile Include="FileFilterBuilder.cs" />
     <Compile Include="Applications\PropertyEventArgs.cs" />
     <Compile Include="Controls\PropertyEditing\PropertyErrorEventArgs.cs" />
@@ -323,6 +361,9 @@
     <Compile Include="Input\MouseEventArgs.cs" />
     <Compile Include="Input\PreviewKeyDownEventArgs.cs" />
     <Compile Include="IPerformanceTarget.cs" />
+    <Compile Include="Models\AdapterViewModel.cs" />
+    <Compile Include="Models\CheckedTreeNode.cs" />
+    <Compile Include="ObservableUtil.cs" />
     <Compile Include="Rendering\AxisSystemType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -442,11 +483,11 @@
     <Compile Include="Dom\ChildPropertyDescriptor.cs" />
     <Compile Include="IAnnotatedParams.cs" />
     <Compile Include="Dom\PropertyDescriptor.cs" />
-    <Compile Include="Applications\Command.cs" />
+    <Compile Include="Applications\Commands\Command.cs" />
     <Compile Include="Applications\CommandCount.cs" />
     <Compile Include="Applications\CommandHistory.cs" />
     <Compile Include="Applications\CommandInfo.cs" />
-    <Compile Include="Applications\CompositeCommand.cs" />
+    <Compile Include="Applications\Commands\CompositeCommand.cs" />
     <Compile Include="Applications\ContextRegistry.cs" />
     <Compile Include="Applications\ICommandClient.cs" />
     <Compile Include="Applications\ICommandService.cs" />
@@ -454,7 +495,7 @@
     <Compile Include="Applications\IContextMenuCommandProvider.cs" />
     <Compile Include="Applications\IHistoryContext.cs" />
     <Compile Include="Applications\MenuInfo.cs" />
-    <Compile Include="Applications\SetSelectionCommand.cs" />
+    <Compile Include="Applications\Commands\SetSelectionCommand.cs" />
     <Compile Include="Applications\StandardCommand.cs" />
     <Compile Include="Applications\StandardCommandGroup.cs" />
     <Compile Include="Applications\StandardLockCommands.cs" />
@@ -763,6 +804,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AtfIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\package_error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

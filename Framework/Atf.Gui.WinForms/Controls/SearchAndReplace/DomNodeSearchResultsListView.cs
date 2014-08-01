@@ -30,7 +30,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Constructor</summary>
         /// <param name="contextRegistry">Interface to dataset that has been been searched</param>
-        public DomNodeSearchResultsListView(IContextRegistry contextRegistry) 
+        public DomNodeSearchResultsListView(IContextRegistry contextRegistry)
             : base(contextRegistry)
         {
             // Create columns for the items and subitems.

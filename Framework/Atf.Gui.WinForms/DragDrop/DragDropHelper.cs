@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     /// <summary>
     /// Provides a wrapper fror the CLSID_DragDropHelper class found in shell32.dll

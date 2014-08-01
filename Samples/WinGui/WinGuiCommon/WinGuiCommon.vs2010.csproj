@@ -36,6 +36,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
@@ -43,6 +45,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -51,9 +54,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editor.cs" />
+    <Compile Include="EditorBase.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +68,8 @@
     <Compile Include="WinGuiCommonData.cs" />
     <Compile Include="WinGuiCommonDataContext.cs" />
     <Compile Include="WinGuiCommonDataDocument.cs" />
+    <Compile Include="WinGuiWpfDataContext.cs" />
+    <Compile Include="WinGuiWpfDataDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
@@ -73,6 +79,10 @@
     <ProjectReference Include="..\..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
       <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
       <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\Atf.Gui.Wpf\Atf.Gui.Wpf.vs2010.csproj">
+      <Project>{050fc659-553f-4911-a609-5ba1be4edbf8}</Project>
+      <Name>Atf.Gui.Wpf.vs2010</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
       <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>

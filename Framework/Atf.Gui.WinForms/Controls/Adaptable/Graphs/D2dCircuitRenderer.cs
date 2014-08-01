@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.Rendering;
@@ -52,7 +52,49 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_documentRegistry.ActiveDocumentChanging += DocumentRegistryOnActiveDocumentChanging;
                 m_documentRegistry.ActiveDocumentChanged += DocumentRegistryOnActiveDocumentChanged;
             }
+
+            RoundedBorder = true;
         }
+
+        /// <summary>
+        /// Specifies the pin drawing style </summary>
+        public enum PinStyle
+        {
+            Default, // non-filled, location adjacent to border but internal
+            OnBorderFilled,
+        }
+
+        /// <summary>
+        /// Gets or sets the pin drawing style</summary>
+        public PinStyle PinDrawStyle
+        {
+            get { return m_pinDrawStyle; }
+            set { m_pinDrawStyle = value; }
+        }
+
+        /// <summary>
+        /// Gets the string to use on the title bar of the circuit element</summary>    
+        protected virtual string GetElementTitle(TElement element)
+        {
+            return element.Type.Name;
+        }
+
+        /// <summary>
+        /// Gets the display name of the circuit element, which is drawn below and outside the circuit element. 
+        /// Returns null or the empty string to not draw anything in this place</summary>    
+        protected virtual string GetElementDisplayName(TElement element)
+        {
+            return element.Name;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the background area of the title should be filled</summary>
+        public bool TitleBackgroundFilled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether edges of elements have a rounded 
+        /// rather than a square or sharp appearance</summary>
+        public bool RoundedBorder { set; get; }
 
         /// <summary>
         /// Gets or sets the threshold size that shows the details in a circuit element</summary>
@@ -118,7 +160,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (e.Item.Is<ICircuitElementType>())
                 Invalidate(e.Item.Cast<ICircuitElementType>());
         }
-              
+
         /// <summary>
         /// Invalidates cached info for element type name</summary>
         /// <param name="elementType">Element type to invalidate</param>
@@ -153,12 +195,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     Draw(element, g, false);
                     DrawOutline(element, m_theme.GetOutLineBrush(style), g);
                     break;
- 
+
                 case DiagramDrawingStyle.Ghosted:
                 case DiagramDrawingStyle.Hidden:
                     DrawGhost(element, g);
                     break;
-            }            
+            }
         }
 
         /// <summary>
@@ -172,10 +214,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             TPin outputPin = edge.FromRoute;
             if (RectangleSelectsWires && style == DiagramDrawingStyle.LastSelected) // last selected is not well defined in multi-edge selection   
                 style = DiagramDrawingStyle.Selected;
-             
+
             D2dBrush pen = (style == DiagramDrawingStyle.Normal) ? GetPen(inputPin) : m_theme.GetOutLineBrush(style);
             if (edge.Is<IEdgeStyleProvider>())
-                DrawEdgeUsingStyleInfo(edge.Cast<IEdgeStyleProvider>(), pen, g);                       
+                DrawEdgeUsingStyleInfo(edge.Cast<IEdgeStyleProvider>(), pen, g);
             else
                 DrawWire(edge.FromNode, outputPin, edge.ToNode, inputPin, g, pen);
         }
@@ -187,14 +229,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Bezier)
                 {
                     var curve = edgeInfo.EdgeData.As<BezierCurve2F>();
-                     g.DrawBezier(curve.P1, curve.P2, curve.P3, curve.P4, pen, edgeInfo.Thickness);
+                    g.DrawBezier(curve.P1, curve.P2, curve.P3, curve.P4, pen, edgeInfo.Thickness);
                 }
                 else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Line)
                 {
                     var line = edgeInfo.EdgeData.As<PointF[]>();
-                      if (line != null)
-                          g.DrawLine(line[0], line[1], pen, edgeInfo.Thickness);
-                  }
+                    if (line != null)
+                        g.DrawLine(line[0], line[1], pen, edgeInfo.Thickness);
+                }
                 else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Polyline)
                 {
                     var lines = edgeInfo.EdgeData.As<PointF[]>();
@@ -210,12 +252,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
                 }
                 else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.None)
-                     return;
- 
+                    return;
+
             }
         }
 
-  
+
         /// <summary>
         /// Gets group pin position in group local space</summary>
         /// <param name="groupPin">Group pin</param>
@@ -223,7 +265,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="inputSide">True if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
         /// <returns>Group pin position</returns>
-        public Point GetGroupPinPosition(ICircuitGroupType<TElement, TWire, TPin> group, ICircuitGroupPin<TElement> groupPin,  bool inputSide, D2dGraphics g)
+        public Point GetGroupPinPosition(ICircuitGroupType<TElement, TWire, TPin> group, ICircuitGroupPin<TElement> groupPin, bool inputSide, D2dGraphics g)
         {
 
             if (inputSide) // group pin box on the left edge
@@ -250,12 +292,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="inputSide">True if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
         /// <returns>Pin position</returns>
-        public Point GetPinPosition(TElement element,  int pinIndex, bool inputSide, D2dGraphics g)
+        public Point GetPinPosition(TElement element, int pinIndex, bool inputSide, D2dGraphics g)
         {
             if (inputSide) // group pin box on the left edge
             {
                 Point op = element.Bounds.Location;
                 op.Y += GetPinOffset(element, pinIndex, true);
+                if (m_pinDrawStyle == PinStyle.OnBorderFilled)
+                    op.X -= m_pinSize / 2;
                 return op;
             }
             else
@@ -263,6 +307,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 ElementTypeInfo info = GetElementTypeInfo(element, g);
                 Point ip = element.Bounds.Location;
                 ip.X += info.Size.Width;
+                if (m_pinDrawStyle == PinStyle.OnBorderFilled)
+                    ip.X += m_pinSize / 2;
                 ip.Y += GetPinOffset(element, pinIndex, false);
                 return ip;
 
@@ -276,7 +322,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="inputElement">Destination element, or null</param>
         /// <param name="inputPin">Destination pin, or null</param>
         /// <param name="label">Edge label</param>
-        /// <param name="endPoint">Endpoint to substitute for source or destination, if either is null</param>
+        /// <param name="endPoint">Endpoint to substitute for source or destination (in client coords), if either is null</param>
         /// <param name="g">Graphics object</param>
         public override void Draw(
             TElement outputElement,
@@ -292,7 +338,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 // dragging from output to endPoint
                 DrawWire(outputElement, outputPin, endPoint, true, g);
             }
-            else if (outputElement == null || outputPin == null) 
+            else if (outputElement == null || outputPin == null)
             {
                 // dragging from input to endPoint
                 DrawWire(inputElement, inputPin, endPoint, false, g);
@@ -311,8 +357,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="inputElement">Destination element, or null</param>
         /// <param name="inputPin">Destination pin, or null</param>
         /// <param name="label">Edge label</param>
-        /// <param name="startPoint">Startpoint for source</param>
-        /// <param name="endPoint">Endpoint for source</param>
+        /// <param name="startPoint">Start point, in client coordinates</param>
+        /// <param name="endPoint">End point, in client coordinates</param>
         /// <param name="g">Graphics object</param>
         public override void DrawPartialEdge(
             TElement outputElement,
@@ -339,7 +385,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             {
                 end = Matrix3x2F.TransformPoint(inverse, endPoint);
             }
-        
+
             DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
             DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
         }
@@ -353,8 +399,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public override RectangleF GetBounds(TElement element, D2dGraphics g)
         {
             RectangleF result = GetElementBounds(element, g);
-            result.Height += m_pinMargin + m_rowSpacing; // label at bottom
-            return result;                        
+
+            // Add in the label at bottom. Keep in sync with CircuitEditingContext.Resize().
+            result.Height += LabelHeight;
+
+            return result;
         }
 
         /// <summary>
@@ -369,13 +418,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             D2dGraphics g)
         {
             var pickedNodes = base.Pick(graph, rect, g).ToArray(); // base version picks nodes only
-            if (!RectangleSelectsWires || pickedNodes.Length >0)
+            if (!RectangleSelectsWires || pickedNodes.Length > 0)
             {
                 if (pickedNodes.Length == 1 && pickedNodes[0].Is<ICircuitGroupType<TElement, TWire, TPin>>())
                 {
                     var pickedGroup = pickedNodes[0].Cast<ICircuitGroupType<TElement, TWire, TPin>>();
                     var pickedSubItems = PickSubItems(pickedGroup, rect, g).ToArray();
-                    if (pickedSubItems.Length >0) // try to pick the sub-nodes expanded to the lowest level
+                    if (pickedSubItems.Length > 0) // try to pick the sub-nodes expanded to the lowest level
                     {
                         return pickedSubItems;
                     }
@@ -384,9 +433,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             List<object> pickedEdges = new List<object>();
-    
+
             // only marquee select edges if no nodes are selected
-            if (RectangleSelectsWires )
+            if (RectangleSelectsWires)
             {
                 foreach (TWire edge in graph.Edges)
                 {
@@ -408,7 +457,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public override GraphHitRecord<TElement, TWire, TPin> Pick(
             IGraph<TElement, TWire, TPin> graph, TWire priorityEdge, PointF p, D2dGraphics g)
         {
-            return Pick(graph.Nodes.Reverse(), graph.Edges, priorityEdge, p, g);         
+            return Pick(graph.Nodes.Reverse(), graph.Edges, priorityEdge, p, g);
         }
 
 
@@ -445,7 +494,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            Point pickedInputPos =  new Point();
+            Point pickedInputPos = new Point();
             Point pickedOutputPos = new Point();
             foreach (TElement element in nodes)
             {
@@ -477,7 +526,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
 
                     if (pickedInput != null)
-                        pickedInputPos = GetPinPosition(pickedElement, pickedInput.Index,  true, g);
+                        pickedInputPos = GetPinPosition(pickedElement, pickedInput.Index, true, g);
                     if (pickedOutput != null)
                         pickedOutputPos = GetPinPosition(pickedElement, pickedOutput.Index, false, g);
                 }
@@ -500,24 +549,24 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                       TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
                 if (labelBounds.Contains(p))
                     return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, label);
-               
+
 
                 if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
                 {
                     var hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
                     if (hitRecord != null)
                         return hitRecord;
-                    
+
                     // check title bar
-                    var titkeBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight );
+                    var titkeBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
                     if (titkeBar.Contains(p))
                         return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
-         
 
-                    if (pickedWire == null && pickedOutput == null && pickedInput==null) // check border lastly
+
+                    if (pickedWire == null && pickedOutput == null && pickedInput == null) // check border lastly
                     {
                         var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
-                        if(border.Contains(p))
+                        if (border.Contains(p))
                             borderPart.Border = DiagramBorder.BorderType.Left;
                         else
                         {
@@ -536,17 +585,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                         borderPart.Border = DiagramBorder.BorderType.Bottom;
                                 }
                             }
-                        }                                       
+                        }
                     }
 
-                    subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g, 
-                        out pickedSubInput, out pickedSubOutput);                 
+                    subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g,
+                        out pickedSubInput, out pickedSubOutput);
                 }
             }
 
             if (pickedSubInput != null)
             {
-                pickedInput =  pickedSubInput;
+                pickedInput = pickedSubInput;
                 pickedInputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubInput.Index, true, g);
                 pickedInputPos.Offset(ParentWorldOffset(subPick.First));
             }
@@ -561,11 +610,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (pickedElement != null && pickedWire == null && pickedOutput == null && pickedInput == null)
                 result.Part = borderPart.Border == DiagramBorder.BorderType.None ? null : borderPart;
             result.DefaultPart = label;
-            result.SubItem = subPick.First ==null? null: subPick.First.First();
+            result.SubItem = subPick.First == null ? null : subPick.First.First();
             result.SubPart = subPick.Second;
             result.ToRoutePos = pickedInputPos;
             result.FromRoutePos = pickedOutputPos;
-          
+
             result.HitPathInversed = subPick.First;
             return result;
         }
@@ -577,7 +626,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="g">D2dGraphics object</param>
         /// <returns>True iff edge hits point</returns>
         protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g)
-        {            
+        {
             ElementTypeInfo fromInfo = GetElementTypeInfo(edge.FromNode, g);
             TPin inputPin = edge.ToRoute;
             TPin outputPin = edge.FromRoute;
@@ -599,10 +648,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 new Vec2F(x2, y2));
 
             Vec2F hitPoint = new Vec2F();
-            return BezierCurve2F.Pick(curve, new Vec2F(p.X,p.Y), m_theme.PickTolerance, ref hitPoint);
+            return BezierCurve2F.Pick(curve, new Vec2F(p.X, p.Y), m_theme.PickTolerance, ref hitPoint);
         }
 
-                
+
         private void theme_Redraw(object sender, EventArgs e)
         {
             m_elementTypeCache.Clear(); // invalidate cached info
@@ -610,11 +659,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         private void Draw(TElement element, D2dGraphics g, bool outline)
-        {            
+        {
             ElementTypeInfo info = GetElementTypeInfo(element, g);
             Point p = element.Bounds.Location;
             p.Offset(WorldOffset(m_graphPath));
-            
+
             RectangleF bounds = new RectangleF(p, info.Size);
             ICircuitElementType type = element.Type;
 
@@ -652,31 +701,59 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             float scaleX = g.Transform.M11; // assume no rotation.
-            bool useRoundedRect = (scaleX * m_elementBody.RadiusX) > 3.0f;
-            bool drawPins =  !groupExpanded  && (scaleX * m_pinSize) > DetailsThresholdSize;
+            bool useRoundedRect = RoundedBorder ? (scaleX * m_elementBody.RadiusX) > 3.0f : false;
+            bool drawPins = !groupExpanded && (scaleX * m_pinSize) > DetailsThresholdSize;
             bool drawText = (m_theme.TextFormat.FontHeight * scaleX) > DetailsThresholdSize;
-            int titleHeight = m_rowSpacing + m_pinMargin;
+            int titleHeight = TitleHeight;
 
             m_elementBody.Rect = bounds;
-            var fillBrush = m_theme.GetCustomOrDefaultBrush(type.Name) as D2dLinearGradientBrush;
-            fillBrush.StartPoint = bounds.Location;
-            fillBrush.EndPoint = new PointF(bounds.Left, bounds.Bottom);
+
+            var titleRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, titleHeight);
+
+            var fillBrush = m_theme.GetCustomOrDefaultBrush(type.Name);
+            var gradientBrush = fillBrush as D2dLinearGradientBrush;
+            if (gradientBrush != null)
+            {
+                gradientBrush.StartPoint = bounds.Location;
+                gradientBrush.EndPoint = new PointF(bounds.Left, bounds.Bottom);
+            }
+            else
+                fillBrush = m_theme.FillBrush;
+
             if (useRoundedRect)
             {
                 g.FillRoundedRectangle(m_elementBody, fillBrush);
+                if (TitleBackgroundFilled)
+                {
+                    var titleBody = m_elementBody;
+                    titleBody.Rect = new RectangleF(bounds.X, bounds.Y, bounds.Width, titleHeight);
+                    g.FillRoundedRectangle(titleBody, m_theme.GetFillTitleBrush(element.Type.Name));
+                    // We don't want the lower part of the title rect rounded. D2d does not support half-rounded rect, fill again
+                    var lowerRect = new RectangleF(bounds.X, bounds.Y + titleHeight * 0.5f, bounds.Width, titleHeight * 0.5f);
+                    g.FillRectangle(lowerRect, m_theme.GetFillTitleBrush(element.Type.Name));
+
+                    g.DrawRoundedRectangle(m_elementBody, m_theme.GetFillTitleBrush(element.Type.Name));
+                }
                 if (outline)
                     g.DrawRoundedRectangle(m_elementBody, m_theme.OutlineBrush);
             }
             else
             {
                 g.FillRectangle(bounds, fillBrush);
+                if (TitleBackgroundFilled)
+                {
+                    g.FillRectangle(titleRect, m_theme.GetFillTitleBrush(element.Type.Name));
+                    g.DrawRectangle(bounds, m_theme.GetFillTitleBrush(element.Type.Name), 1);
+                }
                 if (outline)
                     g.DrawRectangle(bounds, m_theme.OutlineBrush);
             }
-            g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
-            
+
+            if (!TitleBackgroundFilled)
+                g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
+
             if (drawPins)
-            {                                                
+            {
                 int pinY = titleHeight + m_pinMargin;
                 foreach (TPin inputPin in type.Inputs)
                 {
@@ -684,7 +761,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
                     {
                         var pen = GetPen(inputPin);
-                        g.DrawRectangle(new RectangleF(p.X, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen, 1.0f);
+                        if (PinDrawStyle == PinStyle.Default)
+                            g.DrawRectangle(new RectangleF(p.X, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen, 1.0f);
+                        else if (PinDrawStyle == PinStyle.OnBorderFilled)
+                            g.FillRectangle(new RectangleF(p.X - m_pinSize * 0.5f, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen);
                         var pinText = inputPin.Name;
                         if (!groupExpanded)
                             pinText = TruncatePinText(pinText);
@@ -703,9 +783,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
                     {
                         var pen = GetPen(outputPin);
-                        g.DrawRectangle(
-                            new RectangleF(bounds.Right - m_pinSize, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize),
-                            pen, 1.0f);
+                        if (PinDrawStyle == PinStyle.Default)
+                            g.DrawRectangle(new RectangleF(bounds.Right - m_pinSize, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen, 1.0f);
+                        else if (PinDrawStyle == PinStyle.OnBorderFilled)
+                            g.FillRectangle(new RectangleF(bounds.Right - m_pinSize * 0.5f, p.Y + pinY + m_pinOffset, m_pinSize, m_pinSize), pen);
+
                         var pinText = outputPin.Name;
                         if (!groupExpanded)
                             pinText = TruncatePinText(pinText);
@@ -731,23 +813,44 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     g.DrawBitmap(bitMap, new RectangleF(p.X + info.Interior.X, p.Y + info.Interior.Y, info.Interior.Width, info.Interior.Height), 1, D2dBitmapInterpolationMode.Linear);
 
             }
-            
+
             if (drawText)
             {
-                g.DrawText(type.Name, m_theme.TextFormat, new PointF(p.X + m_pinMargin + 2* ExpanderSize + 1, p.Y + m_pinMargin + 1), m_theme.TextBrush);
-                string name = element.Name;
-                if (!string.IsNullOrEmpty(name))
+                string title = GetElementTitle(element);
+                if (!string.IsNullOrEmpty(title))
                 {
-                    RectangleF alignRect = new RectangleF(bounds.Left - MaxNameOverhang, bounds.Bottom + m_pinMargin, bounds.Width + 2 * MaxNameOverhang, m_rowSpacing);
+                    var halignment = m_theme.TextFormat.TextAlignment;
+                    var valignment = m_theme.TextFormat.ParagraphAlignment;
+
+                    m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
+                    m_theme.TextFormat.ParagraphAlignment = D2dParagraphAlignment.Center;
+
+                    int titleOffset = 0;
+                    if (group != null)
+                        titleOffset += 2 * ExpanderSize;
+                    RectangleF textRect = new RectangleF(titleRect.X + titleOffset, titleRect.Y, titleRect.Width - titleOffset, titleRect.Height);
+                    g.DrawText(title, m_theme.TextFormat, textRect, m_theme.TextBrush);
+
+                    m_theme.TextFormat.TextAlignment = halignment;
+                    m_theme.TextFormat.ParagraphAlignment = valignment;
+                }
+
+                string displayName = GetElementDisplayName(element);
+                if (!string.IsNullOrEmpty(displayName))
+                {
+
+                    RectangleF alignRect = new RectangleF(bounds.Left - MaxNameOverhang, bounds.Bottom + m_pinMargin,
+                        bounds.Width + 2 * MaxNameOverhang, m_rowSpacing);
                     var textAlignment = m_theme.TextFormat.TextAlignment;
                     m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
-                    g.DrawText(name, m_theme.TextFormat, alignRect, m_theme.TextBrush);
+                    g.DrawText(displayName, m_theme.TextFormat, alignRect, m_theme.TextBrush);
                     m_theme.TextFormat.TextAlignment = textAlignment;
+
                 }
             }
 
             if (element.Is<IReference<TElement>>())
-                g.DrawLink(p.X + bounds.Width -  2 * ExpanderSize, p.Y + 2 * m_pinMargin + 1, ExpanderSize, m_theme.HotBrush);
+                g.DrawLink(p.X + bounds.Width - 2 * ExpanderSize, p.Y + 2 * m_pinMargin + 1, ExpanderSize, m_theme.HotBrush);
 
             if (group != null)
             {
@@ -813,7 +916,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         Draw(subNode, g, false);
                 }
                 else
-                Draw(subNode, customStyle, g);
+                    Draw(subNode, customStyle, g);
             }
 
             // draw sub-edges after recursively draw sub-nodes
@@ -860,7 +963,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             bounds.Inflate(pickTolerance, pickTolerance);
             return bounds.Contains(p.X, p.Y);
         }
-    
+
 
         private void DrawExpandedGroupPins(TElement element, D2dGraphics g)
         {
@@ -879,14 +982,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     x1 = op.X;
                     y1 = op.Y + grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + subOffset.Y;
                     g.DrawRectangle(new RectangleF(x1 - m_pinSize / 2, y1 - m_pinSize / 2, m_pinSize, m_pinSize),
-                                    grpPin.Info.Color, 1.0f, null );
+                                    grpPin.Info.Color, 1.0f, null);
 
                     // draw virtual link from the subnode to the group pin box when there are incoming wires
                     if (!grpPin.Info.ExternalConnected && CircuitDefaultStyle.ShowVirtualLinks)
                     {
                         Point ip = grpPin.InternalElement.Bounds.Location;
                         ip.Offset(WorldOffset(m_graphPath));
-                        int y2 = ip.Y + GetPinOffset(grpPin.InternalElement, grpPin.InternalPinIndex, true) ;
+                        int y2 = ip.Y + GetPinOffset(grpPin.InternalElement, grpPin.InternalPinIndex, true);
                         int x2 = ip.X;
 
                         DrawWire(g, SubGraphPinBrush, x1, y1, x2, y2, 1.0f, null);
@@ -895,7 +998,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 }
 
-                foreach (var pin  in group.Outputs)
+                foreach (var pin in group.Outputs)
                 {
                     var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
                     ElementTypeInfo info = GetElementTypeInfo(element, g);
@@ -930,20 +1033,24 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ElementTypeInfo info = GetElementTypeInfo(element, g);
             Point p = element.Bounds.Location;
             p.Offset(WorldOffset(m_graphPath));
-            Rectangle bounds = new Rectangle(p, info.Size);            
+            Rectangle bounds = new Rectangle(p, info.Size);
             m_elementBody.Rect = bounds;
-            g.FillRoundedRectangle(m_elementBody, m_theme.GhostBrush);            
+            if (RoundedBorder)
+                g.FillRoundedRectangle(m_elementBody, m_theme.GhostBrush);
+            else
+                g.FillRectangle(bounds, m_theme.GhostBrush);
         }
 
         private void DrawOutline(TElement element, D2dBrush pen, D2dGraphics g)
-        {            
+        {
             ElementTypeInfo info = GetElementTypeInfo(element, g);
             Point p = element.Bounds.Location;
             RectangleF bounds = new RectangleF(p, info.Size);
             bounds.Offset(WorldOffset(m_graphPath));
+            bounds.Inflate(1, 1);
 
             float scaleX = g.Transform.M11; // assume no rotation.
-            bool useRoundedRect = (scaleX * m_elementBody.RadiusX) > 3.0f;
+            bool useRoundedRect = RoundedBorder ? (scaleX * m_elementBody.RadiusX) > 3.0f : false;
             if (useRoundedRect)
             {
                 m_elementBody.Rect = bounds;
@@ -979,7 +1086,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ElementTypeInfo info = GetElementTypeInfo(element, g);
             int pinX;
             if (RouteConnecting == null)
-                pinX = element.Bounds.X + info.Size.Width - m_pinSize;
+            {
+                if (PinDrawStyle == PinStyle.OnBorderFilled)
+                    pinX = element.Bounds.X + info.Size.Width - m_pinSize / 2;
+                else
+                    pinX = element.Bounds.X + info.Size.Width - m_pinSize;
+            }
             else
                 pinX = element.Bounds.X + info.Size.Width / 2;
             return PickPin(element, false, pinX, element.Bounds.Location.Y, info, p);
@@ -1047,7 +1159,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                     var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement.Cast<TElement>(), diagExapander);
                     if (stack.Count > 1)
-                    {                    
+                    {
                         result.SubItem = current;
                         result.HitPathInversed = stack;
                     }
@@ -1069,7 +1181,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         goDown = true;
                         break;
                     }
-                   
+
                 }
             } while (goDown);
 
@@ -1091,11 +1203,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             var subgroup_stack = new Stack<TElement>();
             subgroup_stack.Push(pickedElement.Cast<TElement>());
-            
+
             bool goDown;
             do
             {
-                var current = stack.Peek();            
+                var current = stack.Peek();
                 var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
                 goDown = false;
                 foreach (var child in group.SubNodes)
@@ -1109,7 +1221,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         stack.Push(child.Cast<TElement>());
                         if (child.Is<ICircuitGroupType<TElement, TWire, TPin>>())
                         {
-                            subgroup_stack.Push(child.Cast<TElement>());            
+                            subgroup_stack.Push(child.Cast<TElement>());
                             // go down when the child is expanded
                             goDown = child.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded;
                             break;
@@ -1130,8 +1242,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 bounds.Offset(ParentWorldOffset(stack));
                 ElementTypeInfo info = GetElementTypeInfo(subItem, g);
 
-                pickedSubInput = PickPin(subItem, true, (int)bounds.X, (int)bounds.Y, info, p);
-                pickedSubOutput = PickPin(subItem, false, (int)bounds.X + info.Size.Width - m_pinSize, (int)bounds.Y, info, p);
+                if (PinDrawStyle == PinStyle.OnBorderFilled)
+                {
+                    pickedSubInput = PickPin(subItem, true, (int)bounds.X - m_pinSize / 2, (int)bounds.Y, info, p);
+                    pickedSubOutput = PickPin(subItem, false, (int)bounds.X + info.Size.Width - m_pinSize / 2, (int)bounds.Y, info, p);
+
+                }
+                else
+                {
+                    pickedSubInput = PickPin(subItem, true, (int)bounds.X, (int)bounds.Y, info, p);
+                    pickedSubOutput = PickPin(subItem, false, (int)bounds.X + info.Size.Width - m_pinSize, (int)bounds.Y, info, p);
+
+                }
                 result.Second = pickedSubInput ?? pickedSubOutput;
                 if (result.Second == null) // check border lastly
                 {
@@ -1147,7 +1269,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
             return result;
-          
+
         }
 
 
@@ -1159,7 +1281,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             var stack = new Stack<TElement>();
             stack.Push(pickedElement.Cast<TElement>());
-            
+
             var subgroupStack = new Stack<TElement>();
             subgroupStack.Push(pickedElement.Cast<TElement>());
 
@@ -1193,7 +1315,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 subGroup = child.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
                                 ++hitGroups;
                             }
-                           
+
                         }
                     }
                 }
@@ -1217,10 +1339,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             // look it up in the cache
             ICircuitElementType type = element.Type;
+            string title = GetElementTitle(element);
             ElementTypeInfo cachedInfo;
             if (m_elementTypeCache.TryGetValue(type, out cachedInfo))
             {
-                if (cachedInfo.numInputs != type.Inputs.Count || cachedInfo.numOutputs != type.Outputs.Count)
+                if (cachedInfo.numInputs != type.Inputs.Count || cachedInfo.numOutputs != type.Outputs.Count ||
+                    cachedInfo.Title != title)
                 {
                     m_elementTypeCache.Remove(type);
                     Invalidate(type);
@@ -1228,15 +1352,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 else
                     return cachedInfo;
             }
-               
+
 
             // not in cache, recompute
             if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
             {
-                var group = element.Cast < ICircuitGroupType<TElement, TWire, TPin>>();
+                var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
                 if (m_elementTypeCache.TryGetValue(group, out cachedInfo))
                 {
-                    if (cachedInfo.numInputs != group.Inputs.Count || cachedInfo.numOutputs != group.Outputs.Count)
+                    if (cachedInfo.numInputs != group.Inputs.Count || cachedInfo.numOutputs != group.Outputs.Count ||
+                        cachedInfo.Title != title)
                     {
                         m_elementTypeCache.Remove(group);
                         Invalidate(group);
@@ -1244,13 +1369,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     else
                         return cachedInfo;
                 }
-                return GetHierarchicalElementTypeInfo(group,  g);
-            
+                return GetHierarchicalElementTypeInfo(group, g);
+
             }
-  
-            ElementSizeInfo sizeInfo = GetElementSizeInfo(type, g);
+
+            ElementSizeInfo sizeInfo = GetElementSizeInfo(type, g, title);
             var info = new ElementTypeInfo
             {
+                Title = title,
                 Size = sizeInfo.Size,
                 Interior = sizeInfo.Interior,
                 OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
@@ -1266,12 +1392,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>Computes interior and exterior size as well as the x positions of output pins</summary>
         /// <param name="type">Circuit element type</param>
         /// <param name="g">Graphics that can be used for measuring strings</param>
+        /// <param name="title">The string to use on the title bar of the circuit element</param>
         /// <returns>Element size info; cannot be null</returns>
         /// <remarks>Clients using customized rendering should override this method
         /// to adjust sizes accordingly. These sizes are used by drag-from picking.</remarks>
-        protected virtual ElementSizeInfo GetElementSizeInfo(ICircuitElementType type, D2dGraphics g)
-        {     
-            SizeF typeNameSize = g.MeasureText(type.Name, m_theme.TextFormat);
+        protected virtual ElementSizeInfo GetElementSizeInfo(ICircuitElementType type, D2dGraphics g, string title = null)
+        {
+            SizeF typeNameSize = new SizeF();
+            if (title != null)
+                typeNameSize = g.MeasureText(title, m_theme.TextFormat);
+            else
+                g.MeasureText(type.Name, m_theme.TextFormat);
+
             int width = (int)typeNameSize.Width + 2 * m_pinMargin + 4 * ExpanderSize + 1;
 
             IList<ICircuitPin> inputPins = type.Inputs;
@@ -1312,7 +1444,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     imageRight = false;
                 }
-            
+
 
                 if (outputCount > i)
                 {
@@ -1324,8 +1456,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     rowWidth += labelSize.Width + m_pinSize + m_pinMargin;
                 }
 
-                    rowWidth += type.InteriorSize.Width;
-                
+                rowWidth += type.InteriorSize.Width;
+
                 width = Math.Max(width, (int)rowWidth);
             }
 
@@ -1343,17 +1475,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 type.InteriorSize.Height);
 
             for (int i = 0; i < outputLeftX.Length; i++)
-                outputLeftX[i] = width - m_pinMargin - m_pinSize - outputLeftX[i];                
+                outputLeftX[i] = width - m_pinMargin - m_pinSize - outputLeftX[i];
 
             return new ElementSizeInfo(size, interior, outputLeftX);
         }
 
         private ElementTypeInfo GetHierarchicalElementTypeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
-        {     
+        {
             ElementSizeInfo sizeInfo = GetHierarchicalElementSizeInfo(group, g);
-        
+
             var info = new ElementTypeInfo
             {
+                Title = GetElementTitle(group.As<TElement>()),
                 Size = sizeInfo.Size,
                 Interior = sizeInfo.Interior,
                 OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
@@ -1362,7 +1495,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             };
 
             m_elementTypeCache.Add(group, info);
-            return info; 
+            return info;
         }
 
         /// <summary>Computes interior and exterior size as well as the x positions of output pins for expanded group</summary>
@@ -1370,12 +1503,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="g">Graphics object that can be used for measuring strings</param>
         /// <returns>Element size info; cannot be null</returns>
         protected virtual ElementSizeInfo GetHierarchicalElementSizeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
-        {         
+        {
             if (!group.Expanded) // group element collapsed, treat like non-Hierarchical node
-                return GetElementSizeInfo(group, g);
+                return GetElementSizeInfo(group, g, GetElementTitle(group.As<TElement>()));
 
 
-           
+
             Rectangle grpBounds;
             if (group.AutoSize)
             {
@@ -1389,7 +1522,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                                        subNode.Cast
                                                            <ICircuitGroupType<TElement, TWire, TPin>>(),
                                                        g)
-                                                   : GetElementSizeInfo(subNode.Type, g);
+                                                   : GetElementSizeInfo(subNode.Type, g, GetElementTitle(subNode));
 
                     //if this is the first time through, then lets just set the location and size to
                     //be the current node. Then the box will take the minimum space to hold all of the subnodes.
@@ -1401,7 +1534,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     else
                     {
                         grpBounds = Rectangle.Union(grpBounds, new Rectangle(subNode.Bounds.Location, sizeInfo.Size));
-                    }                    
+                    }
                 }
 
                 // compensate group pin positions
@@ -1430,7 +1563,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     yMax = grpBounds.Y + grpBounds.Height;
 
                 int width = grpBounds.Width + m_subContentOffset.X;
-                int height = Math.Max(yMax - yMin, grpBounds.Height+ TitleHeight + LabelHeight);
+                int height = Math.Max(yMax - yMin, grpBounds.Height);
+                height += LabelHeight; // compensate that the  bottom of sub-nodes may have non-empty names
+
                 if (group.Info.MinimumSize.Width > width)
                     width = group.Info.MinimumSize.Width;
                 if (group.Info.MinimumSize.Height > height)
@@ -1438,14 +1573,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
                 grpBounds = Rectangle.Union(grpBounds,
-                                            new Rectangle(grpBounds.Location.X, yMin, width, height ));
-               
+                                            new Rectangle(grpBounds.Location.X, yMin, width, height));
+
             }
             else
             {
                 grpBounds = group.Bounds;
             }
-           
+
 
             // measure offset of right pins
             int outputCount = group.Outputs.Count();
@@ -1456,11 +1591,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 grpOutputLeftX[i] = grpBounds.Size.Width - m_pinMargin - m_pinSize - (int)labelSize.Width;
 
             }
-    
+
             if (group.AutoSize)
             {
                 bool includeHMargin = group.Info.MinimumSize.IsEmpty;
-                bool includeVMargin = includeHMargin; 
+                bool includeVMargin = includeHMargin;
                 if (!group.Info.MinimumSize.IsEmpty) // MinimumSize is set, 
                 {
                     if (group.Info.MinimumSize.Width >= grpBounds.Size.Width)
@@ -1470,9 +1605,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
                 if (includeHMargin || includeVMargin)
                 {
-                    int margin = 2 * m_groupPinExpandedOffset;
                     return new ElementSizeInfo(new Size(grpBounds.Size.Width + (includeHMargin ? m_subContentOffset.X : 0),
-                                                        grpBounds.Size.Height + +(includeVMargin ? margin : 0)),
+                                                        grpBounds.Size.Height + (includeVMargin ? m_subContentOffset.Y : 0)),
                                                grpBounds,
                                                grpOutputLeftX);
                 }
@@ -1488,7 +1622,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 grpOutputLeftX);
 
         }
-      
+
         private void DrawWire(
             TElement outputElement,
             TPin outputPin,
@@ -1502,14 +1636,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Point op = outputElement.Bounds.Location;
             op.Offset(WorldOffset(m_graphPath));
             int x1 = op.X + info.Size.Width;
-            int y1 = op.Y + GetPinOffset(outputElement, outputPin.Index, false);   
+            if (PinDrawStyle == PinStyle.OnBorderFilled)
+                x1 += m_pinSize / 2;
+            int y1 = op.Y + GetPinOffset(outputElement, outputPin.Index, false);
 
             Point ip = inputElement.Bounds.Location;
             ip.Offset(WorldOffset(m_graphPath));
             int x2 = ip.X;
-            int y2 = ip.Y + GetPinOffset(inputElement,inputPin.Index, true);
+            if (PinDrawStyle == PinStyle.OnBorderFilled)
+                x2 -= m_pinSize / 2;
+            int y2 = ip.Y + GetPinOffset(inputElement, inputPin.Index, true);
 
-            DrawWire(g, pen, x1, y1, x2, y2, 0.0f, null);            
+            DrawWire(g, pen, x1, y1, x2, y2, 0.0f, null);
         }
 
         private void DrawWire(
@@ -1523,6 +1661,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             PointF ep = element.Bounds.Location;
             float x = ep.X;
+            if (PinDrawStyle == PinStyle.OnBorderFilled)
+                x += m_pinSize * 0.5f;
             float y = ep.Y + GetPinOffset(element, pin.Index, !fromOutput);
             if (fromOutput)
                 x += info.Size.Width;
@@ -1559,14 +1699,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     pen, thickness, strokeStyle);
         }
 
-        private void DrawLine(D2dGraphics g, D2dBrush pen, float x1, float y1, float x2, float y2, float strokeWidth, D2dStrokeStyle strokeStyle)
-        {
-            float thickness = strokeWidth == 0 ? EdgeThickness : strokeWidth;  
-            g.DrawLine(
-                    new PointF(x1, y1),                  
-                    new PointF(x2, y2),
-                    pen, thickness, strokeStyle);
-        }
+        //private void DrawLine(D2dGraphics g, D2dBrush pen, float x1, float y1, float x2, float y2, float strokeWidth, D2dStrokeStyle strokeStyle)
+        //{
+        //    float thickness = strokeWidth == 0 ? EdgeThickness : strokeWidth;
+        //    g.DrawLine(
+        //            new PointF(x1, y1),
+        //            new PointF(x2, y2),
+        //            pen, thickness, strokeStyle);
+        //}
 
         private float GetTangentLength(float x1, float x2)
         {
@@ -1640,6 +1780,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_subContentOffset = new Point(m_rowSpacing + 4 * m_pinMargin, m_rowSpacing + 4 * m_pinMargin);
         }
 
+        // Get the element bounds, not including the space for the label below the element.
         private RectangleF GetElementBounds(TElement element, D2dGraphics g)
         {
             ElementTypeInfo info = GetElementTypeInfo(element, g);
@@ -1699,7 +1840,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
             {
                 var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
-                offset = group.Info.Offset;               
+                offset = group.Info.Offset;
             }
 
             return offset;
@@ -1717,7 +1858,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             foreach (var element in graphPath)
             {
                 nodeDelta = SubGraphOffset(element);
-                            
+
                 offset.X += element.Bounds.Location.X + nodeDelta.X;
                 offset.Y += element.Bounds.Location.Y + nodeDelta.Y;
 
@@ -1726,7 +1867,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             return offset;
-                    
+
         }
 
         /// <summary>
@@ -1774,7 +1915,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             return offset;
-           
+
         }
 
         private void DocumentRegistryOnDocumentRemoved(object sender, ItemRemovedEventArgs<IDocument> itemRemovedEventArgs)
@@ -1803,6 +1944,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Class to hold cached element type layout, in pixels (or DIPs)</summary>
         protected class ElementTypeInfo
         {
+            /// <summary>Element title</summary>
+            public string Title;
             /// <summary>Element size</summary>
             public Size Size;
             /// <summary>Element interior size</summary>
@@ -1837,7 +1980,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             /// <summary>
-            /// Gets the size in pixels</summary>
+            /// Gets the size in pixels. The size includes the whole visual circuit element
+            /// but not the label below it.</summary>
             public Size Size { get { return m_size; } }
 
             /// <summary>
@@ -1859,7 +2003,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Size of category expanders in pixels</summary>
         protected const int ExpanderSize = GdiUtil.ExpanderSize;
         private D2dBrush m_subGraphPinBrush;
- 
+
         private D2dRoundedRect m_elementBody = new D2dRoundedRect();
         private D2dDiagramTheme m_theme;
 
@@ -1879,6 +2023,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private readonly Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>> m_cachePerDocument =
             new Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>>();
         private IDocumentRegistry m_documentRegistry;
+        private PinStyle m_pinDrawStyle;
 
         private int m_maxCollapsedGroupPinNameLength;
         private int m_truncatedPinNameSubstringLength;

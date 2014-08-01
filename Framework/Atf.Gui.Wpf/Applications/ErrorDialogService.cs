@@ -93,22 +93,27 @@ namespace Sce.Atf.Wpf.Applications
 
             if (!m_suppressedMessages.Contains(messageId))
             {
-                if (Application.Current.MainWindow != null &&
-                    Application.Current.MainWindow.IsLoaded)
+                // If this is called from another thread we will not be able to access
+                // Application.Current.MainWindow so invoke back to UI thread
+                Application.Current.Dispatcher.BeginInvokeIfRequired(() =>
                 {
-                    var dlg = new ErrorDialog();
-
-                    var vm = new ErrorDialogViewModel();
-                    vm.Message = message;
-                    dlg.DataContext = vm;
-                    dlg.Owner = Application.Current.MainWindow;
-                    dlg.ShowDialog();
-
-                    if (vm.SuppressMessage)
+                    if (Application.Current.MainWindow != null &&
+                        Application.Current.MainWindow.IsLoaded)
                     {
-                        m_suppressedMessages.Add(messageId);
+                        var dlg = new ErrorDialog();
+
+                        var vm = new ErrorDialogViewModel();
+                        vm.Message = message;
+                        dlg.DataContext = vm;
+                        dlg.Owner = Application.Current.MainWindow;
+                        dlg.ShowDialog();
+
+                        if (vm.SuppressMessage)
+                        {
+                            m_suppressedMessages.Add(messageId);
+                        }
                     }
-                }
+                });
             }
         }
 

@@ -19,8 +19,7 @@ namespace Sce.Atf.Wpf.Models
                 return new TypeCatalog(
                     typeof(ViewModelRepository),
                     typeof(MainMenuViewModel),
-                    typeof(ToolBarViewModel),
-                    typeof(StatusBarViewModel));
+                    typeof(ToolBarViewModel));
             }
         }
     }

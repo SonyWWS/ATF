@@ -97,9 +97,9 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Performs actions for removed nodes</summary>
-        /// <param name="m_removed">Removed nodes</param>
-        /// <param name="m_renamed">Renamed nodes and old ids</param>
-        protected abstract void RemoveNodes(HashSet<DomNode> m_removed, Dictionary<DomNode, string> m_renamed);
+        /// <param name="removed">Removed nodes</param>
+        /// <param name="renamed">Renamed nodes and old ids</param>
+        protected abstract void RemoveNodes(HashSet<DomNode> removed, Dictionary<DomNode, string> renamed);
 
         /// <summary>
         /// Performs actions for added nodes</summary>
@@ -109,8 +109,8 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Performs actions for renamed nodes</summary>
-        /// <param name="m_renamed">Renamed nodes and old ids</param>
-        protected abstract void RenameNodes(Dictionary<DomNode, string> m_renamed);
+        /// <param name="renamed">Renamed nodes and old ids</param>
+        protected abstract void RenameNodes(Dictionary<DomNode, string> renamed);
 
         /// <summary>
         /// Performs custom actions after an attribute in the DOM subtree changes</summary>

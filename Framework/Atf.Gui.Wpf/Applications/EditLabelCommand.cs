@@ -2,10 +2,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Windows.Input;
-
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
+using Sce.Atf.Input;
 
 namespace Sce.Atf.Wpf.Applications
 {
@@ -20,27 +19,23 @@ namespace Sce.Atf.Wpf.Applications
         ICommandClient, 
         IContextMenuCommandProvider
     {
-        private enum Commands
+        public enum Commands
         {
             EditLabel
         }
 
-        [Import(typeof(ICommandService))]
-        private ICommandService m_commandService = null;
+        [Import(typeof(ICommandService))] private Sce.Atf.Applications.ICommandService m_commandService = null;
+        [Import(typeof(IContextRegistry))] private IContextRegistry m_contextRegistry = null;
 
-        [Import(typeof(Sce.Atf.Applications.IContextRegistry))]
-        private Sce.Atf.Applications.IContextRegistry m_contextRegistry = null;
-
-        private static CommandDef s_renameCommandDef = new CommandDef(
+        private static readonly Sce.Atf.Applications.CommandInfo s_renameCommandDef = new Sce.Atf.Applications.CommandInfo(
             Commands.EditLabel,
-            Sce.Atf.Applications.StandardMenu.Edit,
+            StandardMenu.Edit,
             null, 
             "Rename".Localize(), 
-            null, 
             "Rename".Localize(), 
-            null, 
-            new InputGesture[]{new KeyGesture(Key.F2)}, 
-            Sce.Atf.Applications.CommandVisibility.None);
+            Keys.F2,
+            null,
+            CommandVisibility.None);
 
         #region IInitializable Members
 
@@ -57,13 +52,11 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
-        /// <param name="commandObj">Command to be done</param>
+        /// <param name="tag">Command to be done</param>
         /// <returns>True iff client can do the command</returns>
-        public bool CanDoCommand(object commandObj)
+        public bool CanDoCommand(object tag)
         {
-            ICommandItem command = commandObj as ICommandItem;
-            Requires.NotNull(command, "Object specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            if (command.CommandTag is Commands)
+            if (tag is Commands)
             {
                 var target = m_contextRegistry.GetCommandTarget<object>();
                 if (target != null)
@@ -77,12 +70,10 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Does the command</summary>
-        /// <param name="commandObj">Command to be done</param>
-        public void DoCommand(object commandObj)
+        /// <param name="tag">Command to be done</param>
+        public void DoCommand(object tag)
         {
-            ICommandItem command = commandObj as ICommandItem;
-            Requires.NotNull(command, "Object specified is from class that doesn't implement ICommandItem.  Most likely, this is a not a command from WPF, and it should be.");
-            switch ((Commands)command.CommandTag)
+            switch ((Commands)tag)
             {
                 case Commands.EditLabel:
                     var target = m_contextRegistry.GetCommandTarget<object>();
@@ -92,8 +83,6 @@ namespace Sce.Atf.Wpf.Applications
                         if (labelEditingContext != null)
                             labelEditingContext.EditLabel(target);
                     }
-                    break;
-                default:
                     break;
             }
         }

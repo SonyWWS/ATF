@@ -33,10 +33,7 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Gets the sequence of all registered controls and associated hosting information</summary>
-        IEnumerable<IControlInfo> Contents
-        {
-            get;
-        }
+        IEnumerable<IControlInfo> Contents { get; }
 
         /// <summary>
         /// Gets or sets the dock panel state</summary>

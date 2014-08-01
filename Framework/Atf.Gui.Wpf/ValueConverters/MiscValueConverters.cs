@@ -2,14 +2,20 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using Sce.Atf.Input;
 using Sce.Atf.Wpf.Markup;
 
 namespace Sce.Atf.Wpf.ValueConverters
@@ -27,15 +33,63 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <returns>SolidColorBrush of desired color</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || value.GetType() != typeof(Color))
-                return value;
-            
-            return new SolidColorBrush((Color)value);
+            if (value != null)
+            {
+                var type = value.GetType();
+                
+                if (type == typeof(Color))
+                    return new SolidColorBrush((Color)value);
+                
+                if (type == typeof(string))
+                    return new SolidColorBrush(ColorUtil.ConvertFromString((string)value));
+            }
+
+            return DependencyProperty.UnsetValue;
         }
     }
 
     /// <summary>
-    /// Returns inverse of a bool</summary>
+    /// Converts a Brush to a Color.
+    /// </summary>
+    public class BrushToColorConverter : ConverterMarkupExtension<BrushToColorConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var solidColorBrush = value as SolidColorBrush;
+            if (solidColorBrush == null)
+                return Color.FromArgb(0, 0, 0, 0);
+
+            return solidColorBrush.Color;
+        }
+    }
+
+    /// <summary>
+    /// Converts a Color to a SolidColorBrush</summary>
+    public class ColorAndOpacityToBrushConverter : MultiConverterMarkupExtension<ColorAndOpacityToBrushConverter>
+    {
+        /// <summary>
+        /// Converts a Color to a SolidColorBrush</summary>
+        /// <param name="values">Color</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>SolidColorBrush of desired color</returns>
+        public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is Color && values[1] is double)
+            {
+                var c = (Color)values[0];
+                var d = (double)values[1];
+                return new SolidColorBrush(Color.FromArgb((byte)(d * 255), c.R, c.G, c.B));
+            }
+            
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+    /// <summary>
+    /// Returns inverse of a bool
+    /// </summary>
     public class InvertBoolConverter : ConverterMarkupExtension<InvertBoolConverter>
     {
         /// <summary>
@@ -96,9 +150,18 @@ namespace Sce.Atf.Wpf.ValueConverters
             return value != null;
         }
     }
-    
+
+    public class IntToBoolConverter : ConverterMarkupExtension<IntToBoolConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (int)value > 0;
+        }
+    }
+
     /// <summary>
-    /// Returns true if type passed as parameter is assignable from type of value</summary>
+    /// Returns true if type passed as parameter is assignable from type of value
+    /// </summary>
     public class IsAssignableFromConverter : ConverterMarkupExtension<IsAssignableFromConverter>
     {
         /// <summary>
@@ -121,6 +184,17 @@ namespace Sce.Atf.Wpf.ValueConverters
     /// Attempts to return a UI resource using the input value as a resource key</summary>
     public class ResourceLookupConverter : ConverterMarkupExtension<ResourceLookupConverter>
     {
+        public ResourceLookupConverter()
+        {
+        }
+
+        public ResourceLookupConverter(FrameworkElement element)
+        {
+            Source = element;
+        }
+
+        public FrameworkElement Source { get; set; }
+
         /// <summary>
         /// Attempts to return a UI resource using the input value as a resource key</summary>
         /// <param name="value">Resource key</param>
@@ -131,7 +205,13 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <remarks>If the requested resource is not found, a System.Windows.ResourceReferenceKeyNotFoundException is thrown.</remarks>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? null : Application.Current.FindResource(value);
+            object result = value == null 
+                ? null 
+                : Source != null
+                    ? Source.TryFindResource(value)
+                    : Application.Current.TryFindResource(value);
+
+            return result;
         }
     }
 
@@ -173,15 +253,43 @@ namespace Sce.Atf.Wpf.ValueConverters
             object image = Application.Current.TryFindResource(resourceKey);
             if (image == null)
             {
-                var imageSource = Application.Current.FindResource(value) as ImageSource;
-                var newImage = new Image();
-                newImage.Source = imageSource;
-                newImage.Style = Application.Current.FindResource(Resources.MenuItemImageStyleKey) as Style;
-                Application.Current.Resources.Add(resourceKey, newImage);
-                image = newImage;
+                var imageSource = Application.Current.TryFindResource(value) as ImageSource;
+                if (imageSource != null)
+                {
+                    var newImage = new Image();
+                    newImage.Source = imageSource;
+                    newImage.Style = Application.Current.FindResource(Resources.MenuItemImageStyleKey) as Style;
+                    Application.Current.Resources.Add(resourceKey, newImage);
+                    image = newImage;
+                }
             }
 
             return image;
+        }
+    }
+
+    /// <summary>
+    /// Returns a cursor from a resource key.
+    /// </summary>
+    public class CursorResourceLookupConverter : ConverterMarkupExtension<CursorResourceLookupConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Convert(value);
+        }
+
+        public static object Convert(object value)
+        {
+            if (value == null)
+                return null;
+
+            var freezable = Application.Current.TryFindResource(value) as FreezableCursor;
+            if (freezable != null)
+            {
+                return freezable.Cursor;
+            }
+
+            return null;
         }
     }
 
@@ -233,25 +341,75 @@ namespace Sce.Atf.Wpf.ValueConverters
             if(inputGesture != null)
                 return inputGesture.GetDisplayStringForCulture(culture);
 
-            var inputGestures = value as IList;
-            if (inputGestures == null || inputGestures.Count < 1)
+            if (value is Keys)
+                return GetDisplayStringForKeys((Keys)value, culture);
+
+            var list = value as IList;
+            if (list == null || list.Count < 1)
                 return null;
 
-            for (int i = 0; i < inputGestures.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                var gesture = inputGestures[i] as KeyGesture;
+                var gesture = list[i] as KeyGesture;
                 if (gesture != null)
                 {
                     return gesture.GetDisplayStringForCulture(culture);
+                }
+                if (list[i] is Keys)
+                {
+                    return GetDisplayStringForKeys((Keys)list[i], culture);
                 }
             }
 
             return null;
         }
+
+        private static string GetDisplayStringForKeys(Keys value, CultureInfo culture)
+        {
+            // Convert Keys to a KeyGesture
+            return ToWpfKeyGesture(value).GetDisplayStringForCulture(culture);
+        }
+
+        private static KeyGesture ToWpfKeyGesture(Keys atfKeys)
+        {
+            ModifierKeys modifiers = Sce.Atf.Wpf.Interop.KeysInterop.ToWpfModifiers(atfKeys);
+            Key key = Sce.Atf.Wpf.Interop.KeysInterop.ToWpf(atfKeys);
+            return new KeyGesture(key, modifiers);
+        }
+    }
+
+    public class ListToStringConverter : ConverterMarkupExtension<ListToStringConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var list = value as IEnumerable;
+            if (list != null)
+            {
+                var sb = new StringBuilder();
+                foreach (var item in list)
+                    sb.AppendLine(item.ToString());
+                return sb.ToString();
+            }
+            return null;
+        }
     }
 
     /// <summary>
-    /// GridLength to double value converter</summary>
+    /// Converts a single value to a collection
+    /// </summary>
+    public class ItemToCollectionConverter : ConverterMarkupExtension<ItemToCollectionConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var collection = new ObservableCollection<object>();
+            collection.Add(value);
+            return collection;
+        }
+    }
+
+    /// <summary>
+    /// GridLength to double value converter
+    /// </summary>
     [ValueConversion(typeof(GridLength), typeof(double))]
     public class DoubleToGridLengthConverter : ConverterMarkupExtension<DoubleToGridLengthConverter>
     {
@@ -329,22 +487,108 @@ namespace Sce.Atf.Wpf.ValueConverters
             return Binding.DoNothing;
         }
 
-        /// <summary>
-        /// Converts back to double from int, long, byte, double, and float</summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="targetType">Type of target (unused)</param>
-        /// <param name="parameter">Converter parameter to use (unused)</param>
-        /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>Original value</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
         }
     }
-    
+
     /// <summary>
-    /// Retrieves the display string for enum values marked with a DisplayStringAttribute.
-    /// Used on an enum, will override the standard behavior of ToString for enum values.</summary>
+    /// Enum to Boolean converter
+    /// Usage 'Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static value...}'
+    /// </summary>
+    [ValueConversion(typeof(Enum), typeof(bool))]
+    public class EnumToBooleanConverter : ConverterMarkupExtension<EnumToBooleanConverter>
+    {
+        public Type EnumType { get; set; }
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null)
+                return Binding.DoNothing;
+            
+            string checkValue = value.ToString();
+            string targetValue = parameter.ToString();
+            return checkValue.Equals(targetValue, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null)
+                return Binding.DoNothing;
+            
+            try
+            {
+                bool boolValue = System.Convert.ToBoolean(value, culture);
+                if (boolValue)
+                    return Enum.Parse(EnumType, parameter.ToString());
+            }
+            catch (ArgumentException)
+            {
+            }
+            catch (FormatException)
+            {
+            }
+            
+            return Binding.DoNothing;
+        }
+    }
+
+    [ValueConversion(typeof(Enum), typeof(string[]))]
+    public class EnumValuesConverter : ConverterMarkupExtension<EnumValuesConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null)
+                return Enum.GetValues(value.GetType());
+            else if (targetType == typeof(Enum))
+                return Enum.GetValues(targetType);
+
+            return value;
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(object))]
+    public class NullToBoolConverter : ConverterMarkupExtension<NullToBoolConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (value == null);
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(object))]
+    public class NullToFalseConverter : ConverterMarkupExtension<NullToFalseConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value != null;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    [ValueConversion(typeof(TimeSpan), typeof(string))]
+    public class TimeSpanFormatConverter : ConverterMarkupExtension<TimeSpanFormatConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            TimeSpan timespan = (TimeSpan)value;
+            return string.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", timespan.Hours, timespan.Minutes, timespan.Seconds, timespan.Milliseconds);
+        }
+    }
+
+    /// <summary>
+    /// Used on any type, will override the standard behavior of ToString for enum values
+    /// </summary>
     public class DisplayStringConverter : ConverterMarkupExtension<DisplayStringConverter>
     {
         /// <summary>
@@ -358,11 +602,150 @@ namespace Sce.Atf.Wpf.ValueConverters
         {
             if (value != null)
             {
-                Type type = value.GetType();
+                var type = value.GetType();
                 if (type.IsEnum)
-                    return EnumUtil.GetDisplayString(type, value);
+                    return EnumDisplayUtil.GetDisplayString(type, value);
+
+                return value.ToString();
             }
+            
             return value;
+        }
+    }
+
+    [ValueConversion(typeof(object), typeof(string))]
+    public class EnumDescriptionConverter : ConverterMarkupExtension<EnumDescriptionConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Default, non-converted result.
+            if (value == null)
+                return Binding.DoNothing;
+
+            string result = value.ToString();
+
+            var field = value.GetType().GetFields(BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public).FirstOrDefault(f => f.GetValue(null).Equals(value));
+
+            if (field != null)
+            {
+                var descriptionAttribute = field.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+                if (descriptionAttribute != null)
+                {
+                    // Found the attribute, assign description
+                    result = descriptionAttribute.Description;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    public class ScaleDoubleConverter : ConverterMarkupExtension<ScaleDoubleConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double dVal = (double)value;
+            double dScale = 0.75;
+            
+            if (parameter is string)
+            {
+                dScale = double.Parse((string)parameter);
+            }
+            else if (parameter != null)
+            {
+                dScale = (double)parameter;
+            }
+
+            return (dVal * dScale);
+        }
+    }
+
+    public class RoundDoubleConverter : ConverterMarkupExtension<RoundDoubleConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double val = 0.0;
+            int decimanlPlaces = 1;
+
+            if (value is string)
+            {
+                val = double.Parse((string)value);
+            }
+            else
+            {
+                if (value is double)
+                {
+                    val = (double)value;
+                }
+                else if (value is float)
+                {
+                    val = (float)value;
+                }
+            }
+
+            if (parameter is string)
+            {
+                decimanlPlaces = int.Parse((string)parameter);
+            }
+            else if (parameter != null)
+            {
+                decimanlPlaces = (int)parameter;
+            }
+
+            Requires.Require<ArgumentException>(decimanlPlaces >= 0, "parameter");
+
+            if (targetType == typeof(string))
+            {
+                var zeroFormat = new string(Enumerable.Repeat('0', decimanlPlaces).ToArray());
+                return val.ToString("0." + zeroFormat);
+            }
+
+            val = Math.Round(val, decimanlPlaces);
+            return val;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Convert(value, targetType, parameter, culture);
+        }
+    }
+
+    public class IndexerBindingConverter : MultiConverterMarkupExtension<IndexerBindingConverter>
+    {
+        public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length < 2)
+                return DependencyProperty.UnsetValue;
+            
+            object dataItem = values[1];
+            object key = values[0];
+
+            if (dataItem == null || key == null)
+                return DependencyProperty.UnsetValue;
+
+            foreach (var propertyInfo in dataItem.GetType().GetProperties())
+            {
+                if (propertyInfo.GetIndexParameters().Length > 0)
+                {
+                    object result = propertyInfo.GetValue(dataItem, new[] { key });
+                    return result;
+                }
+            }
+
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+    public class EnumToBoolConverter : ConverterMarkupExtension<EnumToBoolConverter>
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value.Equals(parameter);
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value.Equals(false) ? Binding.DoNothing : parameter;
         }
     }
 }

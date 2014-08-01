@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,9 +12,41 @@ using Sce.Atf.Dom;
 namespace CircuitEditorSample
 {
     /// <summary>
-    /// Adapter for an instance of a module template</summary>
-    public class ModuleInstance : Module,IReference<Module>, IReference<DomNode>
+    /// Adapter for a reference instance of a module template</summary>
+    /// <remarks>TODO: rename to  ModuleReference</remarks>
+    public class ModuleInstance : Module, IReference<Module>, IReference<DomNode>
     {
+        /// <summary>Gets and sets a globally unique identifier (GUID) that represents this template</summary>
+        public Template Template
+        {
+            get
+            {
+                var template = GetReference<Template>(Schema.moduleTemplateRefType.guidRefAttribute);
+                if (template == null) // in case reading older circuit documents before ATF3.8
+                {
+                    var target = GetReference<DomNode>(Schema.groupTemplateRefType.typeRefAttribute);
+                    if (target != null)
+                    {
+                        template = target.Parent.As<Template>();
+                        if (template != null) // replace obsolete "typeRef" attribute with  guidRef
+                        {
+                            SetReference(Schema.moduleTemplateRefType.guidRefAttribute, template.DomNode);
+                            SetAttribute(Schema.moduleTemplateRefType.typeRefAttribute, null);
+
+                            Guid guid;
+                            if (Guid.TryParse(Id, out guid)) // avoid using GUID as ID too, because we want to resolve guid reference specially
+                                Id = "ModuleInstance" + Id;
+                        }
+                    }
+                }
+                return template;
+            }
+            set
+            {
+                SetReference(Schema.moduleTemplateRefType.guidRefAttribute, value.DomNode);
+            }
+        }
+
         #region IReference members
 
         /// <summary>
@@ -33,8 +66,11 @@ namespace CircuitEditorSample
         /// throw an exception if the specified value cannot be targeted.</remarks>
         public Module Target
         {
-            get { return GetReference<Module>(RefAttribute); }
-            set { SetReference(RefAttribute, value); }
+            get { return Template.Target.As<Module>(); }
+            set
+            {
+                throw new InvalidOperationException("The module template determines the target");
+            }
         }
 
         /// <summary>
@@ -54,13 +90,16 @@ namespace CircuitEditorSample
         /// throw an exception if the specified value cannot be targeted.</remarks>
         DomNode IReference<DomNode>.Target
         {
-            get { return GetReference<DomNode>(RefAttribute); }
-            set { SetReference(RefAttribute, value); }
+            get { return Template.Target; }
+            set
+            {
+                throw new InvalidOperationException("The module template determines the target");
+            }
         }
 
         #endregion
 
- 
+
         /// <summary>
         /// Gets the ICircuitElementType of the module instance</summary>
         public override ICircuitElementType Type
@@ -103,10 +142,10 @@ namespace CircuitEditorSample
             get { return Schema.moduleType.visibleAttribute; }
         }
 
-        private AttributeInfo RefAttribute
-        {
-            get { return Schema.moduleTemplateRefType.typeRefAttribute; }
-        }
+        //private AttributeInfo RefAttribute
+        //{
+        //    get { return Schema.moduleTemplateRefType.typeRefAttribute; }
+        //}
 
         // ICircuitElementType
         /// <summary>
@@ -137,6 +176,24 @@ namespace CircuitEditorSample
         public IList<ICircuitPin> Outputs
         {
             get { return Target.Type.Outputs; }
+        }
+
+        /// <summary>
+        /// Gets the output pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin OutputPin(int pinIndex)
+        {
+            return Target.Type.Outputs[pinIndex];
+        }
+
+        /// <summary>
+        /// Gets the input pin for the given pin index</summary>
+        /// <param name="pinIndex"></param>
+        /// <returns></returns>
+        public override ICircuitPin InputPin(int pinIndex)
+        {
+            return Target.Type.Inputs[pinIndex];
         }
 
         /// <summary>

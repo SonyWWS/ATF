@@ -12,7 +12,7 @@ namespace Sce.Atf.Controls.Adaptable
     public interface ITransformAdapter : IControlAdapter
     {
         /// <summary>
-        /// Gets the current transformation matrix</summary>
+        /// Gets the current transformation matrix, from world to Window client coordinates</summary>
         Matrix Transform
         {
             get;
@@ -95,7 +95,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// Sets the transform to the given matrix; rotation and skew are
         /// ignored</summary>
         /// <param name="transformAdapter">Adapter managing transform</param>
-        /// <param name="transform">Transformation matrix</param>
+        /// <param name="transform">Transformation matrix, from world to Window client coordinates</param>
         public static void SetTransform(this ITransformAdapter transformAdapter, Matrix transform)
         {
             float[] m = transform.Elements;
@@ -103,49 +103,49 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Transforms client point to transform coordinates</summary>
+        /// Transforms client point to world coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
         /// <param name="x">Point, in client coordinates</param>
-        /// <returns>Point, in transform coordinates</returns>
+        /// <returns>Point, in world coordinates</returns>
         public static Point ClientToTransform(this ITransformAdapter adapter, Point x)
         {
             return GdiUtil.InverseTransform(adapter.Transform, x);
         }
 
         /// <summary>
-        /// Transforms client point to transform coordinates</summary>
+        /// Transforms client point to world coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
         /// <param name="x">Point, in client coordinates</param>
-        /// <returns>Point, in transform coordinates</returns>
+        /// <returns>Point, in world coordinates</returns>
         public static PointF ClientToTransform(this ITransformAdapter adapter, PointF x)
         {
             return GdiUtil.InverseTransform(adapter.Transform, x);
         }
 
         /// <summary>
-        /// Transforms client rectangle to transform coordinates</summary>
+        /// Transforms client rectangle to world coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
         /// <param name="x">Rectangle, in client coordinates</param>
-        /// <returns>Rectangle, in transform coordinates</returns>
+        /// <returns>Rectangle, in world coordinates</returns>
         public static Rectangle ClientToTransform(this ITransformAdapter adapter, Rectangle x)
         {
             return GdiUtil.InverseTransform(adapter.Transform, x);
         }
 
         /// <summary>
-        /// Transforms client rectangle to transform coordinates</summary>
+        /// Transforms client rectangle to world coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
         /// <param name="x">Rectangle, in client coordinates</param>
-        /// <returns>Rectangle, in transform coordinates</returns>
+        /// <returns>Rectangle, in world coordinates</returns>
         public static RectangleF ClientToTransform(this ITransformAdapter adapter, RectangleF x)
         {
             return GdiUtil.InverseTransform(adapter.Transform, x);
         }
 
         /// <summary>
-        /// Transforms transform point to client coordinates</summary>
+        /// Transforms point to client coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="x">Point, in transform coordinates</param>
+        /// <param name="x">Point, in world coordinates</param>
         /// <returns>Point, in client coordinates</returns>
         public static Point TransformToClient(this ITransformAdapter adapter, Point x)
         {
@@ -153,9 +153,9 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Transforms transform point to client coordinates</summary>
+        /// Transforms point to client coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="x">Point, in transform coordinates</param>
+        /// <param name="x">Point, in world coordinates</param>
         /// <returns>Point, in client coordinates</returns>
         public static PointF TransformToClient(this ITransformAdapter adapter, PointF x)
         {
@@ -163,9 +163,9 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Transforms transform rectangle to client coordinates</summary>
+        /// Transforms rectangle to client coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="x">Rectangle, in transform coordinates</param>
+        /// <param name="x">Rectangle, in world coordinates</param>
         /// <returns>Rectangle, in client coordinates</returns>
         public static Rectangle TransformToClient(this ITransformAdapter adapter, Rectangle x)
         {
@@ -173,9 +173,9 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Transforms transform rectangle to client coordinates</summary>
+        /// Transforms rectangle to client coordinates</summary>
         /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="x">Rectangle, in transform coordinates</param>
+        /// <param name="x">Rectangle, in world coordinates</param>
         /// <returns>Rectangle, in client coordinates</returns>
         public static RectangleF TransformToClient(this ITransformAdapter adapter, RectangleF x)
         {

@@ -2,14 +2,41 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
                     xmlns:l="clr-namespace:Sce.Atf.Wpf.Controls.PropertyEditing">
+
     <DataTemplate x:Key="{x:Static l:MultiLineTextValueEditor.TemplateKey}">
-        <TextBox Text="{Binding Value, Mode=TwoWay}"  AcceptsReturn="True" TextWrapping="WrapWithOverflow" VerticalContentAlignment="Center" Margin="0"/>
+        <TextBox Text="{Binding Value, Mode=TwoWay}" MinHeight="20" AcceptsReturn="True" TextWrapping="NoWrap"  
+                 VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="0" MaxLines="4"
+                 IsReadOnly="{Binding IsReadOnly}"/>
     </DataTemplate>
 
     <DataTemplate x:Key="{x:Static l:SliderValueEditor.TemplateKey}">
         <c:SliderBox Value="{Binding EditorContext.DoubleValue, Mode=TwoWay}" 
-                     DeferDragUpdate="True"
+                     DeferDragUpdate="True" IsEnabled="{Binding IsWriteable}"
                      StringFormat="{Binding EditorContext.FormatString, Mode=OneTime}">
+            <!--Maximum="{Binding EditorContext.Max, Mode=OneTime}"
+                     Minimum="{Binding EditorContext.Min, Mode=OneTime}"-->
+            <!--SmallChange="{Binding EditorContext.SmallChange, Mode=OneTime}"
+                     LargeChange="{Binding EditorContext.LargeChange, Mode=OneTime}"-->
         </c:SliderBox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static l:RangeSliderValueEditor.TemplateKey}">
+        <c:RangeSlider Minimum="{Binding EditorContext.Min, Mode=OneTime}"
+                       Maximum="{Binding EditorContext.Max, Mode=OneTime}"
+                       IsEnabled="{Binding IsWriteable}"
+            RangeStop="{Binding EditorContext.RangeStop, Mode=TwoWay}"
+            RangeStart="{Binding EditorContext.RangeStart, Mode=TwoWay}">
+        </c:RangeSlider>
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static l:FilePathValueEditor.TemplateKey}">
+        <c:FilePicker IsEnabled="{Binding IsWriteable}"
+            FilePath="{Binding EditorContext.Value, ValidatesOnDataErrors=True}" 
+            Filter="{Binding EditorContext.Filter}" 
+            DefaultExtension="{Binding EditorContext.DefaultExtension}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static l:FolderPathValueEditor.TemplateKey}">
+        <c:DirectoryPicker Directory="{Binding Value, ValidatesOnDataErrors=True}" IsEnabled="{Binding IsWriteable}"/>
     </DataTemplate>
 </ResourceDictionary>

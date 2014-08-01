@@ -99,25 +99,25 @@ namespace Sce.Atf.Wpf.Behaviors
                 return;
             }
 
-            if (oldBehaviors != null)
-            {
-                foreach (var behavior in oldBehaviors)
-                {
-                    int index = GetIndexOf(itemBehaviors, behavior);
+            //if (oldBehaviors != null)
+            //{
+            //    foreach (var behavior in oldBehaviors)
+            //    {
+            //        int index = GetIndexOf(itemBehaviors, behavior);
 
-                    if (index >= 0)
-                    {
-                        itemBehaviors.RemoveAt(index);
-                    }
-                }
-            }
+            //        if (index >= 0)
+            //        {
+            //            itemBehaviors.RemoveAt(index);
+            //        }
+            //    }
+            //}
+
+            itemBehaviors.Clear();
 
             if (newBehaviors != null)
             {
                 foreach (var behavior in newBehaviors)
                 {
-                    Guid behaviorId = GetBehaviorId(behavior);
-
                     int index = GetIndexOf(itemBehaviors, behavior);
 
                     if (index < 0)
@@ -134,6 +134,7 @@ namespace Sce.Atf.Wpf.Behaviors
                     }
                 }
             }
+
         }
 
         private static void SetBehaviorId(DependencyObject obj, Guid value)

@@ -22,16 +22,45 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Raises behavior Attached event and performs custom actions</summary>
         protected override void OnAttached()
         {
+            base.OnAttached();
             AssociatedObject.PreviewMouseDown += new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
             AssociatedObject.PreviewMouseUp += new MouseButtonEventHandler(AssociatedObject_PreviewMouseUp);
             AssociatedObject.LostFocus += new RoutedEventHandler(AssociatedObject_LostFocus);
             AssociatedObject.MouseDoubleClick += new MouseButtonEventHandler(AssociatedObject_MouseDoubleClick);
+            var node = AssociatedObject.DataContext as Node;
+            if(node != null)
+                node.PropertyChanged += Node_PropertyChanged;
         }
 
-        /// <summary>
-        /// Performs custom actions on MouseDoubleClick events of Behavior's AssociatedObject, a TreeViewItem</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">MouseButtonEventArgs containing event data</param>
+        void Node_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == s_isInLabelEditModePropertyName)
+            {
+                var node = sender as Node;
+                if(node.IsInLabelEditMode == false)
+                {
+                    var tv = AssociatedObject.FindAncestor<TreeView>();
+                    // tv can be null since AssociatedObject is a virtualized object and can be disconnected
+                    if (tv != null && tv.SelectedItem == node)
+                    {
+                        AssociatedObject.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (Action)(() => AssociatedObject.Focus()));
+                    }
+                }
+            }
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.PreviewMouseDown -= new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
+            AssociatedObject.PreviewMouseUp -= new MouseButtonEventHandler(AssociatedObject_PreviewMouseUp);
+            AssociatedObject.LostFocus -= new RoutedEventHandler(AssociatedObject_LostFocus);
+            AssociatedObject.MouseDoubleClick -= new MouseButtonEventHandler(AssociatedObject_MouseDoubleClick);
+            var node = AssociatedObject.DataContext as Node;
+            if (node != null)
+                node.PropertyChanged -= Node_PropertyChanged;
+        }
+
         void AssociatedObject_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             StopTimer();
@@ -123,8 +152,9 @@ namespace Sce.Atf.Wpf.Behaviors
         }
 
         private DispatcherTimer m_timer;
-
         private static uint s_doubleClickTime = GetDoubleClickTime();
+        private static readonly string s_isInLabelEditModePropertyName
+            = TypeUtil.GetProperty<Node>(x => x.IsInLabelEditMode).Name;
 
         [DllImport("user32.dll")]
         static extern uint GetDoubleClickTime();

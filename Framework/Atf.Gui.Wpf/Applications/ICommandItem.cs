@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 
 using Sce.Atf.Applications;
+using Sce.Atf.Input;
 
 namespace Sce.Atf.Wpf.Applications
 {
@@ -23,17 +24,13 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets image resource for command</summary>
         object ImageSourceKey { get; set; }
 
-        /// <summary>
-        /// Gets or sets a sequence of input device gestures to execute the command</summary>
-        InputGesture[] InputGestures { get; set; }
+        IEnumerable<Keys> Shortcuts { get; set; }
 
         /// <summary>
         /// Gets where command is visible, as on menus, toolbars, etc.</summary>
         CommandVisibility Visibility { get; }
 
-        /// <summary>
-        /// Gets strings describing menu path</summary>
-        IEnumerable<string> MenuPath { get; }
+        int Index { get; }
     }
 
     /// <summary>

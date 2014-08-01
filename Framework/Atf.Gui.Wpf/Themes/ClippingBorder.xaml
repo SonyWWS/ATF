@@ -1,0 +1,62 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:gac="clr-namespace:Sce.Atf.Wpf.Controls">
+
+    <!-- ClippingBorder style -->
+    <Style TargetType="gac:ClippingBorder">
+        <Setter Property="ClipContent" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="gac:ClippingBorder">
+                    <Border Background="{TemplateBinding Background}" 
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                                x:Name="PART_Border"
+                                
+                                >
+
+                        <Grid>
+
+                            <ContentControl x:Name="PART_TopLeftContentControl"
+                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                <ContentControl.Clip>
+                                    <RectangleGeometry x:Name="PART_TopLeftClip" />
+                                </ContentControl.Clip>
+
+                                <ContentControl x:Name="PART_TopRightContentControl"  
+                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                                    <ContentControl.Clip>
+                                        <RectangleGeometry x:Name="PART_TopRightClip" />
+                                    </ContentControl.Clip>
+
+                                    <ContentControl x:Name="PART_BottomRightContentControl" 
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                                        <ContentControl.Clip>
+                                            <RectangleGeometry x:Name="PART_BottomRightClip" />
+                                        </ContentControl.Clip>
+
+                                        <ContentControl x:Name="PART_BottomLeftContentControl" 
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                                            <ContentControl.Clip>
+                                                <RectangleGeometry x:Name="PART_BottomLeftClip" />
+                                            </ContentControl.Clip>
+
+                                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+
+                                        </ContentControl>
+
+                                    </ContentControl>
+
+                                </ContentControl>
+
+                            </ContentControl>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

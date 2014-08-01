@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Sce.Atf.Controls.PropertyEditing;
@@ -12,87 +14,115 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 {
     /// <summary>
     /// Encapsulates an object or collection of objects and a property common to them all</summary>
-    public class PropertyNode : NotifyPropertyChangedBase, IDataErrorInfo, IDisposable, IComparable<PropertyNode>,
-                                IComparable
+    public class PropertyNode : NotifyPropertyChangedBase, 
+        IDataErrorInfo, 
+        IDisposable, 
+        IComparable<PropertyNode>,
+        IComparable, 
+        IWeakEventListener
     {
-        // This class is similar to ATF PropertyEditorControlContext
-        // perhaps look at merging base behavior?
+        private static readonly PropertyChangedEventArgs s_isExpandedArgs
+            = ObservableUtil.CreateArgs<PropertyNode>(x => x.IsExpanded);
 
         private static readonly PropertyChangedEventArgs s_isSelectedArgs
             = ObservableUtil.CreateArgs<PropertyNode>(x => x.IsSelected);
 
-        private static readonly PropertyChangedEventArgs s_valueArgs
-            = ObservableUtil.CreateArgs<PropertyNode>(x => x.Value);
+        private static readonly PropertyChangedEventArgs s_readOnlyArgs
+            = ObservableUtil.CreateArgs<PropertyNode>(x => x.IsReadOnly);
 
-        private readonly PropertyDescriptor m_descriptor;
-        private readonly object m_instance;
+        private static readonly PropertyChangedEventArgs s_isWriteableArgs
+            = ObservableUtil.CreateArgs<PropertyNode>(x => x.IsWriteable);
+
+        private PropertyDescriptor m_descriptor;
+        private object m_instance;
+        private bool m_isEnumerable;
+        private bool m_synchronizing;
         private bool m_disposed;
-
+        private bool m_isExpanded = true;
         private bool m_isSelected;
 
         /// <summary>
-        /// Constructor</summary>
-        /// <param name="instance">Object or collection of objects that share a property</param>
-        /// <param name="descriptor">PropertyDescriptor of shared property</param>
-        /// <param name="isEnumerable">Whether the object is enumerable</param>
-        /// <param name="owner">Object(s) owner</param>
-        public PropertyNode(object instance, PropertyDescriptor descriptor, bool isEnumerable, FrameworkElement owner)
+        /// Initialize the node
+        /// </summary>
+        /// <param name="instance">Instance or enumerable of instances</param>
+        /// <param name="descriptor">Property descriptor</param>
+        /// <param name="isEnumerable">True if instance parameter holds an IEnumerable of instances</param>
+        public void Initialize(object instance, PropertyDescriptor descriptor, bool isEnumerable)
         {
+            Requires.NotNull(instance, "instance");
+            Requires.NotNull(descriptor, "descriptor");
+
             m_instance = instance;
             m_descriptor = descriptor;
-            IsEnumerable = isEnumerable;
-            Owner = owner;
+            m_isEnumerable = isEnumerable;
+            
+            InitializeInternal();
+            
             SubscribeValueChanged();
+        }
 
-            if (m_descriptor.Converter != null)
+        protected virtual void InitializeInternal()
+        {
+        }
+
+        /// <summary>
+        /// Gets the instance (may be an Enumerable)
+        /// </summary>
+        public object Instance
+        {
+            get
             {
-                var tdcontext = new TypeDescriptorContext(FirstInstance, m_descriptor, null);
-                if (m_descriptor.Converter.GetStandardValuesExclusive(tdcontext))
-                {
-                    StandardValues = m_descriptor.Converter.GetStandardValues().Cast<object>().ToArray();
-                }
+                var customTypeDescriptor = m_instance as ICustomTypeDescriptor;
+                return (customTypeDescriptor != null) ? customTypeDescriptor.GetPropertyOwner(m_descriptor) : m_instance;
             }
         }
 
-        /// <summary>
-        /// Gets objects' owner</summary>
-        public FrameworkElement Owner { get; private set; }
-
-        /// <summary>
-        /// Gets the object(s) (may be enumerable)</summary>
-        public object Instance
-        {
-            get { return m_instance; }
-        }
-
-        /// <summary>
-        /// Gets the first instance of the objects if the instance is enumerable, otherwise returns the object</summary>
-        /// <value>The first instance</value>
-        public object FirstInstance
+        public bool IsMultipleInstance
         {
             get
             {
                 if (IsEnumerable)
-                    return ((IEnumerable) m_instance).Cast<object>().FirstOrDefault();
-                return m_instance;
+                {
+                    int count = 0;
+                    foreach (object item in ((IEnumerable)Instance).Cast<object>())
+                    {
+                        if (count++ > 0)
+                            return true;
+                    }
+                }
+
+                return false;
             }
         }
 
         /// <summary>
-        /// Gets the object or a single instance as an enumerable if the PropertyNode has a collection of objects</summary>
-        /// <value>The instances</value>
+        /// Gets the first instance if the Instance is an Enumerable, otherwise return the Instance.
+        /// </summary>
+        /// <value>The first instance.</value>
+        public object FirstInstance
+        {
+            get { return IsEnumerable ? Instances.Cast<object>().FirstOrDefault() : Instance; }
+        }
+
+        /// <summary>
+        /// Gets the instances or a single Instance as an Enumerable.
+        /// </summary>
+        /// <value>The instances.</value>
         public IEnumerable Instances
         {
             get
             {
                 if (IsEnumerable)
                 {
-                    foreach (object o in (IEnumerable) m_instance)
-                        yield return o;
+                    foreach (object instance in (IEnumerable)Instance)
+                    {
+                        var customTypeDescriptor = instance as ICustomTypeDescriptor;
+                        yield return (customTypeDescriptor != null) ? customTypeDescriptor.GetPropertyOwner(m_descriptor) : instance;
+                    }
                 }
                 else
                 {
-                    yield return m_instance;
+                    yield return Instance;
                 }
             }
         }
@@ -104,18 +134,24 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             get { return m_descriptor; }
         }
 
-        /// <summary>
-        /// Gets the common value of the property for all objects in the PropertyNode
-        /// or null if there is no common value for the property</summary>
         public object Value
         {
-            get
+            get { return IsEnumerable ? GetValueFromEnumerable() : GetValue(Instance); }
+            set
             {
-                if (IsEnumerable)
-                    return GetValueFromEnumerable();
-                return GetValue(m_instance);
+                if (!m_synchronizing)
+                {
+                    try
+                    {
+                        m_synchronizing = true;
+                        SetValue(value);
+                    }
+                    finally
+                    {
+                        m_synchronizing = false;
+                    }
+                }
             }
-            set { SetValue(value); }
         }
 
         /// <summary>
@@ -124,20 +160,79 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         /// <summary>
         /// Gets whether the object(s) in the PropertyNode is/are enumerable</summary>
-        public bool IsEnumerable { get; private set; }
+        public bool IsEnumerable
+        {
+            get { return m_isEnumerable; }
+        }
+
+        /// <summary>
+        /// Gets weather the value of the PropertyNode can be reset
+        /// </summary>
+        public bool CanResetValue
+        {
+            get { return Instances.Cast<object>().All(x => m_descriptor.CanResetValue(x)); }
+        }
+
+        /// <summary>
+        /// Resets the value of the PropertyNode to default
+        /// </summary>
+        public virtual void ResetValue()
+        {
+            foreach (object instance in Instances)
+            {
+                if (m_descriptor.CanResetValue(instance))
+                    m_descriptor.ResetValue(instance);
+            }
+        }
 
         /// <summary>
         /// Gets the context for an editor for this PropertyNode</summary>
-        public object EditorContext { get; internal set; }
+        public object EditorContext { get; set; }
 
         /// <summary>
-        /// Gets a collection of standard values for the property's data type that
-        /// its type converter is designed for when provided with a format context.
-        /// Is null if the data type does not support a standard set of values.</summary>
-        public object[] StandardValues { get; private set; }
+        /// Returns an array of standard values for the instance/s
+        /// Returns null if no standard values or standard values for each instance
+        /// are not identical
+        /// </summary>
+        public object[] StandardValues
+        {
+            get
+            {
+                object[] result = null;
+                if (!IsEnumerable)
+                {
+                    result = GetStandardValues(FirstInstance);
+                }
+                else
+                {
+                    foreach (var instance in Instances)
+                    {
+                        var values = GetStandardValues(instance);
+                        if (result == null)
+                        {
+                            result = values;
+                        }
+                        else if (values == null || !result.SequenceEqual(values))
+                        {
+                            result = null;
+                            break;
+                        }
+                    }
+                }
+                return result;
+            }
+        }
 
-        /// <summary>
-        /// Gets or sets whether one of the instances is selected</summary>
+        public bool IsExpanded
+        {
+            get { return m_isExpanded; }
+            set
+            {
+                m_isExpanded = value;
+                OnPropertyChanged(s_isExpandedArgs);
+            }
+        }
+
         public bool IsSelected
         {
             get { return m_isSelected; }
@@ -190,14 +285,10 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
             if (x != null)
             {
-                if (y != null)
-                    return x.CompareTo(y);
-                return 1;
+                return y != null ? x.CompareTo(y) : 1;
             }
 
-            if (y != null)
-                return -1;
-            return 0;
+            return (y != null) ? -1 : 0;
         }
 
         #endregion
@@ -266,7 +357,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// Refreshes property values, notifying listeners as if they had changed</summary>
         public virtual void Refresh()
         {
-            OnPropertyChanged(s_valueArgs);
+            OnPropertyChanged(ObservableUtil.AllChangedEventArgs);
         }
 
         /// <summary>
@@ -305,14 +396,11 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             return m_descriptor.GetValue(instance);
         }
 
-        /// <summary>
-        /// Gets common value of the property for all objects in the PropertyNode or null if there is no common value for the property</summary>
-        /// <returns>Common value of the property for all objects in the PropertyNode or null</returns>
         private object GetValueFromEnumerable()
         {
             object value = null;
 
-            foreach (object component in (IEnumerable) m_instance)
+            foreach (object component in Instances)
             {
                 object v = GetValue(component);
                 if (value == null)
@@ -328,28 +416,78 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             return value;
         }
 
+        private object[] GetStandardValues(object instance)
+        {
+            if (m_descriptor.Converter != null)
+            {
+                var tdcontext = new TypeDescriptorContext(instance, m_descriptor, null);
+                if (m_descriptor.Converter.GetStandardValuesExclusive(tdcontext))
+                {
+                    var values = m_descriptor.Converter.GetStandardValues(tdcontext);
+                    if (values != null)
+                    {
+                        return values.Cast<object>().ToArray();
+                    }
+                }
+            }
+            return null;
+        }
+
         private void SubscribeValueChanged()
         {
             foreach (object instance in Instances)
-                m_descriptor.AddValueChanged(instance, Instance_PropertyValueChanged);
+            {
+                SubscribeValueChanged(instance);
+            }
+        }
+
+        protected virtual void SubscribeValueChanged(object instance)
+        {
+            ValueChangedEventManager.AddListener(instance, this, m_descriptor);
         }
 
         private void UnsubscribeValueChanged()
         {
             foreach (object instance in Instances)
-                m_descriptor.RemoveValueChanged(instance, Instance_PropertyValueChanged);
+            {
+                UnsubscribeValueChanged(instance);
+            }
         }
 
-        private void Instance_PropertyValueChanged(object sender, EventArgs e)
+        protected virtual void UnsubscribeValueChanged(object instance)
+        {
+            ValueChangedEventManager.RemoveListener(instance, this, m_descriptor);
+        }
+
+        #region IWeakEventListener Members
+
+        bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
+        {
+            return OnReceiveWeakEvent(managerType, sender, e);
+        }
+
+        protected virtual bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
+        {
+            if (managerType == typeof(ValueChangedEventManager))
+            {
+                var args = (ValueChangedEventArgs)e;
+                if (args.PropertyDescriptor == m_descriptor)
+                {
+                    OnInstancePropertyValueChanged();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        #endregion
+
+        private void OnInstancePropertyValueChanged()
         {
             OnValueChanged();
-            OnPropertyChanged(s_valueArgs);
+            Refresh();
         }
 
-        /// <summary>
-        /// Disposes of resources</summary>
-        /// <param name="disposing">True to release both managed and unmanaged resources;
-        /// false to release only unmanaged resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!m_disposed)
@@ -357,6 +495,22 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                 if (disposing)
                 {
                     UnBind();
+
+                    var context = EditorContext as IDisposable;
+                    EditorContext = null;
+
+                    if(context != null)
+                    {
+                        context.Dispose();
+                    }
+
+                    m_descriptor = null;
+                    m_instance = null;
+
+                    ValueSetting = null;
+                    ValueSet = null;
+                    ValueChanged = null;
+                    ValueError = null;
                 }
 
                 m_disposed = true;
@@ -436,9 +590,21 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <value>
         ///     <c>true</c> if this instance is read only; otherwise, <c>false</c>.
         /// </value>
-        public bool IsReadOnly
+        public virtual bool IsReadOnly
         {
-            get { return Descriptor.IsReadOnly; }
+            get { return Descriptor.IsReadOnly || m_overrideReadOnly; }
+            set
+            {
+                m_overrideReadOnly = value;
+                OnReadOnlyStateChanged();
+            }
+        }
+        private bool m_overrideReadOnly;
+
+        protected virtual void OnReadOnlyStateChanged()
+        {
+            OnPropertyChanged(s_readOnlyArgs);
+            OnPropertyChanged(s_isWriteableArgs);
         }
 
         /// <summary>
@@ -482,5 +648,272 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         #endregion
+    }
+
+
+    /// <summary>
+    /// Property node which adds support for dynamic dependencies with other
+    /// property descriptors </summary>
+    /// <remarks>Use the GroupEnabledAttribute to enable/disable this node based on the current state
+    /// of another property on the instances. Only works in single instance mode.
+    /// Use the  DependencyAttribute to force update of this node when another property on the instances
+    /// changes. </remarks>
+    public class DynamicPropertyNode : PropertyNode
+    {
+        private PropertyDescriptor[] m_masterGroups = EmptyArray<PropertyDescriptor>.Instance;
+        private GroupEnables[] m_groupEnableAttributes = EmptyArray<GroupEnables>.Instance;
+        private PropertyDescriptor[] m_dependencyGroups = EmptyArray<PropertyDescriptor>.Instance;
+
+        protected override void InitializeInternal()
+        {
+            base.InitializeInternal();
+
+            // Note: This is attempting to add support for items which become disabled when other
+            // items are set to specific values. This will need extending to support listening to multiple items.
+            PropertyDescriptorCollection descriptors = null;
+
+            var groupEnableAttribute = Descriptor.Attributes.OfType<GroupEnabledAttribute>().FirstOrDefault();
+            if (groupEnableAttribute != null)
+            {
+                descriptors = new PropertyDescriptorCollection(PropertyUtils.GetProperties(Instances.Cast<object>()).ToArray());
+
+                m_groupEnableAttributes = groupEnableAttribute.GroupEnables;
+
+                var groupEnables = new List<GroupEnables>();
+                var masters = new List<PropertyDescriptor>();
+                foreach (var groupEnable in groupEnableAttribute.GroupEnables)
+                {
+                    var desc = descriptors[groupEnable.GroupName];
+                    if (desc != null)
+                    {
+                        groupEnables.Add(groupEnable);
+                        masters.Add(desc);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("PropertyNode: Descriptor not found: " + groupEnable.GroupName);
+                    }
+                }
+
+                m_groupEnableAttributes = groupEnables.ToArray();
+                m_masterGroups = masters.ToArray();
+
+                SetGroupEnabledState();
+            }
+
+            var dependencyAttribute = Descriptor.Attributes.OfType<DependencyAttribute>().FirstOrDefault();
+            if (dependencyAttribute != null)
+            {
+                if (descriptors == null)
+                    descriptors = new PropertyDescriptorCollection(PropertyUtils.GetProperties(Instances.Cast<object>()).ToArray());
+
+                var groups = new List<PropertyDescriptor>();
+                foreach (var descriptorName in dependencyAttribute.DependencyDescriptors)
+                {
+                    var desc = descriptors[descriptorName];
+                    if (desc != null)
+                    {
+                        groups.Add(desc);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("PropertyNode: Descriptor not found: " + descriptorName);
+                    }
+                }
+
+                m_dependencyGroups = groups.ToArray();
+            }
+        }
+
+        public PropertyDescriptor[] MasterGroups
+        {
+            get
+            {
+                var copy = new PropertyDescriptor[m_masterGroups.Length];
+                m_masterGroups.CopyTo(copy, 0);
+                return copy;
+            }
+        }
+
+        public PropertyDescriptor[] DependencyGroups
+        {
+            get
+            {
+                var copy = new PropertyDescriptor[m_dependencyGroups.Length];
+                m_dependencyGroups.CopyTo(copy, 0);
+                return copy;
+            }
+        }
+
+        public override bool IsReadOnly
+        {
+            get { return base.IsReadOnly || m_groupDisable; }
+            set { base.IsReadOnly = value; }
+        }
+        private bool m_groupDisable;
+
+        protected override void SubscribeValueChanged(object instance)
+        {
+            base.SubscribeValueChanged(instance);
+
+            // Subscribe to all master group descriptors values changing
+            foreach (var masterGroup in m_masterGroups)
+            {
+                ValueChangedEventManager.AddListener(instance, this, masterGroup);
+            }
+
+            foreach (var dependencyGroup in m_dependencyGroups)
+            {
+                ValueChangedEventManager.AddListener(instance, this, dependencyGroup);
+            }
+        }
+
+        protected override void UnsubscribeValueChanged(object instance)
+        {
+            base.UnsubscribeValueChanged(instance);
+
+            foreach (var masterGroup in m_masterGroups)
+            {
+                ValueChangedEventManager.RemoveListener(instance, this, masterGroup);
+            }
+
+            foreach (var dependencyGroup in m_dependencyGroups)
+            {
+                ValueChangedEventManager.RemoveListener(instance, this, dependencyGroup);
+            }
+        }
+
+        protected override bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
+        {
+            bool handled = base.OnReceiveWeakEvent(managerType, sender, e);
+            if (!handled)
+            {
+                if (managerType == typeof(ValueChangedEventManager))
+                {
+                    var args = (ValueChangedEventArgs)e;
+                    if (m_masterGroups.Contains(args.PropertyDescriptor))
+                        OnMasterGroupPropertyValueChanged();
+                    else if (m_dependencyGroups.Contains(args.PropertyDescriptor))
+                        OnDependecyGroupPropertyValueChanged();
+                    
+                    handled = true;
+                }
+            }
+            return handled;
+        }
+
+        private void OnMasterGroupPropertyValueChanged()
+        {
+            SetGroupEnabledState();
+            OnMasterGroupChanged();
+            Refresh();
+        }
+
+        private void OnDependecyGroupPropertyValueChanged()
+        {
+            OnDependencyGroupChanged();
+            Refresh();
+        }
+
+        #region Events
+
+        public event EventHandler MasterGroupChanged;
+
+        public event EventHandler DependencyGroupChanged;
+
+        protected virtual void OnMasterGroupChanged()
+        {
+            MasterGroupChanged.Raise(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnDependencyGroupChanged()
+        {
+            DependencyGroupChanged.Raise(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        private void SetGroupEnabledState()
+        {
+            // Update readonly flag based on value of master groups
+            // If any group is disabled then disable this node
+            if (!base.IsReadOnly)
+            {
+                // Defaults to writeable mode unless ANY group is not enabled
+                bool isReadOnly = false;
+
+                for (int index = 0; index < m_groupEnableAttributes.Length; index++)
+                {
+                    var attribute = m_groupEnableAttributes[index];
+                    var masterGroup = m_masterGroups[index];
+
+                    // master group could be null if no matching property descriptor was found
+                    if (masterGroup != null)
+                    {
+                        // Get the value from instance/s
+                        // This will be null if multiple instances have different values
+                        object groupPropertyValue = GetValueFromDescriptor(masterGroup);
+                        if (groupPropertyValue == null)
+                        {
+                            isReadOnly = true;
+                            break;
+                        }
+
+                        // Check the value against the list of valid values
+                        bool groupEnabled = GetGroupValues(masterGroup, attribute).Contains(groupPropertyValue);
+                        if (!groupEnabled)
+                        {
+                            isReadOnly = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (m_groupDisable != isReadOnly)
+                {
+                    m_groupDisable = isReadOnly;
+                    OnReadOnlyStateChanged();
+                }
+            }
+        }
+
+        private IEnumerable<object> GetGroupValues(PropertyDescriptor masterGroup, GroupEnables attribute)
+        {
+            // Ensure init of Typed values - currently these are cached
+            // back into the GroupEnabledAttribute
+            if (attribute.Values == null)
+            {
+                var converter = masterGroup.Converter;
+                if (converter != null && converter.CanConvertFrom(typeof(string)))
+                {
+                    attribute.Values = attribute.StringValues.Select(converter.ConvertFromString).ToArray();
+                }
+                else
+                {
+                    attribute.Values = attribute.StringValues;
+                }
+            }
+            return attribute.Values;
+        }
+
+        private object GetValueFromDescriptor(PropertyDescriptor descriptor)
+        {
+            object value = null;
+
+            foreach (object component in Instances)
+            {
+                object v = descriptor.GetValue(component);
+                if (value == null)
+                    value = v;
+
+                if (value != null && v == null)
+                    return null;
+
+                if (v != null && !v.Equals(value))
+                    return null;
+            }
+
+            return value;
+        }
     }
 }

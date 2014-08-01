@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
@@ -17,31 +18,18 @@ namespace Sce.Atf.Wpf.Models
         public AboutDialogViewModel()
         {
             Title = "About".Localize() + " " + ProductTitle;
+
+            Assemblies = new List<string>();
+            var entryAssembly = Assembly.GetEntryAssembly();
+            foreach (var assembly in entryAssembly.GetReferencedAssemblies())
+            {
+                Assemblies.Add(assembly.Name + ", Version=" + assembly.Version);
+            }
         }
 
-        #region AboutData Provider
-
-        #region Member data
-
-        private XmlDocument xmlDoc = null;
-
-        private const string propertyNameTitle = "Title";
-        private const string propertyNameDescription = "Description";
-        private const string propertyNameProduct = "Product";
-        private const string propertyNameCopyright = "Copyright";
-        private const string propertyNameCompany = "Company";
-        private const string xPathRoot = "ApplicationInfo/";
-        private const string xPathTitle = xPathRoot + propertyNameTitle;
-        private const string xPathVersion = xPathRoot + "Version";
-        private const string xPathDescription = xPathRoot + propertyNameDescription;
-        private const string xPathProduct = xPathRoot + propertyNameProduct;
-        private const string xPathCopyright = xPathRoot + propertyNameCopyright;
-        private const string xPathCompany = xPathRoot + propertyNameCompany;
-        private const string xPathLink = xPathRoot + "Link";
-        private const string xPathLinkUri = xPathRoot + "Link/@Uri";
-        #endregion
-
-        #region Properties
+        /// <summary>
+        /// Gets the assemblies referenced from the current assembly</summary>
+        public List<string> Assemblies { get; private set; } 
 
         /// <summary>
         /// Gets the Title property, which is the About dialog's window title</summary>
@@ -83,7 +71,7 @@ namespace Sce.Atf.Wpf.Models
                     else
                     {
                         // if that fails, try to get the version from a resource in the Application.
-                        result = GetLogicalResourceString(xPathVersion);
+                        result = GetLogicalResourceString(m_xPathVersion);
                     }
                 }
 
@@ -115,7 +103,7 @@ namespace Sce.Atf.Wpf.Models
                     else
                     {
                         // if that fails, try to get the version from a resource in the Application.
-                        result = GetLogicalResourceString(xPathVersion);
+                        result = GetLogicalResourceString(m_xPathVersion);
                     }
                 }
 
@@ -127,78 +115,77 @@ namespace Sce.Atf.Wpf.Models
         /// Gets the application's description</summary>
         public string Description
         {
-            get { return CalculatePropertyValue<AssemblyDescriptionAttribute>(propertyNameDescription, xPathDescription); }
+            get { return CalculatePropertyValue<AssemblyDescriptionAttribute>(m_propertyNameDescription, m_xPathDescription); }
         }
 
         /// <summary>
         ///  Gets the product's full name</summary>
         public string Product
         {
-            get { return CalculatePropertyValue<AssemblyProductAttribute>(propertyNameProduct, xPathProduct); }
+            get { return CalculatePropertyValue<AssemblyProductAttribute>(m_propertyNameProduct, m_xPathProduct); }
         }
 
         /// <summary>
         /// Gets the copyright information for the product</summary>
         public string Copyright
         {
-            get { return CalculatePropertyValue<AssemblyCopyrightAttribute>(propertyNameCopyright, xPathCopyright); }
+            get { return CalculatePropertyValue<AssemblyCopyrightAttribute>(m_propertyNameCopyright, m_xPathCopyright); }
         }
 
         /// <summary>
         /// Gets the product's company name</summary>
         public string Company
         {
-            get { return CalculatePropertyValue<AssemblyCompanyAttribute>(propertyNameCompany, xPathCompany); }
+            get { return CalculatePropertyValue<AssemblyCompanyAttribute>(m_propertyNameCompany, m_xPathCompany); }
         }
 
         /// <summary>
         /// Gets the link text to display in the About dialog</summary>
         public string LinkText
         {
-            get { return GetLogicalResourceString(xPathLink); }
+            get { return GetLogicalResourceString(m_xPathLink); }
         }
 
         /// <summary>
         /// Gets the link URI that is the navigation target of the link</summary>
         public string LinkUri
         {
-            get { return GetLogicalResourceString(xPathLinkUri); }
+            get { return GetLogicalResourceString(m_xPathLinkUri); }
         }
 
-        #endregion
-
-        #region Resource location methods
-
         /// <summary>
-        /// Gets the specified property value either from a specific attribute, or from a resource dictionary</summary>
-        /// <typeparam name="T">Attribute type that we're trying to retrieve</typeparam>
-        /// <param name="propertyName">Property name to use on the attribute</param>
-        /// <param name="xpathQuery">XPath to the element in the XML data resource</param>
-        /// <returns>The resulting string to use for a property.
-        /// Returns null if no data could be retrieved.</returns>
-        private string CalculatePropertyValue<T>(string propertyName, string xpathQuery)
+        /// Gets the banner image path.
+        /// </summary>
+        public Uri Banner
         {
-            string result = string.Empty;
-            // first, try to get the property value from an attribute.
-            object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(T), false);
-            if (attributes.Length > 0)
+            get
             {
-                T attrib = (T)attributes[0];
-                PropertyInfo property = attrib.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-                if (property != null)
+                Uri result = null;
+
+                var assembly = Assembly.GetEntryAssembly();
+                AssemblyName assmName = assembly.GetName();
+
+                // first, try to get the property value from an attribute.
+                object[] attributes = assembly.GetCustomAttributes(typeof(AssemblyBannerAttribute), false);
+                if (attributes.Length > 0)
                 {
-                    result = property.GetValue(attributes[0], null) as string;
+                    var attrib = (AssemblyBannerAttribute)attributes[0];
+                    PropertyInfo property = attrib.GetType().GetProperty("BannerPath", BindingFlags.Public | BindingFlags.Instance);
+                    if (property != null)
+                    {
+                        var path = property.GetValue(attributes[0], null) as string;
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            string relativePackUriBase = "/" + assmName.Name + ";v" + assmName.Version + ";component/" + path;
+                            string absolutePackUriBase = "pack://application:,,," + relativePackUriBase;
+
+                            result = new Uri(absolutePackUriBase);
+                        }
+                    }
                 }
-            }
 
-            // if the attribute wasn't found or it did not have a value, then look in an xml resource.
-            if (result == string.Empty)
-            {
-                // if that fails, try to get it from a resource.
-                result = GetLogicalResourceString(xpathQuery);
+                return result;
             }
-
-            return result;
         }
 
         /// <summary>
@@ -207,18 +194,18 @@ namespace Sce.Atf.Wpf.Models
         {
             get
             {
-                if (xmlDoc == null)
+                if (m_xmlDoc == null)
                 {
                     // if we haven't already found the resource XmlDocument, then try to find it.
                     XmlDataProvider provider = Application.Current.TryFindResource("aboutProvider") as XmlDataProvider;
                     if (provider != null)
                     {
                         // save away the XmlDocument, so we don't have to get it multiple times.
-                        xmlDoc = provider.Document;
+                        m_xmlDoc = provider.Document;
                     }
                 }
 
-                return xmlDoc;
+                return m_xmlDoc;
             }
         }
 
@@ -254,8 +241,54 @@ namespace Sce.Atf.Wpf.Models
             return result;
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the specified property value either from a specific attribute, or from a resource dictionary</summary>
+        /// <typeparam name="T">Attribute type that we're trying to retrieve</typeparam>
+        /// <param name="propertyName">Property name to use on the attribute</param>
+        /// <param name="xpathQuery">XPath to the element in the XML data resource</param>
+        /// <returns>The resulting string to use for a property.
+        /// Returns null if no data could be retrieved.</returns>
+        private string CalculatePropertyValue<T>(string propertyName, string xpathQuery)
+        {
+            string result = string.Empty;
+            // first, try to get the property value from an attribute.
+            object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(T), false);
+            if (attributes.Length > 0)
+            {
+                T attrib = (T)attributes[0];
+                PropertyInfo property = attrib.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
+                {
+                    result = property.GetValue(attributes[0], null) as string;
+                }
+            }
 
-        #endregion
+            // if the attribute wasn't found or it did not have a value, then look in an xml resource.
+            if (result == string.Empty)
+            {
+                // if that fails, try to get it from a resource.
+                result = GetLogicalResourceString(xpathQuery);
+            }
+
+            return result;
+        }
+
+        private XmlDocument m_xmlDoc = null;
+
+        private const string m_propertyNameTitle = "Title";
+        private const string m_propertyNameDescription = "Description";
+        private const string m_propertyNameProduct = "Product";
+        private const string m_propertyNameCopyright = "Copyright";
+        private const string m_propertyNameCompany = "Company";
+        private const string m_xPathRoot = "ApplicationInfo/";
+        private const string m_xPathTitle = m_xPathRoot + m_propertyNameTitle;
+        private const string m_xPathVersion = m_xPathRoot + "Version";
+        private const string m_xPathDescription = m_xPathRoot + m_propertyNameDescription;
+        private const string m_xPathProduct = m_xPathRoot + m_propertyNameProduct;
+        private const string m_xPathCopyright = m_xPathRoot + m_propertyNameCopyright;
+        private const string m_xPathCompany = m_xPathRoot + m_propertyNameCompany;
+        private const string m_xPathLink = m_xPathRoot + "Link";
+        private const string m_xPathLinkUri = m_xPathRoot + "Link/@Uri";
+
     }
 }

@@ -28,6 +28,7 @@ namespace Sce.Atf.Controls.Adaptable
         {            
             m_d2dTextFormat = D2dFactory.CreateTextFormat(fontFamilyName, fontSize);            
             m_fillBrush = D2dFactory.CreateSolidBrush(SystemColors.Window);
+            m_fillTitleBrush = D2dFactory.CreateSolidBrush(Color.YellowGreen);
             m_textBrush = D2dFactory.CreateSolidBrush(SystemColors.WindowText);
             m_outlineBrush = D2dFactory.CreateSolidBrush(SystemColors.ControlDark);
             m_highlightBrush = D2dFactory.CreateSolidBrush(SystemColors.Highlight);                                   
@@ -127,6 +128,17 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
+        /// Gets the custom title background fill brush</summary>
+        /// <param name="key">Key identifying bitmap</param>
+        /// <returns>Custom brush corresponding to the key, or the default title fill brush</returns>
+        public D2dBrush GetFillTitleBrush(object key)
+        {
+            D2dBrush brush;
+            m_brushes.TryGetValue(key, out brush);
+            return brush ?? m_fillTitleBrush;
+        }
+
+        /// <summary>
         /// Gets or sets default Stroke width used for drawing outline</summary>        
         public float StrokeWidth
         {
@@ -163,6 +175,14 @@ namespace Sce.Atf.Controls.Adaptable
         {
             get { return m_fillBrush; }
             set { SetDisposableField(value, ref m_fillBrush); }
+        }
+
+        /// <summary>
+        /// Gets or sets the brush (pen) used to fill title area</summary>
+        public D2dBrush FillTitleBrush
+        {
+            get { return m_fillTitleBrush; }
+            set { SetDisposableField(value, ref m_fillTitleBrush); }
         }
 
         /// <summary>
@@ -313,6 +333,7 @@ namespace Sce.Atf.Controls.Adaptable
             if (disposing)
             {
                 m_fillBrush.Dispose();
+                m_fillTitleBrush.Dispose();
                 m_textBrush.Dispose();
                 m_d2dTextFormat.Dispose();
                 m_highlightBrush.Dispose();
@@ -397,6 +418,7 @@ namespace Sce.Atf.Controls.Adaptable
         private readonly Dictionary<object, D2dBitmap> m_bitmaps = new Dictionary<object, D2dBitmap>();        
         private D2dTextFormat m_d2dTextFormat;
         private D2dBrush m_fillBrush;
+        private D2dBrush m_fillTitleBrush;
         private D2dBrush m_textBrush;        
         private D2dBrush m_highlightBrush;
         private D2dBrush m_textHighlightBrush;

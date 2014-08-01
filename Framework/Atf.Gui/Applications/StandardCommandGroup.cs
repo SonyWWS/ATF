@@ -86,6 +86,10 @@ namespace Sce.Atf.Applications
         WindowLayout,
 
         /// <summary>
+        /// Command group containing the user window layouts</summary>
+        WindowLayoutItems,
+
+        /// <summary>
         /// Command group containing commands to split windows</summary>
         WindowSplit,
 

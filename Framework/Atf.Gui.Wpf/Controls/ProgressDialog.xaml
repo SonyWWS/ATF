@@ -1,15 +1,14 @@
-﻿<Window x:Class="Sce.Atf.Wpf.Controls.ProgressDialog"
+﻿<Controls:CommonDialog x:Class="Sce.Atf.Wpf.Controls.ProgressDialog"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:l="clr-namespace:Sce.Atf.Wpf"
              xmlns:c="clr-namespace:Sce.Atf.Wpf.ValueConverters"
-             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup" xmlns:Controls="clr-namespace:Sce.Atf.Wpf.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Title="{Binding Title}"
-             Background="{x:Static SystemColors.ControlBrush}"
              WindowStartupLocation="CenterOwner"
              SizeToContent="Height"
              Width="400"
@@ -18,6 +17,13 @@
     <DockPanel Margin="12" LastChildFill="False">
         <TextBlock DockPanel.Dock="Top" 
             Text="{Binding Description}"
+            Visibility="{Binding Cancelled, Converter={c:InverseBoolToVisibilityConverter}}"       
+            Margin="0,0,0,12"
+            MinHeight="36"
+            TextWrapping="Wrap" />
+        <TextBlock DockPanel.Dock="Top" 
+            Text="{m:Loc Cancelling...}"
+            Visibility="{Binding Cancelled, Converter={c:BoolToVisibilityConverter}}"
             Margin="0,0,0,12"
             MinHeight="36"
             TextWrapping="Wrap" />
@@ -27,7 +33,8 @@
             IsIndeterminate="{Binding IsIndeterminate}"
             Height="23" />
         <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0" LastChildFill="False">
-            <TextBlock DockPanel.Dock="Top" x:Name="lblStatus" MinHeight="36" Text="{Binding Content}" TextWrapping="Wrap" />
+            <!--Using a fixed height text box here to prevent the dialog resizing like it's having a fit -->
+            <TextBlock DockPanel.Dock="Top" x:Name="lblStatus" Height="60" Text="{Binding Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             <Button DockPanel.Dock="Right"
                 Click="CancelButton_Click"
                 Visibility="{Binding Cancellable, Converter={c:BoolToVisibilityConverter}}"
@@ -38,4 +45,4 @@
         </DockPanel>
 
     </DockPanel>
-</Window>
+</Controls:CommonDialog>

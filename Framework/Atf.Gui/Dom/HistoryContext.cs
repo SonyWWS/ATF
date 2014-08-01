@@ -126,7 +126,7 @@ namespace Sce.Atf.Dom
             {
                 m_undoingOrRedoing = true;
                 // When sharing a global history, need to synchronize undoing/redoing status for participating historycontexts 
-                // to prevent commands executed in undo/redo accidently recorded again into the global history during undo/redo
+                // to prevent commands executed in undo/redo accidentally recorded again into the global history during undo/redo
                 if (globalHistoryContext != null)
                     globalHistoryContext.Cast<GlobalHistoryContext>().SynchronizeUndoRedoStatus(m_undoingOrRedoing);
                 m_history.Undo();
@@ -204,16 +204,16 @@ namespace Sce.Atf.Dom
             }
 
             // if operations can be combined with pending set operations, combine and remove them
-            IList<TransactionContext.Operation> operations = TransactionOperations;
+            IList<Operation> operations = TransactionOperations;
             int i = 0;
             while (i < operations.Count)
             {
-                TransactionContext.Operation operation = operations[i];
-                TransactionContext.AttributeChangedOperation setOp = operation as TransactionContext.AttributeChangedOperation;
+                Operation operation = operations[i];
+                var setOp = operation as AttributeChangedOperation;
                 if (setOp != null)
                 {
-                    Pair<DomNode, AttributeInfo> id = new Pair<DomNode, AttributeInfo>(setOp.DomNode, setOp.AttributeInfo);
-                    TransactionContext.AttributeChangedOperation pendingSetOp;
+                    var id = new Pair<DomNode, AttributeInfo>(setOp.DomNode, setOp.AttributeInfo);
+                    AttributeChangedOperation pendingSetOp;
                     if (m_pendingChanges.TryGetValue(id, out pendingSetOp))
                     {
                         pendingSetOp.NewValue = setOp.NewValue;
@@ -273,7 +273,7 @@ namespace Sce.Atf.Dom
             public TransactionCommand(
                 HistoryContext context,
                 string name,
-                TransactionContext.Operation[] operations,
+                Operation[] operations,
                 SetSelectionCommand setSelectionCommand)
 
                 : base(name)
@@ -289,7 +289,7 @@ namespace Sce.Atf.Dom
                 m_context.DoTransaction(
                     delegate
                     {
-                        foreach (TransactionContext.Operation operation in m_operations)
+                        foreach (Operation operation in m_operations)
                             operation.Do();
                     }, Description);
 
@@ -318,8 +318,8 @@ namespace Sce.Atf.Dom
 
         // Dictionary holding pending set-attribute operations, so that rapid sequences of such
         //  operations can be combined into a single logical command for undo/redo
-        private readonly Dictionary<Pair<DomNode, AttributeInfo>, TransactionContext.AttributeChangedOperation> m_pendingChanges =
-            new Dictionary<Pair<DomNode, AttributeInfo>, TransactionContext.AttributeChangedOperation>();
+        private readonly Dictionary<Pair<DomNode, AttributeInfo>, AttributeChangedOperation> m_pendingChanges =
+            new Dictionary<Pair<DomNode, AttributeInfo>, AttributeChangedOperation>();
 
         // Rather than use a timer, just record the time of attribute-set operations and combine
         //  if new set operations with any pending set operations. There isn't a leak problem with

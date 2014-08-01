@@ -886,19 +886,4 @@ namespace Sce.Atf.Applications
             Command.Connection
         };
     }
-
-    /// <summary>
-    /// Checkout behavior to use when a document is first modified (made dirty)</summary>
-    public enum CheckoutOnEditBehavior
-    {
-        /// <summary>
-        /// Automatically check out a source controlled document, without asking the user</summary>
-        Always,
-        /// <summary>
-        /// Prompt the user if he/she wants to check out a document under source control</summary>
-        Prompt,
-        /// <summary>
-        /// Never check out when a document is first modified</summary>
-        Never
-    }
 }

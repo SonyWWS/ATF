@@ -20,22 +20,93 @@ namespace Sce.Atf.Applications
     /// <summary>
     /// SkinEditor</summary>
     internal class SkinEditor : Form
-    {        
+    {
         public SkinEditor()
         {
-            Init();           
+            Init();
         }
 
         /// <summary>
         /// Load skin</summary>        
         public void OpenSkin(string fileName)
         {
-            if (!File.Exists(fileName)) return;            
+            if (!File.Exists(fileName)) return;
             using (FileStream stream = File.OpenRead(fileName))
             {
                 SetActiveDocument(stream);
-                m_activeDocument.Uri = new Uri(fileName);                
-            }           
+                m_activeDocument.Uri = new Uri(fileName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the current skin, as a stream, suitable for use by SkinService, for example.</summary>
+        /// <returns></returns>
+        public Stream GetCurrentSkin()
+        {
+            if (m_activeDocument == null)
+                return Stream.Null;
+
+            var stream = new MemoryStream();
+            m_activeDocument.Write(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
+        }
+
+        public bool ConfirmCloseActiveDocument( bool closeActiveSkin = true)
+        {
+            bool confirm = true;
+            bool skinChanged = false;
+            if (m_activeDocument != null &&
+                m_activeDocument.Dirty)
+            {
+                var dlgResult = MessageBox.Show(this,
+                "Would you like to save the changes?".Localize(),
+                "Unsaved changes".Localize(),
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button1);
+
+                if (dlgResult == DialogResult.Yes)
+                {
+                    if (m_activeDocument.Uri != null)
+                        SaveActiveDocument();
+                    else
+                        confirm = SaveAsActiveDocument();
+                }
+                else if (dlgResult == DialogResult.Cancel)
+                {
+                    confirm = false;
+                }
+                else if (dlgResult == DialogResult.No)
+                {
+                    skinChanged = true;
+                }
+            }
+            else if (m_activeDocument != null &&
+                     m_activeDocument.Uri == null)
+            {
+                skinChanged = true;
+            }
+
+            if (confirm && closeActiveSkin)
+            {
+                m_activeDocument = null;
+                m_treeControlAdapter.TreeView = null;
+                m_PropertyGrid.Bind(null);
+                if (skinChanged)
+                    OnSkinChanged();
+            }
+            return confirm;
+        }
+
+        /// <summary>
+        /// Event that is raised after the current skin has been loaded or edited</summary>
+        public event EventHandler<DocumentEventArgs> SkinChanged;
+
+        protected virtual void OnSkinChanged()
+        {
+            var e = new DocumentEventArgs(m_activeDocument);// a null active document is OK
+            SkinChanged.Raise(this, e);
         }
 
         #region base overrides
@@ -46,7 +117,7 @@ namespace Sce.Atf.Applications
         #endregion
 
         #region private methods
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bool close = ConfirmCloseActiveDocument();
             if (!close) return;
@@ -61,31 +132,40 @@ namespace Sce.Atf.Applications
             }
             finally
             {
-                stream.Close();                
-            }            
+                stream.Close();
+            }
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool close = ConfirmCloseActiveDocument();
+            bool close = ConfirmCloseActiveDocument(false);
             if (!close) return;
 
             using (var dlg = new OpenFileDialog())
-            {                
+            {
                 dlg.Filter = "Skin (*.skn)|*.skn";
-                dlg.CheckFileExists = true;              
+                dlg.CheckFileExists = true;
                 dlg.InitialDirectory = SkinService.SkinsDirectory;
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
                     string filename = dlg.FileName;
-                    string error = string.Empty;
                     OpenSkin(filename);
                 }
             }
-
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFolderMenu_Click(object sender, EventArgs e)
+        {
+            string path = m_activeDocument != null && m_activeDocument.Uri != null
+                ? m_activeDocument.Uri.LocalPath : null;
+            if (path != null)
+            {
+                string folder = Path.GetDirectoryName(path);
+                System.Diagnostics.Process.Start("explorer.exe", folder);
+            }
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (m_activeDocument == null) return;
             if (m_activeDocument.Uri != null)
@@ -95,54 +175,17 @@ namespace Sce.Atf.Applications
 
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(m_activeDocument == null) return;
+            if (m_activeDocument == null) return;
             SaveAsActiveDocument();
-           
+
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
         }
-       
-        private bool ConfirmCloseActiveDocument()
-        {
-            bool confirm = true;
-            if(m_activeDocument != null &&
-                m_activeDocument.Dirty)
-            {
-                var dlgResult = MessageBox.Show(this, 
-                "Would you like to save the changes?".Localize(), 
-                "Unsaved changes".Localize(), 
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button1);
-
-                if (dlgResult == DialogResult.Yes)
-                {
-                    if (m_activeDocument.Uri != null)
-                        SaveActiveDocument();
-                    else
-                    confirm = SaveAsActiveDocument();
-                    
-                }
-                else if (dlgResult == DialogResult.Cancel)
-                {
-                    confirm = false;
-                }
-            }
-
-            if (confirm)
-            {
-                m_activeDocument = null;
-                m_treeControlAdapter.TreeView = null;
-                m_PropertyGrid.Bind(null);
-            }
-            return confirm;
-        }
-
 
         private bool SaveAsActiveDocument()
         {
@@ -153,8 +196,8 @@ namespace Sce.Atf.Applications
                 dlg.Filter = "Skin (*.skn)|*.skn";
                 if (m_activeDocument.Uri != null)
                 {
-                    dlg.InitialDirectory = Path.GetDirectoryName(m_activeDocument.Uri.AbsolutePath);
-                    dlg.FileName = Path.GetFileName(m_activeDocument.Uri.AbsolutePath);
+                    dlg.InitialDirectory = Path.GetDirectoryName(m_activeDocument.Uri.LocalPath);
+                    dlg.FileName = Path.GetFileName(m_activeDocument.Uri.LocalPath);
                 }
                 else
                 {
@@ -170,33 +213,31 @@ namespace Sce.Atf.Applications
             }
             return result;
         }
+
         private void SaveActiveDocument()
         {
             if (m_activeDocument == null
                 || m_activeDocument.Uri == null) return;
-
-            FileMode fileMode = FileMode.Create;
-            using (FileStream stream = new FileStream(m_activeDocument.Uri.AbsolutePath, fileMode))
+            using (var stream = new FileStream(m_activeDocument.Uri.LocalPath, FileMode.Create))
             {
-                DomXmlWriter writer = new DomXmlWriter(s_schemaLoader.TypeCollection);
-                writer.Write(m_activeDocument.DomNode, stream, m_activeDocument.Uri);
+                m_activeDocument.Write(stream);
             }
             m_activeDocument.Dirty = false;
+
+            OnSkinChanged();
         }
 
         private void Init()
         {
             if (s_schemaLoader == null)
                 s_schemaLoader = new SchemaLoader();
-
-            m_PropertyGrid = new PropertyGrid();
+            m_PropertyGrid = new PropertyGrid(PropertyGridMode.PropertySorting | PropertyGridMode.DisplayDescriptions | PropertyGridMode.HideResetAllButton);
             m_treeControl = new TreeControl();
             m_menu = new MenuStrip();
             var fileMenu = new ToolStripMenuItem();
             var newMenu = new ToolStripMenuItem();
             var openMenu = new ToolStripMenuItem();
-            var saveMenu = new ToolStripMenuItem();
-            var saveAsMenu = new ToolStripMenuItem();
+
             var exitMenu = new ToolStripMenuItem();
             var splitter = new SplitContainer();
 
@@ -207,10 +248,10 @@ namespace Sce.Atf.Applications
             splitter.SuspendLayout();
 
             SuspendLayout();
-            
+
             // m_menu
             m_menu.Location = new System.Drawing.Point(0, 0);
-            m_menu.Name = "m_menu";            
+            m_menu.Name = "m_menu";
             m_menu.TabIndex = 0;
             m_menu.Text = "m_menu";
             m_menu.Items.Add(fileMenu);
@@ -220,95 +261,109 @@ namespace Sce.Atf.Applications
             fileMenu.Name = "fileToolStripMenuItem";
             fileMenu.Size = new System.Drawing.Size(37, 20);
             fileMenu.Text = "File".Localize();
+            fileMenu.DropDownOpening += new EventHandler(fileMenu_DropDownOpening);
             fileMenu.DropDownItems.AddRange(new ToolStripItem[]
             {
-                newMenu, 
+                newMenu,             
                 openMenu,
-                saveMenu,
-                saveAsMenu,
+                m_openFolderMenu,
+                m_saveMenu,
+                m_saveAsMenu,
                 exitMenu
             });
-
 
             // new
             newMenu.Name = "newToolStripMenuItem";
             newMenu.ShortcutKeys = Keys.Control | Keys.N;
             newMenu.Text = "New".Localize();
-            newMenu.Click += newToolStripMenuItem_Click;            
+            newMenu.Click += NewToolStripMenuItem_Click;
 
             //open
             openMenu.Name = "openToolStripMenuItem";
-            openMenu.ShortcutKeys = Keys.Control | Keys.O;            
+            openMenu.ShortcutKeys = Keys.Control | Keys.O;
             openMenu.Text = "Open...".Localize();
-            openMenu.Click += openToolStripMenuItem_Click;
-            
+            openMenu.Click += OpenToolStripMenuItem_Click;
+
+
+            // open containing folder
+            m_openFolderMenu.Name = "OpenFolderMenu";
+            m_openFolderMenu.Text = "Open Containing Folder".Localize();
+            m_openFolderMenu.Click += new EventHandler(OpenFolderMenu_Click);
+
             //save
-            saveMenu.Name = "saveToolStripMenuItem";
-            saveMenu.ShortcutKeys = Keys.Control | Keys.S;
-            saveMenu.Text = "Save".Localize();
-            saveMenu.Click += saveToolStripMenuItem_Click;
+            m_saveMenu.Name = "saveToolStripMenuItem";
+            m_saveMenu.ShortcutKeys = Keys.Control | Keys.S;
+            m_saveMenu.Text = "Save".Localize();
+            m_saveMenu.Click += SaveToolStripMenuItem_Click;
 
             // save as
-            saveAsMenu.Name = "saveAsToolStripMenuItem";            
-            saveAsMenu.Text = "Save As...".Localize();
-            saveAsMenu.Click += saveAsToolStripMenuItem_Click;
+            m_saveAsMenu.Name = "saveAsToolStripMenuItem";
+            m_saveAsMenu.Text = "Save As...".Localize();
+            m_saveAsMenu.Click += SaveAsToolStripMenuItem_Click;
 
             // exit
-            exitMenu.Name = "exitToolStripMenuItem";            
+            exitMenu.Name = "exitToolStripMenuItem";
             exitMenu.Text = "Exit".Localize();
-            exitMenu.Click += exitToolStripMenuItem_Click;
+            exitMenu.Click += ExitToolStripMenuItem_Click;
 
             // tree control
-            m_treeControl.Dock = DockStyle.Fill;          
-            m_treeControl.Name = "m_treeControl";            
+            m_treeControl.Dock = DockStyle.Fill;
+            m_treeControl.Name = "m_treeControl";
             m_treeControl.TabIndex = 1;
             m_treeControl.Width = 150;
             m_treeControl.ShowRoot = false;
             m_treeControl.AllowDrop = false;
             m_treeControl.SelectionMode = SelectionMode.One;
             m_treeControlAdapter = new TreeControlAdapter(m_treeControl);
-            
+
             // propertyGrid1            
-            m_PropertyGrid.Dock = DockStyle.Fill;            
-            m_PropertyGrid.Name = "propertyGrid1";            
+            m_PropertyGrid.Dock = DockStyle.Fill;
+            m_PropertyGrid.Name = "propertyGrid1";
             m_PropertyGrid.TabIndex = 3;
             m_PropertyGrid.PropertySorting = PropertySorting.None;
 
             // splitter           
-            splitter.Dock = DockStyle.Fill;            
+            splitter.Dock = DockStyle.Fill;
             splitter.Name = "splitContainer1";
             splitter.Panel1.Controls.Add(m_treeControl);
-            splitter.Panel2.Controls.Add(m_PropertyGrid);            
+            splitter.Panel2.Controls.Add(m_PropertyGrid);
             splitter.SplitterDistance = 100;
             splitter.TabIndex = 1;
-            
+
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(600, 400);            
-            Controls.Add(splitter);            
+            ClientSize = new System.Drawing.Size(600, 400);
+            Controls.Add(splitter);
             Controls.Add(m_menu);
             MainMenuStrip = m_menu;
             Name = "SkinEditor";
-            Text = "SkinEditor".Localize();
             Icon = GdiUtil.CreateIcon(ResourceUtil.GetImage(Sce.Atf.Resources.AtfIconImage));
-
+            UpdateTitleText();
             m_menu.ResumeLayout(false);
             m_menu.PerformLayout();
             splitter.Panel1.ResumeLayout(false);
             splitter.Panel2.ResumeLayout(false);
             splitter.EndInit();
             splitter.ResumeLayout(false);
-            
+
             ResumeLayout(false);
             PerformLayout();
             splitter.SplitterDistance = 170;
         }
 
+        private void fileMenu_DropDownOpening(object sender, EventArgs e)
+        {
+            m_saveMenu.Enabled = m_activeDocument != null && m_activeDocument.Dirty;
+            m_saveAsMenu.Enabled = m_activeDocument != null;
+            m_openFolderMenu.Enabled =
+                m_activeDocument != null && m_activeDocument.Uri != null;
+        }
+
         private void SetActiveDocument(Stream stream)
         {
-            DomXmlReader domReader = new DomXmlReader(s_schemaLoader);
+            var domReader = new DomXmlReader(s_schemaLoader);
             var node = domReader.Read(stream, null);
             node.InitializeExtensions();
-            m_activeDocument = node.As<SkinDocument>();            
+            m_activeDocument = node.Cast<SkinDocument>();
             var context = node.As<SkinEditingContext>();
             m_treeControlAdapter.TreeView = context;
             m_PropertyGrid.Bind(null);
@@ -319,35 +374,41 @@ namespace Sce.Atf.Applications
                 m_PropertyGrid.Bind(propContext);
             };
 
+            context.Ended += Context_Refresh;
+            context.Cancelled += Context_Refresh;
+
             m_activeDocument.UriChanged += (sender, e) => UpdateTitleText();
             m_activeDocument.DirtyChanged += (sender, e) => UpdateTitleText();
+            UpdateTitleText();
+            OnSkinChanged();
+        }
+
+        private void Context_Refresh(object sender, EventArgs e)
+        {
+            OnSkinChanged();
         }
 
         private void UpdateTitleText()
         {
-            string str = "SkinEditor";
+            string str = "Skin Editor".Localize();
             if (m_activeDocument != null)
             {
 
                 str += m_activeDocument.Uri != null ?
-                    ": " + m_activeDocument.Uri.AbsolutePath : ": Untitled";
+                    ": " + m_activeDocument.Uri.LocalPath : ": Untitled";
                 if (m_activeDocument.Dirty)
                     str += "*";
             }
-            this.Text = str;                                
-        }
-        private void PrintDomNode(DomNode node)
-        {
-            Console.WriteLine(node.Type.Name);
-            foreach (AttributeInfo attr in node.Type.Attributes)
-                Console.WriteLine("\t{0}: {1}", attr.Name, node.GetAttribute(attr));            
-            foreach (DomNode child in node.Children)
-                PrintDomNode(child);                        
+            this.Text = str;
         }
 
         #endregion
 
         #region private members
+
+        ToolStripMenuItem m_openFolderMenu = new ToolStripMenuItem();
+        ToolStripMenuItem m_saveMenu = new ToolStripMenuItem();
+        ToolStripMenuItem m_saveAsMenu = new ToolStripMenuItem();
 
         PropertyGrid m_PropertyGrid;
         TreeControlAdapter m_treeControlAdapter;
@@ -365,9 +426,15 @@ namespace Sce.Atf.Applications
             {
                 get { return "SkinDocument"; }
             }
+
+            public void Write(Stream stream)
+            {
+                var writer = new DomXmlWriter(s_schemaLoader.TypeCollection);
+                writer.Write(DomNode, stream, Uri);
+            }
         }
 
-        private class SkinEditingContext : EditingContext , ITreeView, IItemView
+        private class SkinEditingContext : EditingContext, ITreeView, IItemView
         {
 
             #region ITreeView Members
@@ -392,12 +459,13 @@ namespace Sce.Atf.Applications
             #region IItemView Members
 
             void IItemView.GetInfo(object item, ItemInfo info)
-            {                
-                DomNode node = item.Cast<DomNode>();               
+            {
+                DomNode node = item.Cast<DomNode>();
                 info.IsLeaf = true;
-                 
+                info.AllowLabelEdit = false;
+
                 if (node.Type.Equals(SkinSchema.styleType.Type))
-                    info.Label = (string)node.GetAttribute(SkinSchema.styleType.nameAttribute);                
+                    info.Label = (string)node.GetAttribute(SkinSchema.styleType.nameAttribute);
                 else
                     info.Label = node.Type.Name;
             }
@@ -413,6 +481,8 @@ namespace Sce.Atf.Applications
             /// <returns>Array of property descriptors</returns>
             protected override System.ComponentModel.PropertyDescriptor[] GetPropertyDescriptors()
             {
+
+                // skin schema
 
                 // styleType
                 //    setterType 0 to N
@@ -435,20 +505,15 @@ namespace Sce.Atf.Applications
                 //    valueInfoType 0 to N
 
 
-                List<System.ComponentModel.PropertyDescriptor> descriptors =
-                    new List<System.ComponentModel.PropertyDescriptor>();
-             
-                var setters = DomNode.GetChildList(SkinSchema.styleType.setterChild);               
+                var descriptors = new List<System.ComponentModel.PropertyDescriptor>();
+
+                var setters = DomNode.GetChildList(SkinSchema.styleType.setterChild);
                 foreach (var setter in setters)
                 {
-                    ProcessSetterType(setter,"", descriptors);
+                    ProcessSetterType(setter, "", descriptors);
                 }
-
                 return descriptors.ToArray();
-
-                
             }
-
 
             private void ProcessSetterType(DomNode setter, string parentPropName,
                 List<System.ComponentModel.PropertyDescriptor> descriptors)
@@ -459,7 +524,7 @@ namespace Sce.Atf.Applications
                     ? parentPropName + "->" + curPropName : curPropName;
 
                 DomNode valInfo = setter.GetChild(SkinSchema.setterType.valueInfoChild);
-                if (valInfo != null)                
+                if (valInfo != null)
                 {
                     ProcessValueInfo(valInfo, propName, descriptors);
                 }
@@ -509,17 +574,30 @@ namespace Sce.Atf.Applications
                             }
                             else
                             {
-                                int k = 1;
-                                string paramName = propName +" : Arg_";
-                                foreach (DomNode vInfoChild in vInfoChildList)
+
+                                // special handling for SyntaxEditorControl
+                                if (typeName == "Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle")
                                 {
-                                    string name = paramName + k;                           
-                                    ProcessValueInfo(vInfoChild, name, descriptors);
-                                    k++;
+                                    string argName =
+                                    (string)vInfoChildList[0].GetAttribute(SkinSchema.valueInfoType.valueAttribute);
+
+                                    string name = propName + "->" + argName;
+                                    ProcessValueInfo(vInfoChildList[1], name, descriptors);
+                                }
+                                else
+                                {
+                                    int k = 1;
+                                    string paramName = propName + " : Arg_";
+                                    foreach (DomNode vInfoChild in vInfoChildList)
+                                    {
+                                        string name = paramName + k;
+                                        ProcessValueInfo(vInfoChild, name, descriptors);
+                                        k++;
+                                    }
                                 }
                             }
                         }
-                        
+
                         foreach (DomNode setterChild in valInfo.GetChildList(SkinSchema.valueInfoType.setterChild))
                         {
                             ProcessSetterType(setterChild, propName, descriptors);
@@ -527,11 +605,11 @@ namespace Sce.Atf.Applications
                     }
                 }
             }
-                
-            private void GetEditorAndConverter(Type type, 
-                out object editor, 
+
+            private void GetEditorAndConverter(Type type,
+                out object editor,
                 out TypeConverter converter)
-            {                
+            {
                 editor = null;
                 converter = null;
                 if (type == null) return;
@@ -548,28 +626,6 @@ namespace Sce.Atf.Applications
                     editor = new LongEnumEditor(type);
                 }
 
-                //// First check for very common type names and custom names.
-                //switch (type)
-                //{
-                //    case typeof(Color)
-                       
-                //        break;
-                //    //case "string": //short for "System.String"
-                //    //    return typeof(string);
-
-                //    //case "int": //short for "System.Int32"
-                //    //    return typeof(int);
-
-                //    //case "float": //short for "System.Single"
-                //    //    return typeof(float);
-
-                //    //case "char": //short for "System.Char"
-                //    //    return typeof(char);
-
-                //    //case "byte": //short for "System.Byte"
-                //    //    return typeof(byte);
-                //}
-
             }
             #region IDynamicTypeDescriptor Members
             bool IDynamicTypeDescriptor.CacheableProperties
@@ -578,9 +634,9 @@ namespace Sce.Atf.Applications
             }
             #endregion
         }
-        
+
         private class SkinSetterAttributePropertyDescriptor : AttributePropertyDescriptor
-        {            
+        {
             public SkinSetterAttributePropertyDescriptor(
             DomNode domObj,
             string name,
@@ -597,6 +653,14 @@ namespace Sce.Atf.Applications
 
             #region Overrides
 
+            public override bool CanResetValue(object component)
+            {
+                return false;
+            }
+            public override void ResetValue(object component)
+            {
+            }
+
             public override DomNode GetNode(object component)
             {
                 return m_domObject;
@@ -606,7 +670,7 @@ namespace Sce.Atf.Applications
             /// Implements Equals() for organizing descriptors in grid controls</summary>
             public override bool Equals(object obj)
             {
-                SkinSetterAttributePropertyDescriptor other = obj as SkinSetterAttributePropertyDescriptor;
+                var other = obj as SkinSetterAttributePropertyDescriptor;
                 if (!base.Equals(other))
                     return false;
 
@@ -622,15 +686,14 @@ namespace Sce.Atf.Applications
             /// <summary>
             /// Implements GetHashCode() for organizing descriptors in grid controls</summary>
             public override int GetHashCode()
-            {               
-                return m_domObject.GetHashCode();               
+            {
+                return m_domObject.GetHashCode();
             }
 
-            #endregion 
+            #endregion
 
             private DomNode m_domObject;
         }
-
 
         private class FontDescriptor : Sce.Atf.Dom.PropertyDescriptor
         {
@@ -657,7 +720,7 @@ namespace Sce.Atf.Applications
             /// Implements Equals() for organizing descriptors in grid controls</summary>
             public override bool Equals(object obj)
             {
-                FontDescriptor other = obj as FontDescriptor;
+                var other = obj as FontDescriptor;
                 if (!base.Equals(other))
                     return false;
 
@@ -677,13 +740,12 @@ namespace Sce.Atf.Applications
                 return m_domObject.GetHashCode();
             }
 
-            #endregion
-
-
-
             public override bool CanResetValue(object component)
             {
                 return false;
+            }
+            public override void ResetValue(object component)
+            {
             }
 
             public override object GetValue(object component)
@@ -727,11 +789,6 @@ namespace Sce.Atf.Applications
                 return m_font;
             }
 
-            public override void ResetValue(object component)
-            {
-                // reset attribute.
-            }
-
             public override void SetValue(object component, object value)
             {
                 if (m_font != null) m_font.Dispose();
@@ -758,21 +815,11 @@ namespace Sce.Atf.Applications
                 }
             }
 
+            #endregion
             private DomNode m_domObject;
             private Font m_font;
         }
 
-
-        // <setter propertyName="Font">
-        //    <valueInfo type="System.Drawing.Font">
-        //        <constructorParams>
-        //            <valueInfo type="string" value="Verdana"/>
-        //            <valueInfo type="float" value="11"/>
-        //            <valueInfo type="System.Drawing.FontStyle" value="Regular"/>        
-        //        </constructorParams>
-        //    </valueInfo>
-        //</setter>
-        
         private class StringColorConverter : TypeConverter
         {
 
@@ -791,10 +838,10 @@ namespace Sce.Atf.Applications
             /// <summary>
             /// Convert from color to string. </summary>            
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-            {                
-                if (value is Color)                
-                    return string.Format("#{0:X}", ((Color)value).ToArgb());                                    
-                return value;          
+            {
+                if (value is Color)
+                    return string.Format("#{0:X}", ((Color)value).ToArgb());
+                return value;
             }
 
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
@@ -802,7 +849,7 @@ namespace Sce.Atf.Applications
                 if (destinationType == typeof(string))
                 {
                     if (value is string) return value;
-                    return string.Format("#{0:X}", ((Color)value).ToArgb());                    
+                    return string.Format("#{0:X}", ((Color)value).ToArgb());
                 }
 
                 if (destinationType == typeof(Color))
@@ -813,7 +860,7 @@ namespace Sce.Atf.Applications
                         return m_converter.ConvertFromString(str);
                     return Color.Black;
                 }
-                return null;                
+                return null;
             }
             private System.Drawing.ColorConverter m_converter = new ColorConverter();
         }
@@ -832,7 +879,7 @@ namespace Sce.Atf.Applications
             object IAdaptable.GetAdapter(Type type)
             {
                 if (type == typeof(ITransactionContext))
-                {                    
+                {
                     return m_context.As<ITransactionContext>();
                 }
                 return null;
@@ -843,7 +890,7 @@ namespace Sce.Atf.Applications
         }
 
         private class SchemaLoader : XmlSchemaTypeLoader
-        {            
+        {
             public SchemaLoader()
             {
                 // set resolver to locate embedded .xsd file
@@ -871,11 +918,13 @@ namespace Sce.Atf.Applications
                     SkinSchema.skinType.Type.Define(new ExtensionInfo<MultipleHistoryContext>());
 
                     SkinSchema.styleType.Type.Define(new ExtensionInfo<SkinStyleProperties>());
-                    
+
                     break;
                 }
             }
         }
+
+
         #endregion
 
     } // internal class SkinEditor : Form
@@ -898,10 +947,7 @@ namespace Sce.Atf.Applications
             s_types.Add(typeof(System.Drawing.Drawing2D.LinearGradientMode).FullName, typeof(System.Drawing.Drawing2D.LinearGradientMode));
             s_types.Add(typeof(ControlGradient).FullName, typeof(ControlGradient));
             s_types.Add(typeof(FlatStyle).FullName, typeof(FlatStyle));
-            
-
         }
-
 
         public static Type GetType(string typeName)
         {
@@ -915,7 +961,7 @@ namespace Sce.Atf.Applications
             {
                 type = assembly.GetType(typeName);
                 if (type != null) break;
-                
+
             }
 
             // type could be null but still adding it to s_types
@@ -924,8 +970,6 @@ namespace Sce.Atf.Applications
             return type;
         }
 
-
-        private static Dictionary<string, Type>
-            s_types;
+        private static Dictionary<string, Type> s_types;
     }
 }

@@ -12,6 +12,7 @@ using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.Dom;
 
+using HelpAboutCommand = Sce.Atf.Applications.HelpAboutCommand;
 
 namespace DomPropertyEditorSample
 {

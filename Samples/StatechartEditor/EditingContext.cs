@@ -65,10 +65,10 @@ namespace StatechartEditorSample
         /// <summary>
         /// Centers items in canvas at point</summary>
         /// <param name="items">Items to center</param>
-        /// <param name="center">Point at which to center items</param>
+        /// <param name="center">Point at which to center items, in world coordinates</param>
         public void Center(IEnumerable<object> items, Point center)
         {
-             Rectangle bounds;
+             Rectangle bounds; //world coordinates
              m_viewingContext.GetBounds(items, out bounds);
            
             // calculate offset
@@ -85,6 +85,7 @@ namespace StatechartEditorSample
                 Offset(annotation, offset);
         }
 
+        // 'offset' is in world coordinates
         private void Offset(StateBase stateBase, Point offset)
         {
             Rectangle itemBounds = stateBase.Bounds;
@@ -101,6 +102,7 @@ namespace StatechartEditorSample
             }
         }
 
+        // 'offset' is in world coordinates
         private void Offset(Annotation annotation, Point offset)
         {
             Rectangle itemBounds = annotation.Bounds;
@@ -388,7 +390,7 @@ namespace StatechartEditorSample
             DragDropAdapter dragDropAdapter = control.As<DragDropAdapter>();
             Matrix transform = control.As<ITransformAdapter>().Transform;
 
-            Point center;
+            Point center; // in world coordinates
             if (dragDropAdapter != null && dragDropAdapter.IsDropping)
             {
                 insertionPoint = FindStatechartUnder(dragDropAdapter.MousePosition);
@@ -404,6 +406,7 @@ namespace StatechartEditorSample
                     center = new Point(
                             stateBounds.X + stateBounds.Width / 2,
                             stateBounds.Y + stateBounds.Height / 2);
+                    center = GdiUtil.InverseTransform(transform, center);
                 }
                 else
                 {
@@ -417,6 +420,7 @@ namespace StatechartEditorSample
             Insert(insertingObject, center, insertionPoint);
         }
 
+        // 'center' must be in world coordinates
         private void Insert(object insertingObject, Point center, Statechart insertionPoint)
         {
             IDataObject dataObject = (IDataObject)insertingObject;

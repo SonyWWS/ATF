@@ -157,7 +157,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Returns the smallest rectangle that bounds the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">Bounding rectangle of item</param>
+        /// <param name="bounds">Bounding rectangle of item, in world coordinates</param>
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified ILayoutContext.GetBounds(object item, out Rectangle bounds)
         {
@@ -204,24 +204,23 @@ namespace StatechartEditorSample
         /// <summary>
         /// Sets the bounds of the item</summary>
         /// <param name="item">Item</param>
-        /// <param name="bounds">New item bounds</param>
-        /// <param name="specified">Which parts of bounds are being set</param>
+        /// <param name="bounds">New item bounds, in world coordinates</param>
+        /// <param name="specified">Which parts of bounds to set</param>
         void ILayoutContext.SetBounds(object item, Rectangle bounds, BoundsSpecified specified)
         {
             bounds = ConstrainBounds(bounds, specified);
 
-            StateBase stateBase = Adapters.As<StateBase>(item);
+            var stateBase = item.As<StateBase>();
             if (stateBase != null)
             {
-                stateBase.Bounds = bounds;
+                stateBase.Bounds = WinFormsUtil.UpdateBounds(stateBase.Bounds, bounds, specified);
             }
             else
             {
-                Annotation annotation = Adapters.As<Annotation>(item);
+                var annotation = item.As<Annotation>();
                 if (annotation != null)
-                    annotation.Bounds = bounds;
+                    annotation.Bounds = WinFormsUtil.UpdateBounds(annotation.Bounds, bounds, specified);
             }
-
         }
 
         private Rectangle ConstrainBounds(Rectangle bounds, BoundsSpecified specified)

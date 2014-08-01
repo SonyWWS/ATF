@@ -101,6 +101,9 @@ namespace Sce.Atf
         /// <returns>Registered image, or null if not found</returns>
         public static Image GetImage(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("Image id is null. Call Sce.Atf.WinForms.Resources.Register() to force registration of image resources.");
+
             Image image;
             s_images.TryGetValue(id, out image);
             return image;
@@ -112,6 +115,9 @@ namespace Sce.Atf
         /// <returns>Registered image, or scaled image, or null if not found</returns>
         public static Image GetImage13(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("Image id is null. Call Sce.Atf.WinForms.Resources.Register() to force registration of image resources.");
+
             Image image = s_images13.Images[id];
             if (image == null)
             {
@@ -128,6 +134,9 @@ namespace Sce.Atf
         /// <returns>Registered image, or scaled image, or null if not found</returns>
         public static Image GetImage16(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("Image id is null. Call Sce.Atf.WinForms.Resources.Register() to force registration of image resources.");
+
             Image image = s_images16.Images[id];
             if (image == null)
             {
@@ -145,6 +154,9 @@ namespace Sce.Atf
         /// <returns>Registered image, or scaled image, or null if not found</returns>
         public static Image GetImage24(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("Image id is null. Call Sce.Atf.WinForms.Resources.Register() to force registration of image resources.");
+
             Image image = s_images24.Images[id];
             if (image == null)
             {
@@ -161,6 +173,9 @@ namespace Sce.Atf
         /// <returns>Registered image, or scaled image, or null if not found</returns>
         public static Image GetImage32(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("Image id is null. Call Sce.Atf.WinForms.Resources.Register() to force registration of image resources.");
+
             Image image = s_images32.Images[id];
             if (image == null)
             {
@@ -274,6 +289,15 @@ namespace Sce.Atf
             }
         }
 
+        /// <summary>
+        /// Used by auto-registration code in Atf.Gui.Resources to ensure that automatic registration 
+        /// is only done once. Does not affect explicit Register calls.</summary>
+        public static bool RegistrationStarted
+        {
+            get;
+            set;
+        }
+
         private static void RegisterCursor(Assembly resourceAssembly, string name)
         {
             Cursor cursor = null;
@@ -337,6 +361,8 @@ namespace Sce.Atf
             s_images32.ColorDepth = ColorDepth.Depth32Bit;
             s_images32.TransparentColor = Color.Transparent;
             s_images32.ImageSize = new Size(32, 32);
+
+            Register(typeof(Sce.Atf.Resources));
         }
 
         // all images; image is always the largest available for the given key

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -11,8 +12,16 @@ namespace Sce.Atf.Wpf
 {
     /// <summary>
     /// WPF resource utilities</summary>
+    [Obsolete("Please use Sce.Atf.Wpf.ResourceUtil instead.")]
     public static class WpfResourceUtil
     {
+        public static string GetAssemblyAttribute<T>(this Assembly assembly, Func<T, string> value)
+            where T : Attribute
+        {
+            var attribute = (T)Attribute.GetCustomAttribute(assembly, typeof(T));
+            return value.Invoke(attribute);
+        }
+
         /// <summary>
         /// Gets ImageSource for image given name</summary>
         /// <param name="name">Image name</param>
@@ -30,6 +39,7 @@ namespace Sce.Atf.Wpf
         {
             if (s_registeredTypes.Contains(type))
                 return;
+            
             s_registeredTypes.Add(type);
 
             // Generate packUri
@@ -37,7 +47,7 @@ namespace Sce.Atf.Wpf
             string relativePackUriBase = "/" + assmName.Name + ";component/" + resourcePath;
             string absolutePackUriBase = "pack://application:,,," + relativePackUriBase;
 
-            var imageResources = new ResourceDictionary();
+            ResourceDictionary imageResources = null;
 
             FieldInfo[] fields = type.GetFields(BindingFlags.Static | BindingFlags.Public);
             foreach (FieldInfo field in fields)
@@ -59,7 +69,14 @@ namespace Sce.Atf.Wpf
                     if (extension == ".bmp" || extension == ".png" || extension == ".ico")
                     {
                         var uri = new Uri(absolutePackUriBase + attribute.ImageName);
-                        img = new BitmapImage(uri);
+                        try
+                        {
+                            img = new BitmapImage(uri);
+                        }
+                        catch (IOException ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                        }
                     }
                     else if (extension == ".xaml")
                     {
@@ -71,6 +88,20 @@ namespace Sce.Atf.Wpf
                             throw new InvalidOperationException("Invalid xaml image resource: " + attribute.ImageName);
                         }
                     }
+                    else if (extension == ".cur")
+                    {
+                        var uri = new Uri(relativePackUriBase + attribute.ImageName, UriKind.Relative);
+                        
+                        try
+                        {
+                            var info = Application.GetResourceStream(uri);
+                            img = new FreezableCursor {Cursor = new System.Windows.Input.Cursor(info.Stream)};
+                        }
+                        catch (IOException ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                        }
+                    }
                     else
                     {
                         throw new InvalidOperationException("Unrecognized Wpf image resource file extension for file: " + attribute.ImageName);
@@ -78,6 +109,14 @@ namespace Sce.Atf.Wpf
 
                     if (img != null)
                     {
+                        // Might it be better to keep the img as a DrawingGroup and then assign to relevant Image type later?
+                        if (img is DrawingGroup)
+                        {
+                            var brush = new DrawingBrush(img as DrawingGroup);
+                            brush.Stretch = Stretch.Uniform;
+                            img = brush;
+                        }
+
                         if (img.CanFreeze && !img.IsFrozen)
                             img.Freeze();
 
@@ -89,6 +128,10 @@ namespace Sce.Atf.Wpf
                         }
 
                         field.SetValue(type, imageKey);
+
+                        if (imageResources == null)
+                            imageResources = new ResourceDictionary();
+
                         imageResources.Add(imageKey, img);
                     }
                 }
@@ -111,7 +154,8 @@ namespace Sce.Atf.Wpf
                 }
             }
 
-            Application.Current.Resources.MergedDictionaries.Add(imageResources);
+            if (imageResources != null)
+                Application.Current.Resources.MergedDictionaries.Add(imageResources);
         }
 
         private static readonly HashSet<Type> s_registeredTypes = new HashSet<Type>();

@@ -80,9 +80,20 @@ namespace Sce.Atf.Wpf.Applications
 
             m_endingTags.Add(CommandId.EditPreferences);
             m_endingTags.Add(CommandId.EditDocumentPreferences);
+
+            m_beginningTags.Add(StandardMenu.File);
+            m_beginningTags.Add(StandardMenu.Edit);
+            m_beginningTags.Add(StandardMenu.Format);
+            m_beginningTags.Add(StandardMenu.View);
+            m_beginningTags.Add(StandardMenu.Modify);
+            m_endingTags.Add(StandardMenu.Help);
+            m_endingTags.Add(StandardMenu.Window);
+
+            // Force subitems with the same menu and group to sort themselves by menu name, rather than creation index
+            m_defaultSortByMenuLabel.Add(StandardCommandGroup.WindowDocuments);
         }
 
-        #region IComparer<ICommandInfo> Members
+        #region IComparer<ICommandItem> Members
 
         /// <summary>
         /// Compares two ICommandItems and returns a value indicating whether one is less than, 
@@ -152,22 +163,26 @@ namespace Sce.Atf.Wpf.Applications
             return tag1.Equals(tag2);
         }
 
-        private static int CompareCommands(ICommandItem x, ICommandItem y)
+        public static int CompareCommands(ICommandItem x, ICommandItem y)
         {
             int result = CompareTags(x.MenuTag, y.MenuTag);
             if (result == 0)
                 result = CompareTags(x.GroupTag, y.GroupTag);
             if (result == 0)
                 result = CompareTags(x.CommandTag, y.CommandTag);
-            // finally use the registration index to ensure a stable sort
-            // DAN: dont think we need this as tags are always unique
-            //if (result == 0)
-            //    result = x.Index - y.Index;
+            // finally use either the displayed menu or text registration index to ensure a stable sort
+            if (result == 0)
+            {
+                if (x.GroupTag != null && m_defaultSortByMenuLabel.Contains(x.GroupTag))
+                    result = CompareTags(x.Text, y.Text);
+                else
+                    result = x.Index - y.Index;
+            }
 
             return result;
         }
 
-        private static int CompareTags(object tag1, object tag2)
+        public static int CompareTags(object tag1, object tag2)
         {
             bool tag1First = false, tag2First = false, tag1Last = false, tag2Last = false;
             if (tag1 != null)
@@ -202,6 +217,9 @@ namespace Sce.Atf.Wpf.Applications
             if (tag2 is Enum)
                 return 1;
 
+            if (tag1 is string && tag2 is string)
+                return StringUtil.CompareNaturalOrder((string)tag1, (string)tag2);
+
             IComparable comparable1 = tag1 as IComparable;
             IComparable comparable2 = tag2 as IComparable;
             if (comparable1 != null)
@@ -220,7 +238,8 @@ namespace Sce.Atf.Wpf.Applications
             return 0;
         }
 
-        private static HashSet<object> m_beginningTags = new HashSet<object>();
-        private static HashSet<object> m_endingTags = new HashSet<object>();
+        private static readonly HashSet<object> m_beginningTags = new HashSet<object>();
+        private static readonly HashSet<object> m_endingTags = new HashSet<object>();
+        private static readonly HashSet<object> m_defaultSortByMenuLabel = new HashSet<object>();
     }
 }

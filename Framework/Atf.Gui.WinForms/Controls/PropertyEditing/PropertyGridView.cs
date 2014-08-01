@@ -71,9 +71,12 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_editingControl,
                 m_scrollBar,                
             });
-            ResumeLayout();
-            //m_editingControl            
-            m_resetButton.Click += (sender, e) => SelectedProperty.Context.ResetValue();           
+            ResumeLayout();            
+            m_resetButton.Click += (sender, e) =>
+                {                    
+                    SelectedProperty.Context.ResetValue();                    
+                    Invalidate();
+                };
         }
 
         /// <summary>
@@ -286,51 +289,50 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Processes a command key. This method is called during message
-        /// pre-processing to handle command keys. Command keys are keys that always
-        /// take precedence over regular input keys. Examples of command keys
-        /// include accelerators and menu shortcuts. The method must return true to 
-        /// indicate that it has processed the command key, or false to indicate
-        /// that the key is not a command key.</summary>
-        /// <param name="msg">System.Windows.Forms.Message representing the window message to process</param>
-        /// <param name="keyData">System.Windows.Forms.Keys value for key to process</param>
-        /// <returns>True iff character was processed by control</returns>
-        /// <remarks>Guerrilla's CoreText Editor uses the Tab key as a command shortcut
-        /// but the property editor should take precedence and use the Tab key to toggle
-        /// between properties. So that's why we're doing this work in this method rather
-        /// than ProcessDialogKey().</remarks>
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        /// Processes a dialog key</summary>
+        /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
+        /// <returns>True iff the key was processed by the control</returns>
+        protected override bool ProcessDialogKey(Keys keyData)
         {
             // Handle tab keys, too, because only properties with their own Controls have the TabIndex.
             if (keyData == Keys.Down || keyData == Keys.Tab)
             {
                 Property property = GetNextProperty(SelectedProperty);
-                // check if we should wrap around
-                if (property == null)
-                    property = GetFirstProperty();
+
+                // current wrap around approach,
+                // can't handle embedded PropertyGridView.
+                // disabled for now: Alan                
+                //if (property == null)
+                //    property = GetFirstProperty();
+                
                 if (property != null)
                 {
                     StartPropertyEdit(property);
                     TryMakeSelectionVisible();
+                    return true;
                 }
-                return true;
+                
             }
 
             if (keyData == Keys.Up || keyData == (Keys.Tab | Keys.Shift))
             {
                 Property property = GetPreviousProperty(SelectedProperty);
+
+                // current wrap around approach,
+                // can't handle embedded PropertyGridView.
+                // disabled for now: Alan
                 // check if we should wrap around
-                if (property == null)
-                    property = GetLastProperty();
+                //if (property == null)
+               //     property = GetLastProperty();
                 if (property != null)
                 {
-                    StartPropertyEdit(property);
+                    StartPropertyEdit(property, true);
                     TryMakeSelectionVisible();
+                    return true;
                 }
-                return true;
+                
             }
-
-            return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessDialogKey(keyData);            
         }
 
         /// <summary>
@@ -794,7 +796,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         //    //}
         //}
 
-        private void StartPropertyEdit(Property property)
+        private void StartPropertyEdit(Property property, bool fromEnd = false)
         {
             Select(); // force any edit to conclude
 
@@ -804,18 +806,37 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 property.Control.Select();
 
+                
                 // as PropertyView derives from Control, not ContainerControl, 
                 // need to manually set input focus here
                 if (property.Control.Controls.Count > 0)
                 {
-                    foreach (Control control in property.Control.Controls)
+                    if (fromEnd)
                     {
-                        if (control.CanFocus)
+                        for (int i = property.Control.Controls.Count - 1;
+                            i >= 0; i--)
                         {
-                            control.Focus();
-                            break;
+                            Control control = property.Control.Controls[i];
+                            if (control.CanFocus && !(control is ToolStrip))
+                            {
+                                control.Focus();
+                                break;
+                            }
                         }
                     }
+                    else
+                    {
+                        foreach (Control control in property.Control.Controls)
+                        {
+                            if (control.CanFocus && !(control is ToolStrip))
+                            {
+                                control.Focus();
+                                break;
+                            }
+                        }
+                    }
+
+                    
                 }
                 else if (property.Control.CanFocus)
                     property.Control.Focus();
@@ -1319,6 +1340,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                     LastSelectedObject, property.Descriptor, null);
                 PropertyEditingControl.DrawProperty(
                     property.Descriptor, context, valueRect, font, brush, g);
+                if (property == SelectedProperty)
+                    m_editingControl.Refresh();
             }
             else
             {

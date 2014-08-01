@@ -120,25 +120,27 @@ namespace Sce.Atf.Controls.PropertyEditing
                     });
             }
 
-            // Reset all button.
-            var resetAllButton = new ToolStripButton();
-            resetAllButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            resetAllButton.Image = ResourceUtil.GetImage16(Resources.ResetImage);
-            resetAllButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            resetAllButton.Name = "PropertyGridResetAllButton";
-            resetAllButton.Size = new Size(29, 22);
-            resetAllButton.ToolTipText = "Reset all properties".Localize();
-            resetAllButton.Click += (sender, e) =>
-                {
-                    ITransactionContext transaction = m_propertyGridView.EditingContext.As<ITransactionContext>();
-                    if (transaction == null) return;
-                    transaction.DoTransaction(delegate
+            if ((mode & PropertyGridMode.HideResetAllButton) == 0)
+            {
+                // Reset all button.
+                var resetAllButton = new ToolStripButton();
+                resetAllButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                resetAllButton.Image = ResourceUtil.GetImage16(Resources.ResetImage);
+                resetAllButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+                resetAllButton.Name = "PropertyGridResetAllButton";
+                resetAllButton.Size = new Size(29, 22);
+                resetAllButton.ToolTipText = "Reset all properties".Localize();
+                resetAllButton.Click += (sender, e) =>
                     {
-                        ResetAll();
-                    },
-                    "Reset All Properties".Localize("'Reset' is a verb and this is the name of a command"));                    
-                };
-            m_toolStrip.Items.Add(resetAllButton);
+                        ITransactionContext transaction = m_propertyGridView.EditingContext.As<ITransactionContext>();                        
+                        transaction.DoTransaction(delegate
+                        {
+                            ResetAll();
+                        },
+                        "Reset All Properties".Localize("'Reset' is a verb and this is the name of a command"));
+                    };
+                m_toolStrip.Items.Add(resetAllButton);
+            }
 
             if ((mode & PropertyGridMode.AllowEditingComposites) != 0)
             {
@@ -194,7 +196,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             Font = m_propertyGridView.Font;
             FontChanged += (sender, e) => m_propertyGridView.Font = Font;                
             ResumeLayout(false);
-            PerformLayout();
+            PerformLayout();            
         }
 
         /// <summary>

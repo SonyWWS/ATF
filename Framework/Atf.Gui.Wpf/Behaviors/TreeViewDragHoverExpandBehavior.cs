@@ -31,8 +31,14 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewDragLeave += AssociatedObject_PreviewDragLeave;
         }
 
-        /// <summary>
-        /// Gets or sets delay before hover overed item expands</summary>
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+
+            AssociatedObject.PreviewDragOver -= AssociatedObject_PreviewDragOver;
+            AssociatedObject.PreviewDragLeave -= AssociatedObject_PreviewDragLeave;
+        }
+
         public int ExpandDelay 
         {
             get { return m_timer.Interval.Milliseconds; }
@@ -43,7 +49,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Performs custom actions on PreviewDragOver events of Behavior's AssociatedObject, a TreeViewItem</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">DragEventArgs containing event data</param>
-        private void AssociatedObject_PreviewDragOver(object sender, DragEventArgs e)
+        void AssociatedObject_PreviewDragOver(object sender, DragEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
             TreeViewItem tvi = AssociatedObject.GetItemContainerAtPoint(pos);
@@ -62,12 +68,12 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Performs custom actions on PreviewDragLeave events of Behavior's AssociatedObject, a TreeViewItem</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">DragEventArgs containing event data</param>
-        private void AssociatedObject_PreviewDragLeave(object sender, DragEventArgs e)
+        void AssociatedObject_PreviewDragLeave(object sender, DragEventArgs e)
         {
             m_lastHoveredItem = null;
         }
 
-        private void TimerElapsed(object sender, EventArgs e)
+        void TimerElapsed(object sender, EventArgs e)
         {
             m_timer.Stop();
 
@@ -79,6 +85,6 @@ namespace Sce.Atf.Wpf.Behaviors
         }
 
         private TreeViewItem m_lastHoveredItem;
-        private readonly DispatcherTimer m_timer;
+        private DispatcherTimer m_timer;
     }
 }

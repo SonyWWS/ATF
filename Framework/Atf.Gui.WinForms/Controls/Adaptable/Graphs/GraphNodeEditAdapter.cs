@@ -177,7 +177,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 for (int i = 0; i < m_draggingNodes.Length; i++)
                 {
                     TNode node = m_draggingNodes[i];
-                    Rectangle bounds;
+                    Rectangle bounds; //world coordinates
                     m_layoutContext.GetBounds(node, out bounds);
                     bounds.X += delta.X;
                     bounds.Y += delta.Y;
@@ -366,11 +366,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+        // 'location' is in world coordinates
         private void MoveNode(TNode node, Point location)
         {
-            Rectangle bounds;
-            m_layoutContext.GetBounds(node, out bounds);
-            bounds.Location = location;
+            var bounds = new Rectangle(location.X, location.Y, 0, 0);
             m_layoutContext.SetBounds(node, bounds, BoundsSpecified.Location);
         }
 

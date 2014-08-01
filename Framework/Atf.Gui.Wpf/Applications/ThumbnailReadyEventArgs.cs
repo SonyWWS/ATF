@@ -6,7 +6,7 @@ namespace Sce.Atf.Wpf.Applications
 {
     /// <summary>
     /// Event args for "ThumbnailReady" event</summary>
-    internal class ThumbnailReadyEventArgs : EventArgs
+    public class ThumbnailReadyEventArgs : EventArgs
     {
         /// <summary>
         /// Constructor</summary>

@@ -44,15 +44,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get
             {
-                int pinIndex = GetAttribute<int>(OutputPinAttribute);
-                if (pinIndex >= OutputElement.Type.Outputs.Count)
-                {
-                    var edge = DomNode.Cast<Wire>();
-                    var edgeName = "from " + edge.OutputElement.Name + " to " + edge.InputElement.Name;              
-                    string message = string.Format("Edge {0} Output pin index {1}  out of range ", edgeName, pinIndex);
-                    throw new IndexOutOfRangeException(message);
-                }
-                return OutputElement.Type.Outputs[pinIndex];
+                int pinIndex = GetAttribute<int>(OutputPinAttribute);             
+                return OutputElement.OutputPin(pinIndex);
             }
             set
             {
@@ -75,14 +68,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             get
             {
                 int pinIndex = GetAttribute<int>(InputPinAttribute);
-                if (pinIndex >= InputElement.Type.Inputs.Count)
-                {
-                    var edge = DomNode.Cast<Wire>();
-                    var edgeName = "from " + edge.OutputElement.Name + " to " + edge.InputElement.Name;
-                    string message = string.Format("Edge {0} Input pin index {1}  out of range ", edgeName, pinIndex);
-                    throw new IndexOutOfRangeException(message);
-                }
-                return InputElement.Type.Inputs[pinIndex];
+                return InputElement.InputPin(pinIndex);              
             }
             set
             {

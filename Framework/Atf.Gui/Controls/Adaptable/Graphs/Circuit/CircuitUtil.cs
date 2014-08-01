@@ -108,6 +108,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return node.Is<IReference<Group>>();
         }
 
+  
+        static public bool IsTemplateTargetMissing(object node)
+        {
+            var reference = node.As<IReference<DomNode>>();
+            if (reference == null)
+                return false;
+            var element = reference.Target.As<Element>();
+            if (element == null)
+                return false;
+            return element.Type is MissingElementType;
+        }
+
         /// <summary>
         /// Obtains graph path of specified group</summary>
         /// <param name="group">Group object</param>
@@ -184,6 +196,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 grpPin.InternalElement.Type.Outputs[grpPin.InternalPinIndex] == circuitPin)
                             {
                                 matchedPin = grpPin;
+                                break;
                             }
                         }
                     }

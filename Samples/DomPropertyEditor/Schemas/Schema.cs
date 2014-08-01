@@ -56,6 +56,7 @@ namespace DomPropertyEditorSample
             orcType.rotateAttribute = orcType.Type.GetAttributeInfo("rotate");
             orcType.scaleAttribute = orcType.Type.GetAttributeInfo("scale");
             orcType.skillAttribute = orcType.Type.GetAttributeInfo("skill");
+            orcType.levelAttribute = orcType.Type.GetAttributeInfo("level");
             orcType.weightAttribute = orcType.Type.GetAttributeInfo("weight");
             orcType.emotionAttribute = orcType.Type.GetAttributeInfo("emotion");
             orcType.goalsAttribute = orcType.Type.GetAttributeInfo("goals");
@@ -116,6 +117,7 @@ namespace DomPropertyEditorSample
             public static AttributeInfo rotateAttribute;
             public static AttributeInfo scaleAttribute;
             public static AttributeInfo skillAttribute;
+            public static AttributeInfo levelAttribute;
             public static AttributeInfo weightAttribute;
             public static AttributeInfo emotionAttribute;
             public static AttributeInfo goalsAttribute;

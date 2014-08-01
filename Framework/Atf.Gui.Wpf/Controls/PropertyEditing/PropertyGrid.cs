@@ -1,17 +1,23 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.ComponentModel;
-using System.Collections;
-using Sce.Atf.Controls.PropertyEditing;
-using System.Collections.ObjectModel;
 using System.Windows.Controls.Primitives;
-using System.Collections.Specialized;
+using System.Windows.Data;
+using System.Windows.Threading;
+using System.Xml;
+
+using Sce.Atf.Adaptation;
+using Sce.Atf.Collections;
+using Sce.Atf.Controls.PropertyEditing;
 
 namespace Sce.Atf.Wpf.Controls.PropertyEditing
 {
@@ -32,13 +38,18 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGrid's Instances dependency property</summary>
         public static readonly DependencyProperty InstancesProperty =
-            DependencyProperty.Register("Instances", typeof(IEnumerable), typeof(PropertyGrid), new FrameworkPropertyMetadata(new PropertyChangedCallback(InstancesProperty_Changed)));
+            DependencyProperty.Register("Instances", 
+                typeof(IEnumerable), typeof(PropertyGrid), new FrameworkPropertyMetadata(InstancesPropertyChanged));
 
-        private static void InstancesProperty_Changed(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void InstancesPropertyChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             var grid = s as PropertyGrid;
             if (grid != null)
             {
+                var b = grid.GetBindingExpression(CustomPropertyDescriptorsProperty);
+                if (b != null)
+                    b.UpdateTarget();
+
                 grid.InstancesOrPropertiesChanged(e.OldValue as IEnumerable);
             }
         }
@@ -58,13 +69,18 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGrid's CustomPropertyDescriptors dependency property</summary>
         public static readonly DependencyProperty CustomPropertyDescriptorsProperty =
-            DependencyProperty.Register("CustomPropertyDescriptors", typeof(IEnumerable<PropertyDescriptor>), typeof(PropertyGrid), new FrameworkPropertyMetadata(new PropertyChangedCallback(CustomPropertyDescriptorsProperty_Changed)));
+            DependencyProperty.Register("CustomPropertyDescriptors", 
+                typeof(IEnumerable<PropertyDescriptor>), typeof(PropertyGrid), new FrameworkPropertyMetadata(CustomPropertyDescriptorsPropertyChanged));
 
-        private static void CustomPropertyDescriptorsProperty_Changed(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void CustomPropertyDescriptorsPropertyChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             var grid = s as PropertyGrid;
             if (grid != null)
             {
+                // Update instances too
+                var b = grid.GetBindingExpression(InstancesProperty);
+                b.UpdateTarget();
+
                 grid.InstancesOrPropertiesChanged(e.OldValue as IEnumerable);
             }
         }
@@ -101,16 +117,48 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGrid's Properties dependency property</summary>
         public static readonly DependencyProperty PropertiesProperty =
-            DependencyProperty.Register("Properties", typeof(IEnumerable<PropertyNode>), typeof(PropertyGrid), new FrameworkPropertyMetadata(new PropertyChangedCallback(PropertiesProperty_Changed)));
+            DependencyProperty.Register("Properties", 
+                typeof(IEnumerable<PropertyNode>), typeof(PropertyGrid), new FrameworkPropertyMetadata(PropertiesPropertyChanged));
 
-        private static void PropertiesProperty_Changed(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void PropertiesPropertyChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             var grid = s as PropertyGrid;
             if (grid != null)
             {
+                grid.SelectedProperty = null;
                 grid.SetGrouping();
                 grid.SetSorting();
             }
+        }
+
+        #endregion
+
+        #region HeaderProperty Property
+
+        public PropertyNode HeaderProperty
+        {
+            get { return (PropertyNode)GetValue(HeaderPropertyProperty); }
+            set { SetValue(HeaderPropertyProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderPropertyProperty =
+            DependencyProperty.Register("HeaderProperty", typeof(PropertyNode), typeof(PropertyGrid), new UIPropertyMetadata(null));
+
+        #endregion
+
+        #region TransactionContext Property
+
+        public static readonly DependencyProperty TransactionContextProperty =
+           DependencyProperty.Register("TransactionContext", typeof(object), typeof(PropertyGrid), new PropertyMetadata(default(object), TransactionContextPropertyChanged));
+
+        public object TransactionContext
+        {
+            get { return (object)GetValue(TransactionContextProperty); }
+            set { SetValue(TransactionContextProperty, value); }
+        }
+
+        private static void TransactionContextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
         }
 
         #endregion
@@ -145,9 +193,10 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGrid's Sorting dependency property</summary>
         public static readonly DependencyProperty SortingProperty =
-            DependencyProperty.Register("Sorting", typeof(IComparer), typeof(PropertyGrid), new FrameworkPropertyMetadata(new PropertyChangedCallback(SortingProperty_Changed)));
+            DependencyProperty.Register("Sorting",
+                typeof(IComparer), typeof(PropertyGrid), new FrameworkPropertyMetadata(SortingPropertyChanged));
 
-        private static void SortingProperty_Changed(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void SortingPropertyChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             var grid = s as PropertyGrid;
             if (grid != null)
@@ -178,9 +227,10 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// PropertyGrid's Grouping dependency property</summary>
         public static readonly DependencyProperty GroupingProperty =
-            DependencyProperty.Register("Grouping", typeof(GroupDescription), typeof(PropertyGrid), new FrameworkPropertyMetadata(new PropertyChangedCallback(GroupingProperty_Changed)));
+            DependencyProperty.Register("Grouping", 
+                typeof(GroupDescription), typeof(PropertyGrid), new FrameworkPropertyMetadata(GroupingPropertyChanged));
 
-        private static void GroupingProperty_Changed(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void GroupingPropertyChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             var grid = s as PropertyGrid;
             if (grid != null)
@@ -234,6 +284,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// PropertyGrid's PropertyDetailsVisibility dependency property</summary>
         public static readonly DependencyProperty PropertyDetailsVisibilityProperty =
             DependencyProperty.Register("PropertyDetailsVisibility", typeof(Visibility), typeof(PropertyGrid), new UIPropertyMetadata(Visibility.Visible));
+
         #endregion
 
         #region LabelWidth
@@ -250,7 +301,41 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// PropertyGrid's LabelWidth dependency property</summary>
         public static readonly DependencyProperty LabelWidthProperty =
             DependencyProperty.Register("LabelWidth", typeof(double), typeof(PropertyGrid), new UIPropertyMetadata(100D));
-        
+
+        #endregion
+
+        #region ListBoxItemsPanel Property
+
+        /// <summary>
+        /// Gets or sets PropertyGrid's ListBoxItemsPanel dependency property</summary>
+        public ItemsPanelTemplate ListBoxItemsPanel
+        {
+            get { return (ItemsPanelTemplate)GetValue(ListBoxItemsPanelProperty); }
+            set { SetValue(ListBoxItemsPanelProperty, value); }
+        }
+
+        /// <summary>
+        /// PropertyGrid's ListBoxItemsPanel dependency property</summary>
+        public static readonly DependencyProperty ListBoxItemsPanelProperty =
+            DependencyProperty.Register("ListBoxItemsPanel", typeof(ItemsPanelTemplate), typeof(PropertyGrid));
+
+        #endregion
+
+        #region ListBoxItemContainerStyle Property
+
+        /// <summary>
+        /// Gets or sets PropertyGrid's ListBoxItemContainerStyle dependency property</summary>
+        public Style ListBoxItemContainerStyle
+        {
+            get { return (Style)GetValue(ListBoxItemContainerStyleProperty); }
+            set { SetValue(ListBoxItemContainerStyleProperty, value); }
+        }
+
+        /// <summary>
+        /// PropertyGrid's ListBoxItemContainerStyle dependency property</summary>
+        public static readonly DependencyProperty ListBoxItemContainerStyleProperty =
+            DependencyProperty.Register("ListBoxItemContainerStyle", typeof(Style), typeof(PropertyGrid));
+
         #endregion
 
         #region PropertyFactory
@@ -321,8 +406,11 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             get { return new ComponentResourceKey(typeof(PropertyGrid), "ComboEditorTemplate"); }
         }
 
-        /// <summary>
-        /// Resource key used in XAML files for the bool editor style</summary>
+        public static ComponentResourceKey StandardValuesEditorTemplateKey
+        {
+            get { return new ComponentResourceKey(typeof(PropertyGrid), "StandardValuesEditorTemplate"); }
+        }
+
         public static ComponentResourceKey BoolEditorStyleKey
         {
             get { return new ComponentResourceKey(typeof(PropertyGrid), "BoolEditorStyle"); }
@@ -342,7 +430,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Event that is raised when a property error occurs</summary>
         public event EventHandler<PropertyErrorEventArgs> PropertyError;
-        
+
         /// <summary>
         /// Event that is raised when a property value is edited</summary>
         public event EventHandler<PropertyEditedEventArgs> PropertyEdited;
@@ -365,8 +453,85 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #endregion
 
+        #region Persistent Settings
+
         /// <summary>
-        /// Gets or sets PropertyGrid's collection of value editors</summary>
+        /// Gets or sets the persistent state for the control</summary>
+        public string Settings
+        {
+            get
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", Encoding.UTF8.WebName, "yes"));
+                XmlElement root = xmlDoc.CreateElement("PropertyView");
+                //root.SetAttribute("PropertySorting", m_propertySorting.ToString());
+                xmlDoc.AppendChild(root);
+
+                foreach (var pair in m_categoryExpanded)
+                {
+                    XmlElement columnElement = xmlDoc.CreateElement("Category");
+                    root.AppendChild(columnElement);
+
+                    columnElement.SetAttribute("Name", pair.Key);
+                    columnElement.SetAttribute("Expanded", pair.Value.ToString());
+                }
+
+                WriteSettings(root);
+
+                return xmlDoc.InnerXml;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(value);
+
+                XmlElement root = xmlDoc.DocumentElement;
+                if (root == null || root.Name != "PropertyView")
+                    throw new Exception("Invalid PropertyView settings");
+
+                string s;
+                //s = root.GetAttribute("PropertySorting");
+                //if (s != null)
+                //    m_propertySorting = (PropertySorting)Enum.Parse(typeof(PropertySorting), s);
+
+                XmlNodeList columns = root.SelectNodes("Category");
+                if (columns != null)
+                {
+                    foreach (XmlElement columnElement in columns)
+                    {
+                        string name = columnElement.GetAttribute("Name");
+                        s = columnElement.GetAttribute("Expanded");
+                        bool expanded;
+                        if (s != null && bool.TryParse(s, out expanded))
+                        {
+                            m_categoryExpanded[name] = expanded;
+                        }
+                    }
+                }
+
+                ReadSettings(root);
+            }
+        }
+
+        /// <summary>
+        /// Reads persisted control setting information from the given XML element</summary>
+        /// <param name="root">Root element of XML settings</param>
+        protected virtual void ReadSettings(XmlElement root)
+        {
+        }
+
+        /// <summary>
+        /// Writes persisted control setting information to the given XML element</summary>
+        /// <param name="root">Root element of XML settings</param>
+        protected virtual void WriteSettings(XmlElement root)
+        {
+        }
+
+        #endregion
+
         public ObservableCollection<ValueEditor> Editors { get; set; }
 
         /// <summary>
@@ -382,7 +547,16 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         {
             Editors = new ObservableCollection<ValueEditor>();
             EditorTemplateSelector = new EditorTemplateSelector(Editors);
+
+            // Set up 50ms binding guard timer to prevent rapid updates from slowing
+            // down the property grid
+            m_bindingUpdateTimer = new DispatcherTimer();
+            m_bindingUpdateTimer.Tick += BindingUpdateTimer_Tick;
+            m_bindingUpdateTimer.Interval = TimeSpan.FromMilliseconds(50);
+
             Grouping = DefaultPropertyGrouping.ByCategory;
+            Loaded += PropertyGrid_Loaded;
+            Unloaded += PropertyGrid_Unloaded;
         }
 
         /// <summary>
@@ -392,17 +566,17 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             base.OnApplyTemplate();
 
             DependencyObject part = GetTemplateChild("PART_Selector");
-            TreeView view = part as TreeView;
+            var view = part as TreeView;
             if (view != null)
             {
-                view.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(view_SelectedItemChanged);
+                view.SelectedItemChanged += view_SelectedItemChanged;
             }
             else
             {
-                Selector selector = part as Selector;
+                var selector = part as Selector;
                 if (selector != null)
                 {
-                    selector.SelectionChanged += new SelectionChangedEventHandler(selector_SelectionChanged);
+                    selector.SelectionChanged += selector_SelectionChanged;
                 }
             }
         }
@@ -417,25 +591,25 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                 {
                     node.Refresh();
                 }
+
+                if (HeaderProperty != null)
+                    HeaderProperty.Refresh();
             }
         }
 
-        /// <summary>
-        /// Reloads all PropertyNodes in PropertyGrid, recreating all PropertyNodes</summary>
-        protected virtual void Reload()
+        private void DestroyPropertyNode(PropertyNode node)
         {
-            // Destroy and unsubscribe from old properties
-            if (Properties != null)
-            {
-                foreach (PropertyNode node in Properties)
-                {
-                    node.UnBind();
-                    node.ValueSet -= new EventHandler(node_ValueSet);
-                    node.ValueError -= new EventHandler(node_ValueError);
-                }
-            }
+            node.ValueSet -= node_ValueSet;
+            node.ValueError -= node_ValueError;
+            node.Dispose();
+        }
 
-            object[] instances = Instances.Cast<object>().ToArray();
+        protected virtual void RebuildPopertyNodesImpl()
+        {
+            DestroyPropertyNodes();
+
+            object[] instances = Instances == null ? EmptyArray<object>.Instance
+                                     : Instances.Cast<object>().ToArray();
 
             // TODO: cache and reuse PropertyNodes where possible to prevent having to 
             // rebuild all of the data templates
@@ -447,28 +621,118 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
             else if (Instances != null)
             {
-                descriptors = PropertyUtils.GetSharedProperties(instances);
+                descriptors = PropertyUtils.GetSharedPropertiesOriginal(instances);
             }
 
+            PropertyNode headerPropertyNode = null;
             var propertyNodes = new ObservableCollection<PropertyNode>();
 
-            foreach (var descriptor in descriptors)
+            if (descriptors != null)
             {
-                if (descriptor.IsBrowsable)
-                {
-                    PropertyNode node = null;
-                    if (PropertyFactory != null)
-                        node = PropertyFactory.CreateProperty(instances, descriptor, true, this);
-                    else
-                        node = new PropertyNode(instances, descriptor, true, this);
+                var context = TransactionContext.As<ITransactionContext>();
+                if (context == null)
+                    context = DataContext.As<ITransactionContext>();
 
-                    node.ValueSet += new EventHandler(node_ValueSet);
-                    node.ValueError += new EventHandler(node_ValueError);
-                    propertyNodes.Add(node);
+                foreach (var descriptor in descriptors)
+                {
+                    if (descriptor.IsBrowsable)
+                    {
+                        PropertyNode node;
+                        if (PropertyFactory != null)
+                        {
+                            node = PropertyFactory.CreateProperty(instances, descriptor, true, context);
+                        }
+                        else
+                        {
+                            node = new PropertyNode();
+                            node.Initialize(instances, descriptor, true);
+                        }
+
+                        node.ValueSet += node_ValueSet;
+                        node.ValueError += node_ValueError;
+
+                        if (node.Category != null)
+                        {
+                            bool expansionState;
+                            if (m_categoryExpanded.TryGetValue(node.Category, out expansionState))
+                                node.IsExpanded = expansionState;
+                        }
+
+                        if (headerPropertyNode == null && descriptor.Attributes[typeof(HeaderPropertyAttribute)] != null)
+                            headerPropertyNode = node;
+                        else
+                            propertyNodes.Add(node);
+                    }
                 }
             }
 
+            // Listen for expansion state changes so that we can persist through different objects.
+            m_listener = ChangeListener.Create(propertyNodes, "IsExpanded");
+            m_listener.PropertyChanged += ChildExpandedPropertyChanged;
+
             Properties = propertyNodes;
+            HeaderProperty = headerPropertyNode;
+        }
+
+        protected virtual void DestroyPropertyNodes()
+        {
+            if (m_listener != null)
+            {
+                m_listener.PropertyChanged -= ChildExpandedPropertyChanged;
+                m_listener.Dispose();
+                m_listener = null;
+            }
+
+            // Destroy and unsubscribe from old properties
+            if (Properties != null)
+            {
+                foreach (PropertyNode node in Properties)
+                    DestroyPropertyNode(node);
+
+                Properties = null;
+            }
+
+            if (HeaderProperty != null)
+            {
+                DestroyPropertyNode(HeaderProperty);
+                HeaderProperty = null;
+            }
+        }
+
+        private void RebuildPopertyNodes()
+        {
+            if (IsLoaded)
+            {
+                // Guard updates with a short timer for better performance
+                m_bindingUpdateTimer.Stop();
+                m_bindingUpdateTimer.Start();
+            }
+        }
+
+        void ChildExpandedPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var node = sender as PropertyNode;
+            if (node != null && !string.IsNullOrEmpty(node.Category))
+            {
+                m_categoryExpanded[node.Category] = node.IsExpanded;
+            }
+        }
+
+        private void BindingUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            m_bindingUpdateTimer.Stop();
+            RebuildPopertyNodesImpl();
+        }
+
+        private void PropertyGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            RebuildPopertyNodes();
+        }
+
+        private void PropertyGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DestroyPropertyNodes();
+            SelectedProperty = null;
         }
 
         private void node_ValueSet(object sender, EventArgs e)
@@ -485,12 +749,16 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         private void selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectedProperty = ((Selector)sender).SelectedItem as PropertyNode;
+            var node = ((Selector)sender).SelectedItem as PropertyNode;
+            if (node != SelectedProperty)
+                SelectedProperty = node;
         }
 
         private void view_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SelectedProperty = e.NewValue as PropertyNode;
+            var node = e.NewValue as PropertyNode;
+            if (node != SelectedProperty)
+                SelectedProperty = node;
         }
 
         private void InstancesOrPropertiesChanged(IEnumerable oldInstances)
@@ -503,12 +771,12 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             if (collection != null)
                 collection.CollectionChanged += Instances_CollectionChanged;
 
-            Reload();
+            RebuildPopertyNodes();
         }
 
         private void Instances_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Reload();
+            RebuildPopertyNodes();
         }
 
         #region IDisposable Members
@@ -529,8 +797,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                         foreach (PropertyNode node in properties)
                         {
                             node.UnBind();
-                            node.ValueSet -= new EventHandler(node_ValueSet);
-                            node.ValueError -= new EventHandler(node_ValueError);
+                            node.ValueSet -= node_ValueSet;
+                            node.ValueError -= node_ValueError;
                         }
                     }
                 }
@@ -547,6 +815,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         private bool m_disposed;
+        private ChangeListener m_listener;
+        private readonly DispatcherTimer m_bindingUpdateTimer;
+        private readonly Dictionary<string, bool> m_categoryExpanded = new Dictionary<string, bool>();
 
         #endregion
     }

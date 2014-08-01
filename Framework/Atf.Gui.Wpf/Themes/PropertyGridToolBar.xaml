@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:l="clr-namespace:Sce.Atf.Wpf.Controls.PropertyEditing"
+                    xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+                    xmlns:vc="clr-namespace:Sce.Atf.Wpf.ValueConverters"
                     xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup">
 
     <Style TargetType="{x:Type l:PropertyGridToolBar}">
@@ -18,7 +20,7 @@
                             Padding="{TemplateBinding Padding}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Command="{x:Static l:PropertyGridToolBar.ShowCategorized}" 
-                                    Width="16" Height="16"
+                                    Width="16" Height="16" MinWidth="16"
                                     ToolTip="{m:Loc Sort by Category}">
                                 <Path Data="M 0 0 L 5 0 L 5 1 L 0 1 Z M 7 0 L 12 0 L 12 1 L 7 1 Z
                                             M 7 2 L 12 2 L 12 3 L 7 3 Z
@@ -28,7 +30,7 @@
                                         SnapsToDevicePixels="True"/>
                             </Button>
                             <Button Command="{x:Static l:PropertyGridToolBar.ShowAlphaSorted}" 
-                                    Width="16" Height="16"
+                                    Width="16" Height="16" MinWidth="16"
                                     ToolTip="Sort Alphabetically">
                                 <Path Data="M 2 0 L 4 0 L 4 5 L 6 5 L 3 8 L 0 5 L 2 5 Z"
                                         Fill="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"

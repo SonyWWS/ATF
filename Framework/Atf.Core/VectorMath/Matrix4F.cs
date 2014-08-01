@@ -885,7 +885,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Transforms by this matrix a vector that is perpendicular to some geometry or that is the component of a 3D plane.
         /// Points may be transformed using Transform(). Directional vectors like those in rays can be
-        /// transformed by TransformVector(), and normals need to be tranformed by TransformNormal().</summary>
+        /// transformed by TransformVector(), and normals need to be transformed by TransformNormal().</summary>
         /// <param name="n">The normal vector to some geometry</param>
         /// <param name="result">The normal vector after being transformed by this matrix. Is not normalized.</param>
         public void TransformNormal(Vec3F n, out Vec3F result)
@@ -899,7 +899,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Transforms by this matrix a vector that is perpendicular to some geometry or that is the component of a 3D plane.
         /// Points may be transformed using Transform(). Directional vectors like those in rays can be
-        /// transformed by TransformVector(), and normals need to be tranformed by TransformNormal().</summary>
+        /// transformed by TransformVector(), and normals need to be transformed by TransformNormal().</summary>
         /// <param name="n">The normal vector to some geometry</param>
         /// <param name="transposeOfInverse">The transpose of the inverse of this matrix, for performance reasons</param>
         /// <param name="result">The normal vector after being transformed by this matrix</param>

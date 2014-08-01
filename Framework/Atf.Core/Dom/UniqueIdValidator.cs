@@ -47,18 +47,18 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Performs actions for removed nodes</summary>
-        /// <param name="m_removed">Removed nodes</param>
-        /// <param name="m_renamed">Renamed nodes and old ids</param>
-        protected override void RemoveNodes(HashSet<DomNode> m_removed, Dictionary<DomNode, string> m_renamed)
+        /// <param name="removed">Removed nodes</param>
+        /// <param name="renamed">Renamed nodes and old ids</param>
+        protected override void RemoveNodes(HashSet<DomNode> removed, Dictionary<DomNode, string> renamed)
         {
             // retire names of removed nodes and their subtrees
-            foreach (DomNode node in m_removed)
+            foreach (DomNode node in removed)
             {
                 // if the node was renamed, retire the original name and don't
                 //  rename it, as it was removed
                 string name;
-                if (m_renamed.TryGetValue(node, out name))
-                    m_renamed.Remove(node);
+                if (renamed.TryGetValue(node, out name))
+                    renamed.Remove(node);
                 else
                     name = node.GetId();
 
@@ -83,10 +83,10 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Performs actions for renamed nodes</summary>
-        /// <param name="m_renamed">Renamed nodes and old ids</param>
-        protected override void RenameNodes(Dictionary<DomNode, string> m_renamed)
+        /// <param name="renamed">Renamed nodes and old ids</param>
+        protected override void RenameNodes(Dictionary<DomNode, string> renamed)
         {
-            foreach (KeyValuePair<DomNode, string> pair in m_renamed)
+            foreach (KeyValuePair<DomNode, string> pair in renamed)
             {
                 // retire old name
                 m_uniqueNamer.Retire(pair.Value);

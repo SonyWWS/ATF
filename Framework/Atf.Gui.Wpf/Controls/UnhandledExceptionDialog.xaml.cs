@@ -6,7 +6,7 @@ namespace Sce.Atf.Wpf.Controls
 {
     /// <summary>
     /// Interaction logic for UnhandledExceptionDialog.xaml for unhandled exception dialog</summary>
-    internal partial class UnhandledExceptionDialog : CommonDialog
+    public partial class UnhandledExceptionDialog : CommonDialog
     {
         /// <summary>
         /// Constructor</summary>
@@ -16,14 +16,21 @@ namespace Sce.Atf.Wpf.Controls
         }
     }
 
-    internal class UnhandledExceptionViewModel : DialogViewModelBase
+    /// <summary>
+    /// View model for UnhandledExceptionDialog</summary>
+    public class UnhandledExceptionViewModel : DialogViewModelBase
     {
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="message">Exception message to display</param>
         public UnhandledExceptionViewModel(string message)
         {
-            Title = "Unhandled Exception".Localize();
+            Title = "An error has occurred".Localize();
             Message = message;
         }
 
+        /// <summary>
+        /// Gets the exception message</summary>
         public string Message { get; private set; }
     }
 }

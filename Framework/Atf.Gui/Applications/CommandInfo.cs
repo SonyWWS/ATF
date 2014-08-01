@@ -177,6 +177,65 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
+        /// Constructor</summary>
+        /// <param name="commandTag">Unique command identifier</param>
+        /// <param name="menuTag">Unique menu identifier</param>
+        /// <param name="groupTag">Unique group identifier</param>
+        /// <param name="menuText">Menu text</param>
+        /// <param name="description">Command description</param>
+        /// <param name="shortcut">Default keyboard shortcut. Use bitwise OR for key combos 
+        /// (eg, "Keys.Ctrl | Keys.W"), or "Keys.None" for no shortcut.</param>
+        /// <param name="imageKey">Key to identify image resource, or null</param>
+        public CommandInfo(
+            object commandTag,
+            object menuTag,
+            object groupTag,
+            string menuText,
+            string description,
+            Keys shortcut,
+            object imageKey)
+            : this(commandTag, menuTag, groupTag, menuText, description, shortcut, imageKey, CommandVisibility.Default)
+        {
+        }
+
+        /// <summary>
+        /// Constructor</summary>
+        /// <param name="commandTag">Unique command identifier</param>
+        /// <param name="menuTag">Unique menu identifier</param>
+        /// <param name="groupTag">Unique group identifier</param>
+        /// <param name="menuText">Menu text</param>
+        /// <param name="description">Command description</param>
+        /// <param name="shortcut">Default keyboard shortcut. Use bitwise OR for key combos 
+        /// (eg, "Keys.Ctrl | Keys.W"), or "Keys.None" for no shortcut.</param>
+        /// <param name="imageKey">Key to identify image resource, or null</param>
+        /// <param name="visibility">Command visibility in menus and toolbars</param>
+        public CommandInfo(
+            object commandTag,
+            object menuTag,
+            object groupTag,
+            string menuText,
+            string description,
+            Keys shortcut,
+            object imageKey,
+            CommandVisibility visibility)
+        {
+            CommandTag = commandTag;
+            MenuTag = menuTag;
+            GroupTag = groupTag;
+            MenuText = menuText;
+            Description = description;
+            DefaultShortcuts = new[] { shortcut };
+            Shortcuts = new[] { shortcut };
+            ImageName = imageKey as string;
+            ImageKey = imageKey;
+            Visibility = visibility;
+
+            ShortcutsEditable = true;
+            ShortcutsChanged.Raise(this, EventArgs.Empty);
+        }
+
+
+        /// <summary>
         /// Unique command identifier</summary>
         public readonly object CommandTag;
 
@@ -291,6 +350,10 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Name of image resource, or null</summary>
         public string ImageName;
+
+        /// <summary>
+        /// Image key of image resource, or null</summary>
+        public object ImageKey;
 
         /// <summary>
         /// Actual text displayed in menu for this command</summary>

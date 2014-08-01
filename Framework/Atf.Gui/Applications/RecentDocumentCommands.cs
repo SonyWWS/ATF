@@ -204,6 +204,14 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// The maximum number of characters displayed when listing recent documents in menu.
+        /// Any negative number indicates there is no maximum</summary>
+        public virtual int MaxPathLength
+        {
+            get { return -1; }
+        }
+
         #region ICommandClient Members
 
         /// <summary>
@@ -310,11 +318,19 @@ namespace Sce.Atf.Applications
                     if (docInfo != null)
                     {
                         useGreenPin = !docInfo.Pinned;
+                        var docPath = docInfo.Uri.AbsolutePath;
+                        if (MaxPathLength > 0 && docPath.Length > MaxPathLength)
+                        {
+                            docPath = docPath.Substring(docPath.Length - MaxPathLength);
+                            while (!docPath.StartsWith("/"))
+                                docPath = docPath.Substring(1);
+                            docPath = "..." + docPath;
+                        }
                         stateText = string.Format(
                             docInfo.Pinned ?
                                 "Unpin {0}".Localize("{0} will be replaced with a file name") :
                                 "Pin {0}".Localize("{0} will be replaced with a file name"),
-                            docInfo.Uri.AbsolutePath);
+                                docPath);
                     }
                     state.Text = stateText;
                 }

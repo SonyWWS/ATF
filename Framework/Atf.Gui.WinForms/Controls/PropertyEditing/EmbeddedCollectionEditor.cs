@@ -98,7 +98,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             /// <summary>
             /// Gets or sets a human-friendly type name of the item to be inserted.
-            /// Doesn't have to correspond to a sytem type.</summary>
+            /// Doesn't have to correspond to a system type.</summary>
             public string ItemTypeName { get; set; }
 
             /// <summary>
@@ -145,9 +145,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 // Initialize Controls
 
                 m_toolStrip = new ToolStrip { Dock = DockStyle.Top };
-                m_toolStrip.PreviewKeyDown += m_toolStrip_PreviewKeyDown;
-                m_toolStrip.KeyDown += m_toolStrip_OnKeyDown;
-
+                
                 m_addButton = new ToolStripButton
                 {
                     Text = "Add".Localize(),
@@ -207,31 +205,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_toolStrip.SizeChanged += toolStrip_SizeChanged;
             }
 
-            private void m_toolStrip_OnKeyDown(object sender, KeyEventArgs e)
-            {
-                //Cancel the Tab keypress and give it to our parent Control instead, to support the Tab key to
-                //  cycle between properties in the property editor.
-                if (e.KeyData == Keys.Tab || e.KeyData == (Keys.Tab | Keys.Shift))
-                {
-                    e.SuppressKeyPress = true; //also sets Handled to true.
-                    const int WM_KEYDOWN = 0x100;
-                    PostMessage(Parent.Handle, WM_KEYDOWN, e.KeyValue, 0);
-                }
-            }
-
-            [DllImport("User32.dll", CharSet = CharSet.Auto)]
-            private static extern int PostMessage(IntPtr hWnd, int msg, int wParam, int lParam);
-
-            private void m_toolStrip_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-            {
-                //Allow the KeyDown event to be raised for the Tab key, so that we can cancel this
-                //  keypress and give it to our parent Control instead, to support the Tab key to
-                //  cycle between properties in the property editor.
-                if (e.KeyData == Keys.Tab || e.KeyData == (Keys.Tab | Keys.Shift))
-                {
-                    e.IsInputKey = true;
-                }
-            }
+            
 
             /// <summary>
             /// Performs custom actions on toolstrip SizeChanged events</summary>
@@ -303,6 +277,44 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 base.Dispose(disposing);
             }
+
+
+            /// <summary>
+            /// Processes a dialog key</summary>
+            /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
+            /// <returns>True iff the key was processed by the control</returns>
+            protected override bool ProcessDialogKey(Keys keyData)
+            {
+                // Note, this code is duplicated in ArrayEditingControl.
+                int index = 0; //0 means "no child item has focus".
+                for (int i = 1; i < Controls.Count; i++) // Controls[0] is the toolstrip
+                {
+                    if (Controls[i].ContainsFocus)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                if (keyData == Keys.Tab || keyData == Keys.Enter)
+                {
+                    // if on last item then don't process tab
+                    if (index < Controls.Count - 1)
+                    {
+                        Controls[index + 1].Select();
+                        return true;
+                    }
+                }
+                else if (keyData == (Keys.Tab | Keys.Shift))
+                {
+                    if (index > 1)
+                    {
+                        Controls[index - 1].Select();
+                        return true;
+                    }
+                }
+                return base.ProcessDialogKey(keyData);
+            }
+
 
             /// <summary>
             /// Forces the control to invalidate its client area and immediately redraw itself and any child controls</summary>
@@ -401,16 +413,16 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             private void OnItemInserted(object item)
             {                
-                // If an item is removed and then inserted again in the same transaction
-                // it was just moved, so we just need to update its position
+                // If an item is removed and then inserted again in the same transaction, then
+                // it was just moved, so we just need to update its position.
                 // If it was modified as well it will already be in the changed list
-                // and will have to be rebuilt
+                // and will have to be rebuilt.
                 if (m_pendingItemsRemoved.Contains(item))
                     m_pendingItemsRemoved.Remove(item);
                 else
                     m_pendingItemsInserted.Add(item);
 
-                // If we're not in a transaction we have to process all changes right away
+                // If we're not in a transaction we have to process all changes right away.
                 if (!m_inTransaction)
                     ProcessPendingChanges();
             }
@@ -428,13 +440,13 @@ namespace Sce.Atf.Controls.PropertyEditing
             private void OnItemRemoved(object item)
             {                
                 // If added and removed in the same transaction, add & remove
-                // cancel each other out and we don't need to process them
-                if (m_pendingItemsRemoved.Contains(item))
-                    m_pendingItemsRemoved.Remove(item);
+                // cancel each other out and we don't need to process them.
+                if (m_pendingItemsInserted.Contains(item))
+                    m_pendingItemsInserted.Remove(item);
                 else
                     m_pendingItemsRemoved.Add(item);
 
-                // If we're not in a transaction we have to process all changes right away
+                // If we're not in a transaction we have to process all changes right away.
                 if (!m_inTransaction)
                     ProcessPendingChanges();
             }
@@ -485,9 +497,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             void validationContext_Ended(object sender, EventArgs e)
             {
                 m_inTransaction = false;
-                // This is causing a race condition where m_pendingItemsRemoved is accessed in ProcessPendingChanges while being modified elsewhere.
-                // This is happening on Hakan and Willem's machines, at least.  Ricky to investigate.
-                //ProcessPendingChanges();         
+                ProcessPendingChanges();
             }
 
             private bool m_processingPendingChanges;
@@ -516,7 +526,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         int itemCount = items.Cast<object>().Count();
 
                         // Enable singleton mode iff the collection will always have exactly 1 item
-                        // in this case we can hide toolbar and the item's index collumn
+                        // in this case we can hide toolbar and the item's index column
                         m_singletonMode =
                             (m_editor.GetItemInsertersFunc == null || !m_editor.GetItemInsertersFunc(m_context).Any()) // can't insert
                             && m_editor.RemoveItemFunc == null // can't remove
@@ -538,14 +548,14 @@ namespace Sce.Atf.Controls.PropertyEditing
                         }
                         m_itemControls.Clear();
 
-                        // Add items for insertion
+                        // Add items for insertion.
                         foreach (object item in items)
                             m_pendingItemsInserted.Add(item);
 
                         UpdateAddButton();
                     }
 
-                    // Hide controls for removed items
+                    // Hide controls for removed items.
                     int smallestRemovedIndex = int.MaxValue;
                     foreach (object item in m_pendingItemsRemoved)
                     {
@@ -564,7 +574,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         }
                     }
 
-                    // Set new item selection after any deletes
+                    // Set new item selection after any deletes.
                     if (smallestRemovedIndex != int.MaxValue)
                     {
                         int i = m_itemControls.Count - 1;
@@ -580,7 +590,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         }
                     }
 
-                    // Refresh controls for items that have changed
+                    // Refresh controls for items that have changed.
                     foreach (object item in m_pendingItemsChanged)
                     {
                         ItemControl itemControl;
@@ -591,7 +601,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                                       
                     // Reorder controls for items that have moved, either
                     // because a lower index item was deleted, or because they've been
-                    // (directly or indirectly) been moved up or down
+                    // (directly or indirectly) been moved up or down.
                     int index = 0;
                     int top = m_singletonMode ? 0 : m_toolStrip.Height;
                     foreach (object item in GetItemsFromContext())
@@ -607,9 +617,9 @@ namespace Sce.Atf.Controls.PropertyEditing
                         }
                     }
 
-                    // Add controls for added items
+                    // Add controls for added items.
                     // Currently only adding at the end is supported. If we ever want to support 
-                    // inserting in the middle, then we'd probably want to have this step before 
+                    // inserting in the middle, then we'd probably want to have this step before .
                     // the index-reordering one.
                     foreach (object item in m_pendingItemsInserted)
                     {
@@ -656,12 +666,12 @@ namespace Sce.Atf.Controls.PropertyEditing
                 }
                 catch (Win32Exception ex)
                 {
-                    // For very large collections (with 1000+ items) it is possible that Windows runs out of Window handles
+                    // For very large collections (with 1000+ items) it is possible that Windows runs out of Window handles.
                     // Such collections are currently not usable with this editor. To support such collections we'd have to
                     // implement some kind of virtual mode (i.e. stream items in and out) but that would pose some new
-                    // challengs for editing operations (add, remove, move)
+                    // challenges for editing operations (add, remove, move).
 
-                    // Clean up to release some window handles and keep the application running smoothly
+                    // Clean up to release some window handles and keep the application running smoothly.
                     foreach (ItemControl control in m_itemControls.Values)
                     {
                         if (Controls.Contains(control))
@@ -876,29 +886,17 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
 
             private void SubscribeItemEvents(ItemControl itemControl)
-            {
-                itemControl.SelectionBoxClicked += itemControl_SelectionBoxClicked;
-                itemControl.GotFocus += itemControl_GotFocus;
-
+            {                
                 if (itemControl.CanChangeSize)
                     itemControl.SizeChanged += itemControl_SizeChanged;
             }
 
             private void UnsubscribeItemEvents(ItemControl itemControl)
-            {
-                itemControl.SelectionBoxClicked -= itemControl_SelectionBoxClicked;
-                itemControl.GotFocus -= itemControl_GotFocus;
-
+            {             
                 if (itemControl.CanChangeSize)
                     itemControl.SizeChanged -= itemControl_SizeChanged;
             }
-
-            // Select the number lable part of an ItemControl when the editing part gets the focus</summary>
-            void itemControl_GotFocus(object sender, EventArgs e)
-            {
-                SelectItemControl(sender as ItemControl);
-            }
-
+          
             void itemControl_SizeChanged(object sender, EventArgs e)
             {
                 ItemControl itemControl = sender as ItemControl;
@@ -933,22 +931,20 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// <param name="e">Event args</param>
             void addButton_Click(object sender, EventArgs e)
             {
-                ToolStripItem toolStripItem = sender as ToolStripItem;
+                var toolStripItem = sender as ToolStripItem;
                 if (toolStripItem == null)
                     return;
 
-                ItemInserter inserter = toolStripItem.Tag as ItemInserter;
+                var inserter = toolStripItem.Tag as ItemInserter;
                 if (inserter == null)
                     return;
 
-                object item = null;
                 m_context.TransactionContext.DoTransaction(
-                    delegate { item = inserter.InsertItemFunc(); }, "Insert child".Localize());
-
-                // If we have an ObservableContext, we'll get an ItemInserted event back and handle it there
-                // without an ObsverbableContext, we need to trigger the same logic from here
-                if (ObservableContext == null)
-                    OnItemInserted(item);
+                    delegate
+                    {
+                        object item = inserter.InsertItemFunc();
+                        OnItemInserted(item);
+                    }, "Insert child".Localize());
 
                 if (m_addSplitButton.Visible && m_addSplitButton.DropDownItems.Count > 1)
                     SetDefaultInserter(inserter);
@@ -983,16 +979,6 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
 
             /// <summary>
-            /// Performs custom actions when the number label on an ItemControl has been clicked.
-            /// Select it respecting pressed modifier keys.</summary>
-            /// <param name="sender">Sender</param>
-            /// <param name="e">Event args</param>
-            void itemControl_SelectionBoxClicked(object sender, EventArgs e)
-            {
-                SelectItemControl(sender as ItemControl);
-            }
-
-            /// <summary>
             /// Deletes the selected items</summary>
             private void DeleteSelectedItems()
             {
@@ -1017,16 +1003,11 @@ namespace Sce.Atf.Controls.PropertyEditing
                     delegate
                     {
                         foreach (object deleteItem in deleteItems)
+                        {
                             m_editor.RemoveItemFunc(m_context, deleteItem);
+                            OnItemRemoved(deleteItem);
+                        }
                     }, "Remove children".Localize());
-
-                // If we have an ObservableContext, we'll get ItemRemoved event back and handle it there
-                // without an ObsverbableContext, we need to trigger the same logic from here
-                if (ObservableContext == null)
-                {
-                    foreach (object deleteItem in deleteItems)
-                        OnItemRemoved(deleteItem);
-                }
             }
 
             /// <summary>
@@ -1059,7 +1040,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                     delegate
                     {
                         foreach (var movePair in movePairs)
+                        {
                             m_editor.MoveItemFunc(m_context, movePair.Key, direction);
+                            OnItemChanged(movePair.Key);
+                        }
                     }, "Move children".Localize());
 
 
@@ -1071,11 +1055,11 @@ namespace Sce.Atf.Controls.PropertyEditing
                 foreach (var item in unselected)
                     item.Selected = false;
             }
-
-            private void SelectItemControl(ItemControl selectedControl)
-            {
-                bool shiftKeyDown = (ModifierKeys & Keys.Shift) != 0;
-                bool ctrlKeyDown = (ModifierKeys & Keys.Control) != 0;
+            
+            private void SelectItemControl(ItemControl selectedControl, bool useModifierKeys = false)
+            {                                
+                bool shiftKeyDown = useModifierKeys && (ModifierKeys & Keys.Shift) != 0;
+                bool ctrlKeyDown = useModifierKeys && (ModifierKeys & Keys.Control) != 0;
 
                 int index = -1;
                 if (selectedControl != null)
@@ -1132,6 +1116,226 @@ namespace Sce.Atf.Controls.PropertyEditing
                 UpdateMoveButtons(true);
             }
 
+            /// <summary>
+            /// Control shell for individual child items</summary>
+            private class ItemControl : Panel
+            {
+                public ItemControl(int index, object item, bool singletonMode, int indexColumnWidth, object context)
+                {
+                    m_editControl = new PropertyGridView
+                    {
+                        ShowScrollbar = false,
+                        PropertySorting = PropertySorting.None,
+                        Dock = DockStyle.Fill,
+                    };
+                   
+                    m_editControl.Invalidated += editControl_Invalidated;
+                    m_editControl.MouseUp += editControl_MouseUp;
+                    Controls.Add(m_editControl);
+
+                    Init(index, item, singletonMode, indexColumnWidth, context);
+
+                    GotFocus += (sender, e) => m_editControl.Focus();
+                    m_editControl.GotFocus += (sender, e) => UpdateSelection();
+
+                }
+
+                private bool m_useModifierKeys;
+                private void UpdateSelection()
+                {
+                    CollectionControl p = (CollectionControl)Parent;
+                    p.SelectItemControl(this, m_useModifierKeys);
+                }
+
+                protected override void Dispose(bool disposing)
+                {
+                    Clear();
+                    base.Dispose(disposing);
+                }
+
+                public void Clear()
+                {
+                    m_editControl.BindingContext = null;
+                }
+
+                public void Init(int index, object item, bool singletonMode, int indexColumnWidth, object context)
+                {
+                    m_index = index;
+                    m_singletonMode = singletonMode;
+                    var editingContext = new EmbeddedPropertyEditingContext(new[] { item }, context);
+                    foreach (PropertyDescriptor desc in PropertyEditingContext.GetPropertyDescriptors(editingContext))
+                    {
+                        if (desc.GetEditor(typeof(object)) != null)
+                        {
+                            CanChangeSize = true;
+                            break;
+                        }
+                    }
+
+                    if (!m_singletonMode)
+                    {
+                        // we need a label
+                        if (m_selectButton == null)
+                        {
+                            m_selectButton = new Label();
+                            Controls.Add(m_selectButton);
+                        }
+                        m_selectButton.Width = indexColumnWidth;
+                        m_selectButton.Dock = DockStyle.Left;
+                        m_selectButton.Text = Index.ToString();
+                        m_selectButton.TextAlign = ContentAlignment.MiddleCenter;
+                        m_selectButton.FlatStyle = FlatStyle.Flat;
+                        m_selectButton.MouseDown += selectButton_MouseDown;
+                    }
+                    else
+                    {
+                        // get rid of label
+                        if (m_selectButton != null)
+                        {
+                            Controls.Remove(m_selectButton);
+                            m_selectButton.Dispose();
+                            m_selectButton = null;
+                        }
+                    }
+
+                    m_editControl.EditingContext = editingContext;
+                    Height = m_editControl.GetPreferredHeight();
+                }
+
+                // If the height of the contained control (property grid) changes
+                // we need to adjust the height of the item control to match it
+                private void editControl_Invalidated(object sender, InvalidateEventArgs e)
+                {
+                    Height = m_editControl.GetPreferredHeight();
+                }
+              
+                private void editControl_MouseUp(object sender, MouseEventArgs e)
+                {
+                    // Let listeners see right-click events so that they can show context menus.
+                    Point screenPnt = ((Control)sender).PointToScreen(e.Location);
+                    Point myClientPnt = PointToClient(screenPnt);
+                    var newE = new MouseEventArgs(e.Button, e.Clicks, myClientPnt.X, myClientPnt.Y, e.Delta);
+                    OnMouseUp(newE);
+                }
+
+                // Forward the refresh call to the contained edit control (property grid)
+                public override void Refresh()
+                {
+                    base.Refresh();
+                    m_editControl.Refresh();
+                }
+
+                /// <summary>
+                /// Gets or sets the index (as displayed in the index header column on the left side)</summary>
+                /// <remarks>Changing the index does not by itself move the item in the list.</remarks>
+                public int Index
+                {
+                    get { return m_index; }
+                    set
+                    {
+                        if (m_index != value)
+                        {
+                            m_index = value;
+                            if (m_selectButton != null)
+                            {
+                                m_selectButton.Text = value.ToString();
+                                m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : ForeColor;
+                                m_selectButton.BackColor = m_selected ? SystemColors.Highlight : UnselectedColor;
+                            }
+                        }
+                    }
+                }
+               
+                void selectButton_MouseDown(object sender, EventArgs e)
+                {                  
+                    try
+                    {
+                        m_useModifierKeys = true;
+                        if (!m_editControl.Focused)
+                            m_editControl.Focus();
+                        else
+                            UpdateSelection();
+                    }
+                    finally
+                    {
+                        m_useModifierKeys = false;
+                    }
+                }
+
+                /// <summary>
+                /// Gets or sets the selected state of the ItemControl and updates
+                /// background and foreground color of the index header column accordingly</summary>
+                public bool Selected
+                {
+                    get { return m_selected; }
+                    set
+                    {
+                        if (m_singletonMode)
+                            return;
+                        m_selected = value;
+                        m_selectButton.ForeColor = value ? SystemColors.HighlightText : ForeColor;
+                        m_selectButton.BackColor = value ? SystemColors.Highlight : UnselectedColor;
+
+                        if (!value)
+                            m_editControl.ClearSelectedProperty();
+
+                        m_selectButton.Refresh();
+                    }
+                }
+
+                /// <summary>
+                /// Gets the color used when the item is not selected, alternating for odd and even indexed items</summary>
+                private Color UnselectedColor
+                {
+                    get
+                    {
+                        Color alternate = BackColor;
+                        alternate = alternate.GetBrightness() > 0.5f ? ControlPaint.Dark(alternate, 0.2f)
+                            : ControlPaint.Light(alternate, 0.2f);
+                        return Index % 2 == 0 ? BackColor : alternate;
+                    }
+                }
+
+                public bool CanChangeSize { get; private set; }
+
+                private int m_index;
+                private bool m_selected;
+                private Label m_selectButton;
+                private PropertyGridView m_editControl;
+
+                // In singleton mode theres only 1 item in the collection
+                // and it is impossible to add or remove items
+                // therefore there is no point in displaying the index header column
+                private bool m_singletonMode;
+
+                // We need a PropertyEditingContext that implements ITransactionContext so that property editing
+                //  controls that are embedded within the EmbeddedCollectionEditor can have changes recorded
+                //  for undo/redo.
+                private class EmbeddedPropertyEditingContext : PropertyEditingContext, IAdaptable
+                {
+                    // Note: 'transactionContext' might be null, like in the PropertyEditing sample app.
+                    public EmbeddedPropertyEditingContext(object[] selection, object context)
+                        : base(selection)
+                    {
+                        m_context = context;
+                    }
+
+                    #region IAdaptable Members
+
+                    public object GetAdapter(Type type)
+                    {
+                        var adaptable = m_context.As<IAdaptable>();
+                        if (adaptable != null)
+                            return adaptable.GetAdapter(type);
+                        return null;
+
+                    }
+
+                    #endregion
+
+                    private object m_context;
+                }
+            }
 
             // Context and editor - assigned by constructor and never changed
             private readonly PropertyEditorControlContext m_context;
@@ -1184,218 +1388,6 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
 
-        /// <summary>
-        /// Control shell for individual child items</summary>
-        private class ItemControl : Panel
-        {
-            public ItemControl(int index, object item, bool singletonMode, int indexColumnWidth, object context)
-            {
-                m_editControl = new PropertyGridView
-                {
-                    ShowScrollbar = false,
-                    PropertySorting = PropertySorting.None,
-                    Dock = DockStyle.Fill,                    
-                };
-                
-                m_editControl.GotFocus += editControl_GotFocus;
-                m_editControl.Invalidated += editControl_Invalidated;
-                m_editControl.MouseUp += editControl_MouseUp;
-                Controls.Add(m_editControl);
-
-                Init(index, item, singletonMode, indexColumnWidth, context);                
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                Clear();
-                base.Dispose(disposing);
-            }
-
-            public void Clear()
-            {
-                m_editControl.BindingContext = null;
-            }
-
-            public void Init(int index, object item, bool singletonMode, int indexColumnWidth, object context)
-            {            
-                m_index = index;
-                m_singletonMode = singletonMode;                
-                var editingContext = new EmbeddedPropertyEditingContext(new[] { item }, context);
-                foreach (PropertyDescriptor desc in PropertyEditingContext.GetPropertyDescriptors(editingContext))
-                {
-                    if (desc.GetEditor(typeof(object)) != null)
-                    {
-                        CanChangeSize = true;
-                        break;
-                    }
-                }
-
-                if (!m_singletonMode)
-                {
-                    // we need a label
-                    if (m_selectButton == null)
-                    {
-                        m_selectButton = new Label();
-                        Controls.Add(m_selectButton);
-                    }
-                    m_selectButton.Width = indexColumnWidth;
-                    m_selectButton.Dock = DockStyle.Left;
-                    m_selectButton.Text = Index.ToString();
-                    m_selectButton.TextAlign = ContentAlignment.MiddleCenter;                    
-                    m_selectButton.FlatStyle = FlatStyle.Flat;
-                    m_selectButton.MouseDown += selectButton_MouseDown;
-                }
-                else
-                {
-                    // get rid of label
-                    if (m_selectButton != null)
-                    {
-                        Controls.Remove(m_selectButton);
-                        m_selectButton.Dispose();
-                        m_selectButton = null;
-                    }
-                }
-
-                m_editControl.EditingContext = editingContext;
-                Height = m_editControl.GetPreferredHeight();                
-            }
-
-            // If the height of the contained control (property grid) changes
-            // we need to adjust the height of the item control to match it
-            private void editControl_Invalidated(object sender, InvalidateEventArgs e)
-            {
-                Height = m_editControl.GetPreferredHeight();
-            }
-
-            // Forward focus event from edit control
-            private void editControl_GotFocus(object sender, EventArgs e)
-            {
-                OnGotFocus(e);
-            }
-
-            private void editControl_MouseUp(object sender, MouseEventArgs e)
-            {
-                // Let listeners see right-click events so that they can show context menus.
-                Point screenPnt = ((Control)sender).PointToScreen(e.Location);
-                Point myClientPnt = PointToClient(screenPnt);
-                var newE = new MouseEventArgs(e.Button, e.Clicks, myClientPnt.X, myClientPnt.Y, e.Delta);
-                OnMouseUp(newE);
-            }
-
-            // Forward the refresh call to the contained edit control (property grid)
-            public override void Refresh()
-            {
-                base.Refresh();
-                m_editControl.Refresh();
-            }
-
-            /// <summary>
-            /// Gets or sets the index (as displayed in the index header column on the left side)</summary>
-            /// <remarks>Changing the index does not by itself move the item in the list.</remarks>
-            public int Index
-            {
-                get { return m_index; }
-                set
-                {
-                    if (m_index != value)
-                    {
-                        m_index = value;
-                        if (m_selectButton != null)
-                        {
-                            m_selectButton.Text = value.ToString();
-                            m_selectButton.ForeColor = m_selected ? SystemColors.HighlightText : ForeColor;
-                            m_selectButton.BackColor = m_selected ? SystemColors.Highlight : UnselectedColor;
-                        }
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Event that occurs when the user clicks the index box on the left and thereby
-            /// selects or unselects one or more items</summary>
-            /// <remarks>The event has to be handled by the parent CollectionControl, because
-            /// clicking on the SelectionBox may also select or unselect other items,
-            /// depending on current selection and modifier keys (Ctrl, Shift).</remarks>
-            public event EventHandler SelectionBoxClicked;
-
-            void selectButton_MouseDown(object sender, EventArgs e)
-            {
-                SelectionBoxClicked.Raise(this, e);
-            }
-
-            /// <summary>
-            /// Gets or sets the selected state of the ItemControl and updates
-            /// background and foreground color of the index header column accordingly</summary>
-            public bool Selected
-            {
-                get { return m_selected; }
-                set
-                {
-                    if (m_singletonMode)
-                        return;                
-                    m_selected = value;
-                    m_selectButton.ForeColor = value ? SystemColors.HighlightText : ForeColor;
-                    m_selectButton.BackColor = value ? SystemColors.Highlight : UnselectedColor;
-
-                    if (!value)
-                        m_editControl.ClearSelectedProperty();
-
-                    m_selectButton.Refresh();
-                }
-            }
-
-            /// <summary>
-            /// Gets the color used when the item is not selected, alternating for odd and even indexed items</summary>
-            private Color UnselectedColor
-            {
-                get 
-                {
-                    Color alternate = BackColor;
-                    alternate = alternate.GetBrightness() > 0.5f ? ControlPaint.Dark(alternate, 0.2f)
-                        : ControlPaint.Light(alternate, 0.2f);                   
-                    return Index % 2 == 0 ? BackColor : alternate; 
-                }
-            }
-
-            public bool CanChangeSize { get; private set; }
-
-            private int m_index;
-            private bool m_selected;
-            private Label m_selectButton;
-            private PropertyGridView m_editControl;
-
-            // In singleton mode theres only 1 item in the collection
-            // and it is impossible to add or remove items
-            // therefore there is no point in displaying the index header column
-            private bool m_singletonMode;
-
-            // We need a PropertyEditingContext that implements ITransactionContext so that property editing
-            //  controls that are embedded within the EmbeddedCollectionEditor can have changes recorded
-            //  for undo/redo.
-            private class EmbeddedPropertyEditingContext : PropertyEditingContext, IAdaptable
-            {
-                // Note: 'transactionContext' might be null, like in the PropertyEditing sample app.
-                public EmbeddedPropertyEditingContext(object[] selection, object context)
-                    : base(selection)
-                {
-                    m_context = context;
-                }
-
-                #region IAdaptable Members
-
-                public object GetAdapter(Type type)
-                {                    
-                    var adaptable = m_context.As<IAdaptable>();
-                    if(adaptable != null)
-                        return adaptable.GetAdapter(type);
-                    return null;
-                        
-                }
-
-                #endregion
-
-                private object m_context;
-            }
-        }
+       
     }
 }

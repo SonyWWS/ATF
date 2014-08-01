@@ -24,6 +24,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,16 +36,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\..\ThirdParty\Interactivity\System.Windows.Interactivity.dll</HintPath>
@@ -52,16 +58,15 @@
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="Wws.UI.Docking, Version=0.0.0.23689, Culture=neutral, PublicKeyToken=2806335437706e59, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\Wws.UI\Wws.UI.Docking.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\AppearanceService.cs" />
     <Compile Include="Applications\AtfApp.cs" />
+    <Compile Include="Applications\AutoDocumentService.cs" />
     <Compile Include="Applications\BoundsSpecified.cs" />
     <Compile Include="Applications\CommandDef.cs" />
     <Compile Include="Applications\CommandId.cs" />
+    <Compile Include="Applications\CommandInfos.cs" />
     <Compile Include="Applications\CommandService.cs" />
     <Compile Include="Applications\ControlDef.cs" />
     <Compile Include="Applications\ControlHostService.cs" />
@@ -69,56 +74,239 @@
     <Compile Include="Applications\EditLabelCommand.cs" />
     <Compile Include="Applications\ErrorDialogService.cs" />
     <Compile Include="Applications\EventToCommandArgs.cs" />
+    <Compile Include="Applications\FileDialogService.cs" />
+    <Compile Include="Applications\FileSystemDataProvider.cs" />
     <Compile Include="Applications\HelpCommands.cs" />
     <Compile Include="Applications\IComposer.cs" />
     <Compile Include="Applications\IControlHostClient.cs" />
     <Compile Include="Applications\IControlHostService.cs" />
     <Compile Include="Applications\IControlInfo.cs" />
-    <Compile Include="Applications\IHelpContext.cs" />
     <Compile Include="Applications\ILabelEditingContext.cs" />
     <Compile Include="Applications\ILayoutConstraint.cs" />
     <Compile Include="Applications\ILayoutContext.cs" />
     <Compile Include="Applications\IMenu.cs" />
     <Compile Include="Applications\IMenuItem.cs" />
     <Compile Include="Applications\IPaletteService.cs" />
+    <Compile Include="Applications\IProtocol.cs" />
     <Compile Include="Applications\IStatusItem.cs" />
     <Compile Include="Applications\IStatusService.cs" />
+    <Compile Include="Applications\ITarget.cs" />
+    <Compile Include="Applications\ITargetDiscovery.cs" />
+    <Compile Include="Applications\ITargetService.cs" />
     <Compile Include="Applications\IThumbnailResolver.cs" />
+    <Compile Include="Applications\ITransportLayer.cs" />
     <Compile Include="Applications\IViewingContext.cs" />
-    <Compile Include="Applications\MenuInfo.cs" />
+    <Compile Include="Applications\Listers\ITemplatingContext.cs" />
+    <Compile Include="Applications\MessageBoxService.cs" />
     <Compile Include="Applications\OutputService.cs" />
     <Compile Include="Applications\PaletteService.cs" />
+    <Compile Include="Applications\SettingsService.cs" />
+    <Compile Include="Applications\StandardEditCommands.cs" />
     <Compile Include="Applications\StandardMenus.cs" />
     <Compile Include="Applications\CommandComparer.cs" />
     <Compile Include="Applications\ICommandItem.cs" />
     <Compile Include="Applications\StatusService.cs" />
+    <Compile Include="Applications\SwitchToService.cs" />
+    <Compile Include="Applications\SynchronizeInvoke.cs" />
+    <Compile Include="Applications\TargetService.cs" />
+    <Compile Include="Applications\TcpIpProtocol.cs" />
+    <Compile Include="Applications\TcpIpTarget.cs" />
+    <Compile Include="Applications\TcpIpTransport\TcpIpTransport.Connect.cs" />
+    <Compile Include="Applications\TcpIpTransport\TcpIpTransport.cs" />
+    <Compile Include="Applications\TcpIpTransport\TcpIpTransport.Receive.cs" />
+    <Compile Include="Applications\TcpIpTransport\TcpIpTransport.Send.cs" />
     <Compile Include="Applications\ThumbnailReadyEventArgs.cs" />
     <Compile Include="Applications\ThumbnailService.cs" />
     <Compile Include="Applications\UnhandledExceptionService.cs" />
+    <Compile Include="Applications\VersionControl\CheckInDialog.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>CheckInDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\VersionControl\ReconcileDialog.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>ReconcileDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\VersionControl\SourceControlCommands.cs" />
+    <Compile Include="Applications\WebServices\FeedbackForm.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>FeedbackForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\WebServices\ProjectMappingAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Applications\WebServices\UserFeedbackService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Applications\WebServices\VersionCheck.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Applications\WebServices\VersionUpdateService.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Applications\WindowLayoutServiceCommands.cs" />
     <Compile Include="Applications\WpfItemInfo.cs" />
+    <Compile Include="Behaviors\ActivateContextBehavior.cs" />
     <Compile Include="Behaviors\AdaptableBehavior.cs" />
     <Compile Include="Behaviors\AtfTreeViewBehavior.cs" />
+    <Compile Include="Behaviors\ButtonPopupBehavior.cs" />
     <Compile Include="Behaviors\CommandBehavior.cs" />
     <Compile Include="Behaviors\ContextMenuBehavior.cs" />
+    <Compile Include="Behaviors\ContextSensitiveToolBar.cs" />
+    <Compile Include="Behaviors\DataPiping.cs" />
+    <Compile Include="Behaviors\DialogButtonWorkaround.cs" />
     <Compile Include="Behaviors\DragAutoScrollBehavior.cs" />
     <Compile Include="Behaviors\DragSourceBehavior.cs" />
     <Compile Include="Behaviors\DropTargetBehavior.cs" />
     <Compile Include="Behaviors\EditableTextBlockBehavior.cs" />
+    <Compile Include="Behaviors\EventToCommand.cs" />
     <Compile Include="Behaviors\GridViewColumnHeaderBehavior.cs" />
     <Compile Include="Behaviors\GridViewSortBehavior.cs" />
+    <Compile Include="Behaviors\InstancingDropTargetBehavior.cs" />
     <Compile Include="Behaviors\ItemsControlDoubleClickBehavior.cs" />
     <Compile Include="Behaviors\ItemsControlDragSourceBehavior.cs" />
     <Compile Include="Behaviors\ItemsControlDropTargetBehavior.cs" />
+    <Compile Include="Behaviors\ItemsControlInsertionAdornerBehavior.cs" />
+    <Compile Include="Behaviors\ItemsControlSelectFirstBehavior.cs" />
+    <Compile Include="Behaviors\LastHitAwareBehavior.cs" />
+    <Compile Include="Behaviors\ListBoxScrollToEndBehavior.cs" />
+    <Compile Include="Behaviors\PasswordBoxBehavior.cs" />
+    <Compile Include="Behaviors\RoutedTemplateSelector.cs" />
+    <Compile Include="Behaviors\SafeTextOptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Behaviors\SelectionBehavior.cs" />
     <Compile Include="Behaviors\SelectionContextDragSourceBehavior.cs" />
+    <Compile Include="Behaviors\SelectorSelectionBehavior.cs" />
     <Compile Include="Behaviors\StyleBehaviors.cs" />
+    <Compile Include="Behaviors\TextBoxNumericBehavior.cs" />
+    <Compile Include="Behaviors\TextBoxSelectAllBehavior.cs" />
+    <Compile Include="Behaviors\ThemeStyleBehavior.cs" />
     <Compile Include="Behaviors\TreeViewDragHoverExpandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemLabelEditBehavior.cs" />
     <Compile Include="Behaviors\ViewModelLocator.cs" />
-    <Compile Include="CollectionUtil.cs" />
+    <Compile Include="Collections\PriorityQuadTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ColorUtil.cs" />
+    <Compile Include="Controls\Adaptable\IViewAwareContext.cs" />
+    <Compile Include="Controls\BalancedWrapPanel.cs" />
+    <Compile Include="Controls\ClippingBorder.cs" />
+    <Compile Include="Controls\ConfirmationDialog.xaml.cs">
+      <DependentUpon>ConfirmationDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DirectoryPicker.cs" />
+    <Compile Include="Controls\DomRecorderView.xaml.cs">
+      <DependentUpon>DomRecorderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditTextBox.cs" />
+    <Compile Include="Controls\FilePicker.cs" />
+    <Compile Include="Controls\FindFileDialog.xaml.cs">
+      <DependentUpon>FindFileDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FindTargetsDialog.xaml.cs">
+      <DependentUpon>FindTargetsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Icon.cs" />
+    <Compile Include="Controls\ManageWindowLayoutsDialog.xaml.cs">
+      <DependentUpon>ManageWindowLayoutsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\StandardValuesConverter.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\FilePathValueEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\FolderPathValueEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\IStringValueFilter.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\RangeSliderValueEditor.cs" />
+    <Compile Include="Controls\PropertyEditing\ValueEditors\StandardValuesEditor.cs" />
+    <Compile Include="Controls\RangeBaseEx.cs" />
+    <Compile Include="Controls\RangeSlider.cs" />
+    <Compile Include="Controls\RangeSliderBase.cs" />
+    <Compile Include="Controls\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsLoadSaveDialog.xaml.cs">
+      <DependentUpon>SettingsLoadSaveDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SizeBasedTemplateSelector.cs" />
+    <Compile Include="Controls\SnappingBitmap.cs" />
+    <Compile Include="Controls\SplitButton.cs" />
+    <Compile Include="Controls\StylableListView.cs" />
+    <Compile Include="Controls\SwitchToDialog.xaml.cs">
+      <DependentUpon>SwitchToDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TargetDialog.xaml.cs">
+      <DependentUpon>TargetDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TcpIpTargetEditDialog.xaml.cs">
+      <DependentUpon>TcpIpTargetEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView.cs" />
+    <Compile Include="Controls\ToolBarItemTemplateSelector.cs" />
+    <Compile Include="Controls\TreeViewWithSelection.cs" />
+    <Compile Include="Controls\ValueChangedEventManager.cs" />
+    <Compile Include="Controls\VirtualizingWrapPanel.cs" />
+    <Compile Include="Controls\WindowLayoutNameDialog.xaml.cs">
+      <DependentUpon>WindowLayoutNameDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataContextSpy.cs" />
+    <Compile Include="DebugUtils.cs" />
+    <Compile Include="Docking\ContentSettings.cs" />
+    <Compile Include="Docking\DockContent.cs" />
+    <Compile Include="Docking\DockedWindow.cs" />
+    <Compile Include="Docking\DockIcon.cs" />
+    <Compile Include="Docking\DocklingsWindow.cs" />
+    <Compile Include="Docking\DockPanel.cs" />
+    <Compile Include="Docking\FloatingWindow.cs" />
+    <Compile Include="Docking\GridLayout.cs" />
+    <Compile Include="Docking\IDockable.cs" />
+    <Compile Include="Docking\IDockContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Docking\IDockLayout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Docking\ResizablePopup.xaml.cs">
+      <DependentUpon>ResizablePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Docking\SideBarButton.cs" />
+    <Compile Include="Docking\SidePopup.cs" />
+    <Compile Include="Docking\TabLayout.cs" />
+    <Compile Include="Docking\Win32Calls.cs" />
+    <Compile Include="Dom\DataContextAdapter.cs" />
+    <Compile Include="Dom\DomRecorder.cs" />
+    <Compile Include="Dom\HelpEnabledSchemaLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Extensions\DispatcherExtensions.cs" />
+    <Compile Include="Extensions\MiscExtensions.cs" />
+    <Compile Include="Extensions\TreeViewExtensions.cs" />
+    <Compile Include="Extensions\VisualTreeExtensions.cs" />
+    <Compile Include="FindFileResolver.cs" />
+    <Compile Include="FreezableCursor.cs" />
+    <Compile Include="IMenu.cs" />
+    <Compile Include="Interop\KeysInterop.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Interop\Util.cs" />
-    <Compile Include="TreeViewUtil.cs" />
+    <Compile Include="IToolBar.cs" />
+    <Compile Include="Markup\CommandServiceExtension.cs" />
+    <Compile Include="Markup\EnumValuesExtension.cs" />
+    <Compile Include="Markup\GenericExtensions.cs" />
+    <Compile Include="Markup\ResourceMarkupExtension.cs" />
+    <Compile Include="Markup\TypeConverterExtension.cs" />
+    <Compile Include="Models\AdaptableViewModelCollection.cs" />
+    <Compile Include="Models\ConfirmationDialogViewModel.cs" />
+    <Compile Include="Models\FindFileDialogViewModel.cs" />
+    <Compile Include="Models\FindTargetsViewModel.cs" />
+    <Compile Include="Models\SettingsDialogViewModel.cs" />
+    <Compile Include="Models\SettingsLoadSaveDialogViewModel.cs" />
+    <Compile Include="Models\ShowDialogEventArgs.cs" />
+    <Compile Include="Models\Target.cs" />
+    <Compile Include="Models\TargetDialogViewModel.cs" />
+    <Compile Include="Models\TcpIpTargetEditDialogViewModel.cs" />
+    <Compile Include="Models\WindowLayoutNewViewModel.cs" />
+    <Compile Include="Models\WindowLayoutViewModels.cs" />
+    <Compile Include="ResourceUtil.cs" />
+    <Compile Include="Skins\ReferencedAssemblySkin.cs" />
+    <Compile Include="Skins\Skin.cs" />
     <Compile Include="CommandReference.cs" />
     <Compile Include="Composer.cs" />
     <Compile Include="Contracts.cs" />
@@ -145,7 +333,6 @@
     <Compile Include="Controls\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Applications\ICommandService.cs" />
     <Compile Include="Applications\MenuDef.cs" />
     <Compile Include="Controls\MessageBoxDialog.xaml.cs">
       <DependentUpon>MessageBoxDialog.xaml</DependentUpon>
@@ -178,11 +365,9 @@
     <Compile Include="Controls\WindowsFormsHostEx.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DialogUtil.cs" />
-    <Compile Include="DispatcherUtil.cs" />
     <Compile Include="ExportViewModelAttribute.cs" />
     <Compile Include="ImageUtil.cs" />
     <Compile Include="Interop\CommandClientAdapter.cs" />
-    <Compile Include="Interop\CommandServiceAdapter.cs" />
     <Compile Include="Interop\ContextMenuService.cs" />
     <Compile Include="Interop\ControlHostClientAdapter.cs" />
     <Compile Include="Interop\ControlHostServiceAdapter.cs" />
@@ -198,16 +383,12 @@
     <Compile Include="Markup\TransactionBinding.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="Models\AboutDialogViewModel.cs" />
-    <Compile Include="Models\AdapterViewModel.cs" />
     <Compile Include="Models\BindingAdapterObject.cs" />
     <Compile Include="Models\CommandItem.cs" />
     <Compile Include="Models\DialogViewModelBase.cs" />
     <Compile Include="Models\ErrorDialogViewModel.cs" />
     <Compile Include="Models\IDialogViewModel.cs" />
     <Compile Include="Models\MainMenuViewModel.cs" />
-    <Compile Include="Models\MenuItem.cs" />
-    <Compile Include="Models\MenuItemBase.cs" />
-    <Compile Include="Models\MenuUtil.cs" />
     <Compile Include="Models\NodeTypePaletteItem.cs" />
     <Compile Include="Models\NotifyPropertyChangedBase.cs" />
     <Compile Include="Models\OutputVm.cs" />
@@ -218,18 +399,20 @@
     <Compile Include="Models\StatusImage.cs" />
     <Compile Include="Models\StatusItem.cs" />
     <Compile Include="Models\StatusText.cs" />
-    <Compile Include="Models\ToolBarTrayBinder.cs" />
     <Compile Include="Models\ToolBarViewModel.cs" />
     <Compile Include="Models\TreeViewModel.cs" />
-    <Compile Include="ObservableUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceDictionaryResourceAttribute.cs" />
     <Compile Include="Resources.cs" />
+    <Compile Include="ValueConverters\AdaptingValueConverters.cs" />
+    <Compile Include="ValueConverters\Converters.cs" />
+    <Compile Include="ValueConverters\DomDataTemplateSelector.cs" />
+    <Compile Include="ValueConverters\InterfaceTemplateSelector.cs" />
     <Compile Include="ValueConverters\MenuItemStyleSelector.cs" />
     <Compile Include="ValueConverters\MiscValueConverters.cs" />
+    <Compile Include="ValueConverters\TypeConverter.cs" />
     <Compile Include="ValueConverters\VisibilityValueConverters.cs" />
     <Compile Include="ViewModelRepository.cs" />
-    <Compile Include="VisualTreeUtil.cs" />
     <Compile Include="WpfImageResourceAttribute.cs" />
     <Compile Include="WpfMessageBox.cs" />
     <Compile Include="WpfResourceUtil.cs" />
@@ -249,7 +432,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Applications\VersionControl\CheckInDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Applications\VersionControl\ReconcileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Applications\WebServices\FeedbackForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AboutDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ConfirmationDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DomRecorderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -257,7 +460,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\FindFileDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FindTargetsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ManageWindowLayoutsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -273,19 +488,91 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\SettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SettingsLoadSaveDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SliderBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SwitchToDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TargetDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TcpIpTargetEditDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\UnhandledExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\WindowLayoutNameDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Docking\ResizablePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\dialog_error.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\dialog_information.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\dialog_question.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\dialog_warning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DockIcons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\PropertyEditors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ClippingBorder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\CommonDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DockedWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DockPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\FilePicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\FloatingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -298,6 +585,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\PropertyGridToolBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RangeSlider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SideBarButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SidePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SplitButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\TabLayout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\TileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -315,6 +626,7 @@
     <Resource Include="Resources\warning.ico" />
     <EmbeddedResource Include="Resources\ja\Localization.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

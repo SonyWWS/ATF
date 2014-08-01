@@ -2,23 +2,25 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
                     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-					xmlns:l="clr-namespace:Sce.Atf.Wpf"
+                    xmlns:l="clr-namespace:Sce.Atf.Wpf"
                     xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors"
-					xmlns:m="clr-namespace:Sce.Atf.Wpf.Models"
+                    xmlns:m="clr-namespace:Sce.Atf.Wpf.Models"
                     xmlns:ct="clr-namespace:Sce.Atf.Wpf.Controls"
-                    xmlns:c="clr-namespace:Sce.Atf.Wpf.ValueConverters">
+                    xmlns:c="clr-namespace:Sce.Atf.Wpf.ValueConverters" xmlns:markup="clr-namespace:Sce.Atf.Wpf.Markup"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--Misc Styles *********************************************************************************** -->
-    
+
     <Style x:Key="{x:Static l:Resources.AutoGreyStyleKey}" TargetType="FrameworkElement" >
-		<Style.Triggers>
-			<Trigger Property="IsEnabled" Value="False">
-				<Setter Property="Opacity" Value="0.33"/>
-			</Trigger>
-		</Style.Triggers>
-	</Style>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.33"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
     <Style x:Key="{x:Static l:Resources.DialogButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="MinWidth" Value="75"/>
         <Setter Property="MinHeight" Value="23"/>
         <Setter Property="Margin" Value="6,0,0,0"/>
@@ -30,85 +32,127 @@
     </DataTemplate>
 
     <!--Toolbar Styles ******************************************************************************** -->
-    
-    <Style x:Key="{x:Static l:Resources.ToolBarButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-        <Style.Setters>
-            <Setter Property="ToolTip" Value="{Binding Description}"/>
-            <Setter Property="Command" Value="{Binding}"/>
-        </Style.Setters>
-    </Style>
+
+    <DataTemplate x:Key="{x:Static l:Resources.ToolBarItemTemplateKey}">
+        <Button Command="{Binding}" ToolTip="{Binding Description}" Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}">
+            <ct:Icon Width="16" Height="16" Style="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}" SourceKey="{Binding ImageSourceKey}" SnapsToDevicePixels="True"/>
+        </Button>
+    </DataTemplate>
 
     <Style x:Key="{x:Static l:Resources.ToolBarStyleKey}" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource {x:Type ToolBar}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="MinHeight" Value="16"/>
-        <Setter Property="ItemsSource" Value="{Binding CommandsInSubtree}"/>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Button Style="{StaticResource {x:Static l:Resources.ToolBarButtonStyleKey}}">
-                        <Image Width="16" Height="16" Source="{Binding ImageSourceKey, Converter={c:ResourceLookupConverter}}"
-                               Style="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}"/>
-                    </Button>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Visibility" Value="{Binding CommandsInSubtree, Converter={c:EnumerableCountToVisibilityConverter}}"/>
     </Style>
 
     <Style x:Key="{x:Static l:Resources.ToolBarTrayStyleKey}" TargetType="{x:Type ToolBarTray}" BasedOn="{StaticResource {x:Type ToolBarTray}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="AllowDrop" Value="False"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
     <!--Menu Styles ******************************************************************************** -->
 
+    <!-- http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/42cd1554-de7a-473b-b977-ddbd6298b3d0 -->
+    <Style TargetType="MenuItem">
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    
     <Style x:Key="{x:Static l:Resources.MenuItemImageStyleKey}" TargetType="{x:Type Image}" BasedOn="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}">
         <Setter Property="Width" Value="12"/>
         <Setter Property="Height" Value="12"/>
     </Style>
 
     <Style x:Key="{x:Static l:Resources.SubMenuItemStyleKey}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="Header" Value="{Binding Text}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="ItemsSource" Value="{Binding Children}"/>
-        <Setter Property="Visibility" Value="{Binding CommandsInSubtree, Converter={c:EnumerableCountToVisibilityConverter}}"/>
+        <Setter Property="Visibility" Value="{Binding IsVisible, Converter={c:BoolToVisibilityConverter}}"/>
     </Style>
 
     <Style x:Key="{x:Static l:Resources.CommandMenuItemStyleKey}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="Header" Value="{Binding Text}"/>
         <Setter Property="Command" Value="{Binding}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="IsChecked" Value="{Binding IsChecked}"/>
-        <Setter Property="InputGestureText" Value="{Binding InputGestures, Converter={c:InputGestureTextConverter}}"/>
+        <Setter Property="InputGestureText" Value="{Binding Shortcuts, Converter={c:InputGestureTextConverter}}"/>
         <!--DAN: this is a workaround for a WPF bug (Fixed in .Net4)
                 https://connect.microsoft.com/VisualStudio/feedback/details/497408/wpf-menuitem-icon-cannot-be-set-via-setter?wa=wsignin1.0-->
         <Setter Property="Icon" Value="{Binding ImageSourceKey, Converter={c:ImageResourceLookupConverter}}"/>
     </Style>
 
     <Style x:Key="{x:Static l:Resources.MenuSeparatorStyleKey}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}"/>
+                    <Separator Style="{DynamicResource {x:Static MenuItem.SeparatorStyleKey}}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <c:MenuItemStyleSelector x:Key="MenuStyleSelector"/>
 
-    <Style x:Key="{x:Static l:Resources.MenuStyleKey}" TargetType="{x:Type MenuBase}">
-        <Style.Resources>
-            <c:MenuItemStyleSelector x:Key="styleSelector"/>
-        </Style.Resources>
+    <Style x:Key="{x:Static l:Resources.MenuStyleKey}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">
         <Style.Setters>
-            <Setter Property="ItemContainerStyleSelector" Value="{StaticResource styleSelector}"/>
+            <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+            <Setter Property="ItemContainerStyleSelector" Value="{StaticResource MenuStyleSelector}"/>
             <Setter Property="AllowDrop" Value="False"/>
+            <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
+            <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
+            <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
+            <Setter Property="Visibility" Value="{Binding IsVisible, Converter={c:BoolToVisibilityConverter}}"/>
         </Style.Setters>
+    </Style>
+
+    <Style x:Key="{x:Static l:Resources.ContextMenuStyleKey}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
+        <Style.Setters>
+            <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+            <Setter Property="ItemContainerStyleSelector" Value="{StaticResource MenuStyleSelector}"/>
+            <Setter Property="AllowDrop" Value="False"/>
+            <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
+            <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
+            <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="{x:Static l:Resources.DialogRootBorderStyleKey}" TargetType="{x:Type Border}">
+        <!--<Setter Property="Border.Background" Value="{DynamicResource DialogBackgroundBrush}" />-->
+        <Setter Property="Border.Padding" Value="4" />
+        <Setter Property="Border.BorderThickness" Value="1" />
+        <!--<Setter Property="Border.BorderBrush" Value="{DynamicResource WindowBorderBrush}" />-->
+        <!--<Setter Property="TextElement.Foreground" Value="{DynamicResource DialogTextBrush}" />-->
+        <Setter Property="TextElement.FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
+        <Setter Property="TextElement.FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
+        <Setter Property="TextElement.FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
     </Style>
 
     <!--StatusBar Styles ****************************************************************************** -->
     
     <DataTemplate DataType="{x:Type m:StatusText}">
         <TextBlock Text="{Binding Text}" 
-                   Foreground="{Binding ForeColor}" 
                    ToolTip="{Binding ToolTip}"
-                   MinWidth="{Binding MinWidth, Mode=OneTime}"/>
+                   MinWidth="{Binding MinWidth, Mode=OneTime}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                    <Setter Property="Foreground" Value="{Binding ForeColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ForeColor}" Value="{x:Null}">
+                            <Setter Property="Foreground" Value="{DynamicResource Text1Brush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type m:StatusImage}">
@@ -128,6 +172,7 @@
     </DataTemplate>
 
     <Style x:Key="{x:Static l:Resources.StatusBarItemStyleKey}" TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource {x:Type StatusBarItem}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsLeftDock, FallbackValue=False}" Value="False">
                 <Setter Property="DockPanel.Dock" Value="Right"/>
@@ -137,7 +182,7 @@
                 <Setter Property="Template" >
                     <Setter.Value>
                         <ControlTemplate>
-                            <Separator Style="{StaticResource {x:Static StatusBar.SeparatorStyleKey}}"/>
+                            <Separator Style="{DynamicResource {x:Static StatusBar.SeparatorStyleKey}}"/>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -145,16 +190,25 @@
         </Style.Triggers>
     </Style>
 
-   <Style x:Key="{x:Static l:Resources.StatusBarStyleKey}" TargetType="{x:Type StatusBar}" BasedOn="{StaticResource {x:Type StatusBar}}">
-        <Style.Setters>
-            <Setter Property="ItemContainerStyle" Value="{StaticResource {x:Static l:Resources.StatusBarItemStyleKey}}"/>
-            <Setter Property="AllowDrop" Value="False"/>
-        </Style.Setters>
+    <Style x:Key="{x:Static l:Resources.StatusBarStyleKey}" TargetType="{x:Type StatusBar}" BasedOn="{StaticResource {x:Type StatusBar}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Static l:Resources.StatusBarItemStyleKey}}"/>
+        <Setter Property="AllowDrop" Value="False"/>
+        <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
+        <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
+        <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
     </Style>
 
+    <!-- ListView Styles (needed otherwise BasedOn{ListViewItem} fails with no skins loaded*** -->
+
+    <Style x:Key="{x:Static l:Resources.ListViewItemStyleKey}" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+    </Style>
+        
     <!-- TreeView Styles ****************************************************************************** -->
 
     <Style x:Key="{x:Static l:Resources.TreeViewItemExpanderStyleKey}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="Focusable" Value="false" />
         <Setter Property="Width" Value="16" />
         <Setter Property="Height" Value="16" />
@@ -187,25 +241,29 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="{x:Static l:Resources.TreeViewStateImageStyleKey}" TargetType="{x:Type Image}" >
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+
+    <Style x:Key="{x:Static l:Resources.TreeViewIconStyleKey}" TargetType="{x:Type ct:Icon}" BasedOn="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}" >
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="MaxWidth" Value="10"/>
-        <Setter Property="MaxHeight" Value="10"/>
-        <Setter Property="Margin" Value="0,0,-1,0"/>
+        <Setter Property="Margin" Value="0,2,4,2"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Width" Value="14"/>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="Source" Value="{x:Null}"/>
+                    <Condition Property="SourceBrush" Value="{x:Null}"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </MultiTrigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="{x:Static l:Resources.TreeViewImageStyleKey}" TargetType="{x:Type Image}" >
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+    <Style x:Key="{x:Static l:Resources.TreeViewLabelTextBlockStyleKey}" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <!--<Setter Property="b:EditableTextBlockBehavior.EditOnDoubleClick" Value="True"/>-->
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="MaxWidth" Value="16"/>
-        <Setter Property="MaxHeight" Value="16"/>
-        <Setter Property="Margin" Value="0,1,3,1"/>
-    </Style>
-
-    <Style x:Key="{x:Static l:Resources.TreeViewLabelTextBlockStyleKey}" TargetType="{x:Type TextBlock}" >
-        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="{Binding FontWeight}"/>
+        <Setter Property="FontStyle" Value="{Binding FontItalicStyle}"/>
         <Setter Property="b:EditableTextBlockBehavior.IsInEditMode" Value="{Binding IsInLabelEditMode, Mode=TwoWay}"/>
     </Style>
 
@@ -221,8 +279,12 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
         <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
+        <Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=OneWay}"/>
+        <Setter Property="Visibility" Value="{Binding IsVisible, Mode=OneWay, Converter={c:BoolToVisibilityConverter}}"/>
         <Setter Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+        <Setter Property="b:AtfTreeViewBehavior.IsChecked" Value="{Binding CheckState, Mode=TwoWay}"/>
         <Setter Property="b:StyleBehaviors.Behaviors">
             <Setter.Value>
                 <b:StyleBehaviorCollection>
@@ -231,9 +293,8 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Padding" Value="1,0,0,0" />
+        <!--<Setter Property="Foreground" Value="{DynamicResource TextBrush}" />-->
         <Setter Property="FocusVisualStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type IFrameworkInputElement}">
@@ -259,8 +320,30 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <ToggleButton Name="Expander" Style="{StaticResource {x:Static l:Resources.TreeViewItemExpanderStyleKey}}" ClickMode="Press" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <ToggleButton Name="Expander" Style="{DynamicResource {x:Static l:Resources.TreeViewItemExpanderStyleKey}}" ClickMode="Press" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Border Name="Bd" Grid.Column="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <!--<Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <EventTrigger RoutedEvent="Border.DragEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard Duration="0:0:.1" 
+                                            Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)">
+                                                    <ColorAnimation To="Black" Duration="0:0:.1" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="Border.DragLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard  Duration="0:0:.1" 
+                                            Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)">
+                                                    <ColorAnimation To="Transparent" Duration="0:0:.1" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>-->
                             <ContentPresenter Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </Border>
                         <ItemsPresenter Name="ItemsHost" Grid.Row="1" Grid.Column="1" />
@@ -293,19 +376,41 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ToolTip">
+        <Style.Triggers>
+            <Trigger Property="Content"
+                 Value="{x:Static sys:String.Empty}">
+                <Setter Property="Visibility"
+                    Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="Content"
+                 Value="{x:Null}">
+                <Setter Property="Visibility"
+                    Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <HierarchicalDataTemplate x:Key="{x:Static l:Resources.DefaultTreeViewItemTemplateKey}" ItemsSource="{Binding Children}">
-        <StackPanel Orientation="Horizontal">
-            <Image Style="{StaticResource {x:Static l:Resources.TreeViewStateImageStyleKey}}"
-                        Source="{Binding StateImageKey, Converter={c:ResourceLookupConverter}}"/>
-            <Image Style="{StaticResource {x:Static l:Resources.TreeViewImageStyleKey}}"
-                        Source="{Binding ImageKey, Converter={c:ResourceLookupConverter}}"/>
-            <TextBlock Style="{StaticResource {x:Static l:Resources.TreeViewLabelTextBlockStyleKey}}"
-                       Text="{Binding Label, Mode=TwoWay}" />
+        <StackPanel Orientation="Horizontal"
+                    ToolTipService.ToolTip="{Binding HoverText}">
+            <CheckBox Visibility="{Binding HasCheck, Converter={c:BoolToVisibilityConverter}}" 
+                      IsChecked="{Binding Path=(b:AtfTreeViewBehavior.IsChecked), RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Mode=TwoWay}" 
+                      VerticalAlignment="Center" Margin="0,0,2,0" Focusable="False"/>
+            <ct:Icon Style="{StaticResource {x:Static l:Resources.TreeViewIconStyleKey}}" SourceKey="{Binding StateImageKey}"
+                     Margin="0,2,2,2" Width="8" Height="8"
+                     ct:Icon.RedChroma="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Path=(ct:Icon.RedChroma)}"
+                     ct:Icon.UseShadow="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Path=(ct:Icon.UseShadow)}"/>
+            <ct:Icon Style="{StaticResource {x:Static l:Resources.TreeViewIconStyleKey}}" SourceKey="{Binding ImageKey}"
+                     ct:Icon.RedChroma="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Path=(ct:Icon.RedChroma)}"
+                     ct:Icon.UseShadow="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Path=(ct:Icon.UseShadow)}"/>
+            <TextBlock Style="{DynamicResource {x:Static l:Resources.TreeViewLabelTextBlockStyleKey}}" Text="{Binding Label, Mode=TwoWay}" />
         </StackPanel>
     </HierarchicalDataTemplate>
 
-    <Style x:Key="{x:Static l:Resources.TreeViewStyleKey}" TargetType="TreeView">
-        <Setter Property="ItemContainerStyle" Value="{StaticResource {x:Static l:Resources.TreeViewItemStyleKey}}" />
+    <Style x:Key="{x:Static l:Resources.TreeViewStyleKey}" TargetType="TreeView" BasedOn="{StaticResource {x:Type TreeView}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Static l:Resources.TreeViewItemStyleKey}}" />
         <Setter Property="ItemsSource" Value="{Binding Roots}"/>
         <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
         <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
@@ -314,8 +419,8 @@
         <Setter Property="b:StyleBehaviors.Behaviors">
             <Setter.Value>
                 <b:StyleBehaviorCollection>
-                    <b:AtfTreeViewBehavior EnsureVisiblePath="{Binding EnsureVisiblePath}" SynchronisingSelection="{Binding InSelectionTransaction, Mode=OneWayToSource}"/>
-                    <b:ContextMenuBehavior/>
+                    <b:AtfTreeViewBehavior/>
+                    <b:ItemsControlContextMenuBehavior/>
                     <b:SelectionContextDragSourceBehavior/>
                     <b:ItemsControlDropTargetBehavior/>
                     <b:DragAutoScrollBehavior/>
@@ -324,13 +429,107 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!--TreeListView Styles ****************************************************************************** -->
+
+    <Style x:Key="{x:Static l:Resources.TreeListViewStyleKey}" TargetType="{x:Type ct:TreeListView}" BasedOn="{StaticResource {x:Type ct:TreeListView}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <Setter Property="ItemsSource" Value="{Binding Roots}"/>
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Static l:Resources.TreeListViewItemStyleKey}}"/>
+        <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+        <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+        <Setter Property="ItemTemplate" Value="{DynamicResource {x:Static l:Resources.DefaultTreeViewItemTemplateKey}}"/>
+        <Setter Property="b:StyleBehaviors.Behaviors">
+            <Setter.Value>
+                <b:StyleBehaviorCollection>
+                    <b:AtfTreeViewBehavior/>
+                    <b:ItemsControlContextMenuBehavior/>
+                    <b:SelectionContextDragSourceBehavior/>
+                    <b:ItemsControlDropTargetBehavior/>
+                    <b:DragAutoScrollBehavior/>
+                    <b:TreeViewDragHoverExpandBehavior />
+                </b:StyleBehaviorCollection>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Static l:Resources.TreeListViewItemStyleKey}" TargetType="{x:Type ct:TreeListViewItem}"  BasedOn="{StaticResource {x:Type ct:TreeListViewItem}}">
+        <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+        <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
+        <Setter Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+        <Setter Property="b:StyleBehaviors.Behaviors">
+            <Setter.Value>
+                <b:StyleBehaviorCollection>
+                    <b:TreeViewItemLabelEditBehavior />
+                </b:StyleBehaviorCollection>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ct:TreeListViewItem}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Border Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                            <ct:TreeGridViewRowPresenter 
+                                x:Name="PART_Header" 
+                                Content="{TemplateBinding Header}"
+                                FirstColumnIndent="{Binding Level, Converter={ct:LevelToIndentConverter}, RelativeSource={RelativeSource AncestorType={x:Type ct:TreeListViewItem}}, ConverterParameter=19}"
+                                Columns="{Binding Path=Columns,RelativeSource={RelativeSource AncestorType={x:Type ct:TreeListView}}}">
+                                <ct:TreeGridViewRowPresenter.Expander>
+                                    <Grid>
+                                        <ToggleButton x:Name="Expander" Style="{DynamicResource {x:Static l:Resources.TreeViewItemExpanderStyleKey}}" ClickMode="Press"
+                                            IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </Grid>
+                                </ct:TreeGridViewRowPresenter.Expander>
+                            </ct:TreeGridViewRowPresenter>
+                        </Border>
+                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="True">
+                            <Setter TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Property="Background" />
+                            <Setter Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" Property="Foreground" />
+                        </Trigger>
+                        <!--Test-->
+                        <Trigger Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="False">
+                            <Setter Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Property="Foreground" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="b:AtfTreeViewBehavior.IsMultiSelected" Value="true" />
+                                <Condition Property="IsSelectionActive" Value="false" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Property="Background" />
+                            <Setter Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Property="Foreground" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Property="Foreground" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--Palette DataTemplates ****************************************************************************** -->
     
     <!--Data template for PaletteItem -->
     <DataTemplate DataType="{x:Type m:NodeTypePaletteItem}">
         <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding ImageKey, Converter={c:ResourceLookupConverter}}" Height="16" Margin="2"/>
+            <!--<Image Source="{Binding ImageKey, Converter={c:ResourceLookupConverter}}" Height="16" Margin="2"/>-->
+            <!--<Rectangle Fill="{markup:ResourceKeyBinding Binding={Binding Path=ImageKey, Mode=OneWay}}" Height="16" Margin="2" Stretch="Uniform"/>-->
+            <ct:Icon SourceKey="{Binding ImageKey}"
+                     Margin="0,2,2,2" Width="16" Height="16"
+                     ct:Icon.RedChroma="{DynamicResource ItemIconBrush}"/>
             <TextBlock Text="{Binding Name}" Margin="2"/>
             <ToolTipService.ToolTip>
                 <ContentControl Content="{Binding Description}" />
@@ -340,7 +539,8 @@
 
     <!--Data template for PaletteContent -->
     <DataTemplate DataType="{x:Type m:PaletteContent}">
-        <ListBox ItemsSource="{Binding Data}" AllowDrop="False" HorizontalContentAlignment="Stretch">
+        <ListBox ItemsSource="{Binding Data}" AllowDrop="False" HorizontalContentAlignment="Stretch"
+                 ScrollViewer.CanContentScroll="False">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.ContainerStyle>
@@ -348,7 +548,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                                        <Expander IsExpanded="True">
+                                        <Expander IsExpanded="True" Margin="1">
                                             <Expander.Header>
                                                 <TextBlock FontWeight="Bold" Text="{Binding Path=Name}"/>
                                             </Expander.Header>
@@ -392,7 +592,7 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListBoxItem}" >
-                    <Setter Property="Padding" Value="0,2,0,2" />
+                    <Setter Property="Padding" Value="0" />
                     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                     <Setter Property="Template">
                         <Setter.Value>

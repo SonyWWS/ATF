@@ -18,9 +18,8 @@ namespace Sce.Atf.Wpf
         {
         }
 
-        /// <summary>
-        /// Command DependencyProperty with CommandChanged metadata</summary>
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandReference), new PropertyMetadata(OnCommandChanged));
+        public static readonly DependencyProperty CommandProperty = 
+            DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandReference), new PropertyMetadata(OnCommandChanged));
 
         /// <summary>
         /// Gets or sets the effective value of the Command DependencyProperty</summary>
@@ -39,9 +38,7 @@ namespace Sce.Atf.Wpf
         /// <returns>True iff this command can be executed</returns>
         public bool CanExecute(object parameter)
         {
-            if (Command != null)
-                return Command.CanExecute(parameter);
-            return false;
+            return Command != null && Command.CanExecute(parameter);
         }
 
         /// <summary>
@@ -53,9 +50,11 @@ namespace Sce.Atf.Wpf
             Command.Execute(parameter);
         }
 
-        /// <summary>
-        /// Event that is raised when changes occur that affect whether or not the command should execute</summary>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         /// <summary>
         /// Raises the CanExecuteChanged event</summary>
@@ -63,14 +62,14 @@ namespace Sce.Atf.Wpf
         /// <param name="e">Event args</param>
         private void RaiseCanExecuteChanged(object sender, EventArgs e)
         {
-            CanExecuteChanged.Raise(sender, e);
+            //CanExecuteChanged.Raise(sender, e);
         }
 
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            CommandReference commandReference = d as CommandReference;
-            ICommand oldCommand = e.OldValue as ICommand;
-            ICommand newCommand = e.NewValue as ICommand;
+            var commandReference = d as CommandReference;
+            var oldCommand = e.OldValue as ICommand;
+            var newCommand = e.NewValue as ICommand;
 
             if (oldCommand != null)
             {

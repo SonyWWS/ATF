@@ -101,8 +101,7 @@ namespace Sce.Atf.Controls
                 m_lastEdit = value;
 
                 string formattedText = ((IFormattable)value).ToString(null, CultureInfo.CurrentCulture);
-                Text = formattedText;
-
+                Text = formattedText;                
                 // set values to be consistent in case there's no edit
                 TryValidateText(formattedText);
             }
@@ -128,7 +127,10 @@ namespace Sce.Atf.Controls
             if (keyData == Keys.Enter)
             {
                 Flush();
-                return true;
+               // Let parent handle Enter key.
+               // Some editor might want to focus 
+               // on next child On Enter.
+               // return true;
             }
             else if (keyData == Keys.Escape)
             {
@@ -145,9 +147,10 @@ namespace Sce.Atf.Controls
         /// <returns>True iff key is an input key</returns>
         protected override bool IsInputKey(Keys keyData)
         {
-            // ignore arrow keys so they're available for containers, like our PropertyGridView
+            // ignore arrow keys and tab so they're available for containers, like our PropertyGridView
             if (keyData == Keys.Up ||
-                keyData == Keys.Down)
+                keyData == Keys.Down || 
+                (keyData & Keys.Tab) == Keys.Tab)
             {
                 return false;
             }
@@ -169,10 +172,39 @@ namespace Sce.Atf.Controls
         protected override void OnLostFocus(EventArgs e)
         {
             Flush();
-
             base.OnLostFocus(e);
         }
 
+        private bool m_selectAll;
+        protected override void OnEnter(EventArgs e)
+        {
+            base.OnEnter(e);
+            m_selectAll = MouseButtons == MouseButtons.Left;
+
+            if (MouseButtons == MouseButtons.None)
+            {// select all, when tabbing into this control.
+                SelectAll();
+            }
+        }
+
+        protected override void OnLeave(EventArgs e)
+        {
+            base.OnLeave(e);
+            m_selectAll = false;
+        }
+
+        protected override void OnMouseUp(MouseEventArgs mevent)
+        {
+            base.OnMouseUp(mevent);
+            if (m_selectAll && SelectionLength == 0)
+            {
+                m_selectAll = false;
+                SelectAll();
+                Focus();
+            }
+
+        }
+       
         /// <summary>
         /// Performs custom actions on MouseDown events.
         /// Overrides the default behavior on a double-click so that all the text is selected, not
@@ -361,6 +393,7 @@ namespace Sce.Atf.Controls
         public CompactSpinner()
         {
             this.DoubleBuffered = true;
+            TabStop = false;
         }
 
         /// <summary>

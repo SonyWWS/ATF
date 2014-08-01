@@ -109,10 +109,13 @@
     </Compile>
     <Compile Include="Sce.Atf\Applications\TestStandardFileCommands.cs" />
     <Compile Include="Sce.Atf\Controls\PropertyEditing\TestBoundPropertyDescriptor.cs" />
+    <Compile Include="Sce.Atf\Controls\PropertyEditing\TestLongEnumEditor.cs" />
     <Compile Include="Sce.Atf\Controls\PropertyEditing\TestPropertyUtils.cs" />
     <Compile Include="Sce.Atf\Dom\TestChildAttributePropertyDescriptor.cs" />
     <Compile Include="Sce.Atf\Dom\TestDataValidator.cs" />
     <Compile Include="Sce.Atf\Dom\TestSchemas.cs" />
+    <Compile Include="Sce.Atf\Dom\TestTransactionReporter.cs" />
+    <Compile Include="Sce.Atf\TestEnumUtil.cs" />
     <Compile Include="Sce.Atf\TestPath.cs" />
     <Compile Include="Sce.Atf\Dom\TestAttributePropertyDescriptor.cs" />
     <Compile Include="Sce.Atf\Dom\ValidationContext.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Sce.Atf\TestActiveCollection.cs" />
     <Compile Include="Sce.Atf\TestUniqueNamer.cs" />
     <Compile Include="Sce.Atf\TestWeakKey.cs" />
+    <Compile Include="Sce.Atf\TestWinFormsUtil.cs" />
     <Compile Include="Sce.Atf\TestXmlStringLocalizer.cs" />
     <Compile Include="Sce.Atf\VectorMath\TestAngleAxisF.cs" />
     <Compile Include="Sce.Atf\VectorMath\TestBezierCurve.cs" />
@@ -167,6 +171,7 @@
     <Compile Include="Sce.Atf\VectorMath\TestVec2F.cs" />
     <Compile Include="Sce.Atf\VectorMath\TestVec3F.cs" />
     <Compile Include="Sce.Atf\VectorMath\TestVec4F.cs" />
+    <Compile Include="Sce.Atf\Wpf\Models\TestTreeViewModel.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -246,6 +251,10 @@
     <ProjectReference Include="..\..\Framework\Atf.Gui.WinForms\Atf.Gui.WinForms.vs2010.csproj">
       <Project>{7C36A258-9102-420D-B80A-5EB5717644B6}</Project>
       <Name>Atf.Gui.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Gui.Wpf\Atf.Gui.Wpf.vs2010.csproj">
+      <Project>{050fc659-553f-4911-a609-5ba1be4edbf8}</Project>
+      <Name>Atf.Gui.Wpf.vs2010</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Atf.Gui\Atf.Gui.vs2010.csproj">
       <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>

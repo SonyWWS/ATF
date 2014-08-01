@@ -1,0 +1,124 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Sce.Atf.Wpf.Docking"
+    xmlns:vc="clr-namespace:Sce.Atf.Wpf.ValueConverters">
+    
+    <vc:BoolVisibilityConverter x:Key="myBoolVisibilityConverter"/>
+    <vc:NullVisibilityConverter x:Key="myNullVisibilityConverter"/>
+    
+    <Style x:Key="DockTitleButtonStyle" TargetType="{x:Type ButtonBase}">
+        <Setter Property="Foreground" Value="{x:Static SystemColors.ActiveCaptionTextBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="PART_Border" Padding="2" BorderThickness="1" CornerRadius="2" Background="#01ffffff">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="{x:Static SystemColors.ControlLightBrush}"/>
+                            <Setter TargetName="PART_Border" Property="BorderBrush" Value="DarkSlateBlue"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="#FFFEEFE2"/>
+                            <Setter TargetName="PART_Border" Property="BorderBrush" Value="DarkSlateBlue"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type local:DockedWindow}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Background" Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType=local:DockPanel}}"/><!--GhostWhite-->
+        <Setter Property="BorderBrush" Value="DarkGray"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Panel.ZIndex" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DockedWindow}">
+                    <AdornerDecorator SnapsToDevicePixels="True">
+                        <Border x:Name="PART_FrameFrame" BorderBrush="Silver">
+                            <Grid SnapsToDevicePixels="True" Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <!--Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="1" Grid.Row="0" Grid.RowSpan="2" SnapsToDevicePixels="True"/-->
+                                <Border x:Name="PART_TitleBarBackground" Grid.Row="0" Grid.RowSpan="1" SnapsToDevicePixels="True" Margin="0" Background="LightGray">
+                                    <!--Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#ffd7d7e3" Offset="0"/>
+                                        <GradientStop Color="#ffa4a3be" Offset="1"/-->
+                                    <!--GradientStop Color="{x:Static SystemColors.InactiveCaptionColor}" Offset="0"/>
+                                        <GradientStop Color="{x:Static SystemColors.GradientInactiveCaptionColor}" Offset="1"/-->
+                                    <!--/LinearGradientBrush>
+                                </Border.Background-->
+                                    <Border x:Name="PART_TitleBar" Background="Transparent">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.RowSpan="1" Grid.Column="0">
+                                                <Image Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Root.HeaderIconSize.Width}" 
+                                                   Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Root.HeaderIconSize.Height}" 
+                                                   Margin="2,2,4,0"
+                                                   Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DockedContent.Icon}"
+                                                   Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowIcon, Converter={StaticResource myBoolVisibilityConverter}}"/>
+                                                <TextBlock x:Name="PART_TitleBarText" Foreground="Black" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DockedContent.Header}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <ToggleButton x:Name="PART_CollapseButton" Margin="1" Height="16" Width="16" Style="{StaticResource DockTitleButtonStyle}">
+                                                    <Path x:Name="CollapseButtonContent" Data="M 0,7 0,6 L 2,6 2,0 9,0 9,6 11,6 11,7 6,7 6,10 5,10 5,7 Z M 3,1 L 6,1 6,6 3,6 Z" 
+                                                          Fill="{Binding ElementName=PART_CloseButton, Path=Foreground}" Stretch="Fill" SnapsToDevicePixels="True">
+                                                        <Path.RenderTransformOrigin>
+                                                            <Point X="0.5" Y="0.5"/>
+                                                        </Path.RenderTransformOrigin>
+                                                    </Path>
+                                                </ToggleButton>
+                                                <Button x:Name="PART_CloseButton" Margin="1" Height="16" Width="16" Style="{StaticResource DockTitleButtonStyle}">
+                                                    <Path Data="M 0,0 L 9,9 M 0,9 L 9,0" 
+                                                          Fill="{Binding ElementName=PART_CloseButton, Path=Foreground}" Stroke="{Binding ElementName=PART_CloseButton, Path=Foreground}" StrokeThickness="1" Stretch="UniformToFill"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Border>
+                                <Border Background="{TemplateBinding Background}" Grid.Row="1" Grid.RowSpan="1" Margin="0">
+                                    <ContentPresenter ClipToBounds="True" SnapsToDevicePixels="True"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </AdornerDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Focused" Value="True">
+                            <Setter TargetName="PART_TitleBarBackground" Property="Background" Value="{Binding Background}">
+                                <!--Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#ffffffff" Offset="0"/>
+                                        <GradientStop Color="#ffd7d7e3" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value-->
+                            </Setter>
+                            <Setter TargetName="PART_FrameFrame" Property="BorderThickness" Value="1"/>
+                            <Setter TargetName="PART_FrameFrame" Property="Margin" Value="-1"/>
+                            <Setter TargetName="PART_TitleBarText" Property="Foreground" Value="Black"/>
+                            <Setter TargetName="PART_CollapseButton" Property="Foreground" Value="Black"/>
+                            <Setter TargetName="PART_CloseButton" Property="Foreground" Value="Black"/>
+                        </Trigger>
+                        <Trigger SourceName="PART_CollapseButton" Property="IsChecked" Value="True">
+                            <Setter TargetName="CollapseButtonContent" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="90"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

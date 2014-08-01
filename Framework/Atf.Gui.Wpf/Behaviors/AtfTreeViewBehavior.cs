@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Threading;
@@ -178,12 +179,17 @@ namespace Sce.Atf.Wpf.Behaviors
                                 (Action<VirtualizingStackPanel, int>)InvokeBringIndexIntoView, vsp, node.Index);
 
                             nextTreeViewItem = (TreeViewItem)nextItemsControl.ItemContainerGenerator.ContainerFromItem(node);
-                            
-                            System.Diagnostics.Debug.Assert(nextTreeViewItem != null);
+
+                            // Still getting some issues here sometimes - very hard to diagnose!
+                            System.Diagnostics.Debug.WriteLineIf(nextTreeViewItem != null, "Error in TreeView expand");
                         }
 
-                        System.Diagnostics.Debug.Assert(nextTreeViewItem.DataContext == node);
+                        // Still getting some issues here sometimes - very hard to diagnose!
+                        System.Diagnostics.Debug.WriteLineIf(nextTreeViewItem != null && nextTreeViewItem.DataContext != node, "Error in TreeView expand");
                     }
+
+                    if (nextTreeViewItem == null)
+                        break;
 
                     // Expand if not expanded and wait for the child items to be generated
                     if (node != path.Last && !nextTreeViewItem.IsExpanded)
@@ -193,7 +199,7 @@ namespace Sce.Atf.Wpf.Behaviors
                     }
 
                     nextItemsControl = nextTreeViewItem;
-
+                    
                     // If this is the final node in the path then ensure that it is scrolled into view
                     if (node == path.Last)
                     {
@@ -222,45 +228,74 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #endregion
 
-        /// <summary>
-        /// Raises behavior Attached event and performs custom actions</summary>
+        #region IsChecked Property
+
+        public static readonly DependencyProperty IsCheckedProperty =
+            DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(AtfTreeViewBehavior), new PropertyMetadata(false));
+
+        public static void SetIsChecked(UIElement element, bool? value)
+        {
+            element.SetValue(IsCheckedProperty, value);
+        }
+
+        public static bool? GetIsChecked(UIElement element)
+        {
+            return (bool?)element.GetValue(IsCheckedProperty);
+        }
+
+        #endregion
+
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(AssociatedObject_SelectedItemChanged);
-            AssociatedObject.PreviewMouseDown += new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
-            AssociatedObject.PreviewMouseUp += new MouseButtonEventHandler(AssociatedObject_PreviewMouseUp);
+            AssociatedObject.SelectedItemChanged += AssociatedObject_SelectedItemChanged;
+            AssociatedObject.PreviewMouseDown += AssociatedObject_PreviewMouseDown;
+            AssociatedObject.PreviewMouseUp += AssociatedObject_PreviewMouseUp;
+            AssociatedObject.KeyDown += AssociatedObject_KeyDown;
+            AssociatedObject.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.SelectedItemChanged -= AssociatedObject_SelectedItemChanged;
+            AssociatedObject.PreviewMouseDown -= AssociatedObject_PreviewMouseDown;
+            AssociatedObject.PreviewMouseUp -= AssociatedObject_PreviewMouseUp;
+            AssociatedObject.KeyDown -= AssociatedObject_KeyDown;
+            AssociatedObject.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
         }
 
         #region Event Handlers
 
         private void AssociatedObject_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            Node node = AssociatedObject.SelectedItem as Node;
-            if (node != null)
+            if (!SynchronisingSelection)
             {
-                try
+                Node node = AssociatedObject.SelectedItem as Node;
+                if (node != null)
                 {
-                    SynchronisingSelection = true;
+                    try
+                    {
+                        SynchronisingSelection = true;
 
-                    if (IsShiftPressed)
-                    {
-                        ExtendSelection(node);
+                        if (IsShiftPressed)
+                        {
+                            ExtendSelection(node);
+                        }
+                        else if (!IsCtrlPressed && !m_isMouseDown)
+                        {
+                            SetSelection(node);
+                        }
+                        else if (!node.IsSelected)
+                        {
+                            node.IsSelected = true;
+                        }
                     }
-                    else if (!IsCtrlPressed && !m_isMouseDown)
+                    finally
                     {
-                        SetSelection(node);
-                    }
-                    else if (!node.IsSelected)
-                    {
-                        node.IsSelected = true;
+                        SynchronisingSelection = false;
                     }
                 }
-                finally
-                {
-                    SynchronisingSelection = false;
-                }
-
             }
         }
 
@@ -288,12 +323,12 @@ namespace Sce.Atf.Wpf.Behaviors
                             m_selecting = true;
                             if (IsCtrlPressed)
                             {
-                                SynchronisingSelection = true;
-                                node.IsSelected = !node.IsSelected;
-                                SynchronisingSelection = false;
+                                //SynchronisingSelection = true;
+                                //node.IsSelected = !node.IsSelected;
+                                //SynchronisingSelection = false;
 
-                                if (node.IsSelected)
-                                    tvi.Focus();
+                                //if (node.IsSelected)
+                                //    tvi.Focus();
                                 e.Handled = true;
                             }
                             else if (IsShiftPressed)
@@ -352,14 +387,26 @@ namespace Sce.Atf.Wpf.Behaviors
             {
                 m_selecting = false;
 
-                // if this was a left-click on an already selected node
-                if (m_leftClickedSelectedNode != null && e.ChangedButton == MouseButton.Left)
+                bool isExpanderHit;
+                TreeViewItem tvi = GetTreeViewItemAtPoint(e.GetPosition(AssociatedObject), out isExpanderHit);
+                
+                if (tvi != null && !isExpanderHit)
                 {
-                    bool isExpanderHit;
-                    TreeViewItem tvi = GetTreeViewItemAtPoint(e.GetPosition(AssociatedObject), out isExpanderHit);
+                    Node node = (Node)tvi.DataContext;
 
-                    if (tvi != null && !isExpanderHit
-                        && (tvi.DataContext as Node) == m_leftClickedSelectedNode)
+                    if (IsCtrlPressed)
+                    {
+                        SynchronisingSelection = true;
+                        node.IsSelected = !node.IsSelected;
+                        SynchronisingSelection = false;
+
+                        if (node.IsSelected)
+                            tvi.Focus();
+                        //e.Handled = true;
+                    }
+
+                    // if this was a left-click on an already selected node
+                    if (node == m_leftClickedSelectedNode && e.ChangedButton == MouseButton.Left)
                     {
                         try
                         {
@@ -385,12 +432,65 @@ namespace Sce.Atf.Wpf.Behaviors
                         //    m_editLabelTimer.Enabled = true;
                         //}
                     }
-
                 }
+
             }
 
             m_leftClickedSelectedNode = null;
-            
+
+        }
+
+        private void AssociatedObject_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool updateCheckstate = false;
+
+            if (e.OriginalSource is TreeViewItem)
+            {
+                if (e.Key == Key.Space)
+                {
+                    // ignore alt+space which invokes the system menu
+                    if ((Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.Alt)
+                    {
+                        updateCheckstate = true;
+                    }
+                }
+                else if (e.Key == Key.Enter 
+                    && (bool)(sender as DependencyObject).GetValue(KeyboardNavigation.AcceptsReturnProperty))
+                {
+                    updateCheckstate = true;
+                }
+            }
+
+            if(updateCheckstate)
+            {
+                UpdateIsChecked(e.OriginalSource as UIElement);
+                e.Handled = true;
+            }
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        {
+            if (AssociatedObject.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                return;
+
+            var ensureVisiblePathBind = new Binding("EnsureVisiblePath");
+            BindingOperations.SetBinding(this, EnsureVisiblePathProperty, ensureVisiblePathBind);
+
+            var syncSelectionBind = new Binding("SynchronisingSelection");
+            syncSelectionBind.Mode = BindingMode.OneWayToSource;
+            BindingOperations.SetBinding(this, SynchronisingSelectionProperty, syncSelectionBind);
+        }
+
+        private void UpdateIsChecked(UIElement d)
+        {
+            bool? currentCheckState = GetIsChecked(d);
+
+            bool? newCheckState = !(currentCheckState == true);
+
+            foreach (var selectedNode in SelectedNodes)
+            {
+                selectedNode.CheckState = newCheckState;
+            }
         }
 
         #endregion
@@ -413,17 +513,45 @@ namespace Sce.Atf.Wpf.Behaviors
             if (m_extendSelectionBaseNode != null)
             {
                 bool selecting = false;
+                bool? reverseOrder = null;
+
+                var nodesToSelect = new List<Node>();
+                var nodesToDeselect = new List<Node>();
+
                 foreach (Node n in VisibleNodes)
                 {
-                    n.IsSelected = selecting;
+                    if (!selecting && n.IsSelected)
+                        nodesToDeselect.Add(n);
+                    else if (selecting && !n.IsSelected)
+                        nodesToSelect.Add(n);
 
                     if (n == m_extendSelectionBaseNode ||
                         n == clickedNode)
                     {
                         if (m_extendSelectionBaseNode != clickedNode)
                             selecting = !selecting;
-                        n.IsSelected = true;
+
+                        if (!reverseOrder.HasValue)
+                        {
+                            reverseOrder = n == clickedNode;
+                        }
+
+                        nodesToSelect.Add(n);
                     }
+                }
+
+                for (int i = 0; i < nodesToDeselect.Count; i++)
+                    nodesToDeselect[i].IsSelected = false;
+
+                if (reverseOrder == true)
+                {
+                    for (int i = nodesToSelect.Count -1; i >= 0; i--)
+                        nodesToSelect[i].IsSelected = true;
+                }
+                else
+                {
+                    for (int i = 0; i < nodesToSelect.Count; i++)
+                        nodesToSelect[i].IsSelected = true;
                 }
             }
         }
@@ -564,7 +692,11 @@ namespace Sce.Atf.Wpf.Behaviors
 
         private static void InvokeBringIndexIntoView(VirtualizingStackPanel panel, int index)
         {
-            s_bringIntoViewMethod.Invoke(panel, new object[]{index});
+            var itemsOwner = ItemsControl.GetItemsOwner(panel);
+            if (itemsOwner != null && index >= 0 && index < itemsOwner.Items.Count)
+            {
+                s_bringIntoViewMethod.Invoke(panel, new object[] { index });
+            }
         }
 
         // Use refelection so as not to be forced to create a custom VirtualizingStackPanel to expose this method

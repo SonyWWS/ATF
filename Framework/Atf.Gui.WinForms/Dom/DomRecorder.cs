@@ -316,7 +316,7 @@ namespace Sce.Atf.Dom
         //  undo/redo.
         //  3. Are one or more HistoryContexts recording? (This is the concrete ATF class.) If the recording
         //  is not enabled, then the change will not be automatically added to an undo/redo command. This
-        //  isn't necessarily an error. For example, the change could be temporarily, like when dragging a
+        //  isn't necessarily an error. For example, the change could be temporary, like when dragging a
         //  circuit element on a canvas. Or perhaps client code will manually add a Command to the
         //  CommandHistory.
         //  4. Is the current DOM change being made by a listener in response to an earlier DOM change

@@ -386,6 +386,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             //Rectangle workingArea = Screen.FromControl(this).WorkingArea;
 
+            Applications.SkinService.ApplyActiveSkin(control);
             m_dropDownForm.Bounds = bounds;
             m_dropDownForm.Visible = true;
 
@@ -690,6 +691,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             if (m_absorbEditButtonClick)
             {
                 m_absorbEditButtonClick = false;
+                m_dropDownForm.Visible = false; //http://tracker.ship.scea.com/jira/browse/WWSATF-1486
                 return;
             }
 
@@ -700,7 +702,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             SetPropertyFromTextBox();
 
-            // if we are editting via the drop down, do not disable the text box
+            // if we are editing via the drop down, do not disable the text box
             // we want to keep focus on the text box here. other wise focus will just to what ever
             // control is next in line, then will be set right back to this control a moment later.
             if (!m_isEditing)
@@ -1008,7 +1010,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 base.ControlBox = false;
                 base.MinimizeBox = false;
                 base.MaximizeBox = false;
-                base.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+                base.FormBorderStyle = FormBorderStyle.None;
                 base.Visible = false;
             }
 

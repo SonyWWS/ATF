@@ -82,6 +82,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets whether documents are loaded on application startup</summary>
+        [DefaultValue(true)]
         public bool AutoLoadDocuments
         {
             get { return m_autoLoadDocuments; }
@@ -90,6 +91,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets whether new documents can be created on application startup</summary>
+        [DefaultValue(true)]
         public bool AutoNewDocument
         {
             get { return m_autoNewDocument; }

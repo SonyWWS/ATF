@@ -33,15 +33,26 @@ namespace Sce.Atf.Wpf.Behaviors
             System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
         }
 
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+
+            AssociatedObject.PreviewMouseLeftButtonDown -= new MouseButtonEventHandler(OnMouseLeftButtonDown);
+            AssociatedObject.PreviewMouseLeftButtonUp -= new MouseButtonEventHandler(OnMouseLeftButtonUp);
+            AssociatedObject.MouseMove -= new MouseEventHandler(OnMouseMove);
+
+            System.Windows.DragDrop.RemovePreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+        }
+
         #endregion
 
         #region Event Handlers
 
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DependencyObject original = e.OriginalSource as DependencyObject;
-
-            // Ignore drag operations if the mouse is inside a range control( e.g., Scrollbar, ProgressBar, Slider, etc.) 
+            var original = e.OriginalSource as DependencyObject;
+            
+            // Ignore drag operations if we are scrolling
             if (original.FindAncestor<RangeBase>() != null)
                 return;
 

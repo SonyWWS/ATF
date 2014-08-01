@@ -1,0 +1,88 @@
+﻿<ct:CommonDialog x:Class="Sce.Atf.Wpf.Controls.TcpIpTargetEditDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:Sce.Atf.Wpf"
+             xmlns:ct="clr-namespace:Sce.Atf.Wpf.Controls"
+             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+             xmlns:b="clr-namespace:Sce.Atf.Wpf.Behaviors"
+             mc:Ignorable="d"      
+             ResizeMode="NoResize"
+             SizeToContent="WidthAndHeight"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="TextBox" x:Key="rightStyle" BasedOn="{StaticResource ResourceKey={x:Type TextBox}}">
+                <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,0,4"/>
+                <Setter Property="Grid.Column" Value="1"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="leftStyle" BasedOn="{StaticResource ResourceKey={x:Type Label}}">
+                <Setter Property="b:ThemeStyleBehavior.AutoMergeStyle" Value="True"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Grid.Column" Value="0"/>
+                <Setter Property="Margin" Value="0,0,0,4"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid HorizontalAlignment="Center">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="{m:Loc Name:}" Style="{StaticResource leftStyle}"/>
+            <TextBox Style="{StaticResource rightStyle}"
+                     Text="{Binding Target.Name, Mode=TwoWay, ValidatesOnExceptions=True}"
+                     MaxLength="200"/>
+
+            <Label Content="{m:Loc Host:}" Grid.Row="1" Style="{StaticResource leftStyle}"/>
+            <TextBox Grid.Row="1" Style="{StaticResource rightStyle}"
+                     Text="{Binding Target.IpAddress, Mode=TwoWay, ValidatesOnExceptions=True}"
+                     MaxLength="15"/>
+
+            <Label Content="{m:Loc Port:}" Grid.Row="2" Style="{StaticResource leftStyle}"/>
+            <TextBox Grid.Row="2" Style="{StaticResource rightStyle}"
+                     Text="{Binding Target.Port, Mode=TwoWay, ValidatesOnExceptions=True}"
+                     MaxLength="5"
+                     b:TextBoxNumericBehavior.Mask="Integer" 
+                     b:TextBoxNumericBehavior.MinimumValue="0"
+                     b:TextBoxNumericBehavior.MaximumValue="65535"/>
+
+        </Grid>
+
+        <DockPanel Grid.Row="1" Margin="0,12,0,0" LastChildFill="False" VerticalAlignment="Bottom">
+
+            <Button x:Name="button_OK" DockPanel.Dock="Right"
+                        Content="{m:Loc OK}" b:DialogButtonWorkaround.IsDefault="True" 
+                        Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"
+                        Command="{Binding OkCommand}"/>
+
+            <Button x:Name="button_Cancel" DockPanel.Dock="Right"
+                        Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"
+                        Content="{m:Loc Cancel}" IsCancel="True"  Margin="0"/>
+        </DockPanel>
+
+    </Grid>
+</ct:CommonDialog>

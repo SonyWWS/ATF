@@ -142,54 +142,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
           
         }
 
-        /// <summary>
-        /// Gets a bounding rectangle for the items, in client coordinates</summary>
-        /// <param name="items">Items to bound</param>
-        /// <returns>Bounding rectangle for the items, in client coordinates</returns>
-        public override Rectangle GetBounds(IEnumerable<object> items)
-        {
-            var bounds = base.GetBounds(items);
-            // include group pins y range
-            var group = m_graph.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-            if (group != null)
-            {
-                int yMin = int.MaxValue;
-                int yMax = int.MinValue;
-
-                foreach (var pin in group.Inputs.Concat(group.Info.HiddenInputPins))
-                {
-                    var grpPin = pin.Cast<ICircuitGroupPin<TNode>>();
-                    if (grpPin.Bounds.Location.Y < yMin)
-                        yMin = grpPin.Bounds.Location.Y;
-                    if (grpPin.Bounds.Location.Y > yMax)
-                        yMax = grpPin.Bounds.Location.Y;
-                }
-
-                foreach (var pin in group.Outputs.Concat(group.Info.HiddenOutputPins))
-                {
-                    var grpPin = pin.Cast<ICircuitGroupPin<TNode>>();
-                    if (grpPin.Bounds.Location.Y < yMin)
-                        yMin = grpPin.Bounds.Location.Y;
-                    if (grpPin.Bounds.Location.Y > yMax)
-                        yMax = grpPin.Bounds.Location.Y;
-                }
-
-                // transform y range to client space
-                if (yMin != int.MaxValue && yMax != int.MinValue)
-                {
-                    var yRange = D2dUtil.TransformVector(m_d2dGraphics.Transform, new PointF(yMin, yMax));
-                    yMin = (int) Math.Min(yRange.X, yRange.Y);
-                    yMax = (int) Math.Max(yRange.X, yRange.Y);
-                    int width = bounds.Width;
-                    int height = yMax - yMin + 1;
-                    bounds = Rectangle.Union(bounds, new Rectangle(bounds.Location.X, yMin, width, height));
-                }
-            }
-            return bounds;
-        }
-
-
-
         private void control_ContextChanged(object sender, EventArgs e)
         {
             IGraph<TNode, TEdge, TEdgeRoute> graph = AdaptedControl.ContextAs<IGraph<TNode, TEdge, TEdgeRoute>>();
@@ -205,7 +157,5 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private D2dSolidColorBrush m_scaleBrush;
         private D2dTextFormat m_textFormat;
-        private D2dBrush m_scaleTextBrush = D2dFactory.CreateSolidBrush(SystemColors.WindowText);
-
      }
 }

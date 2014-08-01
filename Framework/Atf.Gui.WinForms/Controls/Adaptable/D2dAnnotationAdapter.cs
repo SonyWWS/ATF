@@ -753,17 +753,17 @@ namespace Sce.Atf.Controls.Adaptable
                 {
                     Matrix3x2F invXform = Matrix3x2F.Invert(D2dControl.D2dGraphics.Transform);
                     PointF deltaF = Matrix3x2F.TransformVector(invXform, Delta);
-                    Point delta = new Point((int) deltaF.X, (int) deltaF.Y);
+                    Point delta = new Point((int) deltaF.X, (int) deltaF.Y); //world coordinates
 
                     // set dragged nodes' positions, offsetting by drag delta and applying layout constraints
                     for (int i = 0; i < m_draggingAnnotations.Length; i++)
                     {
                         IAnnotation annotation = m_draggingAnnotations[i];
-                        Rectangle bounds = GetBounds(annotation);
+                        Rectangle bounds = GetBounds(annotation); //world coordinates
                         bounds.X = m_oldPositions[i].X + delta.X;
                         bounds.Y = m_oldPositions[i].Y + delta.Y;
                         m_newPositions[i] = bounds.Location;
-                        m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location);
+                        m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location); //world coordinates
                     }
                 }
                 else if (m_selecting)
@@ -995,16 +995,16 @@ namespace Sce.Atf.Controls.Adaptable
                 HideCaret();
         }
 
+        // 'location' is in world coordinates
         private void MoveAnnotation(IAnnotation annotation, Point location)
         {
-            Rectangle bounds;
-            m_layoutContext.GetBounds(annotation, out bounds);
-            bounds.Location = location;
+            var bounds = new Rectangle(location.X, location.Y, 0, 0);
             m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location);
         }
 
         private void ResizeAnnotation(DiagramBorder diagramBorder)
         {
+            // Do the work in world coordinates.
             Point currentPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, CurrentPoint);
             Point firstPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, FirstPoint);
             Point delta = new Point(currentPoint.X - firstPoint.X, currentPoint.Y - firstPoint.Y);

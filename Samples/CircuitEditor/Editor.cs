@@ -76,6 +76,15 @@ namespace CircuitEditorSample
             m_circuitRenderer = new D2dCircuitRenderer<Module, Connection, ICircuitPin>(m_theme, documentRegistry);
             m_subGraphRenderer = new D2dSubCircuitRenderer<Module, Connection, ICircuitPin>(m_theme);
 
+			//// Note: Santa Monica uses following render settings: 
+			//m_circuitRenderer.TitleBackgroundFilled = true;
+			//m_circuitRenderer.RoundedBorder = false;
+			//m_circuitRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
+ 
+			//m_subGraphRenderer.TitleBackgroundFilled = true;
+			//m_subGraphRenderer.RoundedBorder = false;
+			//m_subGraphRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
+  
             // create d2dcontrol for displaying sub-circuit            
             m_d2dHoverControl = new D2dAdaptableControl();
             m_d2dHoverControl.Dock = DockStyle.Fill;
@@ -169,6 +178,13 @@ namespace CircuitEditorSample
                 m_theme.RegisterCustomBrush(m_modulePlugin.FloatPinTypeName, pen);
             }
 
+            D2dGradientStop[] gradstops = 
+            { 
+                new D2dGradientStop(Color.White, 0),
+                new D2dGradientStop(Color.MediumVioletRed, 1.0f),
+            };
+            m_theme.RegisterCustomBrush(MissingModule.MissingTypeName, D2dFactory.CreateLinearGradientBrush(gradstops));
+
             CircuitEditingContext.CircuitFormat = CircuitFormat;
 
         }
@@ -214,7 +230,7 @@ namespace CircuitEditorSample
                 // read existing document using standard XML reader
                 using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
-                    DomXmlReader reader = new DomXmlReader(m_schemaLoader);
+                    CircuitReader reader = new CircuitReader(m_schemaLoader);
                     node = reader.Read(stream, uri);
                 }
             }
@@ -231,6 +247,9 @@ namespace CircuitEditorSample
             CircuitDocument circuitCircuitDocument = null;
             if (node != null)
             {
+                // now that the data is complete, initialize all other extensions to the Dom data
+                node.InitializeExtensions();
+
                 AdaptableControl control = CreateCircuitControl(node);
                 control.AddHelp("https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls".Localize());
 
@@ -258,8 +277,6 @@ namespace CircuitEditorSample
                 control.Context = editingContext;
                 editingContext.SchemaLoader = m_schemaLoader; // schema needed for cut and paste between applications
 
-                // now that the data is complete, initialize all other extensions to the Dom data
-                node.InitializeExtensions();
                 m_circuitControlRegistry.RegisterControl(node, control, controlInfo, this);
 
                 // Set the zoom and translation to show the existing items (if any).
@@ -435,6 +452,9 @@ namespace CircuitEditorSample
                 var subGraphReference = hitRecord.Node.As<GroupInstance>();
                 if (subGraphReference != null)
                 {
+                    var templatingContext = m_contextRegistry.GetMostRecentContext<TemplatingContext>();
+                    if (templatingContext != null && templatingContext.IsExternalTemplate(subGraphReference.Template))
+                        return; // templates should only be editable in the document that owns the template
                     DialogResult checkResult = DialogResult.No; //direct editing 
                     if (checkResult == DialogResult.No)
                     {
@@ -823,60 +843,6 @@ namespace CircuitEditorSample
             return render.SubContentOffset;
         }
       
-        // 
-        /// <summary>
-        /// This custom writer only writes out the sub-circuits that are actually referenced 
-        /// by a SubCircuitInstance</summary>
-        private class CircuitWriter : DomXmlWriter
-        {
-            public CircuitWriter(XmlSchemaTypeCollection typeCollection)
-                : base(typeCollection)
-            {
-                PreserveSimpleElements = true;
-            }
-
-            // Scan for all sub-circuits that are referenced directly or indirectly by a module in
-            //  the root of the document
-            public override void Write(DomNode root, Stream stream, Uri uri)
-            {
-                m_usedSubCircuits = new HashSet<Sce.Atf.Controls.Adaptable.Graphs.SubCircuit>();
-
-                foreach (var module in root.Cast<Circuit>().Elements)
-                    FindUsedSubCircuits(module.DomNode);
-
-                base.Write(root, stream, uri);
-            }
-
-            private void FindUsedSubCircuits(DomNode rootNode)
-            {
-                foreach (DomNode node in rootNode.Subtree)
-                {
-                    var instance = node.As<SubCircuitInstance>();
-                    if (instance != null)
-                    {
-                        if (m_usedSubCircuits.Add(instance.SubCircuit))
-                        {
-                            // first time seeing this sub-circuit, so let's recursively add whatever it references
-                            foreach (Module module in instance.SubCircuit.Elements)
-                                FindUsedSubCircuits(module.DomNode);
-                        }
-                    }
-                }
-            }
-
-            // Filter out sub-circuits that are not actually needed
-            protected override void WriteElement(DomNode node, System.Xml.XmlWriter writer)
-            {
-                var subCircuit = node.As<SubCircuit>();
-                if (subCircuit != null && !m_usedSubCircuits.Contains(subCircuit))
-                    return;
-
-                base.WriteElement(node, writer);
-            }
-
-            private HashSet<Sce.Atf.Controls.Adaptable.Graphs.SubCircuit> m_usedSubCircuits;
-        }
-
         /// <summary>
         /// Component that adds module types to the editor</summary>
         [Import(AllowDefault = true)]

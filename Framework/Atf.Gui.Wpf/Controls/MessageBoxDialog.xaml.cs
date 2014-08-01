@@ -1,16 +1,14 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
-using System.Drawing;
 using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace Sce.Atf.Wpf.Controls
 {
     /// <summary>
     /// Interaction logic for MessageBox.xaml for message boxes.
     /// An alternative to the native Win32 message box if WPF styling is required.</summary>
-    public partial class MessageBoxDialog : Window
+    public partial class MessageBoxDialog : CommonDialog
     {
         /// <summary>
         /// Constructor</summary>
@@ -28,15 +26,24 @@ namespace Sce.Atf.Wpf.Controls
         public MessageBoxDialog(string title, string message, MessageBoxButton buttons, MessageBoxImage image)
             : this()
         {
-            Loaded += new RoutedEventHandler(MessageBoxDialog_Loaded);
+            Loaded += MessageBoxDialog_Loaded;
 
             MessageBoxResult = MessageBoxResult.None;
 
-            OkButton.Visibility = (buttons == MessageBoxButton.OKCancel || buttons == MessageBoxButton.OK) ? Visibility.Visible : Visibility.Collapsed;
-            YesButton.Visibility = NoButton.Visibility = (buttons == MessageBoxButton.YesNo || buttons == MessageBoxButton.YesNoCancel) ? Visibility.Visible : Visibility.Collapsed;
-            CancelButton.Visibility = (buttons == MessageBoxButton.OKCancel || buttons == MessageBoxButton.YesNoCancel) ? Visibility.Visible : Visibility.Collapsed;
+            OkButton.Visibility = (buttons == MessageBoxButton.OKCancel || buttons == MessageBoxButton.OK)
+                                      ? Visibility.Visible
+                                      : Visibility.Collapsed;
+            
+            YesButton.Visibility = NoButton.Visibility =
+                (buttons == MessageBoxButton.YesNo || buttons == MessageBoxButton.YesNoCancel)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            
+            CancelButton.Visibility = (buttons == MessageBoxButton.OKCancel || buttons == MessageBoxButton.YesNoCancel)
+                                          ? Visibility.Visible
+                                          : Visibility.Collapsed;
 
-            if (OkButton.Visibility == System.Windows.Visibility.Visible)
+            if (OkButton.Visibility == Visibility.Visible)
             {
                 OkButton.IsDefault = true;
             }
@@ -45,36 +52,35 @@ namespace Sce.Atf.Wpf.Controls
                 YesButton.IsDefault = true;
             }
 
-            if(message != null)
+            if (message != null)
                 MessageText.Text = message;
 
-            if(title != null)
+            if (title != null)
                 Title = title;
 
-            Icon icon = null;
+            object iconSourceKey = null;
             switch (image)
             {
                 case MessageBoxImage.Error:
-                    icon = SystemIcons.Error;
+                    iconSourceKey = Wpf.Resources.DialogErrorImageKey;
                     break;
                 case MessageBoxImage.Question:
-                    icon = SystemIcons.Question;
+                    iconSourceKey = Wpf.Resources.DialogQuestionImageKey;
                     break;
                 case MessageBoxImage.Warning:
-                    icon = SystemIcons.Warning;
+                    iconSourceKey = Wpf.Resources.DialogWarningImageKey;
                     break;
-                case MessageBoxImage.Asterisk:
-                    icon = SystemIcons.Asterisk;
+                case MessageBoxImage.Information:
+                    iconSourceKey = Wpf.Resources.DialogInformationImageKey;
                     break;
                 case MessageBoxImage.None:
                 default:
                     break;
             }
 
-            if (icon != null)
+            if (iconSourceKey != null)
             {
-                BitmapSource bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                Image.Source = bs;
+                Controls.Icon.SetSourceKey(Image, iconSourceKey);
             }
             else
             {
@@ -83,19 +89,35 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Performs custom actions on MessageBoxDialog Loaded event</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">RoutedEventArgs containing event data</param>
-        void MessageBoxDialog_Loaded(object sender, RoutedEventArgs e)
+        /// Gets and sets the text to display on the Yes button</summary>
+        public string YesButtonText
         {
-            if (OkButton.Visibility == System.Windows.Visibility.Visible)
-            {
-                OkButton.Focus();
-            }
-            else
-            {
-                YesButton.Focus();
-            }
+            get { return (YesButton.Content as TextBlock).Text; }
+            set { (YesButton.Content as TextBlock).Text = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the text to display on the No button</summary>
+        public string NoButtonText
+        {
+            get { return (NoButton.Content as TextBlock).Text; }
+            set { (NoButton.Content as TextBlock).Text = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the text to display on the OK button</summary>
+        public string OkButtonText
+        {
+            get { return (OkButton.Content as TextBlock).Text; }
+            set { (OkButton.Content as TextBlock).Text = value; }
+        }
+
+        /// <summary>
+        /// Gets and sets the text to display on the Cancel button</summary>
+        public string CancelButtonText
+        {
+            get { return (CancelButton.Content as TextBlock).Text; }
+            set { (CancelButton.Content as TextBlock).Text = value; }
         }
 
         /// <summary>
@@ -107,6 +129,18 @@ namespace Sce.Atf.Wpf.Controls
             MessageBoxResult = MessageBoxResult.OK;
             DialogResult = true;
             Close();
+        }
+
+        private void MessageBoxDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (OkButton.Visibility == System.Windows.Visibility.Visible)
+            {
+                OkButton.Focus();
+            }
+            else
+            {
+                YesButton.Focus();
+            }
         }
 
         private void YesButton_Click(object sender, RoutedEventArgs e)

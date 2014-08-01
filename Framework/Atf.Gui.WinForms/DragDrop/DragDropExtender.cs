@@ -7,7 +7,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 using IDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
 
-namespace Sce.Atf.DragDrop
+namespace Sce.Atf
 {
     /// <summary>
     /// A class to extend Drag Drop functionality, allowing the attachment of an image and description.

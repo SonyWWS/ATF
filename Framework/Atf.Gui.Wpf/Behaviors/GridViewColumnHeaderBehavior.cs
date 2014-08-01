@@ -47,7 +47,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Sets whether element is clickable</summary>
         /// <param name="element">Dependency object to set property for</param>
         /// <param name="value">Whether element is clickable</param>
-        public static void SetIsDClickable(DependencyObject element, bool value)
+        public static void SetIsClickable(DependencyObject element, bool value)
         {
             element.SetValue(IsClickableProperty, value);
         }

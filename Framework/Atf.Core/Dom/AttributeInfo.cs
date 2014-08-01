@@ -65,7 +65,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Gets the rules for this attribute, which constrain the allowable values</summary>
+        /// Gets the rules for this attribute, which can be used to constrain the allowable values.
+        /// The rules are not applied automatically to DomNode attributes. You must use some
+        /// other mechanism to enforce the rules, like the DataValidator class.</summary>
         public IEnumerable<AttributeRule> Rules
         {
             get
@@ -78,7 +80,8 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Adds a rule to the attribute</summary>
+        /// Adds a rule to the attribute. This rule will not be used automatically to validate data
+        /// by the DomNode. Use some other class, like DataValidator, to make use of the rules.</summary>
         /// <param name="rule">Rule, constraining the attribute value</param>
         public void AddRule(AttributeRule rule)
         {

@@ -1,0 +1,69 @@
+﻿<c:CommonDialog x:Class="Sce.Atf.Wpf.Controls.FindFileDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:l="clr-namespace:Sce.Atf.Wpf"
+             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup"
+             xmlns:c="clr-namespace:Sce.Atf.Wpf.Controls"
+             xmlns:vc="clr-namespace:Sce.Atf.Wpf.ValueConverters"
+             ResizeMode="NoResize"
+             ShowInTaskbar="False"
+             SizeToContent="Height"
+             Width="400"   
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="300">
+    <c:CommonDialog.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="TextBoxBase.IsReadOnly" Value="True">
+                    <Setter Property="Control.Background" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </c:CommonDialog.Resources>
+    
+    <StackPanel>
+        <StackPanel>
+            <TextBlock Text="{m:Loc The following file could not be found at the specified location:}"/>
+            <TextBox Text="{Binding OriginalPath}" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0" Margin="16,8,16,12" />
+        </StackPanel>
+
+        <StackPanel Visibility="{Binding SuggestedPath, Converter={vc:ItemNullToVisibilityConverter}}">
+            <TextBlock Text="{m:Loc The file was found here:}"/>
+            <TextBox Text="{Binding SuggestedPath}" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0" Margin="16,8,16,0" />
+        </StackPanel>
+
+        <Separator Margin="0,12,0,12"/>
+
+        <StackPanel>
+            <TextBlock Text="{m:Loc What would you like to do?}"/>
+            <ListBox Style="{StaticResource {x:Static l:Resources.RadioButtonListStyleKey}}" Margin="16,8,16,0" SelectedValuePath="Content" SelectedValue="{Binding Action}">
+                <ListBox.Resources>
+                    <DataTemplate DataType="{x:Type l:FindFileAction}">
+                        <TextBlock Text="{Binding Converter={vc:DisplayStringConverter}}"/>
+                    </DataTemplate>
+                </ListBox.Resources>
+                <ListBoxItem Content="{x:Static l:FindFileAction.AcceptSuggestion }" Visibility="{Binding SuggestedPath, Converter={vc:ItemNullToVisibilityConverter}}"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.AcceptAllSuggestions }" Visibility="{Binding SuggestedPath, Converter={vc:ItemNullToVisibilityConverter}}"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.UserSpecify }"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.SearchDirectory }"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.SearchDirectoryForAll }"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.Ignore }"/>
+                <ListBoxItem Content="{x:Static l:FindFileAction.IgnoreAll }"/>
+            </ListBox>
+        </StackPanel>
+
+        <Separator Margin="0,12,0,12"/>
+
+        <TextBlock VerticalAlignment="Top" Text="{Binding Action, Converter={vc:EnumDescriptionConverter}}" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+        <DockPanel LastChildFill="False">
+            <Button DockPanel.Dock="Right" Command="{Binding CancelCommand}" IsCancel="True" Content="{m:Loc Cancel}"
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+            <Button DockPanel.Dock="Right" Command="{Binding OkCommand}" IsDefault="True" Content="{m:Loc OK}" 
+                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
+        </DockPanel>
+        
+    </StackPanel>
+</c:CommonDialog>

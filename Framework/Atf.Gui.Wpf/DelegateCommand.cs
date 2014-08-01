@@ -200,9 +200,9 @@ namespace Sce.Atf.Wpf
         {
             Requires.NotNull(executeMethod, "executeMethod");
 
-            _executeMethod = executeMethod;
-            _canExecuteMethod = canExecuteMethod;
-            _isAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
+            m_executeMethod = executeMethod;
+            m_canExecuteMethod = canExecuteMethod;
+            m_isAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
         }
 
         #endregion
@@ -215,9 +215,9 @@ namespace Sce.Atf.Wpf
         /// <returns>True iff can execute command</returns>
         public bool CanExecute(T parameter)
         {
-            if (_canExecuteMethod != null)
+            if (m_canExecuteMethod != null)
             {
-                return _canExecuteMethod(parameter);
+                return m_canExecuteMethod(parameter);
             }
             return true;
         }
@@ -227,9 +227,9 @@ namespace Sce.Atf.Wpf
         /// <param name="parameter">Type of the parameter passed to delegates</param>
         public void Execute(T parameter)
         {
-            if (_executeMethod != null)
+            if (m_executeMethod != null)
             {
-                _executeMethod(parameter);
+                m_executeMethod(parameter);
             }
         }
 
@@ -244,7 +244,7 @@ namespace Sce.Atf.Wpf
         /// Protected virtual method to raise CanExecuteChanged event</summary>
         protected virtual void OnCanExecuteChanged()
         {
-            CommandManagerHelper.CallWeakReferenceHandlers(_canExecuteChangedHandlers);
+            CommandManagerHelper.CallWeakReferenceHandlers(m_canExecuteChangedHandlers);
         }
 
         /// <summary>
@@ -253,21 +253,21 @@ namespace Sce.Atf.Wpf
         {
             get
             {
-                return _isAutomaticRequeryDisabled;
+                return m_isAutomaticRequeryDisabled;
             }
             set
             {
-                if (_isAutomaticRequeryDisabled != value)
+                if (m_isAutomaticRequeryDisabled != value)
                 {
                     if (value)
                     {
-                        CommandManagerHelper.RemoveHandlersFromRequerySuggested(_canExecuteChangedHandlers);
+                        CommandManagerHelper.RemoveHandlersFromRequerySuggested(m_canExecuteChangedHandlers);
                     }
                     else
                     {
-                        CommandManagerHelper.AddHandlersToRequerySuggested(_canExecuteChangedHandlers);
+                        CommandManagerHelper.AddHandlersToRequerySuggested(m_canExecuteChangedHandlers);
                     }
-                    _isAutomaticRequeryDisabled = value;
+                    m_isAutomaticRequeryDisabled = value;
                 }
             }
         }
@@ -282,19 +282,19 @@ namespace Sce.Atf.Wpf
         {
             add
             {
-                if (!_isAutomaticRequeryDisabled)
+                if (!m_isAutomaticRequeryDisabled)
                 {
                     CommandManager.RequerySuggested += value;
                 }
-                CommandManagerHelper.AddWeakReferenceHandler(ref _canExecuteChangedHandlers, value, 2);
+                CommandManagerHelper.AddWeakReferenceHandler(ref m_canExecuteChangedHandlers, value, 2);
             }
             remove
             {
-                if (!_isAutomaticRequeryDisabled)
+                if (!m_isAutomaticRequeryDisabled)
                 {
                     CommandManager.RequerySuggested -= value;
                 }
-                CommandManagerHelper.RemoveWeakReferenceHandler(_canExecuteChangedHandlers, value);
+                CommandManagerHelper.RemoveWeakReferenceHandler(m_canExecuteChangedHandlers, value);
             }
         }
 
@@ -311,15 +311,11 @@ namespace Sce.Atf.Wpf
             if (parameter == null &&
                 typeof(T).IsValueType)
             {
-                return (_canExecuteMethod == null);
+                return (m_canExecuteMethod == null);
             }
             return CanExecute((T)parameter);
         }
 
-        /// <summary>
-        /// Executes the command</summary>
-        /// <param name="parameter">Data used by the command. If the command does not require data to be passed, 
-        /// this object can be set to null</param>
         void ICommand.Execute(object parameter)
         {
             Execute((T)parameter);
@@ -329,10 +325,174 @@ namespace Sce.Atf.Wpf
 
         #region Data
 
-        private readonly Action<T> _executeMethod = null;
-        private readonly Func<T, bool> _canExecuteMethod = null;
-        private bool _isAutomaticRequeryDisabled = false;
-        private List<WeakReference> _canExecuteChangedHandlers;
+        private readonly Action<T> m_executeMethod = null;
+        private readonly Func<T, bool> m_canExecuteMethod = null;
+        private bool m_isAutomaticRequeryDisabled = false;
+        private List<WeakReference> m_canExecuteChangedHandlers;
+
+        #endregion
+    }
+
+    /// <summary>
+    ///     This class allows delegating the commanding logic to methods passed as parameters,
+    ///     and enables a View to bind commands to objects that are not part of the element tree.
+    /// </summary>
+    /// <typeparam name="T1">Type of the parameter passed to the delegates</typeparam>
+    public class DelegateCommand<T1, T2> : ICommand
+    {
+        #region Constructors
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public DelegateCommand(Action<T2> m_executeMethod)
+            : this(m_executeMethod, null, false)
+        {
+        }
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public DelegateCommand(Action<T2> m_executeMethod, Func<T1, bool> m_canExecuteMethod)
+            : this(m_executeMethod, m_canExecuteMethod, false)
+        {
+        }
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public DelegateCommand(Action<T2> executeMethod, Func<T1, bool> canExecuteMethod, bool isAutomaticRequeryDisabled)
+        {
+            Requires.NotNull(executeMethod, "executeMethod");
+
+            m_executeMethod = executeMethod;
+            m_canExecuteMethod = canExecuteMethod;
+            m_isAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        ///     Method to determine if the command can be executed
+        /// </summary>
+        public bool CanExecute(T1 parameter)
+        {
+            if (m_canExecuteMethod != null)
+            {
+                return m_canExecuteMethod(parameter);
+            }
+            return true;
+        }
+
+        /// <summary>
+        ///     Execution of the command
+        /// </summary>
+        public void Execute(T2 parameter)
+        {
+            if (m_executeMethod != null)
+            {
+                m_executeMethod(parameter);
+            }
+        }
+
+        /// <summary>
+        ///     Raises the CanExecuteChaged event
+        /// </summary>
+        public void RaiseCanExecuteChanged()
+        {
+            OnCanExecuteChanged();
+        }
+
+        /// <summary>
+        ///     Protected virtual method to raise CanExecuteChanged event
+        /// </summary>
+        protected virtual void OnCanExecuteChanged()
+        {
+            CommandManagerHelper.CallWeakReferenceHandlers(m_canExecuteChangedHandlers);
+        }
+
+        /// <summary>
+        ///     Property to enable or disable CommandManager's automatic requery on this command
+        /// </summary>
+        public bool IsAutomaticRequeryDisabled
+        {
+            get
+            {
+                return m_isAutomaticRequeryDisabled;
+            }
+            set
+            {
+                if (m_isAutomaticRequeryDisabled != value)
+                {
+                    if (value)
+                    {
+                        CommandManagerHelper.RemoveHandlersFromRequerySuggested(m_canExecuteChangedHandlers);
+                    }
+                    else
+                    {
+                        CommandManagerHelper.AddHandlersToRequerySuggested(m_canExecuteChangedHandlers);
+                    }
+                    m_isAutomaticRequeryDisabled = value;
+                }
+            }
+        }
+
+        #endregion
+
+        #region ICommand Members
+
+        /// <summary>
+        ///     ICommand.CanExecuteChanged implementation
+        /// </summary>
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                if (!m_isAutomaticRequeryDisabled)
+                {
+                    CommandManager.RequerySuggested += value;
+                }
+                CommandManagerHelper.AddWeakReferenceHandler(ref m_canExecuteChangedHandlers, value, 2);
+            }
+            remove
+            {
+                if (!m_isAutomaticRequeryDisabled)
+                {
+                    CommandManager.RequerySuggested -= value;
+                }
+                CommandManagerHelper.RemoveWeakReferenceHandler(m_canExecuteChangedHandlers, value);
+            }
+        }
+
+        bool ICommand.CanExecute(object parameter)
+        {
+            // if T is of value type and the parameter is not
+            // set yet, then return false if CanExecute delegate
+            // exists, else return true
+            if (parameter == null &&
+                typeof(T1).IsValueType)
+            {
+                return (m_canExecuteMethod == null);
+            }
+
+            return CanExecute((T1)parameter);
+        }
+
+        void ICommand.Execute(object parameter)
+        {
+            Execute((T2)parameter);
+        }
+
+        #endregion
+
+        #region Data
+
+        private readonly Action<T2> m_executeMethod = null;
+        private readonly Func<T1, bool> m_canExecuteMethod = null;
+        private bool m_isAutomaticRequeryDisabled = false;
+        private List<WeakReference> m_canExecuteChangedHandlers;
 
         #endregion
     }
