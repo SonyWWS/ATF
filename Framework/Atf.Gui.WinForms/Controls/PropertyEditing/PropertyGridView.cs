@@ -1089,7 +1089,12 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_editingControl.Height = RowHeight;
         }
 
-        internal bool SelectProperty(PropertyDescriptor descriptor)
+        /// <summary>
+        /// Selects the given property by scrolling it into view if necessary, and setting focus
+        /// on the editing Control.</summary>
+        /// <param name="descriptor">The property descriptor for the desired property</param>
+        /// <returns>True if the property was found and false otherwise</returns>
+        public bool SelectProperty(PropertyDescriptor descriptor)
         {
             Refresh();
 
