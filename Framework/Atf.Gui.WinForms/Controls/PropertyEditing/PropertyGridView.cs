@@ -216,6 +216,67 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
+        /// Gets the object (Category or Property) at this client window point, or null if none</summary>
+        /// <param name="clientPnt">Client point</param>
+        /// <param name="bottom">Will be set to the Y position, in client coordinates, of the bottom
+        /// of the row for this property. Is only meaningful if a PropertyDescriptor is found.</param>
+        /// <param name="editingContext">The editing context to be used with the resulting property descriptor</param>
+        /// <returns>PropertyDescriptor for the property under the client point, or null if none</returns>
+        public object Pick(Point clientPnt, out int bottom, out IPropertyEditingContext editingContext)
+        {
+            editingContext = EditingContext;
+            int top = bottom = -m_scroll;
+            int middleX = GetMiddleX();//name & value divider's X coordinate, in client coordinates
+            foreach (object obj in VisibleItems)
+            {
+                if (obj is Category)
+                {
+                    top += RowHeight;
+                    if (clientPnt.Y < top)
+                        return obj;
+                }
+                else
+                {
+                    Property property = (Property)obj;
+                    top += GetRowHeight(property);
+                    if (clientPnt.Y < top)
+                    {
+                        bottom = top;
+
+                        // Check for embedded PropertyGridView on the "values" side
+                        if (property.Control != null &&
+                            clientPnt.X > middleX)
+                        {
+                            foreach (PropertyGridView childPropertyGridView in FindChildControls<PropertyGridView>(property.Control))
+                            {
+                                if (childPropertyGridView != null)
+                                {
+                                    Point screenPnt = PointToScreen(clientPnt);
+                                    Point childClientPnt = childPropertyGridView.PointToClient(screenPnt);
+                                    int childBottomY;
+                                    IPropertyEditingContext childEditingContext;
+                                    object result = childPropertyGridView.Pick(childClientPnt, out childBottomY, out childEditingContext);
+                                    if (result != null)
+                                    {
+                                        Point childClientBottomPnt = new Point(0, childBottomY);
+                                        Point screenBottomPnt = childPropertyGridView.PointToScreen(childClientBottomPnt);
+                                        Point ourClientBottomPnt = PointToClient(screenBottomPnt);
+                                        bottom = ourClientBottomPnt.Y;
+                                        editingContext = childEditingContext;
+                                        return result;
+                                    }
+                                }
+                            }
+                        }
+
+                        return obj;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets or sets whether a tooltip is displayed over property names with property descriptions</summary>
         public bool AllowTooltips
         {
@@ -876,61 +937,6 @@ namespace Sce.Atf.Controls.PropertyEditing
                 int y = -m_scroll + GetRowY(SelectedProperty);
                 m_editingControl.Top = y + 1;
             }
-        }
-
-        // Returns the object (Category or Property) at this client window point
-        private object Pick(Point clientPnt, out int bottom, out IPropertyEditingContext editingContext)
-        {
-            editingContext = EditingContext;
-            int top = bottom = -m_scroll;
-            int middleX = GetMiddleX();//name & value divider's X coordinate, in client coordinates
-            foreach (object obj in VisibleItems)
-            {
-                if (obj is Category)
-                {
-                    top += RowHeight;
-                    if (clientPnt.Y < top)
-                        return obj;
-                }
-                else
-                {
-                    Property property = (Property)obj;
-                    top += GetRowHeight(property);
-                    if (clientPnt.Y < top)
-                    {
-                        bottom = top;
-
-                        // Check for embedded PropertyGridView on the "values" side
-                        if (property.Control != null &&
-                            clientPnt.X > middleX)
-                        {
-                            foreach (PropertyGridView childPropertyGridView in FindChildControls<PropertyGridView>(property.Control))
-                            {
-                                if (childPropertyGridView != null)
-                                {
-                                    Point screenPnt = PointToScreen(clientPnt);
-                                    Point childClientPnt = childPropertyGridView.PointToClient(screenPnt);
-                                    int childBottomY;
-                                    IPropertyEditingContext childEditingContext;
-                                    object result = childPropertyGridView.Pick(childClientPnt, out childBottomY, out childEditingContext);
-                                    if (result != null)
-                                    {
-                                        Point childClientBottomPnt = new Point(0, childBottomY);
-                                        Point screenBottomPnt = childPropertyGridView.PointToScreen(childClientBottomPnt);
-                                        Point ourClientBottomPnt = PointToClient(screenBottomPnt);
-                                        bottom = ourClientBottomPnt.Y;
-                                        editingContext = childEditingContext;
-                                        return result;
-                                    }
-                                }
-                            }
-                        }
-
-                        return obj;
-                    }
-                }
-            }
-            return null;
         }
 
         private IEnumerable<C> FindChildControls<C>(Control control) where C : Control
