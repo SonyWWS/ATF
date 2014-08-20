@@ -221,7 +221,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="bottom">Will be set to the Y position, in client coordinates, of the bottom
         /// of the row for this property. Is only meaningful if a PropertyDescriptor is found.</param>
         /// <param name="editingContext">The editing context to be used with the resulting property descriptor</param>
-        /// <returns>PropertyDescriptor for the property under the client point, or null if none</returns>
+        /// <returns>The Category or Property under the client point, or null if none</returns>
         public object Pick(Point clientPnt, out int bottom, out IPropertyEditingContext editingContext)
         {
             editingContext = EditingContext;
