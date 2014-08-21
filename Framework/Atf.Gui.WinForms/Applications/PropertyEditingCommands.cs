@@ -213,7 +213,9 @@ namespace Sce.Atf.Applications
                             {
                                 PropertyUtils.SetProperty(item, m_descriptor, m_copyValue);
                             }
-                        }, "Paste Property".Localize("'Paste' is a verb and this is the name of a command"));
+                        },
+                        string.Format("Paste: {0}".Localize("'Paste' is a verb and this is the name of a command"),
+                            m_descriptor.DisplayName));
                     }
                     break;
 
@@ -222,7 +224,8 @@ namespace Sce.Atf.Applications
                         {
                             PropertyUtils.ResetProperty(m_editingContext.Items, m_descriptor);
                         },
-                        "Reset Property".Localize("'Reset' is a verb and this is the name of a command"));
+                        string.Format("Reset: {0}".Localize("'Reset' is a verb and this is the name of a command"),
+                            m_descriptor.DisplayName));
                     break;               
                 case Command.CopyAll:
                     {

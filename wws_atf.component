@@ -5,7 +5,7 @@
   xsi:schemaLocation="http://www.ship.scea.com/wws_sdk/component/v1 http://www.ship.scea.com/wws_sdk/component/v1.xsd">
 
   <readablename>Authoring Tools Framework</readablename>
-  <version>3.8.0.1</version>
+  <version>3.8.0.3</version>
   <owner>rlittle</owner>
   <platforms>PC</platforms>
   <category>Component</category>

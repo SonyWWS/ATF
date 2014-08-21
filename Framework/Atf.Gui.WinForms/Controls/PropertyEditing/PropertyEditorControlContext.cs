@@ -124,8 +124,9 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 PropertyUtils.ResetProperty(SelectedObjects, m_descriptor);                
             },
-               "Reset Property".Localize());
+               string.Format("Reset: {0}".Localize(), m_descriptor.DisplayName));
         }
+
         /// <summary>
         /// Sets the property value on all selected objects</summary>
         /// <param name="newValue">New property value</param>
@@ -136,7 +137,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 foreach (object selectedObject in SelectedObjects)
                     PropertyUtils.SetProperty(selectedObject, m_descriptor, newValue);
             },
-                "Edit Property".Localize());
+               string.Format("Edit: {0}".Localize(), m_descriptor.DisplayName));
         }
 
         /// <summary>
@@ -159,7 +160,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     }
                 }
             },
-                "Edit Property".Localize());
+               string.Format("Edit: {0}".Localize(), m_descriptor.DisplayName));
         }
 
         /// <summary>
