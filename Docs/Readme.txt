@@ -1,5 +1,6 @@
 ATF's document set includes the following:
 
+* ATF_Programmer_Guide.pdf: "ATF Programmer’s Guide" Simply contains link to "ATF Programmer’s Guide".
 * Atf-GettingStarted.pdf: "Getting Started with ATF" Introduces ATF concepts and ATF samples.
 * "ATF Programmer’s Guide": Shows using ATF to create applications and tools. It includes a Glossary of ATF technical terms. On a wiki at https://github.com/SonyWWS/ATF/wiki.
 * ATF_DOM-Programmer_Guide.pdf: "ATF Programmer’s Guide: Document Object Model (DOM)" Shows how to use the ATF DOM for application data.
