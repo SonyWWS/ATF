@@ -1351,8 +1351,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                     LastSelectedObject, property.Descriptor, null);
                 PropertyEditingControl.DrawProperty(
                     property.Descriptor, context, valueRect, font, brush, g);
-                if (property == SelectedProperty)
-                    m_editingControl.Refresh();
+                // Reverted this change from changelist 52645 because it causes the PropertyEditingControl to be
+                //  refreshed without saving the user's changes.
+                //if (property == SelectedProperty)
+                //    m_editingControl.Refresh();
             }
             else
             {
