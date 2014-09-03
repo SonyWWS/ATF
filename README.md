@@ -5,6 +5,8 @@ ATF
 
 Authoring Tools Framework (ATF) is a set of C#/.NET components for making tools on Windows&reg;. ATF has been used by most Sony Computer Entertainment first party game studios to make many custom tools such as Naughty Dog's level editor and shader editor for _The Last of Us_&trade;, Guerrilla Game's sequence editor for Killzone&trade; games (including the _Killzone: Shadow Fall_&trade; PS4&trade; launch title), an animation blending tool at Santa Monica Studios, a level editor at Bend Studio, a visual state machine editor for Quantic Dream, sound editing tools, and many others. ATF has been in continuous development in Sony Computer Entertainment's Worldwide Studios central tools group since early 2006.
 
+![LittleBigPlanet Level Editor](https://raw.githubusercontent.com/wiki/SonyWWS/ATF/images/LBP_PSP_2.png?raw=true "LittleBigPlanet Level Editor")
+
 There are many types of components in ATF. ATF Managed Extensibility Framework (MEF) components can be added to a .NET TypeCatalog with a single line of code that can be found in most of our sample applications, as in \Samples\CircuitEditor\Program.cs. Other components, like the DOM, are really a collection of related classes. Components include:
 
 * Control Host Service -- for Windows docking and tracking active Controls.
