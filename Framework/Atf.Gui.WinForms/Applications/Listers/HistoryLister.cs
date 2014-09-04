@@ -30,6 +30,7 @@ namespace Sce.Atf.Applications
                 {
                     try
                     {
+                        if (m_udpatingIndex) return;
                         m_undoingOrRedoing = true;
                         int indexLastDone = m_commandHistory.Current - 1;
                         int cmdIndex = m_listbox.SelectedIndex + m_startIndex;
@@ -171,11 +172,19 @@ namespace Sce.Atf.Applications
         private void UpdatedSelectedIndex()
         {
             if (m_undoingOrRedoing) return;
-            m_listbox.BeginUpdate();
-            int selectedIndex = (m_commandHistory.Current - 1) - m_startIndex;
-            if (selectedIndex < -1) selectedIndex = -1;
-            m_listbox.SelectedIndex = selectedIndex;
-            m_listbox.EndUpdate();
+            try
+            {
+                m_udpatingIndex = true;
+                m_listbox.BeginUpdate();
+                int selectedIndex = (m_commandHistory.Current - 1) - m_startIndex;
+                if (selectedIndex < -1) selectedIndex = -1;
+                m_listbox.SelectedIndex = selectedIndex;
+                m_listbox.EndUpdate();
+            }
+            finally
+            {
+                m_udpatingIndex = false;
+            }
         }
         private void BuildList()
         {
@@ -214,8 +223,8 @@ namespace Sce.Atf.Applications
 
         [Import(AllowDefault = true)]
         private ISettingsService m_settingsService;
-        
 
+        private bool m_udpatingIndex;
         private int m_startIndex;
         private int m_lastCmdCount; // last command count.        
         private CommandHistory m_commandHistory;
