@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
+using System.Globalization;
 #if TRACE_SKINSERVICE
 using System.Diagnostics;
 #endif
@@ -976,7 +977,7 @@ namespace Sce.Atf.Applications
                 // this is a built-in type and we need to go ahead and set the value
                 // of the instance using the converter
                 if(valueInfo.Converter.CanConvertTo(null, valueInfo.Type))
-                    instance = valueInfo.Converter.ConvertTo(valueInfo.Value, valueInfo.Type);
+                    instance = valueInfo.Converter.ConvertTo(null,CultureInfo.InvariantCulture,valueInfo.Value, valueInfo.Type);
             }
             
             return instance;
@@ -1124,7 +1125,7 @@ namespace Sce.Atf.Applications
         }
 
         private void ApplySkinToNonClientArea()
-        {
+        {                
             if (ActiveSkin == null) return;
             SkinStyle style = null;
             foreach (SkinStyle st in ActiveSkin.Styles)
@@ -1153,7 +1154,12 @@ namespace Sce.Atf.Applications
                     nc.Skin = s_ncSkin;
                     nc.CustomPaintDisabled = false;
                 }
-            }            
+            }
+            else
+            {
+                foreach (var nc in s_formNcRenderers.Values)
+                    nc.CustomPaintDisabled = true;
+            }
         }
 
         private static void ApplyNewPropertyValues(object obj, HashSet<object> skinnedControls)
@@ -1273,22 +1279,22 @@ namespace Sce.Atf.Applications
                 return false;
             }
 
-            public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+            public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
             {
                 if(value.GetType() != typeof(string))
                     throw new InvalidOperationException("Can only convert from strings to other representations.");
                 
                 // We determine what to do based on type of the destination property.
                 if (destinationType == typeof(Double))
-                    return new DoubleConverter().ConvertTo(value, destinationType);
+                    return new DoubleConverter().ConvertTo(null, culture, value, destinationType);
                 if (destinationType == typeof(Single))
-                    return new SingleConverter().ConvertTo(value, destinationType);
+                    return new SingleConverter().ConvertTo(null, culture, value, destinationType);
                 if (destinationType.IsEnum)
                     return Enum.Parse(destinationType, (string)value);
                 if (destinationType == typeof(int))
-                    return int.Parse((string)value);
+                    return int.Parse((string)value, NumberStyles.Integer, culture);
                 if (destinationType == typeof(byte))
-                    return new ByteConverter().ConvertTo(value, destinationType);
+                    return new ByteConverter().ConvertTo(null, culture, value, destinationType);
                 if (destinationType == typeof(bool))
                     return bool.Parse((string)value);
                 if (destinationType == typeof(Color))
@@ -1297,7 +1303,7 @@ namespace Sce.Atf.Applications
                     if (string.Compare((string)value, "Empty", false) == 0)
                         return Color.Empty;
 
-                    return new ColorConverter().ConvertFromString((string)value);
+                    return new ColorConverter().ConvertFromString(null, culture, (string)value);
                 }
                 if (destinationType == typeof(string))
                     return value;

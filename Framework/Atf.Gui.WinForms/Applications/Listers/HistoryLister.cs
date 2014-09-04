@@ -20,11 +20,6 @@ namespace Sce.Atf.Applications
     public class HistoryLister : IInitializable
     {
 
-        HistoryLister()
-        {
-            MaxCommandCount = 150;
-        }
-
         #region IInitializable Members        
         void IInitializable.Initialize()
         {            
@@ -38,14 +33,24 @@ namespace Sce.Atf.Applications
                         m_undoingOrRedoing = true;
                         int indexLastDone = m_commandHistory.Current - 1;
                         int cmdIndex = m_listbox.SelectedIndex + m_startIndex;
-                        if (cmdIndex < indexLastDone)
-                        {
-                            while (cmdIndex < indexLastDone)
-                            {
-                                m_historyContext.Undo();
-                                indexLastDone = m_commandHistory.Current - 1;
-                            }
 
+
+                        if (cmdIndex <= indexLastDone)
+                        {
+                            if (m_listbox.SelectedIndex == 0
+                                && cmdIndex == indexLastDone
+                                && m_commandHistory.Count > 1)
+                            {
+                                m_historyContext.Undo();                               
+                            }
+                            else
+                            {
+                                while (cmdIndex < indexLastDone)
+                                {
+                                    m_historyContext.Undo();
+                                    indexLastDone = m_commandHistory.Current - 1;
+                                }
+                            }
                         }
                         else
                         {
@@ -60,10 +65,11 @@ namespace Sce.Atf.Applications
                 };
 
 
-            m_listbox.DrawItem2 += (sender, e) =>
-                {
+            m_listbox.DrawItem += (sender, e) =>
+                {                    
                     if (e.Index < 0) return;                    
                     int cmdIndex = e.Index + m_startIndex;                    
+                    Rectangle bound = e.Bounds;
                     Command cmd = (Command)m_listbox.Items[e.Index];
                     if(cmdIndex >= m_commandHistory.Current)
                     {
@@ -75,19 +81,10 @@ namespace Sce.Atf.Applications
                         m_textBrush.Color = m_undoForeColor;
                         m_fillBrush.Color = m_undoBackColor;
                     }
-                  
-                    if (e.State == DrawItemState.Selected)
-                    {
-                        e.DrawBackground();
-                        e.DrawFocusRectangle();
-                    }
-                    else
-                    {                        
-                        e.Graphics.FillRectangle(m_fillBrush, e.Bounds);
-                    }
-                    
+
+                    e.Graphics.FillRectangle(m_fillBrush, bound);                                       
                     e.Graphics.DrawString(cmd.Description, e.Font, m_textBrush,
-                            e.Bounds, StringFormat.GenericDefault);                                        
+                            bound, StringFormat.GenericDefault);                                       
                 };
 
             ControlInfo cinfo = new ControlInfo("History", "Undo/Redo stack", StandardControlGroup.Right);
@@ -117,7 +114,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets maximum number of history commands</summary>
-        [DefaultValue(150)]
+        [DefaultValue(DefaultMaxCommandCount)]
         public int MaxCommandCount
         {
             get { return m_maxCommandCount; }
@@ -128,7 +125,8 @@ namespace Sce.Atf.Applications
                     m_maxCommandCount = 10;
             }
         }
-        private int m_maxCommandCount;
+        private int m_maxCommandCount = DefaultMaxCommandCount;
+        private const int DefaultMaxCommandCount = 150;
         private void m_documentRegistry_ActiveDocumentChanged(object sender, EventArgs e)
         {
             if (m_commandHistory != null)
@@ -231,11 +229,9 @@ namespace Sce.Atf.Applications
         private Color m_undoBackColor;
         private bool m_undoingOrRedoing;        
         private class CommandList : ListBox
-        {            
-            public EventHandler<DrawItemEventArgs> DrawItem2 = delegate { };
-
+        {                       
             public CommandList()
-            {                
+            {
                 SetStyle(ControlStyles.UserPaint
                    | ControlStyles.AllPaintingInWmPaint
                    | ControlStyles.OptimizedDoubleBuffer
@@ -244,17 +240,26 @@ namespace Sce.Atf.Applications
                    , true);
             }
 
+            protected override bool IsInputKey(Keys keyData)
+            {
+                // Disable arrow keys,
+                // undo/redo should be done via undo/redo 
+                // shortcuts not up/down keys.                
+                if (keyData == Keys.Up || keyData == Keys.Down)
+                    return false;
+                return base.IsInputKey(keyData);
+            }
+                        
             protected override void OnMouseUp(MouseEventArgs e)
             {
                 base.OnMouseUp(e);
                 Invalidate();
-            }            
+            }
             protected override void OnPaint(PaintEventArgs e)
             {
                 e.Graphics.Clear(BackColor);
                 for (int i = 0; i < Items.Count; i++)
-                {
-                    var item = Items[i];
+                {                    
                     var itemRect = GetItemRectangle(i);
                     itemRect.Height = ItemHeight;
                     if (e.ClipRectangle.IntersectsWith(itemRect))
@@ -262,18 +267,18 @@ namespace Sce.Atf.Applications
                         if ((this.SelectionMode == SelectionMode.One && this.SelectedIndex == i)
                             || (this.SelectionMode == SelectionMode.MultiSimple && this.SelectedIndices.Contains(i))
                             || (this.SelectionMode == SelectionMode.MultiExtended && this.SelectedIndices.Contains(i)))
-                        {
-                            DrawItem2(this, new DrawItemEventArgs(e.Graphics, this.Font,
+                        {                            
+                            OnDrawItem(new DrawItemEventArgs(e.Graphics, this.Font,
                                 itemRect, i,
                                 DrawItemState.Selected, this.ForeColor,
                                 this.BackColor));
                         }
                         else
-                        {
-                            DrawItem2(this, new DrawItemEventArgs(e.Graphics, this.Font,
+                        {                         
+                            OnDrawItem(new DrawItemEventArgs(e.Graphics, this.Font,
                                 itemRect, i,
                                 DrawItemState.Default, this.ForeColor,
-                                this.BackColor));
+                                this.BackColor)); 
                         }
                     }
                 }// end of loop
