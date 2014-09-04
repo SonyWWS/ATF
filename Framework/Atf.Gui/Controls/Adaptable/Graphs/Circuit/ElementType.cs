@@ -28,8 +28,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             bool isConnector,
             Size size,
             Image image,
-            Pin[] inputPins,
-            Pin[] outputPins)
+            ICircuitPin[] inputPins,
+            ICircuitPin[] outputPins)
         {
             Set(name, isConnector, size, image, inputPins, outputPins);
         }
@@ -47,8 +47,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             bool isConnector,
             Size size,
             Image image,
-            Pin[] inputPins,
-            Pin[] outputPins)
+            ICircuitPin[] inputPins,
+            ICircuitPin[] outputPins)
         {
             m_name = name;
             m_isConnector = isConnector;
@@ -159,8 +159,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         private string m_name;
-        private Pin[] m_inputPins;
-        private Pin[] m_outputPins;
+        private ICircuitPin[] m_inputPins;
+        private ICircuitPin[] m_outputPins;
         private Size m_size;
         private Image m_image;
         private bool m_isConnector;

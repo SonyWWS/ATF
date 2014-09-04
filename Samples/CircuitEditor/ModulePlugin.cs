@@ -248,37 +248,18 @@ namespace CircuitEditorSample
             ElementType.Pin[] outputs,
             SchemaLoader loader)
         {
-            // turn input pins into attributes on the type
-            var attributes = new List<AttributeInfo>();
-            foreach (ElementType.Pin pin in inputs)
-                attributes.Add(
-                    new AttributeInfo(
-                        pin.Name,
-                        (pin.TypeName == BooleanPinTypeName) ? BooleanPinType : FloatPinType));
-
             // create the type
             var type = new DomNodeType(
                 name.ToString(),
                 Schema.moduleType.Type,
-                attributes,
+                EmptyArray < AttributeInfo>.Instance,
                 EmptyArray<ChildInfo>.Instance,
                 EmptyArray<ExtensionInfo>.Instance);
 
+            DefineCircuitType(type, displayName, imageName, inputs, outputs);
+
             // add it to the schema-defined types
             loader.AddNodeType(name.ToString(), type);
-
-            // create an element type and add it to the type metadata
-            // For now, let all circuit elements be used as 'connectors' which means
-            //  that their pins will be used to create the pins on a master instance.
-            bool isConnector = true; //(inputs.Length + outputs.Length) == 1;
-            type.SetTag<ICircuitElementType>(
-                new ElementType(
-                    displayName,
-                    isConnector,
-                    new Size(),
-                    ResourceUtil.GetImage32(imageName),
-                    inputs,
-                    outputs));
 
             // add the type to the palette
             m_paletteService.AddItem(
@@ -289,6 +270,30 @@ namespace CircuitEditorSample
                     imageName),
                 PaletteCategory,
                 this);
+        }
+
+        private void DefineCircuitType(
+            DomNodeType type,
+            string elementTypeName,
+            string imageName,
+            ICircuitPin[] inputs,
+            ICircuitPin[] outputs)
+        {
+            // create an element type and add it to the type metadata
+            // For now, let all circuit elements be used as 'connectors' which means
+            //  that their pins will be used to create the pins on a master instance.
+            bool isConnector = true; //(inputs.Length + outputs.Length) == 1;
+            var image = string.IsNullOrEmpty(imageName) ? null : ResourceUtil.GetImage32(imageName);
+            type.SetTag<ICircuitElementType>(
+                new ElementType(
+                    elementTypeName,
+                    isConnector,
+                    new Size(),
+                    image,
+                    inputs,
+                    outputs));
+
+ 
         }
     }
 }
