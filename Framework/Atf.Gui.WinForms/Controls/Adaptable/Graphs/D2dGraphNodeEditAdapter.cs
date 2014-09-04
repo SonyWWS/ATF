@@ -212,7 +212,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                     m_draggingNodes = draggingNodes.GetSnapshot<TNode>();
 
-                    if ((m_draggingNodes.Length == 1) && m_draggingNodes[0] == m_mousePick.Item)
+                    if ((m_draggingNodes.Length == 1) &&
+                        (m_draggingNodes[0] == m_mousePick.Item) || // dragging top-level nodes
+                        (m_draggingNodes[0] == m_mousePick.SubItem)) // dragging sub-nodes
                     {
                         if (m_mousePick.SubItem != null)
                         {
@@ -238,6 +240,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 m_firstBound = m_graphAdapter.GetLocalBound(m_mousePick.Item.As<TNode>());
                                 m_resizing = true;
                                 m_targetItem = m_mousePick.Item;
+                            }
+                        }
+                        else if (m_mousePick.SubPart.Is<DiagramBorder>()) // then favor container resizing
+                        {
+                            var borderPart = m_mousePick.SubPart.Cast<DiagramBorder>();
+                            if (m_editableGraphContainer != null && m_editableGraphContainer.CanResize(m_mousePick.SubItem, borderPart))
+                            {
+                                m_firstBound = m_graphAdapter.GetLocalBound(m_mousePick.SubItem.As<TNode>());
+                                m_resizing = true;
+                                m_targetItem = m_mousePick.SubItem;
                             }
                         }
                        

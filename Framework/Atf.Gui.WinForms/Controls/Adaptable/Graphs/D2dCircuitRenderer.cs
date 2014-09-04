@@ -749,7 +749,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     g.DrawRectangle(bounds, m_theme.OutlineBrush);
             }
 
-            if (!TitleBackgroundFilled)
+            if (!TitleBackgroundFilled && (info.Size.Height > 2* TitleHeight)) // draw the separate line between title and content
                 g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
 
             if (drawPins)
@@ -1238,7 +1238,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 result.First = stack;
 
                 // try pick subItem
-                RectangleF bounds = GetBounds(subItem, g);
+                RectangleF bounds = GetElementBounds(subItem, g);
                 bounds.Offset(ParentWorldOffset(stack));
                 ElementTypeInfo info = GetElementTypeInfo(subItem, g);
 
@@ -1265,6 +1265,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         border.Offset(bounds.Width, 0);
                         if (border.Contains(p))
                             result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Right);
+                        else
+                        {
+                            border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
+                            if (border.Contains(p))
+                                result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Top);
+                            else
+                            {
+                                border.Offset(0, bounds.Height);
+                                if (border.Contains(p))
+                                    result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Bottom);
+                            }
+                        }
                     }
                 }
             }
