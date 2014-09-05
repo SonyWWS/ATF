@@ -592,7 +592,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Explicitly notify the graph object has been changed. This is useful when some changes, 
-        /// such as group pin connectivity, are computed at runtime, outside dom attribute mechanism.</summary>
+        /// such as group pin connectivity, are computed at runtime, outside DOM attribute mechanism.</summary>
+        /// <param name="element">Changed graph object</param>
         public void NotifyObjectChanged(object element)
         {
             OnObjectChanged(new ItemChangedEventArgs<object>(element));
@@ -991,9 +992,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 var group = container.Cast<Group>();
                 if (group.Expanded)// && !group.AutoSize)
                 {
-                    if (borderPart.Border == DiagramBorder.BorderType.Right || borderPart.Border == DiagramBorder.BorderType.Bottom)
+                    if (borderPart.Border == DiagramBorder.BorderType.Right ||
+                        borderPart.Border == DiagramBorder.BorderType.Bottom)
+                    {
+                        var layoutContext = m_viewingContext.Cast<ILayoutContext>();
+                        BoundsSpecified specified = layoutContext.CanSetBounds(group);
+                        if ((specified & BoundsSpecified.Width) != 0 || (specified & BoundsSpecified.Height) != 0)
                         return true;
                 }
+            }
             }
             return false;
         }
