@@ -39,6 +39,12 @@ namespace CircuitEditorSample
             m_schemaLoader = schemaLoader;
             m_diagramTheme = diagramTheme;
         }
+
+        protected SchemaLoader SchemaLoader
+        {
+            get { return m_schemaLoader; }
+        }
+
         private IPaletteService m_paletteService;
         private SchemaLoader m_schemaLoader;
         private DiagramTheme m_diagramTheme;
@@ -79,7 +85,7 @@ namespace CircuitEditorSample
 
         /// <summary>
         /// Finishes initializing component by adding palette information and defining module types</summary>
-        void IInitializable.Initialize()
+        public virtual void Initialize()
         {
             // add palette info to annotation type, and register with palette
             var annotationItem = new NodeTypePaletteItem(
