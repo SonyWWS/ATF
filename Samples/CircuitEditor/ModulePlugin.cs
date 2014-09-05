@@ -239,32 +239,44 @@ namespace CircuitEditorSample
 
         #endregion
 
-        private void DefineModuleType(
+        /// <summary>
+        /// Prepare  metadata for the module type, to be used by the pallete and circuit drawing engine</summary>
+        /// <param name="name"> Schema full name of the DomNodeType for the module type</param>
+        /// <param name="displayName">Display name for the module type</param>
+        /// <param name="description"></param>
+        /// <param name="imageName">Image name </param>
+        /// <param name="inputs">Define input pins for the module type</param>
+        /// <param name="outputs">Define output pins for the module type</param>
+        /// <param name="loader">XML schema loader </param>
+        /// <param name="domNodeType">optional DomNode type for the module type</param>
+        protected void DefineModuleType(
             XmlQualifiedName name,
             string displayName,
             string description,
             string imageName,
             ElementType.Pin[] inputs,
             ElementType.Pin[] outputs,
-            SchemaLoader loader)
+            SchemaLoader loader,
+            DomNodeType domNodeType = null)
         {
-            // create the type
-            var type = new DomNodeType(
+            if (domNodeType == null)
+                // create the type
+                domNodeType = new DomNodeType(
                 name.ToString(),
                 Schema.moduleType.Type,
-                EmptyArray < AttributeInfo>.Instance,
+                EmptyArray<AttributeInfo>.Instance,
                 EmptyArray<ChildInfo>.Instance,
                 EmptyArray<ExtensionInfo>.Instance);
 
-            DefineCircuitType(type, displayName, imageName, inputs, outputs);
+            DefineCircuitType(domNodeType, displayName, imageName, inputs, outputs);
 
             // add it to the schema-defined types
-            loader.AddNodeType(name.ToString(), type);
+            loader.AddNodeType(name.ToString(), domNodeType);
 
             // add the type to the palette
             m_paletteService.AddItem(
                 new NodeTypePaletteItem(
-                    type,
+                    domNodeType,
                     displayName,
                     description,
                     imageName),
@@ -293,7 +305,7 @@ namespace CircuitEditorSample
                     inputs,
                     outputs));
 
- 
+
         }
     }
 }
