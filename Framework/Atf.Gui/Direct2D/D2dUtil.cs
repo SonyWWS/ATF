@@ -471,7 +471,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="p1">Start point </param>
         /// <param name="p2">End point</param>
         /// <returns>A new instance of Rectangle that is specified by 2 points</returns>
-        private static RectangleF MakeRectangle(PointF p1, PointF p2)
+		public static RectangleF MakeRectangle(PointF p1, PointF p2)
         {
             float x = p1.X;
             float y = p1.Y;

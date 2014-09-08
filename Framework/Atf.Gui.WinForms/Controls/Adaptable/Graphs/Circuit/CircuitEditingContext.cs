@@ -998,9 +998,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         var layoutContext = m_viewingContext.Cast<ILayoutContext>();
                         BoundsSpecified specified = layoutContext.CanSetBounds(group);
                         if ((specified & BoundsSpecified.Width) != 0 || (specified & BoundsSpecified.Height) != 0)
-                        return true;
+                            return true;
+                    }
                 }
-            }
             }
             return false;
         }
@@ -1012,12 +1012,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="newHeight">New container height</param>
         void IEditableGraphContainer<Element, Wire, ICircuitPin>.Resize(object container, int newWidth, int newHeight)
         {
-            // Subtract the label height because this isn't a part of the CircuitGroupInfo.MinimumSize or group.Bounds.
-            // The label height is added back in by D2dCircuitRenderer.GetBounds(). http://tracker.ship.scea.com/jira/browse/WWSATF-1504
             var control = m_viewingContext.Cast<AdaptableControl>();
-            newHeight -= GetLabelHeight(control);
 
             var group = container.Cast<Group>();
+            if (!string.IsNullOrEmpty(group.Name))
+                // Subtract the label height because this isn't a part of the CircuitGroupInfo.MinimumSize or group.Bounds.
+                // The label height is added back in by D2dCircuitRenderer.GetBounds(). http://tracker.ship.scea.com/jira/browse/WWSATF-1504
+                newHeight -= GetLabelHeight(control);
+
             if (group.AutoSize)
                 group.Info.MinimumSize = new Size(newWidth, newHeight);
             else
