@@ -83,7 +83,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Get the display name of the circuit element, which is drawn below and outside the circuit element. 
-        /// Returns null or the empty string to not draw anything in this place</summary>    
+        /// Returns null or the empty string to not draw anything in this place</summary>
         /// <param name="element">Circuit element</param>
         /// <returns>Display name of the circuit element</returns>
         protected virtual string GetElementDisplayName(TElement element)
@@ -779,7 +779,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     g.DrawRectangle(bounds, m_theme.OutlineBrush);
             }
 
-            if (!TitleBackgroundFilled && (info.Size.Height > 2 * TitleHeight)) // draw the separate line between title and content
+            // draw the separate line between title and content
+            if (!TitleBackgroundFilled && 
+                (info.Size.Height > TitleHeight + 2 * m_pinMargin)) // check non-empty content
                 g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
 
             if (drawPins)
