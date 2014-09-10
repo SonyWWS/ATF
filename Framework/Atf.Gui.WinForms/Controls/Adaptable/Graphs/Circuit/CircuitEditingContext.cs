@@ -390,18 +390,43 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var control = m_viewingContext.As<AdaptableControl>();
             Point center = new Point(control.Width / 2, control.Height / 2);
             var dragDropAdapter = control.As<DragDropAdapter>();
+            Group hitGroup = null;
             if (dragDropAdapter != null && dragDropAdapter.IsDropping)
+            {
                 center = dragDropAdapter.MousePosition;
+                var hitRecord = Pick(dragDropAdapter.MousePosition);
+                if (hitRecord.SubItem.Is<Group>())
+                    hitGroup = hitRecord.SubItem.Cast<Group>();
+                else if (hitRecord.Item.Is<Group>())
+                    hitGroup = hitRecord.Item.Cast<Group>();
 
-            Insert(insertingObject, center);
+            }
+
+            var insertedItems = Insert(insertingObject, center);
+
+            if (hitGroup != null && insertedItems != null) //drop onto a group
+            {
+                var self = (IEditableGraphContainer<Element, Wire, ICircuitPin>)this;
+                self.Move(hitGroup, insertedItems);
+            }
         }
 
-        private void Insert(object insertingObject, Point center)
+        /// <summary>
+        /// Finds element, edge or pin hit by the given point</summary>
+        /// <param name="point">point in client space</param>
+        /// <returns></returns>
+        protected virtual GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
+        {
+            return null;
+        }
+
+
+        private DomNode[] Insert(object insertingObject, Point center)
         {
             var dataObject = (IDataObject)insertingObject;
             IEnumerable<object> items = GetCompatibleData(dataObject);
             if (items == null)
-                return;
+                return null;
 
             if (items.All(x => x.Is<Template>()))
             {
@@ -410,10 +435,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     refs.Add(InsertReference(item));
                 Center(refs, center);
                 Selection.SetRange(refs);
-                return;
+                return null;
             }
 
-            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
+            var itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
             var modules = new List<Element>(itemCopies.AsIEnumerable<Element>());
             foreach (var module in modules)
@@ -428,6 +453,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Center(itemCopies, center);
 
             Selection.SetRange(itemCopies);
+
+            return itemCopies;
         }
 
         private DomNode InsertReference(Template template)

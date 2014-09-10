@@ -2,8 +2,10 @@
 
 
 using System.Collections.Generic;
+using System.Drawing;
 using Sce.Atf;
 using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
 using Sce.Atf.Controls.Adaptable;
 using Sce.Atf.Controls.Adaptable.Graphs;
 using Sce.Atf.Dom;
@@ -129,5 +131,25 @@ namespace CircuitEditorSample
                 DomNode.Cast<CircuitEditingContext>() as IEditableGraphContainer<Element, Wire, ICircuitPin>;
             editableGraphContainer.Disconnect(edge);
         }
+
+        /// <summary>
+        /// Finds element, edge or pin hit by the given point</summary>
+        /// <param name="point">point in client space</param>
+        /// <returns></returns>
+        protected override GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
+        {
+            var viewingContext = DomNode.Cast<IViewingContext>();
+            var control = viewingContext.As<AdaptableControl>();
+            if (viewingContext == null || control == null)
+                return null;
+
+            var graphAdapter = control.As<D2dGraphAdapter<Module, Connection, ICircuitPin>>();
+            GraphHitRecord<Module, Connection, ICircuitPin> hitRecord = graphAdapter.Pick(point);
+            var result = new GraphHitRecord<Element, Wire, ICircuitPin>(hitRecord.Node, hitRecord.Part);
+            result.SubItem = hitRecord.SubItem;
+            result.SubPart = hitRecord.SubPart;
+
+            return result;
+        }     
     }
 }
