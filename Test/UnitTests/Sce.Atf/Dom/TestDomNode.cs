@@ -352,20 +352,24 @@ namespace UnitTests.Atf.Dom
 
             Assert.True(test.IsAttributeDefault(info));
             Assert.Null(test.GetLocalAttribute(info));
+            Assert.False(test.IsAttributeSet(info));
 
             test.SetAttribute(info, 2);
             Assert.AreEqual(test.GetAttribute(info), 2);
             Assert.AreEqual(test.GetLocalAttribute(info), 2);
             Assert.False(test.IsAttributeDefault(info));
+            Assert.True(test.IsAttributeSet(info));
 
             test.SetAttribute(info, null);
             Assert.True(test.IsAttributeDefault(info));
             Assert.Null(test.GetLocalAttribute(info));
+            Assert.False(test.IsAttributeSet(info));
 
             test.SetAttribute(info, 0);
             Assert.AreEqual(test.GetAttribute(info), 0);
             Assert.True(test.IsAttributeDefault(info));
             Assert.AreEqual(test.GetLocalAttribute(info), 0);
+            Assert.True(test.IsAttributeSet(info));
         }
 
         [Test]
@@ -376,13 +380,16 @@ namespace UnitTests.Atf.Dom
             type.Define(info);
             DomNode test = new DomNode(type);
 
+            Assert.False(test.IsAttributeSet(info));
             test.SetAttribute(info, 2);
             Assert.AreEqual(test.GetAttribute(info), 2);
             Assert.AreEqual(test.GetLocalAttribute(info), 2);
+            Assert.True(test.IsAttributeSet(info));
 
             test.SetAttribute(info, null);
             Assert.True(test.IsAttributeDefault(info));
             Assert.Null(test.GetLocalAttribute(info));
+            Assert.False(test.IsAttributeSet(info));
         }
 
         [Test]
