@@ -151,8 +151,28 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_constrainXDetermined = false;
         }
 
+        /// <summary>
+        /// Determine whether  the given node is allowed to drag-around</summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private bool AllowDragging(TNode node)
         {
+            if (m_layoutContext != null)
+            {
+                BoundsSpecified specified = m_layoutContext.CanSetBounds(node);
+                if (specified == BoundsSpecified.None)
+                    return false;
+
+                // bail out if the node can not set location and size
+                bool c1 = (specified & BoundsSpecified.X) == 0; // true if cannot change x
+                bool c2 = (specified & BoundsSpecified.Y) == 0; // true if cannot change y
+                bool c3 = (specified & BoundsSpecified.Width) == 0; // true if cannot change width
+                bool c4 = (specified & BoundsSpecified.Height) == 0; // true if cannot change height
+
+                if ( c1 && c2 && c3 && c4)
+                      return false;
+
+            }
             // do not permit in-line dragging template sub-nodes(open group editor for moving nodes)
             return !m_selectionPathProvider.Ancestry(node).Any( x=>x.Is<IReference<Group>>());
         }
@@ -212,7 +232,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                     m_draggingNodes = draggingNodes.GetSnapshot<TNode>();
 
-                    if ((m_draggingNodes.Length == 1) && m_draggingNodes[0] == m_mousePick.Item)
+                    if ((m_draggingNodes.Length == 1) &&
+                        ((m_draggingNodes[0] == m_mousePick.Item) || // dragging top-level nodes
+                         (m_draggingNodes[0] == m_mousePick.SubItem))) // dragging sub-nodes
                     {
                         if (m_mousePick.SubItem != null)
                         {
@@ -238,6 +260,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 m_firstBound = m_graphAdapter.GetLocalBound(m_mousePick.Item.As<TNode>());
                                 m_resizing = true;
                                 m_targetItem = m_mousePick.Item;
+                            }
+                        }
+                        else if (m_mousePick.SubPart.Is<DiagramBorder>()) // then favor container resizing
+                        {
+                            var borderPart = m_mousePick.SubPart.Cast<DiagramBorder>();
+                            if (m_editableGraphContainer != null && m_editableGraphContainer.CanResize(m_mousePick.SubItem, borderPart))
+                            {
+                                m_firstBound = m_graphAdapter.GetLocalBound(m_mousePick.SubItem.As<TNode>());
+                                m_resizing = true;
+                                m_targetItem = m_mousePick.SubItem;
                             }
                         }
                        
@@ -345,6 +377,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 for (int i = 0; i < m_draggingNodes.Length; i++)
                 {                    
                     TNode node = m_draggingNodes[i];
+                    BoundsSpecified specified = m_layoutContext.CanSetBounds(node);
+                    if (((specified & BoundsSpecified.X) != 0) && 
+                        ((specified & BoundsSpecified.Y) != 0))
+                    {
 
                     Rectangle bounds; //world coordinates
                     m_layoutContext.GetBounds(node, out bounds);
@@ -352,6 +388,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     bounds.Y = m_oldPositions[i].Y + delta.Y;
                     m_newPositions[i] = bounds.Location;
                     m_layoutContext.SetBounds(node, bounds, BoundsSpecified.Location);
+                }
                 }
 
                 if (m_editableGraphContainer != null)

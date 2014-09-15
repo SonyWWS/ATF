@@ -363,6 +363,17 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
+        /// Gets whether or not the attribute has been set, even if it was set to its default value.</summary>
+        /// <param name="attributeInfo">Attribute metadata</param>
+        /// <returns>True iff the attribute has been set to anything other than null</returns>
+        /// <remarks>Setting an attribute to null is special, and makes the attribute look like it
+        /// was never set.</remarks>
+        public bool IsAttributeSet(AttributeInfo attributeInfo)
+        {
+            return GetLocalAttribute(attributeInfo) != null;
+        }
+
+        /// <summary>
         /// Gets whether or not the attribute's value (like by calling GetAttribute) is equal to
         /// the default value.</summary>
         /// <param name="attributeInfo">Attribute metadata</param>

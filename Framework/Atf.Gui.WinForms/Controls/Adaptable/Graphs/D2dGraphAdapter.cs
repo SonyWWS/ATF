@@ -107,11 +107,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     result = DiagramDrawingStyle.LastSelected;
                 else
                     result = DiagramDrawingStyle.Selected;
-
-                if (CircuitUtil.IsGroupTemplateInstance(item))
-                    result = DiagramDrawingStyle.TemplatedInstance;
-                else if (item.Is<Group>())
-                    result = DiagramDrawingStyle.CopyInstance;
             }
             else if (m_selectionPathProvider != null && m_selectionPathProvider.IncludedPath(item) != null)
             {
@@ -644,13 +639,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-        // custom style is mainly used in expanded group node for in-place editing selection highlight
+        // custom style is mainly used in expanded group node for in-place editing (dragging source/target highlight)
         private void ResetCustomStyle(object item)
         {
-            if (m_selectionContext != null && m_selectionContext.SelectionContains(item))
-                m_renderer.SetCustomStyle(item, DiagramDrawingStyle.Selected);
-            else
-                m_renderer.ClearCustomStyle(item);
+            m_renderer.ClearCustomStyle(item);
         }
 
         private D2dAdaptableControl m_d2dControl;

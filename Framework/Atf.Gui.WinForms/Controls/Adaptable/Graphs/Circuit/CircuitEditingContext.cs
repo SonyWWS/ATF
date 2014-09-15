@@ -390,18 +390,43 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var control = m_viewingContext.As<AdaptableControl>();
             Point center = new Point(control.Width / 2, control.Height / 2);
             var dragDropAdapter = control.As<DragDropAdapter>();
+            Group hitGroup = null;
             if (dragDropAdapter != null && dragDropAdapter.IsDropping)
+            {
                 center = dragDropAdapter.MousePosition;
+                var hitRecord = Pick(dragDropAdapter.MousePosition);
+                if (hitRecord.SubItem.Is<Group>())
+                    hitGroup = hitRecord.SubItem.Cast<Group>();
+                else if (hitRecord.Item.Is<Group>())
+                    hitGroup = hitRecord.Item.Cast<Group>();
 
-            Insert(insertingObject, center);
+            }
+
+            var insertedItems = Insert(insertingObject, center);
+
+            if (hitGroup != null && insertedItems != null) //drop onto a group
+            {
+                var self = (IEditableGraphContainer<Element, Wire, ICircuitPin>)this;
+                self.Move(hitGroup, insertedItems);
+            }
         }
 
-        private void Insert(object insertingObject, Point center)
+        /// <summary>
+        /// Finds element, edge or pin hit by the given point</summary>
+        /// <param name="point">point in client space</param>
+        /// <returns></returns>
+        protected virtual GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
+        {
+            return null;
+        }
+
+
+        private DomNode[] Insert(object insertingObject, Point center)
         {
             var dataObject = (IDataObject)insertingObject;
             IEnumerable<object> items = GetCompatibleData(dataObject);
             if (items == null)
-                return;
+                return null;
 
             if (items.All(x => x.Is<Template>()))
             {
@@ -410,10 +435,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     refs.Add(InsertReference(item));
                 Center(refs, center);
                 Selection.SetRange(refs);
-                return;
+                return null;
             }
 
-            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
+            var itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
             var modules = new List<Element>(itemCopies.AsIEnumerable<Element>());
             foreach (var module in modules)
@@ -428,6 +453,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Center(itemCopies, center);
 
             Selection.SetRange(itemCopies);
+
+            return itemCopies;
         }
 
         private DomNode InsertReference(Template template)
@@ -592,7 +619,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Explicitly notify the graph object has been changed. This is useful when some changes, 
-        /// such as group pin connectivity, are computed at runtime, outside dom attribute mechanism.</summary>
+        /// such as group pin connectivity, are computed at runtime, outside DOM attribute mechanism.</summary>
+        /// <param name="element">Changed graph object</param>
         public void NotifyObjectChanged(object element)
         {
             OnObjectChanged(new ItemChangedEventArgs<object>(element));
@@ -991,8 +1019,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 var group = container.Cast<Group>();
                 if (group.Expanded)// && !group.AutoSize)
                 {
-                    if (borderPart.Border == DiagramBorder.BorderType.Right || borderPart.Border == DiagramBorder.BorderType.Bottom)
-                        return true;
+                    if (borderPart.Border == DiagramBorder.BorderType.Right ||
+                        borderPart.Border == DiagramBorder.BorderType.Bottom)
+                    {
+                        var layoutContext = m_viewingContext.Cast<ILayoutContext>();
+                        BoundsSpecified specified = layoutContext.CanSetBounds(group);
+                        if ((specified & BoundsSpecified.Width) != 0 || (specified & BoundsSpecified.Height) != 0)
+                            return true;
+                    }
                 }
             }
             return false;
@@ -1005,12 +1039,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="newHeight">New container height</param>
         void IEditableGraphContainer<Element, Wire, ICircuitPin>.Resize(object container, int newWidth, int newHeight)
         {
-            // Subtract the label height because this isn't a part of the CircuitGroupInfo.MinimumSize or group.Bounds.
-            // The label height is added back in by D2dCircuitRenderer.GetBounds(). http://tracker.ship.scea.com/jira/browse/WWSATF-1504
             var control = m_viewingContext.Cast<AdaptableControl>();
-            newHeight -= GetLabelHeight(control);
 
             var group = container.Cast<Group>();
+            if (!string.IsNullOrEmpty(group.Name))
+                // Subtract the label height because this isn't a part of the CircuitGroupInfo.MinimumSize or group.Bounds.
+                // The label height is added back in by D2dCircuitRenderer.GetBounds(). http://tracker.ship.scea.com/jira/browse/WWSATF-1504
+                newHeight -= GetLabelHeight(control);
+
             if (group.AutoSize)
                 group.Info.MinimumSize = new Size(newWidth, newHeight);
             else

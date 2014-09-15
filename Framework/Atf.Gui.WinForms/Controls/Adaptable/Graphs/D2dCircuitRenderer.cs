@@ -73,18 +73,29 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the string to use on the title bar of the circuit element</summary>    
+        /// Get the string to use on the title bar of the circuit element</summary>
+        /// <param name="element">Circuit element</param>
+        /// <returns>String to use on title bar of circuit element</returns>
         protected virtual string GetElementTitle(TElement element)
         {
             return element.Type.Name;
         }
 
         /// <summary>
-        /// Gets the display name of the circuit element, which is drawn below and outside the circuit element. 
-        /// Returns null or the empty string to not draw anything in this place</summary>    
+        /// Get the display name of the circuit element, which is drawn below and outside the circuit element. 
+        /// Returns null or the empty string to not draw anything in this place</summary>
+        /// <param name="element">Circuit element</param>
+        /// <returns>Display name of the circuit element</returns>
         protected virtual string GetElementDisplayName(TElement element)
         {
             return element.Name;
+        }
+
+        /// <summary>
+        /// Get element type cache</summary>
+        protected Dictionary<ICircuitElementType, ElementTypeInfo> ElementTypeCache
+        {
+            get { return m_elementTypeCache; }
         }
 
         /// <summary>
@@ -400,11 +411,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             RectangleF result = GetElementBounds(element, g);
 
-            // Add in the label at bottom. Keep in sync with CircuitEditingContext.Resize().
-            result.Height += LabelHeight;
+            if (!string.IsNullOrEmpty(element.Name))
+                // Add in the label at bottom. Keep in sync with CircuitEditingContext.Resize().
+                result.Height += LabelHeight;
 
             return result;
         }
+
 
         /// <summary>
         /// Finds node and/or edge hit by the given rectangle</summary>
@@ -606,6 +619,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 pickedOutputPos.Offset(ParentWorldOffset(subPick.First));
             }
 
+            if (pickedWire != null && pickedElement != null &&
+                pickedInput == null && pickedOutput == null && // favor picking pin over wire, need to check no pin is picked
+                pickedSubInput == null && pickedSubOutput == null)
+            {
+                // favor picking wire over element, but we don't want to select wires that are hidden by the element
+                // a rough check here probably should suffice most of the time: the bounds of the wire should not be enclosed by the picked node
+                var elementBounds = GetElementBounds(pickedElement, g);
+                var curveBounds = GetWireBounds(pickedWire, g);
+                if (!elementBounds.Contains(curveBounds))
+                    return new GraphHitRecord<TElement, TWire, TPin>(null, pickedWire, null, null);
+            }
+
             var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement, pickedWire, pickedOutput, pickedInput);
             if (pickedElement != null && pickedWire == null && pickedOutput == null && pickedInput == null)
                 result.Part = borderPart.Border == DiagramBorder.BorderType.None ? null : borderPart;
@@ -614,6 +639,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             result.SubPart = subPick.Second;
             result.ToRoutePos = pickedInputPos;
             result.FromRoutePos = pickedOutputPos;
+
+            if (subPick.Second.Is<TWire>())
+                result.SubItem = subPick.Second; // if a sub-edge is picked
 
             result.HitPathInversed = subPick.First;
             return result;
@@ -624,20 +652,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="edge">Edge to test</param>
         /// <param name="p">Point to test</param>
         /// <param name="g">D2dGraphics object</param>
+        /// <param name="xOffset">optional x offset added to edge</param>
+        /// <param name="yOffset">optional y offset added to edge</param>
         /// <returns>True iff edge hits point</returns>
-        protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g)
+        protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g, float xOffset = 0, float yOffset = 0)
         {
             ElementTypeInfo fromInfo = GetElementTypeInfo(edge.FromNode, g);
             TPin inputPin = edge.ToRoute;
             TPin outputPin = edge.FromRoute;
 
             Point p1 = edge.FromNode.Bounds.Location;
-            int x1 = p1.X + fromInfo.Size.Width;
-            int y1 = p1.Y + GetPinOffset(edge.FromNode, outputPin.Index, false);
+            float x1 = p1.X + fromInfo.Size.Width + xOffset;
+            float y1 = p1.Y + GetPinOffset(edge.FromNode, outputPin.Index, false) + yOffset;
 
             Point p2 = edge.ToNode.Bounds.Location;
-            int x2 = p2.X;
-            int y2 = p2.Y + GetPinOffset(edge.ToNode, inputPin.Index, true);
+            float x2 = p2.X + xOffset; ;
+            float y2 = p2.Y + GetPinOffset(edge.ToNode, inputPin.Index, true) + yOffset;
 
             float tanLen = GetTangentLength(x1, x2);
 
@@ -749,7 +779,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     g.DrawRectangle(bounds, m_theme.OutlineBrush);
             }
 
-            if (!TitleBackgroundFilled)
+            // draw the separate line between title and content
+            if (!TitleBackgroundFilled && 
+                (info.Size.Height > TitleHeight + 2 * m_pinMargin)) // check non-empty content
                 g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
 
             if (drawPins)
@@ -921,7 +953,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             // draw sub-edges after recursively draw sub-nodes
             foreach (var subEdge in group.SubEdges)
-                Draw(subEdge, DiagramDrawingStyle.Normal, g);
+            {
+                var style = GetStyle(subEdge);
+                Draw(subEdge, style, g);
+            }
 
             m_graphPath.Pop();
         }
@@ -1203,42 +1238,60 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             var subgroup_stack = new Stack<TElement>();
             subgroup_stack.Push(pickedElement.Cast<TElement>());
+            TWire pickedWire = null;
 
             bool goDown;
             do
             {
                 var current = stack.Peek();
-                var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                var group = current.Cast<ICircuitGroupType<TElement, TWire, TPin>>(); // the stack top must be a group if we can go down
                 goDown = false;
+                bool hitSubNode = false;
+                PointF offset = WorldOffset(subgroup_stack);
                 foreach (var child in group.SubNodes)
                 {
                     // only push in the first child that hits the point                  
                     RectangleF bounds = GetBounds(child, g);
-                    bounds.Offset(WorldOffset(subgroup_stack));
+                    bounds.Offset(offset);
                     bounds.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
                     if (bounds.Contains(p.X, p.Y))
                     {
                         stack.Push(child.Cast<TElement>());
+                        hitSubNode = true; // sub-node is hit 
                         if (child.Is<ICircuitGroupType<TElement, TWire, TPin>>())
                         {
-                            subgroup_stack.Push(child.Cast<TElement>());
+                            subgroup_stack.Push(child.Cast<TElement>()); // update group hierarchy path 
                             // go down when the child is expanded
                             goDown = child.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded;
                             break;
                         }
                     }
-
+                }
+                if (!hitSubNode) // try picking sub-edges
+                {
+                    foreach (var subEdge in group.SubEdges)
+                    {
+                        if (PickEdge(subEdge, p, g, offset.X, offset.Y))
+                        {
+                            pickedWire = subEdge;
+                            break;
+                        }
+                    }
                 }
             } while (goDown);
 
-            // stack top is the subitem
-            if (stack.Peek() != pickedElement.Cast<TElement>())
+            if (pickedWire != null)
+            {
+                result.First = stack;
+                result.Second = pickedWire;
+            }
+            else if (stack.Peek() != pickedElement.Cast<TElement>())// stack top is the picked subitem
             {
                 var subItem = stack.Peek();
-                result.First = stack;
+                result.First = stack; // get hit path 
 
                 // try pick subItem
-                RectangleF bounds = GetBounds(subItem, g);
+                RectangleF bounds = GetElementBounds(subItem, g);
                 bounds.Offset(ParentWorldOffset(stack));
                 ElementTypeInfo info = GetElementTypeInfo(subItem, g);
 
@@ -1265,11 +1318,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         border.Offset(bounds.Width, 0);
                         if (border.Contains(p))
                             result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Right);
+                        else
+                        {
+                            border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
+                            if (border.Contains(p))
+                                result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Top);
+                            else
+                            {
+                                border.Offset(0, bounds.Height);
+                                if (border.Contains(p))
+                                    result.Second = new DiagramBorder(subItem, DiagramBorder.BorderType.Bottom);
+                            }
+                        }
                     }
                 }
             }
             return result;
-
         }
 
 
@@ -1565,6 +1629,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 int width = grpBounds.Width + m_subContentOffset.X;
                 int height = Math.Max(yMax - yMin, grpBounds.Height);
                 height += LabelHeight; // compensate that the  bottom of sub-nodes may have non-empty names
+                height += TitleHeight;
 
                 if (group.Info.MinimumSize.Width > width)
                     width = group.Info.MinimumSize.Width;
@@ -1716,7 +1781,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return tanLen;
         }
 
-        private D2dBrush GetPen(TPin pin)
+        /// <summary>
+        /// Get pen for drawing pin</summary>
+        /// <param name="pin">Pin to draw</param>
+        /// <returns>Pen for drawing pin</returns>
+        protected virtual D2dBrush GetPen(TPin pin)
         {
             D2dBrush pen = m_theme.GetCustomBrush(pin.TypeName);
             if (pen == null)
@@ -1785,6 +1854,108 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             ElementTypeInfo info = GetElementTypeInfo(element, g);
             return new RectangleF(element.Bounds.Location, info.Size);
+        }
+
+
+        private RectangleF GetWireBounds(TWire wire, D2dGraphics g)
+        {
+            ElementTypeInfo info = GetElementTypeInfo(wire.FromNode, g);
+            RectangleF result = new RectangleF();
+            if (wire.Is<IEdgeStyleProvider>())
+            {
+                bool firstTime = true;
+                foreach (var edgeInfo in wire.Cast<IEdgeStyleProvider>().GetData(this, WorldOffset(m_graphPath), g))
+                {
+                    if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Bezier)
+                    {
+                        var curve = edgeInfo.EdgeData.As<BezierCurve2F>();
+                        var cpts = new PointF[] { curve.P1, curve.P2, curve.P3, curve.P4 };
+                        if (firstTime)
+                        {
+                            result = GetPointsBounds(cpts);
+                            firstTime = false;
+                        }
+                        else
+                            result = RectangleF.Union(result, GetPointsBounds(cpts));
+                    }
+                    else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Line)
+                    {
+                        var line = edgeInfo.EdgeData.As<PointF[]>();
+                        if (line != null)
+                        {
+                            if (firstTime)
+                            {
+                                result = D2dUtil.MakeRectangle(line[0], line[1]);
+                                firstTime = false;
+                            }
+                            else
+                                result = RectangleF.Union(result, D2dUtil.MakeRectangle(line[0], line[1]));
+                        }
+
+                    }
+                    else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.Polyline)
+                    {
+                        var lines = edgeInfo.EdgeData.As<PointF[]>();
+                        if (lines != null)
+                        {
+                            if (firstTime)
+                            {
+                                result = GetPointsBounds(lines);
+                                firstTime = false;
+                            }
+                            else
+                                result = RectangleF.Union(result, GetPointsBounds(lines));
+                        }
+                    }
+                    else if (edgeInfo.ShapeType == EdgeStyleData.EdgeShape.BezierSpline)
+                    {
+                        var curves = edgeInfo.EdgeData.As<IEnumerable<BezierCurve2F>>();
+
+                        foreach (var curve in curves)
+                        {
+                            var cpts = new PointF[] { curve.P1, curve.P2, curve.P3, curve.P4 };
+                            if (firstTime)
+                            {
+                                result = GetPointsBounds(cpts);
+                                firstTime = false;
+                            }
+                            else
+                                result = RectangleF.Union(result, GetPointsBounds(cpts));
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                Point op = wire.FromNode.Bounds.Location;
+                op.Offset(WorldOffset(m_graphPath));
+                int x1 = op.X + info.Size.Width;
+                if (PinDrawStyle == PinStyle.OnBorderFilled)
+                    x1 += m_pinSize / 2;
+                int y1 = op.Y + GetPinOffset(wire.FromNode, wire.FromRoute.Index, false);
+
+                Point ip = wire.ToNode.Bounds.Location;
+                ip.Offset(WorldOffset(m_graphPath));
+                int x2 = ip.X;
+                if (PinDrawStyle == PinStyle.OnBorderFilled)
+                    x2 -= m_pinSize / 2;
+                int y2 = ip.Y + GetPinOffset(wire.ToNode, wire.ToRoute.Index, true);
+                result = D2dUtil.MakeRectangle(new PointF(x1, y1), new PointF(x2, y2));
+            }
+
+            return result;
+        }
+
+        private RectangleF GetPointsBounds(IEnumerable<PointF> points)
+        {
+            var pts = points.ToArray();
+            float minX = points.Min(p => p.X);
+            float minY = points.Min(p => p.Y);
+            float maxX = points.Max(p => p.X);
+            float maxY = points.Max(p => p.Y);
+
+            return new RectangleF(new PointF(minX, minY), new SizeF(maxX - minX, maxY - minY));
         }
 
         /// <summary>

@@ -39,6 +39,12 @@ namespace CircuitEditorSample
             m_schemaLoader = schemaLoader;
             m_diagramTheme = diagramTheme;
         }
+
+        protected SchemaLoader SchemaLoader
+        {
+            get { return m_schemaLoader; }
+        }
+
         private IPaletteService m_paletteService;
         private SchemaLoader m_schemaLoader;
         private DiagramTheme m_diagramTheme;
@@ -79,7 +85,7 @@ namespace CircuitEditorSample
 
         /// <summary>
         /// Finishes initializing component by adding palette information and defining module types</summary>
-        void IInitializable.Initialize()
+        public virtual void Initialize()
         {
             // add palette info to annotation type, and register with palette
             var annotationItem = new NodeTypePaletteItem(
@@ -239,56 +245,73 @@ namespace CircuitEditorSample
 
         #endregion
 
-        private void DefineModuleType(
+        /// <summary>
+        /// Prepare  metadata for the module type, to be used by the pallete and circuit drawing engine</summary>
+        /// <param name="name"> Schema full name of the DomNodeType for the module type</param>
+        /// <param name="displayName">Display name for the module type</param>
+        /// <param name="description"></param>
+        /// <param name="imageName">Image name </param>
+        /// <param name="inputs">Define input pins for the module type</param>
+        /// <param name="outputs">Define output pins for the module type</param>
+        /// <param name="loader">XML schema loader </param>
+        /// <param name="domNodeType">optional DomNode type for the module type</param>
+        protected void DefineModuleType(
             XmlQualifiedName name,
             string displayName,
             string description,
             string imageName,
             ElementType.Pin[] inputs,
             ElementType.Pin[] outputs,
-            SchemaLoader loader)
+            SchemaLoader loader,
+            DomNodeType domNodeType = null)
         {
-            // turn input pins into attributes on the type
-            var attributes = new List<AttributeInfo>();
-            foreach (ElementType.Pin pin in inputs)
-                attributes.Add(
-                    new AttributeInfo(
-                        pin.Name,
-                        (pin.TypeName == BooleanPinTypeName) ? BooleanPinType : FloatPinType));
-
-            // create the type
-            var type = new DomNodeType(
+            if (domNodeType == null)
+                // create the type
+                domNodeType = new DomNodeType(
                 name.ToString(),
                 Schema.moduleType.Type,
-                attributes,
+                EmptyArray<AttributeInfo>.Instance,
                 EmptyArray<ChildInfo>.Instance,
                 EmptyArray<ExtensionInfo>.Instance);
 
-            // add it to the schema-defined types
-            loader.AddNodeType(name.ToString(), type);
+            DefineCircuitType(domNodeType, displayName, imageName, inputs, outputs);
 
-            // create an element type and add it to the type metadata
-            // For now, let all circuit elements be used as 'connectors' which means
-            //  that their pins will be used to create the pins on a master instance.
-            bool isConnector = true; //(inputs.Length + outputs.Length) == 1;
-            type.SetTag<ICircuitElementType>(
-                new ElementType(
-                    displayName,
-                    isConnector,
-                    new Size(),
-                    ResourceUtil.GetImage32(imageName),
-                    inputs,
-                    outputs));
+            // add it to the schema-defined types
+            loader.AddNodeType(name.ToString(), domNodeType);
 
             // add the type to the palette
             m_paletteService.AddItem(
                 new NodeTypePaletteItem(
-                    type,
+                    domNodeType,
                     displayName,
                     description,
                     imageName),
                 PaletteCategory,
                 this);
+        }
+
+        private void DefineCircuitType(
+            DomNodeType type,
+            string elementTypeName,
+            string imageName,
+            ICircuitPin[] inputs,
+            ICircuitPin[] outputs)
+        {
+            // create an element type and add it to the type metadata
+            // For now, let all circuit elements be used as 'connectors' which means
+            //  that their pins will be used to create the pins on a master instance.
+            bool isConnector = true; //(inputs.Length + outputs.Length) == 1;
+            var image = string.IsNullOrEmpty(imageName) ? null : ResourceUtil.GetImage32(imageName);
+            type.SetTag<ICircuitElementType>(
+                new ElementType(
+                    elementTypeName,
+                    isConnector,
+                    new Size(),
+                    image,
+                    inputs,
+                    outputs));
+
+
         }
     }
 }

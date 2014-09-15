@@ -252,11 +252,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Value indicating which parts of the item's bounds can be set</returns>
         BoundsSpecified ILayoutContext.CanSetBounds(object item)
         {
+            //if (item.Is<DomNode>())// debug disallowing dragging 
+            //{
+            //    var parent = item.Cast<DomNode>().Parent;
+            //    if (parent.Is<Group>())
+            //        return BoundsSpecified.None;
+            //}
+
+            // by default a group can be moved and resized
+            if (Adapters.Is<Group>(item)) 
+                return BoundsSpecified.All;
+
             if (Adapters.Is<Element>(item))
                 return BoundsSpecified.Location;
 
             if (Adapters.Is<Annotation>(item))
-                return BoundsSpecified.Location;
+                return BoundsSpecified.All;
 
             return BoundsSpecified.None;
         }

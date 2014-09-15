@@ -433,8 +433,11 @@ namespace Sce.Atf.Controls.PropertyEditing
                 object picked = Pick(e.Location, out bottom, out editingContext);
                 if (picked is Category)
                 {
-                    Category category = picked as Category;
-                    category.Expanded = !category.Expanded; // toggle
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        Category category = picked as Category;
+                        category.Expanded = !category.Expanded; // toggle
+                    }
 
                     // this will cause any currently active child controls to flush
                     Select();
@@ -449,7 +452,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                     if (e.X < middle && property.ChildProperties != null && property.ChildProperties.Count > 0)
                     {
                         // toggle expansion
-                        property.ChildrenExpanded = !property.ChildrenExpanded;
+                        if (e.Button == MouseButtons.Left)
+                            property.ChildrenExpanded = !property.ChildrenExpanded;
 
                         // this will cause any currently active child controls to flush
                         Select();
