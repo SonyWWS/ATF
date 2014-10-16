@@ -63,6 +63,18 @@ namespace Sce.Atf.Applications
             get { return m_propertyGrid; }
         }
 
+        /// <summary>
+        /// Gets or sets the default SelectionPropertyEditingContext object. This object
+        /// is used if there is no IPropertyEditingContext available from the IContextRegistry.
+        /// Set this to control custom property filtering behavior for the current
+        /// ISelectionContext, by overriding the SelectionPropertyEditingContext's
+        /// GetPropertyDescriptors(). Can't be null.</summary>
+        public SelectionPropertyEditingContext DefaultPropertyEditingContext
+        {
+            get { return m_defaultContext; }
+            set { m_defaultContext = value; }
+        }
+
         #region IInitializable Members
 
         /// <summary>
@@ -212,6 +224,6 @@ namespace Sce.Atf.Applications
 
         private readonly PropertyGrid m_propertyGrid;
         private readonly ControlInfo m_controlInfo;
-        private readonly SelectionPropertyEditingContext m_defaultContext = new SelectionPropertyEditingContext();
+        private SelectionPropertyEditingContext m_defaultContext = new SelectionPropertyEditingContext();
     }
 }
