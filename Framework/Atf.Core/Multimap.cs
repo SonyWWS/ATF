@@ -25,7 +25,7 @@ namespace Sce.Atf
         /// default comparer for the type of the key</param>
         public Multimap(IEqualityComparer<Key> comparer)
         {
-            m_keyValues = new Dictionary<Key, object>(comparer);
+            m_keyValues = new Dictionary<Key, List<Value>>(comparer);
         }
         
         /// <summary>
@@ -51,15 +51,11 @@ namespace Sce.Atf
         /// <returns>True iff map contains key/value pair</returns>
         public bool ContainsKeyValue(Key key, Value value)
         {
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
                 return false;
 
-            List<Value> valuesList = values as List<Value>;
-            if (valuesList != null)
-                return valuesList.Contains(value);
-
-            return values.Equals(value);
+            return values.Contains(value);
         }
 
         /// <summary>
@@ -69,17 +65,11 @@ namespace Sce.Atf
         /// <returns>A collection of 0 or more values</returns>
         public IEnumerable<Value> Find(Key key)
         {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
                 return EmptyEnumerable<Value>.Instance;
 
-            IEnumerable<Value> result = values as IEnumerable<Value>;
-            if (result == null)
-                result = new Value[] { (Value)values };
-            return result;
+            return values;
         }
 
         /// <summary>
@@ -88,14 +78,10 @@ namespace Sce.Atf
         /// <returns>The first value for the key, or null if key is not in map</returns>
         public Value FindFirst(Key key)
         {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
                 return default(Value);
-            List<Value> valuesArray = values as List<Value>;
-            return (valuesArray != null) ? valuesArray[0] : (Value)values;
+            return values[0];
         }
 
         /// <summary>
@@ -104,14 +90,10 @@ namespace Sce.Atf
         /// <returns>The last value for the key, or null if key is not in map</returns>
         public Value FindLast(Key key)
         {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
                 return default(Value);
-            List<Value> valuesArray = values as List<Value>;
-            return (valuesArray != null) ? valuesArray[valuesArray.Count - 1] : (Value)values;
+            return values[values.Count - 1];
         }
 
         /// <summary>
@@ -121,18 +103,14 @@ namespace Sce.Atf
         /// <returns>True iff the key has an associated value</returns>
         public bool TryGetFirst(Key key, out Value result)
         {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
             {
                 result = default(Value);
                 return false;
             }
 
-            List<Value> valuesList = values as List<Value>;
-            result = (valuesList != null) ? valuesList[0] : (Value)values;
+            result = values[0];
             return true;
         }
 
@@ -143,18 +121,14 @@ namespace Sce.Atf
         /// <returns>True iff the key has an associated value</returns>
         public bool TryGetLast(Key key, out Value result)
         {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
             {
                 result = default(Value);
                 return false;
             }
 
-            List<Value> valuesList = values as List<Value>;
-            result = (valuesList != null) ? valuesList[valuesList.Count - 1] : (Value)values;
+            result = values[values.Count - 1];
             return true;
         }
         
@@ -170,26 +144,17 @@ namespace Sce.Atf
         /// many values that are already associated with this key</summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <remarks>If the value is already present, it is removed and then added,
+        /// <remarks>If the value is already present, it is removed and then added last,
         /// so duplicate values aren't possible</remarks>
         public void Add(Key key, Value value)
         {
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
-                m_keyValues[key] = value;
+                values = m_keyValues[key] = new List<Value>();
             else
-            {
-                List<Value> valuesArray = values as List<Value>;
-                if (valuesArray == null)
-                {
-                    m_keyValues.Remove(key);
-                    valuesArray = new List<Value>(2);
-                    m_keyValues.Add(key, valuesArray);
-                    valuesArray.Add((Value)values);
-                }
-                valuesArray.Remove(value);
-                valuesArray.Add(value);
-            }
+                values.Remove(value);
+
+            values.Add(value);
         }
 
         /// <summary>
@@ -197,26 +162,17 @@ namespace Sce.Atf
         /// many values that are already associated with this key</summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <remarks>If the value is already present, it is removed and then added,
+        /// <remarks>If the value is already present, it is removed and then added first,
         /// so duplicate values aren't possible.</remarks>
         public void AddFirst(Key key, Value value)
         {
-            object values;
+            List<Value> values;
             if (!m_keyValues.TryGetValue(key, out values))
-                m_keyValues[key] = value;
+                values = m_keyValues[key] = new List<Value>();
             else
-            {
-                List<Value> valuesArray = values as List<Value>;
-                if (valuesArray == null)
-                {
-                    m_keyValues.Remove(key);
-                    valuesArray = new List<Value>(2);
-                    m_keyValues.Add(key, valuesArray);
-                    valuesArray.Add((Value)values);
-                }
-                valuesArray.Remove(value);
-                valuesArray.Insert(0, value);
-            }
+                values.Remove(value);
+
+            values.Insert(0, value);
         }
 
         /// <summary>
@@ -235,32 +191,14 @@ namespace Sce.Atf
         /// <returns>True iff the value was removed</returns>
         public bool Remove(Key key, Value value)
         {
-            object values;
+            List<Value> values;
             if (m_keyValues.TryGetValue(key, out values))
             {
-                List<Value> valueList = values as List<Value>;
-                if (valueList == null)
+                if (values.Remove(value))
                 {
-                    if (value.Equals(values))
-                    {
+                    if (values.Count == 0)
                         m_keyValues.Remove(key);
-                        return true;
-                    }
-                }
-                else
-                {
-                    // remove from the end
-                    for (int i = valueList.Count - 1; i >= 0; i--)
-                    {
-                        if (valueList[i].Equals(value))
-                        {
-                            valueList.RemoveAt(i);
-                            // if only a single value remains in the list, replace it with the single value
-                            if (valueList.Count == 1)
-                                m_keyValues[key] = valueList[0];
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
 
@@ -274,6 +212,7 @@ namespace Sce.Atf
             m_keyValues.Clear();
         }
 
-        private readonly Dictionary<Key, object> m_keyValues;
+        // All lists will contain at least one object of type Value.
+        private readonly Dictionary<Key, List<Value>> m_keyValues;
     }
 }
