@@ -116,6 +116,7 @@
     <Compile Include="Sce.Atf\Dom\TestSchemas.cs" />
     <Compile Include="Sce.Atf\Dom\TestTransactionReporter.cs" />
     <Compile Include="Sce.Atf\TestEnumUtil.cs" />
+    <Compile Include="Sce.Atf\TestMultimap.cs" />
     <Compile Include="Sce.Atf\TestPath.cs" />
     <Compile Include="Sce.Atf\Dom\TestAttributePropertyDescriptor.cs" />
     <Compile Include="Sce.Atf\Dom\ValidationContext.cs" />
