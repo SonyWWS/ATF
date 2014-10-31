@@ -84,11 +84,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_graph = AdaptedControl.ContextAs<IGraph<TNode, TEdge, TEdgeRoute>>();
             m_editableGraph = AdaptedControl.ContextAs<IEditableGraph<TNode, TEdge, TEdgeRoute>>();
-
-            if (m_editableGraph != null)
-            {
-                m_selectionContext = AdaptedControl.ContextCast<ISelectionContext>();
-            }
         }
 
         private void control_Paint(object sender, PaintEventArgs e)
@@ -492,7 +487,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private IGraph<TNode, TEdge, TEdgeRoute> m_graph;
         private IEditableGraph<TNode, TEdge, TEdgeRoute> m_editableGraph;
-        private ISelectionContext m_selectionContext;
 
         private GraphHitRecord<TNode, TEdge, TEdgeRoute> m_mousePick = new GraphHitRecord<TNode, TEdge, TEdgeRoute>();
         private TEdge m_hotEdge;

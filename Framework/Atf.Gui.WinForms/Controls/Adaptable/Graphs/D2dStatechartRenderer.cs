@@ -282,7 +282,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 StateIndicators indicators = state.Indicators;
                 if ((indicators & StateIndicators.Active) != 0)
                 {
-                    bool drawIndicator = (scaleX * CornerRadius) > 2;
                     if (radInPixel > MinRadiusInPixel)
                     {
                         D2dEllipse ellipse = new D2dEllipse();
@@ -374,7 +373,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             D2dEllipse innerEllipse = ellipse;
             innerEllipse.RadiusX = 4;
             innerEllipse.RadiusY = 4;
-            PointF c = ellipse.Center;
 
             g.FillEllipse(ellipse, m_theme.FillBrush);
 

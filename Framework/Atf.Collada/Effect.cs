@@ -191,11 +191,11 @@ namespace Sce.Atf.Collada
             ChildInfo diffuse = shaderType.GetChildInfo("diffuse");
             ChildInfo specular = shaderType.GetChildInfo("specular");
             ChildInfo shininess = shaderType.GetChildInfo("shininess");
-            ChildInfo reflective = shaderType.GetChildInfo("reflective");
-            ChildInfo reflectivity = shaderType.GetChildInfo("reflectivity");
-            ChildInfo transparent = shaderType.GetChildInfo("transparent");
+            shaderType.GetChildInfo("reflective");
+            shaderType.GetChildInfo("reflectivity");
+            shaderType.GetChildInfo("transparent");
             ChildInfo transparency = shaderType.GetChildInfo("transparency");
-            ChildInfo indexOfRefraction = shaderType.GetChildInfo("index_of_refrac");
+            shaderType.GetChildInfo("index_of_refrac");
 
 
             if (emission != null)

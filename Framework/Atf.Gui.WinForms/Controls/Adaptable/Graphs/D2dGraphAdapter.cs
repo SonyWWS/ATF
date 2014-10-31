@@ -35,7 +35,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {            
             m_renderer = renderer;
             m_renderer.Redraw += new EventHandler(renderer_Redraw);
-            m_transformAdapter = transformAdapter;
             m_renderer.GetStyle = GetStyle;
         }
 
@@ -648,7 +647,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private D2dAdaptableControl m_d2dControl;
         private D2dGraphics m_d2dGraphics;
         private readonly D2dGraphRenderer<TNode, TEdge, TEdgeRoute> m_renderer;
-        private readonly ITransformAdapter m_transformAdapter;
         private object m_hoverObject;
         private object m_hoverSubObject;
         private ISelectionPathProvider m_selectionPathProvider;

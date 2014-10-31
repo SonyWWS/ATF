@@ -248,6 +248,7 @@ namespace FileExplorerSample
 
             static FileListView()
             {
+                #pragma warning disable 0219
                 string dummy = Resources.FolderImage; // force initialization of image resources
             }
         }

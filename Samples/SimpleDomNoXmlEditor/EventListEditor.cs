@@ -33,7 +33,6 @@ namespace SimpleDomNoXmlEditorSample
             ICommandService commandService,
             IContextRegistry contextRegistry)
         {
-            m_controlHostService = controlHostService;
             m_commandService = commandService;
             m_contextRegistry = contextRegistry;
 
@@ -41,8 +40,7 @@ namespace SimpleDomNoXmlEditorSample
             m_contextRegistry.ContextAdded += new EventHandler<ItemInsertedEventArgs<object>>(contextRegistry_ContextAdded);
             m_contextRegistry.ContextRemoved += new EventHandler<ItemRemovedEventArgs<object>>(contextRegistry_ContextRemoved);
         }
-
-        private IControlHostService m_controlHostService;
+            
         private ICommandService m_commandService;
         private IContextRegistry m_contextRegistry;
 

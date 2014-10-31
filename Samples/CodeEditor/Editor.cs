@@ -54,6 +54,8 @@ namespace CodeEditor
         [Import(AllowDefault = true)]
         private SourceControlService m_sourceControlService = null;
 
+        #pragma warning disable 0414
+
         [Export(typeof(IDocumentClient))]
         private DocumentClient m_txtDocumentClient;
 

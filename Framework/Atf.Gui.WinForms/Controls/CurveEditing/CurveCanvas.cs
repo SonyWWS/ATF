@@ -1490,7 +1490,6 @@ namespace Sce.Atf.Controls.CurveEditing
         {
             float dx = CurrentPoint.X - ClickPoint.X;
             float dy = CurrentPoint.Y - ClickPoint.Y;
-            bool hasSelection = m_selection.Count > 0;
             List<IControlPoint> points = new List<IControlPoint>();
             List<PointSelectionRegions> regions = new List<PointSelectionRegions>();
             RectangleF pickRect = RectangleF.Empty;
@@ -1702,7 +1701,6 @@ namespace Sce.Atf.Controls.CurveEditing
                 default:
                     break;
             }
-            m_lastEditAction = action;
         }
 
         
@@ -1744,7 +1742,6 @@ namespace Sce.Atf.Controls.CurveEditing
 
             ICurve hit = null;
             const float pickTol = 4;
-            RectangleF rect = RectangleF.Empty;
 
             for (int i = SelectedCurves.Length - 1; i >= 0; i--)
             {
@@ -2319,7 +2316,6 @@ namespace Sce.Atf.Controls.CurveEditing
         private ReadOnlyCollection<ICurve> m_curves = s_emptyCurves;
         private static readonly ReadOnlyCollection<ICurve> s_emptyCurves = (new List<ICurve>()).AsReadOnly();
         private readonly CurveRenderer m_renderer;
-        private MouseEditAction m_lastEditAction = MouseEditAction.None;
 
         private const float MaxAngle = 1.5706217938697f; // = 89.99 degree
         private const float MinAngle = -1.5706217938697f; // =-89.99 degree        

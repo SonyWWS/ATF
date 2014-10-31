@@ -20,9 +20,9 @@ namespace CircuitEditorSample
         {
             m_modules = new DomNodeListAdapter<Module>(DomNode, Schema.groupType.moduleChild);
             m_connections = new DomNodeListAdapter<Connection>(DomNode, Schema.groupType.connectionChild);
-            m_annotations = new DomNodeListAdapter<Annotation>(DomNode, Schema.groupType.annotationChild);
-            m_inputs = new DomNodeListAdapter<GroupPin>(DomNode, Schema.groupType.inputChild);
-            m_outputs = new DomNodeListAdapter<GroupPin>(DomNode, Schema.groupType.outputChild);
+            new DomNodeListAdapter<Annotation>(DomNode, Schema.groupType.annotationChild);
+            new DomNodeListAdapter<GroupPin>(DomNode, Schema.groupType.inputChild);
+            new DomNodeListAdapter<GroupPin>(DomNode, Schema.groupType.outputChild);
             m_thisModule = DomNode.Cast<Module>();
 
             base.OnNodeSet();
@@ -230,8 +230,5 @@ namespace CircuitEditorSample
         private DomNodeListAdapter<Module> m_modules;
         private DomNodeListAdapter<Connection> m_connections;
         private Module m_thisModule;
-        private DomNodeListAdapter<Annotation> m_annotations;
-        private DomNodeListAdapter<GroupPin> m_inputs;
-        private DomNodeListAdapter<GroupPin> m_outputs;
     }
 }

@@ -29,7 +29,6 @@ namespace CircuitEditorSample.Tests
             SchemaLoader schemaLoader)
         {
             m_commandService = commandService;
-            m_contextRegistry = contextRegistry;
             m_schemaLoader = schemaLoader;
         }
 
@@ -124,7 +123,6 @@ namespace CircuitEditorSample.Tests
         private IControlHostService m_controlHostService= null;
 
         private ICommandService m_commandService;
-        private IContextRegistry m_contextRegistry;
         private SchemaLoader m_schemaLoader;
     }
 

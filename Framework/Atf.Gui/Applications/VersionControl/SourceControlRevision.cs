@@ -77,7 +77,7 @@ namespace Sce.Atf.Applications
         {
             get
             {
-                if (m_kind != SourceControlRevisionKind.Date || m_dateTime == null)
+                if (m_kind != SourceControlRevisionKind.Date)
                     throw new InvalidOperationException("This revision is not a Date");
                 return m_dateTime;
             }

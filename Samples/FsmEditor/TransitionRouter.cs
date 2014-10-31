@@ -37,7 +37,6 @@ namespace FsmEditorSample
         {
             if (e.DomNode.Type == Schema.transitionType.Type)
             {
-                Transition transition = e.DomNode.As<Transition>();
                 if (e.AttributeInfo.Equivalent(Schema.transitionType.sourceAttribute))
                 {
                     m_routingInvalid = true;

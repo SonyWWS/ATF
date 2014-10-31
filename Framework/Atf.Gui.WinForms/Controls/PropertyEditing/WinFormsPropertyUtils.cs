@@ -51,7 +51,6 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             public StandardValuesUIEditor(PropertyDescriptor descriptor)
             {
-                m_descriptor = descriptor;
                 m_converter = descriptor.Converter;
                 if (m_converter == null)
                     throw new ArgumentException("descriptor has no Converter");
@@ -123,8 +122,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 return value.ToString();
             }
-
-            private PropertyDescriptor m_descriptor;
+                
             private readonly TypeConverter m_converter;
             private IWindowsFormsEditorService m_editorService;
 

@@ -285,7 +285,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     BuildGraphics(type, info, g);
 
                 s_pathTransform.Translate(p.X, p.Y);
-                PointF test = info.Path.PathPoints[0];
                 info.Path.Transform(s_pathTransform);
 
                 // try to use custom brush if registered

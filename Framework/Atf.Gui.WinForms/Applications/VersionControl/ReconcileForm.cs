@@ -35,8 +35,6 @@ namespace Sce.Atf.Applications
 
         private void reconcileBtn_Click(object sender, EventArgs e)
         {
-            List<Uri> uris = new List<Uri>();
-
             // check out files that are locally modified but not opened
             for (int i = 0; i < localModifiedListBox.Items.Count; i++)
             {

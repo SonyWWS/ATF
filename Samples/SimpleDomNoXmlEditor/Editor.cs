@@ -41,14 +41,12 @@ namespace SimpleDomNoXmlEditorSample
             m_documentService = documentService;
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
-            m_domTypes = domTypes.GetDomTypes();
         }
 
         private IControlHostService m_controlHostService;
         private IDocumentService m_documentService;
         private IContextRegistry m_contextRegistry;
         private IDocumentRegistry m_documentRegistry;
-        private IEnumerable<DomNodeType> m_domTypes;
 
         // scripting related members
         [Import(AllowDefault = true)]

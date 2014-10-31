@@ -2265,7 +2265,6 @@ namespace Sce.Atf.Controls.PropertyEditing
                     int dx = e.X - s_mouseDown.X;
                     int newWidth = s_sizingOriginalWidth + dx;
                     newWidth = Math.Max(newWidth, MinimumColumnWidth);
-                    PropertyDescriptor descriptor = s_sizingProperty.Descriptor;
                     m_gridView.SetPropertyColumnWidth(s_sizingProperty, newWidth);
                     m_gridView.Invalidate();
                 }

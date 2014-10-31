@@ -1309,8 +1309,6 @@ namespace UsingDirect2D
         private List<D2dLinearGradientBrush>
             m_linearBrushes2 = new List<D2dLinearGradientBrush>();
 
-
-        private RectangleF m_infoRect = new RectangleF(0, 0, 500, 32);
         private Clock frmclk = new Clock();
         private float m_cumulativeTime = 0;
         private int m_frameCount = 0;

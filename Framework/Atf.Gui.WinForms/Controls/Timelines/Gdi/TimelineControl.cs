@@ -100,10 +100,10 @@ namespace Sce.Atf.Controls.Timelines
                 //  order of receiving picking events. For example, a custom Control that is drawn
                 //  on top of everything else and that can be clicked on should come last in this
                 //  list so that it is drawn last and is picked first.
-                SelectionManipulator selectionManipulator = new SelectionManipulator(this);
-                MoveManipulator moveManipulator = new MoveManipulator(this);
-                ScaleManipulator scaleManipulator = new ScaleManipulator(this);
-                SplitManipulator splitManipulator = new SplitManipulator(this);
+                new SelectionManipulator(this);
+                new MoveManipulator(this);
+                new ScaleManipulator(this);
+                new SplitManipulator(this);
                 SnapManipulator snapManipulator = new SnapManipulator(this);
                 ScrubberManipulator scrubberManipulator = new ScrubberManipulator(this);
 
@@ -1428,8 +1428,6 @@ namespace Sce.Atf.Controls.Timelines
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"></see> that contains the event data</param>
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            // for each click, scroll horizontally by 1/2 pixel
-            int dx = e.Delta / 2;
             Invalidate();
 
             base.OnMouseWheel(e);

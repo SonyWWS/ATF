@@ -120,7 +120,9 @@ namespace Sce.Atf.Collada
                 else if (semantic == "IN_TANGENT")
                     m_inTangent = source;
                 else if (semantic == "OUT_TANGENT")
-                    m_outTangent = source;
+                {
+                    // unused
+                }
                 else if (semantic == "INTERPOLATION")
                     m_interpolation = source;
             }
@@ -130,6 +132,5 @@ namespace Sce.Atf.Collada
         private Source m_inTangent;
         private Source m_interpolation;
         private Source m_output;
-        private Source m_outTangent;
     }
 }
