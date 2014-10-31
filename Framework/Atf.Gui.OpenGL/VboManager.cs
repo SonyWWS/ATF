@@ -36,7 +36,6 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 Gl.glGenBuffersARB(1, out name);
                 Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, name);
-                int intLength = data.Length * 4;
                 Gl.glBufferDataARB(Gl.GL_ARRAY_BUFFER_ARB, new IntPtr(data.Length * 4),
                     data, Gl.GL_STATIC_DRAW_ARB);
 

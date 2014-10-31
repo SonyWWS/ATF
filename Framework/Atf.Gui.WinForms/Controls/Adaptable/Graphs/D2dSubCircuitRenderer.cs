@@ -344,7 +344,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private void DrawGroupPinNodeFakeEdge(ICircuitGroupPin<TElement> grpPin, PointF grpPinPos, bool inputSide, DiagramDrawingStyle style, D2dGraphics g)
         {
             ElementTypeInfo info = GetElementTypeInfo(grpPin.InternalElement, g);
-            D2dBrush pen = (style == DiagramDrawingStyle.Normal) ? SubGraphPinBrush : Theme.GetOutLineBrush(style);
             if (inputSide)
             {             
                 PointF op = grpPinPos;

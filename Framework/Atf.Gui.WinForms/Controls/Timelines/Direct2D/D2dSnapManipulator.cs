@@ -106,7 +106,6 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                     dist < m_dist)
                 {
                     m_snapToPoint = snapToPoint;
-                    m_snapToEvent = snapToEvent;
                     m_dist = dist;
                 }
             }
@@ -144,7 +143,6 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             private readonly float m_snapFromPoint;
             private float m_dist;
             private float m_snapToPoint;
-            private IEvent m_snapToEvent;
         }
 
         /// <summary>

@@ -32,7 +32,6 @@ namespace Sce.Atf.Controls.Timelines
         {
             m_font = font;
             m_gridPen = new Pen(Color.FromArgb(128, 128, 128, 128));
-            m_collapsedBrush = new SolidBrush(Color.LightGray);
         }
 
         /// <summary>
@@ -942,8 +941,6 @@ namespace Sce.Atf.Controls.Timelines
             {
                 bounds = GetGroupHandleRect(bounds, collapsed);
 
-                RectangleF groupLabelBounds = new RectangleF(bounds.X, bounds.Y, m_headerWidth, bounds.Height);
-
                 if (collapsible)
                 {
                     RectangleF expanderRect = GetExpanderRect(bounds);
@@ -1460,7 +1457,6 @@ namespace Sce.Atf.Controls.Timelines
         private readonly Pen m_gridPen;
         private bool m_disposed;
         private float m_OffsetX;
-        private Brush m_collapsedBrush;
         private float m_minimumTrackSize = 0.025f;
         private int m_expanderRectSize = 8;
         private Padding m_expanderRectMargin = new Padding(3, 3, 3, 3);

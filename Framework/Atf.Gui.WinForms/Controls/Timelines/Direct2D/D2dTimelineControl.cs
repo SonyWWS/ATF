@@ -112,10 +112,10 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                 //  order of receiving picking events. For example, a custom Control that is drawn
                 //  on top of everything else and that can be clicked on should come last in this
                 //  list so that it is drawn last and is picked first.
-                D2dSelectionManipulator selectionManipulator = new D2dSelectionManipulator(this);
-                D2dMoveManipulator moveManipulator = new D2dMoveManipulator(this);
-                D2dScaleManipulator scaleManipulator = new D2dScaleManipulator(this);
-                D2dSplitManipulator splitManipulator = new D2dSplitManipulator(this);
+                new D2dSelectionManipulator(this);
+                new D2dMoveManipulator(this);
+                new D2dScaleManipulator(this);
+                new D2dSplitManipulator(this);
                 D2dSnapManipulator snapManipulator = new D2dSnapManipulator(this);
                 D2dScrubberManipulator scrubberManipulator = new D2dScrubberManipulator(this);
 

@@ -558,8 +558,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             else
             {
                 // prepare to draw arc
-                RectangleF rect = new RectangleF(c.Center.X - c.Radius, c.Center.Y - c.Radius, 2 * c.Radius, 2 * c.Radius);
-
                 double angle1 = Math.Atan2(startPoint.Y - c.Center.Y, startPoint.X - c.Center.X);
                 double angle2 = Math.Atan2(endPoint.Y - c.Center.Y, endPoint.X - c.Center.X);
                 const double twoPi = 2 * Math.PI;

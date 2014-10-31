@@ -428,7 +428,6 @@ namespace Sce.Atf.Controls
 
         private SolidBrush m_brushMatchedHighLight = new SolidBrush(Color.FromArgb(239, 203, 5));
         private SolidBrush m_brushNonMatchedBg = new SolidBrush(Color.FromArgb(230, 230, 230));
-        private SolidBrush m_brushPartialExpander = new SolidBrush(Color.FromArgb(180, 180, 180));
 
         private Color m_categoryStartColor = Color.FromArgb(0, 0, 0, 0);
         private Color m_categoryEndColor = Color.FromArgb(0, 0, 0, 0);

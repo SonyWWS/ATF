@@ -165,7 +165,7 @@ namespace Sce.Atf.Rendering.OpenGL
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            bool handled = m_cameraController.KeyDown(this, e);
+            m_cameraController.KeyDown(this, e);
         }
 
         /// <summary>
@@ -316,7 +316,6 @@ namespace Sce.Atf.Rendering.OpenGL
         private int m_dragThreshold = 3;
         private int m_pickTolerance = 3;
         private bool m_isPicking;
-        private Matrix4F m_axisSystem = new Matrix4F();
 
         private readonly Camera m_camera;  // only camera object.
         private CameraController m_cameraController;

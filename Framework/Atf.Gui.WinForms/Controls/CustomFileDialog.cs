@@ -410,7 +410,6 @@ namespace Sce.Atf
         private int m_filterIndex;
         private string m_fileName = string.Empty;
         private string[] m_fileNames = new string[0];
-        private string m_initialDir = string.Empty; //not used
         private string m_forcedInitialDir = string.Empty;
         private string m_title = string.Empty;
         private string m_defaultExt = string.Empty;

@@ -1949,7 +1949,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private RectangleF GetPointsBounds(IEnumerable<PointF> points)
         {
-            var pts = points.ToArray();
             float minX = points.Min(p => p.X);
             float minY = points.Min(p => p.Y);
             float maxX = points.Max(p => p.X);

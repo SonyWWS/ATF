@@ -54,7 +54,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private enum MoveElementBehavior
         {
-            MoveConstrainToCursorContainment‎, // an element is eligible to move into the new container if current cursor position is contained by the new container
+            MoveConstrainToCursorContainment, // an element is eligible to move into the new container if current cursor position is contained by the new container
             MoveConstrainToContainerBounds, // an element is eligible to move into the new container only its bound are completely contained by the new container
         }
 
@@ -1111,7 +1111,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (container.Is<Circuit>())
                 return true;
 
-            if (m_moveElementBehavior == MoveElementBehavior.MoveConstrainToCursorContainment‎)
+            if (m_moveElementBehavior == MoveElementBehavior.MoveConstrainToCursorContainment)
             {
                 // since container is the drop target, the cursor must be over the container when CanMove() is called
                 return true;
@@ -1144,7 +1144,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private ICircuitContainer m_circuitContainer;
         private IViewingContext m_viewingContext;
         private XmlSchemaTypeLoader m_schemaLoader;
-        private MoveElementBehavior m_moveElementBehavior = MoveElementBehavior.MoveConstrainToCursorContainment‎;
+        private MoveElementBehavior m_moveElementBehavior = MoveElementBehavior.MoveConstrainToCursorContainment;
         private bool m_supportsNestedGroup = true;
 
     }

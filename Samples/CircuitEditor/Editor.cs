@@ -65,7 +65,6 @@ namespace CircuitEditorSample
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
             m_documentService = documentService;
-            m_prototypeLister = prototypeLister;
             m_layerLister = layerLister;
             
             m_schemaLoader = schemaLoader;
@@ -100,7 +99,6 @@ namespace CircuitEditorSample
         private IContextRegistry m_contextRegistry;
         private IDocumentRegistry m_documentRegistry;
         private IDocumentService m_documentService;
-        private PrototypeLister m_prototypeLister;
         private LayerLister m_layerLister;
         private SchemaLoader m_schemaLoader;
 
@@ -701,48 +699,24 @@ namespace CircuitEditorSample
             var hoverItem = e.Object;
             var hoverPart = e.Part;
 
-            string itemName= string.Empty;
-            string partName= string.Empty;
-
             if (e.SubPart.Is<GroupPin>())
             {
                 sb.Append(e.SubPart.Cast<GroupPin>().Name);
-                partName = CircuitUtil.GetDomNodeName(e.SubPart.Cast<DomNode>());
+                CircuitUtil.GetDomNodeName(e.SubPart.Cast<DomNode>());
             }
             else if (e.SubObject.Is<DomNode>())
             {
-                itemName = CircuitUtil.GetDomNodeName(e.SubObject.Cast<DomNode>());
+                CircuitUtil.GetDomNodeName(e.SubObject.Cast<DomNode>());
             }
             else if (hoverPart.Is<GroupPin>())
             {
                 sb.Append(hoverPart.Cast<GroupPin>().Name);
-                partName = CircuitUtil.GetDomNodeName(hoverPart.Cast<DomNode>());
+                CircuitUtil.GetDomNodeName(hoverPart.Cast<DomNode>());
             }
             else if (hoverItem.Is<DomNode>())
             {
-                itemName = CircuitUtil.GetDomNodeName(hoverItem.Cast<DomNode>());
+                CircuitUtil.GetDomNodeName(hoverItem.Cast<DomNode>());
             }
-           
-
-            //Trace.TraceInformation("hoverItem {0} hoverPart  {1}", itemName, partName);
-
-            //StringBuilder sb = new StringBuilder();
-            //ICustomTypeDescriptor customTypeDescriptor = Adapters.As<ICustomTypeDescriptor>(hoverItem);
-            //if (customTypeDescriptor != null)
-            //{
-            //    // Get properties interface
-            //    foreach (System.ComponentModel.PropertyDescriptor property in customTypeDescriptor.GetProperties())
-            //    {
-            //        object value = property.GetValue(hoverItem);
-            //        if (value != null)
-            //        {
-            //            sb.Append(property.Name);
-            //            sb.Append(": ");
-            //            sb.Append(value.ToString());
-            //            sb.Append("\n");
-            //        }
-            //    }
-            //}
 
             HoverBase result = null;
             if (sb.Length > 0) // remove trailing '\n'

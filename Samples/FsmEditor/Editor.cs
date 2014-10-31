@@ -55,7 +55,6 @@ namespace FsmEditorSample
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
             m_documentService = documentService;
-            m_prototypeLister = prototypeLister;
 
             m_schemaLoader = schemaLoader;
 
@@ -71,7 +70,6 @@ namespace FsmEditorSample
         private IContextRegistry m_contextRegistry;
         private IDocumentRegistry m_documentRegistry;
         private IDocumentService m_documentService;
-        private PrototypeLister m_prototypeLister;
         private SchemaLoader m_schemaLoader;
         
         [Import(AllowDefault = true)]

@@ -105,7 +105,7 @@ namespace Sce.Atf.Rendering
                 CheckError();
 
                 // Load from the memory stream in to DevIl's internal unmanaged memory.
-                byte[] readBytes = LoadFromStream(imageStream);
+                LoadFromStream(imageStream);
 
                 // Determine the target file format. OpenGl supports DXT1, DXT3, and DXT5, so don't convert those.
                 // Get those pixels out of DevIl and into a managed array of bytes.

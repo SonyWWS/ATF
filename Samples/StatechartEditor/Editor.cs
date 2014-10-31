@@ -58,7 +58,6 @@ namespace StatechartEditorSample
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
             m_documentService = documentService;
-            m_prototypeLister = prototypeLister;
 
             m_schemaLoader = schemaLoader;
 
@@ -82,7 +81,6 @@ namespace StatechartEditorSample
         private IContextRegistry m_contextRegistry;
         private IDocumentRegistry m_documentRegistry;
         private IDocumentService m_documentService;
-        private PrototypeLister m_prototypeLister;
 
         [Import(AllowDefault = true)]
         private IStatusService m_statusService = null;

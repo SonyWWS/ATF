@@ -588,19 +588,19 @@ namespace TimelineEditorSample
 
         private void observable_Reloaded(object sender, EventArgs e)
         {
-            TimelineDocument doc = sender.Cast<TimelineDocument>();
+            sender.Cast<TimelineDocument>();
             InvalidateTimelineControls();
         }
 
         private void observable_ItemRemoved(object sender, ItemRemovedEventArgs<object> e)
         {
-            TimelineDocument doc = sender.Cast<TimelineDocument>();
+            sender.Cast<TimelineDocument>();
             InvalidateTimelineControls();
         }
 
         private void observable_ItemChanged(object sender, ItemChangedEventArgs<object> e)
         {
-            TimelineDocument doc = sender.Cast<TimelineDocument>();
+            sender.Cast<TimelineDocument>();
             InvalidateTimelineControls();
         }
 

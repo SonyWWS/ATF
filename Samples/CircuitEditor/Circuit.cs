@@ -21,7 +21,7 @@ namespace CircuitEditorSample
             // cache these list wrapper objects
             m_modules = new DomNodeListAdapter<Module>(DomNode, Schema.circuitType.moduleChild);
             m_connections = new DomNodeListAdapter<Connection>(DomNode, Schema.circuitType.connectionChild);
-            m_annotations = new DomNodeListAdapter<Annotation>(DomNode, Schema.circuitType.annotationChild);
+            new DomNodeListAdapter<Annotation>(DomNode, Schema.circuitType.annotationChild);
             base.OnNodeSet();
         }
 
@@ -94,6 +94,5 @@ namespace CircuitEditorSample
 
         private DomNodeListAdapter<Module> m_modules;
         private DomNodeListAdapter<Connection> m_connections;
-        private DomNodeListAdapter<Annotation> m_annotations;
     }
 }
