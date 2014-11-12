@@ -28,6 +28,8 @@ The ATF wiki is at https://github.com/SonyWWS/ATF/wiki.
 
 We have PDF files in the [Docs folder](https://github.com/SonyWWS/ATF/tree/master/Docs) or [Documentation](https://github.com/SonyWWS/ATF/wiki/ATF-Documentation).
 
+[Forums](https://groups.google.com/forum/?hl=en#!forum/authoring-tools-framework) for meeting other ATF users, having discussions, and receiving announcements from us ATF developers.
+
 Bugs, feature requests, and questions:  
 https://github.com/SonyWWS/ATF/issues.
 
