@@ -714,8 +714,8 @@ namespace Sce.Atf.Applications
 
             m_canFireDockStateChanged = false;
 
-            // attempt to close all documents
-            e.Cancel = !Close();
+            // Attempt to close all documents unless a prior event listener has cancelled.
+            e.Cancel = e.Cancel || !Close();
 
             // turn back on or keep off
             m_canFireDockStateChanged = e.Cancel;
