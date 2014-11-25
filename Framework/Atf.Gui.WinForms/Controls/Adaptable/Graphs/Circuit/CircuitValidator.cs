@@ -226,14 +226,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             {
                 if (grpPin.InternalElement.DomNode != node) continue;
                 if (grpPin.IsDefaultName)
-                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.Type.Inputs[grpPin.InternalPinIndex].Name;
+                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex).Name;
             }
 
             foreach (GroupPin grpPin in group.Outputs)
             {
                 if (grpPin.InternalElement.DomNode != node) continue;
                 if (grpPin.IsDefaultName)
-                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.Type.Outputs[grpPin.InternalPinIndex].Name;
+                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex).Name;
 
             }
         }
@@ -390,7 +390,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         {
                             var grpPin = matchedInput.Second.Cast<GroupPin>();
                             wire.InputElement = grpPin.InternalElement;
-                            wire.InputPin = grpPin.InternalElement.Type.Inputs[grpPin.InternalPinIndex];
+                            wire.InputPin = grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex);
                         }
                         else
                         {
@@ -402,7 +402,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         {
                             var grpPin = matchedOutput.Second.Cast<GroupPin>();
                             wire.OutputElement = grpPin.InternalElement;
-                            wire.OutputPin = grpPin.InternalElement.Type.Outputs[grpPin.InternalPinIndex];
+                            wire.OutputPin = grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex);
                         }
                         else
                         {
@@ -462,7 +462,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 //Debug.Assert(edge.InputElement.Level == edge.OutputElement.Level,
                 //    string.Format(CircuitUtil.GetDomNodeName(edge.DomNode)) + "does not connect two nodes at the same level");
 
-                // if the link connects to a group pin, varify they targets to the same leaf node and pin index
+                // if the link connects to a group pin, verify they targets to the same leaf node and pin index
                 if (edge.InputElement.Is<Group>())
                 {
                     Group nestedSubGraph;
@@ -491,14 +491,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     {
                         if (edge.InputPinTarget.InstancingNode == null)
                             Debug.Assert(edge.InputElement.DomNode == edge.InputPinTarget.LeafDomNode,
-                                           "Top level anim graph edge should reference Dom node directly ");
+                                           "Top level graph edge should reference Dom node directly ");
                         else
                         {
                             //TODO
                         }
 
                         Debug.Assert(edge.InputPin.Index == edge.InputPinTarget.LeafPinIndex,
-                                           "Top level anim graph edge should reference node pin index directly ");
+                                           "Top level graph edge should reference node pin index directly ");
                     }
                 }
 
@@ -531,13 +531,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     {
                         if (edge.OutputPinTarget.InstancingNode == null)
                             Debug.Assert(edge.OutputElement.DomNode == edge.OutputPinTarget.LeafDomNode,
-                                "Top level anim graph edge should reference Dom node directly ");
+                                "Top level graph edge should reference Dom node directly ");
                         else
                         {
                             //TODO
                         }
                         Debug.Assert(edge.OutputPin.Index == edge.OutputPinTarget.LeafPinIndex,
-                          "Top level anim graph edge should reference node pin index directly ");
+                          "Top level graph edge should reference node pin index directly ");
 
                     }
                 }

@@ -182,7 +182,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     foreach (var grpPin in group.InputGroupPins)
                     {
                         if (grpPin.InternalElement.Equals(currentElement) &&
-                            grpPin.InternalElement.Type.Inputs[grpPin.InternalPinIndex] == circuitPin)
+                            grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex) == circuitPin)
                         {
                             matchedPin = grpPin;
                             break;
@@ -193,7 +193,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         foreach (var grpPin in group.OutputGroupPins)
                         {
                             if (grpPin.InternalElement.Equals(currentElement) &&
-                                grpPin.InternalElement.Type.Outputs[grpPin.InternalPinIndex] == circuitPin)
+                                grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex) == circuitPin)
                             {
                                 matchedPin = grpPin;
                                 break;

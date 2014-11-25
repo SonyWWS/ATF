@@ -33,7 +33,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the list of input pins for this element type; the list is considered
-        /// to be read-only</summary>
+        /// to be read-only. In a circuit group, this property will only return the
+        /// visible pins. Use the Element.AllInputPins if you need all the pins.</summary>
         IList<ICircuitPin> Inputs
         {
             get;
@@ -41,7 +42,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the list of output pins for this element type; the list is considered
-        /// to be read-only</summary>
+        /// to be read-only. In a circuit group, this property will only return the
+        /// visible pins. Use the Element.AllOutputPins if you need all the pins.</summary>
         IList<ICircuitPin> Outputs
         {
             get;

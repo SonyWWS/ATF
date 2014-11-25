@@ -1040,7 +1040,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 else
                 {
                     if (grpPin.Visible)
-                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.Type.Inputs.Count(),
+                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.AllInputPins.Count(),
                             "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "InternalPinIndex out of range");
 
                 }
@@ -1065,7 +1065,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 else
                 {
                     if (grpPin.Visible)
-                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.Type.Outputs.Count(),
+                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.AllOutputPins.Count(),
                             "SubGraph " + Name + " Output Group Pin" + grpPin.Name + "InternalPinIndex out of range");
 
                 }

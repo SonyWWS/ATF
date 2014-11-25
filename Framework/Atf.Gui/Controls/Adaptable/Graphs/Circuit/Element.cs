@@ -151,14 +151,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Gets all the input pins for this element</summary>
+        /// Gets all the input pins for this element, including hidden pins (if this is a Group)</summary>
         public virtual IEnumerable<ICircuitPin> AllInputPins
         {
             get { return Type.Inputs; }
         }
 
         /// <summary>
-        /// Gets all the output pins for this element</summary>
+        /// Gets all the output pins for this element, including hidden pins (if this is a Group)</summary>
         public virtual IEnumerable<ICircuitPin> AllOutputPins
         {
             get { return Type.Outputs; }
@@ -173,7 +173,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public virtual Pair<Element, ICircuitPin> MatchPinTarget(PinTarget pinTarget, bool inputSide)
         {
             var result = new Pair<Element, ICircuitPin>();
-            if (pinTarget != null &&  pinTarget.LeafDomNode == DomNode) // an element must be a leaf node in a circut hiearchy
+            if (pinTarget != null &&  pinTarget.LeafDomNode == DomNode) // an element must be a leaf node in a circuit hierarchy
             {
                 bool validPinIndex = inputSide
                                          ? pinTarget.LeafPinIndex < Type.Inputs.Count
