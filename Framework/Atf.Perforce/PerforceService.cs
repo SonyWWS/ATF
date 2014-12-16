@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -36,13 +37,21 @@ namespace Sce.Atf.Perforce
             m_connectionManager = new ConnectionManager();
             m_connectionManager.ConnectionChanged += connection_ConnectionChanged;
             m_connectionManager.LoginCanceled += connectionManager_LoginCanceled;
+
+            // GetEntryAssembly can be null if called from unmanaged code, like in UnitTests.
+            Assembly assembly = Assembly.GetEntryAssembly();
+            if (assembly == null)
+                assembly = Assembly.GetCallingAssembly();
+            if (assembly == null)
+                assembly = Assembly.GetExecutingAssembly();
+            ApplicationName = assembly.GetName().Name;
         }
 
         /// <summary> Gets or sets whether the source control server is connected</summary>
         public override bool IsConnected
         {
             get { return m_connectionManager.IsConnected; }
-            set { throw new InvalidOperationException("Connection status is readonly for Perforce"); }
+            set { throw new InvalidOperationException("Connection status is read-only for Perforce"); }
         }
 
         /// <summary>
@@ -53,6 +62,20 @@ namespace Sce.Atf.Perforce
         {
             get { return m_settingsService; }
             set { m_settingsService = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the application which is used for diagnostic purposes in Perforce.
+        /// By default, this is the file name of the application. Set this before a connection is made.</summary>
+        public string ApplicationName
+        {
+            get { return m_connectionManager.ApplicationName; }
+            set
+            {
+                if (IsConnected)
+                    throw new InvalidOperationException("Set ApplicationName before a connection is made");
+                m_connectionManager.ApplicationName = value;
+            }
         }
 
         #region IInitializable Members
@@ -579,7 +602,8 @@ namespace Sce.Atf.Perforce
         }
 
         /// <summary>
-        /// Sets up server/client connection information</summary>
+        /// Shows a dialog box to allow the user to configure the server and client
+        /// connection information</summary>
         /// <returns>True iff information set up</returns>
         public bool ConfigureConnection()
         {
@@ -691,10 +715,14 @@ namespace Sce.Atf.Perforce
         private IP4CommandResult RunP4Command(string command, params string[] args)
         {
             var cmd = m_connectionManager.CreateCommand(command, args);
-            P4CommandResult results = null;
+            P4CommandResult results;
+            P4Server server;
+            uint commandId;
             try
             {
                 results = cmd.Run();
+                server = cmd.pServer;
+                commandId = cmd.CommandId;
             }
             catch (P4Exception ex)
             {
@@ -715,7 +743,11 @@ namespace Sce.Atf.Perforce
 
                 return new DummyCommandResult(false, args);
             }
-            return new P4CommandResultWrapper(cmd, results);
+            finally
+            {
+                cmd.Dispose();
+            }
+            return new P4CommandResultWrapper(server, commandId, results);
         }
 
 
@@ -889,12 +921,12 @@ namespace Sce.Atf.Perforce
                                         Outputs.WriteLine(OutputMessageType.Info, error.ErrorMessage);
                                         break;
                                 }
-                                if (error.ErrorCode == P4ClientError.NotUnderRoot)
+                                if (error.ErrorCode == P4ClientError.MsgDb_NotUnderRoot)
                                 {
                                     lock(m_infoCache)
                                         m_infoCache[filePath].NotInClientView = true;
                                 }
-                                else if (error.ErrorCode == P4ClientError.NotUnderClient)
+                                else if (error.ErrorCode == P4ClientError.MsgDb_NotUnderClient)
                                 {
                                     lock(m_infoCache)
                                         m_infoCache[filePath].NotInClientView = true;
@@ -1042,6 +1074,7 @@ namespace Sce.Atf.Perforce
         /// resetting unmanaged resources</summary>
         public void Dispose()
         {
+            m_connectionManager.Dispose();
         }
 
         #endregion
@@ -1198,14 +1231,37 @@ namespace Sce.Atf.Perforce
         // Wrapper class for Perforce.P4.P4CommandResult
         private class P4CommandResultWrapper : IP4CommandResult
         {
-            public P4CommandResultWrapper(P4Command p4Command, P4CommandResult p4Result) { m_p4Command = p4Command;  m_p4Result = p4Result; }
+            public P4CommandResultWrapper(P4Server server, uint commandId, P4CommandResult p4Result)
+            {
+                m_server = server;
+                m_commandId = commandId;
+                m_p4Result = p4Result;
+            }
 
-            public P4ClientErrorList ErrorList { get { return (m_p4Result != null) ? m_p4Result.ErrorList : new P4ClientErrorList(m_p4Command.pServer, m_p4Command.CommandId); } }
-            public bool Success { get { return m_p4Result != null && m_p4Result.Success; } }
-            public TaggedObjectList TaggedOutput { get { return (m_p4Result != null) ? m_p4Result.TaggedOutput : new TaggedObjectList(); } }
+            public P4ClientErrorList ErrorList
+            {
+                get
+                {
+                    return (m_p4Result != null) ?
+                        m_p4Result.ErrorList :
+                        new P4ClientErrorList(m_server, m_commandId);
+                }
+            }
 
-            private P4Command m_p4Command = null;
-            private P4CommandResult m_p4Result = null;
+            public bool Success
+            {
+                get { return m_p4Result != null && m_p4Result.Success; }
+                
+            }
+
+            public TaggedObjectList TaggedOutput
+            {
+                get { return (m_p4Result != null) ? m_p4Result.TaggedOutput : new TaggedObjectList(); }
+            }
+
+            private readonly P4Server m_server;
+            private readonly uint m_commandId;
+            private readonly P4CommandResult m_p4Result;
         }
     }
 }

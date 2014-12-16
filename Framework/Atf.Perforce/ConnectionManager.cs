@@ -19,6 +19,7 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Connection changed event</summary>
         public event EventHandler ConnectionChanged;
+
         /// <summary>
         /// Login canceled event</summary>
         public event EventHandler LoginCanceled;
@@ -29,7 +30,7 @@ namespace Sce.Atf.Perforce
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 int numItems = 0;
                 foreach (string connection in m_recentConnections)
                 {
@@ -44,7 +45,7 @@ namespace Sce.Atf.Perforce
 
             set
             {
-                StringReader strReader = new StringReader(value);
+                var strReader = new StringReader(value);
                 string line = strReader.ReadLine();
 
                 while (line != null)
@@ -66,12 +67,9 @@ namespace Sce.Atf.Perforce
         }
 
         /// <summary>
-        /// Gets or sets a string indicating the default connection to Perforce server</summary>
-        public string DefaultConnection
-        {
-            get { return m_defaultConnection; }
-            set { m_defaultConnection = value; }
-        }
+        /// Gets or sets a string indicating the default connection to Perforce server.
+        /// The default is " (Default)".</summary>
+        public string DefaultConnection { get; set; }
 
         /// <summary>
         /// Shows an error message to the user</summary>
@@ -81,7 +79,6 @@ namespace Sce.Atf.Perforce
             Outputs.WriteLine(OutputMessageType.Warning, message);
         }
 
-
         /// <summary> 
         /// Gets or sets whether the source control server is connected</summary>
         public bool IsConnected
@@ -90,9 +87,9 @@ namespace Sce.Atf.Perforce
             {
                 lock (m_lock)
                 {
-                    if (!m_connectionInitialized || m_connection == null)
+                    if (!m_connectionInitialized || m_repository == null)
                         return false;
-                    return m_connection.Status == ConnectionStatus.Connected;
+                    return m_repository.Connection.Status == ConnectionStatus.Connected;
                 }
             }          
         }
@@ -103,9 +100,13 @@ namespace Sce.Atf.Perforce
         /// <remarks>The default value is false (turnoff exceptions)</remarks>
         public bool ThrowExceptions { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the application, to be used for the name of the Perforce connection.</summary>
+        public string ApplicationName { get; set; }
+
         internal bool InitializeConnection(string selectedConnection = null)
         {
-            if (m_invalidPlatform || m_connecting || m_configuring)
+            if (m_connecting || m_configuring)
                 return false;
             if (!m_connectionInitialized)
             {
@@ -116,15 +117,15 @@ namespace Sce.Atf.Perforce
                     connectionConfig = ExtractConnectionParts(DefaultConnection);
                 if (connectionConfig != null && connectionConfig.Length == 3)
                 {
-                    Server server = new Server(new ServerAddress(connectionConfig[0]));
+                    var server = new Server(new ServerAddress(connectionConfig[0]));
                     
                     lock (m_lock)
                     {
+                        if (m_repository != null)
+                            m_repository.Dispose();
                         m_repository = new Repository(server);
-                        m_connection = m_repository.Connection;
-                        m_connection.UserName = connectionConfig[1];
-                        m_connection.Client = new Client();
-                        m_connection.Client.Name = connectionConfig[2];
+                        m_repository.Connection.UserName = connectionConfig[1];
+                        m_repository.Connection.Client = new Client {Name = connectionConfig[2]};
                     }
 
                     if (ValidateConnection(true))
@@ -141,8 +142,8 @@ namespace Sce.Atf.Perforce
         {
             lock (m_lock)
             {
-                if (m_connection != null)
-                    m_connection.Disconnect(null);
+                if (m_repository != null)
+                    m_repository.Connection.Disconnect(null);
             }
             m_connectionInitialized = false;
         }
@@ -153,11 +154,10 @@ namespace Sce.Atf.Perforce
         /// <returns>New Changelist with added change</returns>
         public Changelist CreateChangelist(string description)
         {
-            Changelist cl = new Changelist();
-            cl.Description = description;
+            var cl = new Changelist {Description = description};
             lock (m_lock)
             {
-                cl.ClientId = m_connection.Client.Name;
+                cl.ClientId = m_repository.Connection.Client.Name;
                 cl = m_repository.CreateChangelist(cl);
             }
             return cl;
@@ -165,15 +165,15 @@ namespace Sce.Atf.Perforce
 
         /// <summary>
         /// Gets the current connection</summary>
-        public  string CurrentConnection
+        public string CurrentConnection
         {
             get
             {
                 lock (m_lock)
                 {
-                    if (m_connection == null)
+                    if (m_repository == null)
                         return string.Empty;
-                    return GetConnectionConfig(m_connection);
+                    return GetConnectionConfig(m_repository.Connection);
                 }
             }
         }
@@ -182,18 +182,20 @@ namespace Sce.Atf.Perforce
         /// Returns an enumeration of user names for the given server's repository</summary>
         /// <param name="serverAddress">Server</param>
         /// <returns>Enumeration of user names</returns>
-        public  IEnumerable<string> GetUsers(string serverAddress)
+        public IEnumerable<string> GetUsers(string serverAddress)
         {
             var result = new List<string>();
 
             try
             {
-
-                Server server = new Server(new ServerAddress(serverAddress));
+                var server = new Server(new ServerAddress(serverAddress));
                 var repository = new Repository(server);
-                repository.Connection.Connect(null); // this call ensures internal P4Server is set for repository.Connection , otherwise GetUsers() call will fail
+                
+                // This call ensures internal P4Server is set for repository.Connection,
+                //  otherwise GetUsers() call will fail.
+                repository.Connection.Connect(ConnectionOptions);
 
-                Options opts = new Options(UsersCmdFlags.IncludeAll, -1);
+                var opts = new Options(UsersCmdFlags.IncludeAll, -1);
                 foreach (var user in repository.GetUsers(opts))
                     result.Add(user.Id);
 
@@ -232,17 +234,19 @@ namespace Sce.Atf.Perforce
         /// <returns>List of workspaces</returns>
         public IEnumerable<string> GetWorkspaces(string serverAddress, string userId)
         {
-  
             var result = new List<string>();
             try
             {
-
-                Server server = new Server(new ServerAddress(serverAddress));
+                var server = new Server(new ServerAddress(serverAddress));
                 var repository = new Repository(server);
-                repository.Connection.Connect(null); // this call ensures internal P4Server is set for repository.Connection , otherwise GetUsers() call will fail
+                
+                // This call ensures internal P4Server is set for repository.Connection,
+                //  otherwise GetUsers() call will fail.
+                repository.Connection.Connect(ConnectionOptions);
+
                 if (CheckLogin(repository.Connection))
                 {
-                    Options opts = new Options();
+                    var opts = new Options();
                     opts.Add("-u", userId); //The -u user flag lists client workspaces that are owned by the  specified user. 
 
                     foreach (var client in repository.GetClients(opts))
@@ -276,7 +280,7 @@ namespace Sce.Atf.Perforce
         /// <returns>True iff information set up</returns>
         public bool ConfigureConnection()
         {
-            bool result = false;
+            bool result;
             var dlg = new Connections(this);
             if ((MainForm != null) && (MainForm.Icon != null))
                 dlg.Icon = MainForm.Icon;
@@ -287,10 +291,10 @@ namespace Sce.Atf.Perforce
 
                 lock (m_lock)
                 {
-                    if (m_connection != null)
+                    if (m_repository != null)
                     {
-                        m_connection.Dispose();
-                        m_connection = null;
+                        m_repository.Dispose();
+                        m_repository = null;
                     }
                 }
                 m_connectionInitialized = false;
@@ -299,14 +303,12 @@ namespace Sce.Atf.Perforce
                 string[] connectionConfig = ExtractConnectionParts(dlg.ConnectionSelected);
                 if (connectionConfig != null && connectionConfig.Length == 3)
                 {
-                    Server server = new Server(new ServerAddress(connectionConfig[0]));
+                    var server = new Server(new ServerAddress(connectionConfig[0]));
                     lock (m_lock)
                     {
                         m_repository = new Repository(server);
-                        m_connection = m_repository.Connection;
-                        m_connection.UserName = connectionConfig[1];
-                        m_connection.Client = new Client();
-                        m_connection.Client.Name = connectionConfig[2];
+                        m_repository.Connection.UserName = connectionConfig[1];
+                        m_repository.Connection.Client = new Client {Name = connectionConfig[2]};
                     }
                 }
 
@@ -322,12 +324,13 @@ namespace Sce.Atf.Perforce
                         RecentConnections.RemoveAt(index);
                     RecentConnections.Insert(0, CurrentConnection);
                     if (CurrentConnection != oldConnection)
-                        OnConnectionChanged(EventArgs.Empty);        
-                }          
+                        OnConnectionChanged(EventArgs.Empty);
+                }
+                result = true;
             }
-            else if (dr == DialogResult.Cancel)
+            else //if (dr == DialogResult.Cancel)
             {
-                
+                result = false;
             }
             m_configuring = false;
             return result;
@@ -338,18 +341,18 @@ namespace Sce.Atf.Perforce
         /// <returns>Returns true if a connection was established and the log-in was successful and false otherwise.</returns>
         internal bool ValidateConnection(bool checkLogin)
         {
-            if (m_invalidPlatform || m_connecting)
+            if (m_connecting)
                 return false;
             lock (m_lock)
             {
-                if (m_connection == null)
+                if (m_repository == null)
                     return false;
 
                 try
                 {
-                    if (m_connection.Status == ConnectionStatus.Disconnected)
-                        m_connection.Connect(null); // try to connect
-                    if (m_connection.Status == ConnectionStatus.Disconnected)
+                    if (m_repository.Connection.Status == ConnectionStatus.Disconnected)
+                        m_repository.Connection.Connect(ConnectionOptions); // try to connect
+                    if (m_repository.Connection.Status == ConnectionStatus.Disconnected)
                         return false;
                 }
                 catch (P4Exception ex)
@@ -377,7 +380,7 @@ namespace Sce.Atf.Perforce
                 m_connecting = true;
                 bool checkLoginSucceeded;
                 lock (m_lock)
-                    checkLoginSucceeded = CheckLogin(m_connection);
+                    checkLoginSucceeded = CheckLogin(m_repository.Connection);
                 if (!checkLoginSucceeded)
                 {
                     OnLoginCanceled(EventArgs.Empty);
@@ -388,20 +391,36 @@ namespace Sce.Atf.Perforce
             return result;
         }
 
+        private Options ConnectionOptions
+        {
+            get
+            {
+                var options = new Options();
+                if (!string.IsNullOrEmpty(ApplicationName))
+                    options["ProgramName"] = ApplicationName;
+                return options;
+            }
+        }
+
         // return false if user canceled login
-        private  bool CheckLogin(Connection connection)
+        private bool CheckLogin(Connection connection)
         {
             bool result = true;
             bool requireLogin = false;
+            var cmd = new P4Command(connection, "login", true, "-s");
             try
             {
-                var cmd = new P4Command(connection, "login", true, "-s");
                 cmd.Run(null);
             }
             catch (P4Exception ex)
             {
-                if (ex.ErrorLevel >= ErrorSeverity.E_FAILED) //"Perforce password (P4PASSWD) invalid or unset.\n"}    int
+                if (ex.ErrorLevel >= ErrorSeverity.E_FAILED)
+                    //"Perforce password (P4PASSWD) invalid or unset.\n"}    int
                     requireLogin = true;
+            }
+            finally
+            {
+                cmd.Dispose();
             }
 
             LoginDialog loginDialog = null;
@@ -472,7 +491,7 @@ namespace Sce.Atf.Perforce
         // return server, user, and workspace
         private string[] ExtractConnectionParts(string connectionConfig)
         {
-            char[] separator = new char[1] { ',' };
+            char[] separator = { ',' };
             string[] tokens = connectionConfig.Split(separator);
             if (tokens.Length == 3)
             {
@@ -482,6 +501,7 @@ namespace Sce.Atf.Perforce
             }
             return tokens;
         }
+
         /// <summary>
         /// Gets or sets default connection marker</summary>
         public string DefaultConnectionMarker
@@ -490,11 +510,11 @@ namespace Sce.Atf.Perforce
             set { m_defaultConnectionMarker = value; }
         }
 
-
+        // Be sure to dispose of the resulting object!
         internal P4Command CreateCommand(string command, params string[] args)
         {
             lock (m_lock)
-                return new P4Command(m_connection, command, true, args);
+                return new P4Command(m_repository.Connection, command, true, args);
         }
 
         internal string UserName
@@ -502,7 +522,7 @@ namespace Sce.Atf.Perforce
             get
             {
                 lock (m_lock)
-                    return m_connection.UserName;
+                    return m_repository.Connection.UserName;
             }
         }
 
@@ -522,16 +542,18 @@ namespace Sce.Atf.Perforce
         {
             lock (m_lock)
             {
-                if (m_connection != null)
+                if (m_repository != null)
                 {
-                    if (m_connection.Status == ConnectionStatus.Connected)
-                    {
-                        m_connection.Disconnect();
-                        m_connection.Dispose();
-                        m_connection = null;
-                    }
+                    m_repository.Dispose();
+                    m_repository = null;
                 }
             }
+        }
+
+        ~ConnectionManager()
+        {
+            // the Dispose(bool disposing) pattern doesn't seem useful here because Dispose() is not virtual.
+            Dispose();
         }
 
         private const int MaxConnections = 8;
@@ -539,18 +561,15 @@ namespace Sce.Atf.Perforce
         private string m_defaultConnectionMarker = " (Default)";
 
         private List<string> m_recentConnections = new List<string>();
-        private string m_defaultConnection;
 
-        //All access to m_connection and m_repository must be through this lock.
+        //All access to m_repository must be through this lock.
         // P4API.NET does not support multi-threaded access to the same "connection".
         // http://www.perforce.com/perforce/doc.current/user/p4api.netnotes.txt
-        private object m_lock = new object();
-        private Connection m_connection; //lock m_lock before using!
+        private readonly object m_lock = new object();
         private Repository m_repository; //lock m_lock before using!
 
-        private bool m_invalidPlatform = false;
         private bool m_connectionInitialized; //whether or not ValidateConnection() succeeded
-        private bool m_connecting = false; //true if we're attempting to connect, to avoid reentrancy while showing a dialog
+        private bool m_connecting; //true if we're attempting to connect, to avoid reentrancy while showing a dialog
         private bool m_configuring; //true if we're attempting to configure from dialog, to avoid connection attempts during this time
     }
 }
