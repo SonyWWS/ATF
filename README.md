@@ -14,7 +14,7 @@ There are many types of components in ATF. ATF Managed Extensibility Framework (
 ATF is an open source project. See [License.txt](https://github.com/SonyWWS/ATF/blob/master/License.txt).
 
 ### Getting Started ###
-Start at [ATF Getting Started](https://github.com/SonyWWS/ATF/wiki/ATF-Getting-Started). It tells you what you need to know:
+ATF is a technology with great depth in some of its areas. To learn whether ATF is for you and to make effective use of it, you'd be well-advised to acquire the background offered in the ATF documentation, especially topics in the [ATF Getting Started](https://github.com/SonyWWS/ATF/wiki/ATF-Getting-Started) section. This section tells you what you need to know to use ATF:
 
 * ATF Requirements and Dependencies
 * ATF Features and Benefits
