@@ -22,7 +22,7 @@ namespace Sce.Atf.Applications
     public class PropertyEditor : IInitializable, IControlHostClient, IDisposable
     {
         /// <summary>
-        /// Constructor with paramters</summary>
+        /// Constructor with parameters</summary>
         /// <param name="commandService">ICommandService</param>
         /// <param name="controlHostService">IControlHostService</param>
         /// <param name="contextRegistry">IContextRegistry</param>
@@ -35,11 +35,6 @@ namespace Sce.Atf.Applications
             CommandService = commandService;
             ControlHostService = controlHostService;
             ContextRegistry = contextRegistry;
-
-            Configure(out m_propertyGrid, out m_controlInfo);
-
-            m_propertyGrid.PropertyGridView.ContextRegistry = ContextRegistry;
-            m_propertyGrid.MouseUp += propertyGrid_MouseUp;
         }
 
         /// <summary>
@@ -57,10 +52,22 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets the internal property grid</summary>
+        /// Gets the internal property grid. Is available after Initialize() and Configure() are called.</summary>
         public PropertyGrid PropertyGrid
         {
             get { return m_propertyGrid; }
+        }
+
+        /// <summary>
+        /// Gets or sets the default SelectionPropertyEditingContext object. This object
+        /// is used if there is no IPropertyEditingContext available from the IContextRegistry.
+        /// Set this to control custom property filtering behavior for the current
+        /// ISelectionContext, by overriding the SelectionPropertyEditingContext's
+        /// GetPropertyDescriptors(). Can't be null.</summary>
+        public SelectionPropertyEditingContext DefaultPropertyEditingContext
+        {
+            get { return m_defaultContext; }
+            set { m_defaultContext = value; }
         }
 
         #region IInitializable Members
@@ -69,6 +76,11 @@ namespace Sce.Atf.Applications
         /// Finishes initializing component by subscribing to event, registering control, and setting up Settings Service</summary>
         public virtual void Initialize()
         {
+            Configure(out m_propertyGrid, out m_controlInfo);
+
+            m_propertyGrid.PropertyGridView.ContextRegistry = ContextRegistry;
+            m_propertyGrid.MouseUp += propertyGrid_MouseUp;
+
             ContextRegistry.ActiveContextChanged += contextRegistry_ActiveContextChanged;
 
             ControlHostService.RegisterControl(m_propertyGrid, m_controlInfo, this);
@@ -210,8 +222,8 @@ namespace Sce.Atf.Applications
         [ImportMany]
         private IEnumerable<Lazy<IContextMenuCommandProvider>> m_contextMenuCommandProviders;
 
-        private readonly PropertyGrid m_propertyGrid;
-        private readonly ControlInfo m_controlInfo;
-        private readonly SelectionPropertyEditingContext m_defaultContext = new SelectionPropertyEditingContext();
+        private PropertyGrid m_propertyGrid;
+        private ControlInfo m_controlInfo;
+        private SelectionPropertyEditingContext m_defaultContext = new SelectionPropertyEditingContext();
     }
 }
