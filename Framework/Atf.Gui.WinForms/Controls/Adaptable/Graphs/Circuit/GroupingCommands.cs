@@ -218,13 +218,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     var pin = connection.InputPin.As<GroupPin>();
                     Element element = pin.InternalElement;
-                    connection.SetInput(element, element.Type.Inputs[pin.InternalPinIndex]);
+                    connection.SetInput(element, element.AllInputPins.ElementAt(pin.InternalPinIndex));
                 }
                 else if (connection.OutputElement.As<Group>() == group)
                 {
                     var pin = connection.OutputPin.As<GroupPin>();
                     Element element = pin.InternalElement;
-                    connection.SetOutput(element, element.Type.Outputs[pin.InternalPinIndex]);
+                    connection.SetOutput(element, element.AllOutputPins.ElementAt(pin.InternalPinIndex));
                 }
             }
 
