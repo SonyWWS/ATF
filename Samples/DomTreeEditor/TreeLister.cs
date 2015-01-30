@@ -40,7 +40,7 @@ namespace DomTreeEditorSample
             m_documentRegistry = documentRegistry;
 
             // the tree control always displays the contents of the active document
-            m_documentRegistry.ActiveDocumentChanged += new EventHandler(documentRegistry_ActiveDocumentChanged);
+            m_documentRegistry.ActiveDocumentChanged += documentRegistry_ActiveDocumentChanged;
 
             m_documentService = documentService;
         }
@@ -58,11 +58,10 @@ namespace DomTreeEditorSample
             base.Configure(out treeControl, out treeControlAdapter);
 
             treeControl.ShowRoot = false; // UI node can't really be edited, so hide it
-            treeControl.Text = Localizer.Localize(
-                "Add packages to the UI." + Environment.NewLine +
-                "Add forms, shaders, textures, and fonts to packages." + Environment.NewLine +
-                "Add sprites or text items to forms or sprites." + Environment.NewLine +
-                "Drag shaders, textures, and fonts onto the reference slots of sprites and text items.");
+            treeControl.Text = ("Add packages to the UI." + Environment.NewLine +
+                                "Add forms, shaders, textures, and fonts to packages." + Environment.NewLine +
+                                "Add sprites or text items to forms or sprites." + Environment.NewLine +
+                                "Drag shaders, textures, and fonts onto the reference slots of sprites and text items.").Localize();
             treeControl.Dock = DockStyle.Fill;
             treeControl.AllowDrop = true;
             treeControl.SelectionMode = SelectionMode.MultiExtended;
@@ -82,7 +81,7 @@ namespace DomTreeEditorSample
             if (TreeView != null)
             {
                 m_contextRegistry.ActiveContext = TreeView;
-                m_documentRegistry.ActiveDocument = Adapters.As<Document>(TreeView);
+                m_documentRegistry.ActiveDocument = TreeView.As<Document>();
             }
         }
 
@@ -112,7 +111,7 @@ namespace DomTreeEditorSample
             bool closed = true;
 
             // Get current document, if any
-            Document document = Adapters.As<Document>(TreeView);
+            Document document = TreeView.As<Document>();
 
             // Check if document can be closed
             if (document != null)
@@ -137,8 +136,8 @@ namespace DomTreeEditorSample
             m_controlHostService.RegisterControl(
                 TreeControl,
                 new ControlInfo(
-                   Localizer.Localize("UI Tree Lister"),
-                   Localizer.Localize("Displays a tree view of the UI"),
+                   "UI Tree Lister".Localize(),
+                   "Displays a tree view of the UI".Localize(),
                    StandardControlGroup.CenterPermanent), // don't show close button
                this);
         }
@@ -175,7 +174,7 @@ namespace DomTreeEditorSample
             // forward "last hit" information to the editing context which needs to know
             //  where to insert objects during copy/paste and drag/drop. The base tracks
             //  the last clicked and last dragged over tree objects.
-            EditingContext context = Adapters.As<EditingContext>(TreeView);
+            EditingContext context = TreeView.As<EditingContext>();
             if (context != null)
                 context.SetInsertionParent(LastHit);
         }

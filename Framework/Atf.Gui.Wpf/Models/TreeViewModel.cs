@@ -54,31 +54,31 @@ namespace Sce.Atf.Wpf.Models
 
                         if (m_observableContext != null)
                         {
-                            m_observableContext.ItemInserted -= new EventHandler<ItemInsertedEventArgs<object>>(tree_ItemInserted);
-                            m_observableContext.ItemRemoved -= new EventHandler<ItemRemovedEventArgs<object>>(tree_ItemRemoved);
-                            m_observableContext.ItemChanged -= new EventHandler<ItemChangedEventArgs<object>>(tree_ItemChanged);
-                            m_observableContext.Reloaded -= new EventHandler(tree_Reloaded);
+                            m_observableContext.ItemInserted -= tree_ItemInserted;
+                            m_observableContext.ItemRemoved -= tree_ItemRemoved;
+                            m_observableContext.ItemChanged -= tree_ItemChanged;
+                            m_observableContext.Reloaded -= tree_Reloaded;
                             m_observableContext = null;
                         }
 
                         if (m_validationContext != null)
                         {
-                            m_validationContext.Beginning -= new EventHandler(validationContext_Beginning);
-                            m_validationContext.Ended -= new EventHandler(validationContext_Ended);
-                            m_validationContext.Cancelled -= new EventHandler(validationContext_Cancelled);
+                            m_validationContext.Beginning -= validationContext_Beginning;
+                            m_validationContext.Ended -= validationContext_Ended;
+                            m_validationContext.Cancelled -= validationContext_Cancelled;
                             m_validationContext = null;
                         }
 
                         if (m_selectionContext != null)
                         {
-                            m_selectionContext.SelectionChanging -= new EventHandler(selection_Changing);
-                            m_selectionContext.SelectionChanged -= new EventHandler(selection_Changed);
+                            m_selectionContext.SelectionChanging -= selection_Changing;
+                            m_selectionContext.SelectionChanged -= selection_Changed;
                             m_selectionContext = null;
                         }
 
                         if (m_labelEditingContext != null)
                         {
-                            m_labelEditingContext.BeginLabelEdit -= new EventHandler<BeginLabelEditEventArgs>(labelEditingContext_BeginLabelEdit);
+                            m_labelEditingContext.BeginLabelEdit -= labelEditingContext_BeginLabelEdit;
                         }
                     }
 
@@ -86,36 +86,36 @@ namespace Sce.Atf.Wpf.Models
 
                     if (m_treeView != null)
                     {
-                        m_itemView = Adapters.As<IItemView>(m_treeView);
+                        m_itemView = m_treeView.As<IItemView>();
 
-                        m_observableContext = Adapters.As<IObservableContext>(m_treeView);
+                        m_observableContext = m_treeView.As<IObservableContext>();
                         if (m_observableContext != null)
                         {
-                            m_observableContext.ItemInserted += new EventHandler<ItemInsertedEventArgs<object>>(tree_ItemInserted);
-                            m_observableContext.ItemRemoved += new EventHandler<ItemRemovedEventArgs<object>>(tree_ItemRemoved);
-                            m_observableContext.ItemChanged += new EventHandler<ItemChangedEventArgs<object>>(tree_ItemChanged);
-                            m_observableContext.Reloaded += new EventHandler(tree_Reloaded);
+                            m_observableContext.ItemInserted += tree_ItemInserted;
+                            m_observableContext.ItemRemoved += tree_ItemRemoved;
+                            m_observableContext.ItemChanged += tree_ItemChanged;
+                            m_observableContext.Reloaded += tree_Reloaded;
                         }
 
-                        m_validationContext = Adapters.As<IValidationContext>(m_treeView);
+                        m_validationContext = m_treeView.As<IValidationContext>();
                         if (m_validationContext != null)
                         {
-                            m_validationContext.Beginning += new EventHandler(validationContext_Beginning);
-                            m_validationContext.Ended += new EventHandler(validationContext_Ended);
-                            m_validationContext.Cancelled += new EventHandler(validationContext_Cancelled);
+                            m_validationContext.Beginning += validationContext_Beginning;
+                            m_validationContext.Ended += validationContext_Ended;
+                            m_validationContext.Cancelled += validationContext_Cancelled;
                         }
 
-                        m_selectionContext = Adapters.As<ISelectionContext>(m_treeView);
+                        m_selectionContext = m_treeView.As<ISelectionContext>();
                         if (m_selectionContext != null)
                         {
-                            m_selectionContext.SelectionChanging += new EventHandler(selection_Changing);
-                            m_selectionContext.SelectionChanged += new EventHandler(selection_Changed);
+                            m_selectionContext.SelectionChanging += selection_Changing;
+                            m_selectionContext.SelectionChanged += selection_Changed;
                         }
 
-                        m_labelEditingContext = Adapters.As<ILabelEditingContext>(m_treeView);
+                        m_labelEditingContext = m_treeView.As<ILabelEditingContext>();
                         if (m_labelEditingContext != null)
                         {
-                            m_labelEditingContext.BeginLabelEdit += new EventHandler<BeginLabelEditEventArgs>(labelEditingContext_BeginLabelEdit);
+                            m_labelEditingContext.BeginLabelEdit += labelEditingContext_BeginLabelEdit;
                         }
                     }
                 }
@@ -287,7 +287,8 @@ namespace Sce.Atf.Wpf.Models
         }
 
         /// <summary>
-        /// Expands tree to first leaf node in tree.</summary>
+        /// Expands tree to first leaf node in tree</summary>
+        /// <returns>First leaf node in tree</returns>
         public Node ExpandToFirstLeaf()
         {
             Node node = Root;
@@ -386,7 +387,7 @@ namespace Sce.Atf.Wpf.Models
         /// <summary>
         /// Gets the enumeration of expanded nodes, in a depth-first traversal. The root node will be included, even if it's
         /// not visible. Leaf nodes may or may not be considered expanded.</summary>
-        /// <returns></returns>
+        /// <returns>Enumeration of expanded nodes</returns>
         public IEnumerable<object> GetExpandedItems()
         {
             if (m_treeView != null)
@@ -410,6 +411,9 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Expand item</summary>
+        /// <param name="item">Item associated with node to expand</param>
         public void Expand(object item)
         {
             foreach (var node in m_itemToNodesMap[item])
@@ -418,6 +422,9 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Expand items</summary>
+        /// <param name="items">Enumeration of items to expand</param>
         public void Expand(IEnumerable<object> items)
         {
             foreach (var item in items)
@@ -674,8 +681,8 @@ namespace Sce.Atf.Wpf.Models
         }
 
         /// <summary>
-        /// This method is called after each GetInfo(), which updates a node's ItemInfo based on its Adaptee.</summary>
-        /// <param name="node"></param>
+        /// This method is called after each GetInfo(), which updates a node's ItemInfo based on its Adaptee</summary>
+        /// <param name="node">Node with updated info</param>
         /// <remarks>Derived classes may want to further modify the ItemInfo of the node, before it responds to those modifications.
         /// Override method to do so.</remarks>
         protected virtual void OnNodeInfoUpdated(Node node)
@@ -712,8 +719,15 @@ namespace Sce.Atf.Wpf.Models
                     }
                 }
 
+                foreach (object item in m_itemsToReload)
+                {
+                    foreach (var node in m_itemToNodesMap[item])
+                        RefreshNode(node);
+                }
+
                 m_parentsWithRemovedChildren = null;
                 m_parentsWithAddedChildren = null;
+                m_itemsToReload = null;
             }
 
             // if last hit is no longer in tree, clear it
@@ -910,6 +924,18 @@ namespace Sce.Atf.Wpf.Models
 
         private void tree_ItemChanged(object sender, ItemChangedEventArgs<object> e)
         {
+            if (e.Reloaded)
+            {
+                if (m_itemsToReload != null)
+                    m_itemsToReload.Add(e.Item);
+                else
+                {
+                    foreach (var node in m_itemToNodesMap[e.Item])
+                        RefreshNode(node);
+                }
+                return;
+            }
+
             foreach (var node in m_itemToNodesMap[e.Item])
             {
                 UpdateNode(node);
@@ -925,6 +951,7 @@ namespace Sce.Atf.Wpf.Models
         {
             m_parentsWithRemovedChildren = new HashSet<object>();
             m_parentsWithAddedChildren = new HashSet<object>();
+            m_itemsToReload = new HashSet<object>();
         }
 
         private void validationContext_Ended(object sender, EventArgs e)
@@ -1176,6 +1203,8 @@ namespace Sce.Atf.Wpf.Models
 
         #endregion
 
+        /// <summary>
+        /// Get selection context</summary>
         protected ISelectionContext SelectionContext { get { return m_selectionContext; } }
 
         private ITreeView m_treeView;
@@ -1188,12 +1217,20 @@ namespace Sce.Atf.Wpf.Models
         private HashSet<Node> m_selectionChangedNodes;
         private HashSet<object> m_parentsWithRemovedChildren;
         private HashSet<object> m_parentsWithAddedChildren;
+        private HashSet<object> m_itemsToReload;
         private Path<object>[] m_previousSelection;
         private readonly Multimap<object, Node> m_itemToNodesMap = new Multimap<object, Node>(null);
     }
 
+    /// <summary>
+    /// View model for a node in TreeViewModel</summary>
     public class Node : AdapterViewModel
     {
+        /// <summary>
+        /// Constructor with adaptee, owner, and parent</summary>
+        /// <param name="adaptee">Object that is adapted</param>
+        /// <param name="owner">TreeViewModel owner</param>
+        /// <param name="parent">Parent node</param>
         public Node(object adaptee, TreeViewModel owner, Node parent)
             : base(adaptee)
         {
@@ -1201,13 +1238,19 @@ namespace Sce.Atf.Wpf.Models
             Parent = parent;
         }
 
+        /// <summary>
+        /// Get node parent</summary>
         public Node Parent { get; private set; }
 
+        /// <summary>
+        /// Get enumeration of node's child nodes</summary>
         public IEnumerable<Node> Children
         { 
             get { return m_children ?? (m_children = m_owner.CreateChildren(this)); }
         }
 
+        /// <summary>
+        /// Get or set node label</summary>
         public string Label
         {
             get { return m_itemInfo.Label; }
@@ -1222,6 +1265,8 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Get or set whether node selected</summary>
         public bool IsSelected
         {
             get { return m_isSelected; }
@@ -1236,9 +1281,13 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
-
+        /// <summary>
+        /// Node selected changed event</summary>
         internal event EventHandler IsSelectedChanged;
 
+        /// <summary>
+        /// Get or set whether node expanded in the view. Set by
+        /// Control adapters - client code shouldn't set this value.</summary>
         public bool Expanded
         {
             get { return m_itemInfo.IsExpandedInView; }
@@ -1259,6 +1308,10 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Get whether node is leaf (has no sub-items)</summary>
+        /// <remarks>Used by tree controls to inhibit drawing the node expander; default
+        /// is false</remarks>
         public bool IsLeaf
         {
             get { return m_itemInfo.IsLeaf; }
@@ -1266,6 +1319,8 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Gets or sets whether label edit mode is active</summary>
+        /// <remarks>Used by tree controls to inhibit editing the node label; default
+        /// is true</remarks>
         public bool IsInLabelEditMode
         {
             get { return m_isInLabelEditMode; }
@@ -1310,8 +1365,7 @@ namespace Sce.Atf.Wpf.Models
         #region FontWeight Property
 
         /// <summary>
-        /// Gets or sets node's label</summary>
-        /// <remarks>Default is empty string if node has no label</remarks>
+        /// Get node's FontWeight</summary>
         public FontWeight FontWeight
         {
             get { return ItemInfo.FontWeight; }
@@ -1322,8 +1376,7 @@ namespace Sce.Atf.Wpf.Models
         #region FontItalicsStyle Property
 
         /// <summary>
-        /// Gets or sets node's label</summary>
-        /// <remarks>Default is empty string if node has no label</remarks>
+        /// Get node's FontStyle for italic style</summary>
         public FontStyle FontItalicStyle
         {
             get { return ItemInfo.FontItalicStyle; }
@@ -1334,8 +1387,7 @@ namespace Sce.Atf.Wpf.Models
         #region HoverText Property
 
         /// <summary>
-        /// Gets or sets node's label</summary>
-        /// <remarks>Default is empty string if node has no label</remarks>
+        /// Gets or sets node's mouse hover over text</summary>
         public string HoverText
         {
             get { return m_itemInfo.HoverText; }
@@ -1354,15 +1406,23 @@ namespace Sce.Atf.Wpf.Models
         private static readonly PropertyChangedEventArgs s_hoverTextArgs
             = ObservableUtil.CreateArgs<Node>(x => x.HoverText);
 
+        /// <summary>
+        /// Hover text changed event</summary>
         internal event EventHandler HoverTextChanged;
 
         #endregion
 
+        /// <summary>
+        /// Get whether node should have check box control</summary>
+        /// <remarks>Default is false</remarks>
         public bool HasCheck
         {
             get { return m_itemInfo.HasCheck; }
         }
 
+        /// <summary>
+        /// Gets or sets the CheckState: Checked, Unchecked or Indeterminate</summary>
+        /// <remarks>Default is CheckState.Unchecked</remarks>
         public bool? CheckState
         {
             get { return m_itemInfo.CheckState; }
@@ -1379,15 +1439,19 @@ namespace Sce.Atf.Wpf.Models
                     delegate
                     {
                         context.SetIsChecked(Adaptee, value);
-                    }, Localizer.Localize("Check/Uncheck"));
+                    }, "Check/Uncheck".Localize());
             }
         }
 
+        /// <summary>
+        /// Gets the enabled flag</summary>
         public bool IsEnabled
         {
             get { return m_itemInfo.IsEnabled; }
         }
         
+        /// <summary>
+        /// Get index of node in parent's node list</summary>
         public int Index
         {
             get
@@ -1427,6 +1491,11 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Reset the node visibility filter string. A node is visible if it contains the filter string.</summary>
+        /// <param name="filter">New filter string</param>
+        /// <param name="isNewFilterASubstring">Set true to refilter if node label was in old filter</param>
+        /// <param name="isOldFilterASubstring">Set true to refilter if node label was not in old filter</param>
         public void ResetVisibilityFilter(string filter, bool isNewFilterASubstring, bool isOldFilterASubstring)
         {
             if (m_isFilterCached)
@@ -1449,13 +1518,19 @@ namespace Sce.Atf.Wpf.Models
             OnPropertyChanged(new PropertyChangedEventArgs("IsVisible"));
         }
 
+        /// <summary>
+        /// Get node WpfItemInfo (information on the appearance and behavior of an item)</summary>
         public WpfItemInfo ItemInfo { get { return m_itemInfo; } }
 
+        /// <summary>
+        /// Item info changed on node</summary>
         internal void ItemInfoChanged()
         {
             OnPropertyChanged(ObservableUtil.AllChangedEventArgs);
         }
 
+        /// <summary>
+        /// Get a list of the node's children</summary>
         internal IList<Node> ChildrenInternal { get { return m_children; } }
 
         private readonly WpfItemInfo m_itemInfo = new WpfItemInfo();
@@ -1469,33 +1544,42 @@ namespace Sce.Atf.Wpf.Models
     }
 
     /// <summary>
-    /// Context which has checkable items
-    /// </summary>
+    /// Context that has checkable items</summary>
     public interface ICheckableItemView
     {
+        /// <summary>
+        /// Return value of checked dependency property for element</summary>
+        /// <param name="item">Element tested</param>
+        /// <returns>Nullable Boolean value for checked dependency property</returns>
         bool? GetIsChecked(object item);
 
+        /// <summary>
+        /// Set checked dependency property</summary>
+        /// <param name="item">Element set</param>
+        /// <param name="value">Nullable Boolean value to set</param>
         void SetIsChecked(object item, bool? value);
     }
 
+    /// <summary>
+    /// Enumeration for node expansion</summary>
     [Flags]
     public enum AutoExpandMode : byte
     {
         /// <summary>
-        /// Auto expand is disabled </summary>
+        /// Auto expand is disabled</summary>
         Disabled = 0,
         /// <summary>
-        /// Auto expands nodes if they become selected in the ISelectionContext </summary>
+        /// Auto expands nodes if they become selected in the ISelectionContext</summary>
         ExpandSelected = 1,
         /// <summary>
-        /// Auto expands newly inserted nodes </summary>
+        /// Auto expands newly inserted nodes</summary>
         ExpandInserted = 2,
         /// <summary>
         /// Auto expands newly inserted nodes only if the parent node is selected.
         /// This option overrides ExpandInserted</summary>
         ExpandInsertedIfParentSelected = 4,
         /// <summary>
-        /// Default mode </summary>
+        /// Default mode</summary>
         Default = ExpandSelected | ExpandInsertedIfParentSelected
     }
 }

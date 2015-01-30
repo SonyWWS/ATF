@@ -40,6 +40,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets the DataTemplate resource for SliderValueEditor</summary>
         /// <param name="node">PropertyNode (unused)</param>
+        /// <param name="container">The DependencyObject to query</param>
         /// <returns>DataTemplate resource for SliderValueEditor</returns>
         public override DataTemplate GetTemplate(PropertyNode node, DependencyObject container)
         {

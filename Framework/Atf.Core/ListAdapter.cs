@@ -1,5 +1,6 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 
 namespace Sce.Atf
@@ -42,6 +43,8 @@ namespace Sce.Atf
         /// <param name="item">The object to insert into the list</param>
         public void Insert(int index, U item)
         {
+            if (m_list.IsReadOnly)
+                throw new InvalidOperationException("Collection is read only");
             T t = Convert(item);
             m_list.Insert(index, t);
         }
@@ -51,6 +54,8 @@ namespace Sce.Atf
         /// <param name="index">The zero-based index of the item to remove</param>
         public void RemoveAt(int index)
         {
+            if (m_list.IsReadOnly)
+                throw new InvalidOperationException("Collection is read only");
             m_list.RemoveAt(index);
         }
 
@@ -64,6 +69,8 @@ namespace Sce.Atf
             }
             set
             {
+                if (m_list.IsReadOnly)
+                    throw new InvalidOperationException("Collection is read only");
                 T t = Convert(value);
                 m_list[index] = t;
             }

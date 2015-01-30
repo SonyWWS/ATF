@@ -28,7 +28,8 @@ namespace DomTreeEditorSample
 
             // add x channel
             Curve curve = (new DomNode(UISchema.curveType.Type)).As<Curve>();
-            curve.Name = "X Channel";
+            curve.Name = "curve1";
+            curve.DisplayName = "X channel";
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = float.MinValue;
@@ -36,8 +37,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Black;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "x-Time";
+            curve.YLabel = "x-Pos";
 
             IControlPoint cp = curve.CreateControlPoint();
             cp.X = 0;
@@ -52,7 +53,8 @@ namespace DomTreeEditorSample
 
             // add y channel
             curve = (new DomNode(UISchema.curveType.Type)).As<Curve>();
-            curve.Name = "Y Channel";
+            curve.Name = "Curve2";
+            curve.DisplayName = "Y Channel";
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = float.MinValue;
@@ -60,8 +62,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Black;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "Y-Time";
+            curve.YLabel = "Y-Pos";
 
             cp = curve.CreateControlPoint();
             cp.X = 0;
@@ -84,8 +86,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Black;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "Z-Time";
+            curve.YLabel = "Z-Pos";
 
             cp = curve.CreateControlPoint();
             cp.X = 0;
@@ -104,8 +106,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Red;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "R-Time";
+            curve.YLabel = "R-Value";
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = 0;
@@ -166,8 +168,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Green;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";            
+            curve.XLabel = "G-Time";
+            curve.YLabel = "G-Value";            
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = 0;
@@ -192,8 +194,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.Blue;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "B-Time";
+            curve.YLabel = "B-value";
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = 0;
@@ -218,8 +220,8 @@ namespace DomTreeEditorSample
             curve.CurveColor = Color.White;
             curve.PreInfinity = CurveLoopTypes.Cycle;
             curve.PostInfinity = CurveLoopTypes.Cycle;
-            curve.XLabel = "time";
-            curve.YLabel = "value";
+            curve.XLabel = "A-Time";
+            curve.YLabel = "A-Value";
             curve.MinX = 0;
             curve.MaxX = 1000;
             curve.MinY = 0;

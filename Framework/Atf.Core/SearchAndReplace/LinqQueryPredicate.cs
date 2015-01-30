@@ -540,7 +540,7 @@ namespace Sce.Atf
             #endregion
 
             //double m_pattern1;
-            ///double m_pattern2;
+            //double m_pattern2;
         }
 
         /// <summary>

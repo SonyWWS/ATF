@@ -38,7 +38,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Raises the TransactionFinishedAttributeChanged event</summary>
-        /// <param name="attributeEventArgs"></param>
+        /// <param name="attributeEventArgs">Attribute event arguments</param>
         protected virtual void OnTransactionFinishedAttributeChanged(AttributeEventArgs attributeEventArgs)
         {
             TransactionFinishedAttributeChanged.Raise(this, attributeEventArgs);
@@ -46,7 +46,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Raises the TransactionFinishedChildInserted event</summary>
-        /// <param name="childEventArgs"></param>
+        /// <param name="childEventArgs">Child event arguments</param>
         protected virtual void OnTransactionFinishedChildInserted(ChildEventArgs childEventArgs)
         {
             TransactionFinishedChildInserted.Raise(this, childEventArgs);
@@ -54,7 +54,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Raises the TransactionFinishedChildRemoved event</summary>
-        /// <param name="childEventArgs"></param>
+        /// <param name="childEventArgs">Child event arguments</param>
         protected virtual void OnTransactionFinishedChildRemoved(ChildEventArgs childEventArgs)
         {
             TransactionFinishedChildRemoved.Raise(this, childEventArgs);
@@ -62,6 +62,10 @@ namespace Sce.Atf.Dom
 
         #region sealed methods; use the above methods and events instead
 
+        /// <summary>
+        /// Handle AttributeChanged event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="attributeEventArgs">Attribute event arguments</param>
         protected sealed override void OnAttributeChanged(object sender, AttributeEventArgs attributeEventArgs)
         {
             if (m_inTransaction)
@@ -99,6 +103,10 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Handle ChildInserted event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="childEventArgs">Child event arguments</param>
         protected sealed override void OnChildInserted(object sender, ChildEventArgs childEventArgs)
         {
             if (m_inTransaction)
@@ -116,6 +124,10 @@ namespace Sce.Atf.Dom
                 OnTransactionFinishedChildInserted(childEventArgs);
         }
 
+        /// <summary>
+        /// Handle ChildRemoved event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="childEventArgs">Child event arguments</param>
         protected sealed override void OnChildRemoved(object sender, ChildEventArgs childEventArgs)
         {
             if (m_inTransaction)
@@ -160,18 +172,30 @@ namespace Sce.Atf.Dom
                 OnTransactionFinishedChildRemoved(childEventArgs);
         }
 
+        /// <summary>
+        /// Handle Beginning event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
         protected sealed override void OnBeginning(object sender, EventArgs e)
         {
             ClearRecording();
             m_inTransaction = true;
         }
 
+        /// <summary>
+        /// Handle Cancelled event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
         protected sealed override void OnCancelled(object sender, EventArgs e)
         {
             ClearRecording();
             m_inTransaction = false;
         }
 
+        /// <summary>
+        /// Handle Ended event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
         protected sealed override void OnEnded(object sender, EventArgs e)
         {
             // Stop recording changes now, since the transaction has ended and we're about to report the changes.

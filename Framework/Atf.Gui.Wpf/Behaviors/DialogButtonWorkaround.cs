@@ -12,23 +12,32 @@ namespace Sce.Atf.Wpf.Behaviors
 {
     /// <summary>
     /// Attached property replacement for the standard Button.IsDefault to work around a bug in WPF detailed here
-    /// http://www.thomasclaudiushuber.com/blog/2008/05/02/lostfocus-textbox-vs-buttons-isdefault-property/
-    /// </summary>
+    /// http://www.thomasclaudiushuber.com/blog/2008/05/02/lostfocus-textbox-vs-buttons-isdefault-property/ </summary>
     /// <remarks>
     /// To use, add as a property of the button declaration in XAML:
-    ///     <Button x:Name="button_OK" DockPanel.Dock="Right"
-    ///             Content="OK" b:DialogButtonWorkaround.IsDefault="True" />
+    ///     &lt;Button x:Name="button_OK" DockPanel.Dock="Right"
+    ///             Content="OK" b:DialogButtonWorkaround.IsDefault="True" /&gt;
     /// </remarks>
     public static class DialogButtonWorkaround
     {
+        /// <summary>
+        /// Whether is default dependency property</summary>
         public static readonly DependencyProperty IsDefaultProperty =
             DependencyProperty.RegisterAttached("IsDefault", typeof(bool), typeof(DialogButtonWorkaround), new PropertyMetadata(default(bool), OnIsDefaultPropertyChanged));
 
+        /// <summary>
+        /// Set whether is default dependency property</summary>
+        /// <param name="element">Element to set property on</param>
+        /// <param name="value">Property value</param>
         public static void SetIsDefault(UIElement element, bool value)
         {
             element.SetValue(IsDefaultProperty, value);
         }
 
+        /// <summary>
+        /// Get whether is default dependency property</summary>
+        /// <param name="element">Element to test</param>
+        /// <returns>Property value</returns>
         public static bool GetIsDefault(UIElement element)
         {
             return (bool)element.GetValue(IsDefaultProperty);

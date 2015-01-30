@@ -243,8 +243,8 @@ namespace UnitTests.Atf
         public void TestChangeEvents()
         {
             Selection<object> test = new Selection<object>();
-            test.Changing += new EventHandler(test_Changing);
-            test.Changed += new EventHandler(test_Changed);
+            test.Changing += test_Changing;
+            test.Changed += test_Changed;
             test.Add("a");
             Assert.True(m_changedEvents == 1);
             test.Add("a");
@@ -273,7 +273,7 @@ namespace UnitTests.Atf
         public void TestItemsChangedEvents()
         {
             Selection<object> test = new Selection<object>();
-            test.ItemsChanged += new EventHandler<ItemsChangedEventArgs<object>>(test_ItemsChanged);
+            test.ItemsChanged += test_ItemsChanged;
             test.Add("a");
             Assert.NotNull(ItemsChangedEventArgs);
             Utilities.TestSequenceEqual(ItemsChangedEventArgs.AddedItems, "a");

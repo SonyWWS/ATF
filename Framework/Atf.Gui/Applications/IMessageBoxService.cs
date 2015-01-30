@@ -5,6 +5,8 @@ using System.ComponentModel.Composition;
 
 namespace Sce.Atf.Applications
 {
+    /// <summary>
+    /// MessageBox result enumeration</summary>
     public enum MessageBoxResult
     {
         // Summary:
@@ -28,9 +30,9 @@ namespace Sce.Atf.Applications
         No = 7,
     }
 
-    // Summary:
-    //     Specifies the buttons that are displayed on a message box. Used as an argument
-    //     of the Overload:System.Windows.MessageBox.Show method.
+    /// <summary>
+    /// Specify buttons displayed on a message box. Used as an argument
+    /// of the Overload:System.Windows.MessageBox.Show method.</summary>
     public enum MessageBoxButton
     {
         // Summary:
@@ -50,8 +52,8 @@ namespace Sce.Atf.Applications
         YesNo = 4,
     }
 
-    // Summary:
-    //     Specifies the icon that is displayed by a message box.
+    /// <summary>
+    /// Specify the icon that is displayed by a message box</summary>
     public enum MessageBoxImage
     {
         // Summary:
@@ -91,19 +93,22 @@ namespace Sce.Atf.Applications
         Asterisk = 64,
     }
 
+    /// <summary>
+    /// MessageBox display interface</summary>
     public interface IMessageBoxService
     {
         /// <summary>
-        ///   Show the MessageBox to the client
-        /// </summary>
+        /// Show the MessageBox to the client</summary>
         /// <param name = "message">Message to be shown</param>
         /// <param name = "title">Title of the MessageBox</param>
-        /// <param name = "buttons">Buttons</param>
-        /// <param name = "image">Image to be shown</param>
-        /// <returns>MessageBox results</returns>
+        /// <param name = "buttons">Buttons to display on box</param>
+        /// <param name = "image">Image to be shown on box</param>
+        /// <returns>MessageBox result</returns>
         MessageBoxResult Show(string message, string title, MessageBoxButton buttons, MessageBoxImage image);
     }
 
+    /// <summary>
+    /// Class for MessageBoxes</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(MessageBoxes))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -134,6 +139,13 @@ namespace Sce.Atf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Display message box</summary>
+        /// <param name="message">Message text</param>
+        /// <param name="title">Message box title</param>
+        /// <param name="buttons">Buttons to display on box</param>
+        /// <param name="image">Image to be shown on box</param>
+        /// <returns>MessageBox result</returns>
         public static MessageBoxResult Show(string message, string title, MessageBoxButton buttons, MessageBoxImage image)
         {
             return (ms_messageBoxService == null)
@@ -141,6 +153,10 @@ namespace Sce.Atf.Applications
                        : ms_messageBoxService.Show(message, title, buttons, image);
         }
 
+        /// <summary>
+        /// Display message box</summary>
+        /// <param name="message">Message text</param>
+        /// <returns>MessageBox result</returns>
         public static MessageBoxResult Show(string message)
         {
             return Show(message, "Error".Localize(), MessageBoxButton.OK, MessageBoxImage.Error);

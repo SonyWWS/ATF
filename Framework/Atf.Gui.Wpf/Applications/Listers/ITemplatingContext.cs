@@ -31,7 +31,9 @@ namespace Sce.Atf.Wpf.Applications.Listers
         bool CanReference(object item);
 
         /// <summary>
-        /// Create a reference instance that refrences the specified target item</summary>
+        /// Create a reference instance that references the specified target item</summary>
+        /// <param name="item">Item to create reference for</param>
+        /// <returns>Reference instance</returns>
         object CreateReference(object item);
     }
 }

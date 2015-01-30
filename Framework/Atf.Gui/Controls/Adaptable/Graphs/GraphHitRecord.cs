@@ -89,8 +89,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets the full path of the hit circuit element</summary>
-        /// <remarks>The path is inverted as we usually process from bottom up.</remarks>
+        /// Gets or sets the full path of the hit circuit element, with the most nested item first</summary>
+        /// <remarks>The path is inverted meaning that the lowest level element in the hierarchy is first
+        /// and the highest level container (which is the Item property) is last.</remarks>
         public IEnumerable<TNode> HitPathInversed
         {
             get { return m_pathInversed; }

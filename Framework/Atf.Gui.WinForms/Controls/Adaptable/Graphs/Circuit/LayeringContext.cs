@@ -235,7 +235,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             // If the parent is the LayeringContext itself:
             // create a new layer for the objects about to be inserted
             LayerFolder layer = parent.As<LayerFolder>();
-            if (layer == null && nodes.Count() > 0)
+            if (layer == null && nodes.Any())
             {
                 DomNode node = new DomNode(LayerFolderType);
                 LayerFolder subLayer = node.As<LayerFolder>();
@@ -537,7 +537,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             ElementRef reference = item.As<ElementRef>();
             if (reference != null)
-                return Adapters.As<IVisible>(reference.Element);
+                return reference.Element.As<IVisible>();
             return item.As<IVisible>();
         }
 

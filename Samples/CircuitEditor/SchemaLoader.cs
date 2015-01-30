@@ -65,7 +65,6 @@ namespace CircuitEditorSample
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<MultipleHistoryContext>());    // ties sub-context histories into document dirty bit
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<PrototypingContext>());        // document-wide prototype hierarchy
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<TemplatingContext>());         // document-wide template hierarchy
-                Schema.circuitDocumentType.Type.Define(new ExtensionInfo<MasteringValidator>());        // validates sub-circuits
                 //Schema.circuitDocumentType.Type.Define(new ExtensionInfo<UniqueIdValidator>());         // ensures all ids are unique throughout document
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<CategoryUniqueIdValidator>());   // ensures all ids are local unique in its category
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<CircuitValidator>());          // validate group hierarchy
@@ -84,12 +83,11 @@ namespace CircuitEditorSample
                 Schema.groupType.Type.Define(new ExtensionInfo<Group>());
                 Schema.groupType.Type.Define(new ExtensionInfo<ViewingContext>());
 
- 
-                // register the circuit model interfaces
-            
+                #pragma warning disable 618 //mastered sub-circuits are obsolete
                 Schema.subCircuitType.Type.Define(new ExtensionInfo<SubCircuit>());
-
                 Schema.subCircuitInstanceType.Type.Define(new ExtensionInfo<SubCircuitInstance>());
+                #pragma warning restore 618
+
                 Schema.connectionType.Type.Define(new ExtensionInfo<WireStyleProvider<Module, Connection, ICircuitPin>>());
                                   
                 RegisterCircuitExtensions();
@@ -157,8 +155,8 @@ namespace CircuitEditorSample
 
             Schema.templateFolderType.Type.Define(new ExtensionInfo<TemplateFolder>());
             Schema.templateType.Type.Define(new ExtensionInfo<Template>());
-            Schema.moduleTemplateRefType.Type.Define(new ExtensionInfo<ModuleInstance>());
-            Schema.groupTemplateRefType.Type.Define(new ExtensionInfo<GroupInstance>());
+            Schema.moduleTemplateRefType.Type.Define(new ExtensionInfo<ModuleReference>());
+            Schema.groupTemplateRefType.Type.Define(new ExtensionInfo<GroupReference>());
             Schema.missingModuleType.Type.Define(new ExtensionInfo<MissingModule>());
 
 

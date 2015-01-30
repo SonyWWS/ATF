@@ -4,7 +4,9 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
+using Sce.Atf;
 using Sce.Atf.Controls.PropertyEditing;
+using Sce.Atf.Dom;
 
 namespace UnitTests.Atf
 {
@@ -32,6 +34,49 @@ namespace UnitTests.Atf
                 throw new Exception("TestOnStaThread() threw the following exception", m_exception);
         }
 
+        private class PropertyEditingControlOwnerMock : IPropertyEditingControlOwner
+        {
+            public object[] SelectedObjects
+            {
+                get { return EmptyArray<object>.Instance; }
+            }
+        }
+
+        private class PropertyDescriptorMock : PropertyDescriptor
+        {
+            public PropertyDescriptorMock()
+                : base("mockName", typeof(int), "mockCategory", "mockDescription", false)
+            {
+                
+            }
+
+            public override bool CanResetValue(object component)
+            {
+                return false;
+            }
+
+            public override object GetValue(object component)
+            {
+                return 5;
+            }
+
+            public override void ResetValue(object component)
+            {
+            }
+
+            public override void SetValue(object component, object value)
+            {
+            }
+        }
+
+        private class PropertyEditorControlContextMock : PropertyEditorControlContext
+        {
+            public PropertyEditorControlContextMock() :
+                base(new PropertyEditingControlOwnerMock(), new PropertyDescriptorMock(), null)
+            {
+            }
+        }
+
         // Call only on a single-threaded apartment thread.
         private void TestOnStaThread()
         {
@@ -43,8 +88,8 @@ namespace UnitTests.Atf
                 var longEnumEditor = new LongEnumEditor();
                 longEnumEditor.DefineEnum(new[] {"One", "Two", "Three"});
                 longEnumEditor.MaxDropDownItems = 50;
-
-                Control editingControl = longEnumEditor.GetEditingControl(null);
+                var context = new PropertyEditorControlContextMock();
+                Control editingControl = longEnumEditor.GetEditingControl(context);
                 var comboBox = editingControl as ComboBox;
                 if (comboBox != null)
                 {
@@ -59,7 +104,7 @@ namespace UnitTests.Atf
                 longEnumEditor.DefineEnum(new[] {"One==Neo", "Two==Zwei", "Three==Tres"});
                 longEnumEditor.MaxDropDownItems = 50;
 
-                editingControl = longEnumEditor.GetEditingControl(null);
+                editingControl = longEnumEditor.GetEditingControl(context);
                 comboBox = editingControl as ComboBox;
                 if (comboBox != null)
                 {
@@ -71,7 +116,7 @@ namespace UnitTests.Atf
 
                 // Programmatically add a new item to the list.
                 longEnumEditor.DefineEnum(new[] {"One==Neo", "Two==Zwei", "Three==Tres", "Four"});
-                editingControl = longEnumEditor.GetEditingControl(null);
+                editingControl = longEnumEditor.GetEditingControl(context);
                 comboBox = editingControl as ComboBox;
                 if (comboBox != null)
                 {
@@ -84,7 +129,7 @@ namespace UnitTests.Atf
 
                 // Use an enum.
                 longEnumEditor = new LongEnumEditor(typeof (EnumTest));
-                editingControl = longEnumEditor.GetEditingControl(null);
+                editingControl = longEnumEditor.GetEditingControl(context);
                 comboBox = editingControl as ComboBox;
                 if (comboBox != null)
                 {

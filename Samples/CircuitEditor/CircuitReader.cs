@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-
 using System.IO;
 using System.Linq;
+
+using System.Xml.Linq;
+
 using Sce.Atf;
 using Sce.Atf.Dom;
 
@@ -19,6 +21,90 @@ namespace CircuitEditorSample
             : base(loader)
         {
 
+        }
+
+        /// <summary>
+        /// Reads a node tree from a stream</summary>
+        /// <param name="stream">Read stream</param>
+        /// <param name="uri">URI of stream</param>
+        /// <returns>Node tree, from stream</returns>
+        public override DomNode Read(Stream stream, Uri uri)
+        {
+            return base.Read(TransformXmlIfNeeded(stream), uri);
+        }
+
+        /// <summary>
+        /// Update the XML document if needed, mostly due to version/schema changes</summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        Stream TransformXmlIfNeeded(Stream stream)
+        {
+            // Linq to XML
+            long position = stream.Position;
+            var doc = XDocument.Load(stream);
+            XAttribute versionAttribute = doc.Root.Attribute("version");
+            string versionValue = "1.0"; //default version
+            if (versionAttribute != null)
+                versionValue = versionAttribute.Value;
+
+            var version = new Version(versionValue);
+            if (version.Major < m_version.Major) // need to update the xml document
+            {
+                if (version.Major == 1 && m_version.Major ==2 )
+                    UpgradeXmlFromV1ToV2(doc);
+               
+                // save the updated xml tree
+                MemoryStream xmlStream = new MemoryStream();
+                doc.Save(xmlStream);
+                xmlStream.Flush(); // adjust this if you want read your data from the stream
+                xmlStream.Position = 0;
+                return xmlStream;
+            }
+            else
+            {
+                stream.Position = position; // rewind and return the original stream
+                return stream;
+            }
+        }
+
+        // experiment code only currently 
+        private void UpgradeXmlFromV1ToV2(XDocument doc)
+        {
+            XNamespace ns = "http://sony.com/gametech/circuits/1_0";
+            XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
+            foreach (var connection in doc.Descendants(ns + "connection")) // retrieve every connection within the xml
+            {
+                // if inputModule is of andType
+                XAttribute attribute = connection.Attribute("inputModule");
+                string inputModuleName = attribute.Value;
+                foreach (var element in doc.Descendants())
+                {
+                    XAttribute nameAttribute = element.Attribute("name");
+                    if (nameAttribute != null && nameAttribute.Value == inputModuleName) // find the node by name
+                    {
+                        // check for element type
+                        XAttribute typeAttribute = element.Attribute(xsi + "type");
+                        if (typeAttribute != null && typeAttribute.Value == "andType") // type matching
+                        {
+                            // from version 1 to 2: need to swap input pin index 0 and 1 for any wire connected to andType element
+                            XAttribute inputPinAttribute = connection.Attribute("inputPin");
+                            if (inputPinAttribute != null)
+                            {
+                                if (inputPinAttribute.Value == "0")
+                                    inputPinAttribute.SetValue("1");
+                                else if (inputPinAttribute.Value == "1")
+                                    inputPinAttribute.SetValue("0");
+                            }
+                            else //inputPin has default value of "0", which is not persisted into xml by default
+                            {
+                                XAttribute newAttribute = new XAttribute("inputPin", "1");
+                                connection.Add(newAttribute);
+                            }
+                        }
+
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -166,5 +252,7 @@ namespace CircuitEditorSample
         }
 
         private Dictionary<string, DomNode> m_missingTemplates;
+
+        private Version m_version = new Version(1,0); // current version of the reader
     }
 }

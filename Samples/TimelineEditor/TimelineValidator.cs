@@ -31,7 +31,7 @@ namespace TimelineEditorSample
                     float constrained = Math.Max(value, 0);                 // >= 0
                     constrained = (float)MathUtil.Snap(constrained, 1.0);   // snapped to nearest integral frame number
                     if (constrained != value)
-                        throw new InvalidTransactionException(Localizer.Localize("Timeline events must have a positive integer start time"));
+                        throw new InvalidTransactionException("Timeline events must have a positive integer start time".Localize());
                     return;
                 }
 
@@ -44,7 +44,7 @@ namespace TimelineEditorSample
                         float constrained = Math.Max(value, 1);                 // >= 1
                         constrained = (float)MathUtil.Snap(constrained, 1.0);   // snapped to nearest integral frame number
                         if (constrained != value)
-                            throw new InvalidTransactionException(Localizer.Localize("Timeline intervals must have an integer length"));
+                            throw new InvalidTransactionException("Timeline intervals must have an integer length".Localize());
                         return;
                     }
                 }

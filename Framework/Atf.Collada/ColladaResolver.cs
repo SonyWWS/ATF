@@ -63,7 +63,7 @@ namespace Sce.Atf.Collada
                 Outputs.WriteLine(OutputMessageType.Warning, "Could not load resource: " + e.Message);
             }
             
-            IResource resource = Adapters.As<IResource>(domNode);
+            IResource resource = domNode.As<IResource>();
             if (resource != null)
                 resource.Uri = uri;
 

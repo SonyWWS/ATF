@@ -18,9 +18,9 @@ namespace Sce.Atf
 {
     /// <summary>
     /// Sends usage information to an ATF logging server, including the full computer name, user name,
-    /// and operating system information</summary>
+    /// and operating system information.</summary>
     /// <remarks>The purpose of logging this information is to help the ATF team know who is
-    /// using the ATF and on what kind of hardware. The ATF team was asked to gather this data
+    /// using ATF and on what kind of hardware. The ATF team was asked to gather this data
     /// by upper management. Usage data can be viewed here:
     /// https://sd-cdump-dev002.share.scea.com/recap/ </remarks>
     [Export(typeof(IInitializable))]

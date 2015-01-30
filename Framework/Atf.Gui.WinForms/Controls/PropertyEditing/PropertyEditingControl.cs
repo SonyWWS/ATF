@@ -35,7 +35,9 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             // force creation of the window handles on the GUI thread
             // see http://forums.msdn.microsoft.com/en-US/clr/thread/fa033425-0149-4b9a-9c8b-bcd2196d5471/
+            #pragma warning disable 219
             IntPtr handle;
+            #pragma warning restore 219
             handle = m_editButton.Handle;
             handle = m_textBox.Handle;
 

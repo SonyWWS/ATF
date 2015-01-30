@@ -126,10 +126,11 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// DAN: the above method has been edited and broken! MultiPropertyDescriptor is specifc to Dom
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
+        /// Obtain the common default properties for multiple objects</summary>
+        /// <remarks>Some of the descriptors may be MultiPropertyDescriptor so that all the items can share them.
+        /// <para>DAN: the above method has been edited and broken! MultiPropertyDescriptor is specific to DOM.</para></remarks>
+        /// <param name="items">Items with properties</param>
+        /// <returns>Default properties all shared by multiple objects</returns>
         public static IEnumerable<PropertyDescriptor> GetSharedPropertiesOriginal(IEnumerable<object> items)
         {
             List<PropertyDescriptor> result = new List<PropertyDescriptor>();

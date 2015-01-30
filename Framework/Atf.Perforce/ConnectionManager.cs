@@ -407,10 +407,18 @@ namespace Sce.Atf.Perforce
         {
             bool result = true;
             bool requireLogin = false;
-            var cmd = new P4Command(connection, "login", true, "-s");
+            P4Command cmd = null;
             try
             {
-                cmd.Run(null);
+                if (connection.Server.State == ServerState.Online)
+                {
+                    cmd = new P4Command(connection, "login", true, "-s");
+                    cmd.Run(null);
+                }
+                else
+                {
+                    requireLogin = true;
+                }
             }
             catch (P4Exception ex)
             {
@@ -420,7 +428,8 @@ namespace Sce.Atf.Perforce
             }
             finally
             {
-                cmd.Dispose();
+                if (cmd != null)
+                    cmd.Dispose();
             }
 
             LoginDialog loginDialog = null;
@@ -443,9 +452,17 @@ namespace Sce.Atf.Perforce
                 {
                     try
                     {
-                        var credential = connection.Login(loginDialog.Password);
-                        requireLogin = credential == null;
-
+                        if (connection.Server.State != ServerState.Online)
+                        {
+                            ConnectionOptions["Password"] = loginDialog.Password;
+                            connection.Connect(ConnectionOptions);
+                            requireLogin = connection.Server.State != ServerState.Online;
+                        }
+                        else
+                        {
+                            var credential = connection.Login(loginDialog.Password);
+                            requireLogin = credential == null;
+                        }
                     }
                     catch (P4Exception e)
                     {
@@ -550,6 +567,8 @@ namespace Sce.Atf.Perforce
             }
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ConnectionManager"/> class, disposing of resources.</summary>
         ~ConnectionManager()
         {
             // the Dispose(bool disposing) pattern doesn't seem useful here because Dispose() is not virtual.

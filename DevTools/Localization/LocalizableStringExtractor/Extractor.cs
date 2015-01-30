@@ -1,8 +1,9 @@
-﻿using System;
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -20,7 +21,7 @@ namespace LocalizableStringExtractor
     {
         /// <summary>
         /// Extracts all localizable strings whose paths are in the settings file and creates
-        /// xml files according to the settings' output filenames.</summary>
+        /// XML files according to the settings' output filenames.</summary>
         public void ExtractAll()
         {
             s_log.Clear();
@@ -38,9 +39,9 @@ namespace LocalizableStringExtractor
         }
 
         /// <summary>
-        /// Extracts localizable strings from the given assembly and outputs them to the given xml file.</summary>
-        /// <param name="assembly">the fully qualified path of the Atf-based managed *.exe or *.dll</param>
-        /// <param name="xmlFile">the fully qualified path of the xml file that is to be created and
+        /// Extracts localizable strings from the given assembly and outputs them to the given XML file.</summary>
+        /// <param name="assembly">the fully qualified path of the ATF-based managed *.exe or *.dll</param>
+        /// <param name="xmlFile">the fully qualified path of the XML file that is to be created and
         /// populated with localizable string data. If this file exists already, it will be deleted.</param>
         public static void ExtractLocalizableStrings(string assembly, string xmlFile)
         {
@@ -64,13 +65,13 @@ namespace LocalizableStringExtractor
         }
 
         /// <summary>
-        /// Disassembles the given managed .Net assembly (dll or exe) into an array of strings
+        /// Disassembles the given managed .NET assembly (DLL or EXE) into an array of strings
         /// of intermediate language (IL) code.</summary>
         /// <param name="assembly">fully qualified path of the assembly file</param>
         /// <returns>an array of strings for each line of the intermediate language version</returns>
         public static string[] Disassemble(string assembly)
         {
-            string[] ilLines = new string[0];
+            string[] ilLines;
 
             // Determine the temporary directory (in case there are many resource files) and temporary file name.
             string assemblyDir = Path.GetDirectoryName(assembly);
@@ -96,11 +97,12 @@ namespace LocalizableStringExtractor
         }
 
         /// <summary>
-        /// Extracts all of the localizable strings from the Microsoft intermediate language text.</summary>
+        /// Extracts all of the unique localizable strings from the Microsoft intermediate language text.</summary>
         /// <param name="ilLines"></param>
         /// <returns></returns>
         public static IEnumerable<LocalizableString> ExtractFromIl(string[] ilLines)
         {
+            var results = new HashSet<LocalizableString>();
             for (int i = 0; i < ilLines.Length; i++)
             {
                 // This is the overload that takes just one string, the string to be localized.
@@ -112,7 +114,7 @@ namespace LocalizableStringExtractor
                     int beginningLineOfQuote;
                     string text = GetStringFromIl(ilLines, i - 1, out beginningLineOfQuote);
                     if (text.Length != 0)
-                        yield return new LocalizableString(text, string.Empty);
+                        results.Add(new LocalizableString(text, string.Empty));
                 }
 
                 // This is the overload that takes two string parameters: text and context.
@@ -131,10 +133,11 @@ namespace LocalizableStringExtractor
                     {
                         string text = GetStringFromIl(ilLines, beginningLineOfQuote - 1, out beginningLineOfQuote);
                         if (text.Length != 0)
-                            yield return new LocalizableString(text, context);
+                            results.Add(new LocalizableString(text, context));
                     }
                 }
             }
+            return results;
         }
 
         /// <summary>
@@ -143,7 +146,7 @@ namespace LocalizableStringExtractor
         /// <param name="stringData">the localizable string data to write to the XML file</param>
         public static void WriteLocalizationFile(string outputFile, IEnumerable<LocalizableString> stringData)
         {
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0",System.Text.Encoding.UTF8.WebName, "yes"));
 
             XmlElement root = xmlDoc.CreateElement("StringLocalizationTable");
@@ -170,7 +173,7 @@ namespace LocalizableStringExtractor
                 stringElement.SetAttribute("translation", stringItem.Text);
             }
 
-            using (XmlTextWriter writer = new XmlTextWriter(outputFile, Encoding.UTF8))
+            using (var writer = new XmlTextWriter(outputFile, Encoding.UTF8))
             {
                 writer.Formatting = Formatting.Indented;
                 xmlDoc.WriteTo(writer);
@@ -295,14 +298,14 @@ namespace LocalizableStringExtractor
             result.Replace("\\n", "\n");
             result.Replace("\\r", "\r");
 
-            // to-do: octals, end-of-line-seperators, bytearray
+            // to-do: octals, end-of-line-separators, byte-array
 
             return result.ToString();
         }
 
         /// <summary>
         /// A pair of fully qualified paths. The source is the assembly (*.exe or *.dll) path
-        /// and the target is the name of the output xml file.</summary>
+        /// and the target is the name of the output XML file.</summary>
         public class SourceTargetPair
         {
             public SourceTargetPair(string source, string target)

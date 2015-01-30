@@ -49,5 +49,12 @@ namespace CircuitEditorSample
         {
             get { return Schema.annotationType.backcolorAttribute; }
         }
+
+        /// <summary>
+        /// Gets annotation foreColorAttribute color attribute</summary>
+        protected override AttributeInfo ForeColorAttribute
+        {
+            get { return Schema.annotationType.foreColorAttribute; }
+        }
     }
 }

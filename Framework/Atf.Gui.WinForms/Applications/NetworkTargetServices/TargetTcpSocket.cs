@@ -89,8 +89,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
             m_theSocket = null;
             m_curTarget = null;
-            m_recieveClb = new AsyncCallback(ReceiveClb);
-            m_connectClb = new AsyncCallback(ConnectClb);
+            m_recieveClb = ReceiveClb;
+            m_connectClb = ConnectClb;
             m_ConnectionInProgress = false;
             MessageSize = maximumMessageSize;
         }

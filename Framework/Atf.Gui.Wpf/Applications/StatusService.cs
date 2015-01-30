@@ -60,7 +60,7 @@ namespace Sce.Atf.Wpf.Applications
         {
             m_mainStatusText.IsLeftDock = true;
 
-            ShowStatus(Localizer.Localize("Ready", "Application is ready"));
+            ShowStatus("Ready".Localize("Application is ready"));
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace Sce.Atf.Wpf.Applications
             statusItem.Tag = new StatusBarProgressContext(progressCompleteHandler, part);
 
             statusItem.RunWorkerThread(argument, workHandler);
-            statusItem.RunWorkerCompleted += new EventHandler(statusItem_RunWorkerCompleted);
+            statusItem.RunWorkerCompleted += statusItem_RunWorkerCompleted;
         }
 
         /// <summary>

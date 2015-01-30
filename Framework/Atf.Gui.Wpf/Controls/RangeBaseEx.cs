@@ -22,14 +22,14 @@ namespace Sce.Atf.Wpf.Controls
         }
         
         /// <summary>
-        /// Constructor </summary>
+        /// Constructor</summary>
         protected RangeBaseEx()
         {
             SkewFactor = 1.0;
         }
 
         /// <summary>
-        /// Gets and sets the default value for the element</summary>
+        /// Gets or sets the default value for the element</summary>
         public double DefaultValue
         {
             get { return (double)GetValue(DefaultValueProperty); }
@@ -43,7 +43,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(0.0, DefaultValueChanged));
 
         /// <summary>
-        /// Gets and sets whether to show the slider</summary>
+        /// Gets or sets whether to show the slider</summary>
         public bool? ShowSlider
         {
             get { return (bool?)GetValue(ShowSliderProperty); }
@@ -57,7 +57,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, null, CoerceShowSlider));
 
         /// <summary>
-        /// Gets and sets whether the value is currently being edited</summary>
+        /// Gets or sets whether the value is currently being edited</summary>
         public bool IsValueEditing
         {
             get { return (bool)GetValue(IsValueEditingProperty); }
@@ -70,7 +70,7 @@ namespace Sce.Atf.Wpf.Controls
             DependencyProperty.Register("IsValueEditing", typeof(bool), typeof(RangeBaseEx), new UIPropertyMetadata(false, IsValueEditingChanged));
 
         /// <summary>
-        /// Gets and sets whether the value should be displayed on a logarithmic scale</summary>
+        /// Gets or sets whether the value should be displayed on a logarithmic scale</summary>
         public bool IsLogarithmic
         {
             get { return (bool)GetValue(IsLogarithmicProperty); }
@@ -84,7 +84,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// Gets and sets the orientation of the element - horizontal or vertical</summary>
+        /// Gets or sets the orientation of the element - horizontal or vertical</summary>
         public Orientation Orientation
         {
             get { return (Orientation)GetValue(OrientationProperty); }
@@ -98,7 +98,7 @@ namespace Sce.Atf.Wpf.Controls
                 new UIPropertyMetadata(Orientation.Horizontal, OnOrientationChanged));
 
         /// <summary>
-        /// Gets and sets the brush to use for drawing the slider</summary>
+        /// Gets or sets the brush to use for drawing the slider</summary>
         public Brush SliderBrush
         {
             get { return (Brush)GetValue(SliderBrushProperty); }
@@ -112,7 +112,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(Brushes.Pink, FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// Gets and sets the default interval to change the value by when the slider is moved</summary>
+        /// Gets or sets the default interval to change the value by when the slider is moved</summary>
         public double DefaultChange
         {
             get { return (double)GetValue(DefaultChangeProperty); }
@@ -126,7 +126,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(0.01, DefaultChangeChanged));
 
         /// <summary>
-        /// Gets and sets the center value for the range</summary>
+        /// Gets or sets the center value for the range</summary>
         public double Center
         {
             get { return (double)GetValue(CenterProperty); }
@@ -140,7 +140,7 @@ namespace Sce.Atf.Wpf.Controls
                 new FrameworkPropertyMetadata(double.NaN, OnCenterChanged, OnCoerceCenter));
 
         /// <summary>
-        /// Gets and sets the hard maximum for the range</summary>
+        /// Gets or sets the hard maximum for the range</summary>
         public double HardMaximum
         {
             get { return (double)GetValue(HardMaximumProperty); }
@@ -155,7 +155,7 @@ namespace Sce.Atf.Wpf.Controls
                     FrameworkPropertyMetadataOptions.AffectsRender, HardMaximumChanged, CoerceHardMaximum));
 
         /// <summary>
-        /// Gets and sets the hard minimum for the range</summary>
+        /// Gets or sets the hard minimum for the range</summary>
         public double HardMinimum
         {
             get { return (double)GetValue(HardMinimumProperty); }
@@ -170,7 +170,7 @@ namespace Sce.Atf.Wpf.Controls
                     FrameworkPropertyMetadataOptions.AffectsRender, HardMinimumChanged, CoerceHardMinimum));
 
         /// <summary>
-        /// Gets and sets the command that commits an edit</summary>
+        /// Gets or sets the command that commits an edit</summary>
         public ICommand CommitEditCommand
         {
             get { return (ICommand)GetValue(CommitEditCommandProperty); }
@@ -183,7 +183,7 @@ namespace Sce.Atf.Wpf.Controls
             DependencyProperty.Register("CommitEditCommand", typeof(ICommand), typeof(RangeBaseEx), new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets and sets the command that cancels an edit</summary>
+        /// Gets or sets the command that cancels an edit</summary>
         public ICommand CancelEditCommand
         {
             get { return (ICommand)GetValue(CancelEditCommandProperty); }
@@ -200,7 +200,7 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Gets and sets whether the element has cancelled changes</summary>
+        /// Gets or sets whether the element has cancelled changes</summary>
         protected bool HasCancelledChanges { get; set; }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Calculates the value that the slider should have based on the desired proportion 
-        /// of its total range </summary>
+        /// of its total range</summary>
         /// <param name="proportion">Proportion of the total length to represent by the slider value. Should be in the range [0, 1]</param>
         /// <returns>The proportional value of the slider</returns>
         protected double ProportionOfLengthToValue(double proportion)
@@ -250,13 +250,13 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Helper function for calculating slider value to display when IsLogarithmic is true</summary>
-        /// <param name="inputMinimum"></param>
-        /// <param name="inputMaximum"></param>
-        /// <param name="outputMinimum"></param>
-        /// <param name="outputMaximum"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// Helper function for calculating logarithmic slider value to display when IsLogarithmic is true</summary>
+        /// <param name="inputMinimum">Input minimum value</param>
+        /// <param name="inputMaximum">Input maximum value</param>
+        /// <param name="outputMinimum">Output minimum value</param>
+        /// <param name="outputMaximum">Output maximum value</param>
+        /// <param name="value">Number whose logarithm is calculated</param>
+        /// <returns>Logarithm value to use on slider</returns>
         protected double Log(double inputMinimum, double inputMaximum, double outputMinimum, double outputMaximum, double value)
         {
             var inputRange = (Math.Exp(2.0) - 1.0) / (inputMaximum - inputMinimum);
@@ -265,13 +265,13 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Helper function for calculating slider value to display when IsLogarithmic is true</summary>
-        /// <param name="inputMinimum"></param>
-        /// <param name="inputMaximum"></param>
-        /// <param name="outputMinimum"></param>
-        /// <param name="outputMaximum"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// Helper function for calculating exponential slider value to display when IsLogarithmic is true</summary>
+        /// <param name="inputMinimum">Input minimum value</param>
+        /// <param name="inputMaximum">Input maximum value</param>
+        /// <param name="outputMinimum">Output minimum value</param>
+        /// <param name="outputMaximum">Output maximum value</param>
+        /// <param name="value">Number specifying a power</param>
+        /// <returns>Value for number e raised to power to use on slider</returns>
         protected double Exp(double inputMinimum, double inputMaximum, double outputMinimum, double outputMaximum, double value)
         {
             var inputRange = 2.0 / (inputMaximum - inputMinimum);
@@ -389,12 +389,16 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Event handler for when the element's orientation changes. Does nothing.</summary>
-        /// <param name="oldValue">not used</param>
-        /// <param name="newValue">not used</param>
+        /// <param name="oldValue">Not used</param>
+        /// <param name="newValue">Not used</param>
         protected virtual void OnOrientationChanged(Orientation oldValue, Orientation newValue)
         {
         }
 
+        /// <summary>
+        /// Callback for dependency property changed</summary>
+        /// <param name="d">DependencyObject</param>
+        /// <param name="e">Dependency property changed event arguments</param>
         static void DefaultValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var slider = d as RangeBaseEx;

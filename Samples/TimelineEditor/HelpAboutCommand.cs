@@ -34,7 +34,7 @@ namespace TimelineEditorSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("Timeline Editor Sample"), appURL, richTextBox, null, null, true);
+                "Timeline Editor Sample".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

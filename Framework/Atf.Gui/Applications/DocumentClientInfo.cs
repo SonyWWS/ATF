@@ -61,11 +61,11 @@ namespace Sce.Atf.Applications
             string openIconName,
             bool multiDocument)
         {
-            m_fileType = fileType;
-            m_extensions = extensions;
+            FileType = fileType;
+            Extensions = extensions;
             m_newIconName = newIconName;
             m_openIconName = openIconName;
-            m_multiDocument = multiDocument;
+            MultiDocument = multiDocument;
         }
 
         /// <summary>
@@ -114,72 +114,53 @@ namespace Sce.Atf.Applications
             object openIconKey,
             bool multiDocument)
         {
-            m_fileType = fileType;
-            m_extensions = extensions;
-            m_newIconKey = newIconKey;
-            m_openIconKey = openIconKey;
-            m_multiDocument = multiDocument;
+            FileType = fileType;
+            Extensions = extensions;
+            NewIconKey = newIconKey;
+            OpenIconKey = openIconKey;
+            MultiDocument = multiDocument;
         }
 
         /// <summary>
         /// Gets and sets the document client's user-readable file type name</summary>
         /// <remarks>The type name should be unique within an application and can contain
         /// any characters except ','</remarks>
-        public string FileType
-        {
-            get { return m_fileType; }
-            set { m_fileType = value; }
-        }
+        public string FileType { get; set; }
 
         /// <summary>
         /// Gets and sets the file extensions that the editor can handle</summary>
-        public string[] Extensions
-        {
-            get { return m_extensions; }
-            set { m_extensions = value; }
-        }
+        public string[] Extensions { get; set; }
 
         /// <summary>
-        /// Gets and sets the default new file extension that the editor can handle</summary>
+        /// Gets and sets the default new file extension that the editor can handle. If not null,
+        /// then it should be a string that is in the Extensions property.</summary>
         /// <remarks>If the editor supports multiple extensions, setting the default extension 
         /// will stop ATF from prompting the user to choose the extension, when creating a new file</remarks>
-        public string DefaultExtension
-        {
-            get { return m_defaultExtension; }
-            set { m_defaultExtension = value; }
-        }
+        public string DefaultExtension { get; set; }
 
         /// <summary>
         /// Gets and sets the editor's 'New' icon name, or null</summary>
         public string NewIconName
         {
-            get { return (!String.IsNullOrEmpty(m_newIconName)) ? m_newIconName : (m_newIconKey as string); }
+            get { return (!String.IsNullOrEmpty(m_newIconName)) ? m_newIconName : (NewIconKey as string); }
             set { m_newIconName = value; }
         }
 
         /// <summary>
         /// Gets and sets the editor's 'New' icon resource key, or null</summary>
-        public object NewIconKey
-        {
-            get { return m_newIconKey; }
-            set { m_newIconKey = value; }
-        }
+        public object NewIconKey { get; set; }
 
         /// <summary>
         /// Gets and sets the editor's 'Open' icon name, or null</summary>
         public string OpenIconName
         {
-            get { return (!String.IsNullOrEmpty(m_openIconName)) ? m_openIconName : m_openIconKey as string; }
+            get { return (!String.IsNullOrEmpty(m_openIconName)) ? m_openIconName : OpenIconKey as string; }
             set { m_openIconName = value; }
         }
 
         /// <summary>
         /// Gets and sets the editor's 'Open' icon name, or null</summary>
-        public object OpenIconKey
-        {
-            get { return m_openIconKey; }
-            set { m_openIconKey = value; }
-        }
+        public object OpenIconKey { get; set; }
 
         /// <summary>
         /// Gets and sets the editor's default new document name</summary>
@@ -191,20 +172,12 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets and sets a value indicating if the editor can open multiple documents simultaneously</summary>
-        public bool MultiDocument
-        {
-            get { return m_multiDocument; }
-            set { m_multiDocument = value; }
-        }
+        public bool MultiDocument { get; set; }
 
         /// <summary>
         /// Gets and sets a string to be used as the initial directory for the first time this application runs
         /// on the user's computer</summary>
-        public string InitialDirectory
-        {
-            get { return m_initialDirectory; }
-            set { m_initialDirectory = value; }
-        }
+        public string InitialDirectory { get; set; }
 
         /// <summary>
         /// Gets and sets a value indicating whether the StandardFileCommands service should automatically create commands for this client's document</summary>
@@ -250,16 +223,9 @@ namespace Sce.Atf.Applications
             return FileFilterBuilder.GetFilterString(FileType, Extensions);
         }
 
-        private string m_fileType;
         private string m_newIconName;
         private string m_openIconName;
-        private object m_newIconKey;
-        private object m_openIconKey;
         private string m_newDocumentName = "Untitled".Localize();
-        private bool m_multiDocument;
-        private string[] m_extensions;
-        private string m_defaultExtension;
-        private string m_initialDirectory;
         private bool m_allowStandardFileCommands = true;
     }
 }

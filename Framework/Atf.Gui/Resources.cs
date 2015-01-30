@@ -586,7 +586,7 @@ namespace Sce.Atf
             // if there's more than one registration method available, we have no idea which should be used.
             // The application will have to determine this, by calling one of the methods explicitly,
             // before execution arrives at this call path.
-            if (registerMethods.Count() > 1)
+            if (registerMethods.Length > 1)
             {
                 throw new InvalidOperationException(
                     "More than one library has implemented a ResourceUtil.Register(Type type).\n" +

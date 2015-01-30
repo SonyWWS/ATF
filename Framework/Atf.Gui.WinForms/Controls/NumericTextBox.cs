@@ -176,6 +176,10 @@ namespace Sce.Atf.Controls
         }
 
         private bool m_selectAll;
+
+        /// <summary>
+        /// Handle enter event</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnEnter(EventArgs e)
         {
             base.OnEnter(e);
@@ -187,12 +191,18 @@ namespace Sce.Atf.Controls
             }
         }
 
+        /// <summary>
+        /// Handle leave event</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnLeave(EventArgs e)
         {
             base.OnLeave(e);
             m_selectAll = false;
         }
 
+        /// <summary>
+        /// Handle mouse up event</summary>
+        /// <param name="mevent">Mouse event arguments</param>
         protected override void OnMouseUp(MouseEventArgs mevent)
         {
             base.OnMouseUp(mevent);

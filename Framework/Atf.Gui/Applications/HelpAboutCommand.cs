@@ -32,6 +32,7 @@ namespace Sce.Atf.Applications
 
         void IInitializable.Initialize()
         {
+            CommandInfo.HelpAbout.EnableCheckCanDoEvent(this);
             CommandService.RegisterCommand(CommandInfo.HelpAbout, this);
         }
 

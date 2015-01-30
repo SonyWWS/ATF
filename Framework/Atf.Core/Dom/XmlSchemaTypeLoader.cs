@@ -123,7 +123,7 @@ namespace Sce.Atf.Dom
                     XmlQualifiedName refName = kvp.Value;
                     ChildInfo childInfo = kvp.Key;
 
-                    var substitutions = substitutionGroups.Find(refName).ToArray();
+                    var substitutions = CreateSubstitutions(substitutionGroups, refName).ToArray();
                     if (substitutions.Length > 0)
                     {
                         childInfo.AddRule(new SubstitutionGroupChildRule(substitutions));
@@ -219,49 +219,6 @@ namespace Sce.Atf.Dom
                 m_annotations = null;
                 m_typeNameSet = null;
                 m_localElementSet = null;
-            }
-        }
-
-        /// <summary>
-        /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
-        /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
-        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.</summary>
-        /// <param name="schemaSet">XML schema sets being loaded</param>
-        protected virtual void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
-        {
-        }
-
-        /// <summary>
-        /// Is called after the schema set has been loaded and the DomNodeTypes have been frozen with
-        /// their ID attributes set. Is called shortly after OnSchemaSetLoaded.</summary>
-        /// <param name="schemaSet">XML schema sets being loaded</param>
-        protected virtual void OnDomNodeTypesFrozen(XmlSchemaSet schemaSet)
-        {
-        }
-
-        /// <summary>
-        /// Parses annotations in schema sets. Override this to handle custom annotations.</summary>
-        /// <param name="schemaSet">XML schema sets being loaded</param>
-        /// <param name="annotations">Dictionary of annotations in schema</param>
-        protected virtual void ParseAnnotations(
-            XmlSchemaSet schemaSet,
-            IDictionary<NamedMetadata, IList<XmlNode>> annotations)
-        {
-            // Inspect root types for the legacy annotation specifying id attribute
-            // Get types reachable from global elements
-            foreach (XmlSchemaElement element in schemaSet.GlobalElements.Values)
-            {
-                ChildInfo childInfo = GetRootElement(element.QualifiedName.ToString());
-                IList<XmlNode> xmlNodes;
-                if (annotations.TryGetValue(childInfo.Type, out xmlNodes))
-                {
-                    string idAttribute = FindAttribute(xmlNodes, "idAttribute", "name");
-                    if (idAttribute != null)
-                    {
-                        foreach (DomNodeType type in GetNodeTypes(element.QualifiedName.Namespace))
-                            type.SetIdAttribute(idAttribute);
-                    }
-                }
             }
         }
 
@@ -455,6 +412,49 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
+        /// Method called after the schema set has been loaded and the DomNodeTypes have been created, but
+        /// before the DomNodeTypes have been frozen. This means that DomNodeType.SetIdAttribute, for example, has
+        /// not been called on the DomNodeTypes. Is called shortly before OnDomNodeTypesFrozen.</summary>
+        /// <param name="schemaSet">XML schema sets being loaded</param>
+        protected virtual void OnSchemaSetLoaded(XmlSchemaSet schemaSet)
+        {
+        }
+
+        /// <summary>
+        /// Is called after the schema set has been loaded and the DomNodeTypes have been frozen with
+        /// their ID attributes set. Is called shortly after OnSchemaSetLoaded.</summary>
+        /// <param name="schemaSet">XML schema sets being loaded</param>
+        protected virtual void OnDomNodeTypesFrozen(XmlSchemaSet schemaSet)
+        {
+        }
+
+        /// <summary>
+        /// Parses annotations in schema sets. Override this to handle custom annotations.</summary>
+        /// <param name="schemaSet">XML schema sets being loaded</param>
+        /// <param name="annotations">Dictionary of annotations in schema</param>
+        protected virtual void ParseAnnotations(
+            XmlSchemaSet schemaSet,
+            IDictionary<NamedMetadata, IList<XmlNode>> annotations)
+        {
+            // Inspect root types for the legacy annotation specifying id attribute
+            // Get types reachable from global elements
+            foreach (XmlSchemaElement element in schemaSet.GlobalElements.Values)
+            {
+                ChildInfo childInfo = GetRootElement(element.QualifiedName.ToString());
+                IList<XmlNode> xmlNodes;
+                if (annotations.TryGetValue(childInfo.Type, out xmlNodes))
+                {
+                    string idAttribute = FindAttribute(xmlNodes, "idAttribute", "name");
+                    if (idAttribute != null)
+                    {
+                        foreach (DomNodeType type in GetNodeTypes(element.QualifiedName.Namespace))
+                            type.SetIdAttribute(idAttribute);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Converts a qualified name into a locally unique (on the type) field name</summary>
         /// <param name="qualifiedName">XML qualified name</param>
         /// <returns>Unique field name</returns>
@@ -469,6 +469,32 @@ namespace Sce.Atf.Dom
 
             return qualifiedName.ToString();
         }
+
+        private IEnumerable<ChildInfo> CreateSubstitutions(Multimap<XmlQualifiedName, ChildInfo> substitutionGroups, XmlQualifiedName refName)
+        {
+            foreach (var group in substitutionGroups.Keys)
+            {
+                if (group == refName)
+                {
+                    var childInfos = substitutionGroups[group];
+                    foreach (var childInfo in childInfos)
+                    {
+                        yield return childInfo;
+
+                        var ns = string.Empty;
+                        int index = childInfo.Type.Name.LastIndexOf(':');
+                        if (index >= 0)
+                            ns = childInfo.Type.Name.Substring(0, index);
+
+                        var qualifiedName = new XmlQualifiedName(childInfo.Name, ns);
+
+                        foreach (var sub in CreateSubstitutions(substitutionGroups, qualifiedName))
+                            yield return sub;
+                    }
+                }
+            }
+        }
+
 
         #region Private Schema-to-Type Methods
 
@@ -712,18 +738,26 @@ namespace Sce.Atf.Dom
 
                     if (childNodeType != null)
                     {
-                        int minOccurs = (int)Math.Min(element.MinOccurs, Int32.MaxValue);
-                        int maxOccurs = (int)Math.Min(element.MaxOccurs, Int32.MaxValue);
+                        int minOccurs;
+                        int maxOccurs;
 
                         // If <xs:choice> is within a <xs:sequence>, choose the most relaxed constraints.
-                        if (particle.Parent is XmlSchemaChoice &&
-                            particle.Parent.Parent is XmlSchemaSequence)
+                        if (particle.Parent is XmlSchemaChoice)
                         {
-                            XmlSchemaChoice parent = (XmlSchemaChoice)particle.Parent;
-                            int parentMinOccurs = (int)Math.Min(parent.MinOccurs, Int32.MaxValue);
-                            int parentMaxOccurs = (int)Math.Min(parent.MaxOccurs, Int32.MaxValue);
-                            minOccurs = Math.Min(parentMinOccurs, minOccurs);
-                            maxOccurs = Math.Max(parentMaxOccurs, maxOccurs);
+                            var parent = (XmlSchemaChoice)particle.Parent;
+                            minOccurs = (int)Math.Min(Math.Min(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
+                            maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);
+                        }
+                        else if (particle.Parent is XmlSchemaSequence)
+                        {
+                            var parent = (XmlSchemaSequence)particle.Parent;
+                            minOccurs = (int)Math.Min(Math.Min(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
+                            maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);
+                        }
+                        else
+                        {
+                            minOccurs = (int)Math.Min(element.MinOccurs, Int32.MaxValue);
+                            maxOccurs = (int)Math.Min(element.MaxOccurs, Int32.MaxValue);
                         }
 
                         ChildInfo childInfo = new ChildInfo(GetFieldName(element.QualifiedName), childNodeType, maxOccurs > 1);

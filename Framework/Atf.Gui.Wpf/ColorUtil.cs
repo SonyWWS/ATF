@@ -13,7 +13,7 @@ namespace Sce.Atf.Wpf
         /// Gets a color from a base color, lightened or darkened by the given amount</summary>
         /// <param name="color">Base color</param>
         /// <param name="amount">Amount to darken or lighten, should be > 0</param>
-        /// <param name="alpha"></param>
+        /// <param name="alpha">alpha channel value for transparency</param>
         /// <returns>Lightened or darkened color</returns>
         public static Color GetShade(Color color, float amount, byte alpha)
         {

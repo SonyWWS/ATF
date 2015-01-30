@@ -41,11 +41,7 @@ namespace Sce.Atf.Applications
         /// <note>I considered using a nullable 'long' for numericSuffix, but it's less convenient for
         /// the caller and for unit tests, and I think that negative #s for suffixes are very rare. --Ron</note>
         public static string Rename(string original,
-            string prefix, string baseName, string suffix, long numericSuffix
-            #if CS_4
-            = -1
-            #endif
-            )
+            string prefix, string baseName, string suffix, long numericSuffix = -1)
         {
             // Do we keep the existing base? If not, then set original to be just the base portion.
             if (baseName != null)

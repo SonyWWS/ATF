@@ -266,7 +266,7 @@ namespace Sce.Atf.Controls
         private void BtnDeleteClick(object sender, EventArgs e)
         {
             var selectedItems = m_layouts.SelectedItems.Cast<ListViewItem>();
-            if (selectedItems.Count() <= 0)
+            if (!selectedItems.Any())
                 return;
 
             try

@@ -19,6 +19,8 @@ namespace Sce.Atf.Wpf.Applications
         ICommandClient, 
         IContextMenuCommandProvider
     {
+        /// <summary>
+        /// Commands enumeration</summary>
         public enum Commands
         {
             EditLabel

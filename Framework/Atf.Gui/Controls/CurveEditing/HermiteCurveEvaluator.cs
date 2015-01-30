@@ -112,7 +112,10 @@ namespace Sce.Atf.Controls.CurveEditing
                     x = (((int)numcycle & 1)==0)? lastX - nx : firstX + nx;
                 }
             }
-                              
+
+            // correct any potential floating point error.
+            x = MathUtil.Clamp(x, firstPt.X, lastPt.X);
+
             bool exactMatch;
             int index = FindIndex(x, out exactMatch);
             if (exactMatch)

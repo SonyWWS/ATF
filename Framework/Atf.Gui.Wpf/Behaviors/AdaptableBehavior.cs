@@ -48,11 +48,13 @@ namespace Sce.Atf.Wpf.Behaviors
         }
     }
 
+    /// <summary>
+    /// Adaptable control, which is a control with adapters (decorators). The adaptable control
+    /// can be converted into any of its adapters using the ControlAs method.</summary>
     public static class AdaptableControl
     {
         /// <summary>
-        /// Returns an IAdaptableControl wrapper for any control
-        /// </summary>
+        /// Returns an IAdaptableControl wrapper for any control</summary>
         /// <param name="control">Control to adapt</param>
         /// <returns>IAdaptableControl</returns>
         public static IAdaptableControl AsAdaptableControl(this FrameworkElement control)
@@ -67,12 +69,22 @@ namespace Sce.Atf.Wpf.Behaviors
             return wrapper;
         }
 
+        /// <summary>
+        /// Extension method to return control adapter of given type</summary>
+        /// <typeparam name="T">Type of desired adapter</typeparam>
+        /// <param name="control">Control to obtain adapter for</param>
+        /// <returns>Control adapter of given type</returns>
         public static T ControlAs<T>(this FrameworkElement control)
             where T : class
         {
             return control.AsAdaptableControl().As<T>();
         }
 
+        /// <summary>
+        /// Extension method to enumerate control adapters of given type</summary>
+        /// <typeparam name="T">Type of desired adapters</typeparam>
+        /// <param name="control">Control to obtain adapters for</param>
+        /// <returns>Enumeration of control adapters of given type</returns>
         public static IEnumerable<T> ControlAsAll<T>(this FrameworkElement control)
             where T : class
         {

@@ -28,12 +28,14 @@
   <StringItem id="&amp;Discard" context="The '&amp;' is optional and means that Alt+D is the keyboard shortcut on this button" translation="破棄(&amp;D)" />
   <StringItem id="Grid Property Editor" context="" translation="グリッドプロパティエディター" />
   <StringItem id="Edits selected object properties" context="" translation="選択したオブジェクトのプロパティを編集します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Property+Editing+Programming+Discussion" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Property+Editing+Programming+Discussion" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
   <StringItem id="An application built using the Authoring Tools Framework" context="" translation="Authoring Tools Framework (ATF) を使用して構築されたアプリケーション" />
   <StringItem id="About this Application" context="" translation="このアプリケーションについて" />
   <StringItem id="Edit Label" context="" translation="ラベルを編集" />
   <StringItem id="Tree View" context="" translation="ツリービュー" />
   <StringItem id="Tree View" context="" translation="ツリービュー" />
+  <StringItem id="Max Visual Command History Count" context="" translation="コマンド履歴表示の最大数" />
+  <StringItem id="Maximum number of commands in the visual command history. Minimum value is 10" context="" translation="コマンド履歴表示に表示するコマンドの最大数。 最大値は 10 です。" />
   <StringItem id="Layers" context="" translation="レイヤー" />
   <StringItem id="Edits document layers" context="" translation="ドキュメントレイヤーを編集します。" />
   <StringItem id="Copy items from the document and paste them here to create layers whose visibility can be controlled by clicking on a check box." context="" translation="ドキュメントからアイテムをコピーしてここに貼り付け、レイヤーを作成します。レイヤーの表示はチェックボックスで制御します。" />
@@ -45,8 +47,8 @@
   <StringItem id="Prototypes" context="" translation="プロトタイプ" />
   <StringItem id="Creates new instances from prototypes" context="" translation="プロトタイプから新しいインスタンスを作成します。" />
   <StringItem id="Copy items from the document and paste them here to create prototypes that can be dragged and dropped onto a canvas." context="" translation="ドキュメントからアイテムをコピーしてここに貼り付け、プロトタイプを作成します。プロトタイプはキャンバスにドラッグアンドドロップできます。" />
-  <StringItem id="Resources" context="" translation="参考資料" />
-  <StringItem id="Resources" context="" translation="参考資料" />
+  <StringItem id="Resources" context="" translation="リソース" />
+  <StringItem id="Resources" context="" translation="リソース" />
   <StringItem id="Lists available resources" context="" translation="使用可能なりソースをリストします。" />
   <StringItem id="Details View" context="" translation="詳細表示" />
   <StringItem id="Switch to details view" context="" translation="詳細表示に切り替えます。" />
@@ -88,25 +90,30 @@
   <StringItem id="http://www.ship.scea.com/portal/search/search.action?q=PaletteService+or+Palette&amp;context=resource_WIKI%7CWWSSDKATF" context="" translation="http://www.ship.scea.com/portal/search/search.action?q=PaletteService+or+Palette&amp;context=resource_WIKI%7CWWSSDKATF" />
   <StringItem id="Performance Monitor" context="" translation="パフォーマンスモニター" />
   <StringItem id="Displays performance data on the currently active Control" context="" translation="現在アクティブなコントロールのパフォーマンスデータを表示します。" />
-  <StringItem id="Reset Current" context="Reset the current property to its default value" translation="このプロパティをリセット" />
+  <StringItem id="Copy Property" context="Copies this property's value to the local clipboard" translation="プロパティ値をコピー" />
+  <StringItem id="Copies this property's value to the to local clipboard" context="" translation="プロパティの値をクリップボードに貼り付けます。" />
+  <StringItem id="Paste Property" context="Pastes the local clipboard into this property's value" translation="プロパティを貼り付け" />
+  <StringItem id="Pastes the local clipboard into this property's value" context="" translation="クリップボードの内容をこのプロパティの値に貼り付けます。" />
+  <StringItem id="Reset Property" context="Reset the current property to its default value" translation="プロパティをリセット" />
   <StringItem id="Reset the current property to its default value" context="" translation="選択されているプロパティをデフォルト値にリセットします。" />
+  <StringItem id="Copy All" context="Copies all properties to the local clipboard" translation="コピー" />
+  <StringItem id="Copies all properties to the local clipboard" context="" translation="すべてのプロパティをローカルクリップボードにコピーします。" />
+  <StringItem id="Paste All" context="Pastes the local clipboard into all properties" translation="すべてを貼り付け" />
+  <StringItem id="Pastes the local clipboard into all properties" context="" translation="ローカルクリップボードの内容をすべてのプロパティに貼り付けます。" />
   <StringItem id="Reset All" context="Reset all properties to their default values" translation="すべてのプロパティをリセット" />
   <StringItem id="Reset all properties to their default values" context="" translation="オブジェクトのすべてのプロパティの値をデフォルトにリセットします。" />
-  <StringItem id="Copy Property" context="Copies this property's value to the clipboard" translation="プロパティ値をコピー" />
-  <StringItem id="Copies this property's value to the clipboard" context="" translation="プロパティの値をクリップボードに貼り付けます。" />
-  <StringItem id="Paste Property" context="Pastes the clipboard into this property's value" translation="プロパティを貼り付け" />
-  <StringItem id="Pastes the clipboard into this property's value" context="" translation="クリップボードの内容をこのプロパティの値に貼り付けます。" />
   <StringItem id="View In Text Editor" context="Open the file in the associated text editor" translation="テキストエディターに表示" />
   <StringItem id="Open the file in the associated text editor" context="" translation="ファイルを関連付けられたテキストエディターで開きます。" />
-  <StringItem id="Reset Property" context="'Reset' is a verb and this is the name of a command" translation="プロパティをリセット" />
+  <StringItem id="Paste: {0}" context="'Paste' is a verb and this is the name of a command" translation="{0} を貼り付け" />
+  <StringItem id="Reset: {0}" context="'Reset' is a verb and this is the name of a command" translation="{0} をリセット" />
+  <StringItem id="Paste All" context="'Paste' is a verb and this is the name of a command" translation="すべてを貼り付け" />
   <StringItem id="Reset All Properties" context="'Reset' is a verb and this is the name of a command" translation="すべてのプロパティをリセット" />
-  <StringItem id="Paste Property" context="'Paste' is a verb and this is the name of a command" translation="プロパティを貼り付け" />
   <StringItem id="Property Editor" context="" translation="プロパティエディター" />
   <StringItem id="Edits selected object properties" context="" translation="選択したオブジェクトのプロパティを編集します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Property+Editing+Programming+Discussion" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Property+Editing+Programming+Discussion" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
   <StringItem id="Rename..." context="Rename selected objects" translation="名前を変更..." />
   <StringItem id="Rename selected objects" context="" translation="選択したオブジェクトの名前を変更します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/2012/05/18/Scripting+your+app+with+Python" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/2012/05/18/Scripting+your+app+with+Python" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" context="" translation="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" />
   <StringItem id="Search and Replace" context="" translation="検索および置換" />
   <StringItem id="Search for elements managed within the currently selected subwindow, and optionally replace their values" context="" translation="現在選択されたサブウィンドウ内の管理された要素を検索し、オプションでその値を置き換えます。" />
   <StringItem id="Reset All Preferences" context="Reset all preferences to their default values?" translation="すべての設定をリセット" />
@@ -120,33 +127,26 @@
   <StringItem id="Edit user preferences" context="" translation="ユーザー設定を編集します。" />
   <StringItem id="Load or Save Settings..." context="" translation="@設定を読み込み/保存..." />
   <StringItem id="User can save or load application settings from files" context="" translation="アプリケーション設定の、ファイルへの保存またはファイルからの読み込みです。" />
+  <StringItem id="Would you like to save the changes?" context="" translation="変更を保存しますか?" />
+  <StringItem id="Unsaved changes" context="" translation="未保存の変更" />
+  <StringItem id="File" context="" translation="ファイル" />
+  <StringItem id="New" context="" translation="新規" />
+  <StringItem id="Open..." context="" translation="開く" />
+  <StringItem id="Open Containing Folder" context="" translation="ドキュメントを含むディレクトリを開く" />
+  <StringItem id="Save" context="" translation="保存" />
+  <StringItem id="Save As..." context="" translation="名前を付けて保存..." />
+  <StringItem id="Exit" context="" translation="終了" />
+  <StringItem id="Skin Editor" context="" translation="Skin Editor" />
   <StringItem id="Most Recently Used Skin File" context="" translation="直近に使用されたスキンファイル" />
   <StringItem id="Error loading skin file." context="" translation="スキンファイルの読み込みでエラーが発生しました。" />
-  <StringItem id="Edit Current Skin..." context="Edit the current skin file." translation="現在のスキンを編集..." />
-  <StringItem id="Edit the current skin file." context="" translation="現在のスキンファイルを編集します。" />
+  <StringItem id="Edit Skin..." context="Show Skin Editor and open current skin file." translation="スキンを編集..." />
+  <StringItem id="Edit skin." context="" translation="スキンを編集" />
   <StringItem id="Load Skin..." context="Load and apply a skin file." translation="スキンを読み込み..." />
   <StringItem id="Load and apply a skin file." context="" translation="スキンファイルを読み込み、適用します。" />
-  <StringItem id="Create New Skin..." context="Create a new skin file." translation="新しいスキンを作成..." />
-  <StringItem id="Create a new skin file." context="" translation="新しいスキンファイルを作成します。" />
   <StringItem id="Reset Skin to Default" context="Reset active skin to the default skin." translation="スキンをデフォルトにリセット" />
   <StringItem id="Reset active skin to the default skin." context="" translation="アクティブなスキンをデフォルトスキンにリセットします。" />
   <StringItem id="Cut" context="Cut the selection" translation="切り取り" />
   <StringItem id="Delete" context="" translation="削除" />
-  <StringItem id="There was a problem opening the file" context="" translation="ファイルを開く際に次の問題が発生しました" />
-  <StringItem id="There was a problem saving the file" context="" translation="ファイルを保存する際に次の問題が発生しました" />
-  <StringItem id="Save {0}?" context="" translation="{0} を保存しますか?" />
-  <StringItem id="File extension not supported" context="" translation="サポートされていないファイル拡張子です。" />
-  <StringItem id="A file with that name is already open" context="" translation="同名のファイルがすでに開いています。" />
-  <StringItem id="Document Saved" context="" translation="ドキュメントが保存されました。" />
-  <StringItem id="Document Saved As {0}" context="" translation="ドキュメントが {0} として保存されました。" />
-  <StringItem id="Couldn't save all documents" context="" translation="一部のドキュメントが保存されませんでした。" />
-  <StringItem id="All documents saved" context="" translation="すべてのドキュメントが保存されました。" />
-  <StringItem id="New {0}" context="" translation="{0}を新規作成" />
-  <StringItem id="New" context="Name of a command" translation="新規" />
-  <StringItem id="Creates a new {0} document" context="{0} is the type of document to create" translation="新しい{0}ドキュメントを作成します。" />
-  <StringItem id="Open {0}" context="" translation="{0}を開く" />
-  <StringItem id="Open" context="Name of a command" translation="開く" />
-  <StringItem id="Open an existing {0} document" context="" translation="既存の{0}ドキュメントを開きます。" />
   <StringItem id="Ready" context="Application is ready" translation="準備完了" />
   <StringItem id="Ready" context="" translation="準備完了" />
   <StringItem id="Source Control/Enable" context="" translation="ソース管理/有効化" />
@@ -169,7 +169,7 @@
   <StringItem id="Reconcile Offline Work" context="" translation="オフラインで行った作業を調整します。" />
   <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
   <StringItem id="Disable Source Control" context="" translation="ソース管理を無効にする" />
-  <StringItem id="Add document {0} to version control?" context="" translation="ドキュメントをバージョン管理に追加しますか?" />
+  <StringItem id="Add document {0} to version control?" context="" translation="ドキュメント {0} をバージョン管理に追加しますか?" />
   <StringItem id="Add document to Version Control" context="" translation="ドキュメントをバージョン管理に追加します。" />
   <StringItem id="Check out this file to be able to save the changes?" context="" translation="変更を保存できるようにこのファイルをチェックアウトしますか?" />
   <StringItem id="Check Out File" context="" translation="ファイルをチェックアウト" />
@@ -213,17 +213,6 @@
   <StringItem id="Edit Annotation" context="the name of a command" translation="注釈を編集" />
   <StringItem id="Grid" context="Grid location constraint" translation="グリッド" />
   <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
-  <StringItem id="Copy Template" context="" translation="テンプレートをコピー" />
-  <StringItem id="You are attempting to edit multiple templates in one transaction, not supported yet." context="" translation="1 回のトランザクションで複数のテンプレートを編集しようとしていますが、これはまだサポートされていません。" />
-  <StringItem id="Template Edit Warning" context="" translation="テンプレート編集の警告" />
-  <StringItem id="You are attempting to edit a Global Template File! This Template may be referenced in other *.mc files and modifying it will affect the animations that reference it. Are you sure you want to do this?
-" context="" translation="グローバルテンプレートファイルを編集しようとしています。 このテンプレートはほかの *.mc ファイルで参照されている可能性があり、変更すると参照元のアニメーションに影響が出ます。 編集しますか?" />
-  <StringItem id="Global Template Warning" context="" translation="グローバルテンプレートの警告" />
-  <StringItem id="Do you wish to edit the Template or a Copy Instance?
-" context="" translation="テンプレートを編集しますか? それともコピーしますか?" />
-  <StringItem id="Template" context="" translation="編集" />
-  <StringItem id="Copy Instance" context="" translation="コピー" />
-  <StringItem id="Copy Template" context="" translation="テンプレートをコピー" />
   <StringItem id="Show Expanded Group Pins" context="" translation="展開したグループのピンを表示" />
   <StringItem id="Show Expanded Group Pins" context="" translation="展開したグループのピンを表示" />
   <StringItem id="Reset Group Pin Names" context="" translation="グループピン名をリセット" />
@@ -252,11 +241,20 @@
   <StringItem id="Grid" context="Grid location constraint" translation="グリッド" />
   <StringItem id="Edit Label" context="" translation="ラベルを編集" />
   <StringItem id="Resize States" context="" translation="ステートのサイズ変更" />
+  <StringItem id="Hex must be a hex value between 00000000 and FFFFFFFF" context="" translation="Hex は 00000000 ～ FFFFFFFF の間の 16 進数である必要があります。" />
+  <StringItem id="Hue must be a number between 0 and 360" context="" translation="色合いは 0 ～ 360 の間の数である必要があります。" />
+  <StringItem id="Saturation must be a number between 0 and 100" context="" translation="彩度は 0 ～ 100 の間の数である必要があります。" />
+  <StringItem id="Brightness must be a number between 0 and 100" context="" translation="明度は 0 ～ 100 の間の数である必要があります。" />
+  <StringItem id="Red must be a number between 0 and 255" context="" translation="赤は 0 ～ 255 の間の数である必要があります。" />
+  <StringItem id="Green must be a number between 0 and 255" context="" translation="緑は 0 ～ 255 の間の数である必要があります。" />
+  <StringItem id="Blue must be a number between 0 and 255" context="" translation="青は 0 ～ 255 の間の数である必要があります。" />
+  <StringItem id="Alpha must be a number between 0 and 255" context="" translation="アルファは 0 ～ 255 の間の数である必要があります。" />
+  <StringItem id="Cyan must be a number between 0 and 100" context="" translation="シアンは 0 ～ 100 の間の数である必要があります。" />
+  <StringItem id="Magenta must be a number between 0 and 100" context="" translation="マゼンタは 0 ～ 100 の間の数である必要があります。" />
+  <StringItem id="Yellow must be a number between 0 and 100" context="" translation="黄色は 0 ～ 100 の間の数である必要があります。" />
+  <StringItem id="Key must be a number between 0 and 100" context="" translation="キーは 0 ～ 100 の間の数である必要があります。" />
   <StringItem id="Undo" context="" translation="元に戻す" />
   <StringItem id="Redo" context="" translation="やり直し" />
-  <StringItem id="Cut" context="" translation="切り取り" />
-  <StringItem id="Copy" context="" translation="コピー" />
-  <StringItem id="Paste" context="" translation="貼り付け" />
   <StringItem id="Delete" context="" translation="削除" />
   <StringItem id="Cut" context="" translation="切り取り" />
   <StringItem id="Paste" context="" translation="貼り付け" />
@@ -271,7 +269,7 @@
   <StringItem id="Snap" context="" translation="スナップ" />
   <StringItem id="Snap" context="" translation="スナップ" />
   <StringItem id="Move" context="" translation="移動" />
-  <StringItem id="Scale" context="" translation="拡大/縮小" />
+  <StringItem id="Scale" context="" translation="スケール" />
   <StringItem id="Resize Curve Limit" context="could be phrased as 'resize the boundary of the curve'" translation="曲線境界のサイズ変更" />
   <StringItem id="Undo" context="" translation="元に戻す" />
   <StringItem id="Redo" context="" translation="やり直し" />
@@ -387,8 +385,9 @@
   <StringItem id="Moved Collection Item Down" context="" translation="コレクションアイテムを下に移動しました。" />
   <StringItem id="Moved Collection Item Up" context="" translation="コレクションアイテムを上に移動しました。" />
   <StringItem id="Error" context="" translation="エラー" />
-  <StringItem id="Edit Property" context="" translation="プロパティを編集" />
-  <StringItem id="Edit Property" context="" translation="プロパティを編集" />
+  <StringItem id="Reset: {0}" context="" translation="{0} をリセット" />
+  <StringItem id="Edit: {0}" context="" translation="{0} を編集" />
+  <StringItem id="Edit: {0}" context="" translation="{0} を編集" />
   <StringItem id="Property Organization" context="Could be rephrased as 'How do you want these properties to be organized?'" translation="プロパティを整理" />
   <StringItem id="Unsorted" context="" translation="並べ替えなし" />
   <StringItem id="Alphabetical" context="" translation="プロパティ名順" />
@@ -398,7 +397,10 @@
   <StringItem id="Alphabetical Categories And Properties" context="" translation="カテゴリ名&gt;プロパティ名順" />
   <StringItem id="Search" context="'Search' is a verb" translation="検索" />
   <StringItem id="Clear Search" context="'Clear' is a verb" translation="検索結果をクリア" />
+  <StringItem id="Reset all properties" context="" translation="すべてのプロパティをリセット" />
   <StringItem id="Navigate back to parent of selected object" context="" translation="選択したオブジェクトの親に戻ります。" />
+  <StringItem id="Reset All Properties" context="'Reset' is a verb and this is the name of a command" translation="すべてのプロパティをリセット" />
+  <StringItem id="Resets the property to its default value" context="" translation="プロパティをデフォルト値にリセットします。" />
   <StringItem id="Search" context="'Search' is a verb" translation="検索" />
   <StringItem id="Clear Search" context="'Clear' is a verb" translation="検索結果をクリア" />
   <StringItem id="Move Events" context="Move Manipulator's undo / redo description for moving timeline events" translation="イベントを移動" />
@@ -422,15 +424,18 @@
   <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
   <StringItem id="Add Template Folder" context="" translation="テンプレートフォルダーを追加" />
   <StringItem id="Creates a new template folder" context="" translation="新しいテンプレートフォルダーを作成します。" />
-  <StringItem id="Add Global Template Folder" context="" translation="グローバルテンプレートフォルダーを追加" />
-  <StringItem id="Creates a Global Template folder based off of a pre-existing .mcc" context="" translation="既存の .mcc を基に、グローバルテンプレートフォルダーを作成します。" />
+  <StringItem id="Import Templates from Document..." context="" translation="" />
+  <StringItem id="Import Templates from Document" context="" translation="" />
   <StringItem id="Promote To Template Library" context="" translation="テンプレートライブラリにレベル上げ" />
   <StringItem id="Promote To Template Library" context="" translation="テンプレートライブラリにレベル上げ" />
   <StringItem id="Demote To Copy Instance" context="" translation="コピーインスタンスにレベル下げ" />
   <StringItem id="Demote To Copy Instance" context="" translation="コピーインスタンスにレベル下げ" />
+  <StringItem id="Rescan Template Documents" context="" translation="" />
+  <StringItem id="Rescan Template Documents" context="" translation="" />
   <StringItem id="New Template Folder" context="" translation="新しいテンプレートフォルダー" />
   <StringItem id="Add Template Folder" context="" translation="テンプレートフォルダーを追加" />
-  <StringItem id="Add External Template Folder" context="" translation="外部テンプレートフォルダーを追加" />
+  <StringItem id="Add External Template Folder" context="" translation="" />
+  <StringItem id="Reload External Templates" context="" translation="" />
   <StringItem id="Promote To Template Library" context="" translation="テンプレートライブラリにレベル上げ" />
   <StringItem id="Demote To Copy Instance" context="" translation="コピーインスタンスにレベル下げ" />
 </StringLocalizationTable>

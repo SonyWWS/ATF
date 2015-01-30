@@ -93,72 +93,72 @@ namespace StatechartEditorSample
                 Schema.annotationType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.annotationType.Type,
-                        Localizer.Localize("Comment"),
-                        Localizer.Localize("Comment on a statechart"),
+                        "Comment".Localize(),
+                        "Comment on a statechart".Localize(),
                         Resources.AnnotationImage));
 
                 Schema.reactionType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.reactionType.Type,
-                        Localizer.Localize("Reaction"),
-                        Localizer.Localize("Reaction"),
+                        "Reaction".Localize(),
+                        "Reaction".Localize(),
                         Resources.ReactionImage));
 
                 Schema.stateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.stateType.Type,
-                        Localizer.Localize("State"),
-                        Localizer.Localize("State in a statechart"),
+                        "State".Localize(),
+                        "State in a statechart".Localize(),
                         Resources.StateImage));
 
                 Schema.startStateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.startStateType.Type,
-                        Localizer.Localize("Start State"),
-                        Localizer.Localize("Initial state in a statechart"),
+                        "Start State".Localize(),
+                        "Initial state in a statechart".Localize(),
                         Resources.StartImage));
 
                 Schema.conditionalStateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.conditionalStateType.Type,
-                        Localizer.Localize("Conditional State"),
-                        Localizer.Localize("State with a condition to reduce the number of transitions"),
+                        "Conditional State".Localize(),
+                        "State with a condition to reduce the number of transitions".Localize(),
                         Resources.ConditionalImage));
 
                 Schema.historyStateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.historyStateType.Type,
-                        Localizer.Localize("History State"),
-                        Localizer.Localize("State that restores history"),
+                        "History State".Localize(),
+                        "State that restores history".Localize(),
                         Resources.HistoryImage));
 
                 Schema.finalStateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.finalStateType.Type,
-                        Localizer.Localize("Final State"),
-                        Localizer.Localize("Final state in a statechart"),
+                        "Final State".Localize(),
+                        "Final state in a statechart".Localize(),
                         Resources.FinalImage));
 
                 Schema.reactionType.Type.SetTag(
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Event"),
+                                "Event".Localize(),
                                 Schema.reactionType.eventAttribute,
                                 null,
-                                Localizer.Localize("Event that triggers reaction"),
+                                "Event that triggers reaction".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Guard"),
+                                "Guard".Localize(),
                                 Schema.reactionType.guardAttribute,
                                 null,
-                                Localizer.Localize("Guard condition required for reaction"),
+                                "Guard condition required for reaction".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Action"),
+                                "Action".Localize(),
                                 Schema.reactionType.actionAttribute,
                                 null,
-                                Localizer.Localize("Action taken"),
+                                "Action taken".Localize(),
                                 false),
                     }));
 
@@ -166,34 +166,34 @@ namespace StatechartEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Label"),
+                                "Label".Localize(),
                                 Schema.stateType.labelAttribute, // 'nameAttribute' is unique id, label is user visible name
                                 null,
-                                Localizer.Localize("State label"),
+                                "State label".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Entry Action"),
+                                "Entry Action".Localize(),
                                 Schema.stateType.entryActionAttribute,
                                 null,
-                                Localizer.Localize("Action taken when state is entered"),
+                                "Action taken when state is entered".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Exit Action"),
+                                "Exit Action".Localize(),
                                 Schema.stateType.exitActionAttribute,
                                 null,
-                                Localizer.Localize("Action taken when state is exited"),
+                                "Action taken when state is exited".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Width"),
+                                "Width".Localize(),
                                 Schema.stateType.widthAttribute,
                                 null,
-                                Localizer.Localize("Width of state"),
+                                "Width of state".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Height"),
+                                "Height".Localize(),
                                 Schema.stateType.heightAttribute,
                                 null,
-                                Localizer.Localize("Height of state"),
+                                "Height of state".Localize(),
                                 false),
                     }));
 
@@ -201,16 +201,16 @@ namespace StatechartEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("History Type"),
+                                "History Type".Localize(),
                                 Schema.historyStateType.typeAttribute,
                                 null,
-                                Localizer.Localize("Whether history is shallow or deep"),
+                                "Whether history is shallow or deep".Localize(),
                                 false,
                                 new EnumUITypeEditor(
                                     new string[]
                                     {
-                                        Localizer.Localize("Shallow", "Shallow history in a statechart"),
-                                        Localizer.Localize("Deep", "Deep history in a statechart")
+                                        "Shallow".Localize("Shallow history in a statechart"),
+                                        "Deep".Localize("Deep history in a statechart")
                                     }))
                     }));
 

@@ -216,21 +216,21 @@ namespace CodeEditor
             switch (extension)
             {
                 case ".txt":
-                    return Localizer.Localize("Text");
+                    return "Text".Localize();
                 case ".cs":
-                    return Localizer.Localize("CSharp");
+                    return "CSharp".Localize();
                 case ".py":
-                    return Localizer.Localize("Python");
+                    return "Python".Localize();
                 case ".lua":
-                    return Localizer.Localize("Lua");
+                    return "Lua".Localize();
                 case ".nut":
-                    return Localizer.Localize("Squirrel");
+                    return "Squirrel".Localize();
                 case ".xml":
-                    return Localizer.Localize("XML");
+                    return "XML".Localize();
                 case ".dae":
-                    return Localizer.Localize("COLLADA");
+                    return "COLLADA".Localize();
                 case ".cg":
-                    return Localizer.Localize("Cg");
+                    return "Cg".Localize();
                 default:
                     throw new InvalidOperationException("invalid code path");
             }

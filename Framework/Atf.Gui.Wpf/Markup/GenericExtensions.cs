@@ -20,7 +20,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Gets and sets the generic type name (e.g. Dictionary, for the Dictionary<K,V> case)</summary>
+        /// Gets or sets the generic type name (e.g. Dictionary, for the Dictionary&lt;K,V&gt; case)</summary>
         public string TypeName
         {
             get { return _typeName; }
@@ -28,13 +28,13 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Constructor</summary>
+        /// Default constructor</summary>
         public GenericExtension()
         {
         }
 
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with type name</summary>
         /// <param name="typeName">The generic type name</param>
         public GenericExtension(string typeName)
         {
@@ -47,7 +47,6 @@ namespace Sce.Atf.Wpf.Markup
         /// <returns>The instance of the type</returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-#if CS_4
             string[] baseTypeArray = _typeName.Split(':');
 
             var namespaceResolver =
@@ -79,48 +78,31 @@ namespace Sce.Atf.Wpf.Markup
             
             // Create an instance of that type
             return Activator.CreateInstance(concreteType);
-#else
-            IXamlTypeResolver xamlTypeResolver = serviceProvider.GetService(typeof(IXamlTypeResolver)) as IXamlTypeResolver;
-            if (xamlTypeResolver == null)
-                throw new Exception("The Generic markup extension requires an IXamlTypeResolver service provider");
-            
-            // Get e.g. "Collection`1" type
-            string name = _typeName +"`" + TypeArguments.Count.ToString();
-            Type genericType = xamlTypeResolver.Resolve(name);
-            
-            // Get an array of the type arguments
-            Type[] typeArgumentArray = new Type[TypeArguments.Count];
-            TypeArguments.CopyTo(typeArgumentArray, 0);
-
-            // Create the concrete type, e.g. Collection<String>
-            Type concreteType = genericType.MakeGenericType(typeArgumentArray);
-
-            // Create an instance of that type
-            return Activator.CreateInstance(concreteType);
-#endif
         }
 
         #region IValueConverter Members
 
         /// <summary>
-        /// Not implemented</summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
+        /// Converts a value. Not implemented</summary>
+        /// <exception cref="NotSupportedException"> is raised</exception>
+        /// <param name="value">Value produced by the binding source</param>
+        /// <param name="targetType">Type of the binding target property</param>
+        /// <param name="parameter">Converter parameter to use</param>
+        /// <param name="culture">Culture to use in the converter</param>
+        /// <returns>Converted value. If the method returns null, the valid null value is used.</returns>
         public virtual object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
-        /// Not implemented</summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
+        /// Converts back a value. Not implemented</summary>
+        /// <exception cref="NotSupportedException"> is raised</exception>
+        /// <param name="value">Value that is produced by the binding target</param>
+        /// <param name="targetType">Type to convert to</param>
+        /// <param name="parameter">Converter parameter to use</param>
+        /// <param name="culture">Culture to use in the converter</param>
+        /// <returns>Converted value from the target value back to the source value. If the method returns null, the valid null value is used.</returns>
         public virtual object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotSupportedException();

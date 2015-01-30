@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -37,7 +36,7 @@ namespace Sce.Atf.Controls
             listView1.Columns.Add("Name", 250, HorizontalAlignment.Left);
             listView1.Columns.Add("Date Modified", 130, HorizontalAlignment.Left);
             listView1.Columns.Add("Size", listView1.Width - 250 - 130 - 20, HorizontalAlignment.Right);
-            listView1.ColumnClick += new ColumnClickEventHandler(listView1_ColumnClick);
+            listView1.ColumnClick += listView1_ColumnClick;
             m_listViewItemComparer = new ListViewItemComparer();
 
             listView1.SmallImageList = new ImageList();
@@ -71,7 +70,7 @@ namespace Sce.Atf.Controls
 
             fileNameComboBox.SelectedIndexChanged += fileNameComboBox_SelectedIndexChanged;
             fileNameComboBox.PreviewKeyDown += fileNameComboBox_PreviewKeyDown;
-            fileNameComboBox.TextChanged += new EventHandler(fileNameComboBox_TextChanged);
+            fileNameComboBox.TextChanged += fileNameComboBox_TextChanged;
 
             lookInComboBox.SelectedIndexChanged += path_SelectedIndexChanged;
             lookInComboBox.DrawMode = DrawMode.OwnerDrawFixed;
@@ -599,22 +598,6 @@ namespace Sce.Atf.Controls
             }
         }
 
-        private string GetRecentFilePath()
-        {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            if (assembly == null)
-                assembly = Assembly.GetExecutingAssembly();
-
-            AssemblyName assemblyName = assembly.GetName();
-            Version version = assemblyName.Version;
-            var versionString = version.Major + "." + version.Minor;
-
-
-            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return string.Format("{0}\\{1}\\{2}\\RecentFile.lnk", appDataPath, assemblyName.Name, versionString);
-        }
-
-
         private void GoToDirectory(DirectoryInfo dirInfo)
         {
             if (dirInfo == null)
@@ -786,7 +769,7 @@ namespace Sce.Atf.Controls
             lookInComboBox.Text = "Computer".Localize();
             listView1.VirtualListSize = 0;
             listView1.Items.Clear();
-            m_cache = new ListViewItem[DriveInfo.GetDrives().Count()];
+            m_cache = new ListViewItem[DriveInfo.GetDrives().Length];
             int index = 0;
             foreach (var drive in DriveInfo.GetDrives())
             {

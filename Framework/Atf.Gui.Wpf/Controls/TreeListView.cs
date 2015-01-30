@@ -75,14 +75,24 @@ namespace Sce.Atf.Wpf.Controls
         private GridViewColumnCollection m_columns;
     }
 
+    /// <summary>
+    /// Describes binding of tree view items with a type and ancestor level for type</summary>
+    /// <typeparam name="T">Item with dependency property</typeparam>
     public class AncestorTypeBinding<T> : Binding
         where T : class
     {
         private AncestorTypeBinding() { }
 
+        /// <summary>
+        /// Constructor with path</summary>
+        /// <param name="path">Path describing binding</param>
         public AncestorTypeBinding(string path)
             : this(path, 1) { }
 
+        /// <summary>
+        /// Constructor with path and ancestor level</summary>
+        /// <param name="path">Path describing binding</param>
+        /// <param name="ancestorLevel">Ordinal position of desired ancestor among all ancestors of type</param>
         public AncestorTypeBinding(string path, int ancestorLevel)
             : base(path)
         {
@@ -118,6 +128,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Executes operations required after initialization</summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
@@ -180,7 +191,7 @@ namespace Sce.Atf.Wpf.Controls
                 "Expander",
                 typeof(UIElement),
                 typeof(TreeGridViewRowPresenter),
-                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnExpanderChanged)));
+                new FrameworkPropertyMetadata(null, OnExpanderChanged));
 
         /// <summary>
         /// Gets or sets first column indent dependency property</summary>
@@ -331,9 +342,9 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// Converter function to calculate how wide to make the final column</summary>
         /// <param name="values">values[0] is the ListView. values[1] is the total width of the control.</param>
-        /// <param name="type">not used</param>
-        /// <param name="parameter">not used</param>
-        /// <param name="culture">not used</param>
+        /// <param name="type">Not used</param>
+        /// <param name="parameter">Not used</param>
+        /// <param name="culture">Not used</param>
         /// <returns>The remaining width available for the final column</returns>
         public override object Convert(object[] values, Type type, object parameter, CultureInfo culture)
         {
@@ -375,9 +386,9 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// Converter function to calculate the amount to indent an item based on its level in the tree</summary>
         /// <param name="o">The level of the item (as an integer)</param>
-        /// <param name="type">not used</param>
+        /// <param name="type">Not used</param>
         /// <param name="parameter">Optional: The indent size to use per level (as a string that will be parsed to a double)</param>
-        /// <param name="culture">not used</param>
+        /// <param name="culture">Not used</param>
         /// <returns>The size to indent by</returns>
         public override object Convert(object o, Type type, object parameter, CultureInfo culture)
         {

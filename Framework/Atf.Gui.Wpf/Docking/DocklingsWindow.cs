@@ -12,13 +12,13 @@ namespace Sce.Atf.Wpf.Docking
     /// as the control that it is requested for. 
     /// This class mimics the same behavior as AdornerLayer, but is topmost above all other windows too.
     /// </summary>
-    internal class DocklingsWindow : Window
+    internal class DockIconsLayer : Window
     {
         private Canvas m_canvas;
         /// <summary>
         /// Constructor</summary>
         /// <param name="element">Source element to create window for</param>
-        public DocklingsWindow(FrameworkElement element)
+        public DockIconsLayer(FrameworkElement element)
         {
             ShowInTaskbar = false;
             ShowActivated = false;

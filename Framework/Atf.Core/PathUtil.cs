@@ -9,7 +9,7 @@ using System.Threading;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Path utilities</summary>
+    /// File path utilities.</summary>
     public static class PathUtil
     {
         /// <summary>

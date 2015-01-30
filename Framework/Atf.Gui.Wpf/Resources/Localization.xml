@@ -1,39 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
+  <StringItem id="Skins" context="" translation="Skins" />
+  <StringItem id="Appearance" context="" translation="Appearance" />
+  <StringItem id="Theme" context="" translation="Theme" />
+  <StringItem id="Auto-load Documents" context="" translation="Auto-load Documents" />
+  <StringItem id="Load previously open documents on application startup" context="" translation="Load previously open documents on application startup" />
+  <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="Auto New Document" />
+  <StringItem id="Create a new empty document on application startup" context="" translation="Create a new empty document on application startup" />
+  <StringItem id="Documents" context="" translation="Documents" />
   <StringItem id="Activate Control" context="" translation="Activate Control" />
   <StringItem id="Could not load window layout" context="" translation="Could not load window layout" />
   <StringItem id="Show/Hide " context="" translation="Show/Hide " />
-  <StringItem id="Show/Hide " context="" translation="Show/Hide " />
   <StringItem id="Rename" context="" translation="Rename" />
-  <StringItem id="Rename" context="" translation="Rename" />
-  <StringItem id="About" context="" translation="About" />
-  <StringItem id="Help" context="" translation="Help" />
-  <StringItem id="Help" context="" translation="Help" />
-  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Close" context="Close file" translation="Close" />
+  <StringItem id="Save" context="" translation="Save" />
+  <StringItem id="Discard" context="" translation="Discard" />
+  <StringItem id="_About" context="" translation="_About" />
+  <StringItem id="Help/Help" context="" translation="Help/Help" />
   <StringItem id="Help" context="" translation="Help" />
   <StringItem id="Show Context Help" context="" translation="Show Context Help" />
-  <StringItem id="Help" context="" translation="Help" />
   <StringItem id="Uncheck this to hide help commands in context menus" context="" translation="Uncheck this to hide help commands in context menus" />
-  <StringItem id="_Contents" context="" translation="_Contents" />
+  <StringItem id="_Contents" context="the '_' means that 'C' is a shortcut key" translation="_Contents" />
   <StringItem id="Help Contents" context="" translation="Help Contents" />
-  <StringItem id="_About" context="" translation="_About" />
+  <StringItem id="_Release Notes" context="the '_' means that 'R' is a shortcut key" translation="_Release Notes" />
+  <StringItem id="Release Notes" context="" translation="Release Notes" />
+  <StringItem id="_About" context="the '_' means that 'A' is a shortcut key" translation="_About" />
   <StringItem id="Shows Information About Application" context="" translation="Shows Information About Application" />
-  <StringItem id="_File" context="" translation="_File" />
-  <StringItem id="File Commands" context="" translation="File Commands" />
-  <StringItem id="_Edit" context="" translation="_Edit" />
-  <StringItem id="Editing Commands" context="" translation="Editing Commands" />
-  <StringItem id="_View" context="" translation="_View" />
-  <StringItem id="View Commands" context="" translation="View Commands" />
-  <StringItem id="Modify" context="" translation="Modify" />
-  <StringItem id="Modify Commands" context="" translation="Modify Commands" />
-  <StringItem id="_Format" context="" translation="_Format" />
-  <StringItem id="Formatting Commands" context="" translation="Formatting Commands" />
-  <StringItem id="_Window" context="" translation="_Window" />
-  <StringItem id="Window Management Commands" context="" translation="Window Management Commands" />
-  <StringItem id="_Help" context="" translation="_Help" />
-  <StringItem id="Help Commands" context="" translation="Help Commands" />
   <StringItem id="Output" context="" translation="Output" />
   <StringItem id="View errors, warnings, and informative messages" context="" translation="View errors, warnings, and informative messages" />
+  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="Cut" />
+  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="Cut the selection and place it on the clipboard" />
+  <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="Copy" />
+  <StringItem id="Copy the selection and place it on the clipboard" context="" translation="Copy the selection and place it on the clipboard" />
+  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="Paste" />
+  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="Paste the contents of the clipboard and make that the new selection" />
+  <StringItem id="Delete" context="Delete the selection" translation="Delete" />
+  <StringItem id="Delete the selection" context="" translation="Delete the selection" />
+  <StringItem id="Cut" context="Cut the selection" translation="Cut" />
+  <StringItem id="Delete" context="" translation="Delete" />
   <StringItem id="_File" context="" translation="_File" />
   <StringItem id="File Commands" context="" translation="File Commands" />
   <StringItem id="_Edit" context="" translation="_Edit" />
@@ -49,13 +53,51 @@
   <StringItem id="_Help" context="" translation="_Help" />
   <StringItem id="Help Commands" context="" translation="Help Commands" />
   <StringItem id="Ready" context="Application is ready" translation="Ready" />
-  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
-  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
-  <StringItem id="Edit Property" context="" translation="Edit Property" />
-  <StringItem id="Unhandled Exception" context="" translation="Unhandled Exception" />
-  <StringItem id="About" context="" translation="About" />
+  <StringItem id="Targets" context="" translation="Targets" />
+  <StringItem id="_Targets" context="" translation="_Targets" />
+  <StringItem id="Edit Targets" context="" translation="Edit Targets" />
+  <StringItem id="Enter a port between 0 and 65535" context="" translation="Enter a port between 0 and 65535" />
+  <StringItem id="Check In Files" context="" translation="Check In Files" />
+  <StringItem id="Reconcile Offline Work" context="" translation="Reconcile Offline Work" />
+  <StringItem id="Send Feedback" context="" translation="Send Feedback" />
+  <StringItem id="Send Feedback..." context="" translation="Send Feedback..." />
+  <StringItem id="Report bug or request feature" context="" translation="Report bug or request feature" />
+  <StringItem id="Version Check Failed" context="" translation="Version Check Failed" />
+  <StringItem id="Check for update..." context="" translation="Check for update..." />
+  <StringItem id="Check for product update" context="" translation="Check for product update" />
+  <StringItem id="Check for update at startup" context="" translation="Check for update at startup" />
+  <StringItem id="Check for product update at startup" context="" translation="Check for product update at startup" />
+  <StringItem id="Application" context="" translation="Application" />
+  <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
+  <StringItem id="The most recent version is {0}" context="" translation="The most recent version is {0}" />
+  <StringItem id="Would you like to download the latest version?" context="" translation="Would you like to download the latest version?" />
+  <StringItem id="Update" context="" translation="Update" />
+  <StringItem id="Cannot open url:" context="" translation="Cannot open url:" />
   <StringItem id="Error" context="" translation="Error" />
+  <StringItem id="This software is up to date." context="" translation="This software is up to date." />
+  <StringItem id="Updater" context="" translation="Updater" />
+  <StringItem id="Saves the layout to a new configuration" context="" translation="Saves the layout to a new configuration" />
+  <StringItem id="Manages the current layouts" context="" translation="Manages the current layouts" />
+  <StringItem id="Drag Drop" context="" translation="Drag Drop" />
+  <StringItem id="DomRecorder" context="" translation="DomRecorder" />
+  <StringItem id="Records DOM events on the active context and displays them" context="" translation="Records DOM events on the active context and displays them" />
+  <StringItem id="Yes" context="" translation="Yes" />
+  <StringItem id="No" context="" translation="No" />
+  <StringItem id="Cancel" context="" translation="Cancel" />
+  <StringItem id="Find File" context="" translation="Find File" />
+  <StringItem id="Find Targets" context="" translation="Find Targets" />
+  <StringItem id="Preferences" context="" translation="Preferences" />
+  <StringItem id="Reset all preferences to their default values?" context="" translation="Reset all preferences to their default values?" />
+  <StringItem id="Reset All Preferences" context="" translation="Reset All Preferences" />
+  <StringItem id="Load and Save Settings" context="" translation="Load and Save Settings" />
+  <StringItem id="Edit TCP/IP Target" context="" translation="Edit TCP/IP Target" />
+  <StringItem id="New Layout" context="" translation="New Layout" />
+  <StringItem id="Reset Property" context="" translation="Reset Property" />
+  <StringItem id="Edit Property" context="" translation="Edit Property" />
+  <StringItem id="An error has occurred" context="" translation="An error has occurred" />
+  <StringItem id="About" context="" translation="About" />
   <StringItem id="Please wait..." context="" translation="Please wait..." />
   <StringItem id="Progress" context="" translation="Progress" />
   <StringItem id="Edit Label" context="" translation="Edit Label" />
+  <StringItem id="Check/Uncheck" context="" translation="Check/Uncheck" />
 </StringLocalizationTable>

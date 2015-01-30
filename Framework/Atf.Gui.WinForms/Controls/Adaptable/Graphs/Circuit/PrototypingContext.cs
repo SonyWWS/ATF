@@ -37,9 +37,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected override void OnNodeSet()
         {
 
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
 
@@ -61,11 +61,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Item's name in the context, or null if none</returns>
         string INamingContext.GetName(object item)
         {
-            Prototype prototype = Adapters.As<Prototype>(item);
+            Prototype prototype = item.As<Prototype>();
             if (prototype != null)
                 return prototype.Name;
 
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+            PrototypeFolder folder = item.As<PrototypeFolder>();
             if (folder != null)
                 return folder.Name;
 
@@ -79,8 +79,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         bool INamingContext.CanSetName(object item)
         {
             return
-                Adapters.Is<Prototype>(item) ||
-                Adapters.Is<PrototypeFolder>(item);
+                item.Is<Prototype>() ||
+                item.Is<PrototypeFolder>();
         }
 
         /// <summary>
@@ -89,14 +89,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="name">New item name</param>
         void INamingContext.SetName(object item, string name)
         {
-            Prototype prototype = Adapters.As<Prototype>(item);
+            Prototype prototype = item.As<Prototype>();
             if (prototype != null)
             {
                 prototype.Name = name;
             }
             else
             {
-                PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+                PrototypeFolder folder = item.As<PrototypeFolder>();
                 if (folder != null)
                     folder.Name = name;
             }
@@ -125,15 +125,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             List<object> instances = new List<object>();
             foreach (object item in items)
             {
-                Prototype prototype = Adapters.As<Prototype>(item);
+                Prototype prototype = item.As<Prototype>();
                 if (prototype != null)
                 {
-                    instances.AddRange(Adapters.AsIEnumerable<object>(prototype.Modules));
-                    instances.AddRange(Adapters.AsIEnumerable<object>(prototype.Connections));
+                    instances.AddRange(prototype.Modules.AsIEnumerable<object>());
+                    instances.AddRange(prototype.Connections.AsIEnumerable<object>());
                     continue;
                 }
 
-                PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+                PrototypeFolder folder = item.As<PrototypeFolder>();
                 if (folder != null)
                     instances.Add(folder);
             }
@@ -174,9 +174,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             foreach (object item in items)
             {
-                if (!Adapters.Is<Element>(item) &&
-                    !Adapters.Is<Wire>(item) &&
-                    !Adapters.Is<Annotation>(item))
+                if (!item.Is<Element>() &&
+                    !item.Is<Wire>() &&
+                    !item.Is<Annotation>())
                 {
                     return false;
                 }
@@ -195,18 +195,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (items == null)
                 return;
 
-            object[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
             // create a new prototype
             DomNode node = new DomNode(PrototypeType);
             Prototype prototype = node.As<Prototype>();
             prototype.Name = "Prototype".Localize("Circuit prototype");
-            foreach (Element module in Adapters.AsIEnumerable<Element>(itemCopies))
+            foreach (Element module in itemCopies.AsIEnumerable<Element>())
                 prototype.Modules.Add(module);
-            foreach (Wire connection in Adapters.AsIEnumerable<Wire>(itemCopies))
+            foreach (Wire connection in itemCopies.AsIEnumerable<Wire>())
                 prototype.Connections.Add(connection);
 
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(m_activeItem);
+            PrototypeFolder folder = m_activeItem.As<PrototypeFolder>();
             if (folder == null)
                 folder = PrototypeFolder;
 
@@ -248,7 +248,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Enumeration of children of the parent object</returns>
         IEnumerable<object> ITreeView.GetChildren(object parent)
         {
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(parent);
+            PrototypeFolder folder = parent.As<PrototypeFolder>();
             if (folder != null)
             {
                 foreach (PrototypeFolder childFolder in folder.Folders)
@@ -268,14 +268,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="info">Display info to update</param>
         public void GetInfo(object item, ItemInfo info)
         {
-            PrototypeFolder category = Adapters.As<PrototypeFolder>(item);
+            PrototypeFolder category = item.As<PrototypeFolder>();
             if (category != null)
             {
                 info.Label = category.Name;
             }
             else
             {
-                Prototype prototype = Adapters.As<Prototype>(item);
+                Prototype prototype = item.As<Prototype>();
                 if (prototype != null)
                 {
                     info.Label = prototype.Name;

@@ -32,6 +32,10 @@ namespace Sce.Atf.Wpf.Applications
         {
         }
 
+        /// <summary>
+        /// Perform the Reconcile command</summary>
+        /// <param name="doing">True to perform the Reconcile; false to test whether Reconcile can be done</param>
+        /// <returns>True iff Reconcile can be done or was done</returns>
         protected override bool DoReconcile(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -66,6 +70,9 @@ namespace Sce.Atf.Wpf.Applications
             return true;
         }
 
+        /// <summary>
+        /// Display Checkin dialog</summary>
+        /// <param name="toCheckIns">List of resources to check in</param>
         protected override void ShowCheckInDialog(IList<IResource> toCheckIns)
         {
             var vm = new CheckInViewModel(SourceControlService, toCheckIns);

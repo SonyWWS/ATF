@@ -67,7 +67,7 @@ namespace SimpleDomEditorSample
                 typeof(HelpAboutCommand),               // Help -> About command
 
                 typeof(PaletteService),                 // global palette, for drag/drop instancing
-                typeof(HistoryLister),                  // vistual list of undo/redo stack
+                typeof(HistoryLister),                  // visual list of undo/redo stack
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,

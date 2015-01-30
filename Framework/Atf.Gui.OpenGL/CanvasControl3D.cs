@@ -32,7 +32,7 @@ namespace Sce.Atf.Rendering.OpenGL
             m_cameraController = new TrackBallCameraController();
             m_cameraController.Camera = m_camera;
 
-            m_camera.CameraChanged += new EventHandler(CameraChanged);
+            m_camera.CameraChanged += CameraChanged;
             Sphere3F sphere = new Sphere3F(new Vec3F(0, 0, 0), 25.0f);
             m_camera.ZoomOnSphere(sphere);
         }

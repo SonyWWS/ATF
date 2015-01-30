@@ -10,6 +10,8 @@ using Sce.Atf.Wpf.Models;
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Service to handle commands in menus and toolbars</summary>
     [Export(typeof(CommandService))]
     [Export(typeof(ICommandService))]
     [Export(typeof(IInitializable))]
@@ -25,6 +27,8 @@ namespace Sce.Atf.Wpf.Applications
             m_cachedRequerySuggestedHandler = CommandManager_RequerySuggested;
         }
 
+        /// <summary>
+        /// Finish initializing component</summary>
         public override void Initialize()
         {
             // Prevent register of user settings, keyboard shorcut commands etc for now
@@ -32,6 +36,10 @@ namespace Sce.Atf.Wpf.Applications
             CommandManager.RequerySuggested += m_cachedRequerySuggestedHandler;
         }
 
+        /// <summary>
+        /// Get command from tag</summary>
+        /// <param name="commandTag">Command tag</param>
+        /// <returns>ICommandItem representing a command</returns>
         public ICommandItem GetCommand(object commandTag)
         {
             CommandItem command;
@@ -41,6 +49,9 @@ namespace Sce.Atf.Wpf.Applications
 
         #region Overrides
 
+        /// <summary>
+        /// Registers menu info</summary>
+        /// <param name="info">MenuInfo to register</param>
         protected override sealed void RegisterMenuInfo(MenuInfo info)
         {
             base.RegisterMenuInfo(info);
@@ -50,6 +61,9 @@ namespace Sce.Atf.Wpf.Applications
                 ExportMenuModel(info);
         }
 
+        /// <summary>
+        /// Registers a unique CommandInfo object</summary>
+        /// <param name="info">CommandInfo to register</param>
         protected override void RegisterCommandInfo(CommandInfo info)
         {
             // Embedded image resources will not be available as WPF app resources
@@ -79,6 +93,10 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Unregisters a unique CommandInfo object</summary>
+        /// <param name="commandTag">CommandInfo object to unregister</param>
+        /// <param name="client">ICommandClient of command</param>
         public override void UnregisterCommand(object commandTag, ICommandClient client)
         {
             base.UnregisterCommand(commandTag, client);
@@ -100,6 +118,11 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Runs a context (right click popup) menu at the given screen point</summary>
+        /// <exception cref="NotSupportedException"> always because not supported</exception>
+        /// <param name="commandTags">Commands in menu; nulls indicate separators</param>
+        /// <param name="screenPoint">Point in screen coordinates</param>
         public override void RunContextMenu(IEnumerable<object> commandTags, System.Drawing.Point screenPoint)
         {
             throw new NotSupportedException("Use IContextMenuService");
@@ -109,6 +132,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IPartImportsSatisfiedNotification Members
 
+        /// <summary>
+        /// Notification when part's imports have been satisfied</summary>
         public void OnImportsSatisfied()
         {
             foreach (var menuInfo in m_menus)
@@ -156,10 +181,7 @@ namespace Sce.Atf.Wpf.Applications
 
         private void LegacyUpdateCommand(ICommandItem item)
         {
-            ICommandClient client = GetClient(item.CommandTag);
-            if (client == null)
-                client = m_activeClient;
-
+            ICommandClient client = GetClientOrActiveClient(item.CommandTag);
             if (client != null)
             {
                 var commandState = new CommandState { Text = item.Text, Check = item.IsChecked };

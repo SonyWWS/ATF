@@ -12,7 +12,7 @@ Test.Equal(0, fsm.States.Count, "Verify new document has no states")
 
 statesCnt = 10
 for i in range(statesCnt):
-    editingContext.InsertState(50, 50 + 50*i, "state#" + str(i), 64)
+    editingContext.InsertState(50, 50 + 50*i, "state#" + unicode(i), 64)
 
 Test.Equal(fsm.States.Count, statesCnt)
 
@@ -31,7 +31,7 @@ for i in range(statesCnt):
 
 cnt = 0
 for state in fsm.States:
-    Test.Equal("state#" + str(cnt), state.Name, "Verify name of state is consistent after redo")
+    Test.Equal("state#" + unicode(cnt), state.Name, "Verify name of state is consistent after redo")
     cnt = cnt + 1
 
 print Test.SUCCESS

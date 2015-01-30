@@ -49,10 +49,16 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Converts a Brush to a Color.
-    /// </summary>
+    /// Converts a Brush to a Color</summary>
     public class BrushToColorConverter : ConverterMarkupExtension<BrushToColorConverter>
     {
+        /// <summary>
+        /// Convert a brush to a SolidColorBrush</summary>
+        /// <param name="value">Brush to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted brush</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var solidColorBrush = value as SolidColorBrush;
@@ -68,8 +74,8 @@ namespace Sce.Atf.Wpf.ValueConverters
     public class ColorAndOpacityToBrushConverter : MultiConverterMarkupExtension<ColorAndOpacityToBrushConverter>
     {
         /// <summary>
-        /// Converts a Color to a SolidColorBrush</summary>
-        /// <param name="values">Color</param>
+        /// Converts Color values to a SolidColorBrush</summary>
+        /// <param name="values">Color values</param>
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
@@ -88,8 +94,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns inverse of a bool
-    /// </summary>
+    /// Converter for inverse of a Boolean</summary>
     public class InvertBoolConverter : ConverterMarkupExtension<InvertBoolConverter>
     {
         /// <summary>
@@ -118,7 +123,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns whether or not an object is null</summary>
+    /// Converter for whether or not an object is null</summary>
     public class IsNullConverter : ConverterMarkupExtension<IsNullConverter>
     {
         /// <summary>
@@ -135,7 +140,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns whether or not an object is non-null</summary>
+    /// Converter for whether or not an object is non-null</summary>
     public class IsNotNullConverter : ConverterMarkupExtension<IsNotNullConverter>
     {
         /// <summary>
@@ -151,8 +156,17 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for int to Boolean</summary>
     public class IntToBoolConverter : ConverterMarkupExtension<IntToBoolConverter>
     {
+        /// <summary>
+        /// Convert int to a bool</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)value > 0;
@@ -160,8 +174,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns true if type passed as parameter is assignable from type of value
-    /// </summary>
+    /// Converter for whether type passed as parameter is assignable from type of value</summary>
     public class IsAssignableFromConverter : ConverterMarkupExtension<IsAssignableFromConverter>
     {
         /// <summary>
@@ -181,18 +194,25 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Attempts to return a UI resource using the input value as a resource key</summary>
+    /// Converter for a UI resource using the input value as a resource key</summary>
     public class ResourceLookupConverter : ConverterMarkupExtension<ResourceLookupConverter>
     {
+        /// <summary>
+        /// Default constructor</summary>
         public ResourceLookupConverter()
         {
         }
 
+        /// <summary>
+        /// Constructor with FrameworkElement</summary>
+        /// <param name="element">FrameworkElement key</param>
         public ResourceLookupConverter(FrameworkElement element)
         {
             Source = element;
         }
 
+        /// <summary>
+        /// Get or set FrameworkElement key</summary>
         public FrameworkElement Source { get; set; }
 
         /// <summary>
@@ -216,7 +236,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns an image resource from a resource key.
+    /// Converter for an image resource from a resource key.
     /// This class is a workaround for a WPF bug (Fixed in .NET 4).
     /// that prevents binding a MenuItem.Icon to an ImageSource correctly! For details, see
     /// https://connect.microsoft.com/VisualStudio/feedback/details/497408/wpf-menuitem-icon-cannot-be-set-via-setter?wa=wsignin1.0 </summary>
@@ -269,15 +289,25 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Returns a cursor from a resource key.
-    /// </summary>
+    /// Converter for a cursor from a resource key</summary>
     public class CursorResourceLookupConverter : ConverterMarkupExtension<CursorResourceLookupConverter>
     {
+        /// <summary>
+        /// Attempt to convert a resource key to a cursor</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Convert(value);
         }
 
+        /// <summary>
+        /// Attempt to convert a resource key to a cursor</summary>
+        /// <param name="value">Object to convert</param>
+        /// <returns>Converted value or null if no conversion done</returns>
         public static object Convert(object value)
         {
             if (value == null)
@@ -378,8 +408,17 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for list to string</summary>
     public class ListToStringConverter : ConverterMarkupExtension<ListToStringConverter>
     {
+        /// <summary>
+        /// Attempt to convert a list to a string</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value or null if no conversion done</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var list = value as IEnumerable;
@@ -395,10 +434,16 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Converts a single value to a collection
-    /// </summary>
+    /// Converts a single value to a collection</summary>
     public class ItemToCollectionConverter : ConverterMarkupExtension<ItemToCollectionConverter>
     {
+        /// <summary>
+        /// Convert a single value to a collection</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var collection = new ObservableCollection<object>();
@@ -408,8 +453,7 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// GridLength to double value converter
-    /// </summary>
+    /// GridLength to double value converter</summary>
     [ValueConversion(typeof(GridLength), typeof(double))]
     public class DoubleToGridLengthConverter : ConverterMarkupExtension<DoubleToGridLengthConverter>
     {
@@ -460,12 +504,12 @@ namespace Sce.Atf.Wpf.ValueConverters
     public class ToDoubleConverter : ConverterMarkupExtension<ToDoubleConverter>
     {
         /// <summary>
-        /// Converts from int, long, byte, double, and float, to double</summary>
+        /// Converts to int, long, byte, double, or float</summary>
         /// <param name="value">Value to convert</param>
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>Double value</returns>
+        /// <returns>Double value, 0 if value == null, or Binding.DoNothing if value's type is not int, long, byte, double, or float</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
@@ -487,6 +531,13 @@ namespace Sce.Atf.Wpf.ValueConverters
             return Binding.DoNothing;
         }
 
+        /// <summary>
+        /// Convert back value</summary>
+        /// <param name="value">Value to convert back</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Value converted back</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
@@ -494,14 +545,22 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Enum to Boolean converter
-    /// Usage 'Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static value...}'
-    /// </summary>
+    /// Enum to Boolean converter.
+    /// Usage 'Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static value...}'</summary>
     [ValueConversion(typeof(Enum), typeof(bool))]
     public class EnumToBooleanConverter : ConverterMarkupExtension<EnumToBooleanConverter>
     {
+        /// <summary>
+        /// Get or set type of enumeration</summary>
         public Type EnumType { get; set; }
 
+        /// <summary>
+        /// Attempt to convert an enumeration value to a Boolean</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Parameter to test against value</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Binding.DoNothing if value or parameter is null. Otherwise, true iff value or parameter convert to the same string.</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
@@ -512,6 +571,13 @@ namespace Sce.Atf.Wpf.ValueConverters
             return checkValue.Equals(targetValue, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Convert back value from Boolean to enumeration value</summary>
+        /// <param name="value">Value to convert back</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">String representation of name or numeric value of enumeration value</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Value converted back or Binding.DoNothing if no conversion done</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
@@ -534,9 +600,18 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for enumeration value to array of values of constants</summary>
     [ValueConversion(typeof(Enum), typeof(string[]))]
     public class EnumValuesConverter : ConverterMarkupExtension<EnumValuesConverter>
     {
+        /// <summary>
+        /// Attempt to convert an enumeration value to array of values of constants in enumeration</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of value</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Array of values of constants in enumeration or original value if no conversion done</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null)
@@ -548,37 +623,78 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for null to Boolean</summary>
     [ValueConversion(typeof(bool), typeof(object))]
     public class NullToBoolConverter : ConverterMarkupExtension<NullToBoolConverter>
     {
+        /// <summary>
+        /// Test whether object null</summary>
+        /// <param name="value">Object to test</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>True iff value is null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (value == null);
         }
 
+        /// <summary>
+        /// Convert back value from Boolean to null</summary>
+        /// <param name="value">Value to convert back (unused)</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>null</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }
     }
 
+    /// <summary>
+    /// Converter for not null to Boolean</summary>
     [ValueConversion(typeof(bool), typeof(object))]
     public class NullToFalseConverter : ConverterMarkupExtension<NullToFalseConverter>
     {
+        /// <summary>
+        /// Test whether object is not null</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>True iff value is not null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value != null;
         }
 
+        /// <summary>
+        /// Convert back value to null</summary>
+        /// <param name="value">Value to convert back (unused)</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>null</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }
     }
 
+    /// <summary>
+    /// Converter for TimeSpan to another format</summary>
     [ValueConversion(typeof(TimeSpan), typeof(string))]
     public class TimeSpanFormatConverter : ConverterMarkupExtension<TimeSpanFormatConverter>
     {
+        /// <summary>
+        /// Attempt to convert a TimeSpan to time string</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted time string</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             TimeSpan timespan = (TimeSpan)value;
@@ -587,17 +703,16 @@ namespace Sce.Atf.Wpf.ValueConverters
     }
 
     /// <summary>
-    /// Used on any type, will override the standard behavior of ToString for enum values
-    /// </summary>
+    /// Converter used on any type, overriding the standard behavior of ToString for enumeration values</summary>
     public class DisplayStringConverter : ConverterMarkupExtension<DisplayStringConverter>
     {
         /// <summary>
-        /// Retrieves the display string for enum values marked with a DisplayStringAttribute</summary>
-        /// <param name="value">Value that may be an enum</param>
+        /// Retrieves the display string for enumeration values marked with a DisplayStringAttribute</summary>
+        /// <param name="value">Value that may be an enumeration</param>
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>Display string for enum value, or original value if no conversion found</returns>
+        /// <returns>Display string for enumeration value, or original value if no conversion found</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null)
@@ -613,9 +728,18 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for an enumeration to a description</summary>
     [ValueConversion(typeof(object), typeof(string))]
     public class EnumDescriptionConverter : ConverterMarkupExtension<EnumDescriptionConverter>
     {
+        /// <summary>
+        /// Attempt to convert an enumeration to a description</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Binding.DoNothing if value is null. Otherwise, enumeration description</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             // Default, non-converted result.
@@ -640,8 +764,17 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for scaling a double value</summary>
     public class ScaleDoubleConverter : ConverterMarkupExtension<ScaleDoubleConverter>
     {
+        /// <summary>
+        /// Scale a double value</summary>
+        /// <param name="value">Object to be scaled</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Scale factor</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Scaled double value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double dVal = (double)value;
@@ -660,8 +793,17 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for rounding a double value</summary>
     public class RoundDoubleConverter : ConverterMarkupExtension<RoundDoubleConverter>
     {
+        /// <summary>
+        /// Round a double to a given number of decimal places</summary>
+        /// <param name="value">Object to round</param>
+        /// <param name="targetType">Type of target</param>
+        /// <param name="parameter">Number decimal places to round</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double val = 0.0;
@@ -704,14 +846,30 @@ namespace Sce.Atf.Wpf.ValueConverters
             return val;
         }
 
+        /// <summary>
+        /// Convert back rounded value to double</summary>
+        /// <param name="value">Value to convert back</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Value converted back</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Convert(value, targetType, parameter, culture);
         }
     }
 
+    /// <summary>
+    /// Converter for indexed properties</summary>
     public class IndexerBindingConverter : MultiConverterMarkupExtension<IndexerBindingConverter>
     {
+        /// <summary>
+        /// Attempt to convert values to property value</summary>
+        /// <param name="values">Array of objects to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value or DependencyProperty.UnsetValue if no conversion done</returns>
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.Length < 2)
@@ -736,13 +894,29 @@ namespace Sce.Atf.Wpf.ValueConverters
         }
     }
 
+    /// <summary>
+    /// Converter for enum to Boolean</summary>
     public class EnumToBoolConverter : ConverterMarkupExtension<EnumToBoolConverter>
     {
+        /// <summary>
+        /// Test if value equals a parameter</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Parameter to test against value</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>True iff value equals parameter</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value.Equals(parameter);
         }
 
+        /// <summary>
+        /// Convert back Boolean to Binding.DoNothing or parameter</summary>
+        /// <param name="value">Value to convert back</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Possible return value</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>If value == false Binding.DoNothing, otherwise parameter</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value.Equals(false) ? Binding.DoNothing : parameter;

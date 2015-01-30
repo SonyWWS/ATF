@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
@@ -60,8 +61,22 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="parameters">Editor parameters</param>
         public void Initialize(string[] parameters)
         {
-            if (parameters.Length >= 1)
+            if (parameters.Length == 1)
+            {
                 m_filter = parameters[0];
+            }
+            else if (parameters.Length > 1)
+            {
+                // This editor only accept on parameter.
+                // If there are more than one, then combine them into one.
+                StringBuilder filter = new StringBuilder();
+                for (int i = 0; i < parameters.Length - 1; i++)
+                {
+                    filter.AppendFormat("{0},", parameters[i]);
+                }
+                filter.Append(parameters[parameters.Length - 1]);
+                m_filter = filter.ToString();                
+            }                        
         }
 
         #endregion

@@ -237,14 +237,10 @@ namespace UnitTests.Atf.Dom
 
             VisibleAdapter test = node.GetAdapter(typeof(VisibleAdapter)) as VisibleAdapter;
 
-            Assert.True(Enumerable.SequenceEqual(
-                test.GetDecorators(typeof(DomNodeAdapter)),
-                node.GetDecorators(typeof(DomNodeAdapter))));
+            Assert.True(test.GetDecorators(typeof(DomNodeAdapter)).SequenceEqual(node.GetDecorators(typeof(DomNodeAdapter))));
             Assert.AreEqual(test.GetDecoratorsType, typeof(DomNodeAdapter));
 
-            Assert.True(Enumerable.SequenceEqual(
-                test.GetDecorators(typeof(SimpleAdapter)),
-                node.GetDecorators(typeof(SimpleAdapter))));
+            Assert.True(test.GetDecorators(typeof(SimpleAdapter)).SequenceEqual(node.GetDecorators(typeof(SimpleAdapter))));
         }
 
         [Test]

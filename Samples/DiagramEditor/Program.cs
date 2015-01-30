@@ -12,7 +12,7 @@ using Sce.Atf.Applications;
 using Sce.Atf.Controls.Adaptable;
 using Sce.Atf.Controls.Adaptable.Graphs;
 using Sce.Atf.Dom;
-using GroupingCommands = Sce.Atf.Controls.Adaptable.Graphs.GroupingCommands;
+
 using LayeringCommands = Sce.Atf.Controls.Adaptable.Graphs.LayeringCommands;
 
 namespace DiagramEditorSample
@@ -84,7 +84,7 @@ namespace DiagramEditorSample
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
                                                         //  Reset All, Copy Value, Paste Value, Copy All, Paste All
 
-                typeof(HistoryLister),                  // vistual list of undo/redo stack
+                typeof(HistoryLister),                  // visual list of undo/redo stack
                 typeof(PrototypeLister),                // editable palette of instantiable item groups
                 typeof(LayerLister),                    // editable tree view of layers
 
@@ -101,9 +101,8 @@ namespace DiagramEditorSample
 
                 typeof(CircuitEditorSample.Editor),             // sample circuit editor
                 typeof(CircuitEditorSample.SchemaLoader),       // loads circuit schema and extends types
-                typeof(GroupingCommands),                       // circuit group/ungroup commands
+                typeof(CircuitEditorSample.GroupingCommands),   // circuit group/ungroup commands
                 typeof(CircuitControlRegistry),                 // circuit controls management
-                typeof(MasteringCommands),                      // circuit master/unmaster commands
                 typeof(CircuitEditorSample.ModulePlugin),       // component that defines circuit module types
                 typeof(LayeringCommands),                       // "Add Layer" context menu command for the Layer Lister
 

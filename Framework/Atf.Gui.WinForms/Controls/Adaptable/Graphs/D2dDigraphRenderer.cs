@@ -151,7 +151,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
-                foreach (TEdge edge in Enumerable.Reverse(graph.Edges))
+                foreach (TEdge edge in graph.Edges.Reverse())
                 {
                     if (Pick(edge, v))
                     {
@@ -161,7 +161,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (TNode node in Enumerable.Reverse(graph.Nodes))
+            foreach (TNode node in graph.Nodes.Reverse())
             {
                 if (Pick(node, p))
                 {

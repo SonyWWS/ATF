@@ -38,7 +38,6 @@ namespace FsmEditorSample
         /// <param name="documentService">Document service</param>
         /// <param name="prototypeLister">Prototype lister</param>
         /// <param name="schemaLoader">Schema loader</param>
-        /// <param name="diagramTheme">Diagram theme, which determines how elements in diagrams are rendered and picked</param>
         [ImportingConstructor]
         public Editor(
             IControlHostService controlHostService,
@@ -47,8 +46,7 @@ namespace FsmEditorSample
             IDocumentRegistry documentRegistry,
             IDocumentService documentService,
             PrototypeLister prototypeLister,
-            SchemaLoader schemaLoader,
-            DiagramTheme diagramTheme)
+            SchemaLoader schemaLoader)
         {
             m_controlHostService = controlHostService;
             m_commandService = commandService;
@@ -125,7 +123,7 @@ namespace FsmEditorSample
         /// <summary>
         /// Document editor information for FSM editor</summary>
         public static DocumentClientInfo EditorInfo =
-            new DocumentClientInfo(Localizer.Localize("Finite State Machine"), ".fsm", null, null);
+            new DocumentClientInfo("Finite State Machine".Localize(), ".fsm", null, null);
 
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
@@ -276,7 +274,7 @@ namespace FsmEditorSample
         /// <param name="document">Document to show</param>
         public void Show(IDocument document)
         {
-            ViewingContext viewingContext = Adapters.As<ViewingContext>(document);
+            ViewingContext viewingContext = document.As<ViewingContext>();
             m_controlHostService.Show(viewingContext.Control);
         }
 
@@ -301,7 +299,7 @@ namespace FsmEditorSample
         /// <param name="document">Document to close</param>
         public void Close(IDocument document)
         {
-            EditingContext context = Adapters.As<EditingContext>(document);
+            EditingContext context = document.As<EditingContext>();
 
             // close all active EditingContexts in the document
             foreach (DomNode node in context.DomNode.Subtree)
@@ -312,7 +310,7 @@ namespace FsmEditorSample
             m_documentRegistry.Remove(document);
 
             // finally unregister the control and release the reference to it
-            ViewingContext viewingContext = Adapters.As<ViewingContext>(document);
+            ViewingContext viewingContext = document.As<ViewingContext>();
             m_controlHostService.UnregisterControl(viewingContext.Control);
             viewingContext.Control.Dispose();
             viewingContext.Control = null;
@@ -409,7 +407,7 @@ namespace FsmEditorSample
         {
             // handle states and transitions
             StringBuilder sb = new StringBuilder();
-            ICustomTypeDescriptor customTypeDescriptor = Adapters.As<ICustomTypeDescriptor>(hoverTarget);
+            ICustomTypeDescriptor customTypeDescriptor = hoverTarget.As<ICustomTypeDescriptor>();
             if (customTypeDescriptor != null)
             {
                 // Get properties interface

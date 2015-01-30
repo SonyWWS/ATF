@@ -64,8 +64,8 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Gets or sets the window's bounding rectangle, which defines the visible
-        /// area of the canvas</summary>
+        /// Gets or sets the window's bounding rectangle in client coordinates,
+        /// which defines the visible area of the canvas</summary>
         public Rectangle WindowBounds
         {
             get { return m_windowBounds; }

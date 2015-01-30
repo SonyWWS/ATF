@@ -19,8 +19,12 @@ namespace Sce.Atf.Controls.CurveEditing
     public interface ICurve
     {
         /// <summary>
-        /// Gets curve name</summary>
-        string Name { get; }
+        /// Gets or sets curve name</summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets display name or null</summary>
+        string DisplayName { get; set; }
 
         /// <summary>
         /// Gets or sets curve Interpolation type</summary>        
@@ -47,12 +51,12 @@ namespace Sce.Atf.Controls.CurveEditing
         float MaxY { get; set; }
 
         /// <summary>
-        /// Gets x axis label</summary>
-        string XLabel { get; }
+        /// Gets or sets x axis label</summary>
+        string XLabel { get; set; }
 
         /// <summary>
-        /// Gets y axis label</summary>
-        string YLabel { get; }
+        /// Gets or sets y axis label</summary>
+        string YLabel { get; set; }
 
         /// <summary>
         /// Gets or sets curve color</summary>

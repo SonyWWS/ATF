@@ -258,7 +258,7 @@ namespace Sce.Atf.Controls.Adaptable
                             contentBounds.Width = Math.Max(contentBounds.Width, MinimumWidth);
                             contentBounds.Height = Math.Max(contentBounds.Height, MinimumHeight);
 
-                            PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - annotationData.TopLine * m_theme.TextFormat.FontHeight);
+                            PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - annotationData.GetLineYOffset(annotationData.TopLine) );
                             var result = new AnnotationHitEventArgs(annotation, label);
                             result.Position = new PointF(p.X - origin.X, p.Y - origin.Y);
                             return result;
@@ -722,7 +722,8 @@ namespace Sce.Atf.Controls.Adaptable
                     AdaptedControl.Capture = true;
 
                     if (m_autoTranslateAdapter != null)
-                        m_autoTranslateAdapter.Enabled = true;
+                        // annotation local text scrolling should not operate when dragging out of control's client area
+                        m_autoTranslateAdapter.Enabled = !m_scrolling; 
                 }                             
             }
         }
@@ -736,13 +737,13 @@ namespace Sce.Atf.Controls.Adaptable
 
             if (m_resizing)
             {
-                ResizeAnnotation(m_mousePick.Part.Cast<DiagramBorder>());            
+                ResizeAnnotation(m_mousePick.Part.As<DiagramBorder>());            
                 D2dControl.Invalidate();
                 return;
             }
             if (m_scrolling)
             {
-                ScrollAnnotation(m_mousePick.Part.Cast<DiagramScrollBar>());
+                ScrollAnnotation(m_mousePick.Part.As<DiagramScrollBar>());
                 D2dControl.Invalidate();
                 return;
             }
@@ -853,7 +854,11 @@ namespace Sce.Atf.Controls.Adaptable
 
             Color backColor = m_coloringContext == null
                                   ? SystemColors.Info
-                                  : (Color) m_coloringContext.GetColor(ColoringTypes.BackColor, annotation);
+                                  : m_coloringContext.GetColor(ColoringTypes.BackColor, annotation);
+            Color foreColor = m_coloringContext == null
+                        ? SystemColors.WindowText
+                        : m_coloringContext.GetColor(ColoringTypes.ForeColor, annotation);
+
             // keep the width of border in 1 pixel after transformation to avoid D2d antialiasing away the line
             float borderThickness = 1.0f/m_scaleX;
             g.FillRectangle(bounds, backColor);
@@ -887,17 +892,22 @@ namespace Sce.Atf.Controls.Adaptable
                     var annotationEditor = m_annotationEditors[annotation];
                     if (annotationEditor.TextLayout.Text != annotation.Text) // text content changed, for example, undo,redo
                     {
+                        // TextLayout.Text is immutable, have to recreate TextLayout object
                         annotationEditor.ResetText(annotation.Text);
                     }
                     topLine = annotationEditor.TopLine;
-                    textLayout = m_annotationEditors[annotation].TextLayout;
+                    textLayout = annotationEditor.TextLayout;
                     annotationEditor.VerticalScrollBarVisibe = textLayout.Height > textLayout.LayoutHeight;
 
-                    if (m_annotationEditors[annotation].VerticalScrollBarVisibe)
+                    if (annotationEditor.VerticalScrollBarVisibe)
                         textBounds.Width -= ScrollBarWidth + 2 * ScrollBarMargin;
-                    textLayout.LayoutWidth = textBounds.Width;
-                    textLayout.LayoutHeight = textBounds.Height;
-                 
+                    if (Math.Abs(textLayout.LayoutWidth - textBounds.Width) +
+                        Math.Abs(textLayout.LayoutHeight - textBounds.Height) > 1.0)
+                    {
+                        textLayout.LayoutWidth = textBounds.Width; // layout width and height can be updated
+                        textLayout.LayoutHeight = textBounds.Height;
+                        annotationEditor.Validate();
+                    }
                 }
 
                 if (textLayout == null)
@@ -924,7 +934,8 @@ namespace Sce.Atf.Controls.Adaptable
                 }
 
                 var annotationData = m_annotationEditors[annotation];
-                PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - topLine *  m_theme.TextFormat.FontHeight);
+                float yOffset = annotationData.GetLineYOffset(topLine);
+                PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - yOffset);
 
                 g.PushAxisAlignedClip(contentBounds);
 
@@ -942,8 +953,7 @@ namespace Sce.Atf.Controls.Adaptable
                     }               
                 }
 
-                // draw caret
-                
+                // draw caret             
                 if ( style == DiagramDrawingStyle.Selected || style == DiagramDrawingStyle.LastSelected)
                 {
                     textLayout = annotationData.TextLayout;
@@ -972,16 +982,16 @@ namespace Sce.Atf.Controls.Adaptable
                 }
 
                 // draw text 
-                g.DrawTextLayout(origin, textLayout, m_theme.TextBrush); 
+                g.DrawTextLayout(origin, textLayout, foreColor); 
 
                 g.PopAxisAlignedClip();
 
                 // draw v-scroll bar
                 if (contentBounds.Height < textLayout.Height)
                 {
-                    float visibleLines = contentBounds.Height / m_theme.TextFormat.FontHeight;
-                    float vMin = topLine * textLayout.LayoutHeight / textLayout.LineCount;
-                    float vMax = (topLine + visibleLines-1) * textLayout.LayoutHeight / textLayout.LineCount;
+                    float visibleLines = annotationData.GetVisibleLines();
+                    float vMin = topLine * contentBounds.Height / textLayout.LineCount;
+                    float vMax = (topLine + visibleLines - 1) * contentBounds.Height / textLayout.LineCount;
                     if (m_scrolling)
                     {
                         var trackBounds = new RectangleF(contentBounds.Right - ScrollBarMargin - ScrollBarWidth, contentBounds.Y, ScrollBarWidth, contentBounds.Height);
@@ -1004,6 +1014,9 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void ResizeAnnotation(DiagramBorder diagramBorder)
         {
+            if (diagramBorder == null)
+                return;
+
             // Do the work in world coordinates.
             Point currentPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, CurrentPoint);
             Point firstPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, FirstPoint);
@@ -1058,17 +1071,19 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void ScrollAnnotation(DiagramScrollBar scrollBar)
         {
+            if (scrollBar == null)
+                return;
 
             Point delta = Delta;
             var annotationData = m_annotationEditors[scrollBar.Item.Cast<IAnnotation>()];
             float lineHeight = annotationData.TextLayout.Height /annotationData.TextLayout.LineCount;
             float lines = delta.Y / lineHeight;
-            int newTopLine = m_startTopLine + (int)lines;
+            int newTopLine = m_startTopLine + (int)Math.Ceiling(lines);
             float visibleLines = annotationData.TextLayout.LayoutHeight / lineHeight;
 
             if (newTopLine < 0)
                 newTopLine = 0;
-            if (newTopLine + visibleLines - 1 > annotationData.TextLayout.LineCount)
+            if ((int)(newTopLine + visibleLines - 1) > annotationData.TextLayout.LineCount)
                 newTopLine = annotationData.TopLine;
             annotationData.TopLine =  newTopLine >=0?  newTopLine:0;
         }
@@ -1112,6 +1127,10 @@ namespace Sce.Atf.Controls.Adaptable
                 return;
                
             var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
+
+            // accepts input chars under WM_CHAR message only
+            if (AdaptedControl.IsImeChar)
+                return;
       
             switch (e.KeyChar)
             {
@@ -1266,6 +1285,10 @@ namespace Sce.Atf.Controls.Adaptable
                     }, EditAnnotation);
 
             }
+            else if (e.KeyCode == Keys.C && ctrlPressed)
+            {
+                CopyToClipboard(annotation);
+            }
             else if (e.KeyCode == Keys.V && ctrlPressed)
             {              
                 transactionContext.DoTransaction(() =>
@@ -1297,7 +1320,7 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void InsertChar(IAnnotation annotation, TextEditor annotationEditor, char charValue)
         {
-            var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
+           var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
             transactionContext.DoTransaction(() =>
                 {
                     DeleteTextSelection(annotation);
@@ -1441,11 +1464,18 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Tests when the annotation is selected and the adapted control has keyboard focus</summary>
         /// <param name="annotation">IAnnotation to test</param>
-        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
+        /// <returns>True iff the adapted control has input focus,  the annotation node is selected, 
+        /// and text selected for the annotation node</returns>
         public bool CanCopyText(IAnnotation annotation)
         {
-            return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
-                AdaptedControl.HasKeyboardFocus;
+            if (m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
+                AdaptedControl.Focused)
+            {
+                string textSelected = TextSelected(annotation);
+                return !string.IsNullOrEmpty(textSelected);
+            }
+
+            return false;
         }
 
         /// <summary>

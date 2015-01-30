@@ -6,9 +6,8 @@ namespace Sce.Atf.Dom
 {
     /// <summary>
     /// Adapter that ensures that every DOM node in the subtree has a unique id local to a category</summary>
-    /// <remarks>Each DomNode in a Dom-Tree can be assigned a category key for unique id , 
-    /// a DomNode has no category key associated by default falls to default category
-    ///</remarks>
+    /// <remarks>Each DomNode in a Dom-Tree can be assigned a category key for unique id; 
+    /// a DomNode has no category key associated by default falls to default category</remarks>
     public class CategoryUniqueIdValidator : IdValidator
     {
         /// <summary>
@@ -23,6 +22,8 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Get the id category of the given node</summary>
+        /// <param name="node">Node</param>
+        /// <returns>Id category</returns>
         protected virtual object GetIdCategory(DomNode node)
         {
             return null; 

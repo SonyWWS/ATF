@@ -86,18 +86,20 @@ namespace FsmEditorSample
 
                 // annotate state and annotation types with display information for palette
 
+                Schema.stateType.labelAttribute.DefaultValue = "State".Localize();
+
                 Schema.stateType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.stateType.Type,
-                        Localizer.Localize("State"),
-                        Localizer.Localize("State in a finite state machine"),
+                        (string)Schema.stateType.labelAttribute.DefaultValue,
+                        "State in a finite state machine".Localize(),
                         Resources.StateImage));
 
                 Schema.annotationType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.annotationType.Type,
-                        Localizer.Localize("Comment"),
-                        Localizer.Localize("Comment on state machine"),
+                        "Comment".Localize(),
+                        "Comment on state machine".Localize(),
                         Resources.AnnotationImage));
 
                 // register property descriptors on state, transition, folder types
@@ -106,48 +108,48 @@ namespace FsmEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 Schema.stateType.labelAttribute, // 'nameAttribute' is unique id, label is user visible name
                                 null,
-                                Localizer.Localize("State name"),
+                                "State name".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Size"),
+                                "Size".Localize(),
                                 Schema.stateType.sizeAttribute,
                                 null,
-                                Localizer.Localize("State size"),
+                                "State size".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Hidden"),
+                                "Hidden".Localize(),
                                 Schema.stateType.hiddenAttribute,
                                 null,
-                                Localizer.Localize("Whether or not state is hidden"),
+                                "Whether or not state is hidden".Localize(),
                                 false,
                                 new BoolEditor()),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Start"),
+                                "Start".Localize(),
                                 Schema.stateType.startAttribute,
                                 null,
-                                Localizer.Localize("Whether or not state is the start state"),
+                                "Whether or not state is the start state".Localize(),
                                 false,
                                 new BoolEditor()),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Entry Action"),
+                                "Entry Action".Localize(),
                                 Schema.stateType.entryActionAttribute,
                                 null,
-                                Localizer.Localize("Action performed when entering state"),
+                                "Action performed when entering state".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Action"),
+                                "Action".Localize(),
                                 Schema.stateType.actionAttribute,
                                 null,
-                                Localizer.Localize("Action performed while in state"),
+                                "Action performed while in state".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Exit Action"),
+                                "Exit Action".Localize(),
                                 Schema.stateType.exitActionAttribute,
                                 null,
-                                Localizer.Localize("Action performed when exiting state"),
+                                "Action performed when exiting state".Localize(),
                                 false),
                     }));
 
@@ -155,22 +157,22 @@ namespace FsmEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Label"),
+                                "Label".Localize(),
                                 Schema.transitionType.labelAttribute,
                                 null,
-                                Localizer.Localize("Label displayed on transition"),
+                                "Label displayed on transition".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Trigger"),
+                                "Trigger".Localize(),
                                 Schema.transitionType.triggerAttribute,
                                 null,
-                                Localizer.Localize("Event which triggers transition"),
+                                "Event which triggers transition".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Action"),
+                                "Action".Localize(),
                                 Schema.transitionType.actionAttribute,
                                 null,
-                                Localizer.Localize("Action performed when making transition"),
+                                "Action performed when making transition".Localize(),
                                 false),
                         }));
 
@@ -178,10 +180,10 @@ namespace FsmEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 Schema.prototypeFolderType.nameAttribute,
                                 null,
-                                Localizer.Localize("Prototype folder name"),
+                                "Prototype folder name".Localize(),
                                 false)
                     }));
 
@@ -189,10 +191,10 @@ namespace FsmEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Text"),
+                                "Text".Localize(),
                                 Schema.annotationType.textAttribute,
                                 null,
-                                Localizer.Localize("Comment text"),
+                                "Comment text".Localize(),
                                 false)
                     }));
 

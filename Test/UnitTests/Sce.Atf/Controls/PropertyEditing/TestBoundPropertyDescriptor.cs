@@ -24,7 +24,7 @@ namespace UnitTests.Atf
 
             public int ReadOnlyProperty { get; private set; }
 
-            public string Field = "unset";
+            //public string Field = "unset";
         }
 
         [Test]

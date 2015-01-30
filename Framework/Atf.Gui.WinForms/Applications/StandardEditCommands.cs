@@ -427,10 +427,10 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets ICommandService</summary>
+        /// Gets ICommandService for edit commands</summary>
         protected ICommandService CommandService { get { return m_commandService; } }
         /// <summary>
-        /// Gets IContextRegistry</summary>
+        /// Gets IContextRegistry for edit commands</summary>
         protected IContextRegistry ContextRegistry { get { return m_contextRegistry; } }
 
         private readonly ICommandService m_commandService;

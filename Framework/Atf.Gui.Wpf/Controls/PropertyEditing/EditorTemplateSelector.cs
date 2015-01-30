@@ -12,18 +12,25 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
     /// Provides a way to select a value editor</summary>
     public class EditorTemplateSelector : DataTemplateSelector
     {
+        /// <summary>
+        /// Get default selector</summary>
         public static EditorTemplateSelector Default
         {
             get { return s_default ?? (s_default = new EditorTemplateSelector(new ObservableCollection<ValueEditor>())); }
         }
         private static EditorTemplateSelector s_default;
 
+        /// <summary>
+        /// Get default non-editing selector</summary>
         public static EditorTemplateSelector DefaultNonEdit
         {
             get { return s_defaultNonEdit ?? (s_defaultNonEdit = new EditorTemplateSelector(new ObservableCollection<ValueEditor>()) { SelectNonEditingTemplates = true }); }
         }
         private static EditorTemplateSelector s_defaultNonEdit;
 
+        /// <summary>
+        /// Constructor with editors</summary>
+        /// <param name="editors">Enumeration of editors</param>
         public EditorTemplateSelector(IEnumerable<ValueEditor> editors)
         {
             Editors = editors;

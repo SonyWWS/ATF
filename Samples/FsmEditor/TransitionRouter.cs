@@ -23,9 +23,9 @@ namespace FsmEditorSample
 
             // subscribe to DOM change events to invalidate transition routing on any
             //  change to transitions.
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             // get initial routing
             RouteTransitions();

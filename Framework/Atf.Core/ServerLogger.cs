@@ -113,7 +113,7 @@ namespace Sce.Atf
             //  exception on a worker thread that brings the whole app down. Exceptions are thrown under normal
             //  conditions such as not having a network connection. Since 'callback' can't be null, let's use
             //  our own do-nothing exception handler.
-            m_recapConnection.callback = new RecapExceptionCallback(HandleRecapException);
+            m_recapConnection.callback = HandleRecapException;
         }
 
         private void TestNotInitialized()

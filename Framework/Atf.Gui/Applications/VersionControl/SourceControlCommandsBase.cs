@@ -95,6 +95,8 @@ namespace Sce.Atf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Initialize MEF component by registering commands with Command service</summary>
         public virtual void Initialize()
         {
             if ((RegisterCommands & CommandRegister.Enabled) == CommandRegister.Enabled)
@@ -230,6 +232,10 @@ namespace Sce.Atf.Applications
 
         #region ICommandClient Members
 
+        /// <summary>
+        /// Check whether the client can do the command, if it handles it</summary>
+        /// <param name="commandTag">Command to be done</param>
+        /// <returns>True iff client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             if (!(commandTag is Command))
@@ -292,6 +298,9 @@ namespace Sce.Atf.Applications
             return canDo;
         }
 
+        /// <summary>
+        /// Do the command</summary>
+        /// <param name="commandTag">Command to be done</param>
         public virtual void DoCommand(object commandTag)
         {
             if (!(commandTag is Command))
@@ -349,6 +358,10 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// Update command state for given command</summary>
+        /// <param name="commandTag">Command</param>
+        /// <param name="commandState">Command info to update</param>
         public virtual void UpdateCommand(object commandTag, CommandState commandState)
         {
             if ((commandTag is Command))
@@ -368,6 +381,7 @@ namespace Sce.Atf.Applications
         /// Gets tags for context menu (right click) commands</summary>
         /// <param name="context">Context containing target object</param>
         /// <param name="target">Right clicked object, or null if none</param>
+        /// <returns>Enumeration of command tags</returns>
         public virtual IEnumerable<object> GetCommands(object context, object target)
         {
             IResource resource = target.As<IResource>();
@@ -376,6 +390,8 @@ namespace Sce.Atf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Get source control context from context registry</summary>
         protected virtual ISourceControlContext SourceControlContext
         {
             get
@@ -404,8 +420,9 @@ namespace Sce.Atf.Applications
 
             if (SourceControlService.GetStatus(e.Document.Uri) == SourceControlStatus.NotControlled)
             {
-                string message = "Add document ".Localize() + e.Document.Uri.AbsolutePath + " to version control?".Localize();
-                var result = MessageBoxes.Show(message, " Add document to Version Control".Localize(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                string message = string.Format("Add document {0} to version control?".Localize(), e.Document.Uri.AbsolutePath);
+                var result = MessageBoxes.Show(message, "Add Document to Version Control".Localize("this is the title of a dialog box that is asking a question"),
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     SourceControlService.Add(e.Document.Uri);
@@ -413,6 +430,10 @@ namespace Sce.Atf.Applications
             }
         }
 
+        /// <summary>
+        /// Handle document dirty changed event</summary>
+        /// <param name="sender">Document registry</param>
+        /// <param name="e">Event arguments</param>
         protected virtual void OnDocumentDirtyChanged(object sender, EventArgs e)
         {
             IDocument document = sender as IDocument;
@@ -427,11 +448,11 @@ namespace Sce.Atf.Applications
                     return;
                 }
 
-                string message = "Check out the file\r\n\r\n".Localize();
-                message += document.Uri.LocalPath;
-                message += "\r\n\r\nto be able to save the changes?".Localize();
+                string message = string.Format("Check out the file\r\n\r\n{0}\r\n\r\nto be able to save the changes?".Localize(),
+                    document.Uri.LocalPath);
 
-                var result = MessageBoxes.Show(message, "Check Out File".Localize(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result = MessageBoxes.Show(message, "Check Out File".Localize("this is the title of a dialog box that is asking a question"),
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                     TestCheckedIn(sender);
             }
@@ -439,6 +460,10 @@ namespace Sce.Atf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Perform the Refresh command</summary>
+        /// <param name="doing">True to perform the Refresh; false to test whether Refresh can be done</param>
+        /// <returns>True iff Refresh can be done or was done</returns>
         protected virtual bool DoRefresh(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -460,11 +485,19 @@ namespace Sce.Atf.Applications
             return uris.Count > 0; // something to refresh?
         }
 
+        /// <summary>
+        /// Perform the Reconcile command</summary>
+        /// <param name="doing">True to perform the Reconcile; false to test whether Reconcile can be done</param>
+        /// <returns>True iff Reconcile can be done or was done</returns>
         protected virtual bool DoReconcile(bool doing)
         {
             return false;
         }
 
+        /// <summary>
+        /// Add path to list of source controlled URIs</summary>
+        /// <param name="path">Path to add</param>
+        /// <param name="uris">List of source controlled URIs</param>
         protected static void GetSourceControlledUri(object path, List<Uri> uris)
         {
             IResource resource = path.As<IResource>();
@@ -472,6 +505,10 @@ namespace Sce.Atf.Applications
                 uris.Add(resource.Uri);
         }
 
+        /// <summary>
+        /// Perform the Add command</summary>
+        /// <param name="doing">True to perform the Add; false to test whether Add can be done</param>
+        /// <returns>True iff Add can be done or was done</returns>
         protected virtual bool DoAdd(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -494,6 +531,10 @@ namespace Sce.Atf.Applications
             return addedCount != 0;
         }
 
+        /// <summary>
+        /// Perform the CheckOut command</summary>
+        /// <param name="doing">True to perform the CheckOut; false to test whether CheckOut can be done</param>
+        /// <returns>True iff CheckOut can be done or was done</returns>
         protected virtual bool DoCheckOut(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -511,6 +552,10 @@ namespace Sce.Atf.Applications
             return checkedOutCount != 0;
         }
 
+        /// <summary>
+        /// Perform the CheckIn command</summary>
+        /// <param name="doing">True to perform the CheckIn; false to test whether CheckIn can be done</param>
+        /// <returns>True iff CheckIn can be done or was done</returns>
         protected virtual bool DoCheckIn(bool doing)
         {
             if (SourceControlService == null || ContextRegistry == null ||
@@ -559,10 +604,17 @@ namespace Sce.Atf.Applications
             return result;
         }
 
+        /// <summary>
+        /// Display Checkin dialog</summary>
+        /// <param name="toCheckIns">List of resources to check in</param>
         protected virtual void ShowCheckInDialog(IList<IResource> toCheckIns)
         {
         }
 
+        /// <summary>
+        /// Perform the Sync command</summary>
+        /// <param name="doing">True to perform the Sync; false to test whether Sync can be done</param>
+        /// <returns>True iff Sync can be done or was done</returns>
         protected virtual bool DoSync(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -589,6 +641,10 @@ namespace Sce.Atf.Applications
             return count != 0;
         }
 
+        /// <summary>
+        /// Perform the Revert command</summary>
+        /// <param name="doing">True to perform the Revert; false to test whether Revert can be done</param>
+        /// <returns>True iff Revert can be done or was done</returns>
         protected virtual bool DoRevert(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -597,7 +653,7 @@ namespace Sce.Atf.Applications
             foreach (IResource resource in SourceControlContext.Resources)
             {
                 SourceControlStatus status = GetStatus(resource);
-                if (status != SourceControlStatus.CheckedOut && status != SourceControlStatus.Added)
+                if (status != SourceControlStatus.CheckedOut && status != SourceControlStatus.Added && status != SourceControlStatus.Deleted)
                     return false;
             }
 
@@ -612,7 +668,7 @@ namespace Sce.Atf.Applications
                     foreach (IResource resource in SourceControlContext.Resources.ToArray())
                     {
                         SourceControlStatus status = GetStatus(resource);
-                        if (status == SourceControlStatus.CheckedOut || status == SourceControlStatus.Added)
+                        if (status == SourceControlStatus.CheckedOut || status == SourceControlStatus.Added || status == SourceControlStatus.Deleted)
                         {
                             SourceControlService.Revert(resource.Uri);
                             Reload(resource);
@@ -624,6 +680,10 @@ namespace Sce.Atf.Applications
             return true;
         }
 
+        /// <summary>
+        /// Perform the Connect command</summary>
+        /// <param name="doing">True to perform the Connect; false to test whether Connect can be done</param>
+        /// <returns>True iff Connect can be done or was done</returns>
         protected virtual bool DoConnection(bool doing)
         {
             if (SourceControlService == null)
@@ -634,6 +694,10 @@ namespace Sce.Atf.Applications
                 : SourceControlService.CanConfigure;
         }
 
+        /// <summary>
+        /// Get the source control status of an item</summary>
+        /// <param name="resource">URI representing the path to item</param>
+        /// <returns>Status of item</returns>
         protected virtual SourceControlStatus GetStatus(IResource resource)
         {
             Uri uri = resource.Uri;
@@ -643,6 +707,10 @@ namespace Sce.Atf.Applications
             return SourceControlStatus.FileDoesNotExist;
         }
 
+        /// <summary>
+        /// Reload document associated with resource</summary>
+        /// <param name="resource">Resource to reload</param>
+        /// <remarks>Reload a document when it is refreshed, for example</remarks>
         protected virtual void Reload(IResource resource)
         {
             IDocument doc = resource as IDocument;
@@ -680,6 +748,8 @@ namespace Sce.Atf.Applications
             Connection
         }
 
+        /// <summary>
+        /// Get current Command</summary>
         protected Command CurrentCommand
         {
             get { return m_currentCommnd; }
@@ -728,6 +798,8 @@ namespace Sce.Atf.Applications
         private CommandRegister m_registerCommands = CommandRegister.Default;
         private CommandVisibility m_commandVisibility = CommandVisibility.Menu | CommandVisibility.Toolbar;
 
+        /// <summary>
+        /// Get IContextRegistry</summary>
         [Import(AllowDefault = true)]
         protected IContextRegistry ContextRegistry
         {

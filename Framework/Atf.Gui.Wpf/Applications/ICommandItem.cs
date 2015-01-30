@@ -24,12 +24,16 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets image resource for command</summary>
         object ImageSourceKey { get; set; }
 
+        /// <summary>
+        /// Get command keyboard shortcuts</summary>
         IEnumerable<Keys> Shortcuts { get; set; }
 
         /// <summary>
         /// Gets where command is visible, as on menus, toolbars, etc.</summary>
         CommandVisibility Visibility { get; }
 
+        /// <summary>
+        /// Get command index</summary>
         int Index { get; }
     }
 

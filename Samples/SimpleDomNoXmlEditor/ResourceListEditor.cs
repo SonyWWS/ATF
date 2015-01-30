@@ -37,7 +37,7 @@ namespace SimpleDomNoXmlEditorSample
             m_commandService = commandService;
             m_contextRegistry = contextRegistry;
 
-            m_contextRegistry.ActiveContextChanged += new EventHandler(contextRegistry_ActiveContextChanged);
+            m_contextRegistry.ActiveContextChanged += contextRegistry_ActiveContextChanged;
         }
 
         private IControlHostService m_controlHostService;
@@ -66,27 +66,23 @@ namespace SimpleDomNoXmlEditorSample
             m_resourcesListView.LabelEdit = true;
             m_resourcesListView.Dock = DockStyle.Fill;
 
-            m_resourcesListView.DragOver += new DragEventHandler(resourcesListView_DragOver);
-            m_resourcesListView.DragDrop += new DragEventHandler(resourcesListView_DragDrop);
-            m_resourcesListView.MouseUp += new MouseEventHandler(resourcesListView_MouseUp);
+            m_resourcesListView.DragOver += resourcesListView_DragOver;
+            m_resourcesListView.DragDrop += resourcesListView_DragDrop;
+            m_resourcesListView.MouseUp += resourcesListView_MouseUp;
             m_resourcesListViewAdapter = new ListViewAdapter(m_resourcesListView);
             m_resourcesListViewAdapter.LabelEdited +=
-                new EventHandler<LabelEditedEventArgs<object>>(resourcesListViewAdapter_LabelEdited);
+                resourcesListViewAdapter_LabelEdited;
 
             m_resourcesControlInfo = new ControlInfo(
-                Localizer.Localize("Resources"),
-                Localizer.Localize("Resources for selected Event"),
+                "Resources".Localize(),
+                "Resources for selected Event".Localize(),
                 StandardControlGroup.Bottom);
 
             m_controlHostService.RegisterControl(m_resourcesListView, m_resourcesControlInfo, this);
 
             if (m_settingsService != null)
             {
-                SettingsServices.RegisterSettings(
-                    m_settingsService,
-                    this,
-                    new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", "", "")
-                );
+                m_settingsService.RegisterSettings(this, new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", "", ""));
             }
         }
 
@@ -157,7 +153,7 @@ namespace SimpleDomNoXmlEditorSample
             {
                 if (m_eventSequenceContext != null)
                 {
-                    m_eventSequenceContext.SelectionChanged -= new EventHandler(eventSequenceContext_SelectionChanged);
+                    m_eventSequenceContext.SelectionChanged -= eventSequenceContext_SelectionChanged;
                 }
 
                 m_eventSequenceContext = context;
@@ -166,7 +162,7 @@ namespace SimpleDomNoXmlEditorSample
                 {
                     // track the most recently active EventSequenceContext's selection to get the most recently
                     //  selected event.
-                    m_eventSequenceContext.SelectionChanged += new EventHandler(eventSequenceContext_SelectionChanged);
+                    m_eventSequenceContext.SelectionChanged += eventSequenceContext_SelectionChanged;
                 }
 
                 UpdateEvent();
@@ -210,8 +206,7 @@ namespace SimpleDomNoXmlEditorSample
                 object target = null;
 
                 IEnumerable<object> commands =
-                    ContextMenuCommandProvider.GetCommands(
-                        Lazies.GetValues(m_contextMenuCommandProviders), m_resourcesListViewAdapter, target);
+                    m_contextMenuCommandProviders.GetValues().GetCommands(m_resourcesListViewAdapter, target);
 
                 Point screenPoint = control.PointToScreen(new Point(e.X, e.Y));
                 m_commandService.RunContextMenu(commands, screenPoint);
@@ -240,32 +235,27 @@ namespace SimpleDomNoXmlEditorSample
                 if (context.CanInsert(e.Data))
                 {
                     ITransactionContext transactionContext = context as ITransactionContext;
-                    TransactionContexts.DoTransaction(transactionContext,
-                        delegate
-                        {
-                            context.Insert(e.Data);
-                        },
-                        Localizer.Localize("Drag and Drop"));
+                    transactionContext.DoTransaction(delegate
+                    {
+                        context.Insert(e.Data);
+                    }, "Drag and Drop".Localize());
 
                     if (m_statusService != null)
-                        m_statusService.ShowStatus(Localizer.Localize("Drag and Drop"));
+                        m_statusService.ShowStatus("Drag and Drop".Localize());
                 }
             }
         }
 
         private void resourcesListViewAdapter_LabelEdited(object sender, LabelEditedEventArgs<object> e)
         {
-            Resource resource = Adapters.As<Resource>(e.Item);
-            TransactionContexts.DoTransaction(
-                m_eventSequenceContext,
-                delegate
-                {
-                    resource.Name = e.Label;
-                },
-                Localizer.Localize("Rename Resource"));
+            Resource resource = e.Item.As<Resource>();
+            m_eventSequenceContext.DoTransaction(delegate
+            {
+                resource.Name = e.Label;
+            }, "Rename Resource".Localize());
 
             if (m_statusService != null)
-                m_statusService.ShowStatus(Localizer.Localize("Rename Resource"));
+                m_statusService.ShowStatus("Rename Resource".Localize());
         }
 
         private Event m_event;

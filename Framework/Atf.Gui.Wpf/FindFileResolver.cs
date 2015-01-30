@@ -69,7 +69,7 @@ namespace Sce.Atf.Wpf
 
     /// <summary>
     /// Options used by the FindFileResolver when prompting the user to select
-    /// a replacement file </summary>
+    /// a replacement file</summary>
     public enum SelectFileFilterOptions
     {
         /// <summary>
@@ -131,6 +131,7 @@ namespace Sce.Atf.Wpf
         /// created, based on a user's decisions.</summary>
         /// <param name="uri">The uri to find, which may or may not be valid. It must not be null.</param>
         /// <param name="newUri">Will either be 'uri' or a new valid uri. It will not be set to null.</param>
+        /// <param name="options">Options used by the FindFileResolver when prompting the user to select a replacement file</param>
         /// <returns>true if 'uri' exists or if a new uri was found. Otherwise, false.</returns>
         public static bool? Find(Uri uri, out Uri newUri, SelectFileFilterOptions options)
         {

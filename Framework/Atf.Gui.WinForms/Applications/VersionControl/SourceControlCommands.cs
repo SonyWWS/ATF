@@ -93,6 +93,13 @@ namespace Sce.Atf.Applications
             set { m_checkoutOnEditBehavior = value; }
         }
 
+        /// <summary>
+        /// Whether to refresh the status after saving a  document</summary>
+        /// <remarks>Subversion usualy does not require check-out to edit a checked-in doc, 
+        /// need to refresh doc status after saving </remarks>
+        public bool RefreshStatusOnSave { get; set; }
+  
+
         #region IInitializable Members
 
         /// <summary>
@@ -419,9 +426,16 @@ namespace Sce.Atf.Applications
 
         private void documentService_DocumentSaved(object sender, DocumentEventArgs e)
         {
-            if (e.Kind != DocumentEventType.SavedAs || SourceControlService == null)
+            if ( SourceControlService == null)
                 return;
 
+            if (RefreshStatusOnSave)
+                SourceControlService.RefreshStatus(e.Document.Uri);
+
+            if (e.Kind != DocumentEventType.SavedAs)
+                return;
+
+          
             if (SourceControlService.GetStatus(e.Document.Uri) == SourceControlStatus.NotControlled)
             {
                 string message = string.Format("Add document {0} to version control?".Localize(), e.Document.Uri.AbsolutePath);
@@ -474,7 +488,8 @@ namespace Sce.Atf.Applications
         /// <returns>True iff any documents refreshed or can be refreshed</returns>
         protected virtual bool DoRefresh(bool doing)
         {
-            if (SourceControlService == null || SourceControlContext == null)
+            if (SourceControlService == null || !SourceControlService.Enabled ||
+                SourceControlContext == null)
                 return false;
 
             if (!doing)
@@ -558,7 +573,8 @@ namespace Sce.Atf.Applications
         /// <returns>True iff any documents added or can be added</returns>
         protected virtual bool DoAdd(bool doing)
         {
-            if (SourceControlService == null || SourceControlContext == null)
+            if (SourceControlService == null || !SourceControlService.Enabled ||
+                SourceControlContext == null)
                 return false;
 
             int addedCount = 0;
@@ -584,7 +600,8 @@ namespace Sce.Atf.Applications
         /// <returns>True iff any documents checked out or can be checked out</returns>
         protected virtual bool DoCheckOut(bool doing)
         {
-            if (SourceControlService == null || SourceControlContext == null)
+            if (SourceControlService == null || !SourceControlService.Enabled ||
+                SourceControlContext == null)
                 return false;
 
             int checkedOutCount = 0;

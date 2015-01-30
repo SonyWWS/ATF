@@ -26,22 +26,24 @@ namespace Sce.Atf.Wpf.Behaviors
         {
             base.OnAttached();
 
-            AssociatedObject.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(OnMouseLeftButtonDown);
-            AssociatedObject.PreviewMouseLeftButtonUp += new MouseButtonEventHandler(OnMouseLeftButtonUp);
-            AssociatedObject.MouseMove += new MouseEventHandler(OnMouseMove);
+            AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+            AssociatedObject.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
+            AssociatedObject.MouseMove += OnMouseMove;
 
-            System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, OnQueryContinueDrag);
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            AssociatedObject.PreviewMouseLeftButtonDown -= new MouseButtonEventHandler(OnMouseLeftButtonDown);
-            AssociatedObject.PreviewMouseLeftButtonUp -= new MouseButtonEventHandler(OnMouseLeftButtonUp);
-            AssociatedObject.MouseMove -= new MouseEventHandler(OnMouseMove);
+            AssociatedObject.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
+            AssociatedObject.PreviewMouseLeftButtonUp -= OnMouseLeftButtonUp;
+            AssociatedObject.MouseMove -= OnMouseMove;
 
-            System.Windows.DragDrop.RemovePreviewQueryContinueDragHandler(AssociatedObject, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            System.Windows.DragDrop.RemovePreviewQueryContinueDragHandler(AssociatedObject, OnQueryContinueDrag);
         }
 
         #endregion

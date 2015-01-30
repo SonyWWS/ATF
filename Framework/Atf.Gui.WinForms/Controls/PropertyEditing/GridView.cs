@@ -133,7 +133,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
 
             // if a select all came in, preserve the last selected if there is one
-            bool selectAll = (objects.Count() != 0) && (objects.Count() == max);
+            bool selectAll = (objects.Count != 0) && (objects.Count == max);
             int lastSelected = m_selectedRows.LastSelected;
             if (selectAll && (lastSelected != -1))
             {
@@ -463,7 +463,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_columnUserHiddenStates = new Dictionary<string, bool>();
 
             // if the properties are loaded, build a fresh dictionary of values
-            if (Properties.Count() > 0)
+            if (Properties.Any())
                 m_columnUserHiddenStates.Clear();
 
             foreach (Property property in Properties)

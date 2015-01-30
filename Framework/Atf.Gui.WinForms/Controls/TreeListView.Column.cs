@@ -22,7 +22,20 @@ namespace Sce.Atf.Controls
             {
                 Label = label;
                 Width = DefaultWidth;
+                ActualWidth = DefaultWidth;
             }
+
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="label">Column's label</param>
+            /// <param name="width">Column's width</param>
+            public Column(string label, int width)
+            {
+                Label = label;
+                m_width = width;
+                ActualWidth = width;
+            }
+
 
             /// <summary>
             /// Gets or sets the column's label</summary>
@@ -55,6 +68,12 @@ namespace Sce.Atf.Controls
                     WidthChanged.Raise(this, EventArgs.Empty);
                 }
             }
+
+            /// <summary>
+            /// Gets the rendered width of this column.</summary>
+            /// <remarks>This property is a calculated value based on other width inputs, 
+            /// and the layout algorithm</remarks>
+            public int ActualWidth { get; set; }
 
             /// <summary>
             /// Gets or sets whether to allow editing of properties in this column</summary>

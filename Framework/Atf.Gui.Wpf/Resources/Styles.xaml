@@ -33,6 +33,10 @@
 
     <!--Toolbar Styles ******************************************************************************** -->
 
+    <DataTemplate DataType="{x:Type m:ToolBarSeparator}">
+        <Separator Style="{DynamicResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+    </DataTemplate>
+
     <DataTemplate x:Key="{x:Static l:Resources.ToolBarItemTemplateKey}">
         <Button Command="{Binding}" ToolTip="{Binding Description}" Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}">
             <ct:Icon Width="16" Height="16" Style="{StaticResource {x:Static l:Resources.AutoGreyStyleKey}}" SourceKey="{Binding ImageSourceKey}" SnapsToDevicePixels="True"/>

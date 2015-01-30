@@ -75,6 +75,12 @@ namespace SimpleDomEditorSample
 
                 Schema.resourceType.Type.Define(new ExtensionInfo<Resource>());
 
+                // Set some defaults in a localization-friendly way.
+                Schema.eventType.nameAttribute.DefaultValue = "Event".Localize();
+                Schema.animationResourceType.nameAttribute.DefaultValue = "Animation".Localize();
+                Schema.geometryResourceType.nameAttribute.DefaultValue = "Geometry".Localize();
+
+
                 // Enable metadata driven property editing for events and resources
                 var creator = new AdapterCreator<CustomTypeDescriptorNodeAdapter>();
                 Schema.eventType.Type.AddAdapterCreator(creator);
@@ -85,21 +91,21 @@ namespace SimpleDomEditorSample
                 Schema.eventType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.eventType.Type,
-                        "Event".Localize(),
+                        (string)Schema.eventType.nameAttribute.DefaultValue,
                         "Event in a sequence".Localize(),
                         Resources.EventImage));
 
                 Schema.animationResourceType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.animationResourceType.Type,
-                        "Animation".Localize(),
+                        (string)Schema.animationResourceType.nameAttribute.DefaultValue,
                         "Animation resource".Localize(),
                         Resources.AnimationImage));
 
                 Schema.geometryResourceType.Type.SetTag(
                     new NodeTypePaletteItem(
                         Schema.geometryResourceType.Type,
-                        "Geometry".Localize(),
+                        (string)Schema.geometryResourceType.nameAttribute.DefaultValue,
                         "Geometry resource".Localize(),
                         Resources.GeometryImage));
 

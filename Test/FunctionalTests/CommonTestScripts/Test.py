@@ -11,45 +11,45 @@ SUCCESS = "Success"
 # ============================================================
 def Equal(val1, val2, msg = "Testing equality"):
     if (val1 == val2):
-        print msg + ": " + str(val1) + "==" + str(val2)
+        print msg + ": " + unicode(val1) + "==" + unicode(val2)
     else:
-            msg = "Error: " + msg + ": " + str(val1) + "!=" + str(val2)
+            msg = "Error: " + msg + ": " + unicode(val1) + "!=" + unicode(val2)
             print msg
             raise Exception(msg)
 
 def NotEqual(val1, val2, msg = "Testing inequality"):
     if (val1 != val2):
-        print msg + ": " + str(val1) + "!=" + str(val2)
+        print msg + ": " + unicode(val1) + "!=" + unicode(val2)
     else:
-            msg = "Error: " + msg + ": " + str(val1) + "==" + str(val2)
+            msg = "Error: " + msg + ": " + unicode(val1) + "==" + unicode(val2)
             print msg
             raise Exception(msg)
 
 def True(val, msg = "Testing true"):
     if (val):
-        print msg + ": " + str(val) + " is true"
+        print msg + ": " + unicode(val) + " is true"
     else:
-            msg = "Error: " + msg + ": " + str(val) + " should be true"
+            msg = "Error: " + msg + ": " + unicode(val) + " should be true"
             print msg
             raise Exception(msg)
 
 def False(val, msg = "Testing false"):
     if (not val):
-        print msg + ": " + str(val) + " is false"
+        print msg + ": " + unicode(val) + " is false"
     else:
-            msg = "Error: " + msg + ": " + str(val) + " should be false"
+            msg = "Error: " + msg + ": " + unicode(val) + " should be false"
             print msg
             raise Exception(msg)
 
 def NotNull(val, msg = "Testing not null"):
     #Python will throw a NameExcpetion if val is not defined, so no need to test the value
-    print msg + ": " + str(val) + " is not null"
+    print msg + ": " + unicode(val) + " is not null"
 
 def GreaterThan(val1, val2, msg = "Testing greater than"):
     if (val1 > val2):
-        print msg + ": " + str(val1) + " > " + str(val2)
+        print msg + ": " + unicode(val1) + " > " + unicode(val2)
     else:
-        msg = "Error: " + msg + ": " + str(val1) + " <= " + str(val2)
+        msg = "Error: " + msg + ": " + unicode(val1) + " <= " + unicode(val2)
         print msg
         raise Exception(msg)
 
@@ -59,9 +59,9 @@ def GreaterThan(val1, val2, msg = "Testing greater than"):
 #are converted from radians to degrees)
 def FuzzyCompare(val1, val2, msg = "Testing fuzzy equality", threshold = 0.001):
     if (System.Math.Abs(val1 - val2) <= threshold):
-        print msg + ": " + str(val1) + "~=" + str(val2)
+        print msg + ": " + unicode(val1) + "~=" + unicode(val2)
     else:
-        msg = "Error in fuzzy compare: " + msg + ": " + str(val1) + "!~=" + str(val2)
+        msg = "Error in fuzzy compare: " + msg + ": " + unicode(val1) + "!~=" + unicode(val2)
         print msg
         raise Exception(msg)
 

@@ -186,21 +186,22 @@ Test.Equal(5, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(text.DomNo
 
 #=====================  8: Animation ==================================
 print "Verify cannot add children to an animation"
+animCount = Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode))
 editingContext.Insert[UIPackage](DomNode(UISchema.UIPackageType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a package")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a package")
 editingContext.Insert[UIForm](DomNode(UISchema.UIFormType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a form")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a form")
 editingContext.Insert[UIShader](DomNode(UISchema.UIShaderType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a shader")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a shader")
 editingContext.Insert[UITexture](DomNode(UISchema.UITextureType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a texture")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a texture")
 editingContext.Insert[UIFont](DomNode(UISchema.UIFontType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a font")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a font")
 editingContext.Insert[UISprite](DomNode(UISchema.UISpriteType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a sprite")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a sprite")
 editingContext.Insert[UITextItem](DomNode(UISchema.UITextItemType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding a text")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding a text")
 editingContext.Insert[UIAnimation](DomNode(UISchema.UIAnimationType.Type), animation.DomNode)
-Test.Equal(0, Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), "Verify animation child count does not increase when adding an animation")
+Test.Equal(Test.GetEnumerableCount(treeLister.TreeView.GetChildren(animation.DomNode)), animCount, "Verify animation child count does not increase when adding an animation")
 
 print Test.SUCCESS

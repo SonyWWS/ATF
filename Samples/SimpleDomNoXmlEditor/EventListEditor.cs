@@ -36,9 +36,9 @@ namespace SimpleDomNoXmlEditorSample
             m_commandService = commandService;
             m_contextRegistry = contextRegistry;
 
-            m_contextRegistry.ActiveContextChanged += new EventHandler(contextRegistry_ActiveContextChanged);
-            m_contextRegistry.ContextAdded += new EventHandler<ItemInsertedEventArgs<object>>(contextRegistry_ContextAdded);
-            m_contextRegistry.ContextRemoved += new EventHandler<ItemRemovedEventArgs<object>>(contextRegistry_ContextRemoved);
+            m_contextRegistry.ActiveContextChanged += contextRegistry_ActiveContextChanged;
+            m_contextRegistry.ContextAdded += contextRegistry_ContextAdded;
+            m_contextRegistry.ContextRemoved += contextRegistry_ContextRemoved;
         }
             
         private ICommandService m_commandService;
@@ -61,11 +61,7 @@ namespace SimpleDomNoXmlEditorSample
         {
             if (m_settingsService != null)
             {
-                SettingsServices.RegisterSettings(
-                    m_settingsService,
-                    this,
-                    new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", "", "")
-                );
+                m_settingsService.RegisterSettings(this, new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", "", ""));
             }
         }
 
@@ -91,29 +87,29 @@ namespace SimpleDomNoXmlEditorSample
 
         private void contextRegistry_ContextAdded(object sender, ItemInsertedEventArgs<object> e)
         {
-            EventSequenceContext context = Adapters.As<EventSequenceContext>(e.Item);
+            EventSequenceContext context = e.Item.As<EventSequenceContext>();
             if (context != null)
             {
-                context.ListView.DragOver += new DragEventHandler(listView_DragOver);
-                context.ListView.DragDrop += new DragEventHandler(listView_DragDrop);
-                context.ListView.MouseUp += new MouseEventHandler(listView_MouseUp);
+                context.ListView.DragOver += listView_DragOver;
+                context.ListView.DragDrop += listView_DragDrop;
+                context.ListView.MouseUp += listView_MouseUp;
 
                 context.ListViewAdapter.LabelEdited +=
-                    new EventHandler<LabelEditedEventArgs<object>>(listViewAdapter_LabelEdited);
+                    listViewAdapter_LabelEdited;
             }
         }
 
         private void contextRegistry_ContextRemoved(object sender, ItemRemovedEventArgs<object> e)
         {
-            EventSequenceContext context = Adapters.As<EventSequenceContext>(e.Item);
+            EventSequenceContext context = e.Item.As<EventSequenceContext>();
             if (context != null)
             {
-                context.ListView.DragOver -= new DragEventHandler(listView_DragOver);
-                context.ListView.DragDrop -= new DragEventHandler(listView_DragDrop);
-                context.ListView.MouseUp -= new MouseEventHandler(listView_MouseUp);
+                context.ListView.DragOver -= listView_DragOver;
+                context.ListView.DragDrop -= listView_DragDrop;
+                context.ListView.MouseUp -= listView_MouseUp;
 
                 context.ListViewAdapter.LabelEdited -=
-                    new EventHandler<LabelEditedEventArgs<object>>(listViewAdapter_LabelEdited);
+                    listViewAdapter_LabelEdited;
             }
         }
 
@@ -124,8 +120,7 @@ namespace SimpleDomNoXmlEditorSample
             if (e.Button == MouseButtons.Right)
             {
                 IEnumerable<object> commands =
-                    ContextMenuCommandProvider.GetCommands(
-                        Lazies.GetValues(m_contextMenuCommandProviders), m_eventSequenceContext, target);
+                    m_contextMenuCommandProviders.GetValues().GetCommands(m_eventSequenceContext, target);
 
                 Point screenPoint = control.PointToScreen(new Point(e.X, e.Y));
                 m_commandService.RunContextMenu(commands, screenPoint);
@@ -148,31 +143,26 @@ namespace SimpleDomNoXmlEditorSample
             if (context.CanInsert(e.Data))
             {
                 ITransactionContext transactionContext = context as ITransactionContext;
-                TransactionContexts.DoTransaction(transactionContext,
-                    delegate
-                    {
-                        context.Insert(e.Data);
-                    },
-                    Localizer.Localize("Drag and Drop"));
+                transactionContext.DoTransaction(delegate
+                {
+                    context.Insert(e.Data);
+                }, "Drag and Drop".Localize());
 
                 if (m_statusService != null)
-                    m_statusService.ShowStatus(Localizer.Localize("Drag and Drop"));
+                    m_statusService.ShowStatus("Drag and Drop".Localize());
             }
         }
 
         private void listViewAdapter_LabelEdited(object sender, LabelEditedEventArgs<object> e)
         {
-            Event _event = Adapters.As<Event>(e.Item);
-            TransactionContexts.DoTransaction(
-                m_eventSequenceContext,
-                delegate
-                {
-                    _event.Name = e.Label;
-                },
-                Localizer.Localize("Rename Event"));
+            Event _event = e.Item.As<Event>();
+            m_eventSequenceContext.DoTransaction(delegate
+            {
+                _event.Name = e.Label;
+            }, "Rename Event".Localize());
 
             if (m_statusService != null)
-                m_statusService.ShowStatus(Localizer.Localize("Rename Event"));
+                m_statusService.ShowStatus("Rename Event".Localize());
         }
 
         private EventSequenceContext m_eventSequenceContext;

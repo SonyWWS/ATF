@@ -87,87 +87,90 @@ namespace DomTreeEditorSample
                 UISchema.UIRefType.Type.Define(new ExtensionInfo<UIRef>());
                 UISchema.UIAnimationType.Type.Define(new ExtensionInfo<UIAnimation>());
                 UISchema.curveType.Type.Define(new ExtensionInfo<Curve>());
+                UISchema.curveType.Type.Define(new ExtensionInfo<CurveLimitValidator>());                
                 UISchema.controlPointType.Type.Define(new ExtensionInfo<ControlPoint>());
                 
+
+                //
                 // tag UI types with display info; it will be used both in the palette
                 //  and in the UITreeLister tree view.
 
                 UISchema.UIType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIType.Type,
-                        Localizer.Localize("UI"),
-                        Localizer.Localize("UI Container"),
+                        "UI".Localize(),
+                        "UI Container".Localize(),
                         "Sce.Atf.Resources.Data16.png"));
 
                 UISchema.UIPackageType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIPackageType.Type,
-                        Localizer.Localize("Package"),
-                        Localizer.Localize("Package, containing a complete collection of UI items"),
+                        "Package".Localize(),
+                        "Package, containing a complete collection of UI items".Localize(),
                         "DomTreeEditorSample.Resources.package.png"));
 
                 UISchema.UIFormType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIFormType.Type,
-                        Localizer.Localize("Form"),
-                        Localizer.Localize("Form, containing a UI screen"),
+                        "Form".Localize(),
+                        "Form, containing a UI screen".Localize(),
                         "DomTreeEditorSample.Resources.form.png"));
 
                 UISchema.UISpriteType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UISpriteType.Type,
-                        Localizer.Localize("Sprite"),
-                        Localizer.Localize("A moveable UI element"),
+                        "Sprite".Localize(),
+                        "A moveable UI element".Localize(),
                         "DomTreeEditorSample.Resources.sprite.png"));
 
                 UISchema.UIShaderType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIShaderType.Type,
-                        Localizer.Localize("Shader"),
-                        Localizer.Localize("Shader for rendering graphics"),
+                        "Shader".Localize(),
+                        "Shader for rendering graphics".Localize(),
                         "DomTreeEditorSample.Resources.shader.png"));
 
                 UISchema.UITextureType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UITextureType.Type,
-                        Localizer.Localize("Texture"),
-                        Localizer.Localize("Texture for rendering graphics"),
+                        "Texture".Localize(),
+                        "Texture for rendering graphics".Localize(),
                         "DomTreeEditorSample.Resources.texture.png"));
 
                 UISchema.UIFontType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIFontType.Type,
-                        Localizer.Localize("Font"),
-                        Localizer.Localize("Font for rendering text"),
+                        "Font".Localize(),
+                        "Font for rendering text".Localize(),
                         "DomTreeEditorSample.Resources.font.png"));
 
                 UISchema.UITextItemType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UITextItemType.Type,
-                        Localizer.Localize("Text"),
-                        Localizer.Localize("Text, to display on Form"),
+                        "Text".Localize(),
+                        "Text, to display on Form".Localize(),
                         "DomTreeEditorSample.Resources.text.png"));
 
                 UISchema.UITransformType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UITransformType.Type,
-                        Localizer.Localize("Transform"),
-                        Localizer.Localize("Transform, for sprites and text"),
+                        "Transform".Localize(),
+                        "Transform, for sprites and text".Localize(),
                         "DomTreeEditorSample.Resources.transform.png"));
 
                 UISchema.UIAnimationType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.UIAnimationType.Type,
-                        Localizer.Localize("Animation"),
-                        Localizer.Localize("Color and position animation curves, for form and control"),
+                        "Animation".Localize(),
+                        "Color and position animation curves, for form and control".Localize(),
                         null)                        
                 );
 
                 UISchema.curveType.Type.SetTag(
                     new NodeTypePaletteItem(
                         UISchema.curveType.Type,
-                        Localizer.Localize("Curve"),
-                        Localizer.Localize("animation curve"),
+                        "Curve".Localize(),
+                        "animation curve".Localize(),
                         null));
 
                 // Tag UI types with descriptors for property editing
@@ -199,17 +202,17 @@ namespace DomTreeEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Shader"),
+                            "Shader".Localize(),
                             UISchema.UIShaderType.FxFileAttribute,
                             null,
-                            Localizer.Localize("Shader file path"),
+                            "Shader file path".Localize(),
                             false,
                             new FileUriEditor("Fx Files (*.fx)|*.fx")),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Shader param"),
+                            "Shader param".Localize(),
                             UISchema.UIShaderType.ShaderParamAttribute,
                             null,
-                            Localizer.Localize("Shader param"),
+                            "Shader param".Localize(),
                             false,
                             new NumericEditor(typeof(Int32)))
                     }));
@@ -218,32 +221,31 @@ namespace DomTreeEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Texture file"),
+                            "Texture file".Localize(),
                             UISchema.UITextureType.TextureFileAttribute,
                             null,
-                            Localizer.Localize("Texture file path"),
+                            "Texture file path".Localize(),
                             false,
                             new FileUriEditor("Texture Files (*.tga)|*.tga")),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Texture folder"),
+                            "Texture folder".Localize(),
                             UISchema.UITextureType.TextureFolderAttribute,
                             null,
-                            Localizer.Localize("Texture folder path"),
+                            "Texture folder path".Localize(),
                             false,
                             new FolderBrowserDialogUITypeEditor("Texture folder path")),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Texture numbers"),
+                            "Texture numbers".Localize(),
                             UISchema.UITextureType.TextureArrayAttribute,
                             null,
-                            Localizer.Localize("Texture number array"),
+                            "Texture number array".Localize(),
                             false,
-                            new ArrayEditor(),
-                            new FloatArrayConverter()),
+                            new ArrayEditor()),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Texture revision date"),
+                            "Texture revision date".Localize(),
                             UISchema.UITextureType.TextureRevDateAttribute,
                             null,
-                            Localizer.Localize("Texture revision date"),
+                            "Texture revision date".Localize(),
                             false,
                             new DateTimeEditor()),
                     }));
@@ -252,17 +254,17 @@ namespace DomTreeEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Font"),
+                            "Font".Localize(),
                             UISchema.UIFontType.FontFileAttribute,
                             null,
-                            Localizer.Localize("Font file path"),
+                            "Font file path".Localize(),
                             false,
                             new FileUriEditor("Font Files (*.ttf)|*.ttf")),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Font parameters"),
+                            "Font parameters".Localize(),
                             UISchema.UIFontType.FontParamsAttribute,
                             null,
-                            Localizer.Localize("Font parameters"),
+                            "Font parameters".Localize(),
                             false,
                             new CollectionEditor()),
                     }));
@@ -271,17 +273,17 @@ namespace DomTreeEditorSample
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Animation transform"),
+                            "Animation transform".Localize(),
                             UISchema.UIAnimationType.AnimationTransformAttribute,
                             null,
-                            Localizer.Localize("Animation transform"),
+                            "Animation transform".Localize(),
                             false,
                             new NumericMatrixEditor(typeof(float), 3, 3)),
                         new AttributePropertyDescriptor(
-                            Localizer.Localize("Animal kinds"),
+                            "Animal kinds".Localize(),
                             UISchema.UIAnimationType.AnimalKindsAttribute,
                             null,
-                            Localizer.Localize("Kinds of animal to animate"),
+                            "Kinds of animal to animate".Localize(),
                             false,
                             new CollectionEditor()),
                     }));
@@ -291,32 +293,28 @@ namespace DomTreeEditorSample
                         new PropertyDescriptor[]
                     {
                         new ChildAttributePropertyDescriptor(
-                            Localizer.Localize("Translation"),
+                            "Translation".Localize(),
                             UISchema.UITransformType.TranslateAttribute,
                             UISchema.UIControlType.TransformChild,
                             null,
-                            Localizer.Localize("Item position"),
+                            "Item position".Localize(),
                             false,
-                            new NumericTupleEditor(typeof(float), new string[] { "X", "Y", "Z" }),
-                            new FloatArrayConverter()),
+                            new NumericTupleEditor(typeof(float), new string[] { "X", "Y", "Z" })),
                         new ChildAttributePropertyDescriptor(
-                            Localizer.Localize("Rotation"),
+                            "Rotation".Localize(),
                             UISchema.UITransformType.RotateAttribute,
                             UISchema.UIControlType.TransformChild,
                             null,
-                            Localizer.Localize("Item rotation"),
+                            "Item rotation".Localize(),
                             false,
-                            new NumericTupleEditor(typeof(float), new string[] { "X", "Y", "Z" }),
-                            new FloatArrayConverter()),
+                            new NumericTupleEditor(typeof(float), new string[] { "X", "Y", "Z" })),
                         new ChildAttributePropertyDescriptor(
-                            Localizer.Localize("Scale"),
+                            "Scale".Localize(),
                             UISchema.UITransformType.ScaleAttribute,
                             UISchema.UIControlType.TransformChild,
                             null,
-                            Localizer.Localize("Item scale"),
-                            false,
-                            //new NumericTupleEditor(typeof(float), new string[] { "X", "Y", "Z" }),
-                            //new FloatArrayConverter())
+                            "Item scale".Localize(),
+                            false,                            
                             new UniformArrayEditor<float>())
                     }));
 

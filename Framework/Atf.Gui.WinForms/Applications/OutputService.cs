@@ -190,8 +190,17 @@ namespace Sce.Atf.Applications
         /// <param name="control">Client Control that was activated</param>
         public void Activate(Control control)
         {
-            if (m_commandService!= null)
+            if (m_commandService != null)
+            {
                 m_commandService.SetActiveClient(this);
+
+                // Disable other standard editing commands that we don't support.
+                foreach (CommandInfo info in m_commandsToDeactivate)
+                {
+                    if (info.CommandService != null)
+                        m_commandService.RegisterCommand(info, this);
+                }
+            }
         }
 
         /// <summary>
@@ -308,7 +317,14 @@ namespace Sce.Atf.Applications
             }
         }
 
-       
+        private readonly CommandInfo[] m_commandsToDeactivate =
+        {
+            CommandInfo.EditCut,
+            CommandInfo.EditDelete,
+            CommandInfo.EditPaste,
+            CommandInfo.EditDeselectAll,
+            CommandInfo.EditInvertSelection
+        };
 
         private readonly IControlHostService m_controlHostService;
 

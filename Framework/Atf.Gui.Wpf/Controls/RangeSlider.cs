@@ -192,7 +192,7 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Overide to get the visuals from the control template </summary>
+        /// Override to get the visuals from the control template</summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

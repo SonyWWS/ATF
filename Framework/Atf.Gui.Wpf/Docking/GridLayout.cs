@@ -10,8 +10,7 @@ using System.Xml;
 namespace Sce.Atf.Wpf.Docking
 {
     /// <summary>
-    /// extended Dock enum, with extra entry Center
-    /// </summary>
+    /// Extended Dock enumeration, with extra entry 'Center'</summary>
     public enum DockTo
     {
         Left,
@@ -22,8 +21,7 @@ namespace Sce.Atf.Wpf.Docking
     }
     /// <summary>
     /// Layout that lays its children horizontally or vertically separated with separators. Each child
-    /// is DockedWindow, or another GridLayout.
-    /// </summary>
+    /// is DockedWindow or another GridLayout.</summary>
     internal class GridLayout : Grid, IDockLayout, IXmlSerializable
     {
         private Size m_minGridSize = new Size(40, 20);
@@ -104,7 +102,7 @@ namespace Sce.Atf.Wpf.Docking
         /// Will create and return new column definition with given width and minimum width boundary
         /// </summary>
         /// <param name="length">Length (width) of the column</param>
-        /// <param name="minHeight">Minimum width of the column</param>
+        /// <param name="minWidth">Minimum width of the column</param>
         /// <returns>New column definition</returns>
         private ColumnDefinition NewColumnDefinition(GridLength length, double minWidth)
         {
@@ -548,7 +546,7 @@ namespace Sce.Atf.Wpf.Docking
             }
             else if (m_children.Count == 1)
             {
-                if (Parent is IDockLayout || m_children[0] is IDockLayout)
+                if (Parent is IDockLayout || m_children[0] != null)
                 {
                     IDockLayout lastChild = m_children[0];
                     if (!(lastChild is DockedWindow && Parent == null))

@@ -30,6 +30,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets annotation background color attribute</summary>
         protected abstract AttributeInfo BackColorAttribute { get; }
+        /// <summary>
+        /// Gets annotation foreground color attribute</summary>
+        protected abstract AttributeInfo ForeColorAttribute { get; }
  
         /// <summary>
         /// Gets or sets the comment text</summary>
@@ -100,6 +103,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             set { DomNode.SetAttribute(BackColorAttribute, value.ToArgb()); }
         }
 
+        /// <summary>
+        /// Gets and sets the foreground color of the annotation</summary>
+        public Color ForeColor
+        {
+            get
+            {
+                return ForeColorAttribute == null ? SystemColors.WindowText :
+                   Color.FromArgb((int)DomNode.GetAttribute(ForeColorAttribute));
+            }
+            set { DomNode.SetAttribute(ForeColorAttribute, value.ToArgb()); }
+        }
 
         /// <summary>
         /// Sets the size (as a rectangle) of the annotation's text, 

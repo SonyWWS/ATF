@@ -22,7 +22,7 @@ namespace Sce.Atf.Wpf.Controls
         /// Dependency property for item width</summary>
         public static DependencyProperty ItemWidthProperty =
             DependencyProperty.Register("ItemWidth", 
-                typeof(double), typeof(TileView), new PropertyMetadata(1.0, new PropertyChangedCallback(ScalePropertyChanged)));
+                typeof(double), typeof(TileView), new PropertyMetadata(1.0, ScalePropertyChanged));
 
         /// <summary>
         /// Gets and sets the height of the tiled items</summary>
@@ -36,7 +36,7 @@ namespace Sce.Atf.Wpf.Controls
         /// Dependency property for item height</summary>
         public static DependencyProperty ItemHeightProperty =
             DependencyProperty.Register("ItemHeight", 
-                typeof(double), typeof(TileView), new PropertyMetadata(1.0, new PropertyChangedCallback(ScalePropertyChanged)));
+                typeof(double), typeof(TileView), new PropertyMetadata(1.0, ScalePropertyChanged));
 
         /// <summary>
         /// Event fired when the item width or height changes</summary>

@@ -1,11 +1,13 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using Sce.Atf.Dom;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
     /// Adapts DomNode to sub-circuit instance, which is an instance of a mastered SubCircuit</summary>
+    [Obsolete("Circuit groups and circuit templates have replaced mastered circuits")]
     public abstract class SubCircuitInstance : Element
     {
         /// <summary>

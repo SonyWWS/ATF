@@ -1,12 +1,9 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Windows.Forms;
-using Sce.Atf.Controls.PropertyEditing;
-
 
 using Sce.Atf.Dom;
 
@@ -23,55 +20,42 @@ namespace Sce.Atf.Applications
         #region IInitializable Members        
         void IInitializable.Initialize()
         {            
-            m_listbox = new CommandList();
-            m_listbox.DrawMode = DrawMode.OwnerDrawFixed;
-            m_listbox.BorderStyle = BorderStyle.None;
-            m_listbox.SelectedIndexChanged += (sender, e) =>
+            m_commandListbox = new CommandList();
+            
+            m_commandListbox.MouseDown += (sender, e) =>
                 {
-                    try
+                    var item = m_commandListbox.GetItemAt(e.X, e.Y);
+                    if (item == null) return;                   
+                    int indexLastDone = m_commandHistory.Current - 1;
+                    int cmdIndex = item.Index - 1;
+                    if (cmdIndex <= indexLastDone)
                     {
-                        if (m_udpatingIndex) return;
-                        m_undoingOrRedoing = true;
-                        int indexLastDone = m_commandHistory.Current - 1;
-                        int cmdIndex = m_listbox.SelectedIndex + m_startIndex;
-
-
-                        if (cmdIndex <= indexLastDone)
+                        while (cmdIndex < indexLastDone)
                         {
-                            if (m_listbox.SelectedIndex == 0
-                                && cmdIndex == indexLastDone
-                                && m_commandHistory.Count > 1)
-                            {
-                                m_historyContext.Undo();                               
-                            }
-                            else
-                            {
-                                while (cmdIndex < indexLastDone)
-                                {
-                                    m_historyContext.Undo();
-                                    indexLastDone = m_commandHistory.Current - 1;
-                                }
-                            }
+                            m_historyContext.Undo();
+                            indexLastDone = m_commandHistory.Current - 1;
                         }
-                        else
-                        {
-                            while (cmdIndex >= m_commandHistory.Current)
-                                m_historyContext.Redo();
-                        }
-                    }                    
-                    finally
+                    }
+                    else
                     {
-                        m_undoingOrRedoing = false;                        
+                        while (cmdIndex >= m_commandHistory.Current)
+                            m_historyContext.Redo();
                     }
                 };
 
 
-            m_listbox.DrawItem += (sender, e) =>
+            m_commandListbox.RetrieveCommandListItem += (sender, e) =>
+                {
+                    e.Item = e.ItemIndex == 0 ? new CommandListItem("< Clean State >".Localize())
+                        : new CommandListItem(m_commandHistory[e.ItemIndex-1].Description);                    
+                };
+            
+            m_commandListbox.DrawItem += (sender, e) =>
                 {                    
-                    if (e.Index < 0) return;                    
-                    int cmdIndex = e.Index + m_startIndex;                    
-                    Rectangle bound = e.Bounds;
-                    Command cmd = (Command)m_listbox.Items[e.Index];
+                    if (e.Item.Index < 0) return;
+                    int cmdIndex = e.Item.Index-1;
+                    Rectangle bound = e.Item.Bounds;
+                    var cmd = e.Item;
                     if(cmdIndex >= m_commandHistory.Current)
                     {
                         m_textBrush.Color = m_redoForeColor;
@@ -83,51 +67,22 @@ namespace Sce.Atf.Applications
                         m_fillBrush.Color = m_undoBackColor;
                     }
 
-                    e.Graphics.FillRectangle(m_fillBrush, bound);                                       
-                    e.Graphics.DrawString(cmd.Description, e.Font, m_textBrush,
-                            bound, StringFormat.GenericDefault);                                       
+                    e.Graphics.FillRectangle(m_fillBrush, bound);
+                    e.Graphics.DrawString(cmd.Text, m_commandListbox.Font, m_textBrush,
+                            bound, StringFormat.GenericDefault);                    
                 };
 
             ControlInfo cinfo = new ControlInfo("History", "Undo/Redo stack", StandardControlGroup.Right);
-            m_controlHostService.RegisterControl(m_listbox, cinfo, null);
+            m_controlHostService.RegisterControl(m_commandListbox, cinfo, null);
             m_documentRegistry.ActiveDocumentChanged += m_documentRegistry_ActiveDocumentChanged;
 
-            m_listbox.BackColorChanged += (sender, e) => ComputeColors();
-            m_listbox.ForeColorChanged += (sender, e) => ComputeColors();
-
-            if (m_settingsService != null)
-            {
-                var descriptor = new BoundPropertyDescriptor(
-                        this,
-                        () => MaxCommandCount,
-                        "Max Visual Command History Count".Localize(),
-                        null,
-                        "Maximum number of commands in the visual command history. Minimum value is 10".Localize());
-
-                m_settingsService.RegisterSettings(this, descriptor);
-                m_settingsService.RegisterUserSettings("Application", descriptor);
-
-            }
+            m_commandListbox.BackColorChanged += (sender, e) => ComputeColors();
+            m_commandListbox.ForeColorChanged += (sender, e) => ComputeColors();            
             ComputeColors();
         }
 
         #endregion
-
-        /// <summary>
-        /// Gets or sets maximum number of history commands</summary>
-        [DefaultValue(DefaultMaxCommandCount)]
-        public int MaxCommandCount
-        {
-            get { return m_maxCommandCount; }
-            set
-            {
-                m_maxCommandCount  = value;
-                if (m_maxCommandCount < 10)
-                    m_maxCommandCount = 10;
-            }
-        }
-        private int m_maxCommandCount = DefaultMaxCommandCount;
-        private const int DefaultMaxCommandCount = 150;
+              
         private void m_documentRegistry_ActiveDocumentChanged(object sender, EventArgs e)
         {
             if (m_commandHistory != null)
@@ -144,68 +99,25 @@ namespace Sce.Atf.Applications
                 m_commandHistory.CommandDone += m_commandHistory_CommandDone;
                 m_commandHistory.CommandUndone += m_commandHistory_CommandUndone;
             }
-            
-            m_undoingOrRedoing = false;
-            m_lastCmdCount = 0;
-            m_startIndex = 0;
-            m_listbox.Items.Clear();
-            if(m_commandHistory != null)
-                BuildList();            
+            if (m_commandHistory != null && m_commandHistory.Count > 0)
+                m_commandListbox.VirtualListSize = m_commandHistory.Count + 1;
+            else
+                m_commandListbox.VirtualListSize = 0;                    
         }
         private void m_commandHistory_CommandUndone(object sender, EventArgs e)
         {
-            UpdatedSelectedIndex();          
+            m_commandListbox.Invalidate();            
         }
         private void m_commandHistory_CommandDone(object sender, EventArgs e)
         {
-            if (m_lastCmdCount != m_commandHistory.Count)
-            {
-                m_lastCmdCount = m_commandHistory.Count;
-                BuildList();            
-            }
-            else
-            {
-                UpdatedSelectedIndex();
-            }
-            
+            m_commandListbox.VirtualListSize = m_commandHistory.Count + 1;
+            m_commandListbox.Invalidate();
         }
-        private void UpdatedSelectedIndex()
-        {
-            if (m_undoingOrRedoing) return;
-            try
-            {
-                m_udpatingIndex = true;
-                m_listbox.BeginUpdate();
-                int selectedIndex = (m_commandHistory.Current - 1) - m_startIndex;
-                if (selectedIndex < -1) selectedIndex = -1;
-                m_listbox.SelectedIndex = selectedIndex;
-                m_listbox.EndUpdate();
-            }
-            finally
-            {
-                m_udpatingIndex = false;
-            }
-        }
-        private void BuildList()
-        {
-            if (m_undoingOrRedoing) return;            
-            int cmdCount = m_commandHistory.Count;
-            m_startIndex = cmdCount > MaxCommandCount ? cmdCount - MaxCommandCount : 0;
-            m_listbox.BeginUpdate();
-            m_listbox.Items.Clear();
-            m_listbox.ItemHeight = m_listbox.Font.Height + 2;
-            for (int i = m_startIndex; i < cmdCount; i++)
-            {
-                Command cmd = m_commandHistory[i];
-                m_listbox.Items.Add(cmd);
-            }            
-            m_listbox.EndUpdate();
-            UpdatedSelectedIndex();
-        }
+        
         private void ComputeColors()
         {           
-            m_undoForeColor = m_listbox.ForeColor;            
-            m_undoBackColor = m_listbox.BackColor;
+            m_undoForeColor = m_commandListbox.ForeColor;            
+            m_undoBackColor = m_commandListbox.BackColor;
 
             m_redoForeColor = m_undoForeColor.GetBrightness() > 0.5f ?
                 ControlPaint.Dark(m_undoForeColor, 0.3f): ControlPaint.Light(m_undoForeColor, 0.3f);
@@ -220,79 +132,198 @@ namespace Sce.Atf.Applications
 
         [Import(AllowDefault = false)]
         private IControlHostService m_controlHostService;
-
-        [Import(AllowDefault = true)]
-        private ISettingsService m_settingsService;
-
-        private bool m_udpatingIndex;
-        private int m_startIndex;
-        private int m_lastCmdCount; // last command count.        
+        
         private CommandHistory m_commandHistory;
         private HistoryContext m_historyContext;
-        private CommandList m_listbox;
+        private CommandList m_commandListbox;
         private SolidBrush m_fillBrush = new SolidBrush(Color.White);
         private SolidBrush m_textBrush = new SolidBrush(Color.White);
         private Color m_redoForeColor;
         private Color m_redoBackColor;
         private Color m_undoForeColor;
         private Color m_undoBackColor;
-        private bool m_undoingOrRedoing;        
-        private class CommandList : ListBox
-        {                       
+        
+        #region CommandList classes
+
+        private class RetrieveCommandListItemEventArgs : EventArgs
+        {
+            public RetrieveCommandListItemEventArgs(int index)
+            {
+                ItemIndex = index;
+            }
+            public readonly int ItemIndex;
+            public CommandListItem Item;
+        }
+        private class DrawCommandListItemEventArgs : EventArgs
+        {
+            public DrawCommandListItemEventArgs(Graphics graphics, CommandListItem item)
+            {
+                Graphics = graphics;
+                Item = item;                
+            }
+
+            public readonly Graphics Graphics;
+            public readonly CommandListItem Item;                        
+        }
+        
+        private class CommandListItem 
+        {
+            public CommandListItem(string text)
+            {
+                Text = text;
+            }
+            public readonly string Text;
+            public Rectangle Bounds
+            {
+                get;
+                private set;
+            }
+            public int Index
+            {
+                get;
+                private set;
+            }
+
+            #region members only useb by CommandList
+            public void SetBounds(Rectangle bounds)
+            {
+                Bounds = bounds;
+            }
+            public void SetIndex(int index)
+            {
+                Index = index;
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// Simple item list view control</summary>
+        private class CommandList : Control
+        {
+            public EventHandler<DrawCommandListItemEventArgs> DrawItem;
+            public EventHandler<RetrieveCommandListItemEventArgs> RetrieveCommandListItem;
+
             public CommandList()
             {
+                DoubleBuffered = true;
                 SetStyle(ControlStyles.UserPaint
                    | ControlStyles.AllPaintingInWmPaint
                    | ControlStyles.OptimizedDoubleBuffer
                    | ControlStyles.ResizeRedraw
-                   | ControlStyles.Opaque
                    , true);
+
+                m_vScrollBar = new VScrollBar();
+                m_vScrollBar.Dock = DockStyle.Right;                
+                Controls.Add(m_vScrollBar);
+
+                SizeChanged += (sender, e) => UpdateScrollBar();
+                m_vScrollBar.ValueChanged += (sender, e) => Invalidate();
+            }
+            
+            public int VirtualListSize
+            {
+                get{return m_virtualListSize;}
+                set
+                {
+                    if (value < 0)
+                        throw new ArgumentOutOfRangeException("value");
+                    if (value == m_virtualListSize)
+                        return;
+                    
+                    m_virtualListSize = value;
+                    UpdateScrollBar();                    
+                    Invalidate();
+                }
             }
 
-            protected override bool IsInputKey(Keys keyData)
-            {
-                // Disable arrow keys,
-                // undo/redo should be done via undo/redo 
-                // shortcuts not up/down keys.                
-                if (keyData == Keys.Up || keyData == Keys.Down)
-                    return false;
-                return base.IsInputKey(keyData);
+            public CommandListItem GetItemAt(int x, int y)
+            {                
+                if (y < 0
+                    || y >= ClientSize.Height
+                    || VirtualListSize == 0)
+                    return null;
+
+                int startIndex = GetTopIndex();
+                int itemWidth = GetItemWidth();
+                int itemHeight = GetItemHeight();                                
+                int itemNumber = y / itemHeight;
+                int itemIndex = startIndex + itemNumber;
+                if (itemIndex >= VirtualListSize) 
+                    return null;
+
+                var re = new RetrieveCommandListItemEventArgs(itemIndex);
+                OnRetrieveCommandListItem(re);
+                re.Item.SetIndex(itemIndex);
+                re.Item.SetBounds(new Rectangle(0, itemNumber * itemHeight, itemWidth, itemHeight));
+                return re.Item;
             }
-                        
-            protected override void OnMouseUp(MouseEventArgs e)
-            {
-                base.OnMouseUp(e);
-                Invalidate();
-            }
+
             protected override void OnPaint(PaintEventArgs e)
-            {
-                e.Graphics.Clear(BackColor);
-                for (int i = 0; i < Items.Count; i++)
-                {                    
-                    var itemRect = GetItemRectangle(i);
-                    itemRect.Height = ItemHeight;
-                    if (e.ClipRectangle.IntersectsWith(itemRect))
-                    {
-                        if ((this.SelectionMode == SelectionMode.One && this.SelectedIndex == i)
-                            || (this.SelectionMode == SelectionMode.MultiSimple && this.SelectedIndices.Contains(i))
-                            || (this.SelectionMode == SelectionMode.MultiExtended && this.SelectedIndices.Contains(i)))
-                        {                            
-                            OnDrawItem(new DrawItemEventArgs(e.Graphics, this.Font,
-                                itemRect, i,
-                                DrawItemState.Selected, this.ForeColor,
-                                this.BackColor));
-                        }
-                        else
-                        {                         
-                            OnDrawItem(new DrawItemEventArgs(e.Graphics, this.Font,
-                                itemRect, i,
-                                DrawItemState.Default, this.ForeColor,
-                                this.BackColor)); 
-                        }
-                    }
-                }// end of loop
+            {                
+                if (VirtualListSize == 0) return;
+                int itemWidth = GetItemWidth();
+                int itemHeight = GetItemHeight();
+                int pagesize = (ClientSize.Height % itemHeight) == 0 ?
+                    (ClientSize.Height / itemHeight) : (ClientSize.Height / itemHeight) + 1;
+                int startIndex = GetTopIndex();
+                int endIndex = Math.Min(startIndex+pagesize, VirtualListSize);
+
+                Rectangle bound = new Rectangle(0, 0, itemWidth, itemHeight);
+
+                for (int index = startIndex; index < endIndex; index++)
+                {
+                    var re = new RetrieveCommandListItemEventArgs(index);
+                    OnRetrieveCommandListItem(re);
+                    re.Item.SetIndex(index);
+                    re.Item.SetBounds(bound);
+                    var de = new DrawCommandListItemEventArgs(e.Graphics,re.Item);
+                    OnDrawItem(de);
+                    bound.Y +=itemHeight;
+                }
             }
 
+            private int GetItemHeight()
+            {
+                return (int)Font.GetHeight() + 2;
+            }
+            private void OnRetrieveCommandListItem(RetrieveCommandListItemEventArgs e)
+            {
+                RetrieveCommandListItem.Raise(this, e);
+            }
+            private void OnDrawItem(DrawCommandListItemEventArgs e)
+            {                
+                DrawItem.Raise(this, e);
+            }
+
+            private VScrollBar m_vScrollBar;
+            private int m_virtualListSize;
+            
+            private int GetTopIndex()
+            {
+                return m_vScrollBar.Visible ? m_vScrollBar.Value : 0;
+            }
+            private int GetItemWidth()
+            {
+                return m_vScrollBar.Visible ? ClientSize.Width - m_vScrollBar.Width - 1
+                    : ClientSize.Width - 1;
+            }
+            private void UpdateScrollBar()
+            {                
+                int itemHieght = GetItemHeight();               
+                m_vScrollBar.Minimum = 0;
+                m_vScrollBar.Maximum = Math.Max(VirtualListSize - 1, 0);
+                m_vScrollBar.LargeChange = (ClientSize.Height / itemHieght);
+                m_vScrollBar.Visible = m_vScrollBar.Maximum > 0 && m_vScrollBar.LargeChange <= m_vScrollBar.Maximum;
+                if (!m_vScrollBar.Visible)
+                {
+                    m_vScrollBar.Value = 0;
+                }
+                else
+                {
+                    m_vScrollBar.Value = Math.Min(m_vScrollBar.Value, m_vScrollBar.Maximum-m_vScrollBar.LargeChange);
+                }
+            }
         }
+        #endregion
     }
 }

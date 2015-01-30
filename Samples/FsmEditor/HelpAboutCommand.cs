@@ -34,7 +34,7 @@ namespace FsmEditorSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("FSM"), appURL, richTextBox, null, null, true);
+                "FSM".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

@@ -83,7 +83,7 @@ namespace Sce.Atf.Wpf.Controls
         public string InitialFolder { get; set; }
 
         /// <summary>
-        /// Gets or sets the initially selected and expanded folder path.  Overrides 
+        /// Gets or sets the initially selected and expanded folder path. Overrides 
         /// SelectedFolder.</summary>
         public string InitialExpandedFolder { get; set; }
 
@@ -120,20 +120,23 @@ namespace Sce.Atf.Wpf.Controls
             BrowseInfo.pszDisplayName = new string(' ', 260);
             BrowseInfo.lpszTitle = "Select a folder:";
             BrowseInfo.ulFlags = BrowseInfoFlags.BIF_NEWDIALOGSTYLE;
-            BrowseInfo.lpfn = new BrowseCallbackProc(BrowseEventHandler);
+            BrowseInfo.lpfn = BrowseEventHandler;
             BrowseInfo.lParam = IntPtr.Zero;
             BrowseInfo.iImage = -1;
         }
 
         /// <summary>
-        /// Shows the dialog (Win32::SHBrowseForFolder()).</summary>
+        /// Shows the dialog (Win32::SHBrowseForFolder())</summary>
+        /// <returns>Nullable Boolean signifying how window was closed by user</returns>
         public bool? ShowDialog()
         {
             return PInvokeSHBrowseForFolder(null);
         }
 
         /// <summary>
-        /// Shows the dialog (Win32::SHBrowseForFolder()).</summary>
+        /// Shows the dialog (Win32::SHBrowseForFolder())</summary>
+        /// <param name="owner">Window owner</param>
+        /// <returns>Nullable Boolean signifying how window was closed by user</returns>
         public bool? ShowDialog(Window owner)
         {
             return PInvokeSHBrowseForFolder(owner);
@@ -154,7 +157,7 @@ namespace Sce.Atf.Wpf.Controls
         public enum BrowseInfoFlags : uint
         {
             /// <summary>
-            /// No specified BIF_xxx flags.</summary>
+            /// No specified BIF_xxx flags</summary>
             BIF_None = 0x0000,
 
             /// <summary>
@@ -176,7 +179,7 @@ namespace Sce.Atf.Wpf.Controls
 
             /// <summary>
             /// Only return file system ancestors. An ancestor is a subfolder that is beneath the root 
-            /// folder in the namespace hierarchy. </summary>
+            /// folder in the namespace hierarchy.</summary>
             BIF_RETURNFSANCESTORS = 0x0008,
 
             /// <summary>
@@ -186,22 +189,21 @@ namespace Sce.Atf.Wpf.Controls
             
             /// <summary>
             /// If the user types an invalid name into the edit box, the browse dialog box will
-            /// call the application's BrowseCallbackProc with the BFFM_VALIDATEFAILED message. </summary>
+            /// call the application's BrowseCallbackProc with the BFFM_VALIDATEFAILED message</summary>
             BIF_VALIDATE = 0x0020, 
             
             /// <summary>
             /// Use the new user interface. Setting this flag provides the user with a larger dialog
-            /// box that can be resized. Caller needs to call OleInitialize() before using this API</summary>
+            /// box that can be resized. Caller needs to call OleInitialize() before using this API.</summary>
             BIF_NEWDIALOGSTYLE = 0x0040, 
             
             /// <summary>
             /// Use the new user interface, including an edit box. This flag is equivalent to 
-            /// BIF_EDITBOX | BIF_NEWDIALOGSTYLE. </summary>
+            /// BIF_EDITBOX | BIF_NEWDIALOGSTYLE.</summary>
             BIF_USENEWUI = BIF_NEWDIALOGSTYLE | BIF_EDITBOX,
 
             /// <summary>
-            /// The browse dialog box can display URLs. The BIF_USENEWUI and BIF_BROWSEINCLUDEFILES flags must also be set. 
-            /// </summary>
+            /// The browse dialog box can display URLs. The BIF_USENEWUI and BIF_BROWSEINCLUDEFILES flags must also be set.</summary>
             BIF_BROWSEINCLUDEURLS = 0x0080, 
             
             /// <summary>
@@ -210,13 +212,13 @@ namespace Sce.Atf.Wpf.Controls
             BIF_UAHINT = 0x0100,
 
             /// <summary>
-            /// Do not add the "New Folder" button to the dialog.  Only applicable with 
+            /// Do not add the "New Folder" button to the dialog. Only applicable with 
             /// BIF_NEWDIALOGSTYLE.</summary>
             BIF_NONEWFOLDERBUTTON = 0x0200,
 
             /// <summary>
             /// When the selected item is a shortcut, return the PIDL of the shortcut itself rather 
-            /// than its target.</summary>
+            /// than its target</summary>
             BIF_NOTRANSLATETARGETS = 0x0400,
             
             /// <summary>
@@ -226,15 +228,15 @@ namespace Sce.Atf.Wpf.Controls
             
             /// <summary>
             /// Only allow the selection of printers. If the user selects anything other than a printer, 
-            /// the OK button is grayed. </summary>
+            /// the OK button is grayed.</summary>
             BIF_BROWSEFORPRINTER = 0x2000,
             
             /// <summary>
-            /// The browse dialog box will display files as well as folders.</summary>
+            /// The browse dialog box will display files as well as folders</summary>
             BIF_BROWSEINCLUDEFILES = 0x4000, 
 
             /// <summary>
-            /// The browse dialog box can display shareable resources on remote systems.</summary>
+            /// The browse dialog box can display shareable resources on remote systems</summary>
             BIF_SHAREABLE = 0x8000 
         }
 
@@ -244,11 +246,11 @@ namespace Sce.Atf.Wpf.Controls
         public enum MessageFromBrowser : uint
         {
             /// <summary>
-            /// The dialog box has finished initializing.</summary>
+            /// The dialog box has finished initializing</summary>
             BFFM_INITIALIZED = 1,
 
             /// <summary>
-            /// The selection has changed in the dialog box.</summary>
+            /// The selection has changed in the dialog box</summary>
             BFFM_SELCHANGED = 2,
 
             /// <summary>
@@ -262,68 +264,68 @@ namespace Sce.Atf.Wpf.Controls
             BFFM_VALIDATEFAILEDW = 4,
 
             /// <summary>
-            /// An IUnknown interface is available to the dialog box.</summary>
+            /// An IUnknown interface is available to the dialog box</summary>
             BFFM_IUNKNOWN = 5
         }
 
         /// <summary>
-        /// The message to browser.</summary>
+        /// The message to browser</summary>
         public enum MessageToBrowser : uint
         {
             /// <summary>
-            /// Win32 API macro - start of user defined window message range.</summary>
+            /// Win32 API macro - start of user defined window message range</summary>
             WM_USER = 0x0400,
 
             /// <summary>
             /// (ANSI) Sets the status text. Set lpData to point to a null-terminated string 
-            /// with the desired text. </summary>
+            /// with the desired text.</summary>
             BFFM_SETSTATUSTEXTA = WM_USER + 100,
 
             /// <summary>
-            /// Enables or disables the dialog box's OK button.  lParam - To enable, set to 
+            /// Enables or disables the dialog box's OK button. lParam - To enable, set to 
             /// a nonzero value. To disable, set to zero.</summary>
             BFFM_ENABLEOK = WM_USER + 101,
 
             /// <summary>
-            /// (ANSI) Specifies the path of a folder to select. </summary>
+            /// (ANSI) Specifies the path of a folder to select</summary>
             BFFM_SETSELECTIONA = WM_USER + 102,
 
             /// <summary>
-            /// (Unicode) Specifies the path of a folder to select. </summary>
+            /// (Unicode) Specifies the path of a folder to select</summary>
             BFFM_SETSELECTIONW = WM_USER + 103,
 
             /// <summary>
             /// (Unicode) Sets the status text. Set lpData to point to a null-terminated string 
-            /// with the desired text. </summary>
+            /// with the desired text.</summary>
             BFFM_SETSTATUSTEXTW = WM_USER + 104,
 
             /// <summary>
-            /// Sets the text that is displayed on the dialog box's OK button.</summary>
+            /// Sets the text that is displayed on the dialog box's OK button</summary>
             BFFM_SETOKTEXT = WM_USER + 105, // Unicode only
 
             /// <summary>
-            /// Specifies the path of a folder to expand in the Browse dialog box. </summary>
+            /// Specifies the path of a folder to expand in the Browse dialog box</summary>
             BFFM_SETEXPANDED = WM_USER + 106 // Unicode only
         }
 
 
         /// <summary>
         /// Interop wrapper for SendMessageW</summary>
-        /// <param name="hWnd"></param>
-        /// <param name="Msg"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
+        /// <param name="hWnd">Handle to window whose window procedure receives message</param>
+        /// <param name="Msg">Message to send</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">Additional message-specific information</param>
+        /// <returns>Result of message processing, depending on message</returns>
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Interop wrapper for SendMessageW</summary>
-        /// <param name="hWnd"></param>
-        /// <param name="msg"></param>
-        /// <param name="wParam"></param>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        /// <param name="hWnd">Handle to window whose window procedure receives message</param>
+        /// <param name="msg">MessageToBrowser enum indicating message to browser</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="str">Message text to send</param>
+        /// <returns>Result of message processing, depending on message</returns>
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessageW(IntPtr hWnd, MessageToBrowser msg, IntPtr wParam,
                                                  [MarshalAs(UnmanagedType.LPWStr)] string str);

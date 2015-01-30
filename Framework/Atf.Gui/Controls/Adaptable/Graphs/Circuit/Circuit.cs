@@ -47,9 +47,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             foreach (var connection in Wires)
                 connection.SetPinTarget();
 
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
 
@@ -181,7 +181,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets the sequence of annotations in the context</summary>
         IEnumerable<IAnnotation> IAnnotatedDiagram.Annotations
         {
-            get { return Adapters.AsIEnumerable<IAnnotation>(Annotations); }
+            get { return Annotations.AsIEnumerable<IAnnotation>(); }
         }
 
         #endregion

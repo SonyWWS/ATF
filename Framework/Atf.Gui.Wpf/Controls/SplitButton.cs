@@ -53,7 +53,7 @@ namespace Sce.Atf.Wpf.Controls
             DependencyProperty.Register("PreDropDownCommand", typeof(ICommand), typeof(SplitButton));
 
         /// <summary>
-        /// Called when a new template is applied to the control.</summary>
+        /// Called when a new template is applied to the control</summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -125,7 +125,7 @@ namespace Sce.Atf.Wpf.Controls
         {
             if (DropDownMenu != null)
             {
-                DropDownMenu.Closed -= new RoutedEventHandler(DropDownMenuClosed);
+                DropDownMenu.Closed -= DropDownMenuClosed;
             }
         }
 

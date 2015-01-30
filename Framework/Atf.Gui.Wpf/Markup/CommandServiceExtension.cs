@@ -7,18 +7,29 @@ using System.Windows.Input;
 
 namespace Sce.Atf.Wpf.Markup
 {
+    /// <summary>
+    /// Command service markup extension</summary>
     [ContentProperty("Command")]
     public class CommandServiceExtension : MarkupExtension
     {
+        /// <summary>
+        /// Default constructor</summary>
         public CommandServiceExtension()
         {
         }
 
+        /// <summary>
+        /// Constructor with command</summary>
+        /// <param name="command">Command object</param>
         public CommandServiceExtension(object command)
         {
             Command = command;
         }
 
+        /// <summary>
+        /// Return object set as value of target property for this markup extension</summary>
+        /// <param name="serviceProvider">Object that provides custom support</param>
+        /// <returns>ICommandItem representing a command</returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             ICommand result = null;
@@ -38,6 +49,8 @@ namespace Sce.Atf.Wpf.Markup
             return result;
         }
 
+        /// <summary>
+        /// Get or set command</summary>
         public object Command { get; set; }
 
     }

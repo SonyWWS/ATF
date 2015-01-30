@@ -20,6 +20,11 @@ namespace Sce.Atf.Wpf.Behaviors
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
             }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
         }
 
         /// <summary>

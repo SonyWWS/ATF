@@ -93,7 +93,7 @@ namespace TimelineEditorSample
         /// Gets a string identifying the type of the resource to the end-user</summary>
         public override string Type
         {
-            get { return Localizer.Localize("Timeline"); }
+            get { return "Timeline".Localize(); }
         }
 
         #endregion

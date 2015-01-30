@@ -101,7 +101,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 newGroup.Wires.Add(connection);
             }
 
-            // initalize group pin's index and pinY
+            // initialize group pin's index and pinY
             newGroup.InitializeGroupPinIndexes(internalConnections);
 
             if (graphContainer.Is<Group>()) // making a group inside a group
@@ -115,13 +115,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (modules.Contains(grpPin.InternalElement))
                     {
                         // adjust the internal pin index first 
-                        for (int j = 0; j < newGroup.Inputs.Count; ++j)
+                        foreach (var newGrpPin in newGroup.InputGroupPins)
                         {
-                            var newGrpPin = newGroup.Inputs[j] as GroupPin;
                             if (newGrpPin.InternalElement.DomNode == grpPin.InternalElement.DomNode &&
                                 newGrpPin.InternalPinIndex == grpPin.InternalPinIndex)
                             {
-                                grpPin.InternalPinIndex = j;
+                                grpPin.InternalPinIndex = newGrpPin.Index;
                                 newGrpPin.Name = grpPin.Name;
                                 //grpPin.Name = newGroup.Name + ":" + newGrpPin.Name;
 
@@ -138,13 +137,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (modules.Contains(grpPin.InternalElement))
                     {
                         // adjust the internal pin index first 
-                        for (int j = 0; j < newGroup.Outputs.Count; ++j)
+                        foreach (var newGrpPin in newGroup.OutputGroupPins)
                         {
-                            var newGrpPin = newGroup.Outputs[j] as GroupPin;
                             if (newGrpPin.InternalElement.DomNode == grpPin.InternalElement.DomNode &&
                                 newGrpPin.InternalPinIndex == grpPin.InternalPinIndex)
                             {
-                                grpPin.InternalPinIndex = j;
+                                grpPin.InternalPinIndex = newGrpPin.Index;
                                 newGrpPin.Name = grpPin.Name;
                                 //grpPin.Name = newGroup.Name + ":" + newGrpPin.Name;
 
@@ -218,13 +216,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     var pin = connection.InputPin.As<GroupPin>();
                     Element element = pin.InternalElement;
-                    connection.SetInput(element, element.AllInputPins.ElementAt(pin.InternalPinIndex));
+                    connection.SetInput(element, element.InputPin(pin.InternalPinIndex));
                 }
                 else if (connection.OutputElement.As<Group>() == group)
                 {
                     var pin = connection.OutputPin.As<GroupPin>();
                     Element element = pin.InternalElement;
-                    connection.SetOutput(element, element.AllOutputPins.ElementAt(pin.InternalPinIndex));
+                    connection.SetOutput(element, element.OutputPin(pin.InternalPinIndex));
                 }
             }
 
@@ -285,7 +283,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private enum CommandTag
         {
-            HideUnconnectedPins,   // only expose connected group pins
+            //HideUnconnectedPins,   // only expose connected group pins
             ShowExpandedGroupPins, // whether to draw the orange box on the left and right borders of  an expanded group that represents the group pin
             TogglePinVisibility,   // in-place group pin visibility toggling - not supported yet
             ResetGroupPinNames,
@@ -347,17 +345,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             //   CommandVisibility.ContextMenu,
             //   this);
 
-            var hideUnconnectedPins = m_commandService.RegisterCommand(
-              CommandTag.HideUnconnectedPins,
-              StandardMenu.Edit,
-              StandardCommandGroup.EditOther,
-              "Hide Unconnected Pins".Localize(),
-              "Hide Unconnected Pins".Localize(),
-              Keys.None,
-              null,
-              CommandVisibility.ContextMenu,
-              this);
-            hideUnconnectedPins.CheckOnClick = true;
+            //var hideUnconnectedPins = m_commandService.RegisterCommand(
+            //  CommandTag.HideUnconnectedPins,
+            //  StandardMenu.Edit,
+            //  StandardCommandGroup.EditOther,
+            //  "Hide Unconnected Pins".Localize(),
+            //  "Hide Unconnected Pins".Localize(),
+            //  Keys.None,
+            //  null,
+            //  CommandVisibility.ContextMenu,
+            //  this);
+            //hideUnconnectedPins.CheckOnClick = true;
 
             //m_commandService.RegisterCommand(
             //  CommandTag.EdgeStyleDefault,
@@ -442,12 +440,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         if (enabled)
                             enabled = !CircuitUtil.IsTemplateTargetMissing(m_targetRef.Target);
                     }
-                    else if (CommandTag.HideUnconnectedPins.Equals(commandTag))
-                    {
-                        enabled = m_targetRef != null && m_targetRef.Target.Is<Group>();
-                        if (enabled)
-                            enabled = !CircuitUtil.IsTemplateTargetMissing(m_targetRef.Target);
-                    }
+                    //else if (CommandTag.HideUnconnectedPins.Equals(commandTag))
+                    //{
+                    //    enabled = m_targetRef != null && m_targetRef.Target.Is<Group>();
+                    //    if (enabled)
+                    //        enabled = !CircuitUtil.IsTemplateTargetMissing(m_targetRef.Target);
+                    //}
                     else if (CommandTag.TogglePinVisibility.Equals(commandTag))
                     {
                         enabled = m_targetRef != null && CanDoTogglePinVisibility(context, m_targetRef.Target);
@@ -500,10 +498,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     transactionContext.DoTransaction(() => GroupResetPinNames(), "Reset Group Pin Names".Localize());
                 }
-                else if (CommandTag.HideUnconnectedPins.Equals(commandTag))
-                {
-                    transactionContext.DoTransaction(() => ToggleHideUnconnectedPins(), "Hide Unconnected Pins".Localize());
-                }
+                //else if (CommandTag.HideUnconnectedPins.Equals(commandTag))
+                //{
+                //    transactionContext.DoTransaction(() => ToggleHideUnconnectedPins(), "Hide Unconnected Pins".Localize());
+                //}
                 //else if (CommandTag.EdgeStyleDirectCurve.Equals(commandTag))
                 //{
                 //    foreach (var connection in context.CircuitContainer.Wires)
@@ -533,10 +531,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         object target = m_targetRef.Target;
                         if (target.Is<Group>() && !CircuitUtil.IsTemplateTargetMissing(target))
                         {
+                            if (!target.Is<IReference<DomNode>>())
+                            {
                             var group = target.Cast<Group>();
                             state.Text = string.Format("Reset Pin Names on \"{0}\"".Localize(), group.Name);
                         }
                     }
+                }
                 }
                 else if (commandTag.Equals(CommandTag.ShowExpandedGroupPins))
                 {
@@ -551,51 +552,51 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         }
                     }
                 }
-                else if (commandTag.Equals(CommandTag.HideUnconnectedPins))
-                {
-                    if (m_targetRef != null && m_targetRef.Target != null)
-                    {
-                        object target = m_targetRef.Target;
-                        if (target.Is<Group>() && !CircuitUtil.IsTemplateTargetMissing(target))
-                        {
-                            var group = target.Cast<Group>();
-                            var graphContainer = group.ParentGraph.As<ICircuitContainer>();
-                            if (graphContainer != null)
-                            {
-                                // check if all unconnected pins are hidden
-                                m_allUnconnectedHidden = true;
-                                foreach (var grpPin in group.InputGroupPins)
-                                {
-                                    bool externalConectd =
-                                        graphContainer.Wires.FirstOrDefault(
-                                            x => x.InputPinTarget.FullyEquals(grpPin.PinTarget)) != null;
-                                    if (!externalConectd && grpPin.Visible)
-                                    {
-                                        m_allUnconnectedHidden = false;
-                                        break;
-                                    }
-                                }
-                                if (m_allUnconnectedHidden)
-                                {
-                                    foreach (var grpPin in group.OutputGroupPins)
-                                    {
-                                        bool externalConectd =
-                                            graphContainer.Wires.FirstOrDefault(
-                                                x => x.OutputPinTarget.FullyEquals(grpPin.PinTarget)) != null;
-                                        if (!externalConectd && grpPin.Visible)
-                                        {
-                                            m_allUnconnectedHidden = false;
-                                            break;
-                                        }
-                                    }
-                                }
+                //else if (commandTag.Equals(CommandTag.HideUnconnectedPins))
+                //{
+                //    if (m_targetRef != null && m_targetRef.Target != null)
+                //    {
+                //        object target = m_targetRef.Target;
+                //        if (target.Is<Group>() && !CircuitUtil.IsTemplateTargetMissing(target))
+                //        {
+                //            var group = target.Cast<Group>();
+                //            var graphContainer = group.ParentGraph.As<ICircuitContainer>();
+                //            if (graphContainer != null)
+                //            {
+                //                // check if all unconnected pins are hidden
+                //                m_allUnconnectedHidden = true;
+                //                foreach (var grpPin in group.InputGroupPins)
+                //                {
+                //                    bool externalConectd =
+                //                        graphContainer.Wires.FirstOrDefault(
+                //                            x => x.InputPinTarget.FullyEquals(grpPin.PinTarget)) != null;
+                //                    if (!externalConectd && grpPin.Visible)
+                //                    {
+                //                        m_allUnconnectedHidden = false;
+                //                        break;
+                //                    }
+                //                }
+                //                if (m_allUnconnectedHidden)
+                //                {
+                //                    foreach (var grpPin in group.OutputGroupPins)
+                //                    {
+                //                        bool externalConectd =
+                //                            graphContainer.Wires.FirstOrDefault(
+                //                                x => x.OutputPinTarget.FullyEquals(grpPin.PinTarget)) != null;
+                //                        if (!externalConectd && grpPin.Visible)
+                //                        {
+                //                            m_allUnconnectedHidden = false;
+                //                            break;
+                //                        }
+                //                    }
+                //                }
 
-                                state.Check = m_allUnconnectedHidden;
-                                state.Text = string.Format("Hide Unconnected Pins on \"{0}\"".Localize(), group.Name);
-                            }
-                        }
-                    }
-                }
+                //                state.Check = m_allUnconnectedHidden;
+                //                state.Text = string.Format("Hide Unconnected Pins on \"{0}\"".Localize(), group.Name);
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
 
@@ -627,7 +628,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (CanDoTogglePinVisibility(context, target))
                     yield return CommandTag.TogglePinVisibility;
 
-                yield return CommandTag.HideUnconnectedPins;
+                //yield return CommandTag.HideUnconnectedPins;
                 yield return CommandTag.EdgeStyleDefault;
                 yield return CommandTag.EdgeStyleDirectCurve;
              }    
@@ -684,9 +685,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 newGroup.UpdateGroupPinInfo();
                 foreach (var grpPin in newGroup.InputGroupPins)
                     grpPin.Visible = grpPin.Info.ExternalConnected;
-                       
+
                 foreach (var grpPin in newGroup.OutputGroupPins)
-                    grpPin.Visible = grpPin.Info.ExternalConnected;  
+                    grpPin.Visible = grpPin.Info.ExternalConnected;
             }
 
             // select the newly created group
@@ -700,11 +701,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var newSelection = new List<object>();
             foreach (var group in selectionContext.Selection.AsIEnumerable<Group>())
             {
-#if CS_4
                 newSelection.AddRange(group.Elements);
-#else
-                newSelection.AddRange(group.Elements.AsIEnumerable<object>());
-#endif
                 UngroupGroup(group, graphContainer);
             }
             selectionContext.SetRange(newSelection);
@@ -782,58 +779,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-        private void ToggleHideUnconnectedPins()
-        {
-            if (m_targetRef == null || m_targetRef.Target == null)
-                return;
-
-            var group = m_targetRef.Target.Cast<Group>();
-            if (CircuitUtil.IsGroupTemplateInstance(m_targetRef.Target))             
-            {
-                group = CircuitUtil.GetGroupTemplate(m_targetRef.Target);
-                // for template instances, force update template group pin connectivity   
-                // because currently the pin connectivity  of a group template is computed on-demand
-                var graphValidator = m_targetRef.Target.Cast<DomNode>().GetRoot().As<CircuitValidator>();
-                if (graphValidator == null) // it is possible to hold on a templated instance that is converting to a copy instance during rapid mouse clicks, 
-                                            // where the templated instance is no longer a child of root node
-                    return;
-                graphValidator.UpdateTemplateInfo(group);           
-            }
-         
-            // CTE does not set group’s parent during deserialization,
-            // this call ensures the group pins’ external connectivity updated 
-            group.UpdateGroupPinInfo(); 
-           
-            if (m_allUnconnectedHidden)
-            {
-                foreach (var grpPin in group.InputGroupPins)
-                {
-                    foreach (var childGroupPin in grpPin.SinkChain(true))
-                    {
-                        childGroupPin.Visible = true;
-                    }
-                }
-                foreach (var grpPin in group.OutputGroupPins)
-                {
-                    foreach (var childGroupPin in grpPin.SinkChain(false))
-                    {
-                        childGroupPin.Visible = true;
-                    }
-                }
-                          
-            }
-            else
-            {
-                foreach (var grpPin in group.InputGroupPins)
-                    grpPin.Visible = grpPin.Info.ExternalConnected;
-
-                foreach (var grpPin in group.OutputGroupPins)
-                    grpPin.Visible = grpPin.Info.ExternalConnected;
-            }
-          
-               
-        }
-
         private bool CanDoTogglePinVisibility(object context, object target)
         {
             if (target.Is<Group>())
@@ -873,6 +818,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
  
         private Group.PinOrderStyle m_defaultPinOrderStyle;
         private WeakReference m_targetRef;
-        private bool m_allUnconnectedHidden;
+        //private bool m_allUnconnectedHidden;
     }
 }

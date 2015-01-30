@@ -99,9 +99,11 @@ namespace Sce.Atf.Applications
                 }
 
                 RegisterCommandInfo(info);
+                // Only increment the menu count for unique commands, because it's legal to
+                //  call RegisterCommand multiple times with the same CommandInfo.
+                IncrementMenuCommandCount(info.MenuTag);
             }
 
-            IncrementMenuCommandCount(info.MenuTag);
             m_commandClients.Add(info.CommandTag, client);
         }
 
@@ -145,7 +147,8 @@ namespace Sce.Atf.Applications
         /// <param name="client">Command client, null if client is deactivated</param>
         public void SetActiveClient(ICommandClient client)
         {
-            List<object> commandTags = new List<object>(m_commandClients.Keys);
+            var commandTags = new List<object>(m_commandClients.Keys);
+            var commandTagsToUpdate = new List<object>();
 
             // 'client' being null is an indication to pop the most recently active client
             if (client == null && m_activeClient != null)
@@ -154,7 +157,10 @@ namespace Sce.Atf.Applications
                 foreach (object commandTag in commandTags)
                 {
                     if (m_commandClients.ContainsKeyValue(commandTag, m_activeClient))
+                    {
                         m_commandClients.AddFirst(commandTag, m_activeClient);
+                        commandTagsToUpdate.Add(commandTag);
+                    }
                 }
             }
 
@@ -166,9 +172,22 @@ namespace Sce.Atf.Applications
                 foreach (object commandTag in commandTags)
                 {
                     if (m_commandClients.ContainsKeyValue(commandTag, client))
+                    {
                         m_commandClients.Add(commandTag, client);
+                        commandTagsToUpdate.Add(commandTag);
+                    }
                 }
             }
+
+            foreach (object commandTag in commandTagsToUpdate)
+                UpdateCommand(commandTag);
+        }
+
+        /// <summary>
+        /// Forces an update for the command associated with the given tag.</summary>
+        /// <param name="commandTag">Command's tag object</param>
+        protected virtual void UpdateCommand(object commandTag)
+        {
         }
 
         /// <summary>
@@ -251,7 +270,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Updates command state for given command</summary>
-        /// <param name="commandTag">Command</param>
+        /// <param name="commandTag">Command's tag object</param>
         /// <param name="state">Command state to update</param>
         public virtual void UpdateCommand(object commandTag, CommandState state) { }
 
@@ -463,13 +482,24 @@ namespace Sce.Atf.Applications
         /// Gets the command client for the given command tag, or null if none exists. If multiple
         /// command clients registered a command with this tag, the most recent command client
         /// is returned.</summary>
-        /// <param name="commandtag">Command tag</param>
+        /// <param name="commandTag">Command tag</param>
         /// <returns>Command client for given command tag</returns>
-        public ICommandClient GetClient(object commandtag)
+        public ICommandClient GetClient(object commandTag)
         {
             ICommandClient client;
-            m_commandClients.TryGetLast(commandtag, out client);
+            m_commandClients.TryGetLast(commandTag, out client);
             return client;
+        }
+
+        /// <summary>
+        /// Gets the command client for the given command tag, or the active client if none exists.
+        /// See SetActiveClient(). If multiple command clients registered a command with this tag,
+        /// the most recent command client is returned.</summary>
+        /// <param name="commandTag">Command tag</param>
+        /// <returns>Command client for given command tag</returns>
+        public ICommandClient GetClientOrActiveClient(object commandTag)
+        {
+            return GetClient(commandTag) ?? m_activeClient;
         }
 
         /// <summary>
@@ -528,7 +558,6 @@ namespace Sce.Atf.Applications
             m_commands.Remove(info);
         }
 
-        
         /// <summary>
         /// Sets shortcut</summary>
         /// <param name="shortcut">Shortcut keys</param>
@@ -605,7 +634,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Increments menu command count</summary>
-        /// <param name="menuTag">Menu's unique ID</param>
+        /// <param name="menuTag">Menu's unique ID tag. Is null if there is no menu item.</param>
         /// <returns>MenuInfo object corresponding to menu tag</returns>
         protected virtual MenuInfo IncrementMenuCommandCount(object menuTag)
         {

@@ -37,7 +37,7 @@
 			</valueInfo>
 		</setter>
 	</style>
-	<style name="Atf3DockStyle" targetType="Sce.Atf.Applications.ControlHostService+DockPanel">
+	<style name="DockStyle" targetType="Sce.Atf.Applications.ControlHostService+DockPanel">
 		<setter propertyName="DockBackColor">
 			<valueInfo type="System.Drawing.Color" value="#FF777777" />
 		</setter>

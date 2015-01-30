@@ -362,6 +362,22 @@ namespace UnitTests.Atf.Dom
         }
 
         [Test]
+        public void TestConvertRelativeUriContainingSpacesToString()
+        {
+            var test = new AttributeType("test", typeof(Uri));
+
+            var baseUri = new Uri("C:\\base\\path");
+            var relPath = "rel\\path\\with spaces\\in it\\file.txt";
+
+            var absUri = new Uri(baseUri, relPath);
+            var relUri = baseUri.MakeRelativeUri(absUri);
+
+            var uriToString = relUri.ToString();
+            var uriConverted = test.Convert(relUri);
+
+            Assert.AreEqual(uriToString, uriConverted);
+        }
+        [Test]
         public void TestConvertFromString()
         {
             TestConvertFromString<SByte>(0, 1);

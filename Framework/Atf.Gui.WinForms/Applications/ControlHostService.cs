@@ -195,6 +195,12 @@ namespace Sce.Atf.Applications
                    new BoundPropertyDescriptor(this, () => UILocked, "UILocked", null, null));
             }
 
+            // Turn off the CommandService's polling of these commands.
+            CommandInfo.UILock.EnableCheckCanDoEvent(this);
+            CommandInfo.WindowTileHorizontal.EnableCheckCanDoEvent(this);
+            CommandInfo.WindowTileVertical.EnableCheckCanDoEvent(this);
+            CommandInfo.WindowTileTabbed.EnableCheckCanDoEvent(this);
+
             if (m_commandService != null)
             {
                 if ((RegisteredCommands & CommandRegister.UILock) == CommandRegister.UILock)
@@ -282,16 +288,35 @@ namespace Sce.Atf.Applications
             info.Control = control;
             info.Changed += info_Changed;
 
-            var dockContent = new DockContent(this);
+            DockContent dockContent = null;
+            bool useControlInfoLayout = true;
+            if (info.IsDocument.HasValue && info.IsDocument.Value)
+            {
+                foreach (DockContent unregisteredContent in m_unregisteredContents)
+                {
+                    if (unregisteredContent.Name == DocumentContentPrefix + info.Description)
+                    {
+                        dockContent = unregisteredContent;
+                        m_unregisteredContents.Remove(unregisteredContent);
+                        useControlInfoLayout = false;
+                        break;
+                    }
+                }
+            }
+
+            if (dockContent == null)
+            {
+                dockContent = new DockContent(this);
+                // set persistence id one time only.
+                // do not update dockContent.Name            
+                // dockContent.Text is used for titlebar.
+                dockContent.Name = GetPersistenceId(info);
+            }
 
             if (!string.IsNullOrEmpty(info.HelpUrl))
                 dockContent.AddHelp(info.HelpUrl);
 
-            // set persistence id one time only.
-            // do not update dockContent.Name            
-            // dockContent.Text is used for titlebar.
-            dockContent.Name = GetPersistenceId(info);
-
+   
             UpdateDockContent(dockContent, info);
 
             m_dockContent.Add(info, dockContent);
@@ -308,7 +333,7 @@ namespace Sce.Atf.Applications
 
             dockContent.FormClosing += dockContent_FormClosing;
 
-            ShowDockContent(dockContent, info);
+            ShowDockContent(dockContent, useControlInfoLayout ? info : null);
 
             if (info.ShowInMenu)
             {
@@ -707,15 +732,24 @@ namespace Sce.Atf.Applications
 
         private void mainForm_Closing(object sender, CancelEventArgs e)
         {
+            // Check if another listener has cancelled the event already.
+            if (e.Cancel)
+                return;
+
+            // close these unregistered DockContents so they are not persisted in saved layout
+            foreach (var unregisteredContent in m_unregisteredContents)
+            {
+                unregisteredContent.DockHandler.Form.Close();
+            }
+
             // snapshot docking state before we close anything;
-            //  Except this snapshot is unused and GetDockPanelState() is simply called twice because
-            //  m_formLoaded is still true.
-            //m_dockPanelState = GetDockPanelState();
+            m_formLoaded = false; // persuade DockPanelState getter to use the cached instead of the current docking state
+            m_dockPanelState = GetDockPanelState();
 
             m_canFireDockStateChanged = false;
 
-            // Attempt to close all documents unless a prior event listener has cancelled.
-            e.Cancel = e.Cancel || !Close();
+            // Attempt to close all documents.
+            e.Cancel = !Close();
 
             // turn back on or keep off
             m_canFireDockStateChanged = e.Cancel;
@@ -916,6 +950,7 @@ namespace Sce.Atf.Applications
             return dockContent;
         }
 
+    
         private void UpdateDockContent(DockContent dockContent, ControlInfo info)
         {
             if (!string.IsNullOrEmpty(dockContent.Text))
@@ -923,9 +958,12 @@ namespace Sce.Atf.Applications
 
             string displayName = info.Name;
             if (info.IsDocument.HasValue && info.IsDocument.Value)
+            {
                 dockContent.Text = displayName;
+                dockContent.Name = DocumentContentPrefix + info.Description;
+            }
             else
-            { 
+            {
                 // make the hosting control's name unique for non-document controls
                 string uniqueDisplayName = m_uniqueNamer.Name(displayName);
                 dockContent.Text = uniqueDisplayName;
@@ -958,10 +996,20 @@ namespace Sce.Atf.Applications
 
         private void ShowDockContent(DockContent dockContent, ControlInfo info)
         {
+            if (info == null)
+            {
+                dockContent.Show(m_dockPanel);
+                return;
+            }
+
             DockState state;
             if (IsCenterGroup(info.Group))
             {
-                state = DockState.Document;
+
+                if (dockContent.DockHandler.IsFloat)
+                    state = DockState.Float;
+                else
+                    state = DockState.Document;
             }
             else
             {
@@ -1016,10 +1064,13 @@ namespace Sce.Atf.Applications
 
         private string GetPersistenceId(ControlInfo info)
         {
+            if (info.IsDocument.HasValue && info.IsDocument.Value)
+                return info.Name;
+
             // first, try Name            
             string name = info.Name;
 
-            // don't use name as a part of id if it is too long or it is a path or file name.
+            // don't use name as a part of id if it is too long 
             bool usedefault
                 = string.IsNullOrEmpty(name)
                 || name.Length > 64
@@ -1066,14 +1117,17 @@ namespace Sce.Atf.Applications
                 else
                     isDocument = info.Client is IDocumentClient;
 
-                m_commandService.RegisterCommand(
-                    new CommandInfo(
-                        info.Control,
-                        StandardMenu.Window,
-                        isDocument ? StandardCommandGroup.WindowDocuments : StandardCommandGroup.WindowGeneral,
-                        text,
-                        "Activate Window".Localize()),
-                    this);
+                var commandInfo = new CommandInfo(
+                    info.Control,
+                    StandardMenu.Window,
+                    isDocument ? StandardCommandGroup.WindowDocuments : StandardCommandGroup.WindowGeneral,
+                    text,
+                    "Activate Window".Localize());
+
+                // CanDoCommand() always returns true, so let's disable polling.
+                commandInfo.EnableCheckCanDoEvent(this);
+
+                m_commandService.RegisterCommand(commandInfo, this);
             }
         }
 
@@ -1118,6 +1172,8 @@ namespace Sce.Atf.Applications
         {
             get
             {
+                // return the previously set state if the main form had not yet loaded,
+                // to prevent dock panel state being corrupted for the WindowLayoutService.
                 if (!m_formLoaded && !string.IsNullOrEmpty(m_dockPanelState))
                     return m_dockPanelState;
 
@@ -1178,6 +1234,12 @@ namespace Sce.Atf.Applications
                             ShowDockContent(dockContent, info);
                         }
                     }
+
+                    // Hide these unregistered DockContents until client code calls RegisterControl().
+                    foreach (DockContent unregisteredContent in m_unregisteredContents)
+                    {
+                        unregisteredContent.Hide();
+                    }
                 }
             }
 
@@ -1203,35 +1265,20 @@ namespace Sce.Atf.Applications
             return result;
         }
 
+        // The callback method from DockPanelSuite, to get a DockContent object.
         private IDockContent StringToDockContent(string id)
         {
             foreach (DockContent dockContent in m_dockContent.Values)
                 if (dockContent.Name == id)
                     return dockContent;
 
-            // In ATF 3.1, on 4/1/2011, after ATF 3.1 was already released, the separator was
-            //  changed from ':' to a '_'. This messed up all user layouts, making their dockable
-            //  controls appear as "all tabs".
-            // So, try replacing the first ':' with a '_' and see if the DockContent's Name and
-            //  the ControlInfo's Client's type name matches.
-            // http://sf.ship.scea.com/sf/tracker/do/viewArtifact/projects.atf/tracker.bugs/artf39064
-            int firstColon = id.IndexOf(':');
-            if (firstColon >= 0)
+            // Save document windows until RegisterControl() is called.
+            if (id.StartsWith(DocumentContentPrefix))
             {
-                var sb = new StringBuilder(id);
-                sb[firstColon] = '_';
-                id = sb.ToString();
-
-                foreach (KeyValuePair<ControlInfo,DockContent> kvp in m_dockContent)
-                {
-                    DockContent dockContent = kvp.Value;
-                    if (dockContent.Name == id)
-                    {
-                        ControlInfo info = kvp.Key;
-                        if (info.Client.GetType().Name == id.Substring(0, firstColon))
-                            return dockContent;
-                    }
-                }
+                var result = new DockContent(this);
+                result.Name = id;
+                m_unregisteredContents.Add(result);
+                return result;
             }
 
             return null;
@@ -1451,6 +1498,7 @@ namespace Sce.Atf.Applications
 
                 return consumed;
             }
+
         }
 
         private class DefaultClient : IControlHostClient
@@ -1459,6 +1507,9 @@ namespace Sce.Atf.Applications
             public void Deactivate(Control control) { }
             public bool Close(Control control) { return true; }
         }
+
+        const string DocumentContentPrefix = "Sce.Atf.DockPanel.DocumentContent,";
+
 
         private readonly Form m_mainForm;
 
@@ -1472,8 +1523,10 @@ namespace Sce.Atf.Applications
         private IEnumerable<Lazy<IContextMenuCommandProvider>> m_contextMenuCommandProviders;
 
         private readonly Dictionary<ControlInfo, DockContent> m_dockContent = new Dictionary<ControlInfo, DockContent>();
-        private readonly ActiveCollection<ControlInfo> m_controls;
+        private readonly List<DockContent> m_unregisteredContents = new List<DockContent>() ;
 
+        private readonly ActiveCollection<ControlInfo> m_controls;
+ 
         private readonly UniqueNamer m_uniqueNamer = new UniqueNamer('(');
         private readonly UniqueNamer m_idNamer = new UniqueNamer();
 

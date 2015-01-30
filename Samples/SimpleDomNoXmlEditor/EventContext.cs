@@ -34,9 +34,9 @@ namespace SimpleDomNoXmlEditorSample
         /// Raises the HistoryContext NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
         }
@@ -54,7 +54,7 @@ namespace SimpleDomNoXmlEditorSample
         /// Gets names for table columns</summary>
         public string[] ColumnNames
         {
-            get { return new string[] { Localizer.Localize("Name"), Localizer.Localize("Size") }; }
+            get { return new string[] { "Name".Localize(), "Size".Localize() }; }
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace SimpleDomNoXmlEditorSample
         /// <param name="info">Display info to update</param>
         public void GetInfo(object item, ItemInfo info)
         {
-            Resource resource = Adapters.As<Resource>(item);
+            Resource resource = item.As<Resource>();
             info.Label = resource.Name;
             string type = null;
             if (resource.DomNode.Type == DomTypes.animationResourceType.Type)
@@ -145,7 +145,7 @@ namespace SimpleDomNoXmlEditorSample
                 return false;
 
             foreach (object item in items)
-                if (!Adapters.Is<Resource>(item))
+                if (!item.Is<Resource>())
                     return false;
 
             return true;
@@ -161,9 +161,9 @@ namespace SimpleDomNoXmlEditorSample
             if (items == null)
                 return;
 
-            DomNode[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            DomNode[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
             IList<Resource> resources = this.Cast<Event>().Resources;
-            foreach (Resource resource in Adapters.AsIEnumerable<Resource>(itemCopies))
+            foreach (Resource resource in itemCopies.AsIEnumerable<Resource>())
                 resources.Add(resource);
 
             Selection.SetRange(itemCopies);

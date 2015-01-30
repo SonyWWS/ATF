@@ -52,12 +52,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (m_theme != value)
                 {
                     if (m_theme != null)
-                        m_theme.Redraw -= new EventHandler(theme_Redraw);
+                        m_theme.Redraw -= theme_Redraw;
 
                     m_theme = value;
 
                     if (m_theme != null)
-                        m_theme.Redraw += new EventHandler(theme_Redraw);
+                        m_theme.Redraw += theme_Redraw;
 
                     base.OnRedraw();
                 }
@@ -224,7 +224,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
-                foreach (TEdge edge in Enumerable.Reverse(graph.Edges))
+                foreach (TEdge edge in graph.Edges.Reverse())
                 {
                     if (Pick(edge, v))
                     {
@@ -234,7 +234,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (TNode node in Enumerable.Reverse(graph.Nodes))
+            foreach (TNode node in graph.Nodes.Reverse())
             {
                 if (Pick(node, p))
                 {
@@ -557,37 +557,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
-                // prepare to draw arc
-                double angle1 = Math.Atan2(startPoint.Y - c.Center.Y, startPoint.X - c.Center.X);
-                double angle2 = Math.Atan2(endPoint.Y - c.Center.Y, endPoint.X - c.Center.X);
-                const double twoPi = 2 * Math.PI;
-
-                // swap so we always go clockwise
-                if (angle1 > angle2)
-                {
-                    double temp = angle1;
-                    angle1 = angle2;
-                    angle2 = temp;
-                }
-
-                double startAngle = angle1;
-                double sweepAngle = angle2 - angle1;
-
-                if (moreThan180)
-                {
-                    if (sweepAngle < Math.PI)
-                        sweepAngle = -(twoPi - sweepAngle);
-                }
-                else
-                {
-                    if (sweepAngle > Math.PI)
-                        sweepAngle = -(twoPi - sweepAngle);
-                }
-
-                const double RadiansToDegrees = 360 / twoPi;
-                startAngle *= RadiansToDegrees;
-                sweepAngle *= RadiansToDegrees;
-
                 textPoint = (endPoint + startPoint) * 0.5f;
                 CircleF.Project(textPoint, c, ref textPoint);
                 if (moreThan180)

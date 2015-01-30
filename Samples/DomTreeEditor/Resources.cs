@@ -58,5 +58,8 @@ namespace DomTreeEditorSample
         /// Texture image resource resource filename</summary>
         [ImageResource("texture.png")]
         public static readonly string TextureImage;
+
+        [ImageResource("curve_16.png")]
+        public static readonly string CurveImage;
     }
 }

@@ -20,7 +20,7 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Gets or sets the translation</summary>
+        /// Gets the current transformation matrix, from world to Window client coordinates</summary>
         public PointF Translation
         {
             get { return new PointF(m_transform.OffsetX, m_transform.OffsetY); }

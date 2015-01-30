@@ -532,7 +532,7 @@ namespace Sce.Atf.Dom
                     result = value.ToString();
                     break;
                 case AttributeTypes.Uri:
-                    result = Uri.EscapeUriString(value.ToString());
+                    result = Uri.EscapeUriString(Uri.UnescapeDataString(value.ToString()));
                     break;
 
                 //case AttributeTypes.Reference: // references require special handling by persisters

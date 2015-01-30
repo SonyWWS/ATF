@@ -76,7 +76,8 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Gets or sets the hit path</summary>
+        /// Gets or sets the hit path which has the highest level container first and the
+        /// most specific child element last</summary>
         public AdaptablePath<object> HitPath
         {
             get { return m_hitPath; }

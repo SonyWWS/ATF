@@ -50,8 +50,8 @@
           <xs:element name="statechart" type="statechartType" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="label" type="xs:string" default="State"/>
-        <xs:attribute name="width" type="xs:int" use="required" />
-        <xs:attribute name="height" type="xs:int" use="required" />
+        <xs:attribute name="width" type="xs:int" default="64"/>
+        <xs:attribute name="height" type="xs:int" default="64"/>
         <xs:attribute name="entryAction" type="xs:string" />
         <xs:attribute name="exitAction" type="xs:string" />
       </xs:extension>

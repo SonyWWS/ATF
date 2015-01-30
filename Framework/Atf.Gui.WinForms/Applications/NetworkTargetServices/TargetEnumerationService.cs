@@ -388,8 +388,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             m_listView.Name = "targetsListView";
             m_listView.CellValidating += listView_CellValidating;
             m_listView.ItemChecked += listView_ItemChecked;
-            m_listView.ItemCheck += new ItemCheckEventHandler(listView_ItemCheck);
-            m_listView.MouseUp += new MouseEventHandler(listView_MouseUp);
+            m_listView.ItemCheck += listView_ItemCheck;
+            m_listView.MouseUp += listView_MouseUp;
          
             m_userControl.Controls.Add(m_listView);
             m_userControl.Controls.Add(m_addTargetButton);
@@ -414,7 +414,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
                 if (targetProvider.CanCreateNew)
                     m_addTargetButton.ContextMenuStrip.Items.Add(AddNewString + targetProvider.Name);
             }
-            m_addTargetButton.ContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(ContextMenuStrip_ItemClicked);
+            m_addTargetButton.ContextMenuStrip.ItemClicked += ContextMenuStrip_ItemClicked;
             if (m_addTargetButton.ContextMenuStrip.Items.Count ==1)
             {
                 m_addTargetButton.ShowSplit = false;

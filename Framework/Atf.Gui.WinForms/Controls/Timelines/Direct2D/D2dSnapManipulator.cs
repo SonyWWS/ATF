@@ -22,7 +22,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         public D2dSnapManipulator(D2dTimelineControl owner)
         {
             m_owner = owner;
-            m_owner.GetSnapOffset = new D2dTimelineControl.SnapOffsetFinder(GetSnapOffset);
+            m_owner.GetSnapOffset = GetSnapOffset;
             m_owner.DrawingD2d += owner_DrawingD2d;
             m_owner.MouseUp += owner_MouseUp;
             m_owner.MouseDown += owner_MouseDown;

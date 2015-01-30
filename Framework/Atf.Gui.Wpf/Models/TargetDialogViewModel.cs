@@ -12,8 +12,14 @@ using Sce.Atf.Wpf.Applications;
 
 namespace Sce.Atf.Wpf.Models
 {
+    /// <summary>
+    /// View model for a target dialog</summary>
     public class TargetDialogViewModel : DialogViewModelBase
     {
+        /// <summary>
+        /// Constructor with targets and protocols</summary>
+        /// <param name="targets">Enumeration of targets</param>
+        /// <param name="protocols">Enumeration of protocols for interacting with targets</param>
         public TargetDialogViewModel(IEnumerable<TargetViewModel> targets, IEnumerable<IProtocol> protocols)
         {
             Title = "Targets".Localize();
@@ -34,11 +40,17 @@ namespace Sce.Atf.Wpf.Models
             
         }
 
+        /// <summary>
+        /// Get targets</summary>
         public ObservableCollection<TargetViewModel> Targets { get; private set; }
+        /// <summary>
+        /// Get protocols for interacting with targets</summary>
         public ObservableCollection<IProtocol> Protocols { get; private set; }
        
         #region AddUserTargetCommand
 
+        /// <summary>
+        /// Get add user defined target command</summary>
         public ICommand AddUserTargetCommand { get; private set; }
 
         private bool CanAddUserTarget()
@@ -65,6 +77,8 @@ namespace Sce.Atf.Wpf.Models
 
         #region DeleteTargetCommand
 
+        /// <summary>
+        /// Get delete target command</summary>
         public ICommand DeleteTargetCommand { get; private set; }
 
         private void DeleteTarget()
@@ -86,6 +100,8 @@ namespace Sce.Atf.Wpf.Models
 
         #region EditUserTargetCommand
 
+        /// <summary>
+        /// Get edit target for user command</summary>
         public ICommand EditUserTargetCommand { get; private set; }
 
         private bool CanEditUserTarget()
@@ -105,6 +121,8 @@ namespace Sce.Atf.Wpf.Models
 
         #region FindTargetsCommand
 
+        /// <summary>
+        /// Get find targets command</summary>
         public ICommand FindTargetsCommand { get; private set; }
 
         private void FindTargets()
@@ -113,6 +131,8 @@ namespace Sce.Atf.Wpf.Models
             EnsureSelection();
         }
 
+        /// <summary>
+        /// Displaying found targets dialog event</summary>
         public event EventHandler<ShowDialogEventArgs> ShowFindTargetsDialog;
 
         #endregion
@@ -123,11 +143,16 @@ namespace Sce.Atf.Wpf.Models
             return vm != null ? vm.Target : null;
         }
 
+        /// <summary>
+        /// Obtain the currently selected protocol</summary>
+        /// <returns>Currently selected protocol</returns>
         internal IProtocol GetSelectedProtocol()
         {
             return m_protocolsCv.CurrentItem as IProtocol;
         }
 
+        /// <summary>
+        /// Ensure that last target is selected if no other targets are selected</summary>
         internal void EnsureSelection()
         {
             if (Targets.Count > 0 && !Targets.Any(x => x.IsSelected))

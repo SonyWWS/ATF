@@ -10,6 +10,7 @@ using System.Xml.Schema;
 
 using Sce.Atf;
 using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
 using Sce.Atf.Controls.PropertyEditing;
 using Sce.Atf.Dom;
 
@@ -20,17 +21,39 @@ namespace DomPropertyEditorSample
     /// Loads the game schema, and annotates
     /// the types with display information and PropertyDescriptors.</summary>
     [Export(typeof(SchemaLoader))]
+    [Export(typeof(IInitializable))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class SchemaLoader : XmlSchemaTypeLoader
+    public class SchemaLoader : XmlSchemaTypeLoader, IInitializable
     {
         /// <summary>
         /// Constructor</summary>
-        public SchemaLoader()
+        [ImportingConstructor]
+        public SchemaLoader(PropertyEditor propertyEditor)
         {
+            m_propertyEditor = propertyEditor;
             // set resolver to locate embedded .xsd file
             SchemaResolver = new ResourceStreamResolver(Assembly.GetExecutingAssembly(), "DomPropertyEditorSample/Schemas");
             Load("game.xsd");
         }
+
+
+        #region IInitializable Members
+
+        void IInitializable.Initialize()
+        {
+            // Set custom display options for the 2-column PropertyEditor
+            PropertyGridView propertyGridView = m_propertyEditor.PropertyGrid.PropertyGridView;
+            if (propertyGridView.CustomizeAttributes != null)
+                throw new InvalidOperationException("Someone else set PropertyGridView's CustomizeAttributes already");
+            propertyGridView.CustomizeAttributes = new[]
+                {
+                    new PropertyView.CustomizeAttribute("Orcs".Localize(), horizontalEditorOffset:0, nameHasWholeRow:true),
+                    new PropertyView.CustomizeAttribute("Armor".Localize(), horizontalEditorOffset:64),
+                    new PropertyView.CustomizeAttribute("Club".Localize(), horizontalEditorOffset:64)
+                };
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets the schema namespace</summary>
@@ -314,7 +337,7 @@ namespace DomPropertyEditorSample
 
 
                 //EmbeddedCollectionEditor edit children (edit, add, remove, move).
-                // note: EmbeddedCollectionEditor needs some work (effecienty and implementation issues).
+                // note: EmbeddedCollectionEditor needs some work (efficiency and implementation issues).
                 var collectionEditor = new EmbeddedCollectionEditor();
 
                 // the following  lambda's handles (add, remove, move ) items.
@@ -482,6 +505,7 @@ namespace DomPropertyEditorSample
                         ));
                 
                 Schema.orcType.Type.SetTag(orcDescriptors);
+               
                 // only one namespace
                 break;
             }            
@@ -525,9 +549,7 @@ namespace DomPropertyEditorSample
             Eat = 4,
             Sleep = 8,        
         }
+
+        private readonly PropertyEditor m_propertyEditor;        
     }
-
-
-    
-    
 }

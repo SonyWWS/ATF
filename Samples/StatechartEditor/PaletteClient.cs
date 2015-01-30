@@ -34,7 +34,7 @@ namespace StatechartEditorSample
         /// Finishes initializing component by adding information to types for palette</summary>
         void IInitializable.Initialize()
         {
-            string statechartCategory = Localizer.Localize("Statecharts");
+            string statechartCategory = "Statecharts".Localize();
 
             // add annotation type to palette
             NodeTypePaletteItem annotationItem = Schema.annotationType.Type.GetTag<NodeTypePaletteItem>();

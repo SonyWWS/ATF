@@ -75,9 +75,10 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void control_BeforePaint(object sender, EventArgs e)
         {
-            Rectangle windowBounds = UpdateScrollbars();
-
+            //UpdateScrollbars(); //leads to endless updating
+            
             // update canvas WindowBounds to account for scrollbars
+            Rectangle windowBounds = AdaptedControl.ClientRectangle;
             Rectangle canvasWindowBounds = m_canvasAdapter.WindowBounds;
             if (m_hScrollBar.Enabled)
                 windowBounds.Height = Math.Min(canvasWindowBounds.Height, windowBounds.Height - m_hScrollBar.Height);
@@ -91,8 +92,15 @@ namespace Sce.Atf.Controls.Adaptable
         {
             if (!m_updatingScrollbars)
             {
-                m_scroll.Y = -m_vScrollBar.Value;
-                m_transformAdapter.Translation = new PointF(m_transformAdapter.Translation.X, m_scroll.Y);
+                m_updatingScrollbars = true;
+                try
+                {
+                    m_transformAdapter.Translation = new PointF(m_transformAdapter.Translation.X, -m_vScrollBar.Value);
+                }
+                finally
+                {
+                    m_updatingScrollbars = false;
+                }
             }
 
             OnScroll(EventArgs.Empty);
@@ -104,8 +112,15 @@ namespace Sce.Atf.Controls.Adaptable
         {
             if (!m_updatingScrollbars)
             {
-                m_scroll.X = -m_hScrollBar.Value;
-                m_transformAdapter.Translation = new PointF(m_scroll.X, m_transformAdapter.Translation.Y);
+                m_updatingScrollbars = true;
+                try
+                {
+                    m_transformAdapter.Translation = new PointF(-m_hScrollBar.Value, m_transformAdapter.Translation.Y);
+                }
+                finally
+                {
+                    m_updatingScrollbars = false;
+                }
             }
 
             OnScroll(EventArgs.Empty);
@@ -120,30 +135,38 @@ namespace Sce.Atf.Controls.Adaptable
         {
         }
 
-        private Rectangle UpdateScrollbars()
+        private void UpdateScrollbars()
         {
-            // get canvas size, in client coordinates
-            Size canvasSize = m_canvasAdapter.Bounds.Size;
-            PointF scale = m_transformAdapter.Scale;
-            Size canvasSizeInPixels = new Size(
-                (int)(canvasSize.Width * scale.X),
-                (int)(canvasSize.Height * scale.Y));
-
-            // get window bounds to allow for scrollbars without obscuring any of canvas
-            Rectangle windowBounds = AdaptedControl.ClientRectangle;
+            if (m_updatingScrollbars)
+                return;
 
             try
             {
                 m_updatingScrollbars = true;
 
+                // get view rectangle in Windows client coordinates
+                Rectangle viewRect = AdaptedControl.ClientRectangle;
+
+                // get canvas bounds in Windows client coordinates
+                Rectangle canvasRect = m_canvasAdapter.Bounds; // start with world coordinates
+                PointF scale = m_transformAdapter.Scale;
+
+                // Calculate the negation of the translation, by allowing the translation to range far
+                //  enough so that the edge of the canvas can get to the center of the screen.
+                int minTransX = (int)(canvasRect.X * scale.X - viewRect.Width * 0.5f);
+                int minTransY = (int)(canvasRect.Y * scale.Y - viewRect.Height * 0.5f);
+                int maxTransX = (int)(canvasRect.Right * scale.X - viewRect.Width * 0.5f);
+                int maxTransY = (int)(canvasRect.Bottom * scale.Y - viewRect.Height * 0.5f);
+                canvasRect = new Rectangle(minTransX, minTransY, maxTransX - minTransX, maxTransY - minTransY);
+
                 WinFormsUtil.UpdateScrollbars(
                     m_vScrollBar,
                     m_hScrollBar,
-                    windowBounds.Size,
-                    canvasSizeInPixels);
+                    viewRect,
+                    canvasRect);
 
-                if (!m_hScrollBar.Capture &&
-                    !m_vScrollBar.Capture)
+                // Set the scrollbars' values to be the negation of the translation.
+                if (!m_hScrollBar.Capture && !m_vScrollBar.Capture)
                 {
                     PointF translation = m_transformAdapter.Translation;
                     m_hScrollBar.Value = Math.Min(Math.Max(m_hScrollBar.Minimum, -(int)translation.X), m_hScrollBar.Maximum);
@@ -154,14 +177,11 @@ namespace Sce.Atf.Controls.Adaptable
             {
                 m_updatingScrollbars = false;
             }
-
-            return windowBounds;
         }
 
         private readonly ITransformAdapter m_transformAdapter;
         private readonly ICanvasAdapter m_canvasAdapter;
 
-        private Point m_scroll; //the translation in Transform which is also the negative scrollbar values.
         private readonly VScrollBar m_vScrollBar;
         private readonly HScrollBar m_hScrollBar;
         private bool m_updatingScrollbars;

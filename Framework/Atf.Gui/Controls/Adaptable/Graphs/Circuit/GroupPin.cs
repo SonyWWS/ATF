@@ -98,13 +98,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets the default group pin name</summary>
         /// <param name="inputSide">True iff pin is on input side</param>
         /// <returns>Default group pin name</returns>
-        /// <remarks>The group pin default naming convention: internal-element-name: internal-pin-name</remarks>
+        /// <remarks>The group pin default naming convention: "{internal-element-name}:{internal-pin-name}"</remarks>
         public virtual string DefaultName(bool inputSide)
         {
             string pinName =
                 inputSide
-                ? InternalElement.AllInputPins.ElementAt(InternalPinIndex).Name
-                : InternalElement.AllOutputPins.ElementAt(InternalPinIndex).Name;
+                ? InternalElement.InputPin(InternalPinIndex).Name
+                : InternalElement.OutputPin(InternalPinIndex).Name;
                    
             return InternalElement.Name + ":" + pinName;
         }
@@ -145,7 +145,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the index of the pin on InternalElement that this group pin connects to</summary>
+        /// Gets the "index" (really an ID) of the pin on InternalElement that this group pin
+        /// connects to. Use this with InternalElement.GetInputPin(index) or Group.InputPin(index).</summary>
         public int InternalPinIndex
         {
             get { return GetAttribute<int>(PinAttribute); }
@@ -260,7 +261,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         var parentPins = inputSide ? parentSubGraph.InputGroupPins : parentSubGraph.OutputGroupPins;
                         foreach (var parentPin in parentPins)
                         {
-                            if (parentPin.InternalElement == subGraph && parentPin.InternalPinIndex == grpPin.Index)
+                            if (parentPin.InternalElement.DomNode == subGraph.DomNode && parentPin.InternalPinIndex == grpPin.Index)
                             {
                                 nextGrpPin = parentPin;
                                 domNode = nextGrpPin.DomNode;

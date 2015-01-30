@@ -338,9 +338,9 @@ namespace Sce.Atf.Controls.Timelines
             IHierarchicalTimeline timeline = reference.Target;
             if (bounds.IntersectsWith(clipBounds))
             {
-                DrawMode drawMode = DrawMode.Normal;
-                if (selection.SelectionContains(path))
-                    drawMode |= DrawMode.Selected;
+                //DrawMode drawMode = DrawMode.Normal;
+                //if (selection.SelectionContains(path))
+                //    drawMode |= DrawMode.Selected;
                 DrawTimelineReference(reference, bounds, DrawMode.Normal, c);
             }
 

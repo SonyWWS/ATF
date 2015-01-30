@@ -92,7 +92,7 @@ namespace ModelViewerSample.Rendering
                 IShader shader = m_primitives.Shader;
                 IRenderStateCreator renderStateCreator = null;
                 if (shader != null)
-                    renderStateCreator = Adapters.As<IRenderStateCreator>(shader);
+                    renderStateCreator = shader.As<IRenderStateCreator>();
 
                 if (renderStateCreator != null)
                 {

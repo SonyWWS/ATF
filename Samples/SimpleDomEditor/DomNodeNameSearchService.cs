@@ -43,14 +43,9 @@ namespace SimpleDomEditorSample
         /// Finishes initializing component by registering the control</summary>
         public void Initialize()
         {
-            ControlHostServices.RegisterControl(m_controlHostService,
-                m_rootControl,
-                Localizer.Localize("Search and Replace - DomNode Names"),
-                Localizer.Localize("Provide simple GUI for matching on, and replacing, DomNode names of the active document"),
-                StandardControlGroup.Left,
-                this);
+            m_controlHostService.RegisterControl(m_rootControl, "Search and Replace - DomNode Names".Localize(), "Provide simple GUI for matching on, and replacing, DomNode names of the active document".Localize(), StandardControlGroup.Left, this);
 
-            m_contextRegistry.ActiveContextChanged += new EventHandler(contextRegistry_ActiveContextChanged);
+            m_contextRegistry.ActiveContextChanged += contextRegistry_ActiveContextChanged;
         }
 
         #endregion

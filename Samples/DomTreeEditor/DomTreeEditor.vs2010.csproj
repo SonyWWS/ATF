@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython.Modules">
       <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
@@ -52,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlPoint.cs" />
+    <Compile Include="CurveLimitValidator.cs" />
     <Compile Include="HelpAboutCommand.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="Curve.cs" />
@@ -140,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\DefaultLayout1.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\curve_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

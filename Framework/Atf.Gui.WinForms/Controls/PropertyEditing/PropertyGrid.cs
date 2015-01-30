@@ -24,7 +24,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Constructor using the default PropertyGridView and the given mode flags</summary>
-        /// <param name="mode">Flags specifiying the PropertyGrid's features and appearance</param>
+        /// <param name="mode">Flags specifying the PropertyGrid's features and appearance</param>
         public PropertyGrid(PropertyGridMode mode)
             : this(mode, new PropertyGridView())
         {
@@ -32,7 +32,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Constructor using given PropertyGridView and mode flags</summary>
-        /// <param name="mode">The flags specifiying the PropertyGrid's features and appearance</param>
+        /// <param name="mode">The flags specifying the PropertyGrid's features and appearance</param>
         /// <param name="propertyGridView">The customized PropertyGridView</param>
         public PropertyGrid(PropertyGridMode mode, PropertyGridView propertyGridView)
         {
@@ -45,6 +45,13 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_propertyGridView.DragDrop += propertyGrid_DragDrop;
             m_propertyGridView.MouseHover += propertyGrid_MouseHover;
             m_propertyGridView.MouseLeave += propertyGrid_MouseLeave;
+            m_propertyGridView.DescriptionSetter = p =>
+            {
+                if (p != null)
+                    m_descriptionTextBox.SetDescription(p.DisplayName, p.Description);
+                else
+                    m_descriptionTextBox.ClearDescription();
+            };
 
             m_toolStrip = new ToolStrip();
             m_toolStrip.GripStyle = ToolStripGripStyle.Hidden;

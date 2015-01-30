@@ -37,9 +37,9 @@ namespace FsmEditorSample
             // use the viewing context to access the viewing control, and for bounds calculations
             m_viewingContext = DomNode.Cast<ViewingContext>();
 
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
         }
@@ -126,15 +126,15 @@ namespace FsmEditorSample
         /// <returns>Item's name in the context, or null if none</returns>
         string INamingContext.GetName(object item)
         {
-            State state = Adapters.As<State>(item);
+            State state = item.As<State>();
             if (state != null)
                 return state.Name;
 
-            Transition transition = Adapters.As<Transition>(item);
+            Transition transition = item.As<Transition>();
             if (transition != null)
                 return transition.Label;
 
-            Annotation annotation = Adapters.As<Annotation>(item);
+            Annotation annotation = item.As<Annotation>();
             if (annotation != null)
                 return annotation.Text;
 
@@ -148,9 +148,9 @@ namespace FsmEditorSample
         bool INamingContext.CanSetName(object item)
         {
             return
-                Adapters.Is<State>(item) ||
-                Adapters.Is<Transition>(item) ||
-                Adapters.Is<Annotation>(item);
+                item.Is<State>() ||
+                item.Is<Transition>() ||
+                item.Is<Annotation>();
         }
 
         /// <summary>
@@ -159,21 +159,21 @@ namespace FsmEditorSample
         /// <param name="name">New item name</param>
         void INamingContext.SetName(object item, string name)
         {
-            State state = Adapters.As<State>(item);
+            State state = item.As<State>();
             if (state != null)
             {
                 state.Name = name;
             }
             else
             {
-                Transition transition = Adapters.As<Transition>(item);
+                Transition transition = item.As<Transition>();
                 if (transition != null)
                 {
                     transition.Label = name;
                 }
                 else
                 {
-                    Annotation annotation = Adapters.As<Annotation>(item);
+                    Annotation annotation = item.As<Annotation>();
                     if (annotation != null)
                         annotation.Text = name;
                 }
@@ -200,12 +200,12 @@ namespace FsmEditorSample
         {
             // get the set of states and copy them
             HashSet<State> states = new HashSet<State>(Selection.AsIEnumerable<State>());
-            HashSet<DomNode> itemsToCopy = new HashSet<DomNode>(Adapters.AsIEnumerable<DomNode>(states));
+            HashSet<DomNode> itemsToCopy = new HashSet<DomNode>(states.AsIEnumerable<DomNode>());
 
             // look for selected transitions between copied states and copy them
             foreach (Transition transition in Selection.AsIEnumerable<Transition>())
                 if (IsTransitionCopyable(transition, states))
-                    itemsToCopy.Add(Adapters.As<DomNode>(transition));
+                    itemsToCopy.Add(transition.As<DomNode>());
 
             // if no transitions were added from items, look for copyable transitions between the copied states
             if (itemsToCopy.Count == states.Count)
@@ -213,12 +213,12 @@ namespace FsmEditorSample
                 foreach (State state in states)
                     foreach (Transition transition in m_fsm.Transitions)
                         if (IsTransitionCopyable(transition, states))
-                            itemsToCopy.Add(Adapters.As<DomNode>(transition));
+                            itemsToCopy.Add(transition.As<DomNode>());
             }
 
             // add annotations
             foreach (Annotation annotation in Selection.AsIEnumerable<Annotation>())
-                itemsToCopy.Add(Adapters.As<DomNode>(annotation));
+                itemsToCopy.Add(annotation.As<DomNode>());
 
             List<object> copies = new List<object>(DomNode.Copy(itemsToCopy));
             return new DataObject(copies.ToArray());
@@ -244,9 +244,9 @@ namespace FsmEditorSample
 
             foreach (object item in items)
             {
-                if (!Adapters.Is<State>(item) &&
-                    !Adapters.Is<Transition>(item) &&
-                    !Adapters.Is<Annotation>(item))
+                if (!item.Is<State>() &&
+                    !item.Is<Transition>() &&
+                    !item.Is<Annotation>())
                 {
                     return false;
                 }
@@ -337,16 +337,16 @@ namespace FsmEditorSample
             if (items == null)
                 return;
 
-            object[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
-            List<State> states = new List<State>(Adapters.AsIEnumerable<State>(itemCopies));
+            List<State> states = new List<State>(itemCopies.AsIEnumerable<State>());
             foreach (State state in states)
                 m_fsm.States.Add(state);
 
-            foreach (Transition transition in Adapters.AsIEnumerable<Transition>(itemCopies))
+            foreach (Transition transition in itemCopies.AsIEnumerable<Transition>())
                 m_fsm.Transitions.Add(transition);
 
-            foreach (Annotation annotation in Adapters.AsIEnumerable<Annotation>(itemCopies))
+            foreach (Annotation annotation in itemCopies.AsIEnumerable<Annotation>())
                 m_fsm.Annotations.Add(annotation);
 
             Center(itemCopies, centerLocation);
@@ -366,7 +366,7 @@ namespace FsmEditorSample
                 // get bounds, convert to world coords                
                 Matrix transform = m_viewingContext.Control.As<ITransformAdapter>().Transform;
                 p = GdiUtil.InverseTransform(transform, p);
-                LayoutContexts.Center(layoutContext, items, p);
+                layoutContext.Center(items, p);
             }
         }
 

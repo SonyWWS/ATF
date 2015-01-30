@@ -15,6 +15,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets the DataTemplate resource for MultiLineTextValueEditor</summary>
         /// <param name="node">PropertyNode (unused)</param>
+        /// <param name="container">DependencyObject container of TextBox</param>
         /// <returns>DataTemplate resource for MultiLineTextValueEditor</returns>
         public override DataTemplate GetTemplate(PropertyNode node, DependencyObject container)
         {

@@ -129,8 +129,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_autoTranslateAdapter = control.As<IAutoTranslateAdapter>();
 
-            control.ContextChanged += new EventHandler(control_ContextChanged);
-            control.Paint += new PaintEventHandler(control_Paint);
+            control.ContextChanged += control_ContextChanged;
+            control.Paint += control_Paint;
 
             base.Bind(control);
         }
@@ -140,8 +140,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="control">Adaptable control</param>
         protected override void Unbind(AdaptableControl control)
         {
-            control.ContextChanged -= new EventHandler(control_ContextChanged);
-            control.Paint -= new PaintEventHandler(control_Paint);
+            control.ContextChanged -= control_ContextChanged;
+            control.Paint -= control_Paint;
 
             base.Unbind(control);
         }
@@ -321,7 +321,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             IHierarchicalGraphNode<TNode, TEdge, TEdgeRoute> hierarchicalNode =
-                Adapters.As<IHierarchicalGraphNode<TNode, TEdge, TEdgeRoute>>(node);
+                node.As<IHierarchicalGraphNode<TNode, TEdge, TEdgeRoute>>();
             if (hierarchicalNode != null)
             {
                 foreach (TNode subNode in hierarchicalNode.SubNodes)
@@ -347,13 +347,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (m_initiated)
                     {
                         ITransactionContext transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
-                        TransactionContexts.DoTransaction(transactionContext,
-                            delegate
-                            {
-                                foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
-                                    itemDragAdapter.EndDrag();
-                            },
-                            "Drag Items".Localize());
+                        transactionContext.DoTransaction(delegate
+                        {
+                            foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
+                                itemDragAdapter.EndDrag();
+                        }, "Drag Items".Localize());
 
                         m_initiated = false;
                     }

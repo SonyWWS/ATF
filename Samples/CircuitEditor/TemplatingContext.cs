@@ -34,7 +34,7 @@ namespace CircuitEditorSample
                     m_rootFolder = GetChild<TemplateFolder>(Schema.circuitDocumentType.templateFolderChild);
                     if (m_rootFolder == null) // create one if no root folder is defined yet
                     {
-                        var rootFolderNode =  new DomNode(Schema.templateFolderType.Type);
+                        var rootFolderNode = new DomNode(Schema.templateFolderType.Type);
                         rootFolderNode.Cast<TemplateFolder>().Name = "_TemplateRoot_";
                         DomNode.SetChild(Schema.circuitDocumentType.templateFolderChild, rootFolderNode);
                         m_rootFolder = rootFolderNode.Cast<TemplateFolder>();
@@ -68,20 +68,20 @@ namespace CircuitEditorSample
             var template = item.Cast<Template>();
             if (template.Target.Is<Group>())
             {
-                var groupReference = new DomNode(Schema.groupTemplateRefType.Type).Cast<GroupInstance>();
-                groupReference.SourceGuid = template.Guid;
-				groupReference.Template = template;
+                var groupReference = new DomNode(Schema.groupTemplateRefType.Type).Cast<GroupReference>();
+                groupReference.Template = template;
                 groupReference.Id = template.Name;
                 groupReference.Name = template.Name;
+                groupReference.Group.SourceGuid = template.Guid;
                 return groupReference;
             }
             if (template.Target.Is<Module>())
             {
-                var moduleReference = new DomNode(Schema.moduleTemplateRefType.Type).Cast<ModuleInstance>();
-                moduleReference.SourceGuid = template.Guid;
-				moduleReference.Template = template;
+                var moduleReference = new DomNode(Schema.moduleTemplateRefType.Type).Cast<ModuleReference>();
+                moduleReference.Template = template;
                 moduleReference.Id = template.Name;
                 moduleReference.Name = template.Name;
+                moduleReference.Element.SourceGuid = template.Guid;
                 return moduleReference;
             }
             return null;
@@ -90,13 +90,13 @@ namespace CircuitEditorSample
         private void DomNode_ChildRemoved(object sender, ChildEventArgs e)
         {
             // if a template is deleted, turn template references into copy-instances
-            if (!IsMovingItems &&  e.Child.Is<Template>())
+            if (!IsMovingItems && e.Child.Is<Template>())
             {
                 // we can use the ReferenceValidator which is attached to this (root) node to get all the references.
                 // note reference validation will happen later at the end of the transaction to remove the dangling references
                 var refValidator = this.As<ReferenceValidator>();
                 DomNode target = e.Child.Cast<Template>().Target;
-             
+
                 foreach (var reference in refValidator.GetReferences(target))
                 {
                     var targetCopies = DomNode.Copy(new[] { target }); // DOM deep copy
@@ -113,7 +113,7 @@ namespace CircuitEditorSample
                         if (wire.InputElement == templateInstance)
                         {
                             wire.InputElement = copyInstance;
-                            wire.InputPin = copyInstance.Type.Inputs[wire.InputPin.Index];     
+                            wire.InputPin = copyInstance.Type.Inputs[wire.InputPin.Index];
                             wire.SetPinTarget();
                         }
                         if (wire.OutputElement == templateInstance)

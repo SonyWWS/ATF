@@ -34,6 +34,8 @@ namespace Sce.Atf
         /// <param name="item">Object to add to the collection</param>
         public void Add(U item)
         {
+            if (m_collection.IsReadOnly)
+                throw new InvalidOperationException("Collection is read only");
             T t = Convert(item);
             m_collection.Add(t);
         }
@@ -42,6 +44,8 @@ namespace Sce.Atf
         /// Removes all items from the collection</summary>
         public void Clear()
         {
+            if (m_collection.IsReadOnly)
+                throw new InvalidOperationException("Collection is read only");
             m_collection.Clear();
         }
 
@@ -83,16 +87,17 @@ namespace Sce.Atf
         /// <returns>True iff the collection is read-only</returns>
         public bool IsReadOnly
         {
-            get { return false; }
+            get { return m_collection.IsReadOnly; }
         }
 
         /// <summary>
         /// Removes the first occurrence of a specific object from the collection</summary>
         /// <param name="item">The object to remove from the collection</param>
-        /// <returns>
-        /// True if item was successfully removed from the collection</returns>
+        /// <returns>True iff item was successfully removed from the collection</returns>
         public bool Remove(U item)
         {
+            if (m_collection.IsReadOnly)
+                throw new InvalidOperationException("Collection is read only");
             T t = Convert(item);
             return m_collection.Remove(t);
         }

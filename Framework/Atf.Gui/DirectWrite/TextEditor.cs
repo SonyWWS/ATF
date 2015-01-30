@@ -1,16 +1,17 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+//using System.Diagnostics;
 using System.Drawing;
+
 using Sce.Atf.Direct2D;
 
 namespace Sce.Atf.DirectWrite
 {
     /// <summary>
-    /// Text editing, selecting using DirectWrite </summary>
+    /// Text editing and selecting using DirectWrite.</summary>
     /// <remarks>The implementation detail is based on Microsoft PadWrite C++ sample:
-    /// http://msdn.microsoft.com/en-us/library/windows/desktop/dd941792%28v=vs.85%29.aspx
-    /// </remarks>
+    /// http://msdn.microsoft.com/en-us/library/windows/desktop/dd941792%28v=vs.85%29.aspx </remarks>
     public class TextEditor
     {
         /// <summary>
@@ -98,6 +99,10 @@ namespace Sce.Atf.DirectWrite
         /// <summary>
         /// Gets or sets whether the vertical scroll bar should be visible</summary>
         public bool VerticalScrollBarVisibe { get; set; }
+
+        ///// <summary>
+        ///// Gets or sets the text display bounds, in world space</summary>
+        //public RectangleF DisplayBounds { get; set; }
 
         /// <summary>
         /// Updates the text position corresponding to the position x,y in graph space</summary>
@@ -234,6 +239,8 @@ namespace Sce.Atf.DirectWrite
                                 break; // already top line
                             line--;
                             linePosition -= lineMetrics[line].Length;
+                            if (line <= TopLine)
+                                TopLine = TopLine - 1 >= 0 ? TopLine - 1 : 0; // scroll down a line of text 
                         }
                         else
                         {
@@ -241,6 +248,9 @@ namespace Sce.Atf.DirectWrite
                             line++;
                             if (line >= lineMetrics.Length)
                                 break; // already bottom line
+
+                            // scroll up a line of text 
+                            TopLine = TopLine + 1;
                         }
 
                         // To move up or down, we need three hit-testing calls to determine:
@@ -451,12 +461,16 @@ namespace Sce.Atf.DirectWrite
 
             if (caretMoved)
             {
-                //// update the caret formatting attributes
-                //if (updateCaretFormat)
-                //    UpdateCaretFormatting();
+                // scroll the text automatically to avoid caret lost
+                var lineMetrics = TextLayout.GetLineMetrics();
+                int linePosition;
+                GetLineFromPosition(lineMetrics, m_caretPosition, out  line, out linePosition);
+                if (line <= TopLine)
+                    TopLine = TopLine - 1 >= 0 ? TopLine - 1 : 0; // scroll down a line of text 
 
-                //PostRedraw();
-
+                float visibleLines = TextLayout.Height / lineMetrics[0].Height;
+                if (line > TopLine + visibleLines)
+                    TopLine = TopLine + 1;
                 //RectF rect;
                 GetCaretRect();
                 //UpdateSystemCaret(rect);
@@ -465,7 +479,7 @@ namespace Sce.Atf.DirectWrite
 
             //Trace.TraceInformation("caretMoved {0} caretPosition  {1} caretPositionOffset {2} caretAnchor  {3} ",
             //                       caretMoved, m_caretPosition, m_caretPositionOffset, m_caretAnchor);
-
+            Validate();
             return caretMoved;
 
 
@@ -604,6 +618,67 @@ namespace Sce.Atf.DirectWrite
                 line = lineMetrics.Length - 1;
         }
 
+        /// <summary>
+        /// Return how many lines can be displayed within the desired LayoutWidth*LayoutHeight.</summary>
+        /// <returns>Number of lines that can be displayed within constraints</returns>
+        public int GetVisibleLines()
+        {
+            var lineMetrics = TextLayout.GetLineMetrics();
+            int numVisibleLines = 0;
+            float totalHeight = 0;
+            for (int i = 0; i < lineMetrics.Length;++i)
+            {
+                totalHeight += lineMetrics[i].Height;
+                if (totalHeight > TextLayout.LayoutHeight) 
+                    break;
+                ++numVisibleLines;
+            }
+            return numVisibleLines;
+        }
+
+        /// <summary>
+        /// Get i-th line y-offset</summary>
+        /// <param name="line">Line index</param>
+        /// <returns>Line y-offset for given line index</returns>
+        public float GetLineYOffset(int line)
+        {
+            if (line > TextLayout.LineCount - 1)
+                return 0.0f;
+
+            float totalHeight = 0;
+            var lineMetrics = TextLayout.GetLineMetrics();
+            for (int i = 0; i < line - 1; ++i)
+                totalHeight += lineMetrics[i].Height;
+
+            return totalHeight;
+        }
+
+        /// <summary>
+        /// Ensure TopLine, caret position, etc in visible area
+        /// </summary>
+        public void Validate()
+        {
+            int numVisibleLines = GetVisibleLines();
+
+            // ensure the line where caret is placed is visible
+            var lineMetrics = TextLayout.GetLineMetrics();
+            int linePosition;
+            int line;
+            GetLineFromPosition(lineMetrics, m_caretPosition, out  line, out linePosition);
+            if (line > TopLine + numVisibleLines-1)
+            {
+                int lines = line- TopLine - numVisibleLines+1;
+                TopLine = TopLine + lines;
+            }
+
+            // update Topline: because topline + visiblelines <= lineCount, so toplineMax= lineCount-visiblelines
+            int maxTopLine = TextLayout.LineCount - numVisibleLines;
+            if (TopLine > maxTopLine)
+                TopLine = maxTopLine;
+
+  
+            //Trace.TraceInformation("Validate topline: {0} current line: {1}, caret {2} ", TopLine, line, m_caretPosition);
+        }
 
         // caretAnchor equals caretPosition when there is no selection.
         // Otherwise, the anchor holds the point where shift was held

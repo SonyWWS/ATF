@@ -169,7 +169,7 @@ namespace Sce.Atf.Dom
                 var substitutionGroupRule = node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault();
                 if (substitutionGroupRule != null)
                 {
-                    var substituteChildInfo = substitutionGroupRule.Substitutions.FirstOrDefault(x => x.Type == node.Type);
+                    var substituteChildInfo = substitutionGroupRule.Substitutions.FirstOrDefault(x => x.Type.IsAssignableFrom(node.Type));
                     if (substituteChildInfo == null)
                     {
                         throw new InvalidOperationException("No suitable Substitution Group found for node " + node);
@@ -235,8 +235,10 @@ namespace Sce.Atf.Dom
         {
             // write type name if this is a polymorphic type
             // if this node is substitution group element then ignore type name
+            // unless it is a root node (for root node, substitution groups are ignored)
             DomNodeType type = node.Type;
-            if (node.ChildInfo.Type != type && node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault() == null)
+            if (node.ChildInfo.Type != type &&
+                (IsRootNode(node) || node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault() == null))
             {
                 string name = type.Name;
                 int index = name.LastIndexOf(':');

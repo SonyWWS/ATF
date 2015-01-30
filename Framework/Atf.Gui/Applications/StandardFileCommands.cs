@@ -32,7 +32,11 @@ namespace Sce.Atf.Applications
             IFileDialogService fileDialogService)
         {
             CommandService = commandService;
+            
             DocumentRegistry = documentRegistry;
+            documentRegistry.ActiveDocumentChanging += ActiveDocumentChanging;
+            documentRegistry.ActiveDocumentChanged += ActiveDocumentChanged;
+
             FileDialogService = fileDialogService;
         }
 
@@ -80,6 +84,11 @@ namespace Sce.Atf.Applications
                 IDocumentClient client = lazy.Value;
                 m_typeToClientMap.Add(client.Info.FileType, client);
             }
+
+            CommandInfo.FileSave.EnableCheckCanDoEvent(this);
+            CommandInfo.FileSaveAs.EnableCheckCanDoEvent(this);
+            CommandInfo.FileSaveAll.EnableCheckCanDoEvent(this);
+            CommandInfo.FileClose.EnableCheckCanDoEvent(this);
 
             // register standard file menu commands
             if ((RegisterCommands & CommandRegister.FileSave) == CommandRegister.FileSave)
@@ -544,79 +553,85 @@ namespace Sce.Atf.Applications
         {
             Uri uri = null;
             string fileName = client.Info.NewDocumentName;
-            string extension = null;
-            string directoryName = null;
-            if (client.Info.Extensions.Length > 1)
+            if (client.Info.Extensions.Length > 1 &&
+                string.IsNullOrEmpty(client.Info.DefaultExtension))
             {
-                if (string.IsNullOrEmpty(client.Info.DefaultExtension))
+                // Since there are multiple possible extensions and no default, ask the user.
+                string path = PromptUserForNewFilePath(client, fileName, null);
+                if (path != null)
                 {
-                    // Since there are multiple possible extensions, ask the user to pick a filename.
-                    string path = PromptUserForNewFilePath(client, fileName, null);
-                    if (path != null)
+                    try
                     {
-                        try
-                        {
-                            if (File.Exists(path))
-                                File.Delete(path);
-                        }
-                        catch (Exception e)
-                        {
-                            string message = string.Format(
-                                "Failed to delete: {0}. Exception: {1}", path, e);
-                            Outputs.WriteLine(OutputMessageType.Warning, message);
-                        }
-
-                        m_newDocumentPaths.Add(path);
-                        uri = new Uri(path, UriKind.RelativeOrAbsolute);
-                        return uri;
+                        if (File.Exists(path))
+                            File.Delete(path);
                     }
-                }
-                else
-                {
-                    directoryName = client.Info.InitialDirectory;
-                    if (directoryName == null)
-                        directoryName = FileDialogService.InitialDirectory;
-                    extension = client.Info.DefaultExtension;
+                    catch (Exception e)
+                    {
+                        string message = string.Format(
+                            "Failed to delete: {0}. Exception: {1}", path, e);
+                        Outputs.WriteLine(OutputMessageType.Warning, message);
+                    }
+
+                    m_newDocumentPaths.Add(path);
+                    uri = new Uri(path, UriKind.RelativeOrAbsolute);
+                    return uri;
                 }
             }
 
             if (client.Info.Extensions.Length >= 1)
             {
-                // Since there is only one possible extension, we can choose the new name (e.g., "Untitled.xml").
-                directoryName = client.Info.InitialDirectory;
+                // There is either only one possible extension or there is a default, so we choose.
+                string directoryName = client.Info.InitialDirectory;
                 if (directoryName == null)
                     directoryName = FileDialogService.InitialDirectory;
 
-                extension = client.Info.Extensions[0];
+                string extension = client.Info.DefaultExtension;
+                if (string.IsNullOrEmpty(extension))
+                    extension = client.Info.Extensions[0];
 
                 if (directoryName != null && extension != null)
+                    uri = GenerateUniqueUri(directoryName, fileName, extension);
+            }
+
+            return uri;
+        }
+
+        /// <summary>
+        /// Creates a Uri under a specified directory, with a file name containing the specified string and extension, 
+        /// which currently doesn't exist on the file system</summary>
+        /// <param name="directoryName">The base directory path under which the new Uri should reside</param>
+        /// <param name="fileName">The base file name to be included in the new Uri, e.g., "Untitled".</param>
+        /// <param name="extension">The file extension to be appended to the new Uri</param>
+        /// <returns>A Uri under 'directoryName', with a file name containing 'fileName'</returns>
+        /// <remarks>The default is to append "(#)" to 'fileName' if necessary, where '#' is a numeric suffix
+        /// starting with 2 that is always incremented (independently for each file extension) for the
+        /// life of this app.</remarks>
+        protected virtual Uri GenerateUniqueUri(string directoryName, string fileName, string extension)
+        {
+            Uri uri;
+            int suffix;
+            m_extensionSuffixes.TryGetValue(extension, out suffix);
+
+            // check the name to make sure there is no existing file with the same name
+            while (true)
+            {
+                string fullFileName = fileName;
+                if (suffix > 0)
+                    fullFileName += "(" + (suffix + 1) + ")";
+
+                suffix++;
+
+                fullFileName += extension;
+
+                string fullPath = Path.Combine(directoryName, fullFileName);
+                if (!FileDialogService.PathExists(fullPath))
                 {
-                    int suffix;
-                    m_extensionSuffixes.TryGetValue(extension, out suffix);
-
-                    // check the name to make sure there is no existing file with the same name
-                    while (true)
-                    {
-                        string fullFileName = fileName;
-                        if (suffix > 0)
-                            fullFileName += "(" + (suffix + 1) + ")";
-
-                        suffix++;
-
-                        fullFileName += extension;
-
-                        string fullPath = Path.Combine(directoryName, fullFileName);
-                        if (!FileDialogService.PathExists(fullPath))
-                        {
-                            uri = new Uri(fullPath, UriKind.RelativeOrAbsolute);
-                            break;
-                        }
-                    }
-
-                    m_extensionSuffixes[extension] = suffix;
+                    uri = new Uri(fullPath, UriKind.RelativeOrAbsolute);
+                    break;
                 }
             }
 
+            m_extensionSuffixes[extension] = suffix;
             return uri;
         }
 
@@ -814,6 +829,7 @@ namespace Sce.Atf.Applications
             {
                 switch ((StandardCommand)commandTag)
                 {
+                    // keep this logic in sync with ActiveDocumentChanged and ActiveDocumentDirtyChanged
                     case StandardCommand.FileClose:
                     case StandardCommand.FileSaveAs:
                     case StandardCommand.FileSaveAll:
@@ -974,6 +990,30 @@ namespace Sce.Atf.Applications
 
                 index++;
             }
+        }
+
+        private void ActiveDocumentChanging(object sender, EventArgs e)
+        {
+            IDocument activeDocument = DocumentRegistry.ActiveDocument;
+            if (activeDocument != null)
+                activeDocument.DirtyChanged -= ActiveDocumentDirtyChanged;
+        }
+
+        private void ActiveDocumentChanged(object sender, EventArgs eventArgs)
+        {
+            IDocument activeDocument = DocumentRegistry.ActiveDocument;
+            if (activeDocument != null)
+                activeDocument.DirtyChanged += ActiveDocumentDirtyChanged;
+
+            CommandInfo.FileSave.OnCheckCanDo(this);
+            CommandInfo.FileSaveAs.OnCheckCanDo(this);
+            CommandInfo.FileSaveAll.OnCheckCanDo(this);
+            CommandInfo.FileClose.OnCheckCanDo(this);
+        }
+
+        private void ActiveDocumentDirtyChanged(object sender, EventArgs eventArgs)
+        {
+            CommandInfo.FileSave.OnCheckCanDo(this);
         }
 
         // custom commands for New, Open Document

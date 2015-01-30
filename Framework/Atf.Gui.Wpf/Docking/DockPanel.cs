@@ -18,6 +18,8 @@ using System.Xml;
 
 namespace Sce.Atf.Wpf.Docking
 {
+    /// <summary>
+    /// Docking icons visibility regions enumeration</summary>
     public enum IconVisibility
     {
         None = 0x0,
@@ -28,16 +30,26 @@ namespace Sce.Atf.Wpf.Docking
     }
 
     /// <summary>
-    /// DockPanel is the root class that provides docking/undocking/collapsing windows and other things.</summary>
+    /// DockPanel is the root class that provides docking/undocking/collapsing windows and other things</summary>
     public class DockPanel : Control, IDockLayout, IDockable
     {
+        /// <summary>
+        /// Grid splitter style resource key</summary>
         public static ComponentResourceKey GridSplitterStyleKey = new ComponentResourceKey(typeof(DockPanel), "GridSplitterStyleKey");
 
         #region Dependency Properties
 
+        /// <summary>
+        /// IconVisibility DependencyProperty</summary>
         public static DependencyProperty IconVisibilityProperty = DependencyProperty.Register("IconVisibility", typeof(IconVisibility), typeof(DockPanel));
+        /// <summary>
+        /// HeaderIconSize DependencyProperty</summary>
         public static DependencyProperty HeaderIconSizeProperty = DependencyProperty.Register("HeaderIconSize", typeof(Size), typeof(DockPanel));
+        /// <summary>
+        /// RegisteredContents DependencyProperty</summary>
         public static DependencyProperty RegisteredContentsProperty = DependencyProperty.Register("RegisteredContents", typeof(ObservableCollection<IDockContent>), typeof(DockPanel));
+        /// <summary>
+        /// Get or set RegisteredContents DependencyProperty</summary>
         public ObservableCollection<IDockContent> RegisteredContents
         {
             get { return ((ObservableCollection<IDockContent>)(base.GetValue(DockPanel.RegisteredContentsProperty))); }
@@ -48,11 +60,15 @@ namespace Sce.Atf.Wpf.Docking
 
         #region Public Properties
 
+        /// <summary>
+        /// Get or set HeaderIconSize DependencyProperty</summary>
         public Size HeaderIconSize
         {
             get { return ((Size)(base.GetValue(DockPanel.HeaderIconSizeProperty))); }
             set { base.SetValue(DockPanel.HeaderIconSizeProperty, value); }
         }
+        /// <summary>
+        /// Get or set IconVisibility DependencyProperty</summary>
         public IconVisibility IconVisibility
         {
             get { return ((IconVisibility)(base.GetValue(DockPanel.IconVisibilityProperty))); }
@@ -66,25 +82,25 @@ namespace Sce.Atf.Wpf.Docking
         private SidePopup PART_TopCollapsePanel { get; set; }
         private SidePopup PART_RightCollapsePanel { get; set; }
         private SidePopup PART_BottomCollapsePanel { get; set; }
-        private DocklingsWindow m_docklings;
+        private DockIconsLayer m_dockIconsLayer;
         private XmlReader m_layoutToApply;
         private bool m_templateApplied;
         private bool m_layoutApplied;
+
         /// <summary>
-        /// Will return the icon layer window for the dockpanel
-        /// </summary>
-        internal DocklingsWindow DockIconsLayer
+        /// Get icon layer window for the dockpanel</summary>
+        internal DockIconsLayer DockIconsLayer
         {
             get
             {
-                if (m_docklings == null)
-                {					
-                    m_docklings = new DocklingsWindow(this);
-                    m_docklings.Owner = Window.GetWindow(this);
-                    m_docklings.Closing += new System.ComponentModel.CancelEventHandler(Docklings_Closing);
-                    m_docklings.Show();
+                if (m_dockIconsLayer == null)
+                {
+                    m_dockIconsLayer = new DockIconsLayer(this);
+                    m_dockIconsLayer.Owner = Window.GetWindow(this);
+                    m_dockIconsLayer.Closing += DockIconsLayer_Closing;
+                    m_dockIconsLayer.Show();
                 }
-                return m_docklings;
+                return m_dockIconsLayer;
             }
         }
         private DockIcon m_dockLeftIcon;
@@ -110,16 +126,19 @@ namespace Sce.Atf.Wpf.Docking
             } 
         }
 
+        /// <summary>
+        /// Get dock icon size</summary>
         internal Size DockIconSize { get; private set; }
 
+        /// <summary>
+        /// Static constructor</summary>
         static DockPanel()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DockPanel), new FrameworkPropertyMetadata(typeof(DockPanel)));
         }		
 
         /// <summary>
-        /// Default Constructor
-        /// </summary>
+        /// Default constructor</summary>
         public DockPanel()
         {
             IconVisibility = IconVisibility.All;
@@ -129,9 +148,12 @@ namespace Sce.Atf.Wpf.Docking
             m_registeredContents = new Dictionary<String, DockContent>();
             RegisteredContents = new ObservableCollection<IDockContent>();
             m_windows = new List<FloatingWindow>();
-            Loaded += new RoutedEventHandler(DockPanel_Loaded);
+            Loaded += DockPanel_Loaded;
         }
 
+        /// <summary>
+        /// Constructor with dock icon size</summary>
+        /// <param name="dockIconSize">Dock icon size</param>
         public DockPanel(double dockIconSize)
             : base()
         {
@@ -143,7 +165,7 @@ namespace Sce.Atf.Wpf.Docking
             Window wnd = Window.GetWindow(this);
             if (wnd != null)
             {
-                wnd.Activated += new EventHandler(OwnerWindowActivated);
+                wnd.Activated += OwnerWindowActivated;
             }
             if (m_templateApplied && !m_layoutApplied)
             {
@@ -151,11 +173,14 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
-        void Docklings_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void DockIconsLayer_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            m_docklings = null;
+            m_dockIconsLayer = null;
         }
 
+        /// <summary>
+        /// Return focused dock content</summary>
+        /// <returns>Focused dock content; may be null</returns>
         public IDockContent GetActiveContent()
         {
             if (!IsLoaded)
@@ -169,6 +194,10 @@ namespace Sce.Atf.Wpf.Docking
             return null;
         }
 
+        /// <summary>
+        /// Test if given content is visible</summary>
+        /// <param name="content">Content to check</param>
+        /// <returns>Whether content is visible</returns>
         public bool IsContentVisible(IDockContent content)
         {
             if (!IsLoaded)
@@ -178,6 +207,9 @@ namespace Sce.Atf.Wpf.Docking
             return ((IDockLayout)this).HasDescendant(content);
         }
 
+        /// <summary>
+        /// Override that is called after a visual template is applied to the control,
+        /// called whenever ApplyTemplate, which builds the current template's visual tree, is called</summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -201,9 +233,8 @@ namespace Sce.Atf.Wpf.Docking
             m_templateApplied = true;
         }
         /// <summary>
-        /// This will check consistency of all children. Called usually when child window is removed,
-        /// to maintain the tree structure, without having nodes with no children 
-        /// </summary>
+        /// Check consistency of all children. Called usually when child window is removed,
+        /// to maintain the tree structure, without having nodes with no children.</summary>
         internal void CheckConsistency()
         {
             if (GridLayout != null)
@@ -212,10 +243,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Will return content of given type. Since each content type can be currently registered only
-        /// once, it is one to one projection.
-        /// </summary>
-        /// <param name="contentTypeName">Content type name</param>
+        /// Return content of given type. Since each content type can be currently registered only
+        /// once, it is one to one projection.</summary>
+        /// <param name="uniqueName">Content type name</param>
         /// <returns>Reference for the content</returns>
         internal DockContent GetContent(String uniqueName)
         {
@@ -227,16 +257,15 @@ namespace Sce.Atf.Wpf.Docking
             return null;
         }
         /// <summary>
-        /// Will give focus to layout and unfocus the last one
-        /// </summary>
-        /// <param name="layout">layout to focus</param>
+        /// Give focus to layout and unfocus the last one</summary>
+        /// <param name="content">layout to focus</param>
         internal void Focus(IDockContent content)
         {
             if (m_lastFocusedContent != content)
             {
                 if (m_lastFocusedContent != null)
                 {
-                    ((DockContent)m_lastFocusedContent).IsFocused = false;
+                    m_lastFocusedContent.IsFocused = false;
                 }
                 if (content != null)
                 {
@@ -268,17 +297,24 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Will register content with docking panel
-        /// </summary>
-        /// <typeparam name="T">Type to register</typeparam>
-        /// <param name="content">Content</param>
-        /// <param name="ucid">Unique name (indentifier, won't be visible anywhere in UI)</param>
+        /// Register content with docking panel</summary>
+        /// <param name="content">Content to register</param>
+        /// <param name="ucid">Unique name for content (identifier, won't be visible anywhere in UI)</param>
         /// <param name="dockSide">Default docking place (center, left, right, top, bottom)</param>
+        /// <returns>New dock content</returns>
         public IDockContent RegisterContent(object content, String ucid, DockTo dockSide) //where T : FrameworkElement, IDockContent
         {
             return RegisterContent(content, ucid, dockSide, String.Empty, null);
         }
 
+        /// <summary>
+        /// Register content with docking panel</summary>
+        /// <param name="content">Content to register</param>
+        /// <param name="ucid">Unique name for content (identifier, won't be visible anywhere in UI)</param>
+        /// <param name="dockSide">Default docking place (center, left, right, top, bottom)</param>
+        /// <param name="header">Header information to display in the docked tab or title bar</param>
+        /// <param name="icon">Icon to display</param>
+        /// <returns>New dock content</returns>
         public IDockContent RegisterContent(object content, String ucid, DockTo dockSide, String header, ImageSource icon) //where T : FrameworkElement, IDockContent
         {
             if (m_registeredContents.ContainsKey(ucid))
@@ -315,6 +351,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Display dock content. If the content is not docked in main panel, collapsible panels or windows, 
+        /// then it is opened in its last position when it was closed</summary>
+        /// <param name="o">Content object; must be registered by calling RegisterContent</param>
         public void ShowContent(object o)
         {
             foreach (DockContent content in RegisteredContents)
@@ -327,6 +367,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Display dock content. If the content is not docked in main panel, collapsible panels or windows, 
+        /// then it is opened in its last position when it was closed</summary>
+        /// <param name="ucid">Unique name for content</param>
         public void ShowContent(String ucid)
         {
             if (IsLoaded)
@@ -340,9 +384,8 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         /// <summary>
-        /// If the content is not docket in main panel, collapsible panels or windows, then it will be opened
-        /// in its last position when it was closed.
-        /// </summary>
+        /// Display dock content. If the content is not docked in main panel, collapsible panels or windows, 
+        /// then it is opened in its last position when it was closed</summary>
         /// <param name="content">Content to show</param>
         public void ShowContent(IDockContent content)
         {
@@ -454,6 +497,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         
+        /// <summary>
+        /// Hide dock content</summary>
+        /// <param name="ucid">Unique name for content</param>
         public void HideContent(String ucid)
         {
             if (IsLoaded)
@@ -466,6 +512,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Hide dock content</summary>
+        /// <param name="content">Content to hide</param>
         public void HideContent(IDockContent content)
         {
             DockContent dockContent;
@@ -510,6 +559,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Unregister dock content</summary>
+        /// <param name="ucid">Unique name for content</param>
         public void UnregisterContent(String ucid)
         {
             if (!m_registeredContents.ContainsKey(ucid))
@@ -525,6 +577,10 @@ namespace Sce.Atf.Wpf.Docking
             RegisteredContents.Remove(m_registeredContents[ucid]);
             m_registeredContents.Remove(ucid);
         }
+
+        /// <summary>
+        /// Unregister dock content</summary>
+        /// <param name="content">Content</param>
         public void UnregisterContent(IDockContent content)
         {
             DockContent dockContent;
@@ -564,9 +620,8 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         /// <summary>
-        /// Will read the layout from xml file, and apply it to dockpanel.
-        /// </summary>
-        /// <param name="reader">Source xml file</param>
+        /// Read the layout from XML file and apply it to dockpanel</summary>
+        /// <param name="reader">Source XML file</param>
         public void ApplyLayout(XmlReader reader)
         {
             try
@@ -651,6 +706,14 @@ namespace Sce.Atf.Wpf.Docking
                                     window.Left = window.Left;
                                     window.Top = window.Top;
                                 }
+                                else
+                                {
+                                    // To-do: create "dummy content" like in DockPanelSuite, so that if the
+                                    //  window were to be created later, we could apply the layout. For now,
+                                    //  setting the Owner magically allows this hidden FloatingWindow to be
+                                    //  closed later and avoids hanging the app.
+                                    window.Owner = Window.GetWindow(this);
+                                }
                             } while (reader.ReadToNextSibling(typeof(FloatingWindow).Name));
                             reader.ReadEndElement();
                         }
@@ -706,9 +769,8 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Will save the layout to xml writer
-        /// </summary>
-        /// <param name="writer">Output xml</param>
+        /// Save the layout to XML writer</summary>
+        /// <param name="writer">Output XML</param>
         public void SaveLayout(XmlWriter writer)
         {
             if (IsLoaded)
@@ -756,9 +818,9 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         /// <summary>
-        /// Will start dragging the given content. This includes undocking it from the ui,
-        /// creating new window with the content, and then start dragging it.
-        /// </summary>
+        /// Start dragging the given content. This includes undocking it from the UI,
+        /// creating new window with the content, and then start dragging it.</summary>
+        /// <param name="source"></param>
         /// <param name="content">Content to drag</param>
         internal void Drag(IDockLayout source, IDockContent content)
         {
@@ -789,9 +851,8 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// This will "un"collapse content, means that will be undocked from the collapsible panel
-        /// on the side, and redocked to main view.
-        /// </summary>
+        /// This "un"collapses content, so it is undocked from the collapsible panel
+        /// on the side, and then redocked to main view</summary>
         /// <param name="content">Panel to uncollapse</param>
         internal void UnCollapse(IDockContent content)
         {
@@ -825,8 +886,7 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Will undock given content and collapse to the side that is closest to it.
-        /// </summary>
+        /// Undock given content and collapse to the side that is closest to it</summary>
         /// <param name="content">Content to collapse</param>
         internal void Collapse(IDockContent content)
         {
@@ -895,11 +955,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Creates and starts animation for collapsing, to indicate where the window is going
-        /// </summary>
-        /// <param name="element">element that is being animated (image of original element)</param>
-        /// <param name="from">from rectangle, original position and size</param>
-        /// <param name="to">to rectangle, target position and size</param>
+        /// Creates and starts animation for collapsing, to indicate where the window is going</summary>
+        /// <param name="element">Element that is being animated (image of original element)</param>
+        /// <param name="from">From rectangle, original position and size</param>
+        /// <param name="to">To rectangle, target position and size</param>
         private void AnimateCollapse(FrameworkElement element, Rect from, Rect to)
         {
             Duration duration = new Duration(TimeSpan.FromSeconds(0.33));
@@ -915,18 +974,17 @@ namespace Sce.Atf.Wpf.Docking
             sb.Children.Add(CreateDoubleAnimation(pFrom.Y, pTo.Y, duration, Canvas.TopProperty, element));
             sb.Children.Add(CreateDoubleAnimation(from.Width, to.Width, duration, FrameworkElement.WidthProperty, element));
             sb.Children.Add(CreateDoubleAnimation(from.Height, to.Height, duration, FrameworkElement.HeightProperty, element));
-            sb.Completed += new EventHandler(CollapseCompleted);
+            sb.Completed += CollapseCompleted;
             sb.Begin();			
         }
         /// <summary>
-        /// Creates double animation, this is helper function, so we don't have to call all those setters
-        /// </summary>
-        /// <param name="from">from value</param>
-        /// <param name="to">to value</param>
-        /// <param name="duration">duration of animation</param>
-        /// <param name="property">target element property</param>
-        /// <param name="target">target element</param>
-        /// <returns></returns>
+        /// Creates double animation; this is helper function, so we don't have to call all those setters</summary>
+        /// <param name="from">From value</param>
+        /// <param name="to">To value</param>
+        /// <param name="duration">Duration of animation</param>
+        /// <param name="property">Target element property</param>
+        /// <param name="target">Target element</param>
+        /// <returns>DoubleAnimation</returns>
         private DoubleAnimation CreateDoubleAnimation(double from, double to, Duration duration, DependencyProperty property, FrameworkElement target)
         {
             DoubleAnimation anim = new DoubleAnimation(from, to, duration);
@@ -940,11 +998,10 @@ namespace Sce.Atf.Wpf.Docking
             DockIconsLayer.ClearChildren();
         }
         /// <summary>
-        /// Will find elements at mouse position
-        /// </summary>
+        /// Find elements at mouse position</summary>
         /// <param name="e">Mouse event arguments</param>
-        /// <returns>List IDockable elements at the position. There can be more of them, because the 
-        /// layout is tree and one grid layout can contain more layouts...</returns>
+        /// <returns>List of IDockable elements at the position. There can be more of them, because the 
+        /// layout is tree and one grid layout can contain more layouts.</returns>
         internal List<IDockable> FindElementsAt(MouseEventArgs e)
         {
             bool isOverChild = false;
@@ -953,7 +1010,7 @@ namespace Sce.Atf.Wpf.Docking
             foreach (Window window in mainWindow.OwnedWindows)
             {
                 IInputElement element = window.InputHitTest(e.GetPosition(window));
-                if(element != null && !(window is DocklingsWindow) && !window.IsMouseCaptured)
+                if(element != null && !(window is DockIconsLayer) && !window.IsMouseCaptured)
                 {
                     if (window is FloatingWindow)
                     {
@@ -999,6 +1056,8 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockLayout Members
 
+        /// <summary>
+        /// Get the root of the hierarchy</summary>
         DockPanel IDockLayout.Root
         {
             get
@@ -1007,6 +1066,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Hit test the position and return content at that position</summary>
+        /// <param name="position">Position to test</param>
+        /// <returns>Content if hit, null otherwise</returns>
         DockContent IDockLayout.HitTest(Point position)
         {
             if (GridLayout != null)
@@ -1016,6 +1079,10 @@ namespace Sce.Atf.Wpf.Docking
             return null;
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as direct child</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff the content is child of this control</returns>
         bool IDockLayout.HasChild(IDockContent content)
         {
             if (!IsLoaded)
@@ -1052,6 +1119,10 @@ namespace Sce.Atf.Wpf.Docking
             return false;
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as child or descendant</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff content is child or descendant</returns>
         bool IDockLayout.HasDescendant(IDockContent content)
         {
             if (!IsLoaded)
@@ -1088,6 +1159,11 @@ namespace Sce.Atf.Wpf.Docking
             return false;
         }
 
+        /// <summary>
+        /// Dock the new content next to content</summary>
+        /// <param name="nextTo">Dock content to add new content next to</param>
+        /// <param name="newContent">New content to be docked</param>
+        /// <param name="dockTo">Side of nextTo content where new content should be docked</param>
         void IDockLayout.Dock(IDockContent nextTo, IDockContent newContent, DockTo dockTo)
         {
             if (GridLayout == null)
@@ -1125,6 +1201,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Undock given content</summary>
+        /// <param name="content">Content to undock</param>
         void IDockLayout.Undock(IDockContent content)
         {
             if (GridLayout != null && GridLayout.HasDescendant(content))
@@ -1133,6 +1212,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Undock given child layout</summary>
+        /// <param name="child">Child layout to undock</param>
         void IDockLayout.Undock(IDockLayout child)
         {
             if (GridLayout == child)
@@ -1141,6 +1223,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Replace the old layout with new layout child</summary>
+        /// <param name="oldLayout">Old layout to be replaced</param>
+        /// <param name="newLayout">New layout that replaces old layout</param>
         void IDockLayout.Replace(IDockLayout oldLayout, IDockLayout newLayout)
         {
             if (GridLayout == oldLayout)
@@ -1149,6 +1235,8 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Close the layout</summary>
         void IDockLayout.Close()
         {
             if (GridLayout != null)
@@ -1167,6 +1255,10 @@ namespace Sce.Atf.Wpf.Docking
             PART_BottomCollapsePanel.Close();
         }
 
+        /// <summary>
+        /// Return the content's parent as an IDockLayout</summary>
+        /// <param name="content">The docked content whose parent is requested</param>
+        /// <returns>The parent as IDockLayout</returns>
         IDockLayout IDockLayout.FindParentLayout(IDockContent content)
         {
             if (IsLoaded)
@@ -1206,11 +1298,17 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockable Members
 
+        /// <summary>
+        /// Get nullable DockTo indicating where dockable window should be dropped relative to window it's dropped onto</summary>
         DockTo? IDockable.DockPreview
         {
             get { return m_dockPreview; }
         }
 
+        /// <summary>
+        /// Function called when dragged window enters already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         void IDockable.DockDragEnter(object sender, DockDragDropEventArgs e)
         {
             Point center = new Point(ActualWidth / 2, ActualHeight / 2);
@@ -1246,6 +1344,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Function called when dragged window is moved over already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         void IDockable.DockDragOver(object sender, DockDragDropEventArgs e)
         {
             DockTo? previousDockPreview = m_dockPreview;
@@ -1335,6 +1437,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Function called when dragged window leaves already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         void IDockable.DockDragLeave(object sender, DockDragDropEventArgs e)
         {
             DockIconsLayer.RemoveChild(m_dockLeftIcon);
@@ -1350,6 +1456,10 @@ namespace Sce.Atf.Wpf.Docking
             DockIconsLayer.CloseIfEmpty();
         }
 
+        /// <summary>
+        /// Function called when dragged window is dropped over already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         void IDockable.DockDrop(object sender, DockDragDropEventArgs e)
         {
             if (e.Content is TabLayout)

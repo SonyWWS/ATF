@@ -16,6 +16,8 @@ using PropertyGrid = Sce.Atf.Wpf.Controls.PropertyEditing.PropertyGrid;
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Service to manage appearance, such as skins</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(AppearanceService))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -25,6 +27,8 @@ namespace Sce.Atf.Wpf.Applications
     
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish initializing component, registering user settings</summary>
         public void Initialize()
         {
             if (m_settingsService != null)
@@ -50,11 +54,15 @@ namespace Sce.Atf.Wpf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Get enumeration of registered skins</summary>
         public IEnumerable<Skin> RegisteredSkins
         {
             get { return m_registeredSkins.Values; }
         }
 
+        /// <summary>
+        /// Get or set current skin</summary>
         public string CurrentSkin
         {
             get { return m_currentSkin; }
@@ -101,6 +109,9 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Register a skin</summary>
+        /// <param name="skin">Skin to register</param>
         public void RegisterSkin(Skin skin)
         {
             if (!m_registeredSkins.ContainsKey(skin.Name))
@@ -121,7 +132,7 @@ namespace Sce.Atf.Wpf.Applications
 
 
         /// <summary>
-        /// Gets or sets persisted settings.</summary>
+        /// Gets or sets persisted settings</summary>
         public string PersistedSettings
         {
             get
@@ -202,10 +213,14 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Handle AppearanceChanging event</summary>
         protected void OnAppearanceChanging()
         {
         }
 
+        /// <summary>
+        /// Handle AppearanceChanged event</summary>
         protected void OnAppearanceChanged()
         {
         }
@@ -215,35 +230,60 @@ namespace Sce.Atf.Wpf.Applications
             new Dictionary<string, Skin>();
     }
 
+    /// <summary>
+    /// ValueEditor for themes</summary>
     public class ThemesValueEditor : ValueEditor
     {
+        /// <summary>
+        /// Constructor with AppearanceService</summary>
+        /// <param name="appearanceService">AppearanceService</param>
         public ThemesValueEditor(AppearanceService appearanceService)
         {
             AppearanceService = appearanceService;
         }
 
+        /// <summary>
+        /// Gets whether this editor uses a custom context</summary>
         public override bool UsesCustomContext { get { return true; } }
 
+        /// <summary>
+        /// Gets custom context for PropertyNode</summary>
+        /// <param name="node">PropertyNode</param>
+        /// <returns>Custom context for editor</returns>
         public override object GetCustomContext(PropertyNode node)
         {
             return (node == null) ? null : new StandardValuesEditorContext(node, AppearanceService.RegisteredSkins.Select(x => x.Name));
         }
 
+        /// <summary>
+        /// Get the template to be used for the control</summary>
+        /// <param name="node">Unused</param>
+        /// <param name="container">DependencyObject to query for the template</param>
+        /// <returns>The template</returns>
         public override DataTemplate GetTemplate(PropertyNode node, DependencyObject container)
         {
             return FindResource<DataTemplate>(PropertyGrid.StandardValuesEditorTemplateKey, container);
         }
 
+        /// <summary>
+        /// Get or set AppearanceService</summary>
         public AppearanceService AppearanceService { get; set; }
     }
 
+    /// <summary>
+    /// View model of themes in appearance</summary>
     public class ThemeValuesEditorContext : NotifyPropertyChangedBase
     {
+        /// <summary>
+        /// Constructor with skins</summary>
+        /// <param name="skins">Skins enumeration</param>
         public ThemeValuesEditorContext(IEnumerable<string> skins)
         {
             StandardValues = skins;
         }
 
+        /// <summary>
+        /// Get standard theme values, which are a skins enumeration</summary>
         public IEnumerable<string> StandardValues { get; private set; }
     }
 }

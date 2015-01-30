@@ -15,6 +15,7 @@
     <xs:attribute name="x" type="xs:int" use="required" />
     <xs:attribute name="y" type="xs:int" use="required" />
     <xs:attribute name="visible" type="xs:boolean" default="true"/>
+    <xs:attribute name="showUnconnectedPins" type="xs:boolean" default="true"/>
     <!--the original GUID of the template if this module is a copy-instance of-->
     <xs:attribute name="sourceGuid" type="xs:string"/>
   </xs:complexType>
@@ -124,7 +125,9 @@
     <!--size-->
     <xs:attribute name="width" type="xs:int"/>
     <xs:attribute name="height" type="xs:int"/>
+    <!--color-->
     <xs:attribute name="backcolor" type="xs:integer" default="-31"/>
+    <xs:attribute name="foreColor" type="xs:integer" default="-16777216"/>
   </xs:complexType>
 
   <!--
@@ -238,7 +241,7 @@
   -->
   <xs:complexType name ="groupTemplateRefType" >
     <xs:complexContent>
-      <xs:extension base="moduleType">
+      <xs:extension base="groupType">
         <!--<xs:IDREF value should be the guid of the template/>-->
         <xs:attribute name="guidRef" type="xs:IDREF" use="required" />
         <!--typeRef is obsolete, replaced by guidRef; keep it so we can read older circuit docs before ATF3.8 -->
@@ -274,6 +277,7 @@
           <xs:element name="prototypeFolder" type="prototypeFolderType" />
           <xs:element name="templateFolder" type="templateFolderType" />
         </xs:sequence>
+        <xs:attribute name="version" type="xs:string" default="1.0"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

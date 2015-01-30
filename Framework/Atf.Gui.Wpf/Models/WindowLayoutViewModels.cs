@@ -203,7 +203,7 @@ namespace Sce.Atf.Wpf.Models
                     foreach (var file in files)
                     {
                         var name = Path.GetFileNameWithoutExtension(file);
-                        var layoutSlot = m_layouts.Where(x => x.Name.Equals(name)).FirstOrDefault();
+                        var layoutSlot = m_layouts.FirstOrDefault(x => x.Name.Equals(name));
                         if (layoutSlot != null)
                         {
                             layoutSlot.Image = ImageUtil.CreateFromFile(file);

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Text" context="" translation="Text" />
+  <StringItem id="CSharp" context="" translation="CSharp" />
+  <StringItem id="Python" context="" translation="Python" />
+  <StringItem id="Lua" context="" translation="Lua" />
+  <StringItem id="Squirrel" context="" translation="Squirrel" />
+  <StringItem id="XML" context="" translation="XML" />
+  <StringItem id="COLLADA" context="" translation="COLLADA" />
+  <StringItem id="Cg" context="" translation="Cg" />
+  <StringItem id="Find and Replace..." context="" translation="Find and Replace..." />
+  <StringItem id="Find and replace text" context="" translation="Find and replace text" />
+  <StringItem id="Go to..." context="" translation="Go to..." />
+  <StringItem id="Go to line" context="" translation="Go to line" />
+  <StringItem id="Code Editor Sample" context="" translation="Code Editor Sample" />
+  <StringItem id="Code Editor" context="" translation="Code Editor" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample" />
+</StringLocalizationTable>

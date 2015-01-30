@@ -35,7 +35,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets the URL that will be opened by the default browser if the user presses F1. Setting
-        /// to null or the empty string will cause nothing to happen when F1 is pressed.</summary>
+        /// to null or the empty string will cause nothing to happen when F1 is pressed. Must set before
+        /// Initialize() is called.</summary>
         public string Url
         {
             get;
@@ -48,11 +49,13 @@ namespace Sce.Atf.Applications
         /// Initializes this component</summary>
         public virtual void Initialize()
         {
-            CommandInfo helpCommandInfo =
-                CommandService.RegisterCommand(Commands.OpenHelpPage, StandardMenu.Help,
+            var helpCommandInfo = new CommandInfo(Commands.OpenHelpPage, StandardMenu.Help,
                 StandardCommandGroup.HelpAbout, "Online Help".Localize(),
-                "Opens an online help page for this app".Localize(), Keys.F1, null,
-                CommandVisibility.ApplicationMenu, this);
+                "Opens an online help page for this app".Localize(), Sce.Atf.Input.Keys.F1, null,
+                CommandVisibility.ApplicationMenu);
+            helpCommandInfo.EnableCheckCanDoEvent(this);
+
+            CommandService.RegisterCommand(helpCommandInfo, this);
 
             // We need to listen to the MenuItem's Click event, rather than the normal and otherwise
             //  better way of using DoCommand, because the currently active Control might have a

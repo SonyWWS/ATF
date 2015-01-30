@@ -176,15 +176,15 @@ namespace UnitTests.Atf
 
         private bool IsSameHashCode(System.ComponentModel.PropertyDescriptor p1, System.ComponentModel.PropertyDescriptor p2)
         {
-            int hash1 = PropertyUtils.GetPropertyDescriptorHash(p1);
-            int hash2 = PropertyUtils.GetPropertyDescriptorHash(p2);
+            int hash1 = p1.GetPropertyDescriptorHash();
+            int hash2 = p2.GetPropertyDescriptorHash();
             return hash1 == hash2;
         }
 
         private bool IsSameHashKey(System.ComponentModel.PropertyDescriptor p1, System.ComponentModel.PropertyDescriptor p2)
         {
-            string id1 = PropertyUtils.GetPropertyDescriptorKey(p1);
-            string id2 = PropertyUtils.GetPropertyDescriptorKey(p2);
+            string id1 = p1.GetPropertyDescriptorKey();
+            string id2 = p2.GetPropertyDescriptorKey();
             return id1 == id2;
         }
 

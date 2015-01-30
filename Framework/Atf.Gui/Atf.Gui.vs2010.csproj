@@ -189,6 +189,7 @@
     <Compile Include="Controls\Adaptable\DiagramTitleBar.cs" />
     <Compile Include="Controls\Adaptable\Graphs\BoundaryRoute.cs" />
     <Compile Include="Controls\Adaptable\Graphs\CircuitDefaultStyle.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\CircuitElementInfo.cs" />
     <Compile Include="Controls\Adaptable\Graphs\CircuitGroupInfo.cs" />
     <Compile Include="Controls\Adaptable\Graphs\CircuitGroupPinInfo.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\Annotation.cs" />
@@ -196,9 +197,11 @@
     <Compile Include="Controls\Adaptable\Graphs\Circuit\CircuitUtil.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\Element.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\ElementRef.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\ElementReference.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\ElementType.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\Group.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupPin.cs" />
+    <Compile Include="Controls\Adaptable\Graphs\Circuit\GroupReference.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\ICircuitContainer.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\LayerFolder.cs" />
     <Compile Include="Controls\Adaptable\Graphs\Circuit\MissingElementType.cs" />

@@ -12,7 +12,7 @@ namespace Sce.Atf.Adaptation
     /// Base class for binding adapter objects</summary>
     /// <remarks>
     /// This class is a CustomTypeDescriptor object that adapts an IAdaptable
-    /// object and provides a customised set of property descriptors for binding.</remarks>
+    /// object and provides a customized set of property descriptors for binding.</remarks>
     public abstract class BindingAdapterObjectBase : CustomTypeDescriptor,
         IAdaptable,
         INotifyPropertyChanged
@@ -31,7 +31,7 @@ namespace Sce.Atf.Adaptation
         public object Adaptee { get; private set; }
 
         /// <summary>
-        /// Returns the customised set of property descriptors for binding</summary>
+        /// Returns the customized set of property descriptors for binding</summary>
         /// <returns>Cached property descriptors</returns>
         public override PropertyDescriptorCollection GetProperties()
         {
@@ -39,7 +39,8 @@ namespace Sce.Atf.Adaptation
         }
 
         /// <summary>
-        /// Returns the customised set of property descriptors for binding, generating them if necessary</summary>
+        /// Returns the customized set of property descriptors for binding, generating them if necessary</summary>
+        /// <param name="attributes">Attribute array (unused)</param>
         /// <returns>Cached property descriptors</returns>
         public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
@@ -73,7 +74,7 @@ namespace Sce.Atf.Adaptation
         #endregion
 
         /// <summary>
-        /// Generates a customised set of property descriptors for binding</summary>
+        /// Generates a customized set of property descriptors for binding</summary>
         /// <returns>Cached property descriptors</returns>
         protected abstract PropertyDescriptorCollection GenerateDescriptors();
 
@@ -95,16 +96,22 @@ namespace Sce.Atf.Adaptation
     }
 
     /// <summary>
-    /// This BindingAdapterObject generates propertydescriptors based 
+    /// This BindingAdapterObject generates PropertyDescriptors based 
     /// on adapting the adaptee to all possible types and returning 
     /// descriptors for each adapter</summary>
     public class BindingAdapterObject : BindingAdapterObjectBase
     {
+        /// <summary>
+        /// Constructor with adaptee</summary>
+        /// <param name="adaptee">Adaptee object</param>
         public BindingAdapterObject(object adaptee)
             : base(adaptee)
         {
         }
 
+        /// <summary>
+        /// Generate a PropertyDescriptorCollection for adapters adapting adaptee</summary>
+        /// <returns>PropertyDescriptorCollection for adapters</returns>
         protected override PropertyDescriptorCollection GenerateDescriptors()
         {
             var result = new List<PropertyDescriptor>();
@@ -230,14 +237,12 @@ namespace Sce.Atf.Adaptation
     }
 
     /// <summary>
-    /// Dom specific version of BindingAdapterObject which adds an optimisation option
-    /// which will cache property descriptors by DomNodeType
-    /// </summary>
+    /// DOM specific version of BindingAdapterObject which adds an optimization option
+    /// which will cache property descriptors by DomNodeType</summary>
     public class DomBindingAdapterObject : BindingAdapterObject
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
+        /// Constructor with adaptee and optimization flag</summary>
         /// <param name="adaptee">Adaptee DomNode</param>
         /// <param name="enableNodeTypeExtensionOptimisation">True to enable static caching of
         /// property descriptors by node type</param>
@@ -247,8 +252,13 @@ namespace Sce.Atf.Adaptation
             EnableNodeTypeExtensionOptimisation = enableNodeTypeExtensionOptimisation;
         }
 
+        /// <summary>
+        /// Get whether to enable optimization by statically caching PropertyDescriptorCollections by DomNodeType</summary>
         public bool EnableNodeTypeExtensionOptimisation { get; private set; }
 
+        /// <summary>
+        /// Generate a PropertyDescriptorCollection for adapters adapting adaptee</summary>
+        /// <returns>PropertyDescriptorCollection for adapters</returns>
         protected override PropertyDescriptorCollection GenerateDescriptors()
         {
             PropertyDescriptorCollection result = null;

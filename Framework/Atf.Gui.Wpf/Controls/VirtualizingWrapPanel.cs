@@ -99,7 +99,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Gets the index of the first visible item</summary>
-        /// <returns></returns>
+        /// <returns>Index of the first visible item</returns>
         public int GetFirstVisibleIndex()
         {
             int section = GetFirstVisibleSection();
@@ -772,7 +772,8 @@ namespace Sce.Atf.Wpf.Controls
             #region IEnumerable<ItemAbstraction> Members
 
             /// <summary>
-            /// Returns an enumerator that iterates through a collection.</summary>
+            /// Returns an enumerator that iterates through a collection</summary>
+            /// <returns>Enumerator that iterates through a collection</returns>
             public IEnumerator<ItemAbstraction> GetEnumerator()
             {
                 return Items.GetEnumerator();

@@ -39,6 +39,10 @@ namespace Sce.Atf.Wpf.Applications
 
         #endregion
 
+        /// <summary>
+        /// Shows the exception dialog, which allows the user to choose whether or not to continue</summary>
+        /// <param name="exception">Exception</param>
+        /// <returns>Nullable Boolean indicating how a window was closed by the user</returns>
         protected virtual bool? ShowExceptionDialog(Exception exception)
         {
             var dlg = new UnhandledExceptionDialog();

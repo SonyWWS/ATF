@@ -45,6 +45,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.DragOver += OnDragOver;
         }
 
+        /// <summary>
+        /// Handle Detaching event by unsubscribing from drag and drop events</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();

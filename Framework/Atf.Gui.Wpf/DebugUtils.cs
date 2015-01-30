@@ -10,6 +10,8 @@ using Sce.Atf.Wpf.Markup;
 
 namespace Sce.Atf.Wpf
 {
+    /// <summary>
+    /// Debugging utility functions</summary>
     public static class DebugUtils
     {
         /// <summary>
@@ -17,7 +19,10 @@ namespace Sce.Atf.Wpf
         public static readonly ResourceKey DebugConverterKey
             = new ComponentResourceKey(typeof(DebugUtils), "DebugConverter");
 
-        // Provided for when it helps to traverse the logical tree
+        /// <summary>
+        /// Method provided for when it helps to traverse the logical tree</summary>
+        /// <param name="initial">Initial DependencyObject</param>
+        /// <returns>DependencyObject tree root</returns>
         public static DependencyObject FindLogicalTreeRoot(DependencyObject initial)
         {
             var current = initial;
@@ -33,6 +38,10 @@ namespace Sce.Atf.Wpf
             return result;
         }
 
+        /// <summary>
+        /// Get item's data context</summary>
+        /// <param name="item">Item</param>
+        /// <returns>Data context</returns>
         public static object GetDataContext(object item)
         {
             if (item == null)
@@ -68,13 +77,20 @@ namespace Sce.Atf.Wpf
         }
     }
 
-    // By referencing this class for the 'Converter' property of any Binding markup,
-    // your debugging session will break in Convert() and ConvertBack(), when that Binding is processed
-    //
-    // DO NOT CHECK IN XAML THAT USES THIS CONVERTER.  It is intended for local debugging only.
-    //
+    /// <summary>
+    /// Debugging class. By referencing this class for the 'Converter' property of any Binding markup,
+    /// your debugging session will break in Convert() and ConvertBack(), when that Binding is processed.</summary>
+    /// <remarks>
+    /// DO NOT CHECK IN XAML THAT USES THIS CONVERTER. It is intended for local debugging only.</remarks>
     public class DebugConverter : ConverterMarkupExtension<DebugConverter>
     {
+        /// <summary>
+        /// Attempt to convert a value to a target type</summary>
+        /// <param name="value">Object to convert</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Converted value or null if no conversion done</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             // breakpoint allows inspection of value obtained for a target control in a binding
@@ -85,6 +101,13 @@ namespace Sce.Atf.Wpf
             return value;
         }
 
+        /// <summary>
+        /// Convert back value</summary>
+        /// <param name="value">Value to convert back</param>
+        /// <param name="targetType">Type of target (unused)</param>
+        /// <param name="parameter">Converter parameter to use (unused)</param>
+        /// <param name="culture">Culture to use in the converter (unused)</param>
+        /// <returns>Value converted back or null if no conversion done</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             // breakpoint allows inspection of value obtained for a target control in a binding

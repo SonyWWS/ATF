@@ -5,7 +5,7 @@ using System;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Arguments for "item changed" event</summary>
+    /// Arguments for "item changed" event.</summary>
     /// <typeparam name="T">Type of changed item</typeparam>
     public class ItemChangedEventArgs<T> : EventArgs
         //where T : class
@@ -13,13 +13,19 @@ namespace Sce.Atf
         /// <summary>
         /// Constructor</summary>
         /// <param name="item">Changed item</param>
-        public ItemChangedEventArgs(T item)
+        /// <param name="reloaded">Whether contents of changed item was completely reloaded</param>
+        public ItemChangedEventArgs(T item, bool reloaded=false)
         {
             Item = item;
+            Reloaded = reloaded;
         }
 
         /// <summary>
         /// Changed item</summary>
         public readonly T Item;
+
+        /// <summary>
+        /// Whether contents of changed item was completely reloaded.</summary>
+        public readonly bool Reloaded;
     }
 }

@@ -218,7 +218,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if can copy selection from the circuit</summary>
         /// <returns>True iff there are items to copy</returns>
-        public bool CanCopy()
+        public virtual bool CanCopy()
         {
             if (m_instancingContext != null)
                 return m_instancingContext.CanCopy();
@@ -228,9 +228,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Copies selected items from the circuit</summary>
         /// <returns>DataObject containing an enumeration of selected items</returns>
-        public object Copy()
+        public virtual object Copy()
         {
-
             // copy selected text in the selected annotation?
             var annotationAdapter = m_viewingContext.Cast<AdaptableControl>().As<D2dAnnotationAdapter>();
             if (annotationAdapter != null)
@@ -249,14 +248,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-
-
             if (m_instancingContext != null)
                 return m_instancingContext.Copy();
 
             // get the selected modules
             HashSet<Element> modules = new HashSet<Element>(Selection.AsIEnumerable<Element>());
-            HashSet<object> itemsToCopy = new HashSet<object>(Adapters.AsIEnumerable<object>(modules));
+            HashSet<object> itemsToCopy = new HashSet<object>(modules.AsIEnumerable<object>());
 
             // get selected connections between selected modules
             foreach (Wire connection in Selection.AsIEnumerable<Wire>())
@@ -273,34 +270,24 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             // add annotations
             foreach (Annotation annotation in Selection.AsIEnumerable<Annotation>())
-                itemsToCopy.Add(Adapters.As<DomNode>(annotation));
+                itemsToCopy.Add(annotation.As<DomNode>());
 
             // create format for local use
-            DataObject dataObject = new DataObject(Enumerable.ToArray(itemsToCopy));
+            DataObject dataObject = new DataObject(itemsToCopy.ToArray());
 
             // add a serializable format for the system clipboard
             DomNodeSerializer serializer = new DomNodeSerializer();
-            byte[] data = serializer.Serialize(Adapters.AsIEnumerable<DomNode>(itemsToCopy));
+            byte[] data = serializer.Serialize(itemsToCopy.AsIEnumerable<DomNode>());
             dataObject.SetData(CircuitFormat, data);
 
-
-
-
             return dataObject;
-        }
-
-        private bool IsConnectionCopyable(Wire wire, HashSet<Element> modules)
-        {
-            return
-                modules.Contains(wire.OutputElement) &&
-                modules.Contains(wire.InputElement);
         }
 
         /// <summary>
         /// Tests if can insert a given object into the circuit</summary>
         /// <param name="insertingObject">Object to insert</param>
         /// <returns>True iff can insert object into the circuit</returns>
-        public bool CanInsert(object insertingObject)
+        public virtual bool CanInsert(object insertingObject)
         {
             // pasted selected text in the selected annotation?
             var annotationAdapter = m_viewingContext.Cast<AdaptableControl>().As<D2dAnnotationAdapter>();
@@ -325,46 +312,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Edits objects using a transaction, so the history context can be verified.
-        /// Called by automated scripts during testing.</summary>
-        /// <param name="node">Object to modify</param>
-        /// <param name="attr">Attribute to modify</param>
-        /// <param name="newValue">New value</param>
-        public void SetProperty(DomNode node, AttributeInfo attr, object newValue)
-        {
-            ITransactionContext transactionContext = this.As<ITransactionContext>();
-            transactionContext.DoTransaction(
-                delegate
-                {
-                    node.SetAttribute(attr, newValue);
-                }, "Scripted Edit Property");
-        }
-
-        /// <summary>
-        /// Adds new object of given type to circuit using a transaction. Called by automated scripts during testing.</summary>
-        /// <typeparam name="T">Type of object to add</typeparam>
-        /// <param name="domNode">DomNode that contains added object</param>
-        /// <param name="xPos">X-coordinate at center of insertion position</param>
-        /// <param name="yPos">Y-coordinate at center of insertion position</param>
-        /// <returns>Last selected item</returns>
-        public T Insert<T>(DomNode domNode, int xPos, int yPos) where T : class
-        {
-            DataObject dataObject = new DataObject(new object[] { domNode });
-
-            ITransactionContext transactionContext = this.As<ITransactionContext>();
-            transactionContext.DoTransaction(
-                delegate
-                {
-                    Insert(dataObject, new Point(xPos, yPos));
-                }, "Scripted Insert Object");
-
-            return Selection.GetLastSelected<T>();
-        }
-
-        /// <summary>
         /// Inserts object into circuit at the center of the canvas</summary>
         /// <param name="insertingObject">Object to insert</param>
-        public void Insert(object insertingObject)
+        public virtual void Insert(object insertingObject)
         {
             // paste selected text in the selected annotation?
             var annotationAdapter = m_viewingContext.Cast<AdaptableControl>().As<D2dAnnotationAdapter>();
@@ -377,7 +327,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         annotationAdapter.PasteFromClipboard(annotation);
                         return;
                     }
-
                 }
             }
 
@@ -395,11 +344,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             {
                 center = dragDropAdapter.MousePosition;
                 var hitRecord = Pick(dragDropAdapter.MousePosition);
-                if (hitRecord.SubItem.Is<Group>())
-                    hitGroup = hitRecord.SubItem.Cast<Group>();
-                else if (hitRecord.Item.Is<Group>())
-                    hitGroup = hitRecord.Item.Cast<Group>();
-
+                if (hitRecord != null) 
+                {
+                    if (hitRecord.SubItem.Is<Group>())
+                        hitGroup = hitRecord.SubItem.Cast<Group>();
+                    else if (hitRecord.Item.Is<Group>())
+                        hitGroup = hitRecord.Item.Cast<Group>();
+                }
             }
 
             var insertedItems = Insert(insertingObject, center);
@@ -412,129 +363,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Finds element, edge or pin hit by the given point</summary>
-        /// <param name="point">point in client space</param>
-        /// <returns></returns>
-        protected virtual GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
-        {
-            return null;
-        }
-
-
-        private DomNode[] Insert(object insertingObject, Point center)
-        {
-            var dataObject = (IDataObject)insertingObject;
-            IEnumerable<object> items = GetCompatibleData(dataObject);
-            if (items == null)
-                return null;
-
-            if (items.All(x => x.Is<Template>()))
-            {
-                var refs = new List<object>();
-                foreach (var item in items.AsIEnumerable<Template>())
-                    refs.Add(InsertReference(item));
-                Center(refs, center);
-                Selection.SetRange(refs);
-                return null;
-            }
-
-            var itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
-
-            var modules = new List<Element>(itemCopies.AsIEnumerable<Element>());
-            foreach (var module in modules)
-                m_circuitContainer.Elements.Add(module);
-
-            foreach (var connection in itemCopies.AsIEnumerable<Wire>())
-                m_circuitContainer.Wires.Add(connection);
-
-            foreach (var annotation in itemCopies.AsIEnumerable<Annotation>())
-                m_circuitContainer.Annotations.Add(annotation);
-
-            Center(itemCopies, center);
-
-            Selection.SetRange(itemCopies);
-
-            return itemCopies;
-        }
-
-        private DomNode InsertReference(Template template)
-        {
-            var elementReference = m_templatingContext.CreateReference(template).Cast<Element>();
-            m_circuitContainer.Elements.Add(elementReference);
-            return elementReference.DomNode;
-        }
-
-        private IEnumerable<object> GetCompatibleData(IDataObject dataObject)
-        {
-            // try the local format first
-            IEnumerable<object> items = dataObject.GetData(typeof(object[])) as object[];
-            if (items != null && (AreCircuitItems(items) || AreTemplateItems(items)))
-            {
-                return items;
-            }
-
-            // try serialized format
-            byte[] data = dataObject.GetData(CircuitFormat) as byte[];
-            if (data != null)
-            {
-                try
-                {
-                    DomNodeSerializer serializer = new DomNodeSerializer();
-                    IEnumerable<DomNode> deserialized = serializer.Deserialize(data, m_schemaLoader.GetNodeType);
-                    items = Adapters.AsIEnumerable<object>(deserialized);
-                    if (AreCircuitItems(items))
-                        return items;
-                }
-                catch /*(Exception ex)*/
-                {
-                    // the app cannot recover when using output servce                   
-                    //Outputs.WriteLine(OutputMessageType.Warning, ex.Message);
-                }
-            }
-
-            return null;
-        }
-
-        private bool AreCircuitItems(IEnumerable<object> items)
-        {
-            return items.All(IsCircuitItem);
-        }
-
-        private bool AreTemplateItems(IEnumerable<object> items)
-        {
-            return items.All(IsTemplateItem);
-        }
-
-        private static bool IsCircuitItem(object item)
-        {
-
-            return item.Is<Element>() || item.Is<Wire>() || item.Is<Annotation>();
-        }
-
-        private bool IsTemplateItem(object item)
-        {
-            return m_templatingContext != null && m_templatingContext.CanReference(item);
-        }
-
-        /// <summary>
-        /// Centers items in canvas at point</summary>
-        /// <param name="items">Items to center</param>
-        /// <param name="p">Point at which to center items, in client space</param>
-        public void Center(IEnumerable<object> items, Point p)
-        {
-            // get bounds, convert to world coords
-            Rectangle bounds;
-            LayoutContexts.GetBounds(m_viewingContext.Cast<ILayoutContext>(), items, out bounds);
-
-            Matrix transform = m_viewingContext.Cast<AdaptableControl>().Cast<ITransformAdapter>().Transform;
-            p = GdiUtil.InverseTransform(transform, p); // convert center to world coords
-            m_viewingContext.Cast<ILayoutContext>().Center(items, p);
-        }
-
-        /// <summary>
         /// Tests if can delete selected items from the circuit</summary>
         /// <returns>True iff can delete selected items from the circuit</returns>
-        public bool CanDelete()
+        public virtual bool CanDelete()
         {
             if (m_instancingContext != null)
                 return m_instancingContext.CanDelete();
@@ -543,7 +374,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Deletes selected items from the circuit</summary>
-        public void Delete()
+        public virtual void Delete()
         {
             if (m_instancingContext != null)
             {
@@ -786,8 +617,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="item">Item</param>
         Color IColoringContext.GetColor(ColoringTypes kind, object item)
         {
-            if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
-                return item.Cast<Annotation>().BackColor;
+            if (item.Is<Annotation>())
+            {
+                if (kind == ColoringTypes.BackColor)
+                    return item.Cast<Annotation>().BackColor;
+                if (kind == ColoringTypes.ForeColor)
+                    return item.Cast<Annotation>().ForeColor;
+            }
+
             return s_zeroColor;
         }
 
@@ -798,8 +635,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>True iff the item can be colored</returns>
         bool IColoringContext.CanSetColor(ColoringTypes kind, object item)
         {
-            if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
-                return true;
+            if (item.Is<Annotation>())
+            {
+                if (kind == ColoringTypes.BackColor)
+                    return true;
+                if (kind == ColoringTypes.ForeColor)
+                    return true;
+            }
+
             return false;
         }
 
@@ -810,8 +653,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="newValue">Item new color</param>
         void IColoringContext.SetColor(ColoringTypes kind, object item, Color newValue)
         {
-            if (item.Is<Annotation>() && kind == ColoringTypes.BackColor)
-                item.Cast<Annotation>().BackColor = newValue;
+            if (item.Is<Annotation>())
+            {
+                if (kind == ColoringTypes.BackColor)
+                    item.Cast<Annotation>().BackColor = newValue;
+                else if (kind == ColoringTypes.ForeColor)
+                    item.Cast<Annotation>().ForeColor = newValue;
+            }
         }
 
         #endregion
@@ -827,7 +675,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="toNode">"To" node</param>
         /// <param name="inputPin">Input pin</param>
         /// <returns>Whether the "from" node pin can be connected to the "to" node pin</returns>
-        bool IEditableGraph<Element, Wire, ICircuitPin>.CanConnect(
+        public virtual bool CanConnect(
             Element fromNode, ICircuitPin outputPin, Element toNode, ICircuitPin inputPin)
         {
             if (fromNode == null ||
@@ -855,7 +703,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="toRoute">"To" pin</param>
         /// <param name="existingEdge">Existing connection that is being reconnected, or null if new connection</param>
         /// <returns>New connection from the "from" module's pin to the "to" module's pin</returns>
-        Wire IEditableGraph<Element, Wire, ICircuitPin>.Connect(
+        public virtual Wire Connect(
             Element fromNode, ICircuitPin fromRoute, Element toNode, ICircuitPin toRoute, Wire existingEdge)
         {
             var domNode = new DomNode(WireType);
@@ -874,6 +722,34 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             m_circuitContainer.Wires.Add(wire);
+
+            // observe fan in/out constraints
+            if (!fromRoute.AllowFanOut || !toRoute.AllowFanIn)
+            {
+                var wires = m_circuitContainer.Wires.ToArray();
+                if (!fromRoute.AllowFanOut)
+                {
+                    // remove other edges from the route
+                    foreach (var edge in wires)
+                    {
+                        if (edge == wire)
+                            continue;
+                        if (edge.OutputPin == fromRoute && edge.OutputElement == wire.OutputElement)
+                            m_circuitContainer.Wires.Remove(edge);
+                    }
+                }
+                if (!toRoute.AllowFanIn)
+                {
+                    // remove other edges to the route
+                    foreach (var edge in wires)
+                    {
+                        if (edge == wire)
+                            continue;
+                         if (edge.InputPin == toRoute && edge.InputElement == wire.InputElement)
+                            m_circuitContainer.Wires.Remove(edge);
+                    }
+                }
+            }
             return wire;
         }
 
@@ -881,7 +757,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets whether the Connection can be disconnected</summary>
         /// <param name="edge">Connection to disconnect</param>
         /// <returns>Whether the Connection can be disconnected</returns>
-        bool IEditableGraph<Element, Wire, ICircuitPin>.CanDisconnect(Wire edge)
+        public virtual bool CanDisconnect(Wire edge)
         {
             return true;
         }
@@ -889,7 +765,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Disconnects the Connection</summary>
         /// <param name="edge">Connection to disconnect</param>
-        void IEditableGraph<Element, Wire, ICircuitPin>.Disconnect(Wire edge)
+        public virtual void Disconnect(Wire edge)
         {
             m_circuitContainer.Wires.Remove(edge);
         }
@@ -913,7 +789,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             var newContainer = newParent.Cast<ICircuitContainer>();
 
-            // do not allow moving into a collpased container that is a child of the current editing context
+            // do not allow moving into a collapsed container that is a child of the current editing context
             if (newContainer != m_circuitContainer && !newContainer.Expanded)
                 return false;
 
@@ -933,7 +809,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (module.DomNode.Equals(ancestor))
                         return false;
 
-                // don't reparent to same parent
+                // don't re-parent to same parent
                 if (module.DomNode.Parent == newContainer.Cast<DomNode>())
                     return false;
 
@@ -994,7 +870,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 newContainer.Wires.Add(connection);
             }
 
-            // locaton transformation of moved modules         
+            // location transformation of moved modules         
             var offset = GetRelativeOffset(oldContainer, newContainer);
             foreach (var module in movingNodes)
             {
@@ -1016,6 +892,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (container.Is<Group>())
             {
+                if (container.Is<IReference<Group>>())
+                    return false; // disallow resizing group references
+
                 var group = container.Cast<Group>();
                 if (group.Expanded)// && !group.AutoSize)
                 {
@@ -1056,6 +935,216 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         #endregion
+
+        /// <summary>
+        /// Centers items in canvas at point</summary>
+        /// <param name="items">Items to center</param>
+        /// <param name="p">Point at which to center items, in client space</param>
+        public void Center(IEnumerable<object> items, Point p)
+        {
+            // get bounds, convert to world coords
+            Rectangle bounds;
+            LayoutContexts.GetBounds(m_viewingContext.Cast<ILayoutContext>(), items, out bounds);
+
+            Matrix transform = m_viewingContext.Cast<AdaptableControl>().Cast<ITransformAdapter>().Transform;
+            p = GdiUtil.InverseTransform(transform, p); // convert center to world coords
+            m_viewingContext.Cast<ILayoutContext>().Center(items, p);
+        }
+
+        /// <summary>
+        /// Finds element, edge or pin hit by the given point</summary>
+        /// <param name="point">Point in client space</param>
+        /// <returns>GraphHitRecord describing hit point</returns>
+        /// <remarks>Currently you need to override this method only if you want to support
+        /// directly dragging and dropping a palette item onto a group.</remarks>
+        protected virtual GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
+        {
+            // The default behavior is to return null. So when dragging and dropping a palette item onto a group in the canvas,   
+            // the palette item does not automatically get added to the group. Instead, it gets dropped onto the main canvas 
+            // and then becomes hidden from view (because it is behind the group).	This then requires moving the group to
+            // the side and performing a drag and drop from the canvas onto the group. 
+
+            // Override this method so ATF can detect the case for drag & drop over a group
+            return null;
+        }
+
+        /// <summary>
+        /// Adds new object of given type to circuit using a transaction. Called by automated scripts during testing.</summary>
+        /// <typeparam name="T">Type of object to add</typeparam>
+        /// <param name="domNode">DomNode that contains added object</param>
+        /// <param name="xPos">X-coordinate at center of insertion position</param>
+        /// <param name="yPos">Y-coordinate at center of insertion position</param>
+        /// <returns>Last selected item</returns>
+        public T Insert<T>(DomNode domNode, int xPos, int yPos) where T : class
+        {
+            DataObject dataObject = new DataObject(new object[] { domNode });
+
+            ITransactionContext transactionContext = this.As<ITransactionContext>();
+            transactionContext.DoTransaction(
+                delegate
+                {
+                    Insert(dataObject, new Point(xPos, yPos));
+                }, "Scripted Insert Object");
+
+            return Selection.GetLastSelected<T>();
+        }
+
+        /// <summary>
+        /// Edits objects using a transaction, so the history context can be verified.
+        /// Called by automated scripts during testing.</summary>
+        /// <param name="node">Object to modify</param>
+        /// <param name="attr">Attribute to modify</param>
+        /// <param name="newValue">New value</param>
+        public void SetProperty(DomNode node, AttributeInfo attr, object newValue)
+        {
+            ITransactionContext transactionContext = this.As<ITransactionContext>();
+            transactionContext.DoTransaction(
+                delegate
+                {
+                    node.SetAttribute(attr, newValue);
+                }, "Scripted Edit Property");
+        }
+
+        private DomNode[] Insert(object insertingObject, Point center)
+        {
+            var dataObject = (IDataObject)insertingObject;
+            IEnumerable<object> items = GetCompatibleData(dataObject);
+            if (items == null)
+                return null;
+
+            if (items.All(x => x.Is<Template>()))
+            {
+                var refs = new List<object>();
+                foreach (var item in items.AsIEnumerable<Template>())
+                    refs.Add(InsertReference(item));
+                Center(refs, center);
+                Selection.SetRange(refs);
+                return null;
+            }
+
+            var itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
+
+            var modules = new List<Element>(itemCopies.AsIEnumerable<Element>());
+            foreach (var module in modules)
+                m_circuitContainer.Elements.Add(module);
+
+            foreach (var connection in itemCopies.AsIEnumerable<Wire>())
+                m_circuitContainer.Wires.Add(connection);
+
+            foreach (var annotation in itemCopies.AsIEnumerable<Annotation>())
+                m_circuitContainer.Annotations.Add(annotation);
+
+            Center(itemCopies, center);
+
+            Selection.SetRange(itemCopies);
+
+            return itemCopies;
+        }
+
+        private DomNode InsertReference(Template template)
+        {
+            var elementReference = m_templatingContext.CreateReference(template).Cast<Element>();
+            m_circuitContainer.Elements.Add(elementReference);
+            return elementReference.DomNode;
+        }
+
+        private IEnumerable<object> GetCompatibleData(IDataObject dataObject)
+        {
+            // try the local format first
+            IEnumerable<object> items = dataObject.GetData(typeof(object[])) as object[];
+            if (items == null)
+                return null;
+
+            if (!ValidTemplateReferences(items))
+                return null;
+
+            if (AreCircuitItems(items) || AreTemplateItems(items))
+            {
+                return items;
+            }
+
+            // try serialized format
+            byte[] data = dataObject.GetData(CircuitFormat) as byte[];
+            if (data != null)
+            {
+                try
+                {
+                    DomNodeSerializer serializer = new DomNodeSerializer();
+                    IEnumerable<DomNode> deserialized = serializer.Deserialize(data, m_schemaLoader.GetNodeType);
+                    items = deserialized.AsIEnumerable<object>();
+                    if (AreCircuitItems(items))
+                        return items;
+                }
+                catch /*(Exception ex)*/
+                {
+                    // the app cannot recover when using output service                   
+                    //Outputs.WriteLine(OutputMessageType.Warning, ex.Message);
+                }
+            }
+
+            return null;
+        }
+
+        private bool AreCircuitItems(IEnumerable<object> items)
+        {
+            return items.All(IsCircuitItem);
+        }
+
+        private bool AreTemplateItems(IEnumerable<object> items)
+        {
+            return items.All(IsTemplateItem);
+        }
+
+        private static bool IsCircuitItem(object item)
+        {
+
+            return item.Is<Element>() || item.Is<Wire>() || item.Is<Annotation>();
+        }
+
+        private bool IsTemplateItem(object item)
+        {
+            return m_templatingContext != null && m_templatingContext.CanReference(item);
+        }
+
+        /// <summary>
+        /// Template references are valid only when the template is listed in the template library</summary>
+        private bool ValidTemplateReferences(IEnumerable<object> items)
+        {
+            var templatingContext = m_templatingContext.As<TemplatingContext>();
+            if (templatingContext == null)
+                return true; // skip validating references 
+            foreach (var item in items)
+            {
+                var reference = item.As<IReference<DomNode>>();
+                if (reference != null)
+                {
+                    Guid targetGuid = Guid.Empty;
+                    var groupReference = reference.As<GroupReference>();
+                    if (groupReference != null)
+                        targetGuid = groupReference.Template.Guid;
+                    else
+                    {
+                        var elementReference = reference.As<ElementReference>();
+                        if (elementReference != null)
+                            targetGuid = elementReference.Template.Guid;
+                    }
+                    if (targetGuid != Guid.Empty)
+                    {
+                        if (templatingContext.SearchForTemplateByGuid(templatingContext.RootFolder, targetGuid) == null)
+                            return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool IsConnectionCopyable(Wire wire, HashSet<Element> modules)
+        {
+            return
+                modules.Contains(wire.OutputElement) &&
+                modules.Contains(wire.InputElement);
+        }
 
         /// Gets location offset from oldContainer to newContainer, compensate renderer displacements for element title
         /// and margin sub-nodes location are defined relative to the parent container

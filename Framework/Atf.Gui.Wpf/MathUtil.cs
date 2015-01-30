@@ -108,6 +108,11 @@ namespace Sce.Atf.Wpf
             return new Rect(result[0].X, result[0].Y, result[1].X - result[0].X, result[1].Y - result[0].Y);
         }
 
+        /// <summary>
+        /// Round a double value to a given number of fractional digits</summary>
+        /// <param name="value">Value to round</param>
+        /// <param name="digits">Rounding number of fractional digits</param>
+        /// <returns>Rounded double value</returns>
         public static double RoundToDoublePrecision(double value, int digits)
         {
             double d = Math.Abs(value);

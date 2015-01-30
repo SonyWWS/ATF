@@ -135,7 +135,7 @@ namespace CircuitEditorSample
         /// <summary>
         /// Finds element, edge or pin hit by the given point</summary>
         /// <param name="point">point in client space</param>
-        /// <returns></returns>
+        /// <remarks>Implement the pick method to support drag & drop onto a group directly</remarks>
         protected override GraphHitRecord<Element, Wire, ICircuitPin> Pick(Point point)
         {
             var viewingContext = DomNode.Cast<IViewingContext>();

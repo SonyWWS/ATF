@@ -20,7 +20,7 @@ namespace UnitTests.Atf
             // test static method
             m_calls = 0;
             m_eventArgs = new EventArgs();
-            Event.Raise(Test, this, m_eventArgs);
+            Test.Raise(this, m_eventArgs);
             Assert.True(m_calls == 1);
 
             // test extension method
@@ -47,7 +47,7 @@ namespace UnitTests.Atf
             // test static method
             m_calls = 0;
             m_eventArgs = new EventArgs();
-            Event.Raise<EventArgs>(TestGeneric, this, m_eventArgs);
+            TestGeneric.Raise(this, m_eventArgs);
             Assert.True(m_calls == 1);
 
             // test extension method
@@ -77,7 +77,7 @@ namespace UnitTests.Atf
             // test static method
             m_calls = 0;
             m_cancelEventArgs = new CancelEventArgs();
-            Assert.True(Event.RaiseCancellable<CancelEventArgs>(TestCancellable, this, m_cancelEventArgs));
+            Assert.True(TestCancellable.RaiseCancellable(this, m_cancelEventArgs));
             Assert.True(m_calls == 2);
 
             // test extension method

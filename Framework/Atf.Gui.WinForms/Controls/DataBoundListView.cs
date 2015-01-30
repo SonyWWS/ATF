@@ -30,15 +30,17 @@ namespace Sce.Atf.Controls
             HideSelection = false;
             DoubleBuffered = true;
 
-            currencyManager_ListChanged = new ListChangedEventHandler(bindingManager_ListChanged);
-            currencyManager_PositionChanged = new EventHandler(bindingManager_PositionChanged);
-            SelectedIndexChanged += new EventHandler(listView_SelectedIndexChanged);
-            ColumnWidthChanged += new ColumnWidthChangedEventHandler(listView_ColumnWidthChanged);
-            ColumnWidthChanging += new ColumnWidthChangingEventHandler(listView_ColumnWidthChanging);
+            currencyManager_ListChanged = bindingManager_ListChanged;
+            currencyManager_PositionChanged = bindingManager_PositionChanged;
+            SelectedIndexChanged += listView_SelectedIndexChanged;
+            ColumnWidthChanged += listView_ColumnWidthChanged;
+            ColumnWidthChanging += listView_ColumnWidthChanging;
             m_textBox = new TextBox();
             // force creation of the window handles on the GUI thread
             // see http://forums.msdn.microsoft.com/en-US/clr/thread/fa033425-0149-4b9a-9c8b-bcd2196d5471/
+            #pragma warning disable 219
             IntPtr handle = m_textBox.Handle;
+            #pragma warning restore 219
             m_textBox.BorderStyle = BorderStyle.FixedSingle; //BorderStyle.None;
             m_textBox.AutoSize = false;
 
@@ -56,7 +58,7 @@ namespace Sce.Atf.Controls
             m_comboBox = new ComboBox();
             handle = m_comboBox.Handle;
             m_comboBox.Visible = false;
-            m_comboBox.DropDownClosed += new EventHandler(comboBox_DropDownClosed);
+            m_comboBox.DropDownClosed += comboBox_DropDownClosed;
             Controls.Add(m_comboBox);
             OwnerDraw = true;
 
@@ -1532,8 +1534,8 @@ namespace Sce.Atf.Controls
 
         private void EnableEditingControl()
         {
-            m_activeEditingControl.Leave += new EventHandler(activeEditingControl_Leave);
-            m_activeEditingControl.KeyPress += new KeyPressEventHandler(activeEditingControl_KeyPress);
+            m_activeEditingControl.Leave += activeEditingControl_Leave;
+            m_activeEditingControl.KeyPress += activeEditingControl_KeyPress;
             if (m_activeEditingControl == m_textBox)
             {
                 SetTextBoxFromProperty();

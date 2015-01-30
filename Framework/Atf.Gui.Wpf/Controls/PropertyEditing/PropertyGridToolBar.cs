@@ -23,6 +23,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region Properties Property
 
+        /// <summary>
+        /// Get or set IsCategorized DependencyProperty value</summary>
         public bool IsCategorized
         {
             get { return (bool)GetValue(IsCategorizedProperty); }

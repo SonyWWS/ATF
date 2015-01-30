@@ -12,7 +12,7 @@ Test.Equal(0, fsm.Annotations.Count, "Verify new document has no comments")
 commentsCnt = 10
 comments = []
 for i in range(commentsCnt):
-    comments.append(editingContext.InsertComment(50 + 50*i, 50, "comment#" + str(i)))
+    comments.append(editingContext.InsertComment(50 + 50*i, 50, "comment#" + unicode(i)))
 
 Test.Equal(fsm.Annotations.Count, commentsCnt)
 
@@ -31,7 +31,7 @@ for i in range(commentsCnt):
 
 cnt = 0
 for comment in fsm.Annotations:
-    Test.Equal("comment#" + str(cnt), comment.Text  , "Verify name of comment is consistent after redo")
+    Test.Equal("comment#" + unicode(cnt), comment.Text  , "Verify name of comment is consistent after redo")
     cnt = cnt + 1
 
 print "Start redo testing"

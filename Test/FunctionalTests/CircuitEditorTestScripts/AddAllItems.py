@@ -82,19 +82,19 @@ btn2ToOr = editingContext.Connect(btn2, btn2.Type.Outputs[0], orObj, orObj.Type.
 Test.Equal(4, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
 
 btn3ToAnd = editingContext.Connect(btn3, btn3.Type.Outputs[0], andObj, andObj.Type.Inputs[0], None)
-Test.Equal(5, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
+Test.Equal(4, circuitContainer.Wires.Count, "Verify connection count after replacing a connection")
 
 btn3ToOr = editingContext.Connect(btn3, btn3.Type.Outputs[0], orObj, orObj.Type.Inputs[0], None)
-Test.Equal(6, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
+Test.Equal(4, circuitContainer.Wires.Count, "Verify connection count after replacing a connection")
 
 btn2ToAnd = editingContext.Connect(btn2, btn2.Type.Outputs[0], andObj, andObj.Type.Inputs[0], None)
-Test.Equal(7, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
+Test.Equal(4, circuitContainer.Wires.Count, "Verify connection count after replacing a connection")
 
 andToLight2 = editingContext.Connect(andObj, andObj.Type.Outputs[0], light2, light2.Type.Inputs[0], None)
-Test.Equal(8, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
+Test.Equal(5, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
 
 orToLight3 = editingContext.Connect(orObj, orObj.Type.Outputs[0], light3, light3.Type.Inputs[0], None)
-Test.Equal(9, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
+Test.Equal(6, circuitContainer.Wires.Count, "Verify connection count after adding a connection")
 
 totalItemCount = circuitContainer.Elements.Count + circuitContainer.Annotations.Count + circuitContainer.Wires.Count
 Test.Equal(totalItemCount, Test.GetEnumerableCount(editingContext.Items), "Verify item count at end")

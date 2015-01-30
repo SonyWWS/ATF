@@ -8,7 +8,7 @@ using Sce.Atf.Direct2D;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Chart helper class, to draw grids, scales and coordinate axes</summary>
+    /// Chart helper class, to draw grids, scales, and coordinate axes.</summary>
     public class ChartUtil
     {
         /// <summary>

@@ -114,7 +114,7 @@ namespace Sce.Atf.Wpf.Controls
             InitializeComponent();
             PositionSlider.AddHandler(Thumb.DragStartedEvent, new DragStartedEventHandler(Slider_DragStarted));
             PositionSlider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(Slider_DragCompleted));
-            PositionSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(PositionSlider_ValueChanged);
+            PositionSlider.ValueChanged += PositionSlider_ValueChanged;
         }
 
         private void Slider_DragStarted(object sender, DragStartedEventArgs e)

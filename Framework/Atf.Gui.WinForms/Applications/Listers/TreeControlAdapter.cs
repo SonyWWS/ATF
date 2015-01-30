@@ -588,7 +588,12 @@ namespace Sce.Atf.Applications
             object tree = e.Item;
             IEnumerable<TreeControl.Node> nodes = m_itemToNodeMap[tree];
             foreach (TreeControl.Node node in nodes)
-                UpdateNode(node);
+            {
+                if (e.Reloaded)
+                    RefreshNode(node);
+                else
+                    UpdateNode(node);
+            }
         }
 
         private void tree_Reloaded(object sender, EventArgs e)

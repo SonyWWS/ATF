@@ -74,7 +74,10 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Gets/sets a value that indicates whether this control has keyboard focus</summary>
         public bool HasKeyboardFocus { get; set; }
-     
+
+        /// <summary>
+        /// Returns whether the control gets a character from  an input method editor(IME)</summary>
+        public bool IsImeChar { get; set; }
 
         /// <summary>
         /// Event that is raised before adapting control</summary>
@@ -155,12 +158,21 @@ namespace Sce.Atf.Controls.Adaptable
         protected override void WndProc(ref Message m)
         {
             const int WM_PAINT = 0x000F;
+            const int WM_IME_CHAR = 0x286;
+
             if (m.Msg == WM_PAINT)
             {
                 OnPainting(EventArgs.Empty);
                 Painting.Raise(this, EventArgs.Empty);
             }
 
+            // unicode text editor probabaly should handle input chars under WM_CHAR message only
+            // see KeyPress callback in D2dAnnotationAdapter
+            if (m.Msg == WM_IME_CHAR)
+                IsImeChar = true;
+            else
+                IsImeChar = false;
+  
             base.WndProc(ref m);
         }
 

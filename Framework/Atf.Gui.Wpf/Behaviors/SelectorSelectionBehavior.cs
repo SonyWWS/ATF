@@ -12,22 +12,28 @@ using Sce.Atf.Wpf.Applications;
 
 namespace Sce.Atf.Wpf.Behaviors
 {
+    /// <summary>
+    /// Behavior for selection in a Selector</summary>
     public class SelectorSelectionBehavior : Behavior<Selector>
     {
         #region Overrides
 
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
 
-            AssociatedObject.SelectionChanged += new SelectionChangedEventHandler(AssociatedObject_SelectionChanged);
+            AssociatedObject.SelectionChanged += AssociatedObject_SelectionChanged;
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            AssociatedObject.SelectionChanged -= new SelectionChangedEventHandler(AssociatedObject_SelectionChanged);
+            AssociatedObject.SelectionChanged -= AssociatedObject_SelectionChanged;
         }
 
         #endregion
@@ -76,6 +82,8 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #region CommandParameter
 
+        /// <summary>
+        /// Command parameter dependency property</summary>
         public static readonly DependencyProperty CommandParameterProperty = 
             DependencyProperty.Register(
                 "CommandParameter", typeof(object), typeof(SelectorSelectionBehavior),
@@ -94,7 +102,8 @@ namespace Sce.Atf.Wpf.Behaviors
                     }
                 }));
 
-
+        /// <summary>
+        /// Get or set command parameter dependency property</summary>
         public object CommandParameter
         {
             get { return GetValue(CommandParameterProperty); }
@@ -105,12 +114,16 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #region Command
 
+        /// <summary>
+        /// Command dependency property</summary>
         public static readonly DependencyProperty CommandProperty = 
             DependencyProperty.Register(
                 "Command", typeof(ICommand), typeof(SelectorSelectionBehavior),
                 new PropertyMetadata(null,
                     (s, e) => OnCommandChanged(s as SelectorSelectionBehavior, e)));
 
+        /// <summary>
+        /// Get or set command dependency property</summary>
         public ICommand Command
         {
             get { return (ICommand)GetValue(CommandProperty); }
@@ -120,8 +133,12 @@ namespace Sce.Atf.Wpf.Behaviors
         #endregion
     }
 
+    /// <summary>
+    /// Behavior for last item hit in Selector</summary>
     public class SelectorLastHitAwareBehavior : Behavior<Selector>
     {
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -129,6 +146,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.SelectionChanged += SetLastSelected;
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
@@ -136,6 +155,10 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.SelectionChanged -= SetLastSelected;
         }
 
+        /// <summary>
+        /// Set last hit item in Selector</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="args">Selection changed event arguments</param>
         void SetLastSelected(object sender, SelectionChangedEventArgs args)
         {
             var ctx = AssociatedObject.DataContext.As<ILastHitAware>();

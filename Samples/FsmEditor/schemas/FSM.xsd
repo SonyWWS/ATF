@@ -14,7 +14,7 @@
     <xs:attribute name="label" type="xs:string" />
     <xs:attribute name="x" type="xs:int" use="required" />
     <xs:attribute name="y" type="xs:int" use="required" />
-    <xs:attribute name="size" type="xs:int" />
+    <xs:attribute name="size" type="xs:int" default="64" />
     <xs:attribute name="hidden" type="xs:boolean" />
     <xs:attribute name="start" type="xs:boolean" />
   </xs:complexType>

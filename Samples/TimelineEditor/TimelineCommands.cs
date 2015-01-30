@@ -146,17 +146,17 @@ namespace TimelineEditorSample
                     return true;
                 }
 
-                ITimelineObject target = ContextRegistries.GetCommandTarget<ITimelineObject>(m_contextRegistry);
+                ITimelineObject target = m_contextRegistry.GetCommandTarget<ITimelineObject>();
                 if (target == null)
                     return false;
 
                 IInterval activeInterval = target as IInterval;
                 ITrack activeTrack =
-                    (activeInterval != null) ? activeInterval.Track : Adapters.As<ITrack>(target);
+                    (activeInterval != null) ? activeInterval.Track : target.As<ITrack>();
                 IGroup activeGroup =
-                    (activeTrack != null) ? activeTrack.Group : Adapters.As<IGroup>(target);
+                    (activeTrack != null) ? activeTrack.Group : target.As<IGroup>();
                 ITimeline activeTimeline =
-                    (activeGroup != null) ? activeGroup.Timeline : Adapters.As<ITimeline>(target);
+                    (activeGroup != null) ? activeGroup.Timeline : target.As<ITimeline>();
                 ITransactionContext transactionContext = context.TimelineControl.TransactionContext;
 
                 switch ((Command)commandTag)

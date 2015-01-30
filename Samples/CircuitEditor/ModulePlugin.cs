@@ -28,16 +28,13 @@ namespace CircuitEditorSample
         /// Constructor</summary>
         /// <param name="paletteService">Palette service</param>
         /// <param name="schemaLoader">Schema loader</param>
-        /// <param name="diagramTheme">Diagram theme, which determines how elements in diagrams are rendered and picked</param>
         [ImportingConstructor]
         public ModulePlugin(
             IPaletteService paletteService,
-            SchemaLoader schemaLoader,
-            DiagramTheme diagramTheme)
+            SchemaLoader schemaLoader)
         {
             m_paletteService = paletteService;
             m_schemaLoader = schemaLoader;
-            m_diagramTheme = diagramTheme;
         }
 
         protected SchemaLoader SchemaLoader
@@ -47,11 +44,10 @@ namespace CircuitEditorSample
 
         private IPaletteService m_paletteService;
         private SchemaLoader m_schemaLoader;
-        private DiagramTheme m_diagramTheme;
 
         /// <summary>
         /// Gets the palette category string for the circuit modules</summary>
-        public readonly string PaletteCategory = Localizer.Localize("Circuits");
+        public readonly string PaletteCategory = "Circuits".Localize();
 
         /// <summary>
         /// Gets drawing resource key for boolean pin types</summary>
@@ -107,7 +103,7 @@ namespace CircuitEditorSample
                                 "Comment Text".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                "Comment Color".Localize(),  // name
+                                "BackColor".Localize(),  // name
                                 Schema.annotationType.backcolorAttribute, //AttributeInfo
                                 null, // category
                                 "Comment background color".Localize(), //description
@@ -115,12 +111,16 @@ namespace CircuitEditorSample
                                 new Sce.Atf.Controls.PropertyEditing.ColorEditor(), // editor
                                 new Sce.Atf.Controls.PropertyEditing.IntColorConverter() // typeConverter
                                 ),
-                    }));
-
-            // define pin/connection pens
-
-            m_diagramTheme.RegisterCustomPen(BooleanPinTypeName, new Pen(Color.LightSeaGreen, 2));
-            m_diagramTheme.RegisterCustomPen(FloatPinTypeName, new Pen(Color.LightSeaGreen, 2));
+                           new AttributePropertyDescriptor(
+                                "ForeColor".Localize(),  // name
+                                Schema.annotationType.foreColorAttribute, //AttributeInfo
+                                null, // category
+                                "Comment foreground color".Localize(), //description
+                                false, //isReadOnly
+                                new Sce.Atf.Controls.PropertyEditing.ColorEditor(), // editor
+                                new Sce.Atf.Controls.PropertyEditing.IntColorConverter() // typeConverter
+                                ),
+                   }));
 
             // define module types
 
@@ -148,16 +148,45 @@ namespace CircuitEditorSample
                 EmptyArray<ElementType.Pin>.Instance,
                 m_schemaLoader);
 
-            DefineModuleType(
+            DomNodeType speakerNodeType = DefineModuleType(
                 new XmlQualifiedName("speakerType", Schema.NS),
                 "Speaker".Localize("an electronic speaker, for playing sounds"),
                 "Speaker".Localize("an electronic speaker, for playing sounds"),
                 Resources.SpeakerImage,
                 new ElementType.Pin[]
                 {
-                    new ElementType.Pin("In".Localize(), FloatPinTypeName, 0)
+                    new ElementType.Pin("In".Localize(), FloatPinTypeName, 0),
                 },
                 EmptyArray<ElementType.Pin>.Instance,
+                m_schemaLoader);
+            var speakerManufacturerInfo = new AttributeInfo("Manufacturer".Localize(), AttributeType.StringType);
+            speakerNodeType.Define(speakerManufacturerInfo);
+            speakerNodeType.SetTag(
+                new PropertyDescriptorCollection(
+                    new PropertyDescriptor[] {
+                        new AttributePropertyDescriptor(
+                            "Manufacturer".Localize(),
+                            speakerManufacturerInfo,
+                            null, //category
+                            "Manufacturer".Localize(), //description
+                            false) //is not read-only
+                    }));
+
+            DefineModuleType(
+                new XmlQualifiedName("soundType", Schema.NS),
+                "Sound".Localize(),
+                "Sound Player".Localize(),
+                Resources.SoundImage,
+                new ElementType.Pin[]
+                {
+                    new ElementType.Pin("On".Localize(), "boolean", 0),
+                    new ElementType.Pin("Reset".Localize(), "boolean", 1),
+                    new ElementType.Pin("Pause".Localize(), "boolean", 2),
+                },
+                new ElementType.Pin[]
+                {
+                    new ElementType.Pin("Out".Localize(), "float", 0),
+                },
                 m_schemaLoader);
 
             DefineModuleType(
@@ -193,19 +222,70 @@ namespace CircuitEditorSample
                 m_schemaLoader);
 
             DefineModuleType(
-                new XmlQualifiedName("soundType", Schema.NS),
-                "Sound".Localize(),
-                "Sound Player".Localize(),
-                Resources.SoundImage,
+                new XmlQualifiedName("16To1MultiplexerType", Schema.NS),
+                "16-to-1 Multiplexer".Localize(),
+                "16-to-1 Multiplexer".Localize(),
+                Resources.AndImage,
                 new ElementType.Pin[]
                 {
-                    new ElementType.Pin("On".Localize(), "boolean", 0),
-                    new ElementType.Pin("Reset".Localize(), "boolean", 1),
-                    new ElementType.Pin("Pause".Localize(), "boolean", 2),
+                    new ElementType.Pin("In1".Localize(), "boolean", 0),
+                    new ElementType.Pin("In2".Localize(), "boolean", 1),
+                    new ElementType.Pin("In3".Localize(), "boolean", 2),
+                    new ElementType.Pin("In4".Localize(), "boolean", 3),
+                    new ElementType.Pin("In5".Localize(), "boolean", 4),
+                    new ElementType.Pin("In6".Localize(), "boolean", 5),
+                    new ElementType.Pin("In7".Localize(), "boolean", 6),
+                    new ElementType.Pin("In8".Localize(), "boolean", 7),
+                    new ElementType.Pin("In9".Localize(), "boolean", 8),
+                    new ElementType.Pin("In10".Localize(), "boolean", 9),
+                    new ElementType.Pin("In11".Localize(), "boolean", 10),
+                    new ElementType.Pin("In12".Localize(), "boolean", 11),
+                    new ElementType.Pin("In13".Localize(), "boolean", 12),
+                    new ElementType.Pin("In14".Localize(), "boolean", 13),
+                    new ElementType.Pin("In15".Localize(), "boolean", 14),
+                    new ElementType.Pin("In16".Localize(), "boolean", 15),
+                    new ElementType.Pin("Select1".Localize(), "boolean", 16),
+                    new ElementType.Pin("Select2".Localize(), "boolean", 17),
+                    new ElementType.Pin("Select3".Localize(), "boolean", 18),
+                    new ElementType.Pin("Select4".Localize(), "boolean", 19),
                 },
                 new ElementType.Pin[]
                 {
-                    new ElementType.Pin("Out".Localize(), "float", 0),
+                    new ElementType.Pin("Out".Localize(), "boolean", 0),
+                },
+                m_schemaLoader);
+
+            DefineModuleType(
+                new XmlQualifiedName("1To16DemultiplexerType", Schema.NS),
+                "1-to-16 Demultiplexer".Localize(),
+                "1-to-16 Demultiplexer".Localize(),
+                Resources.OrImage,
+                new ElementType.Pin[]
+                {
+                    new ElementType.Pin("Data".Localize(), "boolean", 0),
+                    new ElementType.Pin("Select1".Localize(), "boolean", 1),
+                    new ElementType.Pin("Select2".Localize(), "boolean", 2),
+                    new ElementType.Pin("Select3".Localize(), "boolean", 3),
+                    new ElementType.Pin("Select4".Localize(), "boolean", 4),
+                },
+                new ElementType.Pin[]
+                {
+                    new ElementType.Pin("Out1".Localize(), "boolean", 0),
+                    new ElementType.Pin("Out2".Localize(), "boolean", 1),
+                    new ElementType.Pin("Out3".Localize(), "boolean", 2),
+                    new ElementType.Pin("Out4".Localize(), "boolean", 3),
+                    new ElementType.Pin("Out5".Localize(), "boolean", 4),
+                    new ElementType.Pin("Out6".Localize(), "boolean", 5),
+                    new ElementType.Pin("Out7".Localize(), "boolean", 6),
+                    new ElementType.Pin("Out8".Localize(), "boolean", 7),
+                    new ElementType.Pin("Out9".Localize(), "boolean", 8),
+                    new ElementType.Pin("Out10".Localize(), "boolean", 9),
+                    new ElementType.Pin("Out11".Localize(), "boolean", 10),
+                    new ElementType.Pin("Out12".Localize(), "boolean", 11),
+                    new ElementType.Pin("Out13".Localize(), "boolean", 12),
+                    new ElementType.Pin("Out14".Localize(), "boolean", 13),
+                    new ElementType.Pin("Out15".Localize(), "boolean", 14),
+                    new ElementType.Pin("Out16".Localize(), "boolean", 15),
                 },
                 m_schemaLoader);
         }
@@ -246,7 +326,7 @@ namespace CircuitEditorSample
         #endregion
 
         /// <summary>
-        /// Prepare  metadata for the module type, to be used by the pallete and circuit drawing engine</summary>
+        /// Prepare metadata for the module type, to be used by the palette and circuit drawing engine</summary>
         /// <param name="name"> Schema full name of the DomNodeType for the module type</param>
         /// <param name="displayName">Display name for the module type</param>
         /// <param name="description"></param>
@@ -255,7 +335,8 @@ namespace CircuitEditorSample
         /// <param name="outputs">Define output pins for the module type</param>
         /// <param name="loader">XML schema loader </param>
         /// <param name="domNodeType">optional DomNode type for the module type</param>
-        protected void DefineModuleType(
+        /// <returns>DomNodeType that was created (or the domNodeType parameter, if it wasn't null)</returns>
+        protected DomNodeType DefineModuleType(
             XmlQualifiedName name,
             string displayName,
             string description,
@@ -288,6 +369,8 @@ namespace CircuitEditorSample
                     imageName),
                 PaletteCategory,
                 this);
+
+            return domNodeType;
         }
 
         private void DefineCircuitType(

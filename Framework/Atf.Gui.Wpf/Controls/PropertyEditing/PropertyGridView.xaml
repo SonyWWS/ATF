@@ -1,0 +1,16 @@
+﻿<atf:PropertyView  x:Class="Sce.Atf.Wpf.Controls.PropertyEditing.PropertyGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:atf="clr-namespace:Sce.Atf.Wpf.Controls.PropertyEditing"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <atf:PropertyGrid x:Name="m_propertyGrid" 
+                          DataContext="{Binding Context}"
+                          CustomPropertyDescriptors="{Binding PropertyDescriptors}"
+                          Instances="{Binding Items}" 
+                          PropertyEdited="m_propertyGrid_PropertyEdited" ></atf:PropertyGrid>
+    </Grid>
+</atf:PropertyView>

@@ -213,7 +213,7 @@ namespace Sce.Atf.Applications
 
         private IEnumerable<object> RememberSelection()
         {
-            var selectionContext = Adapters.As<ISelectionContext>(TreeView);
+            var selectionContext = TreeView.As<ISelectionContext>();
             if (selectionContext != null)
                 return selectionContext.Selection;
             return null;

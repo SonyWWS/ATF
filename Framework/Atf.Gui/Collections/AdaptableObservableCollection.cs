@@ -17,6 +17,9 @@ namespace Sce.Atf.Collections
         where T : class
         where U : class
     {
+        /// <summary>
+        /// Constructor with collection</summary>
+        /// <param name="collection">Collection to observe</param>
         public AdaptableObservableCollection(IObservableCollection<T> collection)
             : base(collection)
         {
@@ -29,7 +32,7 @@ namespace Sce.Atf.Collections
         /// <returns>Item, converted to the adapted list type</returns>
         protected override T Convert(U item)
         {
-            T t = Adapters.As<T>(item);
+            T t = item.As<T>();
             if (t == null && item != null)
                 throw new InvalidOperationException("Item of wrong type for underlying collection");
             return t;
@@ -42,7 +45,7 @@ namespace Sce.Atf.Collections
         /// <returns>Item, converted to the adapted list type</returns>
         protected override U Convert(T item)
         {
-            U u = Adapters.As<U>(item);
+            U u = item.As<U>();
             return u;
         }
     }

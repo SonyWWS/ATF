@@ -42,8 +42,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         private bool m_isSelected;
 
         /// <summary>
-        /// Initialize the node
-        /// </summary>
+        /// Initialize the node</summary>
         /// <param name="instance">Instance or enumerable of instances</param>
         /// <param name="descriptor">Property descriptor</param>
         /// <param name="isEnumerable">True if instance parameter holds an IEnumerable of instances</param>
@@ -61,13 +60,14 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             SubscribeValueChanged();
         }
 
+        /// <summary>
+        /// Internal initialization function</summary>
         protected virtual void InitializeInternal()
         {
         }
 
         /// <summary>
-        /// Gets the instance (may be an Enumerable)
-        /// </summary>
+        /// Gets the instance (may be an Enumerable)</summary>
         public object Instance
         {
             get
@@ -77,6 +77,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Gets whether node encapsulates multiple instances</summary>
         public bool IsMultipleInstance
         {
             get
@@ -96,18 +98,16 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Gets the first instance if the Instance is an Enumerable, otherwise return the Instance.
-        /// </summary>
-        /// <value>The first instance.</value>
+        /// Gets the first instance if the Instance is an Enumerable, otherwise gets the Instance</summary>
+        /// <value>The first instance</value>
         public object FirstInstance
         {
             get { return IsEnumerable ? Instances.Cast<object>().FirstOrDefault() : Instance; }
         }
 
         /// <summary>
-        /// Gets the instances or a single Instance as an Enumerable.
-        /// </summary>
-        /// <value>The instances.</value>
+        /// Gets the instances or a single Instance as an Enumerable</summary>
+        /// <value>The instances</value>
         public IEnumerable Instances
         {
             get
@@ -134,6 +134,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             get { return m_descriptor; }
         }
 
+        /// <summary>
+        /// Gets or sets the instance value(s)</summary>
         public object Value
         {
             get { return IsEnumerable ? GetValueFromEnumerable() : GetValue(Instance); }
@@ -166,16 +168,14 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Gets weather the value of the PropertyNode can be reset
-        /// </summary>
+        /// Gets whether the value of the PropertyNode can be reset</summary>
         public bool CanResetValue
         {
             get { return Instances.Cast<object>().All(x => m_descriptor.CanResetValue(x)); }
         }
 
         /// <summary>
-        /// Resets the value of the PropertyNode to default
-        /// </summary>
+        /// Resets the value of the PropertyNode to default</summary>
         public virtual void ResetValue()
         {
             foreach (object instance in Instances)
@@ -190,10 +190,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         public object EditorContext { get; set; }
 
         /// <summary>
-        /// Returns an array of standard values for the instance/s
-        /// Returns null if no standard values or standard values for each instance
-        /// are not identical
-        /// </summary>
+        /// Gets an array of standard values for the instance(s).
+        /// Gets null if no standard values or standard values for each instance
+        /// are not identical.</summary>
         public object[] StandardValues
         {
             get
@@ -223,6 +222,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether PropertyNode expanded</summary>
         public bool IsExpanded
         {
             get { return m_isExpanded; }
@@ -233,6 +234,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether PropertyNode selected</summary>
         public bool IsSelected
         {
             get { return m_isSelected; }
@@ -347,7 +350,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Stops handling property value changed events</summary>
+        /// Stop listening to property value changed events</summary>
         public virtual void UnBind()
         {
             UnsubscribeValueChanged();
@@ -441,6 +444,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Start listening for value changes</summary>
+        /// <param name="instance">Instance to listen for changes on</param>
         protected virtual void SubscribeValueChanged(object instance)
         {
             ValueChangedEventManager.AddListener(instance, this, m_descriptor);
@@ -454,6 +460,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Stop listening for value changes</summary>
+        /// <param name="instance">Instance to stop listening for changes on</param>
         protected virtual void UnsubscribeValueChanged(object instance)
         {
             ValueChangedEventManager.RemoveListener(instance, this, m_descriptor);
@@ -461,11 +470,23 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region IWeakEventListener Members
 
+        /// <summary>
+        /// Receives events from event manager</summary>
+        /// <param name="managerType">Event manager type</param>
+        /// <param name="sender">Event originator</param>
+        /// <param name="e">Event arguments</param>
+        /// <returns>True iff listener handled event</returns>
         bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             return OnReceiveWeakEvent(managerType, sender, e);
         }
 
+        /// <summary>
+        /// Handle receiving weak event</summary>
+        /// <param name="managerType">Event manager type</param>
+        /// <param name="sender">Event originator</param>
+        /// <param name="e">Event arguments</param>
+        /// <returns>True iff handled event</returns>
         protected virtual bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             if (managerType == typeof(ValueChangedEventManager))
@@ -488,6 +509,10 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             Refresh();
         }
 
+        /// <summary>
+        /// Dispose of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!m_disposed)
@@ -578,7 +603,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets whether this instance's property is writeable</summary>
         /// <value>
-        ///     <c>true</c> if this instance is writeable; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is writeable, otherwise <c>false</c>.
         /// </value>
         public bool IsWriteable
         {
@@ -588,7 +613,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets whether this instance's property is read only</summary>
         /// <value>
-        ///     <c>true</c> if this instance is read only; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is read only, otherwise <c>false</c>.
         /// </value>
         public virtual bool IsReadOnly
         {
@@ -601,6 +626,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
         private bool m_overrideReadOnly;
 
+        /// <summary>
+        /// Handle ReadOnlyStateChanged event</summary>
         protected virtual void OnReadOnlyStateChanged()
         {
             OnPropertyChanged(s_readOnlyArgs);
@@ -652,18 +679,19 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
 
     /// <summary>
-    /// Property node which adds support for dynamic dependencies with other
-    /// property descriptors </summary>
+    /// Property node that adds support for dynamic dependencies with other property descriptors</summary>
     /// <remarks>Use the GroupEnabledAttribute to enable/disable this node based on the current state
     /// of another property on the instances. Only works in single instance mode.
-    /// Use the  DependencyAttribute to force update of this node when another property on the instances
-    /// changes. </remarks>
+    /// Use the DependencyAttribute to force update of this node when another property on the instances
+    /// changes.</remarks>
     public class DynamicPropertyNode : PropertyNode
     {
         private PropertyDescriptor[] m_masterGroups = EmptyArray<PropertyDescriptor>.Instance;
         private GroupEnables[] m_groupEnableAttributes = EmptyArray<GroupEnables>.Instance;
         private PropertyDescriptor[] m_dependencyGroups = EmptyArray<PropertyDescriptor>.Instance;
 
+        /// <summary>
+        /// Perform internal initialization</summary>
         protected override void InitializeInternal()
         {
             base.InitializeInternal();
@@ -725,6 +753,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Get array of master group PropertyDescriptors</summary>
         public PropertyDescriptor[] MasterGroups
         {
             get
@@ -735,6 +765,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Get array of dependency group PropertyDescriptors</summary>
         public PropertyDescriptor[] DependencyGroups
         {
             get
@@ -745,6 +777,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Get or set whether DynamicPropertyNode is read only</summary>
         public override bool IsReadOnly
         {
             get { return base.IsReadOnly || m_groupDisable; }
@@ -752,6 +786,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
         private bool m_groupDisable;
 
+        /// <summary>
+        /// Start listening for value changes</summary>
+        /// <param name="instance">Instance to listen for changes on</param>
         protected override void SubscribeValueChanged(object instance)
         {
             base.SubscribeValueChanged(instance);
@@ -768,6 +805,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Stop listening to property value changed events</summary>
+        /// <param name="instance">Instance to stop listening for changes on</param>
         protected override void UnsubscribeValueChanged(object instance)
         {
             base.UnsubscribeValueChanged(instance);
@@ -783,6 +823,12 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Handle receiving weak event</summary>
+        /// <param name="managerType">Event manager type</param>
+        /// <param name="sender">Event originator</param>
+        /// <param name="e">Event arguments</param>
+        /// <returns>True iff handled event</returns>
         protected override bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             bool handled = base.OnReceiveWeakEvent(managerType, sender, e);
@@ -817,15 +863,23 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region Events
 
+        /// <summary>
+        /// Master group changed event</summary>
         public event EventHandler MasterGroupChanged;
 
+        /// <summary>
+        /// Dependency group changed event</summary>
         public event EventHandler DependencyGroupChanged;
 
+        /// <summary>
+        /// Raise MasterGroupChanged event</summary>
         protected virtual void OnMasterGroupChanged()
         {
             MasterGroupChanged.Raise(this, EventArgs.Empty);
         }
-
+        
+        /// <summary>
+        /// Raise DependencyGroupChanged event and perform custom actions</summary>
         protected virtual void OnDependencyGroupChanged()
         {
             DependencyGroupChanged.Raise(this, EventArgs.Empty);

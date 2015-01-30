@@ -138,6 +138,11 @@ namespace CircuitEditorSample
             get { return Schema.groupType.showExpandedGroupPinsAttribute; }
         }
 
+        protected override AttributeInfo SourceGuidAttribute
+        {
+            get { return Schema.groupType.sourceGuidAttribute; }
+        }
+
         /// <summary>
         /// Gets ChildInfo for Modules in group</summary>
         protected override ChildInfo ElementChildInfo

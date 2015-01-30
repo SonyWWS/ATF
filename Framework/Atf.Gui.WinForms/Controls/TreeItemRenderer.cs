@@ -128,7 +128,7 @@ namespace Sce.Atf.Controls
         /// <param name="node">The tree node whose label is to be measured</param>
         /// <param name="g">The current GDI+ Graphics object</param>
         /// <returns>The width and height of a tight rectangle around the label in pixels. The
-        /// TreeControl provides the paddding in between items. Technically, the units of measure
+        /// TreeControl provides the padding in between items. Technically, the units of measure
         /// are specified by Graphics.PageUnit.</returns>
         public virtual Size MeasureLabel(TreeControl.Node node, Graphics g)
         {
@@ -176,18 +176,16 @@ namespace Sce.Atf.Controls
 
             if (!string.IsNullOrEmpty(FilteringPattern))
             {
-                //                 bool matched = false;
                 int regularStart = 0;
                 int matchStart;
                 PointF textLoc = new PointF(textRect.X, textRect.Y);
 
                 do
                 {
-                    // highlight the backdground of matched text 
+                    // highlight the background of matched text 
                     matchStart = node.Label.IndexOf(FilteringPattern, regularStart, StringComparison.CurrentCultureIgnoreCase);
                     if (matchStart >= 0)
                     {
-                        //                        matched = true;
                         // non-matched substring 
                         string regularString = node.Label.Substring(regularStart, matchStart - regularStart);
                         SizeF regularSize = MeasureDisplayStringWidth(g, regularString, font);
@@ -218,6 +216,17 @@ namespace Sce.Atf.Controls
             }
 
             g.DrawString(node.Label, font, textBrush, textRect);
+        }
+
+        /// <summary>
+        /// Draws the data of a tree node at the specified location.</summary>
+        /// <param name="node">The tree control's node whose data is to be drawn</param>
+        /// <param name="g">The current GDI+ graphics object</param>
+        /// <param name="x">The x-coordinate of the upper-left corner of the node label</param>
+        /// <param name="y">The y-coordinate of the upper-left corner of the node label</param>
+        public virtual void DrawData(TreeControl.Node node, Graphics g, int x, int y)
+        {
+            
         }
 
         /// <summary>
@@ -262,13 +271,22 @@ namespace Sce.Atf.Controls
         /// <param name="y">The y-coordinate of the upper-left corner of the check box</param>
         public virtual void DrawCheckBox(TreeControl.Node node, Graphics g, int x, int y)
         {
-            ButtonState buttonState = ButtonState.Flat;
-            if (node.CheckState == CheckState.Checked)
-                buttonState |= ButtonState.Checked;
-            else if (node.CheckState == CheckState.Indeterminate)
-                buttonState |= ButtonState.Inactive;
             Rectangle bounds = new Rectangle(x, y, CheckBoxSize.Width, CheckBoxSize.Height);
-            ControlPaint.DrawCheckBox(g, bounds, buttonState);
+            if (node.CheckState == CheckState.Indeterminate)
+            {   // draw indeterminate state.                                               
+                var rect = Rectangle.Inflate(bounds,-1, -1);
+                g.FillRectangle(SystemBrushes.Window, rect);
+                var rect2 = Rectangle.Inflate(bounds,-4, -4);
+                g.FillRectangle(SystemBrushes.ControlText, rect2);
+                g.DrawRectangle(SystemPens.ControlDark, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);                
+            }
+            else
+            {
+                var buttonState = ButtonState.Flat;
+                if (node.CheckState == CheckState.Checked)
+                    buttonState |= ButtonState.Checked;            
+                ControlPaint.DrawCheckBox(g, bounds, buttonState);
+            }            
         }
 
         /// <summary>
@@ -403,7 +421,7 @@ namespace Sce.Atf.Controls
             return font;
         }
 
-        // return false if the node itself, or any of its chilldren label matches the searching pattern
+        // return false if the node itself, or any of its children label matches the searching pattern
         private bool NeedGrayBackground(TreeControl.Node node)
         {
             if (string.IsNullOrEmpty(FilteringPattern))
@@ -442,7 +460,7 @@ namespace Sce.Atf.Controls
         /// Constructor</summary>
         public ChristmasTreeRenderer()
         {
-            //ExpanderSize = new Size(16,32); //huge! drammatic!
+            //ExpanderSize = new Size(16,32); //huge! dramatic!
             ExpanderSize = new Size(16, 8); //wide and short
             CheckBoxSize = new Size(40, 32);
         }
@@ -451,7 +469,7 @@ namespace Sce.Atf.Controls
         /// <param name="node">The tree node whose label is to be measured</param>
         /// <param name="g">The current GDI+ Graphics object</param>
         /// <returns>The width and height of a tight rectangle around the label in pixels. The
-        /// TreeControl provides the paddding in between items. Technically, the units of measure
+        /// TreeControl provides the padding in between items. Technically, the units of measure
         /// are specified by Graphics.PageUnit.</returns>
         public override Size MeasureLabel(TreeControl.Node node, Graphics g)
         {

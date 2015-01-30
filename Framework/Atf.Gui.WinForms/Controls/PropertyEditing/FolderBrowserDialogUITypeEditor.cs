@@ -55,9 +55,9 @@ namespace Sce.Atf.Controls.PropertyEditing
             if (editorService != null)
             {
                 if (value != null)
-                    m_dialog.SelectedPath = value.ToString();
-                m_dialog.ShowDialog();
-                value = m_dialog.SelectedPath;
+                    m_dialog.SelectedPath = value.ToString();                
+                if(m_dialog.ShowDialog() == DialogResult.OK)
+                    value = m_dialog.SelectedPath;
             }
 
             return value;

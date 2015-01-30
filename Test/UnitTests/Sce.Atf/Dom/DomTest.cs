@@ -35,12 +35,12 @@ namespace UnitTests.Atf.Dom
             public DomNodeListener(DomNode domNode)
             {
                 DomNode = domNode;
-                domNode.AttributeChanging += new EventHandler<AttributeEventArgs>(domNode_AttributeChanging);
-                domNode.AttributeChanged += new EventHandler<AttributeEventArgs>(domNode_AttributeChanged);
-                domNode.ChildInserting += new EventHandler<ChildEventArgs>(domNode_ChildInserting);
-                domNode.ChildInserted += new EventHandler<ChildEventArgs>(domNode_ChildInserted);
-                domNode.ChildRemoving += new EventHandler<ChildEventArgs>(domNode_ChildRemoving);
-                domNode.ChildRemoved += new EventHandler<ChildEventArgs>(domNode_ChildRemoved);
+                domNode.AttributeChanging += domNode_AttributeChanging;
+                domNode.AttributeChanged += domNode_AttributeChanged;
+                domNode.ChildInserting += domNode_ChildInserting;
+                domNode.ChildInserted += domNode_ChildInserted;
+                domNode.ChildRemoving += domNode_ChildRemoving;
+                domNode.ChildRemoved += domNode_ChildRemoved;
             }
 
             public DomNode DomNode;

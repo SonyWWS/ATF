@@ -61,6 +61,14 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
+        /// Gets the interface for property editing control owners, e.g., GridView
+        /// (spreadsheet-style property editor) or PropertyGridView (2-column property editor)</summary>
+        public IPropertyEditingControlOwner EditingControlOwner
+        {
+            get { return m_editingControlOwner; }
+        }
+
+        /// <summary>
         /// Cache current selection</summary>
         public void CacheSelection()
         {

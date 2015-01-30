@@ -42,9 +42,26 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         #endregion
-
         
         #region public properties and methods
+
+        /// <summary>
+        /// Gets or sets whether only selected curves 
+        /// can be edited</summary>        
+        public bool OnlyEditSelectedCurves
+        {
+            get { return m_curveControl.OnlyEditSelectedCurves; }
+            set { m_curveControl.OnlyEditSelectedCurves = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether user can resize curve limits
+        /// The default is false</summary>
+        public bool AllowResizeCurveLimits
+        {
+            get { return m_curveControl.AllowResizeCurveLimits; }
+            set { m_curveControl.AllowResizeCurveLimits = value; }
+        }
 
         /// <summary>
         /// Gets or sets whether to auto compute curve limits
@@ -286,10 +303,7 @@ namespace Sce.Atf.Controls.CurveEditing
             var snapToCurve = new ToolStripButton();
 
             m_undoBtn = new ToolStripButton();
-            m_redoBtn = new ToolStripButton();
-            //m_cutBtn = new ToolStripButton();
-            //m_copyBtn = new ToolStripButton();
-            //m_pasteBtn = new ToolStripButton();
+            m_redoBtn = new ToolStripButton();            
             m_delBtn = new ToolStripButton();
 
             // suspendlayouts            
@@ -528,10 +542,7 @@ namespace Sce.Atf.Controls.CurveEditing
             m_topStrip.Items.AddRange(m_infinityBtns);
             m_topStrip.Items.Add(new ToolStripSeparator());
             m_topStrip.Items.Add(m_undoBtn);
-            m_topStrip.Items.Add(m_redoBtn);
-            //m_topStrip.Items.Add(m_cutBtn);
-            //m_topStrip.Items.Add(m_copyBtn);
-            //m_topStrip.Items.Add(m_pasteBtn);
+            m_topStrip.Items.Add(m_redoBtn);            
             m_topStrip.Items.Add(m_delBtn);
             m_topStrip.Items.Add(new ToolStripSeparator());
             m_topStrip.Location = new Point(0, 31);
@@ -772,30 +783,6 @@ namespace Sce.Atf.Controls.CurveEditing
             m_redoBtn.ToolTipText = "Redo";
             m_redoBtn.Click += delegate { m_curveControl.Redo(); };
 
-            //m_cutBtn.Name = "cutBtn";
-            //m_cutBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            //m_cutBtn.Alignment = ToolStripItemAlignment.Left;
-            //m_cutBtn.Image = ResourceUtil.GetImage24(Resources.CutImage);
-            //m_cutBtn.ImageScaling = ToolStripItemImageScaling.None;
-            //m_cutBtn.ToolTipText = "Cut selected points";
-            //m_cutBtn.Click += delegate { m_curveControl.Cut(); };
-
-            //m_copyBtn.Name = "copyBtn";
-            //m_copyBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            //m_copyBtn.Alignment = ToolStripItemAlignment.Left;
-            //m_copyBtn.Image = ResourceUtil.GetImage24(Resources.CopyImage);
-            //m_copyBtn.ImageScaling = ToolStripItemImageScaling.None;
-            //m_copyBtn.ToolTipText = "Copy selected points";
-            //m_copyBtn.Click += delegate { m_curveControl.Copy(); };
-
-            //m_pasteBtn.Name = "pasteBtn";
-            //m_pasteBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            //m_pasteBtn.Alignment = ToolStripItemAlignment.Left;
-            //m_pasteBtn.Image = ResourceUtil.GetImage24(Resources.PasteImage);
-            //m_pasteBtn.ImageScaling = ToolStripItemImageScaling.None;
-            //m_pasteBtn.ToolTipText = "Paste selected points";
-            //m_pasteBtn.Click += delegate { m_curveControl.Paste(); };
-
             m_delBtn.Name = "delBtn";
             m_delBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
             m_delBtn.Alignment = ToolStripItemAlignment.Left;
@@ -875,18 +862,17 @@ namespace Sce.Atf.Controls.CurveEditing
             m_curvesListView.Name = "m_curvesListView";
             m_curvesListView.Size = new Size(300, 300);
             m_curvesListView.TabIndex = 0;
-            m_curvesListView.TabStop = false;
-            m_curvesListView.TileSize = new Size(250, 24);
+            m_curvesListView.TabStop = false;            
             m_curvesListView.UseCompatibleStateImageBehavior = false;
             m_curvesListView.View = View.Details;
-            m_curvesListView.Sorting = SortOrder.Ascending;
-            m_curvesListView.ItemChecked += m_curvesListView_ItemChecked;            
+            m_curvesListView.ItemChecked += m_curvesListView_ItemChecked;
+            m_curvesListView.SelectedIndexChanged += m_curvesListView_SelectedIndexChanged;
             m_curvesListView.Scrollable = true;
-            m_curvesListView.Columns.Add("Curves", 250);
-            m_curvesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            m_curvesListView.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            m_curvesListView.Columns.Add("Curves", 250);           
             m_curvesListView.AllowColumnReorder = false;
             m_curvesListView.BackColor = m_curveControl.BackColor;
-
+            
             var addMenuItem = new ToolStripMenuItem("Add Point".Localize());
             var listMenuStrip = new ContextMenuStrip();
             m_curvesListView.ContextMenuStrip = listMenuStrip;
@@ -949,6 +935,16 @@ namespace Sce.Atf.Controls.CurveEditing
             Application.Idle += Application_Idle;
         }
 
+        private void m_curvesListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (m_curveControl.OnlyEditSelectedCurves)
+            {
+                int[] selectedIndices = new int[m_curvesListView.SelectedIndices.Count];
+                m_curvesListView.SelectedIndices.CopyTo(selectedIndices, 0);
+                m_curveControl.EditableCurves = selectedIndices;
+            }
+        }
+
         void curveTypeSelector_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var menuItem = e.ClickedItem as ToolStripMenuItem;
@@ -972,10 +968,7 @@ namespace Sce.Atf.Controls.CurveEditing
             bool hasSelection = m_curveControl.Selection.Count > 0;
             
             m_undoBtn.Enabled = m_curveControl.HistoryContext.CanUndo;
-            m_redoBtn.Enabled = m_curveControl.HistoryContext.CanRedo;
-            //m_cutBtn.Enabled = hasSelection;
-            //m_copyBtn.Enabled = hasSelection;
-            //m_pasteBtn.Enabled = m_curveControl.CanPaste;
+            m_redoBtn.Enabled = m_curveControl.HistoryContext.CanRedo;            
             m_delBtn.Enabled = hasSelection;            
         }
 
@@ -1020,7 +1013,9 @@ namespace Sce.Atf.Controls.CurveEditing
             m_curvesListView.BeginUpdate();
             foreach (ICurve curve in curves)
             {
-                string name = curve.Name;
+                string name = string.IsNullOrWhiteSpace(curve.DisplayName)
+                    ? curve.Name : curve.DisplayName;
+
                 if (name.Length > 250)
                     name = name.Substring(0, 250);
                 ListViewItem item = new ListViewItem(name);
@@ -1029,7 +1024,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 item.Tag = curve;
                 m_curvesListView.Items.Add(item);
             }
-            m_curvesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            m_curvesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);            
             m_curvesListView.EndUpdate();
         }
 
@@ -1403,10 +1398,7 @@ namespace Sce.Atf.Controls.CurveEditing
         #region private fields
         private bool m_showTangentEditing = true;
         private ToolStripButton m_undoBtn;
-        private ToolStripButton m_redoBtn;
-        //private ToolStripButton m_cutBtn;
-        //private ToolStripButton m_copyBtn;
-        //private ToolStripButton m_pasteBtn;
+        private ToolStripButton m_redoBtn;        
         private ToolStripButton m_delBtn;
         private ToolStripSeparator m_tanSeparator1;
         private ToolStripSeparator m_tanSeparator2;

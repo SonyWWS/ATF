@@ -14,15 +14,22 @@ namespace Sce.Atf.Wpf.Behaviors
     /// drag drop is initiated using current selection of items from the context</summary>
     public class SelectionContextDragSourceBehavior : DragSourceBehavior<FrameworkElement>
     {
+        /// <summary>
+        /// Selection context dependency property</summary>
         public static readonly DependencyProperty SelectionContextProperty =
            DependencyProperty.Register("SelectionContext", typeof(ISelectionContext), typeof(SelectionContextDragSourceBehavior), new PropertyMetadata(default(ISelectionContext)));
 
+        /// <summary>
+        /// Get or set selection context dependency property</summary>
         public ISelectionContext SelectionContext
         {
             get { return (ISelectionContext)GetValue(SelectionContextProperty); }
             set { SetValue(SelectionContextProperty, value); }
         }
 
+        /// <summary>
+        /// Begin drag operation</summary>
+        /// <param name="e">Mouse event arguments</param>
         protected override void BeginDrag(MouseEventArgs e)
         {
             var ctx = SelectionContext;

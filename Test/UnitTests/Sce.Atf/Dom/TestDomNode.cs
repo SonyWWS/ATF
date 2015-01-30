@@ -664,8 +664,8 @@ namespace UnitTests.Atf.Dom
             type.Define(stringTypeInfo);
             type.Define(intTypeInfo);
             DomNode test = new DomNode(type);
-            test.AttributeChanging += new EventHandler<AttributeEventArgs>(test_AttributeChanging);
-            test.AttributeChanged += new EventHandler<AttributeEventArgs>(test_AttributeChanged);
+            test.AttributeChanging += test_AttributeChanging;
+            test.AttributeChanged += test_AttributeChanged;
             AttributeEventArgs expected;
 
             // test for no value change if setting to the default value and attribute is already the default
@@ -680,8 +680,8 @@ namespace UnitTests.Atf.Dom
 
             // test for value change, string type
             test = new DomNode(type);
-            test.AttributeChanging += new EventHandler<AttributeEventArgs>(test_AttributeChanging);
-            test.AttributeChanged += new EventHandler<AttributeEventArgs>(test_AttributeChanged);
+            test.AttributeChanging += test_AttributeChanging;
+            test.AttributeChanged += test_AttributeChanged;
             AttributeChangingArgs = null;
             AttributeChangedArgs = null;
             object oldValue = test.GetAttribute(stringTypeInfo);
@@ -747,8 +747,8 @@ namespace UnitTests.Atf.Dom
             type.Define(info);
             type.Define(infoList);
             DomNode test = new DomNode(type);
-            test.ChildInserting += new EventHandler<ChildEventArgs>(test_ChildInserting);
-            test.ChildInserted += new EventHandler<ChildEventArgs>(test_ChildInserted);
+            test.ChildInserting += test_ChildInserting;
+            test.ChildInserted += test_ChildInserted;
 
             // test child
             ChildInsertingArgs = null;
@@ -807,8 +807,8 @@ namespace UnitTests.Atf.Dom
             type.Define(info);
             type.Define(infoList);
             DomNode test = new DomNode(type);
-            test.ChildRemoving += new EventHandler<ChildEventArgs>(test_ChildRemoving);
-            test.ChildRemoved += new EventHandler<ChildEventArgs>(test_ChildRemoved);
+            test.ChildRemoving += test_ChildRemoving;
+            test.ChildRemoved += test_ChildRemoved;
 
             // test child
             DomNode child = new DomNode(type);
@@ -920,8 +920,8 @@ namespace UnitTests.Atf.Dom
                 eventType.Type.SetTag(
                     new NodeTypePaletteItem(
                         eventType.Type,
-                        Localizer.Localize("Event"),
-                        Localizer.Localize("Event in a sequence"),
+                        "Event".Localize(),
+                        "Event in a sequence".Localize(),
                         Resources.FactoryImage));
 
                 // register property descriptors on state, transition, folder types
@@ -929,22 +929,22 @@ namespace UnitTests.Atf.Dom
                     new System.ComponentModel.PropertyDescriptorCollection(
                         new Sce.Atf.Dom.PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 eventType.nameAttribute,
                                 null,
-                                Localizer.Localize("Event name"),
+                                "Event name".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Time"),
+                                "Time".Localize(),
                                 eventType.timeAttribute,
                                 null,
-                                Localizer.Localize("Event starting time"),
+                                "Event starting time".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Duration"),
+                                "Duration".Localize(),
                                 eventType.durationAttribute,
                                 null,
-                                Localizer.Localize("Event duration"),
+                                "Event duration".Localize(),
                                 false),
                     }));
             }

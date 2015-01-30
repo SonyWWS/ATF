@@ -14,7 +14,7 @@ namespace DomTreeEditorSample
         /// Gets the document client's file type name</summary>
         public override string Type
         {
-            get { return Localizer.Localize("UI"); }
+            get { return "UI".Localize(); }
         }
 
         /// <summary>

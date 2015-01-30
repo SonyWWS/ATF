@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -66,7 +67,7 @@ namespace CircuitEditorSample
             m_documentRegistry = documentRegistry;
             m_documentService = documentService;
             m_layerLister = layerLister;
-            
+
             m_schemaLoader = schemaLoader;
 
             string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\..\\components\\wws_atf\\Samples\\CircuitEditor\\data");
@@ -75,25 +76,25 @@ namespace CircuitEditorSample
             m_circuitRenderer = new D2dCircuitRenderer<Module, Connection, ICircuitPin>(m_theme, documentRegistry);
             m_subGraphRenderer = new D2dSubCircuitRenderer<Module, Connection, ICircuitPin>(m_theme);
 
-			//// Note: Santa Monica uses following render settings: 
-			//m_circuitRenderer.TitleBackgroundFilled = true;
-			//m_circuitRenderer.RoundedBorder = false;
-			//m_circuitRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
- 
-			//m_subGraphRenderer.TitleBackgroundFilled = true;
-			//m_subGraphRenderer.RoundedBorder = false;
-			//m_subGraphRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
-  
+            //// Note: Santa Monica uses following render settings: 
+            //m_circuitRenderer.TitleBackgroundFilled = true;
+            //m_circuitRenderer.RoundedBorder = false;
+            //m_circuitRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
+
+            //m_subGraphRenderer.TitleBackgroundFilled = true;
+            //m_subGraphRenderer.RoundedBorder = false;
+            //m_subGraphRenderer.PinDrawStyle = D2dCircuitRenderer<Module, Connection, ICircuitPin>.PinStyle.OnBorderFilled;
+
             // create d2dcontrol for displaying sub-circuit            
             m_d2dHoverControl = new D2dAdaptableControl();
             m_d2dHoverControl.Dock = DockStyle.Fill;
             var xformAdapter = new TransformAdapter();
             xformAdapter.EnforceConstraints = false;//to allow the canvas to be panned to view negative coordinates
             m_d2dHoverControl.Adapt(xformAdapter, new D2dGraphAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, xformAdapter));
-            m_d2dHoverControl.DrawingD2d += new EventHandler(m_d2dHoverControl_DrawingD2d);
+            m_d2dHoverControl.DrawingD2d += m_d2dHoverControl_DrawingD2d;
         }
 
-        
+
         private IControlHostService m_controlHostService;
         private ICommandService m_commandService;
         private IContextRegistry m_contextRegistry;
@@ -106,6 +107,8 @@ namespace CircuitEditorSample
         private IStatusService m_statusService = null;
         [Import(AllowDefault = true)]
         private ISettingsService m_settingsService = null;
+        [Import]
+        private IFileDialogService m_fileDialogService = null;
 
         [ImportMany]
         private IEnumerable<Lazy<IContextMenuCommandProvider>> m_contextMenuCommandProviders = null;
@@ -163,6 +166,10 @@ namespace CircuitEditorSample
                         () => CircuitDefaultStyle.ShowVirtualLinks,
                         "Show Virtual links".Localize(), "Circuit Editor".Localize(),
                         "Show virtual links between group pin and its associated subnodes when a group is expanded".Localize()),
+                    new BoundPropertyDescriptor(this, () => InitialDirectory,
+                        "Initial Directory".Localize(), "Circuit Editor".Localize(),
+                        "The initial directory for documents".Localize(),
+                        new System.Windows.Forms.Design.FolderNameEditor(), null), 
                 };
                 m_settingsService.RegisterUserSettings("Circuit Editor", settings);
                 m_settingsService.RegisterSettings(this, settings);
@@ -170,6 +177,7 @@ namespace CircuitEditorSample
 
             if (m_modulePlugin != null)
             {
+                // define pin/connection pens
                 var pen = D2dFactory.CreateSolidBrush(Color.LightSeaGreen);
                 m_theme.RegisterCustomBrush(m_modulePlugin.BooleanPinTypeName, pen);
                 pen = D2dFactory.CreateSolidBrush(Color.LightSeaGreen);
@@ -261,7 +269,7 @@ namespace CircuitEditorSample
                 //Set IsDocument to true to prevent exception in command service if two files with the
                 //  same name, but in different directories, are opened.
                 controlInfo.IsDocument = true;
-                
+
                 circuitCircuitDocument.ControlInfo = controlInfo;
                 circuitCircuitDocument.Uri = uri;
 
@@ -289,7 +297,7 @@ namespace CircuitEditorSample
         internal D2dAdaptableControl CreateCircuitControl(DomNode circuitNode)
         {
             var control = new D2dAdaptableControl();
-            control.SuspendLayout();             
+            control.SuspendLayout();
             control.BackColor = SystemColors.ControlLight;
             control.AllowDrop = true;
 
@@ -301,7 +309,7 @@ namespace CircuitEditorSample
             var viewingAdapter = new ViewingAdapter(transformAdapter);
             viewingAdapter.MarginSize = new Size(25, 25);
             var canvasAdapter = new CanvasAdapter();
-            ((ILayoutConstraint) canvasAdapter).Enabled = false; //to allow negative coordinates for circuit elements within groups
+            ((ILayoutConstraint)canvasAdapter).Enabled = false; //to allow negative coordinates for circuit elements within groups
 
             var autoTranslateAdapter = new AutoTranslateAdapter(transformAdapter);
             var mouseTransformManipulator = new MouseTransformManipulator(transformAdapter);
@@ -361,7 +369,7 @@ namespace CircuitEditorSample
 
                 var groupPinEditor = new GroupPinEditor(transformAdapter);
                 groupPinEditor.GetPinOffset = m_subGraphRenderer.GetPinOffset;
- 
+
                 canvasAdapter.UpdateTranslateMinMax = groupPinEditor.UpdateTranslateMinMax;
 
                 control.Adapt(
@@ -392,12 +400,12 @@ namespace CircuitEditorSample
 
             control.ResumeLayout();
 
-            control.DoubleClick += new EventHandler(control_DoubleClick);
-            control.MouseDown += new MouseEventHandler(control_MouseDown);
+            control.DoubleClick += control_DoubleClick;
+            control.MouseDown += control_MouseDown;
             return control;
         }
 
-   
+
         private void control_DoubleClick(object sender, EventArgs e)
         {
             AdaptableControl d2dHoverControl = (AdaptableControl)sender;
@@ -406,31 +414,58 @@ namespace CircuitEditorSample
             D2dGraphAdapter<Module, Connection, ICircuitPin> graphAdapter =
                 d2dHoverControl.As<D2dGraphAdapter<Module, Connection, ICircuitPin>>();
             GraphHitRecord<Module, Connection, ICircuitPin> hitRecord = graphAdapter.Pick(clientPoint);
-            SubCircuitInstance subCircuitInstance = Adapters.As<SubCircuitInstance>(hitRecord.Node);
-            if (subCircuitInstance != null)
+            Group subGraph = null;
+            var subGraphReference = hitRecord.Node.As<GroupReference>();
+            if (subGraphReference != null)
             {
-                var subCircuit = subCircuitInstance.SubCircuit;
+                var templatingContext = m_contextRegistry.GetMostRecentContext<TemplatingContext>();
+                if (templatingContext != null && templatingContext.IsExternalTemplate(subGraphReference.Template))
+                    return; // templates should only be editable in the document that owns the template
+                DialogResult checkResult = DialogResult.No; //direct editing 
+                if (checkResult == DialogResult.No)
+                {
+                    subGraph = subGraphReference.Group.As<Group>();
+                    var graphValidator = subGraphReference.DomNode.GetRoot().Cast<CircuitValidator>();
+                    graphValidator.UpdateTemplateInfo(subGraph);
+                }
 
-                var viewingContext = subCircuit.Cast<ViewingContext>();
+            }
+            else
+                subGraph = hitRecord.Node.As<Group>();
+            if (subGraph != null)
+            {
+                var viewingContext = subGraph.Cast<ViewingContext>();
                 if (viewingContext.Control != null)
                 {
-                    // sub-circuit is already open, just show control
+                    // sub-graph is already open, just show control
                     m_controlHostService.Show(viewingContext.Control);
                 }
                 else
                 {
                     // create new circuit editing control for sub-circuit
-                    AdaptableControl subCircuitControl = CreateCircuitControl(subCircuit.DomNode);
+                    AdaptableControl subCircuitControl = CreateCircuitControl(subGraph.DomNode);
                     viewingContext.Control = subCircuitControl;
 
-                    CircuitDocument circuitDocument = subCircuitInstance.DomNode.GetRoot().As<CircuitDocument>();
-                    string filePath = circuitDocument.Uri.LocalPath;
-                    string fileName = Path.GetFileNameWithoutExtension(filePath);
-                    string subCircuitName = subCircuit.Name;
-                    string name = fileName + ":" + subCircuitName;
-                    string description = filePath + "#" + subCircuitName;
+                    // use group’s hierarchy as control name
+                    string name = string.Empty;
+                    bool first = true;
+                    foreach (var domNode in subGraph.DomNode.GetPath())
+                    {
+                        if (domNode.Is<Group>())
+                        {
+                            if (first)
+                            {
+                                name = domNode.Cast<Group>().Name;
+                                first = false;
+                            }
+                            else
+                                name += "/" + domNode.Cast<Group>().Name;
+                        }
+                    }
 
-                    var editingContext = subCircuit.DomNode.Cast<CircuitEditingContext>();
+                    string description = name;
+
+                    var editingContext = subGraph.DomNode.Cast<CircuitEditingContext>();
                     editingContext.GetLocalBound = GetLocalBound;
                     editingContext.GetWorldOffset = GetWorldOffset;
                     editingContext.GetTitleHeight = GetTitleHeight;
@@ -441,85 +476,17 @@ namespace CircuitEditorSample
                     editingContext.SchemaLoader = m_schemaLoader; // schema needed for cut and paste between applications
 
                     ControlInfo controlInfo = new ControlInfo(name, description, StandardControlGroup.Center);
-                    m_circuitControlRegistry.RegisterControl(subCircuit.DomNode, subCircuitControl, controlInfo, this);
+                    //controlInfo.Docking = new ControlInfo.DockingInfo() // smart docking behavior
+                    //{                 
+                    //    GroupTag = subGraph.DomNode.Lineage.AsIEnumerable<Group>().Last(),// use the top-level parent group
+                    //    Order = subGraph.Level
+                    //};
+                    m_circuitControlRegistry.RegisterControl(subGraph.DomNode, subCircuitControl, controlInfo, this);
+
+                    var enumerableContext = subGraph.DomNode.Cast<CircuitEditingContext>().Cast<IEnumerableContext>();
+                    var items = (enumerableContext != null) ? enumerableContext.Items : null;
+                    subCircuitControl.As<IViewingContext>().Frame(items);
                 }
-            }
-            else
-            {
-                Group subGraph = null;
-                var subGraphReference = hitRecord.Node.As<GroupInstance>();
-                if (subGraphReference != null)
-                {
-                    var templatingContext = m_contextRegistry.GetMostRecentContext<TemplatingContext>();
-                    if (templatingContext != null && templatingContext.IsExternalTemplate(subGraphReference.Template))
-                        return; // templates should only be editable in the document that owns the template
-                    DialogResult checkResult = DialogResult.No; //direct editing 
-                    if (checkResult == DialogResult.No)
-                    {
-                        subGraph = subGraphReference.Target.Cast<Group>();
-                        var graphValidator = subGraphReference.DomNode.GetRoot().Cast<CircuitValidator>();
-                        graphValidator.UpdateTemplateInfo(subGraph);
-                    }
-                    
-                }
-                else
-                    subGraph = hitRecord.Node.As<Group>();
-                if (subGraph != null)
-                {
-                    var viewingContext = subGraph.Cast<ViewingContext>();
-                    if (viewingContext.Control != null)
-                    {
-                        // sub-graph is already open, just show control
-                        m_controlHostService.Show(viewingContext.Control);
-                    }
-                    else
-                    {
-                        // create new circuit editing control for sub-circuit
-                        AdaptableControl subCircuitControl = CreateCircuitControl(subGraph.DomNode);                     
-                        viewingContext.Control = subCircuitControl;
-
-                        // use group’s hierarchy as control name
-                        string name=string.Empty;                                   
-                        bool first = true;
-                        foreach (var domNode in subGraph.DomNode.GetPath())
-                        {
-                            if (domNode.Is<Group>())
-                            {
-                                if (first)
-                                {
-                                    name = domNode.Cast<Group>().Name;
-                                    first = false;
-                                }
-                                else
-                                    name += "/" + domNode.Cast<Group>().Name;
-                            }
-                        }
-
-                        string description = name;
-
-                        var editingContext = subGraph.DomNode.Cast<CircuitEditingContext>();
-                        editingContext.GetLocalBound = GetLocalBound;
-                        editingContext.GetWorldOffset = GetWorldOffset;
-                        editingContext.GetTitleHeight = GetTitleHeight;
-                        editingContext.GetLabelHeight = GetLabelHeight;
-                        editingContext.GetSubContentOffset = GetSubContentOffset;
-
-                        subCircuitControl.Context = editingContext;
-                        editingContext.SchemaLoader = m_schemaLoader; // schema needed for cut and paste between applications
-
-                        ControlInfo controlInfo = new ControlInfo(name, description, StandardControlGroup.Center);
-                        //controlInfo.Docking = new ControlInfo.DockingInfo() // smart docking behavior
-                        //{                 
-                        //    GroupTag = subGraph.DomNode.Lineage.AsIEnumerable<Group>().Last(),// use the top-level parent group
-                        //    Order = subGraph.Level
-                        //};
-                        m_circuitControlRegistry.RegisterControl(subGraph.DomNode, subCircuitControl, controlInfo, this);
-
-                        var enumerableContext = subGraph.DomNode.Cast<CircuitEditingContext>().Cast<IEnumerableContext>();
-                        var items = (enumerableContext != null) ? enumerableContext.Items : null;
-                        subCircuitControl.As<IViewingContext>().Frame(items);                                         
-                    }
-                }                                 
             }
         }
 
@@ -540,9 +507,23 @@ namespace CircuitEditorSample
                         var group = hitRecord.Item.As<ICircuitGroupType<Module, Connection, ICircuitPin>>();
                         if (hitRecord.SubItem.Is<ICircuitGroupType<Module, Connection, ICircuitPin>>())
                             group = hitRecord.SubItem.Cast<ICircuitGroupType<Module, Connection, ICircuitPin>>();
-                        var transaction_context = group.Cast<DomNodeAdapter>().DomNode.GetRoot().As<ITransactionContext>();
-                        transaction_context.DoTransaction(() => group.Expanded = !group.Expanded, "Toggle Group Expansion");
-                    }                  
+                        var transactionContext = group.Cast<DomNodeAdapter>().DomNode.GetRoot().As<ITransactionContext>();
+                        transactionContext.DoTransaction(() => group.Expanded = !group.Expanded, "Toggle Group Expansion");
+                    }
+                }
+                else if (hitRecord.Part is ShowPinsToggle)
+                {
+                    if (e.Clicks == 1)
+                    {
+                        var element =
+                            hitRecord.HitPath != null ?
+                            hitRecord.HitPath.Last.Cast<ICircuitElement>() :
+                            hitRecord.Item.Cast<ICircuitElement>();
+                        var transactionContext = element.Cast<DomNodeAdapter>().DomNode.GetRoot().As<ITransactionContext>();
+                        transactionContext.DoTransaction(() =>
+                            element.ElementInfo.ShowUnconnectedPins = !element.ElementInfo.ShowUnconnectedPins,
+                            "Toggle Show Unconnected Pins");
+                    }
                 }
                 else if (hitRecord.Part is DiagramPin)
                 {
@@ -571,7 +552,7 @@ namespace CircuitEditorSample
         /// <param name="document">Document to show</param>
         public void Show(IDocument document)
         {
-            var viewingContext = Adapters.Cast<ViewingContext>(document);
+            var viewingContext = document.Cast<ViewingContext>();
             m_controlHostService.Show(viewingContext.Control);
         }
 
@@ -657,11 +638,21 @@ namespace CircuitEditorSample
             {
                 // We don't care if the control was already unregistered. 'closed' should be true.
                 m_circuitControlRegistry.UnregisterControl(control);
-            }            
+            }
             return closed;
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets and sets a string to be used as the initial directory for the open/save dialog box
+        /// regardless of whatever directory the user may have previously navigated to. The default
+        /// value is null. Set to null to cancel this behavior.</summary>
+        public string InitialDirectory
+        {
+            get { return m_fileDialogService.ForcedInitialDirectory; }
+            set { m_fileDialogService.ForcedInitialDirectory = value; }
+        }
 
         private void control_HoverStarted(object sender, HoverEventArgs<object, object> e)
         {
@@ -669,18 +660,7 @@ namespace CircuitEditorSample
         }
         private HoverBase GetHoverForm(HoverEventArgs<object, object> e)
         {
-            HoverBase result = null;
-
-            // handle sub-circuit instance
-            SubCircuitInstance subCircuitInstance = Adapters.As<SubCircuitInstance>(e.Object);
-            if (subCircuitInstance != null)
-            {
-                result = CreateHoverForm(subCircuitInstance);
-            }
-            else
-            {
-                result = CreateHoverForm(e);
-            }
+            HoverBase result = CreateHoverForm(e);
 
             if (result != null)
             {
@@ -727,38 +707,6 @@ namespace CircuitEditorSample
 
             return result;
         }
-
-        // create hover form for sub-circuit instance
-        private HoverBase CreateHoverForm(SubCircuitInstance subCircuitInstance)
-        {
-            const float MAX_SIZE = 420;
-            const int CircuitMargin = 8;
-
-            TransformAdapter xformAdapter = m_d2dHoverControl.As<TransformAdapter>();
-            xformAdapter.Transform.Reset();
-            m_d2dHoverControl.D2dGraphics.Transform = Matrix3x2F.Identity;
-
-            m_d2dHoverControl.Context = subCircuitInstance.SubCircuit;
-
-            RectangleF bounds = m_circuitRenderer.GetBounds(subCircuitInstance.SubCircuit.Elements.AsIEnumerable<Module>()
-                , m_d2dHoverControl.D2dGraphics);
-                                  
-            float boundRatio = bounds.Width / bounds.Height;
-
-            Size size =(boundRatio > 1) ? new Size((int)MAX_SIZE, (int)(MAX_SIZE / boundRatio))
-                : new Size((int)(MAX_SIZE * boundRatio), (int)MAX_SIZE);
-
-            float scale = (float)size.Width / (float)bounds.Width;
-            xformAdapter.Transform.Translate(CircuitMargin, CircuitMargin);
-            xformAdapter.Transform.Scale(scale, scale);
-            xformAdapter.Transform.Translate(-bounds.X , -bounds.Y );
-
-            HoverBase result = new HoverBase();
-            result.Size = new Size(size.Width + 2 * CircuitMargin, size.Height + 2 * CircuitMargin);
-            result.Controls.Add(m_d2dHoverControl);
-            return result;
-        }
-
 
         private void control_HoverStopped(object sender, EventArgs e)
         {
@@ -816,14 +764,14 @@ namespace CircuitEditorSample
             .Cast<D2dCircuitRenderer<Module, Connection, ICircuitPin>>();
             return render.SubContentOffset;
         }
-      
+
         /// <summary>
         /// Component that adds module types to the editor</summary>
         [Import(AllowDefault = true)]
         protected ModulePlugin m_modulePlugin;
 
-        [Import] 
-        private CircuitControlRegistry m_circuitControlRegistry=null;
+        [Import]
+        private CircuitControlRegistry m_circuitControlRegistry = null;
 
         private D2dCircuitRenderer<Module, Connection, ICircuitPin> m_circuitRenderer;
         private D2dSubCircuitRenderer<Module, Connection, ICircuitPin> m_subGraphRenderer;

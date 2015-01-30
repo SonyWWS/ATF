@@ -34,7 +34,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ITransformAdapter transformAdapter)
         {            
             m_renderer = renderer;
-            m_renderer.Redraw += new EventHandler(renderer_Redraw);
+            m_renderer.Redraw += renderer_Redraw;
             m_renderer.GetStyle = GetStyle;
         }
 
@@ -60,7 +60,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Releases non-memory resources</summary>
         public void Dispose()
         {
-             m_renderer.Redraw -= new EventHandler(renderer_Redraw);
+             m_renderer.Redraw -= renderer_Redraw;
              Dispose(true);
         }
 
@@ -83,7 +83,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets the current rendering style for an item</summary>
         /// <param name="item">Rendered item</param>
         /// <returns>Rendering style set by SetStyle, Normal if no override is set</returns>
-        public DiagramDrawingStyle GetStyle(object item)
+        public virtual DiagramDrawingStyle GetStyle(object item)
         {
             DiagramDrawingStyle result = DiagramDrawingStyle.Normal;
             // no override
@@ -132,7 +132,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Hides the given edge.
-        /// This method is used for hidding an edge while dragging its replacement.</summary>
+        /// This method is used for hiding an edge while dragging its replacement.</summary>
         /// <param name="edge">Edge to be hidden or null</param>
         public void HideEdge(TEdge edge)
         {
@@ -375,7 +375,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         if (group.Expanded)
                         {
 
-                            if (node == ActicveContainer())
+                            if (node == ActiveContainer())
                                 selectedGroup = node;
                             else
                                 expandedGroupNodes.Add(node);
@@ -427,8 +427,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
-
-        private object ActicveContainer()
+        private object ActiveContainer()
         {
             if (m_selectionContext != null )
             {
@@ -436,7 +435,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             return null;
         }
-
 
         // draw an edge as soon as both of its start and end nodes are drawn
         private void TryDrawAssociatedEdges(TNode nodeDrawn, RectangleF clipBounds)
@@ -541,15 +539,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     if (m_observableContext != null)
                     {
-                        m_observableContext.ItemInserted -= new EventHandler<ItemInsertedEventArgs<object>>(graph_ObjectInserted);
-                        m_observableContext.ItemRemoved -= new EventHandler<ItemRemovedEventArgs<object>>(graph_ObjectRemoved);
-                        m_observableContext.ItemChanged -= new EventHandler<ItemChangedEventArgs<object>>(graph_ObjectChanged);
-                        m_observableContext.Reloaded -= new EventHandler(graph_Reloaded);
+                        m_observableContext.ItemInserted -= graph_ObjectInserted;
+                        m_observableContext.ItemRemoved -= graph_ObjectRemoved;
+                        m_observableContext.ItemChanged -= graph_ObjectChanged;
+                        m_observableContext.Reloaded -= graph_Reloaded;
                         m_observableContext = null;
                     }
                     if (m_selectionContext != null)
                     {
-                        m_selectionContext.SelectionChanged -= new EventHandler(selection_Changed);
+                        m_selectionContext.SelectionChanged -= selection_Changed;
                         m_selectionContext = null;
                     }
 
@@ -563,16 +561,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     m_observableContext = AdaptedControl.ContextAs<IObservableContext>();
                     if (m_observableContext != null)
                     {
-                        m_observableContext.ItemInserted += new EventHandler<ItemInsertedEventArgs<object>>(graph_ObjectInserted);
-                        m_observableContext.ItemRemoved += new EventHandler<ItemRemovedEventArgs<object>>(graph_ObjectRemoved);
-                        m_observableContext.ItemChanged += new EventHandler<ItemChangedEventArgs<object>>(graph_ObjectChanged);
-                        m_observableContext.Reloaded += new EventHandler(graph_Reloaded);
+                        m_observableContext.ItemInserted += graph_ObjectInserted;
+                        m_observableContext.ItemRemoved += graph_ObjectRemoved;
+                        m_observableContext.ItemChanged += graph_ObjectChanged;
+                        m_observableContext.Reloaded += graph_Reloaded;
                     }
 
                     m_selectionContext = AdaptedControl.ContextAs<ISelectionContext>();
                     if (m_selectionContext != null)
                     {
-                        m_selectionContext.SelectionChanged += new EventHandler(selection_Changed);
+                        m_selectionContext.SelectionChanged += selection_Changed;
                     }
 
                     m_visibilityContext = AdaptedControl.ContextAs<IVisibilityContext>();
@@ -588,11 +586,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private void graph_ObjectInserted(object sender, ItemInsertedEventArgs<object> e)
         {
+            m_renderer.OnGraphObjectInserted(sender, e);
             Invalidate();
         }
 
         private void graph_ObjectRemoved(object sender, ItemRemovedEventArgs<object> e)
         {
+            m_renderer.OnGraphObjectRemoved(sender, e);
             Invalidate();
         }
 

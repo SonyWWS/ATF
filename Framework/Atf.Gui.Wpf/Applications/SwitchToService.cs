@@ -16,6 +16,8 @@ namespace Sce.Atf.Wpf.Applications
     {
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish initializing component</summary>
         public void Initialize()
         {
             if (m_mainWindow != null)

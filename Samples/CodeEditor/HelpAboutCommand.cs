@@ -34,7 +34,7 @@ namespace CodeEditor
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("Code Editor Sample"), appURL, richTextBox, null, null, true);
+                "Code Editor Sample".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

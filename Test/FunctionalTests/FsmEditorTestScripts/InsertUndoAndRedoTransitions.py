@@ -17,14 +17,14 @@ transitionsCnt = 10
 
 print "First create a bunch of states"
 for i in range(transitionsCnt):
-    statesLeft.append(editingContext.InsertState(100, 100 + 50*i, "Left#" + str(i), 64))
+    statesLeft.append(editingContext.InsertState(100, 100 + 50*i, "Left#" + unicode(i), 64))
 for i in range(transitionsCnt):
-    statesRight.append(editingContext.InsertState(300, 100 + 50*i, "Right#" + str(i), 64))
+    statesRight.append(editingContext.InsertState(300, 100 + 50*i, "Right#" + unicode(i), 64))
 
 print "Now add the transitions"
 for i in range(transitionsCnt):
     transitions.append(FsmUtil.AddNewTransitionAndVerify(editingContext, statesLeft[i], statesRight[i]))
-    transitions[i].Label = "Transition#" + str(i)
+    transitions[i].Label = "Transition#" + unicode(i)
 
 print "Start undo testing"
 for i in range(transitionsCnt, 0, -1):
@@ -40,7 +40,7 @@ for i in range(transitionsCnt):
 
 cnt = 0
 for transition in fsm.Transitions:
-    Test.Equal("Transition#" + str(cnt), transition.Label, "Verify label of transition is consistent after redo")
+    Test.Equal("Transition#" + unicode(cnt), transition.Label, "Verify label of transition is consistent after redo")
     cnt = cnt + 1
 
 print Test.SUCCESS

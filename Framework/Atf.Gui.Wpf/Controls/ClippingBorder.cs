@@ -23,19 +23,19 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// The corner radius property.</summary>
         public static readonly DependencyProperty CornerRadiusProperty =
-            DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(ClippingBorder), new PropertyMetadata(new PropertyChangedCallback(CornerRadius_Changed)));
+            DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(ClippingBorder), new PropertyMetadata(CornerRadius_Changed));
 
         /// <summary>
         /// The clip content property.</summary>
         public static readonly DependencyProperty ClipContentProperty =
-            DependencyProperty.Register("ClipContent", typeof(bool), typeof(ClippingBorder), new PropertyMetadata(new PropertyChangedCallback(ClipContent_Changed)));
+            DependencyProperty.Register("ClipContent", typeof(bool), typeof(ClippingBorder), new PropertyMetadata(ClipContent_Changed));
 
         /// <summary>
         /// ClippingBorder constructor.</summary>
         public ClippingBorder()
         {
             this.DefaultStyleKey = typeof(ClippingBorder);
-            this.SizeChanged += new SizeChangedEventHandler(this.ClippingBorder_SizeChanged);
+            this.SizeChanged += this.ClippingBorder_SizeChanged;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Sce.Atf.Wpf.Controls
 
             if (this.m_topLeftContentControl != null)
             {
-                this.m_topLeftContentControl.SizeChanged += new SizeChangedEventHandler(this.ContentControl_SizeChanged);
+                this.m_topLeftContentControl.SizeChanged += this.ContentControl_SizeChanged;
             }
 
             this.m_topLeftClip = this.GetTemplateChild("PART_TopLeftClip") as RectangleGeometry;

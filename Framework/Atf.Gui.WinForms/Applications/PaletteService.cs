@@ -51,7 +51,7 @@ namespace Sce.Atf.Applications
                     "Palette".Localize(),
                     "Creates new instances".Localize(),
                     StandardControlGroup.Left, null,
-                    "http://www.ship.scea.com/portal/search/search.action?q=PaletteService+or+Palette&context=resource_WIKI%7CWWSSDKATF".Localize()),
+                    "https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&q=PaletteService+or+Palette".Localize()),
                 this);
 
             m_paletteTreeAdapter = new PaletteTreeAdapter(this, m_searchInput);
@@ -254,10 +254,9 @@ namespace Sce.Atf.Applications
         {
             TreeView = m_paletteTreeAdapter;
             if (PersistExpandedCategories && m_settingsService != null)
-            {
+            {                
                 m_settingsService.RegisterSettings(
-                    new Guid("{C821424B-18E4-4b3f-A752-DF5D07F0AA2B}"),
-                    new BoundPropertyDescriptor(this, () => ExpandedCategories,
+                    this, new BoundPropertyDescriptor(this, () => ExpandedCategories,
                         "ExpandedCategories", null, null));
             }
             else

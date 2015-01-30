@@ -9,9 +9,6 @@ namespace CircuitEditorSample
     /// <summary>
     /// Adapter for connections in a circuit</summary>
     public class Connection : Wire, IGraphEdge<Module, ICircuitPin>
-#if !CS_4
-        , IGraphEdge<IGraphNode, IEdgeRoute>
-#endif
     {
        
         #region IGraphEdge Members
@@ -51,40 +48,6 @@ namespace CircuitEditorSample
             get { return Label; }
         }
 
-        // In VS2008 projects, we need to be able to cast Connection to IGraphEdge<IGraphNode, IEdgeRoute>.
-        // In VS2010 and later, with C# 4, the 'out' keyword is used in IGraphEdge.
-        #if !CS_4
-        /// <summary>
-        /// Gets edge's destination node</summary>
-        IGraphNode IGraphEdge<IGraphNode>.ToNode
-        {
-            get { return ((IGraphEdge<Module, ICircuitPin>)this).ToNode; }
-        }
-        /// <summary>
-        /// Gets the route taken to the destination node</summary>
-        IEdgeRoute IGraphEdge<IGraphNode, IEdgeRoute>.ToRoute
-        {
-            get { return ((IGraphEdge<Module, ICircuitPin>)this).ToRoute; }
-        }
-        /// <summary>
-        /// Gets edge's source node</summary>
-        IGraphNode IGraphEdge<IGraphNode>.FromNode
-        {
-            get { return ((IGraphEdge<Module, ICircuitPin>)this).FromNode; }
-        }
-        /// <summary>
-        /// Gets the route taken from the source node</summary>
-        IEdgeRoute IGraphEdge<IGraphNode, IEdgeRoute>.FromRoute
-        {
-            get { return ((IGraphEdge<Module, ICircuitPin>)this).FromRoute; }
-        }
-        /// <summary>
-        /// Gets label on connection</summary>
-        string IGraphEdge<IGraphNode>.Label
-        {
-            get { return ((IGraphEdge<Module>)this).Label; }
-        }
-        #endif
         #endregion
 
         /// <summary>

@@ -27,6 +27,7 @@ namespace Sce.Atf
         [StructLayout(LayoutKind.Sequential)]
         private class MEMORYSTATUSEX
         {
+            #pragma warning disable 169 //disable unused field warning
             public uint dwLength = 64;
             public uint dwMemoryLoad;
             public ulong ullTotalPhys; //The amount of actual physical memory, in bytes.
@@ -36,11 +37,15 @@ namespace Sce.Atf
             public ulong ullTotalVirtual;
             public ulong ullAvailVirtual;
             public ulong ullAvailExtendedVirtual;
+            #pragma warning restore 169
         }
 
         [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool GlobalMemoryStatusEx(MEMORYSTATUSEX lpBuffer);
 
+        /// <summary>
+        /// Get number of megabytes of physical memory</summary>
+        /// <returns>Number of megabytes of physical memory</returns>
         public static int GetPhysicalMemoryMB()
         {
             // Available from Windows 2000 and onward; i.e., Environment.OSVersion.Version.Major >= 5 .

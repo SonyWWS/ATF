@@ -34,7 +34,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// </AttachedPropertyComments>
         public static readonly DependencyProperty IsMultiSelectedProperty =
             DependencyProperty.RegisterAttached("IsMultiSelected", typeof(bool), typeof(AtfTreeViewBehavior),
-            new PropertyMetadata(false, new PropertyChangedCallback(IsMultiSelected_PropertyChanged)));
+            new PropertyMetadata(false, IsMultiSelected_PropertyChanged));
 
         /// <summary>
         /// Gets whether multi-selection is enabled for dependency object</summary>
@@ -124,7 +124,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Ensure path is visible property bound to the TreeViewModel</summary>
         public static readonly DependencyProperty EnsureVisiblePathProperty =
             DependencyProperty.RegisterAttached("EnsureVisiblePath", typeof(Path<Node>), typeof(AtfTreeViewBehavior),
-            new PropertyMetadata(new PropertyChangedCallback(EnsureVisiblePath_PropertyChanged)));
+            new PropertyMetadata(EnsureVisiblePath_PropertyChanged));
 
         /// <summary>
         /// Gets whether ensuring path is visible is enabled for dependency object</summary>
@@ -214,7 +214,7 @@ namespace Sce.Atf.Wpf.Behaviors
         #region SynchronisingSelection Property
 
         /// <summary>
-        /// Gets or sets whether synchronising selection dependency property</summary>
+        /// Gets or sets whether synchronizing selection dependency property</summary>
         public bool SynchronisingSelection
         {
             get { return (bool)GetValue(SynchronisingSelectionProperty); }
@@ -222,7 +222,7 @@ namespace Sce.Atf.Wpf.Behaviors
         }
 
         /// <summary>
-        /// Whether synchronising selection dependency property</summary>
+        /// Whether synchronizing selection dependency property</summary>
         public static readonly DependencyProperty SynchronisingSelectionProperty =
             DependencyProperty.Register("SynchronisingSelection", typeof(bool), typeof(AtfTreeViewBehavior), new UIPropertyMetadata(false));
 
@@ -230,14 +230,24 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #region IsChecked Property
 
+        /// <summary>
+        /// Whether item checked dependency property</summary>
         public static readonly DependencyProperty IsCheckedProperty =
             DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(AtfTreeViewBehavior), new PropertyMetadata(false));
 
+        /// <summary>
+        /// Set checked dependency property</summary>
+        /// <param name="element">Element set</param>
+        /// <param name="value">Nullable Boolean value to set</param>
         public static void SetIsChecked(UIElement element, bool? value)
         {
             element.SetValue(IsCheckedProperty, value);
         }
 
+        /// <summary>
+        /// Return value of checked dependency property for element</summary>
+        /// <param name="element">Element tested</param>
+        /// <returns>Nullable Boolean value for checked dependency property</returns>
         public static bool? GetIsChecked(UIElement element)
         {
             return (bool?)element.GetValue(IsCheckedProperty);
@@ -245,6 +255,8 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #endregion
 
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -255,6 +267,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();

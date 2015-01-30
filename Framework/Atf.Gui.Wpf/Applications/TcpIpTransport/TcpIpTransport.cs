@@ -15,6 +15,9 @@ namespace Sce.Atf.Wpf.Applications
     {
         #region Constructors
 
+        /// <summary>
+        /// Constructor with TcpIpTarget</summary>
+        /// <param name="target">TcpIpTarget</param>
         public TcpIpTransport(TcpIpTarget target)
         {
             DisconnectMessage = null;
@@ -46,6 +49,8 @@ namespace Sce.Atf.Wpf.Applications
             m_eventDataSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
+        /// <summary>
+        /// Default destructor</summary>
         ~TcpIpTransport()
         {
             Dispose(false);
@@ -115,12 +120,18 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Dispose of resources</summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Dispose of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (m_disposed) // Dispose has already been called

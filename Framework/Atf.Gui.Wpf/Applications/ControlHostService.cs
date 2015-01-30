@@ -34,19 +34,21 @@ namespace Sce.Atf.Wpf.Applications
         IDockStateProvider
     {
         /// <summary>
-        /// Constructor</summary>
-        /// <param name="mainWindowAdapter">Main application form</param>
+        /// Constructor with IMainWindow</summary>
+        /// <param name="mainWindow">Main application form</param>
         [ImportingConstructor]
         public ControlHostService(IMainWindow mainWindow)
         {
             m_dockPanel = new Sce.Atf.Wpf.Docking.DockPanel();
             m_mainWindow = mainWindow;
 
-            // TODO: temporarily stop compiler warning
-            // TODO: Needs to be implemented!
+
+            // TODO: Need to implement DockStateChanged. Reference it here to silence the compiler warning.
             if (DockStateChanged == null) return;
         }
 
+        /// <summary>
+        /// Get dock panel control</summary>
         public Control DockPanel
         {
             get { return m_dockPanel; }
@@ -67,39 +69,6 @@ namespace Sce.Atf.Wpf.Applications
         public event EventHandler DockStateChanged;
 
         #endregion
-
-        private void m_settingsService_Reloaded(object sender, EventArgs e)
-        {
-            SetDockPanelState(m_cachedDockPanelState);
-            m_stateApplied = true;
-        }
-
-        private void m_mainWindow_Loaded(object sender, EventArgs e)
-        {
-            m_mainWindowLoaded = true;
-
-            if (!m_stateApplied)
-            {
-                SetDockPanelState(null);
-            }
-
-            foreach(var content in m_contentToShowOnMainWindowLoad)
-                Show(content);
-
-            m_contentToShowOnMainWindowLoad.Clear();
-        }
-
-        private void m_mainWindow_Closing(object sender, CancelEventArgs e)
-        {
-            if (e.Cancel == false)
-            {
-                // snapshot docking state before we close anything
-                m_cachedDockPanelState = GetDockPanelState();
-                // attempt to close all documents
-                m_closed = Close(true);
-                e.Cancel = !m_closed;
-            }
-        }
 
         #region IInitializable Members
 
@@ -138,6 +107,35 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         /// <summary>
+        /// Gets the sequence of all registered contents and associated hosting information</summary>
+        public IEnumerable<IControlInfo> Contents
+        {
+            get
+            {
+                foreach (var info in m_registeredContents)
+                    yield return info;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the dock panel state</summary>
+        public string DockPanelState
+        {
+            get
+            {
+                // the cache should be retained if we're in the process of closing
+                if (!m_closed)
+                    m_cachedDockPanelState = GetDockPanelState();
+                return m_cachedDockPanelState;
+            }
+            set
+            {
+                m_cachedDockPanelState = (string)value;
+                SetDockPanelState(m_cachedDockPanelState);
+            }
+        }
+
+        /// <summary>
         /// Registers a control with the control host service</summary>
         /// <param name="def">Control definition</param>
         /// <param name="control">Control</param>
@@ -155,7 +153,7 @@ namespace Sce.Atf.Wpf.Applications
                 throw new ArgumentException("Content with id " + def.Id + " already registered");
 
             IDockContent dockContent = m_dockPanel.RegisterContent(control, def.Id, ControlGroupToDockTo(def.Group));
-            dockContent.IsFocusedChanged += new EventHandler<BooleanArgs>(DockContent_IsFocusedChanged);
+            dockContent.IsFocusedChanged += DockContent_IsFocusedChanged;
 
             ControlInfo contentInfo = new ControlInfo(def.Name, def.Description, def.Id, def.Group, def.ImageSourceKey, dockContent, client);
 
@@ -168,7 +166,7 @@ namespace Sce.Atf.Wpf.Applications
                     StandardMenu.Window,
                     StandardCommandGroup.WindowDocuments,
                     contentInfo.Name,
-                    Localizer.Localize("Activate Control"),
+                    "Activate Control".Localize(),
                     Keys.None, null, CommandVisibility.Menu,
                     this).GetCommandItem();
             }
@@ -213,42 +211,13 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
-        /// <summary>
-        /// Gets the sequence of all registered contents and associated hosting information</summary>
-        public IEnumerable<IControlInfo> Contents
-        {
-            get 
-            {
-                foreach (var info in m_registeredContents)
-                    yield return info;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the dock panel state</summary>
-        public string DockPanelState 
-        {
-            get
-            {
-                // the cache should be retained if we're in the process of closing
-                if (!m_closed)
-                    m_cachedDockPanelState = GetDockPanelState();
-                return m_cachedDockPanelState;
-            }
-            set
-            {
-                m_cachedDockPanelState = (string)value;
-                SetDockPanelState(m_cachedDockPanelState);
-            } 
-        }
-
         #endregion
 
         #region ICommandClient Members
 
         /// <summary>
         /// Checks if the client can do the command</summary>
-        /// <param name="command">command</param>
+        /// <param name="tag">Command tag</param>
         /// <returns>true, if client can do the command</returns>
         public bool CanDoCommand(object tag)
         {
@@ -307,16 +276,42 @@ namespace Sce.Atf.Wpf.Applications
             return true;
         }
 
+        private void m_settingsService_Reloaded(object sender, EventArgs e)
+        {
+            SetDockPanelState(m_cachedDockPanelState);
+            m_stateApplied = true;
+        }
+
+        private void m_mainWindow_Loaded(object sender, EventArgs e)
+        {
+            m_mainWindowLoaded = true;
+
+            if (!m_stateApplied)
+            {
+                SetDockPanelState(null);
+            }
+
+            foreach (var content in m_contentToShowOnMainWindowLoad)
+                Show(content);
+
+            m_contentToShowOnMainWindowLoad.Clear();
+        }
+
+        private void m_mainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (e.Cancel == false)
+            {
+                // snapshot docking state before we close anything
+                m_cachedDockPanelState = GetDockPanelState();
+                // attempt to close all documents
+                m_closed = Close(true);
+                e.Cancel = !m_closed;
+            }
+        }
+
         private void DockContent_IsFocusedChanged(object sender, BooleanArgs e)
         {
-            //var docContent = sender as IDockContent;
-            //if (docContent.IsFocused)
-            //{
-            //    var fwe = docContent.Content as FrameworkElement;
-            //    if (fwe != null)
-            //        fwe.Focus();
-            //}
-
+            // Deactivate the previously active content, and activate the newly focused one
             IDockContent activeControl = m_dockPanel.GetActiveContent();
             if (activeControl != m_activeDockControl)
             {
@@ -387,18 +382,6 @@ namespace Sce.Atf.Wpf.Applications
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    // the dock panel must be cleared of all contents before deserializing
-                    //foreach (ControlInfo info in m_controlInfo)
-                    //{
-                    //    DockContent dockContent = FindContent(info);
-                    //    dockContent.DockPanel = null;
-                    //    dockContent.DockState = DockState.Unknown;
-                    //    dockContent.FloatPane = null;
-                    //    dockContent.Pane = null;
-                    //}
-
-                    //DeserializeDockContent deserializer = new DeserializeDockContent(StringToDockContent);
-                    //m_dockPanel.LoadFromXml(stream, deserializer, true);
                     var reader = XmlReader.Create(stream);
 
                     try
@@ -409,11 +392,6 @@ namespace Sce.Atf.Wpf.Applications
                     {
                         Sce.Atf.Outputs.WriteLine(OutputMessageType.Error, "Could not load window layout".Localize());
                     }
-
-                    // put back any docking content that had no persisted state
-                    //foreach (DockContent dockContent in m_dockContent.Values)
-                    //    if (dockContent.DockPanel == null)
-                    //        dockContent.Show(m_dockPanel);
                 }
             }
         }

@@ -74,14 +74,14 @@ namespace Sce.Atf
             if (m_names.Contains(desired))
             {
                 // parse this unnamed object into prefix and suffix number
-                string prefix;
+                string root;
                 int suffixNumber;
-                Parse(desired, out prefix, out suffixNumber);
+                Parse(desired, out root, out suffixNumber);
 
                 // desired name is taken, generate a unique modification by adding a suffix
                 for (int i = 1; ; ++i)
                 {
-                    result = prefix + m_separator;
+                    result = root + m_separator;
 
                     string iAsString = i.ToString();
                     if (m_minNumDigits > 1)
@@ -132,9 +132,14 @@ namespace Sce.Atf
             m_names.Clear();
         }
 
-        private void Parse(string name, out string prefix, out int suffixNumber)
+        /// <summary>
+        /// Parses a name previously produced by this unique namer into its component parts</summary>
+        /// <param name="name">The previously produced unique name</param>
+        /// <param name="root">The root or base part of the name</param>
+        /// <param name="suffixNumber">The suffix number, or zero if there was none.</param>
+        public void Parse(string name, out string root, out int suffixNumber)
         {
-            prefix = name;
+            root = name;
             suffixNumber = 0;
 
             int separatorIndex = name.LastIndexOf(m_separator);
@@ -146,7 +151,7 @@ namespace Sce.Atf
                     suffixLength--;
                 string suffix = name.Substring(suffixIndex, suffixLength);
                 if (Int32.TryParse(suffix, out suffixNumber))
-                    prefix = name.Substring(0, separatorIndex);
+                    root = name.Substring(0, separatorIndex);
             }
         }
 

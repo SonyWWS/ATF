@@ -260,6 +260,43 @@ namespace Sce.Atf.Applications
         public event EventHandler VisibilityChanged;
 
         /// <summary>
+        /// Event handler that is called when the owning command client (ICommandClient)
+        /// may have changed the CanDoCommand() result. See EnableCheckCanDoEvent() and
+        /// OnCheckCanDo().</summary>
+        /// <remarks>This event is only applicable to WinForms version of CommandService.</remarks>
+        public event EventHandler CheckCanDo;
+
+        /// <summary>
+        /// Gets the command clients that support the CheckCanDo event on this CommandInfo</summary>
+        public IEnumerable<ICommandClient> CheckCanDoClients
+        {
+            get { return m_checkCanDoClients; }
+        }
+
+        /// <summary>
+        /// Indicates whether or not the CheckCanDo event is supported. Call this before
+        /// this CommandInfo is registered with a command service to have improved performance
+        /// by saving the command service from having to poll the command client.</summary>
+        /// <param name="client">Command client that will register this CommandInfo</param>
+        /// <remarks>This method is only applicable to WinForms version of CommandService.</remarks>
+        public void EnableCheckCanDoEvent(ICommandClient client)
+        {
+            m_checkCanDoClients.Add(client);
+        }
+
+        /// <summary>
+        /// Raises the CheckCanDo event. ICommandClients can call EnableCheckCanDoEvent before
+        /// registering this CommandInfo and then can call this method for greatly improved performance.</summary>
+        /// <param name="client">Command client that registered this CommandInfo</param>
+        /// <remarks>This method is only applicable to WinForms version of CommandService.</remarks>
+        public void OnCheckCanDo(ICommandClient client)
+        {
+            if (!m_checkCanDoClients.Contains(client))
+                throw new InvalidOperationException("Call EnableCheckCanDoEvent before calling OnCheckCanDo");
+            CheckCanDo.Raise(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Gets or sets the collection of keyboard shortcuts that can activate this command.
         /// For key-combos, use bitwise OR (e.g. "Keys.Control | Keys.S" for Ctrl-S). 
         /// For no shortcuts, pass an enumeration containing only Keys.None.
@@ -1075,5 +1112,6 @@ namespace Sce.Atf.Applications
         private List<Keys> m_defaultShortcuts;
         private CommandVisibility m_visibility;
         private ICommandService m_commandService;
+        private readonly HashSet<ICommandClient> m_checkCanDoClients = new HashSet<ICommandClient>();
     }
 }

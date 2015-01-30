@@ -161,7 +161,7 @@ namespace Sce.Atf.Rendering.Dom
                 return m_intersectable;
 
             m_intersectableCached = true;
-            m_intersectable = Adapters.As<IIntersectable>(this);
+            m_intersectable = this.As<IIntersectable>();
             if (m_intersectable != null && !m_intersectable.CanIntersect)
                 m_intersectable = null;
 

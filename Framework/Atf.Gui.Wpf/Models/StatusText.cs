@@ -1,7 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Media;
 
 namespace Sce.Atf.Wpf.Models
@@ -56,7 +55,7 @@ namespace Sce.Atf.Wpf.Models
                 OnPropertyChanged(s_foreColorArgs);
             }
         }
-        private Brush m_foreColor = SystemColors.ControlTextBrush;
+        private Brush m_foreColor;
 
         private static readonly PropertyChangedEventArgs s_textArgs
             = ObservableUtil.CreateArgs<StatusText>(x => x.Text);

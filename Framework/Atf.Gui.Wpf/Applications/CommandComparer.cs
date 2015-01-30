@@ -102,7 +102,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <param name="y">ICommandItem 2</param>
         /// <returns>A signed integer that indicates the relative values of the ICommandItems:
         /// Less than zero: ICommandItem 1 is less than ICommandItem 2.
-        /// Zero: ICommandItem 1 equals ICommandItem 2 . 
+        /// Zero: ICommandItem 1 equals ICommandItem 2. 
         /// Greater than zero: ICommandItem 1 is greater than ICommandItem 2.</returns>
         public int Compare(ICommandItem x, ICommandItem y)
         {
@@ -163,6 +163,11 @@ namespace Sce.Atf.Wpf.Applications
             return tag1.Equals(tag2);
         }
 
+        /// <summary>
+        /// Compare two commands</summary>
+        /// <param name="x">First command</param>
+        /// <param name="y">Second command</param>
+        /// <returns>Less than zero if x before y, 0 if commands identical, greater than zero if x after y</returns>
         public static int CompareCommands(ICommandItem x, ICommandItem y)
         {
             int result = CompareTags(x.MenuTag, y.MenuTag);
@@ -182,6 +187,13 @@ namespace Sce.Atf.Wpf.Applications
             return result;
         }
 
+        /// <summary>
+        /// Compare two tags</summary>
+        /// <param name="tag1">First tag</param>
+        /// <param name="tag2">Second tag</param>
+        /// <returns>Less than zero: tag1 is before tag2.
+        /// Zero: tag1 equals tag2. 
+        /// Greater than zero: tag1 is after tag2.</returns>
         public static int CompareTags(object tag1, object tag2)
         {
             bool tag1First = false, tag2First = false, tag1Last = false, tag2Last = false;

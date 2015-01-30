@@ -46,6 +46,8 @@ namespace Sce.Atf.Wpf.Behaviors
             System.Windows.DragDrop.AddPreviewQueryContinueDragHandler(AssociatedObject, OnQueryContinueDrag);
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();

@@ -39,8 +39,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets the synchronizing object (typically the main form) which allows
-        /// FileChanged events to be raised on the main UI thread</summary>
-        /// created this SyncObject.</summary>
+        /// FileChanged events to be raised on the main UI thread that created this SyncObject</summary>
         public ISynchronizeInvoke SynchronizingObject
         {
             get { return m_syncObject; }
@@ -57,9 +56,10 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Registers a file to be watched</summary>
-        /// <param name="filePath">Path of file to watch</param>
-        /// <param name="includeSubdirectories">True to watch sub directories too</param>
+        /// Register a directory and file extensions to be watched</summary>
+        /// <param name="directory">Path of directory to be watched</param>
+        /// <param name="extensions">File extensions to watch</param>
+        /// <param name="includeSubdirectories">True to watch subdirectories, too</param>
         public void Register(string directory, IEnumerable<string> extensions, bool includeSubdirectories)
         {
             List<FileSystemWatcher> watchers;
@@ -79,9 +79,9 @@ namespace Sce.Atf.Applications
                 watcher.IncludeSubdirectories = includeSubdirectories;
                 watcher.InternalBufferSize = InternalBufferSize;
 
-                watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-                watcher.Renamed += new RenamedEventHandler(watcher_Changed);
-                watcher.Deleted += new FileSystemEventHandler(watcher_Changed);
+                watcher.Changed += watcher_Changed;
+                watcher.Renamed += watcher_Changed;
+                watcher.Deleted += watcher_Changed;
                 
                 //Note: Disabled created since this will be fired before a file has finished copying which can create
                 //bad side effects. The changed event should fire when the file has closed.
@@ -93,8 +93,8 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Unregisters a file, so it is no longer watched</summary>
-        /// <param name="filePath">Path of file to no longer watch</param>
+        /// Unregister a directory, so it is no longer watched</summary>
+        /// <param name="directory">Path of directory to no longer watch</param>
         public void Unregister(string directory)
         {
             List<FileSystemWatcher> watchers;

@@ -14,16 +14,6 @@ namespace TimelineEditorSample.DomNodeAdapters
     /// Adapts DomNode to an Interval</summary>
     public class Interval : BaseEvent, IInterval
     {
-        /// <summary>
-        /// Performs custom processing after adapter successfully attaches to the Interval's DOM object</summary>
-        protected override void OnNodeSet()
-        {
-            // initialize defaulted attributes
-            DomNode.SetAttributeIfDefault(Schema.intervalType.nameAttribute, "Interval");
-            DomNode.SetAttributeIfDefault(Schema.intervalType.lengthAttribute, 5.0f);
-            DomNode.SetAttributeIfDefault(Schema.intervalType.colorAttribute, Color.Blue.ToArgb());
-        }
-
         #region IEvent and IInterval Members
 
         /// <summary>

@@ -31,6 +31,23 @@ namespace Sce.Atf.Applications
         event EventHandler<SourceControlEventArgs> StatusChanged;
 
         /// <summary>
+        /// Refreshes cached status info for all items under the specified folder</summary>
+        /// <param name="rootUri">The uri under which all cached file info will be refreshed</param>
+        /// <param name="resetCacheFirst">If true, cache is cleared out before refreshing</param>
+        /// <remarks>
+        /// Using this call minimizes the number of queries to the source control server,
+        /// by allowing large subtrees of files to be queried and cached at once</remarks>
+        void UpdateCachedStatuses(Uri rootUri, bool resetCacheFirst);
+
+        /// <summary>
+        /// Send StatusChanged events for all specified uris</summary>
+        /// <param name="uris">The uris for which StatusChanged events should be fired</param>
+        /// <remarks>
+        /// Cached statuses are broadcast if available. For all others, the source control
+        /// server is queried</remarks>
+        void BroadcastStatuses(IEnumerable<Uri> uris);
+
+        /// <summary>
         /// Adds an item to source control</summary>
         /// <param name="uri">URI representing the path to item</param>
         void Add(Uri uri);

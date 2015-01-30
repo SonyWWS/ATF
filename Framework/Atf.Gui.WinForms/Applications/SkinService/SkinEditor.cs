@@ -261,7 +261,7 @@ namespace Sce.Atf.Applications
             fileMenu.Name = "fileToolStripMenuItem";
             fileMenu.Size = new System.Drawing.Size(37, 20);
             fileMenu.Text = "File".Localize();
-            fileMenu.DropDownOpening += new EventHandler(fileMenu_DropDownOpening);
+            fileMenu.DropDownOpening += fileMenu_DropDownOpening;
             fileMenu.DropDownItems.AddRange(new ToolStripItem[]
             {
                 newMenu,             
@@ -288,7 +288,7 @@ namespace Sce.Atf.Applications
             // open containing folder
             m_openFolderMenu.Name = "OpenFolderMenu";
             m_openFolderMenu.Text = "Open Containing Folder".Localize();
-            m_openFolderMenu.Click += new EventHandler(OpenFolderMenu_Click);
+            m_openFolderMenu.Click += OpenFolderMenu_Click;
 
             //save
             m_saveMenu.Name = "saveToolStripMenuItem";
@@ -791,6 +791,9 @@ namespace Sce.Atf.Applications
 
             public override void SetValue(object component, object value)
             {
+                if (m_font != null && m_font.Equals(value))
+                    return;
+                                
                 if (m_font != null) m_font.Dispose();
                 m_font = (Font)value;
 
@@ -836,7 +839,7 @@ namespace Sce.Atf.Applications
             }
 
             /// <summary>
-            /// Convert from color to string. </summary>            
+            /// Convert from color to string</summary>            
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
                 if (value is Color)

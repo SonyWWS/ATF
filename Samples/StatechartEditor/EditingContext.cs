@@ -41,9 +41,9 @@ namespace StatechartEditorSample
 
             m_transitions = new DomNodeListAdapter<Transition>(DomNode, Schema.statechartDocumentType.transitionChild);
 
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
         }
@@ -78,10 +78,10 @@ namespace StatechartEditorSample
 
             // we must handle states because we also need to center their child states
             //  otherwise, we could use LayoutContext.Center
-            foreach (StateBase stateBase in Adapters.AsIEnumerable<StateBase>(items))
+            foreach (StateBase stateBase in items.AsIEnumerable<StateBase>())
                 Offset(stateBase, offset);
 
-            foreach (Annotation annotation in Adapters.AsIEnumerable<Annotation>(items))
+            foreach (Annotation annotation in items.AsIEnumerable<Annotation>())
                 Offset(annotation, offset);
         }
 
@@ -184,11 +184,11 @@ namespace StatechartEditorSample
         /// <returns>Item's name in the context, or null if none</returns>
         string INamingContext.GetName(object item)
         {
-            State state = Adapters.As<State>(item);
+            State state = item.As<State>();
             if (state != null)
                 return state.Name;
 
-            Annotation annotation = Adapters.As<Annotation>(item);
+            Annotation annotation = item.As<Annotation>();
             if (annotation != null)
                 return annotation.Text;
 
@@ -202,8 +202,8 @@ namespace StatechartEditorSample
         bool INamingContext.CanSetName(object item)
         {
             return
-                Adapters.Is<State>(item) ||
-                Adapters.Is<Annotation>(item);
+                item.Is<State>() ||
+                item.Is<Annotation>();
         }
 
         /// <summary>
@@ -212,14 +212,14 @@ namespace StatechartEditorSample
         /// <param name="name">New item name</param>
         void INamingContext.SetName(object item, string name)
         {
-            State state = Adapters.As<State>(item);
+            State state = item.As<State>();
             if (state != null)
             {
                 state.Name = name;
             }
             else
             {
-                Annotation annotation = Adapters.As<Annotation>(item);
+                Annotation annotation = item.As<Annotation>();
                 if (annotation != null)
                     annotation.Text = name;
             }
@@ -235,7 +235,7 @@ namespace StatechartEditorSample
         /// <returns>True iff the item is locked</returns>
         bool ILockingContext.IsLocked(object item)
         {
-            StateBase stateBase = Adapters.As<StateBase>(item);
+            StateBase stateBase = item.As<StateBase>();
             return
                 stateBase != null &&
                 stateBase.Locked;
@@ -247,7 +247,7 @@ namespace StatechartEditorSample
         /// <returns>True iff the item item can be locked and unlocked</returns>
         bool ILockingContext.CanSetLocked(object item)
         {
-            return Adapters.Is<StateBase>(item);
+            return item.Is<StateBase>();
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace StatechartEditorSample
         /// <param name="value">True to lock, false to unlock</param>
         void ILockingContext.SetLocked(object item, bool value)
         {
-            StateBase stateBase = Adapters.As<StateBase>(item);
+            StateBase stateBase = item.As<StateBase>();
             if (stateBase != null)
                 stateBase.Locked = value;
         }
@@ -284,7 +284,7 @@ namespace StatechartEditorSample
 
             // for all selected root states and sub-states
             IEnumerable<DomNode> rootNodes = DomNode.GetRoots(Selection.AsIEnumerable<DomNode>());
-            IEnumerable<StateBase> rootStates = Adapters.AsIEnumerable<StateBase>(rootNodes);
+            IEnumerable<StateBase> rootStates = rootNodes.AsIEnumerable<StateBase>();
             foreach (StateBase stateBase in rootStates)
             {
                 domNodes.Add(stateBase.DomNode);
@@ -323,7 +323,7 @@ namespace StatechartEditorSample
 
             DomNode[] copies = DomNode.Copy(domNodes);
 
-            return new DataObject(Enumerable.ToArray<object>(copies));
+            return new DataObject(copies.ToArray<object>());
         }
 
         /// <summary>
@@ -339,9 +339,9 @@ namespace StatechartEditorSample
 
             foreach (object item in items)
             {
-                if (!Adapters.Is<StateBase>(item) &&
-                    !Adapters.Is<Transition>(item) &&
-                    !Adapters.Is<Annotation>(item))
+                if (!item.Is<StateBase>() &&
+                    !item.Is<Transition>() &&
+                    !item.Is<Annotation>())
                 {
                     return false;
                 }
@@ -428,16 +428,16 @@ namespace StatechartEditorSample
             if (items == null)
                 return;
             
-            object[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
-            foreach (Annotation annotation in Adapters.AsIEnumerable<Annotation>(itemCopies))
+            foreach (Annotation annotation in itemCopies.AsIEnumerable<Annotation>())
                 this.As<Document>().Annotations.Add(annotation);
             
-            IEnumerable<StateBase> states = Adapters.AsIEnumerable<StateBase>(itemCopies);
+            IEnumerable<StateBase> states = itemCopies.AsIEnumerable<StateBase>();
             foreach (StateBase state in states)
                 insertionPoint.States.Add(state);
 
-            foreach (Transition transition in Adapters.AsIEnumerable<Transition>(itemCopies))
+            foreach (Transition transition in itemCopies.AsIEnumerable<Transition>())
                 m_transitions.Add(transition);
 
             // centering hierarchical states requires some special code

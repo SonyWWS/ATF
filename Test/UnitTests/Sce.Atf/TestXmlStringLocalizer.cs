@@ -27,6 +27,8 @@ namespace UnitTests.Atf
             doc.AddTranslation("A", "ContextY", "Y"); //duplicate original and context and translation
             doc.AddTranslation("B", "ContextZ", "Z"); //duplicate original, but different context
             doc.AddTranslation("D", "", "XD");
+            doc.AddTranslation("E", "ContextE1", "XE"); //test multiple contexts with identical translations
+            doc.AddTranslation("E", "ContextE2", "XE");
             localizer.AddLocalizedStrings(doc);
 
             Assert.AreEqual(localizer.Localize("A", "ContextY"), "Y");
@@ -36,6 +38,8 @@ namespace UnitTests.Atf
             Assert.AreEqual(localizer.Localize("B", "ContextZ"), "Z");
             Assert.AreEqual(localizer.Localize("D", ""), "XD");
             Assert.AreEqual(localizer.Localize("?", ""), "?"); //no translation available
+            Assert.AreEqual(localizer.Localize("E", "unknown context"), "XE"); //context is unknown, but both translations are available
+            Assert.AreEqual(localizer.Localize("F", "unknown context"), "F"); //unknown English word
         }
 
         [Test]

@@ -161,6 +161,10 @@ namespace Sce.Atf.Dom
                     }
                 }
 
+                // Fallback to non-substituted version (for example loading an old schema).
+                if (type == null)
+                    type = GetChildType(nodeInfo.Type, reader);
+
                 if (type == null)
                     throw new InvalidOperationException("Could not match substitution group for child " + nodeInfo.Name);
             }

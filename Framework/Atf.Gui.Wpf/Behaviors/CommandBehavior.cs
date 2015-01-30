@@ -107,7 +107,7 @@ namespace Sce.Atf.Wpf.Behaviors
             DependencyProperty.RegisterAttached("RoutedEventName", typeof(String),
             typeof(CommandBehavior),
                 new FrameworkPropertyMetadata((String)String.Empty,
-                    new PropertyChangedCallback(OnRoutedEventNameChanged)));
+                    OnRoutedEventNameChanged));
 
         /// <summary>
         /// Gets the RoutedEventName property</summary>

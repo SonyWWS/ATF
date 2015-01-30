@@ -31,6 +31,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewDragLeave += AssociatedObject_PreviewDragLeave;
         }
 
+        /// <summary>
+        /// Handle Detaching event and performs custom actions</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
@@ -39,6 +41,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewDragLeave -= AssociatedObject_PreviewDragLeave;
         }
 
+        /// <summary>
+        /// Get or set time delay before expanding item</summary>
         public int ExpandDelay 
         {
             get { return m_timer.Interval.Milliseconds; }

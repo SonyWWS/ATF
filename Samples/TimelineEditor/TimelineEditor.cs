@@ -466,7 +466,7 @@ namespace TimelineEditorSample
             {
                 if (document == null)
                 {
-                    document = Adapters.Cast<TimelineDocument>(node);
+                    document = node.Cast<TimelineDocument>();
 
                     D2dTimelineRenderer renderer = CreateTimelineRenderer();
                     document.Renderer = renderer;
@@ -544,7 +544,7 @@ namespace TimelineEditorSample
                     foreach (TimelinePath path in D2dTimelineControl.GetHierarchy(topTimelineDoc.Timeline))
                     {
                         IHierarchicalTimeline target = ((ITimelineReference)path.Last).Target;
-                        if (document == Adapters.As<ITimelineDocument>(target))
+                        if (document == target.As<ITimelineDocument>())
                             count++;
                     }
                 }
@@ -554,7 +554,7 @@ namespace TimelineEditorSample
 
         private void repository_DocumentAdded(object sender, ItemInsertedEventArgs<IDocument> e)
         {
-            IObservableContext observable = Adapters.As<IObservableContext>(e.Item);
+            IObservableContext observable = e.Item.As<IObservableContext>();
             if (observable != null)
             {
                 observable.ItemChanged += observable_ItemChanged;
@@ -571,7 +571,7 @@ namespace TimelineEditorSample
 
         private void repository_DocumentRemoved(object sender, ItemRemovedEventArgs<IDocument> e)
         {
-            IObservableContext observable = Adapters.As<IObservableContext>(e.Item);
+            IObservableContext observable = e.Item.As<IObservableContext>();
             if (observable != null)
             {
                 observable.ItemChanged -= observable_ItemChanged;
@@ -812,7 +812,7 @@ namespace TimelineEditorSample
 
         private static SchemaLoader s_schemaLoader;
         private static readonly DocumentClientInfo s_info = new DocumentClientInfo(
-            Localizer.Localize("Timeline"),
+            "Timeline".Localize(),
             new string[] { ".timeline" },
             Sce.Atf.Resources.DocumentImage,
             Sce.Atf.Resources.FolderImage,

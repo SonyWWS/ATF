@@ -32,16 +32,17 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="pickRect">Rectangle bounding picked control points</param>
         /// <param name="points">Points picked</param>
         /// <param name="regions">PointSelectionRegions of picked points</param>
-        public void PickPoints(ReadOnlyCollection<ICurve> curves, RectangleF pickRect,
-            List<IControlPoint> points, List<PointSelectionRegions> regions)
+        /// <param name="singlePick">if true only single point, tangetnIn, or tangentOut will be picked</param>
+        public void PickPoints(IEnumerable<ICurve> curves, RectangleF pickRect,
+            List<IControlPoint> points, List<PointSelectionRegions> regions, bool singlePick = false)
         {
             points.Clear();
             regions.Clear();
             if (curves == null)
                 return;
 
-            foreach (ICurve curve in curves)
-            {
+            foreach(var curve in curves)
+            {            
                 if (!curve.Visible)
                     continue;
 
@@ -57,6 +58,7 @@ namespace Sce.Atf.Controls.CurveEditing
                     }
                     else if (curve.CurveInterpolation != InterpolationTypes.Linear && cpt.EditorData.SelectedRegion != PointSelectionRegions.None)
                     {
+                        bool tanPicked = false;
                         bool pickTanOut = cpt.TangentOutType != CurveTangentTypes.Stepped && cpt.TangentOutType != CurveTangentTypes.SteppedNext;
                         if (pickTanOut)
                         {
@@ -66,7 +68,7 @@ namespace Sce.Atf.Controls.CurveEditing
                             {
                                 points.Add(cpt);
                                 regions.Add(PointSelectionRegions.TangentOut);
-                                continue;
+                                tanPicked = true;                                
                             }
                         }
 
@@ -78,7 +80,7 @@ namespace Sce.Atf.Controls.CurveEditing
                             && prevCpt.TangentOutType != CurveTangentTypes.SteppedNext;
                         }
 
-                        if (pickTanIn)
+                        if (!tanPicked && pickTanIn)
                         {
                             //  pick tangentIn.
                             Vec2F tangIn = Vec2F.Normalize(m_canvas.GraphToClientTangent(cpt.TangentIn));
@@ -92,8 +94,9 @@ namespace Sce.Atf.Controls.CurveEditing
                             }
                         }
                     }
+                    if (singlePick && points.Count > 0) break;
                 }
-
+                if (singlePick && points.Count > 0) break;
             } // foreach curve in curves
         }
 
@@ -103,11 +106,12 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="pickRect">Rectangle bounding picked control points</param>
         /// <param name="points">Points picked</param>
         /// <param name="regions">PointSelectionRegions of picked points</param>
-        public void Pick(ReadOnlyCollection<ICurve> curves, RectangleF pickRect,
-            List<IControlPoint> points, List<PointSelectionRegions> regions)
+        /// <param name="singlePick">If true only single point or single curve will be picked</param>
+        public void Pick(IEnumerable<ICurve> curves, RectangleF pickRect,
+            List<IControlPoint> points, List<PointSelectionRegions> regions, bool singlePick = false)
         {
 
-            PickPoints(curves, pickRect, points, regions);
+            PickPoints(curves, pickRect, points, regions, singlePick);
             if (curves == null)
                 return;
 
@@ -124,6 +128,7 @@ namespace Sce.Atf.Controls.CurveEditing
                             points.Add(cpt);
                             regions.Add(PointSelectionRegions.Point);
                         }
+                        if (singlePick) break;
                     }
                 }
             }
@@ -168,15 +173,19 @@ namespace Sce.Atf.Controls.CurveEditing
         /// Draws given curve</summary>
         /// <param name="curve">Curve</param>
         /// <param name="g">Graphics object</param>
-        public void DrawCurve(ICurve curve, Graphics g)
+        /// <param name="thickness">Curve thickness in pixels</param>
+        public void DrawCurve(ICurve curve, Graphics g, float thickness = 1.0f )
         {
             // draw pre-infinity
             // draw actual
             // draw post-inifiny.
-
+            
             ReadOnlyCollection<IControlPoint> points = curve.ControlPoints;
             if (points.Count == 0)
                 return;
+
+            m_infinityPen.Width = thickness;
+            m_curvePen.Width = thickness;
             m_infinityPen.Color = curve.CurveColor;
             m_curvePen.Color = curve.CurveColor;
             if (points.Count == 1)

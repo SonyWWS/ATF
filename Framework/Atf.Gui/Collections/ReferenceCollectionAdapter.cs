@@ -12,14 +12,17 @@ namespace Sce.Atf.Collections
     /// <summary>
     /// Collection to adapt an observable collection of references to an 
     /// observable collection of their reference targets
-    /// TODO: does not currently deal with Reference Targets changing
-    /// </summary>
+    /// TODO: does not currently deal with Reference Targets changing</summary>
     /// <typeparam name="TRefTarget">Type of reference target</typeparam>
     /// <typeparam name="U">Type of reference target</typeparam>
     public class ReferenceCollectionAdapter<TRefTarget, U> : ObservableCollectionAdapter<IReference<TRefTarget>, U>
         where TRefTarget : class
         where U : class
     {
+        /// <summary>
+        /// Constructor with collection and reference creator function</summary>
+        /// <param name="collection">Collection</param>
+        /// <param name="createReference">Reference creator function</param>
         public ReferenceCollectionAdapter(IObservableCollection<IReference<TRefTarget>> collection, Func<U, IReference<TRefTarget>> createReference)
             : base(collection)
         {
@@ -35,11 +38,19 @@ namespace Sce.Atf.Collections
             m_collection.CollectionChanged += CollectionCollectionChanged;
         }
 
+        /// <summary>
+        /// Convert reference to target</summary>
+        /// <param name="item">Reference item</param>
+        /// <returns>Target item</returns>
         protected override U Convert(IReference<TRefTarget> item)
         {
             return item.Target.As<U>();
         }
 
+        /// <summary>
+        /// Convert target to reference</summary>
+        /// <param name="item">Target item</param>
+        /// <returns>Reference item</returns>
         protected override IReference<TRefTarget> Convert(U item)
         {
             IReference<TRefTarget> result;

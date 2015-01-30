@@ -152,8 +152,8 @@ namespace Sce.Atf.Direct2D
         /// Initiates drawing on this D2dGraphics</summary>
         public void BeginDraw()
         {
-            D2dFactory.CheckForRecreateTarget();
-            m_renderTarget.BeginDraw();
+            D2dFactory.CheckForRecreateTarget();            
+            m_renderTarget.BeginDraw();            
         }
 
         /// <summary>
@@ -164,8 +164,8 @@ namespace Sce.Atf.Direct2D
         public D2dResult EndDraw()
         {
             try
-            {
-                m_renderTarget.EndDraw();
+            {                
+                m_renderTarget.EndDraw();             
             }
             catch (SharpDXException ex)
             {
@@ -174,10 +174,13 @@ namespace Sce.Atf.Direct2D
                 {
                     D2dFactory.CheckForRecreateTarget();
                     RecreateTargetAndResources();
-
                 }
-                else
-                    throw;
+                else 
+                {
+                    while (m_clipStack.Count > 0) PopAxisAlignedClip();
+                    try { m_renderTarget.Flush(); } catch { }
+                    throw;                    
+                }                
             }
             return D2dResult.Ok;
         }
@@ -1347,7 +1350,7 @@ namespace Sce.Atf.Direct2D
         public D2dBitmapGraphics CreateCompatibleGraphics()
         {
             var rt = new BitmapRenderTarget(m_renderTarget, CompatibleRenderTargetOptions.None);
-            return new D2dBitmapGraphics(rt);
+            return new D2dBitmapGraphics(this, rt);
         }
 
         /// <summary>
@@ -1359,7 +1362,7 @@ namespace Sce.Atf.Direct2D
         public D2dBitmapGraphics CreateCompatibleGraphics(D2dCompatibleGraphicsOptions options)
         {
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options);
-            return new D2dBitmapGraphics(rt);
+            return new D2dBitmapGraphics(this, rt);
 
         }
 
@@ -1374,7 +1377,7 @@ namespace Sce.Atf.Direct2D
         {
             var dsize = new Size2(pixelSize.Width, pixelSize.Height);
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, null, dsize, null);
-            return new D2dBitmapGraphics(rt);
+            return new D2dBitmapGraphics(this, rt);
         }
 
         /// <summary>
@@ -1387,7 +1390,7 @@ namespace Sce.Atf.Direct2D
         public D2dBitmapGraphics CreateCompatibleGraphics(SizeF size, D2dCompatibleGraphicsOptions options)
         {
             var rt = new BitmapRenderTarget(m_renderTarget, (CompatibleRenderTargetOptions)options, size.ToSharpDX(), null, null);
-            return new D2dBitmapGraphics(rt);
+            return new D2dBitmapGraphics(this, rt);
         }
 
         /// <summary>
@@ -1486,6 +1489,7 @@ namespace Sce.Atf.Direct2D
             if (renderTarget == null)
                 throw new ArgumentNullException("renderTarget");
 
+            m_clipStack.Clear();
             ReleaseResources(true);
             m_renderTargetNumber++;
             m_renderTarget = renderTarget;
@@ -1599,6 +1603,7 @@ namespace Sce.Atf.Direct2D
         private uint m_renderTargetNumber;
         private static readonly Result D2DERR_WRONG_RESOURCE_DOMAIN = new Result(0x88990015);
         private static readonly Result D2DERR_RECREATE_TARGET = new Result(0x8899000C);
+        //private static readonly Result D2DERR_PUSH_POP_UNBALANCED = new Result(0x88990016);
         private const double DPI = 3.1415926535897931;
         private const float ToRadian = (float)(DPI / 180.0);
         // temp list of points used by DrawArc.

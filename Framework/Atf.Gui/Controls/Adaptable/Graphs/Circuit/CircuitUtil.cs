@@ -24,8 +24,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="outgoingConnections">Collection of all outgoing connections, filled by method</param>
         public static void GetSubGraph(
             ICircuitContainer graphContainer,
-            IEnumerable<object> objects,
-            HashSet<Element> modules,
+            IEnumerable<object> objects, // [in] selected objects, edges possible
+            HashSet<Element> modules, // [out] elements in the selected objects
             ICollection<Wire> internalConnections,
             ICollection<Wire> incomingConnections,
             ICollection<Wire> outgoingConnections)
@@ -108,7 +108,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return node.Is<IReference<Group>>();
         }
 
-  
+        /// <summary>
+        /// Check if a template's target is missing</summary>
+        /// <param name="node">Template node</param>
+        /// <returns>True iff target is missing</returns>
         static public bool IsTemplateTargetMissing(object node)
         {
             var reference = node.As<IReference<DomNode>>();
@@ -156,9 +159,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <typeparam name="TEdgeRoute">Pin</typeparam>
         /// <param name="hitPath">Path of groups to traverse</param>
         /// <param name="destNode">Destination group (last group to search) which contains the pin searched for</param>
-        /// <param name="startRoute">Pin in innermost group where search begins</param>
-        /// <returns>Group pin in destination group "destNode" corresponding to "startRoute" group pin in innermost group in path</returns>
-        static public TEdgeRoute EdgeRouteTraverser<TEdgeRoute>(AdaptablePath<object> hitPath, object destNode, TEdgeRoute startRoute)
+        /// <param name="hitRoute">Pin in innermost group where search begins</param>
+        /// <returns>Group pin in destination group "destNode" corresponding to "hitRoute" group pin in innermost group in path</returns>
+        static public TEdgeRoute EdgeRouteTraverser<TEdgeRoute>(AdaptablePath<object> hitPath, object destNode, TEdgeRoute hitRoute)
              where TEdgeRoute : class, ICircuitPin
         {
             if (!hitPath.Last.Is<Element>())
@@ -170,7 +173,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 return null;
 
 
-            var circuitPin = startRoute;
+            var circuitPin = hitRoute;
             var currentElement = hitPath.Last;
             for (int i = fromIndex - 1; i >= toIndex; --i)
             {
@@ -182,7 +185,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     foreach (var grpPin in group.InputGroupPins)
                     {
                         if (grpPin.InternalElement.Equals(currentElement) &&
-                            grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex) == circuitPin)
+                            grpPin.InternalElement.InputPin(grpPin.InternalPinIndex) == circuitPin)
                         {
                             matchedPin = grpPin;
                             break;
@@ -193,7 +196,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         foreach (var grpPin in group.OutputGroupPins)
                         {
                             if (grpPin.InternalElement.Equals(currentElement) &&
-                                grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex) == circuitPin)
+                                grpPin.InternalElement.OutputPin(grpPin.InternalPinIndex) == circuitPin)
                             {
                                 matchedPin = grpPin;
                                 break;

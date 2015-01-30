@@ -17,7 +17,7 @@ namespace Sce.Atf.Wpf.Behaviors
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.RegisterAttached("ViewModel", typeof(string), typeof(ViewModelLocator),
                 new PropertyMetadata((string)String.Empty,
-                    new PropertyChangedCallback(OnViewModelChanged)));
+                    OnViewModelChanged));
 
         /// <summary>
         /// Gets the ViewModel property. This dependency property indicates the ViewModel used.</summary>
@@ -55,7 +55,7 @@ namespace Sce.Atf.Wpf.Behaviors
         public static readonly DependencyProperty SharedViewModelProperty =
             DependencyProperty.RegisterAttached("SharedViewModel", typeof(string), typeof(ViewModelLocator),
                 new PropertyMetadata((string)null,
-                    new PropertyChangedCallback(OnSharedViewModelChanged)));
+                    OnSharedViewModelChanged));
 
         /// <summary>
         /// Gets the SharedViewModel property. This dependency property indicates the type of ViewModel used.</summary>

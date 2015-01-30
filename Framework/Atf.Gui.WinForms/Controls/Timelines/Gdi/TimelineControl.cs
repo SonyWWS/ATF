@@ -200,7 +200,7 @@ namespace Sce.Atf.Controls.Timelines
                 if (value != null)
                     m_snapper = value;
                 else
-                    m_snapper = new SnapOffsetFinder(NoSnapOffset);
+                    m_snapper = NoSnapOffset;
             }
         }
 

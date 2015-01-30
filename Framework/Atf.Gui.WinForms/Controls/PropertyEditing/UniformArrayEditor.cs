@@ -13,7 +13,7 @@ namespace Sce.Atf.Controls.PropertyEditing
     /// (2) the Control that displays a single value of type T.</summary>
     /// <typeparam name="T">The numeric type of each array element that is to be edited as a
     /// single property. All .NET numeric types are supported, although the scaling factor
-    /// in NumericEditor is not applied to integer types. See Scea.Controls.NumericTextBox
+    /// in NumericEditor is not applied to integer types. See Scea.Atf.Controls.NumericTextBox
     /// for the list.</typeparam>
     public class UniformArrayEditor<T> : NumericEditor
     {

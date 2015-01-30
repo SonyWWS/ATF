@@ -57,12 +57,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (m_theme != value)
                 {
                     if (m_theme != null)
-                        m_theme.Redraw -= new EventHandler(theme_Redraw);
+                        m_theme.Redraw -= theme_Redraw;
 
                     m_theme = value;
 
                     if (m_theme != null)
-                        m_theme.Redraw += new EventHandler(theme_Redraw);
+                        m_theme.Redraw += theme_Redraw;
 
                     base.OnRedraw();
                 }
@@ -197,7 +197,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (TElement element in Enumerable.Reverse(graph.Nodes))
+            foreach (TElement element in graph.Nodes.Reverse())
             {
                 if (Pick(element, g, p))
                 {

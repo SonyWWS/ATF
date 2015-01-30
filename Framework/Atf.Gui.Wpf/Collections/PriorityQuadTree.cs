@@ -11,6 +11,8 @@ using Sce.Atf.Collections;
 
 namespace Sce.Atf.Wpf.Collections
 {
+    /// <summary>
+    /// Rectangle functions</summary>
     internal static class RectExtensions
     {
         public static Point GetCenter(this Rect rect)
@@ -35,6 +37,9 @@ namespace Sce.Atf.Wpf.Collections
         }
     }
 
+    /// <summary>
+    /// Class for a priority tree of rectangular objects</summary>
+    /// <typeparam name="T">Type of nodes in tree</typeparam>
     public class PriorityQuadTree<T> : IEnumerable<T>, IEnumerable
     {
         private class QuadNode
@@ -560,6 +565,8 @@ namespace Sce.Atf.Wpf.Collections
         private Rect _extent;
         private Quadrant _root;
 
+        /// <summary>
+        /// Get or set extent of tree, i.e., rectangle enclosing all nodes</summary>
         public Rect Extent
         {
             get { return _extent; }
@@ -575,6 +582,11 @@ namespace Sce.Atf.Wpf.Collections
             }
         }
 
+        /// <summary>
+        /// Insert item into tree</summary>
+        /// <param name="item">Item to insert</param>
+        /// <param name="bounds">Bounds of new item</param>
+        /// <param name="priority">Priority of new item</param>
         public void Insert(T item, Rect bounds, double priority)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -592,6 +604,10 @@ namespace Sce.Atf.Wpf.Collections
             _root.Insert(item, bounds, priority, 1);
         }
 
+        /// <summary>
+        /// Test if rectangle has nodes inside</summary>
+        /// <param name="bounds">Bounding rectangle</param>
+        /// <returns>True iff items inside rectangle</returns>
         public bool HasItemsInside(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -601,6 +617,10 @@ namespace Sce.Atf.Wpf.Collections
             return _root != null && _root.HasNodesInside(bounds);
         }
 
+        /// <summary>
+        /// Enumerate items inside rectangle</summary>
+        /// <param name="bounds">Bounding rectangle</param>
+        /// <returns>Enumeration of items inside rectangle</returns>
         public IEnumerable<T> GetItemsInside(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -617,6 +637,10 @@ namespace Sce.Atf.Wpf.Collections
             yield break;
         }
 
+        /// <summary>
+        /// Test if any items intersect rectangle</summary>
+        /// <param name="bounds">Rectangle</param>
+        /// <returns>True iff items intersect rectangle</returns>
         public bool HasItemsIntersecting(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -626,6 +650,10 @@ namespace Sce.Atf.Wpf.Collections
             return _root != null && _root.HasNodesIntersecting(bounds);
         }
 
+        /// <summary>
+        /// Enumerate items intersecting rectangle</summary>
+        /// <param name="bounds">Rectangle</param>
+        /// <returns>Enumeration of items intersecting rectangle</returns>
         public IEnumerable<T> GetItemsIntersecting(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -642,12 +670,22 @@ namespace Sce.Atf.Wpf.Collections
             yield break;
         }
 
+        /// <summary>
+        /// Remove item from tree</summary>
+        /// <param name="item">Item to remove</param>
+        /// <returns>True iff item removed</returns>
         public bool Remove(T item)
         {
             return Remove(item,
                                new Rect(double.NegativeInfinity, double.NegativeInfinity, double.PositiveInfinity, double.PositiveInfinity));
         }
 
+        /// <summary>
+        /// Remove item if it is in a given rectangle</summary>
+        /// <exception cref="ArgumentOutOfRangeException"> if bounds are invalid</exception>
+        /// <param name="item">Item to remove</param>
+        /// <param name="bounds">Rectangle</param>
+        /// <returns>True iff item removed</returns>
         public bool Remove(T item, Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -657,6 +695,8 @@ namespace Sce.Atf.Wpf.Collections
             return _root != null && _root.Remove(item, bounds);
         }
 
+        /// <summary>
+        /// Remove all nodes from tree</summary>
         public void Clear()
         {
             _root = null;
@@ -675,6 +715,9 @@ namespace Sce.Atf.Wpf.Collections
             }
         }
 
+        /// <summary>
+        /// Get enumerator for tree nodes</summary>
+        /// <returns>Enumerator for tree nodes</returns>
         public IEnumerator<T> GetEnumerator()
         {
             if (_root != null)
@@ -687,6 +730,9 @@ namespace Sce.Atf.Wpf.Collections
             yield break;
         }
 
+        /// <summary>
+        /// Get enumerator for tree nodes</summary>
+        /// <returns>Enumerator for tree nodes</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
