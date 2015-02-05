@@ -2,7 +2,6 @@
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
-#if CS_4
     /// <summary>
     /// Interface for a graph that can be edited by a control</summary>
     /// <typeparam name="TNode">IGraphNode node</typeparam>
@@ -12,12 +11,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         where TNode : class, IGraphNode
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
         where TEdgeRoute : class, IEdgeRoute
-#else
-    public interface IEditableGraph<TNode, TEdge, TEdgeRoute>
-        where TNode : class, IGraphNode
-        where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
-        where TEdgeRoute : class, IEdgeRoute
-#endif
     {
         /// <summary>
         /// Returns whether two nodes can be connected. "from" and "to" refer to the corresponding

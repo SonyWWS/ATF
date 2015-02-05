@@ -6,6 +6,7 @@
   <StringItem id="Application" context="" translation="アプリケーション" />
   <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
   <StringItem id="Customize keyboard shortcuts" context="" translation="キーボードショートカットをカスタマイズします。" />
+  <StringItem id="Error" context="" translation="エラー" />
   <StringItem id="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" context="" translation="IP エンドポイントの形式は、「192.168.0.120:9000」のようになります。" />
   <StringItem id="OSC Receiving Port Number" context="" translation="ポート番号を受診する OSC" />
   <StringItem id="The IP Port number that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するためにリッスンする IP ポート番号" />
@@ -13,6 +14,7 @@
   <StringItem id="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" context="" translation="このアプリケーションからの Open Sound Control メッセージ送信先のプライマリ IP アドレスおよびポート番号。 自動構成であるため、追加の送信先が追加可能です。" />
   <StringItem id="Preferred Receiving IP Address" context="" translation="優先される受信 IP アドレス" />
   <StringItem id="The preferred IP address that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するために優先的にリッスンする IP アドレス。" />
+  <StringItem id="OSC Input" context="The name of a command" translation="OSC 入力" />
   <StringItem id="Vita Target" context="" translation="Vita ターゲット" />
   <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
   <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
@@ -33,8 +35,63 @@
   <StringItem id="X86 Target" context="" translation="X86 ターゲット" />
   <StringItem id="PS3 Target" context="" translation="PS3 ターゲット" />
   <StringItem id="PS4 Target" context="" translation="PS4 ターゲット" />
+  <StringItem id="Preferences..." context="Edit user preferences" translation="基本設定..." />
+  <StringItem id="Edit user preferences" context="" translation="ユーザー設定を編集します。" />
+  <StringItem id="Load or Save Settings..." context="" translation="@設定を読み込み/保存..." />
+  <StringItem id="User can save or load application settings from files" context="" translation="アプリケーション設定の、ファイルへの保存またはファイルからの読み込みです。" />
+  <StringItem id="Can't load settings" context="" translation="設定を読み込めません" />
+  <StringItem id="There was a problem opening the file" context="" translation="ファイルを開く際に次の問題が発生しました" />
+  <StringItem id="There was a problem saving the file" context="" translation="ファイルを保存する際に次の問題が発生しました" />
+  <StringItem id="Save" context="" translation="保存" />
+  <StringItem id="File extension not supported" context="" translation="サポートされていないファイル拡張子です。" />
+  <StringItem id="A file with that name is already open" context="" translation="同名のファイルがすでに開いています。" />
+  <StringItem id="Document Saved" context="" translation="ドキュメントが保存されました。" />
+  <StringItem id="Document Saved As" context="" translation="Document Saved As" />
+  <StringItem id="Couldn't save all documents" context="" translation="一部のドキュメントが保存されませんでした。" />
+  <StringItem id="All documents saved" context="" translation="すべてのドキュメントが保存されました。" />
+  <StringItem id="New {0}" context="" translation="{0}を新規作成" />
+  <StringItem id="New" context="Name of a command" translation="新規" />
+  <StringItem id="Creates a new {0} document" context="{0} is the type of document to create" translation="新しい{0}ドキュメントを作成します。" />
+  <StringItem id="Open {0}" context="" translation="{0}を開く" />
+  <StringItem id="Open" context="Name of a command" translation="開く" />
+  <StringItem id="Open an existing {0} document" context="" translation="既存の{0}ドキュメントを開きます。" />
+  <StringItem id="Source Control/Enable" context="" translation="ソース管理/有効化" />
+  <StringItem id="Enable source control" context="" translation="Enable source control" />
+  <StringItem id="Source Control/Open Connection..." context="" translation="ソース管理/接続を開く..." />
+  <StringItem id="Source control connection" context="" translation="ソース管理の接続" />
+  <StringItem id="Source Control/Add" context="" translation="ソース管理/追加" />
+  <StringItem id="Add to source control" context="" translation="ソース管理に追加します。" />
+  <StringItem id="Source Control/Check In" context="" translation="ソース管理/チェックイン" />
+  <StringItem id="Check in to source control" context="" translation="ソース管理にチェックインします。" />
+  <StringItem id="Source Control/Check Out" context="" translation="ソース管理/チェックアウト" />
+  <StringItem id="Check out from source control" context="" translation="ソース管理からチェックアウトします。" />
+  <StringItem id="Source Control/Get Latest Version" context="" translation="ソース管理/最新版を取得" />
+  <StringItem id="Get latest version from source control" context="" translation="ソース管理から最新版を取得します。" />
+  <StringItem id="Source Control/Revert" context="Revert add or check out from source control" translation="ソース管理/元に戻す" />
+  <StringItem id="Revert add or check out from source control" context="" translation="ソース管理への追加またはチェックアウトを元に戻します。" />
+  <StringItem id="Source Control/Refresh Status" context="" translation="ソース管理/最新の状態に更新" />
+  <StringItem id="Refresh status in source control" context="" translation="ソース管理の情報を最新の状態に更新します。" />
+  <StringItem id="Source Control/Reconcile Offline Work..." context="" translation="ソース管理/オフライン作業を調整" />
+  <StringItem id="Reconcile Offline Work" context="" translation="オフラインで行った作業を調整します。" />
+  <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
+  <StringItem id="Disable Source Control" context="" translation="ソース管理を無効にする" />
+  <StringItem id="Add document {0} to version control?" context="" translation="ドキュメント {0} をバージョン管理に追加しますか?" />
+  <StringItem id="Add Document to Version Control" context="this is the title of a dialog box that is asking a question" translation="ドキュメントをバージョン管理に追加" />
+  <StringItem id="Check out the file
+
+{0}
+
+to be able to save the changes?" context="" translation="ファイル 
+
+{0}
+
+をチェックアウトして変更を保存しますか?" />
+  <StringItem id="Check Out File" context="this is the title of a dialog box that is asking a question" translation="ファイルをチェックアウト" />
+  <StringItem id="All Changes will be lost. Do you want to proceed?" context="" translation="変更はすべて失われます。続行しますか？" />
+  <StringItem id="Proceed with Revert?" context="" translation="元に戻して続行しますか?" />
   <StringItem id="Undo {0}" context="{0} is the name of the command" translation="「{0}」を元に戻す" />
   <StringItem id="Redo {0}" context="{0} is the name of the command " translation="「{0}」をやり直す" />
+  <StringItem id="Untitled" context="" translation="無題" />
   <StringItem id="Untitled" context="" translation="無題" />
   <StringItem id="Untitled" context="" translation="無題" />
   <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="最近使用したファイルの数" />
@@ -54,6 +111,7 @@
   <StringItem id="Layouts" context="" translation="レイアウト" />
   <StringItem id="Save Layout As..." context="" translation="レイアウトに名前を付けて保存..." />
   <StringItem id="Manage Layouts..." context="" translation="レイアウトを管理..." />
+  <StringItem id="Group" context="" translation="グループ" />
   <StringItem id="(none)" context="No flags" translation="(なし)" />
   <StringItem id="Unknown error code" context="" translation="未知のエラーコード" />
   <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0}ファイル" />
@@ -69,13 +127,13 @@
   <StringItem id="Perspective" context="a 3D perspective view of the model" translation="3D 投影" />
   <StringItem id="Save" context="Save the active file" translation="保存" />
   <StringItem id="Save the active file" context="" translation="アクティブなファイルを保存します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Save As ..." context="Save the active file under a new name" translation="名前を付けて保存..." />
   <StringItem id="Save the active file under a new name" context="" translation="アクティブなファイルに名前を付けて保存します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Save All" context="Saves all open files" translation="すべて保存" />
   <StringItem id="Save all open files" context="" translation="開いているファイルをすべて保存します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Close" context="Close the active file" translation="閉じる" />
   <StringItem id="Close the active file" context="" translation="アクティブなファイルを閉じます。" />
   <StringItem id="Print..." context="Print the active document" translation="印刷..." />
@@ -110,7 +168,7 @@
   <StringItem id="Unlock the selection to enable editing" context="" translation="選択部分が編集できるようにロックを解除します。" />
   <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
   <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Group" context="Group the selection into a single item" translation="グループ" />
   <StringItem id="Group the selection into a single item" context="" translation="選択部分をグループとして 1 つにまとめます。" />
   <StringItem id="Ungroup" context="Ungroup any selected groups" translation="グループ化解除" />
@@ -139,22 +197,22 @@
   <StringItem id="Pan and Zoom to center selection" context="" translation="パンおよびズームで選択部分が中央に表示されるようにします。" />
   <StringItem id="Align/Lefts" context="Align left sides of selected items" translation="整列/左揃え" />
   <StringItem id="Align left sides of selected items" context="" translation="選択したアイテムの左端を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/Rights" context="Align right sides of selected items" translation="整列/右揃え" />
   <StringItem id="Align right sides of selected items" context="" translation="選択したアイテムの右端を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/Centers" context="Align centers of selected items" translation="整列/中央揃え" />
   <StringItem id="Align centers of selected items" context="" translation="選択したアイテムの中央を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/Tops" context="Align tops of selected items" translation="整列/上揃え" />
   <StringItem id="Align tops of selected items" context="" translation="選択したアイテムの上端を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/Bottoms" context="Align bottoms of selected items" translation="整列/下揃え" />
   <StringItem id="Align bottoms of selected items" context="" translation="選択したアイテムの下端を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/Middles" context="" translation="整列/上下中央揃え" />
   <StringItem id="Align middles of selected items" context="" translation="選択したアイテムの上下の中央を揃えます。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Using+Standard+Command+Components" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Align/To Grid" context="Align selected items to x/y grid" translation="整列/グリッド" />
   <StringItem id="Align selected items to x/y grid" context="" translation="選択したアイテムを、X/Y グリッドに揃えます。" />
   <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="サイズ/等しくする" />

@@ -28,9 +28,9 @@ namespace FsmEditorSample
         /// Raises the EditingContext NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             base.OnNodeSet();
 
@@ -52,11 +52,11 @@ namespace FsmEditorSample
         /// <returns>Item's name in the context, or null if none</returns>
         string INamingContext.GetName(object item)
         {
-            Prototype prototype = Adapters.As<Prototype>(item);
+            Prototype prototype = item.As<Prototype>();
             if (prototype != null)
                 return prototype.Name;
 
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+            PrototypeFolder folder = item.As<PrototypeFolder>();
             if (folder != null)
                 return folder.Name;
 
@@ -70,8 +70,8 @@ namespace FsmEditorSample
         bool INamingContext.CanSetName(object item)
         {
             return
-                Adapters.Is<Prototype>(item) ||
-                Adapters.Is<PrototypeFolder>(item);
+                item.Is<Prototype>() ||
+                item.Is<PrototypeFolder>();
         }
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace FsmEditorSample
         /// <param name="name">New item name</param>
         void INamingContext.SetName(object item, string name)
         {
-            Prototype prototype = Adapters.As<Prototype>(item);
+            Prototype prototype = item.As<Prototype>();
             if (prototype != null)
             {
                 prototype.Name = name;
             }
             else
             {
-                PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+                PrototypeFolder folder = item.As<PrototypeFolder>();
                 if (folder != null)
                     folder.Name = name;
             }
@@ -116,15 +116,15 @@ namespace FsmEditorSample
             List<object> instances = new List<object>();
             foreach (object item in items)
             {
-                Prototype prototype = Adapters.As<Prototype>(item);
+                Prototype prototype = item.As<Prototype>();
                 if (prototype != null)
                 {
-                    instances.AddRange(Adapters.AsIEnumerable<object>(prototype.States));
-                    instances.AddRange(Adapters.AsIEnumerable<object>(prototype.Transitions));
+                    instances.AddRange(prototype.States.AsIEnumerable<object>());
+                    instances.AddRange(prototype.Transitions.AsIEnumerable<object>());
                     continue;
                 }
 
-                PrototypeFolder folder = Adapters.As<PrototypeFolder>(item);
+                PrototypeFolder folder = item.As<PrototypeFolder>();
                 if (folder != null)
                     instances.Add(folder);
             }
@@ -165,9 +165,9 @@ namespace FsmEditorSample
 
             foreach (object item in items)
             {
-                if (!Adapters.Is<State>(item) &&
-                    !Adapters.Is<Transition>(item) &&
-                    !Adapters.Is<Annotation>(item))
+                if (!item.Is<State>() &&
+                    !item.Is<Transition>() &&
+                    !item.Is<Annotation>())
                 {
                     return false;
                 }
@@ -186,18 +186,18 @@ namespace FsmEditorSample
             if (items == null)
                 return;
 
-            object[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            object[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
 
             // create a new prototype
             DomNode node = new DomNode(Schema.prototypeType.Type);
             Prototype prototype = node.As<Prototype>();
-            prototype.Name = Localizer.Localize("Prototype", "FSM prototype");
-            foreach (State state in Adapters.AsIEnumerable<State>(itemCopies))
+            prototype.Name = "Prototype".Localize("FSM prototype");
+            foreach (State state in itemCopies.AsIEnumerable<State>())
                 prototype.States.Add(state);
-            foreach (Transition transition in Adapters.AsIEnumerable<Transition>(itemCopies))
+            foreach (Transition transition in itemCopies.AsIEnumerable<Transition>())
                 prototype.Transitions.Add(transition);
 
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(m_activeItem);
+            PrototypeFolder folder = m_activeItem.As<PrototypeFolder>();
             if (folder == null)
                 folder = PrototypeFolder;
 
@@ -239,7 +239,7 @@ namespace FsmEditorSample
         /// <returns>Enumeration of children of the parent object</returns>
         IEnumerable<object> ITreeView.GetChildren(object parent)
         {
-            PrototypeFolder folder = Adapters.As<PrototypeFolder>(parent);
+            PrototypeFolder folder = parent.As<PrototypeFolder>();
             if (folder != null)
             {
                 foreach (PrototypeFolder childFolder in folder.Folders)
@@ -259,14 +259,14 @@ namespace FsmEditorSample
         /// <param name="info">Display info to update</param>
         public void GetInfo(object item, ItemInfo info)
         {
-            PrototypeFolder category = Adapters.As<PrototypeFolder>(item);
+            PrototypeFolder category = item.As<PrototypeFolder>();
             if (category != null)
             {
                 info.Label = category.Name;
             }
             else
             {
-                Prototype prototype = Adapters.As<Prototype>(item);
+                Prototype prototype = item.As<Prototype>();
                 if (prototype != null)
                 {
                     info.Label = prototype.Name;

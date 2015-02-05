@@ -38,7 +38,7 @@ namespace DomTreeEditorSample
         {
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
-            m_documentRegistry.ActiveDocumentChanged += new EventHandler(documentRegistry_ActiveDocumentChanged);
+            m_documentRegistry.ActiveDocumentChanged += documentRegistry_ActiveDocumentChanged;
             m_schemaLoader = schemaLoader;
             m_treeLister = treeLister;
         }
@@ -76,12 +76,9 @@ namespace DomTreeEditorSample
 
             if (m_curveEditor != null)
             {
-                Curve.EnforceCurveLimits = true;
                 m_curveEditor.Control.AutoComputeCurveLimitsEnabled = false;
-                m_curveEditor.Control.CurvesChanged += (sender, e) =>
-                {
-                    m_curveEditor.Control.FitAll();
-                };            
+                m_curveEditor.Control.OnlyEditSelectedCurves = true;
+                m_curveEditor.Control.CurvesChanged += (sender, e) => m_curveEditor.Control.FitAll();                
             }
         }
 
@@ -110,7 +107,7 @@ namespace DomTreeEditorSample
         /// Info describing our document type</summary>
         private static DocumentClientInfo s_info =
             new DocumentClientInfo(
-                Localizer.Localize("UI"),   // file type
+                "UI".Localize(),   // file type
                 ".uif",                      // file extension
                 null,                       // "new document" icon
                 null);                      // "open document" icon

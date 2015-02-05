@@ -1,5 +1,6 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
@@ -23,14 +24,21 @@ namespace Sce.Atf.Applications
         {
             m_commandService = commandService;
             m_contextRegistry = contextRegistry;
+            m_contextRegistry.ActiveContextChanged += ActiveContextChanging;
+            m_contextRegistry.ActiveContextChanged += ActiveContextChanged;
         }
 
         #region IInitializable Members
 
         void IInitializable.Initialize()
         {
+            CommandInfo.EditSelectAll.EnableCheckCanDoEvent(this);
             m_commandService.RegisterCommand(CommandInfo.EditSelectAll, this);
+
+            CommandInfo.EditDeselectAll.EnableCheckCanDoEvent(this);
             m_commandService.RegisterCommand(CommandInfo.EditDeselectAll, this);
+
+            CommandInfo.EditInvertSelection.EnableCheckCanDoEvent(this);
             m_commandService.RegisterCommand(CommandInfo.EditInvertSelection, this);
         }
 
@@ -138,31 +146,23 @@ namespace Sce.Atf.Applications
             if (commandTag is StandardCommand)
             {
                 ISelectionContext selectionContext = m_contextRegistry.GetActiveContext<ISelectionContext>();
-                IEnumerableContext enumerableContext = m_contextRegistry.GetActiveContext<IEnumerableContext>(); ;
+                IEnumerableContext enumerableContext = m_contextRegistry.GetActiveContext<IEnumerableContext>();
 
+                // This logic needs to be kept in sync with ActiveContextChanged() and SelectionChanged().
                 switch ((StandardCommand)commandTag)
                 {
-                    case StandardCommand.EditSelectAll:
-                        if (selectionContext != null && enumerableContext != null)
-                        {
-                            // test if there are any objects
-                            foreach (object item in enumerableContext.Items)
-                            {
-                                canDo = true;
-                                break;
-                            }
-                        }
-                        break;
-
                     case StandardCommand.EditDeselectAll:
                         canDo =
                             selectionContext != null &&
                             selectionContext.LastSelected != null;
                         break;
 
+                    case StandardCommand.EditSelectAll:
                     case StandardCommand.EditInvertSelection:
+                        // Doing an exact test to see if these commands are useful is expensive.
+                        // Let's enable them if there is a selection and enumerable context.
                         canDo =
-                            selectionContext != null && // if selection, and enumerable, we can invert
+                            selectionContext != null &&
                             enumerableContext != null;
                         break;
                 }
@@ -204,6 +204,29 @@ namespace Sce.Atf.Applications
         }
 
         #endregion
+
+        private void ActiveContextChanging(object sender, EventArgs eventArgs)
+        {
+            var selectionContext = m_contextRegistry.GetActiveContext<ISelectionContext>();
+            if (selectionContext != null)
+                selectionContext.SelectionChanged -= SelectionChanged;
+        }
+
+        private void ActiveContextChanged(object sender, EventArgs eventArgs)
+        {
+            var selectionContext = m_contextRegistry.GetActiveContext<ISelectionContext>();
+            if (selectionContext != null)
+                selectionContext.SelectionChanged += SelectionChanged;
+
+            CommandInfo.EditSelectAll.OnCheckCanDo(this);
+            CommandInfo.EditDeselectAll.OnCheckCanDo(this);
+            CommandInfo.EditInvertSelection.OnCheckCanDo(this);
+        }
+
+        private void SelectionChanged(object sender, EventArgs eventArgs)
+        {
+            CommandInfo.EditDeselectAll.OnCheckCanDo(this);
+        }
 
         private readonly ICommandService m_commandService;
         private readonly IContextRegistry m_contextRegistry;

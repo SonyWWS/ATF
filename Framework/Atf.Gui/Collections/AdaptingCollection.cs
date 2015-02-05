@@ -44,6 +44,9 @@ namespace Sce.Atf.Collections
     /// <typeparam name="T">Type of items in the collection</typeparam>
     public class AdaptingCollection<T> : AdaptingCollection<T, IDictionary<string, object>>
     {
+        /// <summary>
+        /// Constructor with adapter function</summary>
+        /// <param name="adaptor">Function to apply to items in the collection</param>
         public AdaptingCollection(Func<IEnumerable<Lazy<T, IDictionary<string, object>>>,
                                        IEnumerable<Lazy<T, IDictionary<string, object>>>> adaptor)
             : base(adaptor)

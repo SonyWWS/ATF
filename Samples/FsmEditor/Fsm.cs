@@ -67,7 +67,7 @@ namespace FsmEditorSample
         /// Gets the sequence of annotations in the context</summary>
         IEnumerable<IAnnotation> IAnnotatedDiagram.Annotations
         {
-            get { return Adapters.AsIEnumerable<IAnnotation>(Annotations); }
+            get { return Annotations.AsIEnumerable<IAnnotation>(); }
         }
 
         #endregion

@@ -12,18 +12,15 @@ namespace Sce.Atf.Wpf.Behaviors
 
     /// <summary>
     /// A DataTemplateSelector which raises the bubbling TemplateRequested routed event
-    /// on the templated element when a DataTemplate must be chosen.
-    /// </summary>
+    /// on the templated element when a DataTemplate must be chosen</summary>
     /// <remarks>
-    /// Documentation:  http://www.codeproject.com/useritems/RoutedTemplateSelection.asp
-    /// </remarks>
+    /// Documentation: http://www.codeproject.com/useritems/RoutedTemplateSelection.asp </remarks>
     public class RoutedDataTemplateSelector : DataTemplateSelector
     {
         #region TemplateRequested [routed event]
 
         /// <summary>
-        /// Represents the TemplateRequested bubbling routed event.
-        /// </summary>
+        /// Represents the TemplateRequested bubbling routed event</summary>
         public static readonly RoutedEvent TemplateRequestedEvent =
             EventManager.RegisterRoutedEvent(
                 "TemplateRequested",
@@ -31,11 +28,13 @@ namespace Sce.Atf.Wpf.Behaviors
                 typeof(TemplateRequestedEventHandler),
                 typeof(RoutedDataTemplateSelector));
 
-        // This event declaration is only here so that the compiler allows
-        // the TemplateRequested event to be assigned a handler in XAML.
-        // Since DataTemplateSelector does not derive from UIElement it 
-        // does not have the AddHandler/RemoveHandler methods typically
-        // used within an explicit event declaration.
+        /// <summary>
+        /// TemplateRequested event</summary>
+        /// <remarks>This event declaration is only here so that the compiler allows
+        /// the TemplateRequested event to be assigned a handler in XAML.
+        /// Since DataTemplateSelector does not derive from UIElement, it 
+        /// does not have the AddHandler/RemoveHandler methods typically
+        /// used within an explicit event declaration.</remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public event TemplateRequestedEventHandler TemplateRequested
         {
@@ -49,11 +48,10 @@ namespace Sce.Atf.Wpf.Behaviors
 
         /// <summary>
         /// Raises the TemplateRequested event up the 'container' element's logical tree
-        /// so that the DataTemplate to return can be determined.
-        /// </summary>
-        /// <param name="item">The data object being templated.</param>
-        /// <param name="container">The element which contains the data object.</param>
-        /// <returns>The DataTemplate to apply.</returns>
+        /// so that the DataTemplate to return can be determined</summary>
+        /// <param name="item">The data object being templated</param>
+        /// <param name="container">The element which contains the data object</param>
+        /// <returns>The DataTemplate to apply or null</returns>
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             // We need 'container' to be a UIElement because that class
@@ -79,12 +77,16 @@ namespace Sce.Atf.Wpf.Behaviors
     #region TemplateRequestedEventArgs
 
     /// <summary>
-    /// Event argument used by the RoutedDataTemplateSelector's TemplateRequested event.
-    /// </summary>
+    /// Event arguments used by the RoutedDataTemplateSelector's TemplateRequested event</summary>
     public class TemplateRequestedEventArgs : RoutedEventArgs
     {
         private readonly object m_dataObject;
 
+        /// <summary>
+        /// Constructor with event, element, and data object</summary>
+        /// <param name="routedEvent">RoutedEvent</param>
+        /// <param name="templatedElement">UIElement containing data object for which template must be specified</param>
+        /// <param name="dataObject">Data object being templated</param>
         public TemplateRequestedEventArgs(RoutedEvent routedEvent, UIElement templatedElement, object dataObject)
             : base(routedEvent, templatedElement)
         {
@@ -92,21 +94,18 @@ namespace Sce.Atf.Wpf.Behaviors
         }
 
         /// <summary>
-        /// Returns the data item being templated.
-        /// </summary>
+        /// Gets the data item being templated</summary>
         public object DataObject
         {
             get { return this.m_dataObject; }
         }
 
         /// <summary>
-        /// Gets/sets the DataTemplate to apply to the templated element.
-        /// </summary>
+        /// Gets or sets the DataTemplate to apply to the templated element</summary>
         public DataTemplate TemplateToUse { get; set; }
 
         /// <summary>
-        /// The UIElement which contains the data object for which a template must be specified.
-        /// </summary>
+        /// UIElement which contains the data object for which a template must be specified</summary>
         public UIElement TemplatedElement
         {
             get { return base.OriginalSource as UIElement; }

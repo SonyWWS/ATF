@@ -23,10 +23,10 @@ namespace Sce.Atf.Wpf.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.PreviewMouseDown += new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
-            AssociatedObject.PreviewMouseUp += new MouseButtonEventHandler(AssociatedObject_PreviewMouseUp);
-            AssociatedObject.LostFocus += new RoutedEventHandler(AssociatedObject_LostFocus);
-            AssociatedObject.MouseDoubleClick += new MouseButtonEventHandler(AssociatedObject_MouseDoubleClick);
+            AssociatedObject.PreviewMouseDown += AssociatedObject_PreviewMouseDown;
+            AssociatedObject.PreviewMouseUp += AssociatedObject_PreviewMouseUp;
+            AssociatedObject.LostFocus += AssociatedObject_LostFocus;
+            AssociatedObject.MouseDoubleClick += AssociatedObject_MouseDoubleClick;
             var node = AssociatedObject.DataContext as Node;
             if(node != null)
                 node.PropertyChanged += Node_PropertyChanged;
@@ -49,13 +49,15 @@ namespace Sce.Atf.Wpf.Behaviors
             }
         }
 
+        /// <summary>
+        /// Handle Detaching event and perform custom actions</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.PreviewMouseDown -= new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
-            AssociatedObject.PreviewMouseUp -= new MouseButtonEventHandler(AssociatedObject_PreviewMouseUp);
-            AssociatedObject.LostFocus -= new RoutedEventHandler(AssociatedObject_LostFocus);
-            AssociatedObject.MouseDoubleClick -= new MouseButtonEventHandler(AssociatedObject_MouseDoubleClick);
+            AssociatedObject.PreviewMouseDown -= AssociatedObject_PreviewMouseDown;
+            AssociatedObject.PreviewMouseUp -= AssociatedObject_PreviewMouseUp;
+            AssociatedObject.LostFocus -= AssociatedObject_LostFocus;
+            AssociatedObject.MouseDoubleClick -= AssociatedObject_MouseDoubleClick;
             var node = AssociatedObject.DataContext as Node;
             if (node != null)
                 node.PropertyChanged -= Node_PropertyChanged;
@@ -113,7 +115,7 @@ namespace Sce.Atf.Wpf.Behaviors
                     {
                         m_timer = new DispatcherTimer();
                         m_timer.Interval = TimeSpan.FromMilliseconds(s_doubleClickTime + 100);
-                        m_timer.Tick += new EventHandler(Tick);
+                        m_timer.Tick += Tick;
                         m_timer.Start();
                     }
                 }

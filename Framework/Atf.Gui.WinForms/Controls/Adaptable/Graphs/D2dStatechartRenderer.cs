@@ -27,7 +27,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_theme = theme;
             UpdateToTheme();                        
-            m_theme.Redraw += new EventHandler(theme_Redraw);
+            m_theme.Redraw += theme_Redraw;
             m_stateRect.RadiusX = CornerRadius;
             m_stateRect.RadiusY = CornerRadius;                            
         }
@@ -38,7 +38,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
-            m_theme.Redraw -= new EventHandler(theme_Redraw);
+            m_theme.Redraw -= theme_Redraw;
             if (disposing)
             {
                 m_centerText.Dispose();
@@ -178,7 +178,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
-                foreach (TEdge edge in Enumerable.Reverse(graph.Edges))
+                foreach (TEdge edge in graph.Edges.Reverse())
                 {
                     if (Pick(edge, v))
                     {
@@ -188,7 +188,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (TNode state in Enumerable.Reverse(graph.Nodes))
+            foreach (TNode state in graph.Nodes.Reverse())
             {
                 RectangleF bounds = state.Bounds;
                 bounds.Inflate(tolerance, tolerance);
@@ -282,7 +282,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 StateIndicators indicators = state.Indicators;
                 if ((indicators & StateIndicators.Active) != 0)
                 {
-                    bool drawIndicator = (scaleX * CornerRadius) > 2;
                     if (radInPixel > MinRadiusInPixel)
                     {
                         D2dEllipse ellipse = new D2dEllipse();
@@ -374,7 +373,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             D2dEllipse innerEllipse = ellipse;
             innerEllipse.RadiusX = 4;
             innerEllipse.RadiusY = 4;
-            PointF c = ellipse.Center;
 
             g.FillEllipse(ellipse, m_theme.FillBrush);
 

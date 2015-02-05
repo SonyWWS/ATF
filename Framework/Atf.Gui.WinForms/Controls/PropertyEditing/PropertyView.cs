@@ -103,7 +103,16 @@ namespace Sce.Atf.Controls.PropertyEditing
             if (BoldFont != null)
                 BoldFont.Dispose();
 
-            BoldFont = new Font(base.Font, FontStyle.Bold);
+            if (base.Font.FontFamily.IsStyleAvailable(FontStyle.Bold))
+            {
+                BoldFont = new Font(base.Font, FontStyle.Bold);
+            }
+            else
+            {
+                // if FontStyle.Bold is not supported,
+                // create new Font instead of cloning.                
+                BoldFont = new Font(base.Font, base.Font.Style);
+            }
         }
 
         /// <summary>
@@ -268,7 +277,10 @@ namespace Sce.Atf.Controls.PropertyEditing
             UpdatePropertySorting();
 
             ResumeLayout(true);
-         
+
+            // some property control need to be refreshed
+            // when assigning new editing-context.
+            RefreshEditingControls(); 
             Invalidate();
         }
 
@@ -402,6 +414,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                         PropertyUtils.ResetProperty(SelectedObjects, p.Descriptor);
                 }
 
+                if (!EditingContext.Is<IObservableContext>())
+                    RefreshEditingControls();
                 Invalidate();
             }
         }
@@ -738,8 +752,6 @@ namespace Sce.Atf.Controls.PropertyEditing
                         }
                     }
                 }
-                if (attributes.Length > 0 && customizeAttribute == null)
-                    throw new InvalidOperationException("Missing CustomizeAttribute: " + descriptor.Name);
             }
 
             // set the property customize attributes
@@ -751,6 +763,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                 property.DisableEditing = customizeAttribute.DisableEditing;
                 property.DefaultWidth = customizeAttribute.ColumnWidth;
                 property.HideDisplayName = customizeAttribute.HideDisplayName;
+                property.HorizontalEditorOffset = customizeAttribute.HorizontalEditorOffset;
+                property.NameHasWholeRow = customizeAttribute.NameHasWholeRow;
             }
 
             Control control = property.Control;
@@ -1249,36 +1263,63 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// <summary>
             /// PropertyDescriptor</summary>
             public PropertyDescriptor Descriptor;
+            
             /// <summary>
             /// Property category</summary>
             public Category Category;
+            
             /// <summary>
             /// PropertyEditorControlContext</summary>
             public PropertyEditorControlContext Context;
+            
             /// <summary>
             /// Index in list of properties in property editor</summary>
             public int DescriptorIndex;
+            
             /// <summary>
             /// Whether listed first in its category</summary>
             public bool FirstInCategory;
+            
             /// <summary>
             /// Whether sorting disabled for this property</summary>
             public bool DisableSort;
+            
             /// <summary>
             /// Whether to disable dragging for this property</summary>
             public bool DisableDragging;
+            
             /// <summary>
             /// Whether to disable resizing for this property</summary>
             public bool DisableResize;
+            
             /// <summary>
-            /// Whether to disable eiting for this property</summary>
+            /// Whether to disable editing for this property</summary>
             public bool DisableEditing;
+            
             /// <summary>
             /// Whether to hide UI label for this property</summary>
             public bool HideDisplayName;
+
             /// <summary>
-            /// Default width of property in property editor</summary>
+            /// Default width of the property editor or value. If 0, then the global default is used.
+            /// Determines the width of the column in the spreadsheet-style property editor.</summary>
             public int DefaultWidth;
+
+            /// <summary>
+            /// The number of pixels that the editing control or value
+            /// is shifted to the right of the start of the row, in the 2-column property editor. A
+            /// negative number means "use the default" which is to use the user-adjustable
+            /// splitter between the name and the value columns. Default is -1.</summary>
+            public int HorizontalEditorOffset = -1;
+
+            /// <summary>
+            /// Whether or not the name of the property is given the whole row in the 2-column
+            /// property editor. Default is false.</summary>
+            /// <remarks>If HorizontalEditorOffset is a small positive number, then it may be
+            /// useful to set this property to 'true' so that the property name can be fully
+            /// displayed. If 'true', the 2-column property editor will take more vertical space
+            /// but can save a lot of horizontal space when HorizontalEditorOffset is used.</remarks>
+            public bool NameHasWholeRow;
 
             // for child properties
             /// <summary>
@@ -1429,7 +1470,8 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Gets or sets array of column attributes for property editing</summary>
+        /// Gets or sets array of settings for specifying how properties should be displayed or used
+        /// in the spreadsheet-style or 2-column property editors.</summary>
         public CustomizeAttribute[] CustomizeAttributes { get; set; }
 
         private IPropertyEditingContext m_editingContext;
@@ -1444,7 +1486,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         private PropertySorting m_propertySorting = PropertySorting.ByCategory;
         private readonly Dictionary<string, bool> m_categoryExpanded = new Dictionary<string, bool>();
         private readonly HashSet<PropertyDescriptor> m_processedDescriptors 
-            = new HashSet<PropertyDescriptor>(); // used for parent-child cylce detection only
+            = new HashSet<PropertyDescriptor>(); // used for parent-child cycle detection only
         private List<string> m_customSortOrder;
 
         #endregion
@@ -1479,29 +1521,31 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Size of category expanders, in pixels</summary>
         protected const int ExpanderSize = Sce.Atf.GdiUtil.ExpanderSize;
 
+        /// <summary>
+        /// Attribute used to set default column attributes for property editing</summary>
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
         public class CustomizeAttribute : Sce.Atf.Controls.PropertyEditing.CustomizeAttribute
         {
             /// <summary>
             /// Constructor</summary>
             /// <param name="propertyName">Property name</param>
-            /// <param name="columnWidth">Column width</param>
-            public CustomizeAttribute(string propertyName, int columnWidth) 
-                : base(propertyName, columnWidth)
-            {
-            }
-
-            /// <summary>
-            /// Constructor</summary>
-            /// <param name="propertyName">Property name</param>
-            /// <param name="columnWidth">Column width</param>
+            /// <param name="columnWidth">Column width. 0 means use the global default.</param>
             /// <param name="disableSort">Whether or not to disable column sorting</param>
             /// <param name="disableDragging">Whether or not to disable column dragging</param>
             /// <param name="disableResize">Whether or not to disable column resizing</param>
             /// <param name="disableEditing">Whether or not to disable column editing</param>
             /// <param name="hideDisplayName">Whether or not to hide the column name</param>
-            public CustomizeAttribute(string propertyName, int columnWidth, bool disableSort, bool disableDragging, bool disableResize, bool disableEditing, bool hideDisplayName) 
-                : base(propertyName, columnWidth, disableSort, disableDragging, disableResize, disableEditing, hideDisplayName)
+            /// <param name="horizontalEditorOffset">The number of pixels that the editing control or value
+            /// is shifted to the right of the start of the row, in the 2-column property editor. A
+            /// negative number means "use the default" which is to use the user-adjustable
+            /// splitter between the name and the value columns.</param>
+            /// <param name="nameHasWholeRow">Whether or not the name of the property is given the
+            /// whole row in the 2-column property editor</param>
+            public CustomizeAttribute(string propertyName, int columnWidth=0, bool disableSort=false, bool disableDragging=false,
+                bool disableResize = false, bool disableEditing = false, bool hideDisplayName = false,
+                int horizontalEditorOffset = -1, bool nameHasWholeRow = false) 
+                : base(propertyName, columnWidth, disableSort, disableDragging, disableResize, disableEditing,
+                    hideDisplayName, horizontalEditorOffset, nameHasWholeRow)
             {
             }
         }

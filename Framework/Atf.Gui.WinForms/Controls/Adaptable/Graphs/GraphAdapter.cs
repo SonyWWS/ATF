@@ -38,7 +38,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ITransformAdapter transformAdapter)
         {
             m_renderer = renderer;
-            m_renderer.Redraw += new EventHandler(renderer_Redraw);
+            m_renderer.Redraw += renderer_Redraw;
             m_transformAdapter = transformAdapter;
         }
 
@@ -48,7 +48,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Releases non-memory resources</summary>
         public void Dispose()
         {
-            m_renderer.Redraw -= new EventHandler(renderer_Redraw);
+            m_renderer.Redraw -= renderer_Redraw;
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public void Frame(TNode node)
         {
             Rectangle bounds = GetBounds(node);
-            TransformAdapters.Frame(m_transformAdapter, bounds);
+            m_transformAdapter.Frame(bounds);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public void Frame(IEnumerable<TNode> nodes)
         {
             Rectangle bounds = GetBounds(nodes);
-            TransformAdapters.Frame(m_transformAdapter, bounds);
+            m_transformAdapter.Frame(bounds);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public void EnsureVisible(IEnumerable<TNode> nodes)
         {
             Rectangle bounds = GetBounds(nodes);
-            TransformAdapters.EnsureVisible(m_transformAdapter, bounds);
+            m_transformAdapter.EnsureVisible(bounds);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         Rectangle IPickingAdapter.GetBounds(IEnumerable<object> items)
         {
-            return GetBounds(Adapters.AsIEnumerable<TNode>(items));
+            return GetBounds(items.AsIEnumerable<TNode>());
         }
 
         #endregion
@@ -298,8 +298,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="control">Adaptable control</param>
         protected override void Bind(AdaptableControl control)
         {
-            control.ContextChanged += new EventHandler(control_ContextChanged);
-            control.Paint += new PaintEventHandler(control_Paint);
+            control.ContextChanged += control_ContextChanged;
+            control.Paint += control_Paint;
         }
 
         /// <summary>
@@ -307,8 +307,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="control">Adaptable control</param>
         protected override void Unbind(AdaptableControl control)
         {
-            control.ContextChanged -= new EventHandler(control_ContextChanged);
-            control.Paint -= new PaintEventHandler(control_Paint);
+            control.ContextChanged -= control_ContextChanged;
+            control.Paint -= control_Paint;
         }
 
         private void control_ContextChanged(object sender, EventArgs e)
@@ -323,15 +323,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     if (m_observableContext != null)
                     {
-                        m_observableContext.ItemInserted -= new EventHandler<ItemInsertedEventArgs<object>>(graph_ObjectInserted);
-                        m_observableContext.ItemRemoved -= new EventHandler<ItemRemovedEventArgs<object>>(graph_ObjectRemoved);
-                        m_observableContext.ItemChanged -= new EventHandler<ItemChangedEventArgs<object>>(graph_ObjectChanged);
-                        m_observableContext.Reloaded -= new EventHandler(graph_Reloaded);
+                        m_observableContext.ItemInserted -= graph_ObjectInserted;
+                        m_observableContext.ItemRemoved -= graph_ObjectRemoved;
+                        m_observableContext.ItemChanged -= graph_ObjectChanged;
+                        m_observableContext.Reloaded -= graph_Reloaded;
                         m_observableContext = null;
                     }
                     if (m_selectionContext != null)
                     {
-                        m_selectionContext.SelectionChanged -= new EventHandler(selection_Changed);
+                        m_selectionContext.SelectionChanged -= selection_Changed;
                         m_selectionContext = null;
                     }
 
@@ -345,16 +345,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     m_observableContext = AdaptedControl.ContextAs<IObservableContext>();
                     if (m_observableContext != null)
                     {
-                        m_observableContext.ItemInserted += new EventHandler<ItemInsertedEventArgs<object>>(graph_ObjectInserted);
-                        m_observableContext.ItemRemoved += new EventHandler<ItemRemovedEventArgs<object>>(graph_ObjectRemoved);
-                        m_observableContext.ItemChanged += new EventHandler<ItemChangedEventArgs<object>>(graph_ObjectChanged);
-                        m_observableContext.Reloaded += new EventHandler(graph_Reloaded);
+                        m_observableContext.ItemInserted += graph_ObjectInserted;
+                        m_observableContext.ItemRemoved += graph_ObjectRemoved;
+                        m_observableContext.ItemChanged += graph_ObjectChanged;
+                        m_observableContext.Reloaded += graph_Reloaded;
                     }
 
                     m_selectionContext = AdaptedControl.ContextAs<ISelectionContext>();
                     if (m_selectionContext != null)
                     {
-                        m_selectionContext.SelectionChanged += new EventHandler(selection_Changed);
+                        m_selectionContext.SelectionChanged += selection_Changed;
                     }
 
                     m_visibilityContext = AdaptedControl.ContextAs<IVisibilityContext>();

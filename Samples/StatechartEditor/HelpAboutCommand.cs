@@ -34,7 +34,7 @@ namespace StatechartEditorSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("Statechart Editor"), appURL, richTextBox, null, null, true);
+                "Statechart Editor".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

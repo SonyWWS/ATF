@@ -139,7 +139,7 @@ namespace CircuitEditorSample.Tests
 			foreach (var groupPin in structure.OutputGroupPins)
 				groupPin.Visible = true;
 
-			// make some edges betwen InputFiles & structure
+			// make some edges between InputFiles & structure
 			var connection0 = CircuitAddEdge(inputFiles, 0, structure, 0);
 			circuit.Wires.Add(connection0);
 			var connection1 = CircuitAddEdge(inputFiles, 1, structure, 1);

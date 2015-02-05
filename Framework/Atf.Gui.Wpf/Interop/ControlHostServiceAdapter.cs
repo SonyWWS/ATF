@@ -10,7 +10,7 @@ namespace Sce.Atf.Wpf.Interop
 {
     /// <summary>
     /// Provides control host services. 
-    /// Class to adapt Sce.Atf.Wpf.Applications.IControlHostService to Sce.Atf.Applications.IControlHostService
+    /// Class to adapt Sce.Atf.Wpf.Applications.IControlHostService to Sce.Atf.Applications.IControlHostService.
     /// This allows WinForms-based applications to be run in a WPF based application.</summary>
     [Export(typeof(Sce.Atf.Applications.IControlHostService))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -42,8 +42,8 @@ namespace Sce.Atf.Wpf.Interop
             var clientAdapter = GetOrCreateClientAdapter(client);
 
             // WPF control host service requires a unique control ID in order to be able to reload window layouts
-            // on app startup
-            // this is a problem as we do not have one here.
+            // on app startup.
+            // This is a problem as we do not have one here.
             // The best we can do is try and generate a unique hash
             int uniqueId = GenerateId(control, controlInfo, client);
 

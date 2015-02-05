@@ -19,7 +19,7 @@ namespace FileExplorerSample
         /// Constructor</summary>
         public MainForm()
         {
-            Text = Localizer.Localize("File Explorer Sample");
+            Text = "File Explorer Sample".Localize();
 
             m_splitContainer = new SplitContainer();
             m_splitContainer.Orientation = Orientation.Vertical;

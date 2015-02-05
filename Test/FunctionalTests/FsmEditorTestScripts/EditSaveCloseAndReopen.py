@@ -47,20 +47,20 @@ Test.Equal(states.Count, fsm.States.Count, "Verify states count matches")
 Test.Equal(comments.Count, fsm.Annotations.Count, "Verify comments count matches")
 Test.Equal(transitions.Count, fsm.Transitions.Count, "Verify transitions count matches")
 for i in range(states.Count):
-    print "Testing state#" + str(i)
+    print "Testing state#" + unicode(i)
     Test.Equal(states[i].Name, fsm.States[i].Name, "Verify name")
     Test.Equal(states[i].Position.X, fsm.States[i].Position.X, "Verify X")
     Test.Equal(states[i].Position.Y, fsm.States[i].Position.Y, "Verify Y")
     Test.Equal(states[i].Size, fsm.States[i].Size, "Verify size")
 
 for i in range(comments.Count):
-    print "Testing comment#" + str(i)
+    print "Testing comment#" + unicode(i)
     Test.Equal(comments[i].Text, fsm.Annotations[i].Text, "Verify text")
     Test.Equal(comments[i].Location.X, fsm.Annotations[i].Location.X, "Verify X")
     Test.Equal(comments[i].Location.Y, fsm.Annotations[i].Location.Y, "Verify Y")
 
 for i in range(transitions.Count):
-    print "Testing transition#" + str(i)
+    print "Testing transition#" + unicode(i)
     Test.Equal(transitions[i].Label, fsm.Transitions[i].Label, "Verify label")
     Test.Equal(transitions[i].FromState.Name, fsm.Transitions[i].FromState.Name, "Verify FromState name")
     Test.Equal(transitions[i].ToState.Name, fsm.Transitions[i].ToState.Name, "Verify ToState name")

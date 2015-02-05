@@ -1,7 +1,7 @@
 ﻿namespace Sce.Atf.Controls
 {
     /// <summary>
-    /// Dialog that enumerates all controls accessable by the specified IControlHostService.
+    /// Dialog that enumerates all controls accessible by the specified IControlHostService.
     /// 
     /// A TabbedControlSelectorDialog persists until the Ctrl button is released. Until then, 
     /// it consumes Ctrl+[Tab|Up|Down|Left|Right] key presses to switch the currently selected 

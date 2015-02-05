@@ -163,7 +163,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
                 else if (e.DomNode.Is<GroupPin>() && e.AttributeInfo == PinNameAttributeAttribute)
                 {
-
                     if (e.DomNode.Parent != null)
                     {
                         var subGraph = e.DomNode.Parent.Cast<Group>();
@@ -183,15 +182,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 uniqueName.Name(grpPin.Name);
                         }
 
-
                         string unique = uniqueName.Name(childGrpPin.Name);
                         if (unique != childGrpPin.Name)
                             childGrpPin.Name = unique;
 
-                        // try to reset IsDefaultName
-                        childGrpPin.IsDefaultName = childGrpPin.Name == childGrpPin.DefaultName(childGrpPin.IsInputSide);
-                        UpdateParentGroupPinName(childGrpPin.IsInputSide, childGrpPin);
+                        // Reset IsDefaultName. Ignore the suffix because there are typically multiple
+                        //  circuit elements in a group and the child group pin doesn't know about
+                        //  our unique namer.
+                        string defaultName = childGrpPin.DefaultName(childGrpPin.IsInputSide);
+                        string ourRoot;
+                        int ourSuffix;
+                        uniqueName.Parse(unique, out ourRoot, out ourSuffix);
+                        childGrpPin.IsDefaultName = defaultName == ourRoot;
 
+                        UpdateParentGroupPinName(childGrpPin.IsInputSide, childGrpPin);
                     }
                 }
             }
@@ -226,15 +230,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             {
                 if (grpPin.InternalElement.DomNode != node) continue;
                 if (grpPin.IsDefaultName)
-                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex).Name;
+                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.InputPin(grpPin.InternalPinIndex).Name;
             }
 
             foreach (GroupPin grpPin in group.Outputs)
             {
                 if (grpPin.InternalElement.DomNode != node) continue;
                 if (grpPin.IsDefaultName)
-                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex).Name;
-
+                    grpPin.Name = grpPin.InternalElement.Name + ":" + grpPin.InternalElement.OutputPin(grpPin.InternalPinIndex).Name;
             }
         }
 
@@ -390,7 +393,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         {
                             var grpPin = matchedInput.Second.Cast<GroupPin>();
                             wire.InputElement = grpPin.InternalElement;
-                            wire.InputPin = grpPin.InternalElement.AllInputPins.ElementAt(grpPin.InternalPinIndex);
+                            wire.InputPin = grpPin.InternalElement.InputPin(grpPin.InternalPinIndex);
                         }
                         else
                         {
@@ -402,7 +405,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         {
                             var grpPin = matchedOutput.Second.Cast<GroupPin>();
                             wire.OutputElement = grpPin.InternalElement;
-                            wire.OutputPin = grpPin.InternalElement.AllOutputPins.ElementAt(grpPin.InternalPinIndex);
+                            wire.OutputPin = grpPin.InternalElement.OutputPin(grpPin.InternalPinIndex);
                         }
                         else
                         {
@@ -588,6 +591,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <remarks>Currently only update group pin connectivity for the group template</remarks>
         public void UpdateTemplateInfo(Group template)
         {
+            if (template == null)
+                return;
+
             // for template editing, the  group pin connectivity should be updated 
             // by scanning  all wires of all graph containers that share it by referencing
             var containersToCheck = new List<ICircuitContainer>();

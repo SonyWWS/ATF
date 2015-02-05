@@ -43,6 +43,8 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets the resource key for associated item state image</summary>
         public object StateImageKey { get; set; }
 
+        /// <summary>
+        /// Get or set FontWeight</summary>
         public FontWeight FontWeight
         {
             get
@@ -59,6 +61,8 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Get or set FontStyle for italic style</summary>
         public FontStyle FontItalicStyle
         {
             get
@@ -76,8 +80,7 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         /// <summary>
-        /// Resource key for associated item overlay image
-        /// </summary>
+        /// Get or set resource key for associated item overlay image</summary>
         public object OverlayImageKey { get; set; }
 
         /// <summary>

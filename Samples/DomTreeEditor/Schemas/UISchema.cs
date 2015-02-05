@@ -66,6 +66,7 @@ namespace DomTreeEditorSample
 
             curveType.Type = getNodeType("IdolMinds.UI", "curveType");
             curveType.nameAttribute = curveType.Type.GetAttributeInfo("name");
+            curveType.displayNameAttribute = curveType.Type.GetAttributeInfo("displayName");
             curveType.minXAttribute = curveType.Type.GetAttributeInfo("minX");
             curveType.maxXAttribute = curveType.Type.GetAttributeInfo("maxX");
             curveType.minYAttribute = curveType.Type.GetAttributeInfo("minY");
@@ -190,6 +191,7 @@ namespace DomTreeEditorSample
         {
             public static DomNodeType Type;
             public static AttributeInfo nameAttribute;
+            public static AttributeInfo displayNameAttribute;
             public static AttributeInfo minXAttribute;
             public static AttributeInfo maxXAttribute;
             public static AttributeInfo minYAttribute;

@@ -44,13 +44,30 @@ namespace Sce.Atf.Direct2D
                 s_expanderPoints[2] = new PointF(x, y);
                 g.DrawPolygon(s_expanderPoints, brush, 1.0f);
             }
+        }
 
-            //g.DrawRectangle(new RectangleF(x, y, size, size), brush);           
-            //float lineLength = size - 4;
-            //float center = size / 2;
-            //g.DrawLine(x + 2, y + center, x + 2 + lineLength, y + center, brush);
-            //if (!expanded)
-            //    g.DrawLine(x + center, y + 2, x + center, y + 2 + lineLength, brush);
+        /// <summary>
+        /// Draws the eye icon</summary>
+        /// <param name="g">The D2dGraphics graphics object</param>
+        /// <param name="rect">The rectangle to fit the eye icon in</param>
+        /// <param name="pen">The pen used to draw the icon</param>
+        /// <param name="strokeWidth">Width of the stroke</param>
+        public static void DrawEyeIcon(this D2dGraphics g, RectangleF rect, D2dBrush pen, float strokeWidth)
+        {
+            float delta = rect.Width / 3;
+            var p1 = new PointF(rect.X, rect.Y + rect.Height / 2);
+            var p2 = new PointF(p1.X + delta, rect.Y);
+            var p3 = new PointF(p1.X + 2 * delta, rect.Y);
+            var p4 = new PointF(rect.X + rect.Width, rect.Y + rect.Height / 2);
+            g.DrawBezier(p1, p2, p3, p4, pen, strokeWidth);// top lid
+            p2 = new PointF(p2.X, rect.Y + rect.Height);
+            p3 = new PointF(p3.X, rect.Y + rect.Height);
+            g.DrawBezier(p1, p2, p3, p4, pen, strokeWidth); //bottom lid
+
+            var irisCenter = new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
+            float irisRadius = 0.2f * Math.Min(rect.Width, rect.Height);
+            var irisRect = new RectangleF(irisCenter.X - irisRadius, irisCenter.Y - irisRadius, 2 * irisRadius, 2 * irisRadius);
+            g.DrawEllipse(irisRect, pen, strokeWidth * 1.8f);
         }
 
         /// <summary>

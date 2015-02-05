@@ -91,43 +91,36 @@ namespace Sce.Atf.Controls
             DoubleBuffered = true;
             m_numericType = numericType;
 
-            for (int i = 0; i < Controls.Count; )
-            {
-                Control control = Controls[0];
-                control.Parent = null;
-                control.Dispose();
-            }
-
-
+            while (Controls.Count > 0)
+                Controls[0].Dispose();
             
-
             if (s_lblFormat == null)
             {
                 s_lblFormat = new StringFormat();
                 s_lblFormat.Alignment = StringAlignment.Center;
-                s_lblFormat.LineAlignment = StringAlignment.Center;
+                s_lblFormat.LineAlignment = StringAlignment.Near;
                 s_lblFormat.Trimming = StringTrimming.Character;
 
             }
             m_labelWidth = new int[names.Length];
             m_labelWidth[0] = -1; // to indicate uninitialized state.
             SuspendLayout();
-            //TabStop = false;
-            NumericTextBox textBox = null;
+            
+            
+            // custom tab handling.
+            TabStop = false;
             for (int i = 0; i < names.Length; i++)
             {
-                textBox = new NumericTextBox(m_numericType);
+                var textBox = new NumericTextBox(m_numericType);
                 textBox.BorderStyle = BorderStyle.None;
-                textBox.Name = names[i];
-                textBox.TabStop = true;
-                textBox.TabIndex = i;
+                textBox.TabStop = false;
+                textBox.Name = names[i];                                
                 textBox.ScaleFactor = m_scaleFactor;
                 textBox.ValueEdited += textBox_ValueEdited;            
                 Controls.Add(textBox);
                 
-            }
-            // TODO needs dpi adjustment
-            Size = new Size(80 * names.Length, textBox.Height);
+            }            
+           
             ResumeLayout();
         }
 
@@ -227,8 +220,8 @@ namespace Sce.Atf.Controls
         /// Raises the <see cref="E:System.Windows.Forms.Control.Resize"></see> event</summary>
         /// <param name="e">An <see cref="T:System.EventArgs"></see> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
-        {           
-            Height = Controls[0].Height;
+        {
+            UpdateHeight();
             int cellSize = (Width / Controls.Count);
            
             SuspendLayout();
@@ -239,7 +232,7 @@ namespace Sce.Atf.Controls
                 foreach (NumericTextBox control in Controls)
                 {
                     control.BorderStyle = BorderStyle.FixedSingle;
-                    control.Bounds = new Rectangle(x , 0, cellSize, Height);
+                    control.Bounds = new Rectangle(x, 0, cellSize, control.Height);
                     x += cellSize;
                 }
             }
@@ -252,13 +245,12 @@ namespace Sce.Atf.Controls
                 foreach (Control control in Controls)
                 {
                     int labelWidth = m_labelWidth[c++];
-                    control.Bounds = new Rectangle(x + labelWidth + margin, 0, cellSize - labelWidth - margin, Height);
+                    control.Bounds = new Rectangle(x + labelWidth + margin, 0, cellSize - labelWidth - margin, control.Height);
                     x += cellSize;
                 }
             }
             ResumeLayout(true);
-            base.OnResize(e);
-            SuspendLayout();            
+            base.OnResize(e);          
         }
 
         /// <summary>
@@ -273,7 +265,7 @@ namespace Sce.Atf.Controls
             int cellSize = (Width / Controls.Count);
             int x = 0;
 
-            int height = Controls[0].Height;
+            int height = Controls[0].Height+1;
             using (SolidBrush brush = new SolidBrush(Color.Black))
             {
                 int c = 0;
@@ -320,8 +312,6 @@ namespace Sce.Atf.Controls
             PerformLayout();
             Invalidate();
         }
-
-
        
         /// <summary>
         /// Processes a dialog key</summary>
@@ -364,8 +354,9 @@ namespace Sce.Atf.Controls
         }
 
         private void UpdateHeight()
-        {            
-            Height = Controls[0].Height;
+        {
+            if (Controls.Count > 0)
+                Height = Controls[0].Height;
         }
 
         /// <summary>

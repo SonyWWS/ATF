@@ -14,13 +14,13 @@ namespace Sce.Atf.Wpf.Markup
     public class EnumValuesExtension : MarkupExtension
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Default constructor</summary>
         public EnumValuesExtension()
         {
         }
 
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with enum's Type</summary>
         /// <param name="enumType">Type of the enum</param>
         public EnumValuesExtension(Type enumType)
         {
@@ -30,7 +30,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Type of the enum</summary>
+        /// Get Type of the enum</summary>
         [ConstructorArgument("enumType")]
         public Type EnumType
         {
@@ -51,8 +51,8 @@ namespace Sce.Atf.Wpf.Markup
 
         /// <summary>
         /// Returns an array of EnumerationMembers representing the enum values of EnumType</summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">Object that provides custom support</param>
+        /// <returns>array of EnumerationMembers representing the enum values of EnumType</returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var enumValues = Enum.GetValues(EnumType);

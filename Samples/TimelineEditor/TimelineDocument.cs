@@ -93,7 +93,7 @@ namespace TimelineEditorSample
         /// Gets a string identifying the type of the resource to the end-user</summary>
         public override string Type
         {
-            get { return Localizer.Localize("Timeline"); }
+            get { return "Timeline".Localize(); }
         }
 
         #endregion
@@ -195,9 +195,9 @@ namespace TimelineEditorSample
             //  order of receiving picking events. For example, a custom Control that is drawn
             //  on top of everything else and that can be clicked on should come last in this
             //  list so that it is drawn last and is picked first.
-            D2dSelectionManipulator selectionManipulator = new D2dSelectionManipulator(m_timelineControl);
-            D2dMoveManipulator moveManipulator = new D2dMoveManipulator(m_timelineControl);
-            D2dScaleManipulator scaleManipulator = new D2dScaleManipulator(m_timelineControl);
+            new D2dSelectionManipulator(m_timelineControl);
+            new D2dMoveManipulator(m_timelineControl);
+            new D2dScaleManipulator(m_timelineControl);
             m_splitManipulator = new D2dSplitManipulator(m_timelineControl);
             D2dSnapManipulator snapManipulator = new D2dSnapManipulator(m_timelineControl);
             D2dScrubberManipulator scrubberManipulator = new ScrubberManipulator(m_timelineControl);

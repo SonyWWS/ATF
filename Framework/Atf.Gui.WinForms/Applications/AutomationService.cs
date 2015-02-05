@@ -248,7 +248,7 @@ namespace Sce.Atf.Applications
         public string ExecuteStatement(string statement)
         {
             //Must execute on the main thread to avoid various errors
-            FnExecute f = new FnExecute(s_scriptingService.ExecuteStatement);
+            FnExecute f = s_scriptingService.ExecuteStatement;
             return (string)s_dispatcher.Invoke(f, statement);
         }
 
@@ -259,7 +259,7 @@ namespace Sce.Atf.Applications
         public string ExecuteScript(string scriptPath)
         {
             //Must execute on the main thread to avoid various errors
-            FnExecute f = new FnExecute(s_scriptingService.ExecuteFile);
+            FnExecute f = s_scriptingService.ExecuteFile;
             return (string)s_dispatcher.Invoke(f, scriptPath);
         }
 

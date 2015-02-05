@@ -34,7 +34,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             D2dGraphRenderer<TNode, TEdge, TEdgeRoute> renderer,
             D2dGraphAdapter<TNode, TEdge, TEdgeRoute> graphAdapter,
             ITransformAdapter transformAdapter)
-        {            
+        {
             m_renderer = renderer;
             m_graphAdapter = graphAdapter;
             m_transformAdapter = transformAdapter;
@@ -44,10 +44,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets or sets whether dragging subnodes</summary>
         public bool DraggingSubNodes
         {
-            get { return m_draggingSubNodes;  }
+            get { return m_draggingSubNodes; }
             set { m_draggingSubNodes = value; }
         }
-             
+
         /// <summary>
         /// Position node dragged to</summary>
         /// <param name="node">Dragged node</param>
@@ -67,15 +67,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             return null;
         }
-             
+
         /// <summary>
         /// Binds the adapter to the adaptable control; called in the order that the adapters
         /// were defined on the control.</summary>
         /// <param name="control">Adaptable control</param>
         protected override void Bind(AdaptableControl control)
         {
-            m_autoTranslateAdapter = control.As<IAutoTranslateAdapter>();            
-            m_selectionPathProvider = control.As<ISelectionPathProvider>();  
+            m_autoTranslateAdapter = control.As<IAutoTranslateAdapter>();
+            m_selectionPathProvider = control.As<ISelectionPathProvider>();
             control.ContextChanged += control_ContextChanged;
             control.MouseMove += control_MouseMove;
             control.MouseUp += control_MouseUp;
@@ -114,7 +114,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (e.Button == MouseButtons.None && AdaptedControl.Focused)
             {
                 var hitRecord = m_graphAdapter.Pick(e.Location);
-            
+
                 if (hitRecord.Part.Is<DiagramBorder>())
                 {
                     var borderPart = hitRecord.Part.Cast<DiagramBorder>();
@@ -126,7 +126,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                             AdaptedControl.Cursor = Cursors.SizeWE;
                         else if (borderPart.Border == DiagramBorder.BorderType.Bottom)
                             AdaptedControl.Cursor = Cursors.SizeNS;
-                     }                      
+                    }
                 }
                 else if (hitRecord.SubPart.Is<DiagramBorder>())
                 {
@@ -174,7 +174,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             }
             // do not permit in-line dragging template sub-nodes(open group editor for moving nodes)
-            return !m_selectionPathProvider.Ancestry(node).Any( x=>x.Is<IReference<Group>>());
+            return !m_selectionPathProvider.Ancestry(node).Any(x => x.Is<IReference<Group>>());
         }
 
         /// <summary>
@@ -214,11 +214,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_firstPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, FirstPoint);
                 m_mousePick = m_graphAdapter.Pick(FirstPoint);
                 if (CanDragging())
-                {                    
+                {
                     foreach (var itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
                         if (itemDragAdapter != this)
                             itemDragAdapter.BeginDrag(this);
-               
+
 
                     // drag all selected nodes, and any edges impinging on them
                     ActiveCollection<TNode> draggingNodes = new ActiveCollection<TNode>();
@@ -226,7 +226,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                     foreach (var node in m_selectionContext.GetSelection<TNode>())
                     {
-                         if (AllowDragging(node))                 
+                        if (AllowDragging(node))
                             AddDragNode(node, draggingNodes, nodes);
                     }
 
@@ -272,7 +272,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 m_targetItem = m_mousePick.SubItem;
                             }
                         }
-                       
+
                     }
 
                     m_newPositions = new Point[m_draggingNodes.Length];
@@ -290,8 +290,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (m_autoTranslateAdapter != null)
                         m_autoTranslateAdapter.Enabled = true;
                 }
-            }         
-   
+            }
+
         }
 
         private void ResizingNode()
@@ -309,9 +309,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (m_resizing)
             {
                 ResizingNode();
-                return;            
+                return;
             }
-             
+
             m_movingNodesCrossContainer = false;
             if (m_draggingNodes != null)
             {
@@ -326,7 +326,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (hitRecord.Item != null)
                     {
                         var newItemTarget = ChooseActiveTarget(hitRecord);
-                   
+
                         if (m_targetItem != newItemTarget)
                         {
                             ResetCustomStyle(m_targetItem);
@@ -344,7 +344,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 Point currentPoint = GdiUtil.InverseTransform(m_transformAdapter.Transform, CurrentPoint);
                 // Calculate the delta in world coordinates.
                 Point delta = new Point(currentPoint.X - m_firstPoint.X, currentPoint.Y - m_firstPoint.Y);
-                                
+
                 // Constrain the movement to be parallel to the x-axis or y-axis?
                 if (Control.ModifierKeys == Keys.Shift)
                 {
@@ -375,20 +375,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 // set dragged nodes' positions, offsetting by drag delta and applying layout constraints
                 for (int i = 0; i < m_draggingNodes.Length; i++)
-                {                    
+                {
                     TNode node = m_draggingNodes[i];
                     BoundsSpecified specified = m_layoutContext.CanSetBounds(node);
                     if (((specified & BoundsSpecified.X) != 0) && 
                         ((specified & BoundsSpecified.Y) != 0))
                     {
 
-                    Rectangle bounds; //world coordinates
-                    m_layoutContext.GetBounds(node, out bounds);
-                    bounds.X = m_oldPositions[i].X + delta.X;
-                    bounds.Y = m_oldPositions[i].Y + delta.Y;
-                    m_newPositions[i] = bounds.Location;
-                    m_layoutContext.SetBounds(node, bounds, BoundsSpecified.Location);
-                }
+                        Rectangle bounds; //world coordinates
+                        m_layoutContext.GetBounds(node, out bounds);
+                        bounds.X = m_oldPositions[i].X + delta.X;
+                        bounds.Y = m_oldPositions[i].Y + delta.Y;
+                        m_newPositions[i] = bounds.Location;
+                        m_layoutContext.SetBounds(node, bounds, BoundsSpecified.Location);
+                    }
                 }
 
                 if (m_editableGraphContainer != null)
@@ -418,12 +418,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
                     itemDragAdapter.EndingDrag(); //call ourselves, too
 
-                    var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
-                    transactionContext.DoTransaction(delegate
-                        {
-                            foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
-                                itemDragAdapter.EndDrag(); //call ourselves, too
-                        }, "Drag Items".Localize());
+                var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
+                transactionContext.DoTransaction(delegate
+                    {
+                        foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
+                            itemDragAdapter.EndDrag(); //call ourselves, too
+                    }, "Drag Items".Localize());
 
                 if (m_autoTranslateAdapter != null)
                     m_autoTranslateAdapter.Enabled = false;
@@ -468,7 +468,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (m_resizing)
             {
-                m_editableGraphContainer.Resize(m_targetItem, (int) m_firstBound.Width, (int) m_firstBound.Height);
+                m_editableGraphContainer.Resize(m_targetItem, (int)m_firstBound.Width, (int)m_firstBound.Height);
                 return;
             }
             else if (m_draggingNodes != null) // restore dragged nodes' positions, before the transaction begins.
@@ -517,10 +517,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         var selectionPath = m_selectionPathProvider.GetSelectionPath(node);
                         if (selectionPath == null)
                             continue;
-                        int length = selectionPath.Count();
+                        int length = selectionPath.Count;
                         if (length > 1)
                         {
-                            
+
                             var parent = selectionPath[length - 2];
                             if (parent.Is<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>())
                             {
@@ -551,7 +551,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             draggingNodes.Add(node);
             if (!nodes.Contains(node))
             {
-                nodes.Add(node);                
+                nodes.Add(node);
             }
 
             if (DraggingSubNodes)
@@ -579,7 +579,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (hitRecord.SubItem == null)
                 return hitRecord.Item;
-            
+
             if (m_editableGraphContainer != null)
             {
                 foreach (var itemInPath in hitRecord.HitPathInversed)
@@ -591,13 +591,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             return hitRecord.Item;
         }
-        
+
         // custom style is mainly used in expanded group node for in-place editing selection highlight
         private void ResetCustomStyle(object item)
         {
             m_renderer.ClearCustomStyle(item);
         }
-        
+
         private readonly D2dGraphRenderer<TNode, TEdge, TEdgeRoute> m_renderer;
         private readonly D2dGraphAdapter<TNode, TEdge, TEdgeRoute> m_graphAdapter;
         private readonly ITransformAdapter m_transformAdapter;

@@ -38,7 +38,7 @@ namespace SimpleDomEditorSample
                 string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
                 using (AboutDialog dialog = new AboutDialog(
-                    Localizer.Localize("Simple Dom Editor Sample"), appURL, richTextBox, null, null, true))
+                    "Simple Dom Editor Sample".Localize(), appURL, richTextBox, null, null, true))
                 {
                     dialog.ShowDialog();
                 }

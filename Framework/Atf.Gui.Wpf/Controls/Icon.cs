@@ -131,7 +131,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Sets the source key</summary>
-        /// <param name="obj">Dependency object to query for the property</param>
+        /// <param name="element">Dependency object to query for the property</param>
         /// <param name="value">Value to set</param>
         public static void SetSourceKey(UIElement element, object value)
         {
@@ -140,7 +140,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Gets the source key</summary>
-        /// <param name="obj">Dependency object to query for the property</param>
+        /// <param name="element">Dependency object to query for the property</param>
         /// <returns>Value of the property</returns>
         public static object GetSourceKey(UIElement element)
         {
@@ -154,7 +154,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Sets whether to use a shadow</summary>
-        /// <param name="obj">Dependency object to query for the property</param>
+        /// <param name="element">Dependency object to query for the property</param>
         /// <param name="value">Value to set</param>
         public static void SetUseShadow(UIElement element, bool value)
         {
@@ -163,7 +163,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// Gets whether to use a shadow</summary>
-        /// <param name="obj">Dependency object to query for the property</param>
+        /// <param name="element">Dependency object to query for the property</param>
         /// <returns>Value of the property</returns>
         public static bool GetUseShadow(UIElement element)
         {
@@ -414,7 +414,16 @@ namespace Sce.Atf.Wpf.Controls
 
             if (e.NewValue != null)
             {
-                object resource = icon.FindResource(e.NewValue);
+                object resource = icon.TryFindResource(e.NewValue);
+                if (resource == null)
+                {
+                    // This may be a legacy embedded image string
+                    var image = Sce.Atf.ResourceUtil.GetImage(e.NewValue.ToString());
+                    if (image != null)
+                    {
+                        resource = Sce.Atf.Wpf.ResourceUtil.ConvertWinFormsImage(image);
+                    }
+                }
 
                 var b = resource as DrawingBrush;
                 if (b != null)
@@ -497,7 +506,7 @@ namespace Sce.Atf.Wpf.Controls
                     return base.Source;
                 }
                 
-                return ColorSwapper.SwapColors(base.Source, new ColorCallback(this.ConvertColor));
+                return ColorSwapper.SwapColors(base.Source, this.ConvertColor);
             }
         }
 
@@ -514,7 +523,7 @@ namespace Sce.Atf.Wpf.Controls
                     return this.SourceBrush;
                 }
                 
-                return (DrawingBrush)ColorSwapper.SwapColors(this.SourceBrush, new ColorCallback(this.ConvertColor));
+                return (DrawingBrush)ColorSwapper.SwapColors(this.SourceBrush, this.ConvertColor);
             }
         }
 

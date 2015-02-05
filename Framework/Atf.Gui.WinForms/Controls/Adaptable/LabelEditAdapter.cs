@@ -102,12 +102,10 @@ namespace Sce.Atf.Controls.Adaptable
                 if (transactionContext == null ||
                     !transactionContext.InTransaction)
                 {
-                    TransactionContexts.DoTransaction(transactionContext,
-                        delegate
-                        {
-                            m_namingContext.SetName(m_item, text);
-                        },
-                        "Edit Label".Localize());
+                    transactionContext.DoTransaction(delegate
+                    {
+                        m_namingContext.SetName(m_item, text);
+                    }, "Edit Label".Localize());
                 }
             }
 
@@ -261,11 +259,25 @@ namespace Sce.Atf.Controls.Adaptable
                 Math.Max((int)textSize.Width, m_labelBounds.Width),
                 Math.Max((int)textSize.Height, m_labelBounds.Height));
 
-            // position text box in middle of requested bounds
+            // Position textbox based on alignment. If the textbox becomes larger than the original
+            // label, this will ensure that it grows in an appropriate direction.
             Size actualSize = m_textBox.Size;
-            m_textBox.Location = new Point(
-                m_labelBounds.X + m_labelBounds.Width / 2 - actualSize.Width / 2,
-                m_labelBounds.Y + m_labelBounds.Height / 2 - actualSize.Height / 2);
+
+            int textBoxY = m_labelBounds.Y + m_labelBounds.Height / 2 - actualSize.Height / 2;
+            int textBoxX = m_labelBounds.X; // Default for HorizontalAlignment.Left
+            if (m_textBox.TextAlign == HorizontalAlignment.Right)
+                textBoxX = m_labelBounds.Right - actualSize.Width;
+            else if (m_textBox.TextAlign == HorizontalAlignment.Center)
+                textBoxX = m_labelBounds.X + m_labelBounds.Width / 2 - actualSize.Width / 2;
+            
+            m_textBox.Location = new Point(textBoxX, textBoxY);
+            
+            // Pasting a long string of text into a left-aligned textbox can cause only the end of 
+            // the text to be visible in the textbox. Scroll to index 0, then back to current 
+            // location to ensure everything is visible. This also preserves any existing selection.
+            var selectionStart = m_textBox.SelectionStart;
+            m_textBox.SelectionStart = 0;
+            m_textBox.SelectionStart = selectionStart;
         }
 
         private class TextBox : System.Windows.Forms.TextBox

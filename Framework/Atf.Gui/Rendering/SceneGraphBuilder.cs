@@ -42,7 +42,7 @@ namespace Sce.Atf.Rendering.Dom
                 throw new InvalidOperationException("Must be an IRenderObject");
 
             m_treeView = treeView;
-            m_type = type;
+            //m_type = type;
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Sce.Atf.Rendering.Dom
         }
 
         private readonly ITreeView m_treeView;
-        private Type m_type;
+        //private Type m_type;
         private static readonly object s_lock = new object();//to control access to the static members
         private static readonly HashSet<object> s_ancestors = new HashSet<object>();
     }

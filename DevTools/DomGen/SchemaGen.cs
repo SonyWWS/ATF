@@ -314,7 +314,7 @@ namespace DomGen
             else
             {
                 IEnumerable<XmlSchemaTypeCollection> collections = typeLoader.GetTypeCollections();
-                typeCollection = Enumerable.First(collections);
+                typeCollection = collections.First();
             }
             if (typeCollection == null)
             {

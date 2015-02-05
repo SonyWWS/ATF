@@ -94,7 +94,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             if (m_settingsService != null)
             {
                 m_settingsService.Saving += settingsService_Saving;
-                m_settingsService.Reloaded += new EventHandler(settingsService_Reloaded);
+                m_settingsService.Reloaded += settingsService_Reloaded;
                 m_settingsService.RegisterSettings(this,
                     new BoundPropertyDescriptor(this, () => PersistedTargets, "Targets".Localize(), null, null)
                 );

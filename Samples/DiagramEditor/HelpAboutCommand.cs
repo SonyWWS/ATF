@@ -34,7 +34,7 @@ namespace DiagramEditorSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("Diagram Editor Sample"), appURL, richTextBox, null, null, true);
+                "Diagram Editor Sample".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

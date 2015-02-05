@@ -51,6 +51,7 @@ namespace Sce.Atf.Controls
 
                 if (m_topLeft != null)
                 {
+                    m_topLeft.Name = "TopLeft";
                     Controls.Add(m_topLeft);
                     m_topLeft.GotFocus += ControlGotFocus;
                     SizeTopLeft();
@@ -76,6 +77,7 @@ namespace Sce.Atf.Controls
 
                 if (m_topRight != null)
                 {
+                    m_topRight.Name = "TopRight";
                     Controls.Add(m_topRight);
                     m_topRight.GotFocus += ControlGotFocus;
                     SizeTopRight();
@@ -101,6 +103,7 @@ namespace Sce.Atf.Controls
 
                 if (m_bottomLeft != null)
                 {
+                    m_bottomLeft.Name = "BottomLeft";
                     Controls.Add(m_bottomLeft);
                     m_bottomLeft.GotFocus += ControlGotFocus;
                     SizeBottomLeft();
@@ -126,6 +129,7 @@ namespace Sce.Atf.Controls
 
                 if (m_bottomRight != null)
                 {
+                    m_bottomRight.Name = "BottomRight";
                     Controls.Add(m_bottomRight);
                     m_bottomRight.GotFocus += ControlGotFocus;
                     SizeBottomRight();

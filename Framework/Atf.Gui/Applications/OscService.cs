@@ -519,7 +519,7 @@ namespace Sce.Atf.Applications
             }
             else
             {
-                var bundle = new OscBundle(ReceivingEndpoint, null);
+                var bundle = new OscBundle(ReceivingEndpoint);
                 for (int i = first; i < first + count; i++)
                 {
                     Tuple<string, object> tuple = addressesAndData[i];

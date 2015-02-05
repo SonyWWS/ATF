@@ -58,7 +58,7 @@ namespace TimelineEditorSample.DomNodeAdapters
             get
             {
                 IHierarchicalTimeline target = null;
-                var doc = (TimelineDocument)DocumentRegistries.GetDocument(TimelineEditor.TimelineDocumentRegistry, Uri);
+                var doc = (TimelineDocument)TimelineEditor.TimelineDocumentRegistry.GetDocument(Uri);
                 if (doc != null)
                     target = doc.Timeline as IHierarchicalTimeline;
                 return target;

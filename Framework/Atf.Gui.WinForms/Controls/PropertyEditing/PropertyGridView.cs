@@ -1,15 +1,13 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
-
+using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
-using Sce.Atf.Dom;
 using PropertyDescriptor = System.ComponentModel.PropertyDescriptor;
 
 namespace Sce.Atf.Controls.PropertyEditing
@@ -61,21 +59,22 @@ namespace Sce.Atf.Controls.PropertyEditing
             PropertyExpanderPen = new Pen(SystemColors.ControlDarkDark);
             PropertyLinePen = new Pen(SystemColors.Control);
 
-           
-            
             EditingContext = null;
             Font = new Font("Segoe UI", 9.0f);
             ShowResetButton = true;
             ShowCopyButton = true;
-            Controls.AddRange(new Control[]{                
+            Controls.AddRange(new Control[]{
                 m_editingControl,
-                m_scrollBar,                
+                m_scrollBar,
             });
-            ResumeLayout();            
+            ResumeLayout();
             m_resetButton.Click += (sender, e) =>
-                {                    
-                    SelectedProperty.Context.ResetValue();                    
-                    Invalidate();
+                {
+                    SelectedProperty.Context.ResetValue();
+                    // The base class, PropertyView, will call RefreshEditingControls() if an IObservableContext
+                    //  is available. If not, we should call it.
+                    if (!EditingContext.Is<IObservableContext>())
+                        RefreshEditingControls();
                 };
         }
 
@@ -226,7 +225,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             editingContext = EditingContext;
             int top = bottom = -m_scroll;
-            int middleX = GetMiddleX();//name & value divider's X coordinate, in client coordinates
+            int defaultMiddleX = GetMiddleX();//name & value divider's X coordinate, in client coordinates
             foreach (object obj in VisibleItems)
             {
                 if (obj is Category)
@@ -238,14 +237,17 @@ namespace Sce.Atf.Controls.PropertyEditing
                 else
                 {
                     Property property = (Property)obj;
-                    top += GetRowHeight(property);
+                    int propertyRowHeight = GetRowHeight(property);
+                    top += propertyRowHeight;
                     if (clientPnt.Y < top)
                     {
                         bottom = top;
 
                         // Check for embedded PropertyGridView on the "values" side
+                        int middleX = property.HorizontalEditorOffset >= 0 ? property.HorizontalEditorOffset : defaultMiddleX;
                         if (property.Control != null &&
-                            clientPnt.X > middleX)
+                            clientPnt.X > middleX &&
+                            (!property.NameHasWholeRow || clientPnt.Y >= top - propertyRowHeight + RowHeight))
                         {
                             foreach (PropertyGridView childPropertyGridView in FindChildControls<PropertyGridView>(property.Control))
                             {
@@ -326,8 +328,12 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Gets the client window x-coordinate of the vertical separator between the names and values columns</summary>
+        /// Gets the default client window x-coordinate of the vertical separator
+        /// between the names and values columns</summary>
         /// <returns>Client window x-coordinate of the vertical separator</returns>
+        /// <remarks>Check the Sce.Atf.Controls.PropertyEditing.PropertyView.Property's
+        /// HorizontalEditorOffset and NameHasWholeRow for special exceptions to the
+        /// vertical separator.</remarks>
         public int GetMiddleX()
         {
             int width = Width;
@@ -422,16 +428,16 @@ namespace Sce.Atf.Controls.PropertyEditing
                 return;
             }
 
-            // pick only if not over splitter
             int middle = GetMiddleX();
 
+            bool onSplitter = Math.Abs(e.X - middle) <= SystemDragSize.Width;
 
-            if (Math.Abs(e.X - middle) > SystemDragSize.Width)
+            int bottom;
+            IPropertyEditingContext editingContext;
+            object picked = Pick(e.Location, out bottom, out editingContext);
+            if (picked is Category)
             {
-                int bottom;
-                IPropertyEditingContext editingContext;
-                object picked = Pick(e.Location, out bottom, out editingContext);
-                if (picked is Category)
+                if (!onSplitter)
                 {
                     if (e.Button == MouseButtons.Left)
                     {
@@ -445,11 +451,14 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                     Refresh();
                 }
-                else if (picked is Property)
-                {
-                    Property property = picked as Property;
+            }
+            else if (picked is Property)
+            {
+                Property property = picked as Property;
 
-                    if (e.X < middle && property.ChildProperties != null && property.ChildProperties.Count > 0)
+                if (e.X < middle && property.ChildProperties != null && property.ChildProperties.Count > 0)
+                {
+                    if (!onSplitter)
                     {
                         // toggle expansion
                         if (e.Button == MouseButtons.Left)
@@ -458,18 +467,24 @@ namespace Sce.Atf.Controls.PropertyEditing
                         // this will cause any currently active child controls to flush
                         Select();
                         m_editingControl.Hide();
+                        if (DescriptionSetter != null)
+                            DescriptionSetter(property.Descriptor);
                         Refresh();
                     }
-                    else
+                }
+                else
+                {
+                    // If the user did not click on the splitter or if this property has a custom fixed-width
+                    //  for the property name, then select the property.
+                    if (!onSplitter || property.HorizontalEditorOffset >= 0)
                     {
-                        if (!property.Descriptor.IsReadOnly)
-                        {
-                            // this will cause any currently active child controls to flush
-                            Select();
-                            m_editingControl.Hide();
+                        // this will cause any currently active child controls to flush
+                        Select();
+                        m_editingControl.Hide();
+                        if (DescriptionSetter != null)
+                            DescriptionSetter(property.Descriptor);
 
-                            StartPropertyEdit(property);
-                        }
+                        StartPropertyEdit(property); //Doesn't actually enable editing for read-only properties.
                     }
                 }
             }
@@ -497,17 +512,19 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             int middle = GetMiddleX();
 
-            if (!m_dragging && (e.Button == MouseButtons.Left))
-            {
-                m_dragging = Math.Abs(m_mouseDown.X - middle) <= SystemDragSize.Width;
-            }
-
             // manage tool tip
             int bottom;
             IPropertyEditingContext editingContext;
-            Property property = null;
-            if (e.X < middle)
-                property = Pick(e.Location, out bottom, out editingContext) as Property;
+            Property property = Pick(e.Location, out bottom, out editingContext) as Property;
+
+            bool columnSplitterExists = (property == null || property.HorizontalEditorOffset < 0);
+
+            if (!m_dragging && (e.Button == MouseButtons.Left))
+            {
+                m_dragging =
+                    columnSplitterExists &&
+                    (Math.Abs(m_mouseDown.X - middle) <= SystemDragSize.Width);
+            }
 
             if (property != m_hoverProperty)
             {
@@ -528,7 +545,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 if (!m_dragging)
                 {
                     Cursor cursor = Cursors.Arrow;
-                    if (Math.Abs(e.X - middle) < SystemDragSize.Width)
+                    if (columnSplitterExists && Math.Abs(e.X - middle) < SystemDragSize.Width)
                         cursor = Cursors.VSplit;
 
                     if (cursor != Cursor)
@@ -613,41 +630,50 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_scrollBar.Refresh();
 
             int y = -m_scroll;
-            int width = Width;
+            int rowWidth = Width;
             if (m_scrollBar.Visible)
-            {
-                width -= m_scrollBar.Width;
-            }
+                rowWidth -= m_scrollBar.Width;
 
-            int middle = GetMiddleX();
-            int childLeft = middle + 1;
-            int childWidth = width - childLeft;
+            int defaultMiddle = GetMiddleX();
+            int defaultEditorLeft = defaultMiddle + 1;
             int tabIndex = 0; //for when user presses Enter in a property editing control, so Windows sets Focus on next property
             const int SubCategoryIndent = 13;
            
             foreach (object obj in Items)
             {
-                Category c = obj as Category;
+                var c = obj as Category;
                 if (c != null)
                 {
                     if (c.Visible)
                     {
                         int indent = (c.Parent == null) ? 0 : SubCategoryIndent;
-                        DrawCategoryRow(c, c.Expanded, indent, y, width - indent, g);
+                        DrawCategoryRow(c, c.Expanded, indent, y, rowWidth - indent, g);
                         y += RowHeight;
                     }
                 }
                 else
                 {
-                    Property property = (Property)obj;                    
+                    var property = (Property)obj;
+
+                    // Handle properties that have a special indent for their custom editor.
+                    int editorLeft = defaultMiddle + 1;
+                    if (property.HorizontalEditorOffset >= 0)
+                        editorLeft = Math.Min(property.HorizontalEditorOffset, editorLeft);
+
                     if (property.Control != null)
                     {
                         bool visible = property.Visible;
                         if (visible)
                         {
-                            property.Control.Top = y;
-                            property.Control.Left = childLeft;
-                            property.Control.Width = childWidth;
+                            // There's a weird bug if editorLeft is 0 when calculating editorWidth. This
+                            //  PropertyGridView can stop receiving updated scroll values and Paint events
+                            //  if it is completely hidden by a child Control. So, we need to keep the below
+                            //  property.Control from completely covering this PropertyGridView, so make sure
+                            //  its width is at least 1 less than the PropertyGridView's width.
+                            int editorWidth = rowWidth - Math.Max(editorLeft, 1);
+                            property.Control.Top = y + (property.NameHasWholeRow ? RowHeight : 0);
+                            property.Control.Left = editorLeft;
+                            property.Control.Width = editorWidth;
                             property.Control.TabIndex = tabIndex++;
                         }
 
@@ -660,15 +686,17 @@ namespace Sce.Atf.Controls.PropertyEditing
                         if (property.Category != null &&
                             property.Category.Parent != null)
                             indent = SubCategoryIndent;
-                        DrawPropertyRow(property, indent, y, width - indent, middle, g);
+
+                        int rowMiddle = editorLeft - 1;
+                        DrawPropertyRow(property, indent, y, rowWidth - indent, rowMiddle, g);
                         y += GetRowHeight(property);
                     }
                 }
             }
                      
             SetEditingControlTop();
-            m_editingControl.Left = childLeft;
-            m_editingControl.Width = childWidth;
+            m_editingControl.Left = defaultEditorLeft;
+            m_editingControl.Width = rowWidth - defaultEditorLeft;
 
             m_editingControl.TabIndex = tabIndex++;
             m_editingControl.Font = Font;
@@ -786,7 +814,6 @@ namespace Sce.Atf.Controls.PropertyEditing
         private void scrollBar_ValueChanged(object sender, EventArgs e)
         {
             m_scroll = m_scrollBar.Value;
-
             Invalidate();
         }
 
@@ -861,6 +888,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         //    //}
         //}
 
+        //Doesn't actually enable editing for read-only properties.
         private void StartPropertyEdit(Property property, bool fromEnd = false)
         {
             Select(); // force any edit to conclude
@@ -908,7 +936,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 m_editingControl.Hide();
             }
-            else // property editing control
+            else if (!property.Descriptor.IsReadOnly) // property editing control
             {
                 m_editingControl.Bind(property.Context);
                 SetEditingControlTop();
@@ -929,7 +957,8 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Refreshes all editing controls, invalidating them and immediately drawing them</summary>
         protected override void RefreshEditingControls()
         {
-            m_editingControl.Refresh();
+            if(m_editingControl != null)
+                m_editingControl.Refresh();
 
             base.RefreshEditingControls();
         }
@@ -939,7 +968,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             if (SelectedProperty != null)
             {
                 int y = -m_scroll + GetRowY(SelectedProperty);
-                m_editingControl.Top = y + 1;
+                m_editingControl.Top = y;
             }
         }
 
@@ -1021,7 +1050,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             else
                 control = m_editingControl;
 
-            return Math.Max(RowHeight, control.Height + 2);
+            return Math.Max(RowHeight, control.Height + 1 + (property.NameHasWholeRow ? RowHeight : 0));
         }
 
         /// <summary>
@@ -1264,6 +1293,15 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
         }
 
+        /// <summary>
+        /// Gets or sets the delegate that can be called to set the description for the currently
+        /// selected property. Typically, this is set by the owning PropertyGrid.</summary>
+        public Action<PropertyDescriptor> DescriptionSetter
+        {
+            get;
+            set;
+        }
+
         private Brush m_categoryBackgroundBrush;
         private Brush m_categoryNameBrush;
         private Pen m_categoryLinePen;
@@ -1316,17 +1354,16 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="g">Graphics object</param>
         protected virtual void DrawPropertyRow(Property property, int x, int y, int width, int middle, Graphics g)
         {
-            
             int height = GetRowHeight(property);
             g.FillRectangle(PropertyBackgroundBrush, x, y, width, height - 1);
 
             Brush nameBrush = PropertyTextBrush;
             if (property == SelectedProperty)
-            {                
-                g.FillRectangle(PropertyBackgroundHighlightBrush, x, y, middle - x, height);
+            {
+                int highlightWidth = property.NameHasWholeRow ? width : middle - x;
+                g.FillRectangle(PropertyBackgroundHighlightBrush, x, y, highlightWidth, height);
                 nameBrush = PropertyTextHighlightBrush;
             }
-
            
             int xPadding = Margin.Left;
             int yPadding = (int)((RowHeight - FontHeight) / 2);
@@ -1334,11 +1371,24 @@ namespace Sce.Atf.Controls.PropertyEditing
             int expanderX = ExpanderSize * 2 * depth;
             if (property.ChildProperties != null && property.ChildProperties.Count > 0)
                 GdiUtil.DrawExpander(x + expanderX, y + (RowHeight - ExpanderSize) / 2, property.ChildrenExpanded, g, PropertyExpanderPen);
-          
+
+            int nameWidth;
+            int verticalLineOffset;
+            if (property.NameHasWholeRow)
+            {
+                nameWidth = width - 2*xPadding;
+                verticalLineOffset = RowHeight + 1;
+            }
+            else
+            {
+                nameWidth = middle - 2*xPadding;
+                verticalLineOffset = 0;
+            }
+
             Rectangle nameRect = new Rectangle(
                 x + xPadding,
                 y + yPadding,
-                middle - 2 * xPadding,
+                nameWidth,
                 height - 1);
             g.DrawString(property.Descriptor.Name, Font, nameBrush, nameRect, LeftStringFormat);
 
@@ -1354,19 +1404,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                 TypeDescriptorContext context = new TypeDescriptorContext(
                     LastSelectedObject, property.Descriptor, null);
                 PropertyEditingControl.DrawProperty(
-                    property.Descriptor, context, valueRect, font, brush, g);
-                // Reverted this change from changelist 52645 because it causes the PropertyEditingControl to be
-                //  refreshed without saving the user's changes.
-                //if (property == SelectedProperty)
-                //    m_editingControl.Refresh();
-            }
-            else
-            {
-                // draw custom control immediately, to keep in sync with standard DrawProperty above.
-                property.Control.Refresh();                
+                    property.Descriptor, context, valueRect, font, brush, g);               
             }
 
-            g.DrawLine(PropertyLinePen, middle, y-1, middle, y + height-1);
+            g.DrawLine(PropertyLinePen, middle, y - 1 + verticalLineOffset, middle, y + height - 1);
             g.DrawLine(PropertyLinePen, x, y + height-1 , width, y + height-1);
 
             // show copy and reset buttons for the selected property.            

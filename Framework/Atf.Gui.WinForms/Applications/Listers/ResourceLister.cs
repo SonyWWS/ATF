@@ -54,7 +54,6 @@ namespace Sce.Atf.Applications
             m_treeControlAdapter.TreeView = m_treeContext;
 
             m_listContext = new ListViewContext();
-            m_listSelectionContext = m_listContext.As<ISelectionContext>();
             m_listViewAdapter.ListView = m_listContext;
 
             m_treeControlAdapter.Refresh(rootFolder);
@@ -753,7 +752,6 @@ namespace Sce.Atf.Applications
         private TreeControl m_treeControl;
         
         private ListViewContext m_listContext;
-        private ISelectionContext m_listSelectionContext;
         private ListView m_listView;
         private ListViewAdapter m_listViewAdapter;
         private ThumbnailControl m_thumbnailControl;

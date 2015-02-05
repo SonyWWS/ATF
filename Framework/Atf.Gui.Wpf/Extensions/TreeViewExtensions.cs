@@ -41,8 +41,9 @@ namespace Sce.Atf.Wpf
 
         /// <summary>
         /// Get all treeview items - does not work for virtualized treeviews!</summary>
-        /// <param name="itemsControl">The tree of items</param>
-        /// <returns>The list of tree view items</returns>
+        /// <remarks>Does not work for virtualized treeviews!</remarks>
+        /// <param name="itemsControl">Tree of items</param>
+        /// <returns>List of tree view items</returns>
         public static IEnumerable<TreeViewItem> AllTreeViewItems(ItemsControl itemsControl)
         {
             Stack<ItemsControl> itemsControlStack = new Stack<ItemsControl>();
@@ -68,11 +69,10 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        /// Recursively search for a visible treeview item from its data item
-        /// Will return null if the treeview item has not been generated </summary>
-        /// <param name="container"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// Recursively search for a visible treeview item from its data item</summary>
+        /// <param name="container">Tree of items</param>
+        /// <param name="item">Visible treeview item to search for</param>
+        /// <returns>List of tree view items. Returns null if the treeview item has not been generated.</returns>
         public static TreeViewItem GetTreeViewItem(ItemsControl container, object item)
         {
             return AllTreeViewItems(container).FirstOrDefault<TreeViewItem>(x=>x.DataContext == item);

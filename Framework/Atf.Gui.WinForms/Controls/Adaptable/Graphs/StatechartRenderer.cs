@@ -39,12 +39,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (m_theme != value)
                 {
                     if (m_theme != null)
-                        m_theme.Redraw -= new EventHandler(theme_Redraw);
+                        m_theme.Redraw -= theme_Redraw;
 
                     m_theme = value;
 
                     if (m_theme != null)
-                        m_theme.Redraw += new EventHandler(theme_Redraw);
+                        m_theme.Redraw += theme_Redraw;
 
                     base.OnRedraw();
                 }
@@ -201,7 +201,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
-                foreach (TEdge edge in Enumerable.Reverse(graph.Edges))
+                foreach (TEdge edge in graph.Edges.Reverse())
                 {
                     if (Pick(edge, v))
                     {
@@ -211,7 +211,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (TNode state in Enumerable.Reverse(graph.Nodes))
+            foreach (TNode state in graph.Nodes.Reverse())
             {
                 Rectangle bounds = state.Bounds;
                 bounds.Inflate(tolerance, tolerance);

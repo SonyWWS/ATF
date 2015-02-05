@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Sce.Atf.Dom;
@@ -8,6 +9,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 {
     /// <summary>
     /// Adapts DomNode to sub-circuit, which is created when mastering</summary>
+    [Obsolete("Circuit groups and circuit templates have replaced mastered circuits")]
     public abstract class SubCircuit : Circuit, ICircuitElementType
     {
         /// <summary>

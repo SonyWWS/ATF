@@ -139,6 +139,8 @@ namespace Sce.Atf.Applications
             return lease;
         }
 
+        #pragma warning disable 0414
+
         private Mutex m_mutex; //we can't dispose of this until our app shuts down
         private string[] m_commandLine;
     }

@@ -13,7 +13,7 @@ using Sce.Atf.Wpf.Models;
 namespace Sce.Atf.Wpf.Applications
 {
     /// <summary>
-    /// Service that manages user editable settings (preferences) and app settings persistence</summary>
+    /// Service that manages user editable settings (preferences) and application settings persistence</summary>
     [Export(typeof(ISettingsService))]
     [Export(typeof(SettingsServiceBase))]
     [Export(typeof(SettingsService))]
@@ -70,7 +70,9 @@ namespace Sce.Atf.Wpf.Applications
             new SettingsLoadSaveDialog(new SettingsLoadSaveViewModel(this)).ShowParentedDialog();
         }
 
-        // for use by SettingsDialog only
+        /// <summary>
+        /// Get ITreeView of user settings</summary>
+        /// <remarks>For use by SettingsDialog only</remarks>
         protected override ITreeView UserSettings
         {
             get { return m_userSettings; }

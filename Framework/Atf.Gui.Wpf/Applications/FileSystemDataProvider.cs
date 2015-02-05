@@ -157,7 +157,7 @@ namespace Sce.Atf.Wpf.Applications
     }
 
     /// <summary>
-    /// Exposes a FileInfo object and raises a property changed notification event when the file is modified.</summary>
+    /// Exposes a FileInfo object and raises a property changed notification event when the file is modified</summary>
     public class ObservableFileInfo : NotifyPropertyChangedBase
     {
         #region Data
@@ -170,6 +170,9 @@ namespace Sce.Atf.Wpf.Applications
 
         #region Ctors
 
+        /// <summary>
+        /// Constructor with file path</summary>
+        /// <param name="file">File path</param>
         public ObservableFileInfo(string file)
         {
             m_fileName = file;
@@ -220,6 +223,8 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Get whether file info changed</summary>
         public bool IsChanged
         {
             get { return m_isChanged; }
@@ -251,8 +256,14 @@ namespace Sce.Atf.Wpf.Applications
         #endregion
     }
 
+    /// <summary>
+    /// Collection of ObservableFileInfo objects</summary>
     public class ObservableFileInfoCollection : ObservableCollection<ObservableFileInfo>
     {
+        /// <summary>
+        /// Return ObservableFileInfo for file path</summary>
+        /// <param name="fullName">File path</param>
+        /// <returns>ObservableFileInfo for file path</returns>
         public ObservableFileInfo GetFile(string fullName)
         {
             return this.FirstOrDefault(file => string.CompareOrdinal(file.FileInfo.FullName, fullName) == 0);

@@ -20,28 +20,39 @@ namespace Sce.Atf.Wpf.Docking
     {
         #region Dependency Properties
 
-        public static DependencyProperty DockedContentProperty = DependencyProperty.Register("DockedContent", typeof(TabLayout), typeof(DockedWindow), new UIPropertyMetadata(new PropertyChangedCallback(DockedContentPropertyChanged)));
+        /// <summary>
+        /// DockedContent DependencyProperty</summary>
+        public static DependencyProperty DockedContentProperty = DependencyProperty.Register("DockedContent", typeof(TabLayout), typeof(DockedWindow), new UIPropertyMetadata(DockedContentPropertyChanged));
+        /// <summary>
+        /// Focused DependencyProperty</summary>
         public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(bool), typeof(DockedWindow), new FrameworkPropertyMetadata(FocusedPropertyChanged));
+        /// <summary>
+        /// Header DependencyProperty, which designates header text of window</summary>
         public static DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(String), typeof(DockedWindow));
+        /// <summary>
+        /// ShowIcon DependencyProperty</summary>
         public static DependencyProperty ShowIconProperty = DependencyProperty.Register("ShowIcon", typeof(bool), typeof(DockedWindow));
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>
+        /// Get or set ShowIcon DependencyProperty</summary>
         public bool ShowIcon
         {
             get { return ((bool)(base.GetValue(DockedWindow.ShowIconProperty))); }
             set { base.SetValue(DockedWindow.ShowIconProperty, value); }
         }
+        /// <summary>
+        /// Get or set DockedContent DependencyProperty</summary>
         public TabLayout DockedContent
         {
             get { return ((TabLayout)(base.GetValue(DockedWindow.DockedContentProperty))); }
             private set { base.SetValue(DockedWindow.DockedContentProperty, value); }
         }
         /// <summary>
-        /// Collapsed state of the window.
-        /// </summary>
+        /// Get or set collapsed state of the window</summary>
         public bool IsCollapsed
         {
             get
@@ -58,16 +69,14 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Focused state of the window. Only one window in docked hierarchy can be Focused.
-        /// </summary>
+        /// Get or set focused state of the window. Only one window in docked hierarchy can be Focused.</summary>
         public bool Focused
         {
             get { return ((bool)(base.GetValue(DockedWindow.FocusedProperty))); }
             set { base.SetValue(DockedWindow.FocusedProperty, value); }
         }
         /// <summary>
-        /// Header text of window
-        /// </summary>
+        /// Get or set header text of window</summary>
         public String Header
         {
             get { return ((String)(base.GetValue(DockedWindow.HeaderProperty))); }
@@ -96,22 +105,19 @@ namespace Sce.Atf.Wpf.Docking
         #region Events
 
         /// <summary>
-        /// Event triggered when the window is being closed
-        /// </summary>
+        /// Event triggered when the window is being closed</summary>
         public event EventHandler Closing;
 
         #endregion
 
         /// <summary>
-        /// Static constructor that overrides the style that is used by styling.
-        /// </summary>
+        /// Static constructor that overrides the style that is used by styling</summary>
         static DockedWindow()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DockedWindow), new FrameworkPropertyMetadata(typeof(DockedWindow)));
         }		
         /// <summary>
-        /// Constructor used when the window is created as a consequence of user interaction with the ui.
-        /// </summary>
+        /// Constructor used when the window is created as a consequence of user interaction with the UI</summary>
         /// <param name="dockPanel">Parent dockpanel</param>
         /// <param name="content">Dockable content</param>
         public DockedWindow(DockPanel dockPanel, IDockContent content)
@@ -124,24 +130,23 @@ namespace Sce.Atf.Wpf.Docking
                 DockedContent.Dock(null, content, DockTo.Center);
             }
             Content = DockedContent;
-            ShowIcon = (DockedContent.Icon != null && ((Root.IconVisibility & IconVisibility.Header) == IconVisibility.SideBar));
-            DockedContent.Closing += new ContentClosedEvent(Content_Closing);
+            ShowIcon = (DockedContent.Icon != null && ((Root.IconVisibility & IconVisibility.Header) == IconVisibility.Header));
+            DockedContent.Closing += Content_Closing;
             
-            PreviewMouseDown += new MouseButtonEventHandler(DockedWindow_PreviewMouseDown);
+            PreviewMouseDown += DockedWindow_PreviewMouseDown;
             Focused = ((IDockContent)DockedContent).IsFocused;
         }
         /// <summary>
-        /// Constructor used when deserialising from settings
-        /// </summary>
+        /// Constructor used when deserializing from settings</summary>
         /// <param name="dockPanel">Parent dock panel</param>
-        /// <param name="reader">Xml source</param>
+        /// <param name="reader">XML source</param>
         public DockedWindow(DockPanel dockPanel, XmlReader reader)
         {
             Root = dockPanel;
             ReadXml(reader);
-            ShowIcon = (DockedContent.Icon != null && ((Root.IconVisibility & IconVisibility.Header) == IconVisibility.SideBar));
-            DockedContent.Closing += new ContentClosedEvent(Content_Closing);
-            PreviewMouseDown += new MouseButtonEventHandler(DockedWindow_PreviewMouseDown);
+            ShowIcon = (DockedContent.Icon != null && ((Root.IconVisibility & IconVisibility.Header) == IconVisibility.Header));
+            DockedContent.Closing += Content_Closing;
+            PreviewMouseDown += DockedWindow_PreviewMouseDown;
             Focused = ((IDockContent)DockedContent).IsFocused;
         }
 
@@ -176,27 +181,30 @@ namespace Sce.Atf.Wpf.Docking
             Close();
         }
 
+        /// <summary>
+        /// Return selected dock content</summary>
+        /// <returns>Selected dock content</returns>
         public IDockContent GetActiveContent()
         {
             return DockedContent != null ? DockedContent.GetActiveContent() : null;
         }
 
         /// <summary>
-        /// Override that is called after a visual template is applied to the control
-        /// </summary>
+        /// Override that is called after a visual template is applied to the control,
+        /// called whenever ApplyTemplate, which builds the current template's visual tree, is called</summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             FrameworkElement titleBar = (FrameworkElement)Template.FindName("PART_TitleBar", this);
-            titleBar.MouseDown += new MouseButtonEventHandler(TitleBarMouseDown);
-            titleBar.MouseMove += new MouseEventHandler(TitleBarMouseMove);
+            titleBar.MouseDown += TitleBarMouseDown;
+            titleBar.MouseMove += TitleBarMouseMove;
 
             PART_CloseButton = (Button)Template.FindName("PART_CloseButton", this);
-            PART_CloseButton.Click += new RoutedEventHandler(CloseButton_Click);
+            PART_CloseButton.Click += CloseButton_Click;
 
             PART_CollapseButton = (ToggleButton)Template.FindName("PART_CollapseButton", this);
-            PART_CollapseButton.Click += new RoutedEventHandler(CollapseButton_Click);
+            PART_CollapseButton.Click += CollapseButton_Click;
             PART_CollapseButton.IsChecked = m_isCollapsed;
         }
 
@@ -253,6 +261,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Callback function for dock content changing</summary>
+        /// <param name="sender">Event sender DependencyObject</param>
+        /// <param name="args">Dependency property changed event arguments</param>
         public static void DockedContentPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             DockedWindow window = null;
@@ -277,11 +289,17 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockLayout Members
 
+        /// <summary>
+        /// Get the root of the hierarchy</summary>
         public DockPanel Root
         {
             get; private set;
         }
 
+        /// <summary>
+        /// Hit test the position and return content at that position</summary>
+        /// <param name="position">Position to test</param>
+        /// <returns>Content if hit, null otherwise</returns>
         public DockContent HitTest(Point position)
         {
             if (new Rect(0, 20, ActualWidth, ActualHeight).Contains(PointFromScreen(position)))
@@ -291,6 +309,10 @@ namespace Sce.Atf.Wpf.Docking
             return null;
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as direct child</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff the content is child of this control</returns>
         public bool HasChild(IDockContent content)
         {
             if (DockedContent == content || DockedContent.Children.Any(x => x == content))
@@ -300,16 +322,28 @@ namespace Sce.Atf.Wpf.Docking
             return false;
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as child or descendant</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff content is child or descendant</returns>
         public bool HasDescendant(IDockContent content)
         {
             return HasChild(content);
         }
 
+        /// <summary>
+        /// Add content to dock</summary>
+        /// <param name="nextTo">Dock content to add new content next to</param>
+        /// <param name="newContent">New content to be added to dock</param>
+        /// <param name="dockTo">Side of nextTo content where new content should be docked</param>
         public void Dock(IDockContent nextTo, IDockContent newContent, DockTo dockTo)
         {
             DockedContent.Dock(nextTo as DockContent, newContent, dockTo);
         }
 
+        /// <summary>
+        /// Undock given content</summary>
+        /// <param name="content">Content to undock</param>
         public void Undock(IDockContent content)
         {
             if (DockedContent == content)
@@ -322,6 +356,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Undock given child layout</summary>
+        /// <param name="child">Child layout to undock</param>
         public void Undock(IDockLayout child)
         {
             if (DockedContent == child)
@@ -335,11 +372,17 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Replace the old layout with new layout child</summary>
+        /// <param name="oldLayout">Old layout to be replaced</param>
+        /// <param name="newLayout">New layout that replaces old layout</param>
         public void Replace(IDockLayout oldLayout, IDockLayout newLayout)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Close the layout</summary>
         public void Close()
         {
             Root.Focus(null);
@@ -351,6 +394,10 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Return the content's parent as an IDockLayout</summary>
+        /// <param name="content">The docked content whose parent is requested</param>
+        /// <returns>The parent as IDockLayout</returns>
         IDockLayout IDockLayout.FindParentLayout(IDockContent content)
         {
             return ((IDockLayout)DockedContent).FindParentLayout(content);
@@ -360,11 +407,17 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockable Members
 
+        /// <summary>
+        /// Get nullable DockTo indicating where dockable window should be dropped relative to window it's dropped onto</summary>
         public DockTo? DockPreview
         {
             get { return m_dockPreview; }
         }
 
+        /// <summary>
+        /// Function called when dragged window enters already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         public void DockDragEnter(object sender, DockDragDropEventArgs e)
         {
             Point center = new Point(ActualWidth / 2, ActualHeight / 2);
@@ -387,7 +440,7 @@ namespace Sce.Atf.Wpf.Docking
             m_dockBottomIcon.Offset = new Point(offset.X + center.X - Root.DockIconSize.Width / 2, offset.Y + center.Y + Root.DockIconSize.Height / 2 + space);
             m_dockTabIcon.Offset = new Point(offset.X + center.X - Root.DockIconSize.Width / 2, offset.Y + center.Y - Root.DockIconSize.Height / 2);
 
-            DocklingsWindow dockIconLayer = Root.DockIconsLayer;
+            DockIconsLayer dockIconLayer = Root.DockIconsLayer;
             dockIconLayer.AddChild(m_dockLeftIcon);
             dockIconLayer.AddChild(m_dockRightIcon);
             dockIconLayer.AddChild(m_dockTopIcon);
@@ -395,6 +448,10 @@ namespace Sce.Atf.Wpf.Docking
             dockIconLayer.AddChild(m_dockTabIcon);
         }
 
+        /// <summary>
+        /// Function called when dragged window is moved over already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         public void DockDragOver(object sender, DockDragDropEventArgs e)
         {
             DockTo? previousDockPreview = m_dockPreview;
@@ -495,9 +552,13 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Function called when dragged window leaves already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         public void DockDragLeave(object sender, DockDragDropEventArgs e)
         {
-            DocklingsWindow dockIconLayer = Root.DockIconsLayer;
+            DockIconsLayer dockIconLayer = Root.DockIconsLayer;
             dockIconLayer.RemoveChild(m_dockLeftIcon);
             dockIconLayer.RemoveChild(m_dockRightIcon);
             dockIconLayer.RemoveChild(m_dockTopIcon);
@@ -511,6 +572,10 @@ namespace Sce.Atf.Wpf.Docking
             dockIconLayer.CloseIfEmpty();
         }
 
+        /// <summary>
+        /// Function called when dragged window is dropped over already docked window</summary>
+        /// <param name="sender">Dockable window being dragged</param>
+        /// <param name="e">Drag and drop arguments when window is dropped to be docked to dockpanel</param>
         public void DockDrop(object sender, DockDragDropEventArgs e)
         {
             DockPanel parent = Root;
@@ -547,11 +612,18 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IXmlSerializable Members
 
+        /// <summary>
+        /// Reserved and should not be used</summary>
+        /// <exception cref="NotImplementedException"> is raised if called</exception>
+        /// <returns>XmlSchema describing XML representation of object</returns>
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Generate object from its XML representation</summary>
+        /// <param name="reader">XmlReader stream from which object is deserialized</param>
         public void ReadXml(System.Xml.XmlReader reader)
         {
             if (reader.ReadToFollowing(this.GetType().Name))
@@ -567,6 +639,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Convert object into its XML representation</summary>
+        /// <param name="writer">XmlWriter stream to which object is serialized</param>
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteStartElement(this.GetType().Name);

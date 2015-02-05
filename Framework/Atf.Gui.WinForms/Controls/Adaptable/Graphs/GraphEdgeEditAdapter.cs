@@ -63,8 +63,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_autoTranslateAdapter = control.As<IAutoTranslateAdapter>();
 
-            control.ContextChanged += new EventHandler(control_ContextChanged);
-            control.Paint += new PaintEventHandler(control_Paint);
+            control.ContextChanged += control_ContextChanged;
+            control.Paint += control_Paint;
 
             base.Bind(control);
         }
@@ -74,8 +74,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="control">Adaptable control</param>
         protected override void Unbind(AdaptableControl control)
         {
-            control.ContextChanged -= new EventHandler(control_ContextChanged);
-            control.Paint -= new PaintEventHandler(control_Paint);
+            control.ContextChanged -= control_ContextChanged;
+            control.Paint -= control_Paint;
 
             base.Unbind(control);
         }
@@ -84,11 +84,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_graph = AdaptedControl.ContextAs<IGraph<TNode, TEdge, TEdgeRoute>>();
             m_editableGraph = AdaptedControl.ContextAs<IEditableGraph<TNode, TEdge, TEdgeRoute>>();
-
-            if (m_editableGraph != null)
-            {
-                m_selectionContext = AdaptedControl.ContextCast<ISelectionContext>();
-            }
         }
 
         private void control_Paint(object sender, PaintEventArgs e)
@@ -359,34 +354,32 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         m_existingEdge.FromRoute != m_dragFromRoute)
                     {
                         ITransactionContext transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
-                        TransactionContexts.DoTransaction(transactionContext,
-                            delegate
+                        transactionContext.DoTransaction(delegate
+                        {
+                            // disconnect any existing edge on the node route
+                            if (m_disconnectEdge != null)
                             {
-                                // disconnect any existing edge on the node route
-                                if (m_disconnectEdge != null)
-                                {
-                                    m_editableGraph.Disconnect(m_disconnectEdge);
-                                }
+                                m_editableGraph.Disconnect(m_disconnectEdge);
+                            }
 
-                                if (m_existingEdge != null)
-                                {
-                                    m_editableGraph.Disconnect(m_existingEdge);
-                                }
+                            if (m_existingEdge != null)
+                            {
+                                m_editableGraph.Disconnect(m_existingEdge);
+                            }
 
-                                if (m_dragToNode != null &&
-                                    m_dragToRoute != null &&
-                                    m_dragFromNode != null &&
-                                    m_dragFromRoute != null)
-                                {
-                                    m_editableGraph.Connect(
-                                        m_dragFromNode,
-                                        m_dragFromRoute,
-                                        m_dragToNode,
-                                        m_dragToRoute,
-                                        m_existingEdge);
-                                }
-                            },
-                            "Drag Edge".Localize());
+                            if (m_dragToNode != null &&
+                                m_dragToRoute != null &&
+                                m_dragFromNode != null &&
+                                m_dragFromRoute != null)
+                            {
+                                m_editableGraph.Connect(
+                                    m_dragFromNode,
+                                    m_dragFromRoute,
+                                    m_dragToNode,
+                                    m_dragToRoute,
+                                    m_existingEdge);
+                            }
+                        }, "Drag Edge".Localize());
                     }
 
                     AdaptedControl.Invalidate();
@@ -492,7 +485,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private IGraph<TNode, TEdge, TEdgeRoute> m_graph;
         private IEditableGraph<TNode, TEdge, TEdgeRoute> m_editableGraph;
-        private ISelectionContext m_selectionContext;
 
         private GraphHitRecord<TNode, TEdge, TEdgeRoute> m_mousePick = new GraphHitRecord<TNode, TEdge, TEdgeRoute>();
         private TEdge m_hotEdge;

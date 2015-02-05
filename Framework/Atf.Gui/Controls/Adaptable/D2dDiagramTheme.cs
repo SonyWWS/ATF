@@ -134,8 +134,26 @@ namespace Sce.Atf.Controls.Adaptable
         public D2dBrush GetFillTitleBrush(object key)
         {
             D2dBrush brush;
-            m_brushes.TryGetValue(key, out brush);
+            m_titleBrushes.TryGetValue(key, out brush);
             return brush ?? m_fillTitleBrush;
+        }
+
+        /// <summary>
+        /// Registers a title background fill brush with a unique key</summary>
+        /// <param name="key">Key to access brush</param>
+        /// <param name="brush">Custom title fill brush</param>
+        public void RegisterFillTitleBrush(object key, D2dBrush brush)
+        {
+            D2dBrush oldBrush;
+            m_titleBrushes.TryGetValue(key, out oldBrush);
+            if (brush != oldBrush)
+            {
+                if (oldBrush != null)
+                    oldBrush.Dispose();
+
+                m_titleBrushes[key] = brush;
+                OnRedraw();
+            }
         }
 
         /// <summary>
@@ -350,6 +368,10 @@ namespace Sce.Atf.Controls.Adaptable
                     brush.Dispose();
                 m_brushes.Clear();
 
+                foreach (D2dBrush brush in m_titleBrushes.Values)
+                    brush.Dispose();
+                m_titleBrushes.Clear();
+
                 foreach (D2dBitmap bitmap in m_bitmaps.Values)
                     bitmap.Dispose();
                 m_bitmaps.Clear();                                    
@@ -415,6 +437,7 @@ namespace Sce.Atf.Controls.Adaptable
         }
          
         private readonly Dictionary<object, D2dBrush> m_brushes = new Dictionary<object, D2dBrush>();
+        private readonly Dictionary<object, D2dBrush> m_titleBrushes = new Dictionary<object, D2dBrush>();
         private readonly Dictionary<object, D2dBitmap> m_bitmaps = new Dictionary<object, D2dBitmap>();        
         private D2dTextFormat m_d2dTextFormat;
         private D2dBrush m_fillBrush;

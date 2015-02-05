@@ -85,7 +85,7 @@
             <param name="severityLevel"></param>
             <param name="errorMessage"></param>
         </member>
-        <member name="M:Perforce.P4.P4ClientError.#ctor(System.IntPtr)">
+        <member name="M:Perforce.P4.P4ClientError.#ctor(Perforce.P4.P4Server,System.IntPtr)">
             <summary>
             Create a new ClientError
             </summary>
@@ -144,6 +144,92 @@
             <returns></returns>
         </member>
         <member name="M:Perforce.P4.P4ClientErrorList.op_Implicit(Perforce.P4.P4ClientErrorList)~System.String">
+            <summary>
+            Cast the errors to a String. Each error is separated by \r\n
+            </summary>
+            <param name="l">the list to cast </param>
+            <returns></returns>
+        </member>
+        <member name="T:Perforce.P4.P4ClientInfoMessage">
+            <summary>
+            Class used to return a info message from the bridge dll.
+            </summary>
+        </member>
+        <member name="F:Perforce.P4.P4ClientInfoMessage.MessageLevel">
+            <summary>
+            Message level
+            </summary>
+        </member>
+        <member name="F:Perforce.P4.P4ClientInfoMessage.MessageCode">
+            <summary>
+            Generic code for the message
+            </summary>
+        </member>
+        <member name="F:Perforce.P4.P4ClientInfoMessage.Message">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Perforce.P4.P4ClientInfoMessage.#ctor(System.Int32,System.Int32,System.String)" -->
+        <member name="M:Perforce.P4.P4ClientInfoMessage.#ctor(Perforce.P4.P4Server,System.IntPtr)">
+            <summary>
+            Create a new P4ClientInfoMessage
+            </summary>
+            <param name="severityLevel"></param>
+            <param name="errorMessage"></param>
+        </member>
+        <member name="T:Perforce.P4.P4ClientInfoMessageList">
+            <summary>
+            Class used to return a list of info Messages returned by a command.
+            </summary>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.Init(Perforce.P4.P4Server,System.IntPtr)">
+            <summary>
+            Read an error list from the server by traversing the linked list.
+            </summary>
+            <param name="p4Server">Perforce server</param>
+            <param name="pObj">First error in the list</param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.#ctor">
+            <summary>
+            Create an empty list
+            </summary>
+            <param name="Msg">Error</param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.#ctor(Perforce.P4.P4ClientInfoMessage)">
+            <summary>
+            Create a list of a single error
+            </summary>
+            <param name="Msg">Error</param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.#ctor(System.String,System.Int32)">
+            <summary>
+            Create a list of a single error
+            </summary>
+            <param name="msg">Error message</param>
+            <param name="level">Message level</param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.#ctor(Perforce.P4.P4Server,System.IntPtr)">
+            <summary>
+            Read the error list from the server
+            </summary>
+            <param name="p4Server"></param>
+            <param name="pObj"></param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.#ctor(Perforce.P4.P4Server,System.UInt32)">
+            <summary>
+            Create a list from the current error results on the server
+            </summary>
+            <param name="p4Server">Perforce Server</param>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.op_Implicit(Perforce.P4.P4ClientInfoMessageList)~System.String[]">
+            <summary>
+            Cast the messages to a String[]
+            </summary>
+            <param name="l">the list to cast </param>
+            <returns></returns>
+        </member>
+        <member name="M:Perforce.P4.P4ClientInfoMessageList.op_Implicit(Perforce.P4.P4ClientInfoMessageList)~System.String">
             <summary>
             Cast the errors to a String. Each error is separated by \r\n
             </summary>
@@ -10586,12 +10672,10 @@
             Automate the Login to the Perforce Server
             </summary>
             <param name="password">User' password</param>
-            <param name="options">Login options (see remarks in help file)</param>
-            <param name="options">Login as user (see remarks in help file)</param>
             <returns>Success/Failure</returns>
             <remarks>
             Runs the login process. If the server is using ticket based 
-            authentication, actually runs the logn three times. Once to 
+            authentication, actually runs the logon three times. Once to 
             login and update the ticket file, once to get the ticket from
             the server and finally once to get the ticket expiration data.
             </remarks>
@@ -10759,6 +10843,14 @@
             <summary>
             Create a P4.P4MapApi object to be used on the current server connection
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Perforce.P4.Connection.Dispose">
+            <summary>
+            Get the existing ticket if any for a user on the secified server
+            </summary>
+            <param name="port">name|ip:port for the server</param>
+            <param name="user">user name</param>
             <returns></returns>
         </member>
         <member name="P:Perforce.P4.Connection.ApiLevel">
@@ -11965,7 +12057,7 @@
             Pinned function pointer for the delegate passed to the dll
             </summary>
         </member>
-        <member name="M:Perforce.P4.P4Server.InfoResultsCallback_Int(System.UInt32,System.Int32,System.IntPtr)">
+        <member name="M:Perforce.P4.P4Server.InfoResultsCallback_Int(System.UInt32,System.Int32,System.Int32,System.IntPtr)">
             <summary>
             Internal callback used to receive the raw data. 
             </summary>
@@ -12193,11 +12285,23 @@
             <summary>
             Cancel a running command
             </summary>
-            <param name="cmdId">Unique Id for the run of the command</param>
+            <param name="CmdId">Unique Id for the run of the command</param>
         </member>
         <member name="M:Perforce.P4.P4Server.ReleaseConnection(System.UInt32)">
             <summary>
             Release the UI created for a command after it has been completed
+            </summary>
+            <param name="cmdId">Unique Id for the run of the command</param>
+        </member>
+        <member name="M:Perforce.P4.P4Server.ReleaseConnection(System.UInt32,System.DateTime)">
+            <summary>
+            Release the UI created for a command after it has been completed
+            </summary>
+            <param name="cmdId">Unique Id for the run of the command</param>
+        </member>
+        <member name="M:Perforce.P4.P4Server.FreeConnections">
+            <summary>
+            Free the UI created for a command after it is no longer needed
             </summary>
             <param name="cmdId">Unique Id for the run of the command</param>
         </member>
@@ -12670,7 +12774,8 @@
             The "info" results generally are the output of commands that are run
             <b>not</b> using tagged protocol
             </remarks>
-            <param name="cmdID">Id if the command making the callback</param>
+            <param name="cmdID">Id of the command making the callback</param>
+            <param name="msgID">Unique Id of the message from the server</param>
             <param name="level"></param>
             <param name="info"></param>
         </member>
@@ -12925,9 +13030,17 @@
             <param name="pServer">P4BridgeServer Handle</param>
             <param name="cmdId">Unique Id for the run of the command</param>
         </member>
-        <member name="M:Perforce.P4.P4Bridge.ReleaseConnection(System.IntPtr,System.UInt32)">
+        <member name="M:Perforce.P4.P4Bridge.ReleaseConnection(System.IntPtr,System.UInt32,System.UInt64)">
             <summary>
             Release the UI created for a command after it has been completed
+            </summary>
+            <param name="pServer">P4BridgeServer Handle</param>
+            <param name="cmdId">Unique Id for the run of the command</param>
+        </member>
+        <member name="M:Perforce.P4.P4Bridge.FreeConnections(System.IntPtr,System.UInt64)">
+            <summary>
+            Free the connection created for a command and disconnect from 
+            the server
             </summary>
             <param name="pServer">P4BridgeServer Handle</param>
             <param name="cmdId">Unique Id for the run of the command</param>
@@ -13337,6 +13450,34 @@
             <param name="pObj">P4ErrorList Handle</param>
             <returns>null indicates the end of the list</returns>
         </member>
+        <member name="M:Perforce.P4.P4Bridge.MessageLevel(System.IntPtr)">
+            <summary>
+            Severity of the error
+            </summary>
+            <param name="pObj">P4ClientInfoMessage Handle</param>
+            <returns>Severity level</returns>
+        </member>
+        <member name="M:Perforce.P4.P4Bridge.InfoMsgCode(System.IntPtr)">
+            <summary>
+            Code of the message
+            </summary>
+            <param name="pObj">P4ClientInfoMessage Handle</param>
+            <returns>Generic error code</returns>
+        </member>
+        <member name="M:Perforce.P4.P4Bridge.InfoMessage(System.IntPtr)">
+            <summary>
+            Get the message text.
+            </summary>
+            <param name="pObj">P4ClientInfoMessage Handle</param>
+            <returns>Error Message</returns>
+        </member>
+        <member name="M:Perforce.P4.P4Bridge.NextInfoMsg(System.IntPtr)">
+            <summary>
+            Get the next message in the list
+            </summary>
+            <param name="pObj">P4ClientInfoMessage Handle</param>
+            <returns>null indicates the end of the list</returns>
+        </member>
         <member name="T:Perforce.P4.P4ClientMergeBridge">
             <summary>
             Class containing the DLL imports for the P4Bridge DLL.
@@ -13427,7 +13568,7 @@
             <param name="taggedOutput">Run in tagged protocol</param>
             <param name="arguments">Arguments for the command</param>
         </member>
-        <member name="M:Perforce.P4.P4Command.OnInfoOut(System.UInt32,System.Int32,System.String)">
+        <member name="M:Perforce.P4.P4Command.OnInfoOut(System.UInt32,System.Int32,System.Int32,System.String)">
             <summary>
             Use the infoResultsReceived event to build up a list of info data.
             </summary>
@@ -13527,7 +13668,7 @@
         <member name="T:Perforce.P4.P4Exception">
             <summary>
             Base class for exceptions caused by run time errors from the server.
-            They ca be disabled, by setting the MinThrowLevel to 
+            They can be disabled, by setting the MinThrowLevel to 
             ErrorSeverity.E_NOEXC.
             </summary>
         </member>
@@ -13578,14 +13719,14 @@
             </summary>
             <param name="errors">The list of errors which caused the exception</param>
         </member>
-        <member name="M:Perforce.P4.P4Exception.#ctor(Perforce.P4.P4ClientErrorList,System.String[])">
+        <member name="M:Perforce.P4.P4Exception.#ctor(Perforce.P4.P4ClientErrorList,Perforce.P4.P4ClientInfoMessageList)">
             <summary>
             Create a list of new P4Exceptions
             </summary>
             <param name="errors">The list of errors which caused the exception</param>
             <param name="nDetails">The info output of the command which caused the exception</param>
         </member>
-        <member name="M:Perforce.P4.P4Exception.#ctor(System.String,System.String[],Perforce.P4.P4ClientErrorList,System.String[])">
+        <member name="M:Perforce.P4.P4Exception.#ctor(System.String,System.String[],Perforce.P4.P4ClientErrorList,Perforce.P4.P4ClientInfoMessageList)">
             <summary>
             Create a list of new P4Exceptions
             </summary>
@@ -13630,13 +13771,13 @@
             </summary>
             <param name="errors">List of client errors causing the exception</param>
         </member>
-        <member name="M:Perforce.P4.P4Exception.Throw(Perforce.P4.P4ClientErrorList,System.String[])">
+        <member name="M:Perforce.P4.P4Exception.Throw(Perforce.P4.P4ClientErrorList,Perforce.P4.P4ClientInfoMessageList)">
             <summary>
             Throw if any error in the list exceeds minLevel
             </summary>
             <param name="errors">List of client errors causing the exception</param>
         </member>
-        <member name="M:Perforce.P4.P4Exception.Throw(System.String,System.String[],Perforce.P4.P4ClientErrorList,System.String[])">
+        <member name="M:Perforce.P4.P4Exception.Throw(System.String,System.String[],Perforce.P4.P4ClientErrorList,Perforce.P4.P4ClientInfoMessageList)">
             <summary>
             Throw if any error in the list exceeds minLevel
             </summary>
@@ -22882,58 +23023,6 @@
             <summary>
             A list of tagged objects.
             </summary>
-        </member>
-        <member name="T:Perforce.P4.InfoList">
-            <summary>
-            List of info messages.
-            </summary>
-        </member>
-        <member name="M:Perforce.P4.InfoList.op_Implicit(Perforce.P4.InfoList)~System.String[]">
-            <summary>
-            Cast to a String[].
-            </summary>
-            <param name="l"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Perforce.P4.InfoList.op_Implicit(Perforce.P4.InfoList)~System.String">
-            <summary>
-            Cast to a String. Messages are separated by \r\n
-            </summary>
-            <param name="l"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Perforce.P4.InfoLine">
-            <summary>
-            A single line of output from an 'info' message.
-            </summary>
-        </member>
-        <member name="F:Perforce.P4.InfoLine.Level">
-            <summary>
-            The level of the message (0-9)
-            </summary>
-        </member>
-        <member name="F:Perforce.P4.InfoLine.CommandId">
-            <summary>
-            The level of the message (0-9)
-            </summary>
-        </member>
-        <member name="F:Perforce.P4.InfoLine.Info">
-            <summary>
-            The message
-            </summary>
-        </member>
-        <member name="M:Perforce.P4.InfoLine.#ctor(System.UInt32,System.Int32,System.String)">
-            <summary>
-            Create a new InfoLine
-            </summary>
-            <param name="nLevel">Level of the message</param>
-            <param name="nInfo">Message text.</param>
-        </member>
-        <member name="M:Perforce.P4.InfoLine.ToString">
-            <summary>
-            Convert the info to text
-            </summary>
-            <returns>String representation</returns>
         </member>
         <member name="T:Perforce.P4.TaggedInfoItem">
             <summary>

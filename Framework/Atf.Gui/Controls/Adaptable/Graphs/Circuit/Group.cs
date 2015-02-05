@@ -108,7 +108,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public bool Dirty
         {
             get { return m_dirty; }
-            set { m_dirty = value; }
+            set
+            {
+                if (value)
+                {
+                    m_inputPinsMap = null;
+                    m_outputPinsMap = null;
+                }
+                m_dirty = value;
+            }
         }
 
         /// <summary>
@@ -128,13 +136,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             SetUpGraphData();
             base.OnNodeSet();
 
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
             Info.MinimumSize = MinimumSize;
             Info.ShowExpandedGroupPins = ShowExpandedGroupPins;
 
-            // fillin group pin's leaf DomNode
+            // fill in group pin's leaf DomNode
             foreach (var grpPin in InputGroupPins)
             {
                 grpPin.SetPinTarget(true);
@@ -201,25 +209,38 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public override bool HasOutputPin(ICircuitPin pin)
         {
             return OutputGroupPins.Contains(pin);
-
         }
 
         /// <summary>
         /// Gets the input pin for the given pin index</summary>
-        /// <param name="pinIndex"></param>
-        /// <returns></returns>
+        /// <param name="pinIndex">Pin index</param>
+        /// <returns>Input pin for pin index</returns>
         public override ICircuitPin InputPin(int pinIndex)
         {
-            return m_inputs.FirstOrDefault(x => x.Index == pinIndex);
+            // If we're dirty, construct the map.
+            if (m_inputPinsMap == null)
+            {
+                m_inputPinsMap = new int[m_inputs.Count];
+                for(int i = m_inputs.Count; --i >= 0; )
+                    m_inputPinsMap[m_inputs[i].Index] = i;
+            }
+            return m_inputs[m_inputPinsMap[pinIndex]];
         }
 
         /// <summary>
         /// Gets the output pin for the given pin index</summary>
-        /// <param name="pinIndex"></param>
-        /// <returns></returns>
+        /// <param name="pinIndex">Pin index</param>
+        /// <returns>Output pin for pin index</returns>
         public override ICircuitPin OutputPin(int pinIndex)
         {
-            return m_outputs.FirstOrDefault(x => x.Index == pinIndex);
+            // If we're dirty, construct the map.
+            if (m_outputPinsMap == null)
+            {
+                m_outputPinsMap = new int[m_outputs.Count];
+                for (int i = m_outputs.Count; --i >= 0; )
+                    m_outputPinsMap[m_outputs[i].Index] = i;
+            }
+            return m_outputs[m_outputPinsMap[pinIndex]];
         }
 
         /// <summary>
@@ -303,16 +324,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the list of input pins for this group; the list is considered
-        /// to be read-only</summary>
+        /// Gets the list of input pins, whose Visible property is 'true', for this group;
+        /// the list is considered to be read-only</summary>
         IList<ICircuitPin> ICircuitElementType.Inputs
         {
             get { return Inputs; }
         }
 
         /// <summary>
-        /// Gets the list of output pins for this group; the list is considered
-        /// to be read-only</summary>
+        /// Gets the list of output pins, whose Visible property is 'true', for this group;
+        /// the list is considered to be read-only</summary>
         IList<ICircuitPin> ICircuitElementType.Outputs
         {
             get { return Outputs; }
@@ -601,7 +622,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
         }
-
 
         /// <summary>
         /// Update group pins, its indexes, and cross-links</summary>
@@ -991,7 +1011,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public void Validate()
         {
 
-            // check every pin of a subnode that does not connect to an internal subnode has  a corresponding group pin
+            // check every pin of a subnode that does not connect to an internal subnode has a corresponding group pin
             var internalConnections = new List<Wire>();
             var externalConnections = new List<Wire>();
             GetSubGraphConnections(internalConnections, externalConnections, externalConnections);
@@ -1029,46 +1049,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 Debug.Assert(grpPin.Index < InputGroupPins.Count(), "SubGraph " + Name + " Input Group Pin" + grpPin.Name +
                     " Index invalid " + grpPin.Index + " Count=" + InputGroupPins.Count());
                 //Debug.Assert(grpPin.Position.Y >= 0, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has negative Y");
-                Debug.Assert(grpPin.Position.Y <= 4096 && grpPin.Position.Y >= -4096, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has suspicious large Y greater than 4k");
+                //Debug.Assert(grpPin.Position.Y <= 4096 && grpPin.Position.Y >= -4096, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has suspicious large Y greater than 4k");
                 // validate InternalPinIndex
-                if (grpPin.InternalElement.Is<Group>())
-                {
-                    var group = grpPin.InternalElement.Cast<Group>();
-                    Debug.Assert(grpPin.InternalPinIndex < group.InputGroupPins.Count(),
-                          "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "InternalPinIndex out of range");
-                }
-                else
-                {
-                    if (grpPin.Visible)
-                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.AllInputPins.Count(),
-                            "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "InternalPinIndex out of range");
-
-                }
-
+                Debug.Assert(grpPin.InternalPinIndex >= 0 && grpPin.InternalPinIndex < grpPin.InternalElement.Type.GetAllInputPins().Count(),
+                    "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "InternalPinIndex is out of range");
             }
             foreach (var grpPin in OutputGroupPins)
             {
-                Debug.Assert(grpPin.PinTarget != null, "SubGraph " + Name + " O utput Group Pin" + grpPin.Name + "LeaveNode not set");
+                Debug.Assert(grpPin.PinTarget != null, "SubGraph " + Name + " Output Group Pin" + grpPin.Name + "LeaveNode not set");
                 // pins of proxy group parent not set 
                 //Debug.Assert(grpPin.DomNode.Parent != null, "SubGraph " + Name + " Output Group Pin" + grpPin.Name + "Parent  not set");
                 Debug.Assert(grpPin.Index < OutputGroupPins.Count(), "SubGraph " + Name + " Output Group Pin" + grpPin.Name +
                     " Index invalid " + grpPin.Index + " Count=" + OutputGroupPins.Count());
                 //Debug.Assert(grpPin.Position.Y >= 0, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has negative Y");
-                Debug.Assert(grpPin.Position.Y <= 4096 && grpPin.Position.Y >= -4096, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has suspicious large Y greater than 4k");
+                //Debug.Assert(grpPin.Position.Y <= 4096 && grpPin.Position.Y >= -4096, "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "has suspicious large Y greater than 4k");
                 // validate InternalPinIndex
-                if (grpPin.InternalElement.Is<Group>())
-                {
-                    var group = grpPin.InternalElement.Cast<Group>();
-                    Debug.Assert(grpPin.InternalPinIndex < group.OutputGroupPins.Count(),
-                          "SubGraph " + Name + " Input Group Pin" + grpPin.Name + "InternalPinIndex out of range");
-                }
-                else
-                {
-                    if (grpPin.Visible)
-                        Debug.Assert(grpPin.InternalPinIndex < grpPin.InternalElement.AllOutputPins.Count(),
-                            "SubGraph " + Name + " Output Group Pin" + grpPin.Name + "InternalPinIndex out of range");
-
-                }
+                Debug.Assert(grpPin.InternalPinIndex >= 0 && grpPin.InternalPinIndex < grpPin.InternalElement.Type.GetAllOutputPins().Count(),
+                    "SubGraph " + Name + " Output Group Pin" + grpPin.Name + "InternalPinIndex is out of range");
             }
 
             var pinIndexes = inputGroupPins.GroupBy(g => g.Index).Where(w => w.Count() > 1);
@@ -1096,7 +1093,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
                 }
 
-                // outputt group pins
+                // output group pins
                 foreach (var outputPin in module.Type.Outputs)
                 {
                     if (CanExposePin(module, outputPin, Wires, false))
@@ -1268,8 +1265,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
 
-            return inputSide ? m_inputs.FirstOrDefault(x => x.InternalElement == node && x.InternalPinIndex == pinIndex) :
-                        m_outputs.FirstOrDefault(x => x.InternalElement == node && x.InternalPinIndex == pinIndex);
+            return inputSide ? m_inputs.FirstOrDefault(x => x.InternalElement.DomNode == node.DomNode && x.InternalPinIndex == pinIndex) :
+                        m_outputs.FirstOrDefault(x => x.InternalElement.DomNode == node.DomNode && x.InternalPinIndex == pinIndex);
 
         }
 
@@ -1444,6 +1441,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private void UpdateOffset()
         {
             Point offset = Point.Empty;
+            if (Elements == null)
+                return;
 
             if (Elements.Any())
             {
@@ -1481,6 +1480,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private DomNodeListAdapter<Annotation> m_annotations;
         private DomNodeListAdapter<GroupPin> m_inputs;
         private DomNodeListAdapter<GroupPin> m_outputs;
+
+        // Maps the index passed into InputPin() and OutputPin() to the correct array index.
+        //  If they're null, that's the indicator that they were dirty and need to be rebuilt.
+        private int[] m_inputPinsMap, m_outputPinsMap;
 
         private bool m_dirty;
         private bool m_expanded;

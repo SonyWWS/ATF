@@ -32,7 +32,7 @@ namespace Sce.Atf.Rendering.OpenGL
             m_cameraController = new TrackBallCameraController();
             m_cameraController.Camera = m_camera;
 
-            m_camera.CameraChanged += new EventHandler(CameraChanged);
+            m_camera.CameraChanged += CameraChanged;
             Sphere3F sphere = new Sphere3F(new Vec3F(0, 0, 0), 25.0f);
             m_camera.ZoomOnSphere(sphere);
         }
@@ -165,7 +165,7 @@ namespace Sce.Atf.Rendering.OpenGL
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            bool handled = m_cameraController.KeyDown(this, e);
+            m_cameraController.KeyDown(this, e);
         }
 
         /// <summary>
@@ -316,7 +316,6 @@ namespace Sce.Atf.Rendering.OpenGL
         private int m_dragThreshold = 3;
         private int m_pickTolerance = 3;
         private bool m_isPicking;
-        private Matrix4F m_axisSystem = new Matrix4F();
 
         private readonly Camera m_camera;  // only camera object.
         private CameraController m_cameraController;

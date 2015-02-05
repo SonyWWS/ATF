@@ -57,11 +57,22 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         #region base override
 
+        /// <summary>
+        /// Test if can convert value from a type in a context</summary>
+        /// <param name="context">Context in which conversion occurs</param>
+        /// <param name="sourceType">Type to convert from</param>
+        /// <returns>True iff can convert type</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(string);
         }
 
+        /// <summary>
+        /// Convert value in a context and culture</summary>
+        /// <param name="context">Context in which conversion occurs</param>
+        /// <param name="culture">Culture that indicates conversion format</param>
+        /// <param name="value">Value to convert</param>
+        /// <returns>Converted value</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
             string strVal = value as string;
@@ -78,11 +89,23 @@ namespace Sce.Atf.Controls.PropertyEditing
             throw new ArgumentException("value must be string");
         }
 
+        /// <summary>
+        /// Test if can convert value to a type in a context</summary>
+        /// <param name="context">Context in which conversion occurs</param>
+        /// <param name="destinationType">Type to convert to</param>
+        /// <returns>True iff can convert type</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(string);
         }
 
+        /// <summary>
+        /// Convert value to a type in a context and culture</summary>
+        /// <param name="context">Context in which conversion occurs</param>
+        /// <param name="culture">Culture that indicates conversion format</param>
+        /// <param name="value">Value to convert</param>
+        /// <param name="destinationType">Type to convert to</param>
+        /// <returns>Converted value</returns>
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
             if (value is int && destinationType == typeof(string))

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace Sce.Atf
 {
     /// <summary>
-    /// Utilities for working with resources, such as Images, Icons, and Cursors</summary>
+    /// Utilities for working with resources, such as Images, Icons, and Cursors.</summary>
     public static class ResourceUtil
     {
         /// <summary>
@@ -270,7 +270,7 @@ namespace Sce.Atf
                     string name1 = resourcePath + attribute.ImageName1;
                     field.SetValue(null, name1);
                     string name2 = attribute.ImageName2 != null ? resourcePath + attribute.ImageName2 : null;
-                    string name3 = attribute.ImageName2 != null ? resourcePath + attribute.ImageName2 : null;
+                    string name3 = attribute.ImageName3 != null ? resourcePath + attribute.ImageName3 : null;
                     RegisterImage(resourceAssembly, name1, name2, name3);
 
                     continue;

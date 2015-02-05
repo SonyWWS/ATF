@@ -18,6 +18,8 @@ namespace Sce.Atf.Wpf
         {
         }
 
+        /// <summary>
+        /// Dependency property representing a command</summary>
         public static readonly DependencyProperty CommandProperty = 
             DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandReference), new PropertyMetadata(OnCommandChanged));
 
@@ -50,6 +52,8 @@ namespace Sce.Atf.Wpf
             Command.Execute(parameter);
         }
 
+        /// <summary>
+        /// CanExecuteChanged event</summary>
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -59,7 +63,7 @@ namespace Sce.Atf.Wpf
         /// <summary>
         /// Raises the CanExecuteChanged event</summary>
         /// <param name="sender">Sender</param>
-        /// <param name="e">Event args</param>
+        /// <param name="e">Event arguments</param>
         private void RaiseCanExecuteChanged(object sender, EventArgs e)
         {
             //CanExecuteChanged.Raise(sender, e);

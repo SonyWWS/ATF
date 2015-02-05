@@ -11,28 +11,31 @@ namespace Sce.Atf.Wpf.Controls
 {
 
     /// <summary>
-    /// The "value changed" pattern doesn't use events.  To listen for changes
+    /// The "value changed" pattern doesn't use events. To listen for changes
     /// in a property, a client first obtains the PropertyDescriptor for that
     /// property, then calls the AddValueChanged method to register a callback.
     /// The arguments to the callback don't say which property has changed(!).
     ///
-    /// The standard manager implementation doesn't work for this.  Hence this
+    /// The standard manager implementation doesn't work for this. Hence this
     /// manager overrides and/or ignores the base class methods.
     ///
     /// This manager keeps a table of records, indexed by PropertyDescriptor.
     /// Each record holds the following information:
-    ///     PropertyDescriptor
-    ///     Callback method
-    ///     ListenerList
+    ///  *  PropertyDescriptor
+    ///  *  Callback method
+    ///  *  ListenerList
     ///     
-    /// In short, there's a separate callback method for each property.  That
+    /// In short, there's a separate callback method for each property. That
     /// method knows which property has changed, and can ask the manager to
     /// deliver the "event" to the listeners that are interested in that property.
-    /// Manager for the object.ValueChanged event. </summary>
+    /// Manager for the object.ValueChanged event.</summary>
     public class ValueChangedEventManager : WeakEventManager
     {
         /// <summary>
-        /// Add a listener to the given source's event.</summary>
+        /// Add a listener to the given source's event</summary>
+        /// <param name="source">Source of event</param>
+        /// <param name="listener">Event listener</param>
+        /// <param name="pd">Property descriptor for the value</param>
         public static void AddListener(object source, IWeakEventListener listener, PropertyDescriptor pd)
         {
             if (source == null)
@@ -44,7 +47,10 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Remove a listener to the given source's event.</summary>
+        /// Remove a listener from the given source's event</summary>
+        /// <param name="source">Source of event</param>
+        /// <param name="listener">Event listener</param>
+        /// <param name="pd">Property descriptor for the value</param>
         public static void RemoveListener(object source, IWeakEventListener listener, PropertyDescriptor pd)
         {
             if (source == null)
@@ -58,20 +64,25 @@ namespace Sce.Atf.Wpf.Controls
         // The next two methods need to be defined, but they're never called.
 
         /// <summary>
-        /// Listen to the given source for the event. </summary>
+        /// Listen to the given source for the event</summary>
+        /// <param name="source">Event source</param>
         protected override void StartListening(object source)
         {
         }
 
         /// <summary>
-        /// Stop listening to the given source for the event. </summary>
+        /// Stop listening to the given source for the event</summary>
+        /// <param name="source">Event source</param>
         protected override void StopListening(object source)
         {
         }
 
         /// <summary>
-        /// Remove dead entries from the data for the given source.   Returns true if
-        /// some entries were actually removed. </summary>
+        /// Remove dead entries from the data for the given event source</summary>
+        /// <param name="source">Event source</param>
+        /// <param name="data">Data from which to remove entries</param>
+        /// <param name="purgeAll">If true, purge all entries</param>
+        /// <returns>True iff some entries were actually removed</returns>
         protected override bool Purge(object source, object data, bool purgeAll)
         {
             bool foundDirt = false;
@@ -189,7 +200,7 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Remove a listener to the named property (empty means "any property")</summary>
+        /// Remove a listener from the named property (empty means "any property")</summary>
         /// <param name="source">Source of the event</param>
         /// <param name="listener">The listener to remove</param>
         /// <param name="pd">Property descriptor for the value</param>
@@ -246,18 +257,18 @@ namespace Sce.Atf.Wpf.Controls
                 m_pd = pd;
                 m_eventArgs = new ValueChangedEventArgs(pd);
 
-                pd.AddValueChanged(source, new EventHandler(OnValueChanged));
+                pd.AddValueChanged(source, OnValueChanged);
             }
 
             /// <summary>
-            /// Gets whether the list of listeners is empty.</summary>
+            /// Gets whether the list of listeners is empty</summary>
             public bool IsEmpty
             {
                 get { return m_listeners.IsEmpty; }
             }
 
             /// <summary>
-            /// Add a listener.</summary>
+            /// Add a listener</summary>
             /// <param name="listener">The listener to add</param>
             public void Add(IWeakEventListener listener)
             {
@@ -268,7 +279,7 @@ namespace Sce.Atf.Wpf.Controls
             }
 
             /// <summary>
-            /// Remove a listener.</summary>
+            /// Remove a listener</summary>
             /// <param name="listener">The listener to remove</param>
             public void Remove(IWeakEventListener listener)
             {
@@ -285,7 +296,7 @@ namespace Sce.Atf.Wpf.Controls
             }
 
             /// <summary>
-            /// Purge dead entries.</summary>
+            /// Purge dead entries</summary>
             /// <returns>True if any entries were purged, otherwise false</returns>
             public bool Purge()
             {
@@ -294,19 +305,19 @@ namespace Sce.Atf.Wpf.Controls
             }
 
             /// <summary>
-            /// Remove the callback from the PropertyDescriptor.</summary>
+            /// Remove the callback from the PropertyDescriptor</summary>
             public void StopListening()
             {
                 if (m_source != null && m_source.IsAlive)
                 {
-                    m_pd.RemoveValueChanged(m_source.Target, new EventHandler(OnValueChanged));
+                    m_pd.RemoveValueChanged(m_source.Target, OnValueChanged);
                 }
                 
                 m_source = null;
             }
 
             /// <summary>
-            /// Forward the ValueChanged event to the listeners.</summary>
+            /// Forward the ValueChanged event to the listeners</summary>
             /// <param name="sender"></param>
             /// <param name="e"></param>
             private void OnValueChanged(object sender, EventArgs e)
@@ -337,11 +348,11 @@ namespace Sce.Atf.Wpf.Controls
     }
 
     /// <summary>
-    /// Event args for the ValueChanged event</summary>
+    /// Event arguments for the ValueChanged event</summary>
     public class ValueChangedEventArgs : EventArgs
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with PropertyDescriptor</summary>
         /// <param name="pd">Property descriptor for the value that changed</param>
         public ValueChangedEventArgs(PropertyDescriptor pd)
         {

@@ -18,15 +18,23 @@ namespace Sce.Atf.Wpf.Behaviors
     /// </summary>
     public class ItemsControlDropTargetBehavior : DropTargetBehavior<ItemsControl>
     {
+        /// <summary>
+        /// Root target dependency property</summary>
         public static readonly DependencyProperty RootTargetProperty =
             DependencyProperty.Register("RootTarget", typeof(object), typeof(ItemsControlDropTargetBehavior), new PropertyMetadata(default(object)));
 
+        /// <summary>
+        /// Get or set root target dependency property</summary>
         public object RootTarget
         {
             get { return (object)GetValue(RootTargetProperty); }
             set { SetValue(RootTargetProperty, value); }
         }
 
+        /// <summary>
+        /// Get target item dropped on</summary>
+        /// <param name="e">Drag event arguments</param>
+        /// <returns>Object item dropped on</returns>
         protected virtual object GetDropTarget(DragEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
@@ -39,6 +47,9 @@ namespace Sce.Atf.Wpf.Behaviors
             return parent;
         }
 
+        /// <summary>
+        /// Handle DragOver event</summary>
+        /// <param name="e">Drag event arguments</param>
         protected override void OnDragOver(DragEventArgs e)
         {
             object target = GetDropTarget(e);
@@ -102,15 +113,6 @@ namespace Sce.Atf.Wpf.Behaviors
     public class ItemsControlIndexedDropTargetBehavior : DropTargetBehavior<ItemsControl>
     {
         /// <summary>
-        /// Raises behavior Attached event and performs custom actions</summary>
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-
-            m_hasVerticalOrientation = false;// HasVerticalOrientation(AssociatedObject);
-        }
-
-        /// <summary>
         /// Method called on DragEnter events</summary>
         /// <param name="e">DragEventArgs containing event information</param>
         protected override void OnDragEnter(DragEventArgs e)
@@ -118,21 +120,17 @@ namespace Sce.Atf.Wpf.Behaviors
             //CreateInsertionAdorner();
         }
 
-        private void CreateInsertionAdorner()
-        {
-           // var adornerLayer = AdornerLayer.GetAdornerLayer(this.targetItemContainer);
-           // this.insertionAdorner = new InsertionAdorner(this.hasVerticalOrientation, this.isInFirstHalf, this.targetItemContainer, adornerLayer);
-
-        }
+        //private void CreateInsertionAdorner()
+        //{
+        //   // var adornerLayer = AdornerLayer.GetAdornerLayer(this.targetItemContainer);
+        //   // this.insertionAdorner = new InsertionAdorner(this.hasVerticalOrientation, this.isInFirstHalf, this.targetItemContainer, adornerLayer);
+        //}
 
         /// <summary>
         /// Method called on DragOver events</summary>
         /// <param name="e">DragEventArgs containing event information</param>
         protected override void OnDragOver(DragEventArgs e)
         {
-            int insertionIndex = AssociatedObject.Items.Count;
-            bool isInFirstHalf = false;
-
             var source = (DependencyObject)e.OriginalSource;
 
             FrameworkElement container = null;
@@ -145,18 +143,6 @@ namespace Sce.Atf.Wpf.Behaviors
             else
             {
                 container = AssociatedObject.ContainerFromElement(source) as FrameworkElement;
-            }
-
-            if (container != null)
-            {
-                Point positionRelativeToItemContainer = e.GetPosition(container);
-                isInFirstHalf = IsInFirstHalf(container, positionRelativeToItemContainer, m_hasVerticalOrientation);
-
-                ItemsControl itemsControl = ItemsControl.ItemsControlFromItemContainer(container);
-                insertionIndex = itemsControl.ItemContainerGenerator.IndexFromContainer(container);
-
-                if (!isInFirstHalf)
-                    insertionIndex++;
             }
 
             object parentData = container != null ? container.DataContext : AssociatedObject.DataContext;
@@ -176,6 +162,9 @@ namespace Sce.Atf.Wpf.Behaviors
             }
         }
 
+        /// <summary>
+        /// Handle Drop event</summary>
+        /// <param name="e">Drag event arguments</param>
         protected override void OnDrop(DragEventArgs e)
         {
             var pos = e.GetPosition(AssociatedObject);
@@ -193,42 +182,40 @@ namespace Sce.Atf.Wpf.Behaviors
             }
         }
 
-        private static bool HasVerticalOrientation(FrameworkElement itemContainer)
-        {
-            bool hasVerticalOrientation = true;
-            if (itemContainer != null)
-            {
-                Panel panel = VisualTreeHelper.GetParent(itemContainer) as Panel;
-                StackPanel stackPanel;
-                WrapPanel wrapPanel;
+        //private static bool HasVerticalOrientation(FrameworkElement itemContainer)
+        //{
+        //    bool hasVerticalOrientation = true;
+        //    if (itemContainer != null)
+        //    {
+        //        Panel panel = VisualTreeHelper.GetParent(itemContainer) as Panel;
+        //        StackPanel stackPanel;
+        //        WrapPanel wrapPanel;
 
-                if ((stackPanel = panel as StackPanel) != null)
-                {
-                    hasVerticalOrientation = (stackPanel.Orientation == Orientation.Vertical);
-                }
-                else if ((wrapPanel = panel as WrapPanel) != null)
-                {
-                    hasVerticalOrientation = (wrapPanel.Orientation == Orientation.Vertical);
-                }
-                // You can add support for more panel types here.
-                else
-                {
-                    throw new NotSupportedException("Only items controls with StackPanel or WrapPanel currently supported by ItemsControlIndexedDropTargetBehavior");
-                }
-            }
-            return hasVerticalOrientation;
-        }
+        //        if ((stackPanel = panel as StackPanel) != null)
+        //        {
+        //            hasVerticalOrientation = (stackPanel.Orientation == Orientation.Vertical);
+        //        }
+        //        else if ((wrapPanel = panel as WrapPanel) != null)
+        //        {
+        //            hasVerticalOrientation = (wrapPanel.Orientation == Orientation.Vertical);
+        //        }
+        //        // You can add support for more panel types here.
+        //        else
+        //        {
+        //            throw new NotSupportedException("Only items controls with StackPanel or WrapPanel currently supported by ItemsControlIndexedDropTargetBehavior");
+        //        }
+        //    }
+        //    return hasVerticalOrientation;
+        //}
 
-        private static bool IsInFirstHalf(FrameworkElement container, Point clickedPoint, bool hasVerticalOrientation)
-        {
-            if (hasVerticalOrientation)
-            {
-                return clickedPoint.Y < container.ActualHeight / 2;
-            }
-            return clickedPoint.X < container.ActualWidth / 2;
-        }
-
-        private bool m_hasVerticalOrientation;
+        //private static bool IsInFirstHalf(FrameworkElement container, Point clickedPoint, bool hasVerticalOrientation)
+        //{
+        //    if (hasVerticalOrientation)
+        //    {
+        //        return clickedPoint.Y < container.ActualHeight / 2;
+        //    }
+        //    return clickedPoint.X < container.ActualWidth / 2;
+        //}
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace CircuitEditorSample
     public class CircuitDocument : Sce.Atf.Controls.Adaptable.Graphs.CircuitDocument
     {
         /// <summary>
-        /// Gets ChildInfo for subcircuits in circuit</summary>
+        /// This property is obsolete as of ATF 3.9. It will probably be removed for ATF 3.10.</summary>
         protected override ChildInfo SubCircuitChildInfo
         {
             get { return Schema.circuitDocumentType.subCircuitChild; }

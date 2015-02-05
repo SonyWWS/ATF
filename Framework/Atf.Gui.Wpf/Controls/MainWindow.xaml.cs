@@ -27,7 +27,7 @@ namespace Sce.Atf.Wpf.Controls
         }
 
         /// <summary>
-        /// Gets and sets the ViewModel for the toolbar</summary>
+        /// Gets or sets the ViewModel for the toolbar</summary>
         [Import(Contracts.ViewModel)]
         public ToolBarViewModel ToolBarViewModel
         {
@@ -82,7 +82,7 @@ namespace Sce.Atf.Wpf.Controls
         #region IMainWindowContentSite Members
 
         /// <summary>
-        /// Gets and sets the control that represents the main content of the window. Handles docking on set.</summary>
+        /// Gets or sets the control that represents the main content of the window. Handles docking on set.</summary>
         public Control MainContent 
         {
             get { return m_mainContent; }
@@ -98,8 +98,13 @@ namespace Sce.Atf.Wpf.Controls
 
         #region INotifyPropertyChanged Members
 
+        /// <summary>
+        /// Event that is raised after a property changed</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Handle PropertyChanged event and perform custom actions</summary>
+        /// <param name="e">Property changed event arguments</param>
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             var h = PropertyChanged;
@@ -143,8 +148,12 @@ namespace Sce.Atf.Wpf.Controls
         private Control m_mainContent;
     }
 
+    /// <summary>
+    /// Interface for main window content control</summary>
     public interface IMainWindowContentSite
     {
+        /// <summary>
+        /// Gets or sets the control that represents the main content of the window. Handles docking on set.</summary>
         Control MainContent { get; set; }
     }
 

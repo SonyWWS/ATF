@@ -42,7 +42,7 @@ namespace FileExplorerSample
 
             m_treeControlAdapter = new TreeControlAdapter(m_treeControl);
             m_fileTreeView = new FileTreeView();
-            m_fileTreeView.SelectionChanged += new EventHandler(fileTreeView_SelectionChanged);
+            m_fileTreeView.SelectionChanged += fileTreeView_SelectionChanged;
             m_treeControlAdapter.TreeView = m_fileTreeView;
         }
 
@@ -75,7 +75,7 @@ namespace FileExplorerSample
             public FileTreeView()
             {
                 m_selection = new Selection<object>();
-                m_selection.Changed += new EventHandler(selection_Changed);
+                m_selection.Changed += selection_Changed;
 
                 // suppress compiler warning
                 if (SelectionChanging == null) return;

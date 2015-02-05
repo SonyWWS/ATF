@@ -7,7 +7,7 @@ namespace Sce.Atf.Dom
 {
     /// <summary>
     /// DomNodeAdapter which adds support for data binding to adapters obtained
-    /// through the IAdaptable interface.</summary>
+    /// through the IAdaptable interface</summary>
     /// <remarks>
     /// This DomNodeAdapter exposes a single property which can be bound to using, for example,
     /// a WPF binding.  This property returns a custom type descriptor object which returns a
@@ -19,12 +19,12 @@ namespace Sce.Atf.Dom
     /// {Binding Path=As.DomDocument.IsDirty}
     /// 
     /// A limitation of this technique is that only the simple unqualified name of the adaptable
-    /// types is used for the property path. (in this case DomDocument).  This could result in clashes
+    /// types is used for the property path (in this case DomDocument). This could result in clashes
     /// if the DomNode has multiple similarly named adapters.</remarks>
     public class BindingAdapter : ObservableDomNodeAdapter
     {
         /// <summary>
-        /// Bindable adapter object</summary>
+        /// Get bindable adapter object</summary>
         public object As
         {
             get
@@ -38,8 +38,8 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Setting this flag to true will improve performance of the BindingAdapter
         /// by making the assumption that all DomNodes of a given DomNodeType will 
-        /// always return the same set of adapter types
-        /// Default value is True.</summary>
+        /// always return the same set of adapter types.
+        /// Default value is true.</summary>
         public static bool EnableNodeTypeExtensionOptimisation
         {
             get { return s_enableOptimisation; }

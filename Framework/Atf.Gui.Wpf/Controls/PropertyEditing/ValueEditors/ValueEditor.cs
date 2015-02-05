@@ -38,6 +38,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets style for PropertyNode</summary>
         /// <param name="node">PropertyNode</param>
+        /// <param name="container">DependencyObject container</param>
         /// <returns>Style for PropertyNode</returns>
         public virtual Style GetStyle(PropertyNode node, DependencyObject container)
         {
@@ -88,6 +89,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         Both
     }
 
+    /// <summary>
+    /// Utilities for ValueEditor</summary>
     public static class ValueEditorUtil
     {
         /// <summary>

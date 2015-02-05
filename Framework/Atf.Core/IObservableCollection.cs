@@ -15,8 +15,9 @@ namespace Sce.Atf
     }
 
     /// <summary>
-    /// Interface shorthand for observable collections. Combines IList<T>, INotifyPropertyChanged, 
+    /// Interface shorthand for observable collections. Combines IList&lt;T&gt;, INotifyPropertyChanged, 
     /// and INotifyCollectionChanged without adding any additional methods.</summary>
+    /// <typeparam name="T">Type of items in collection</typeparam>
     public interface IObservableCollection<T> : IList<T>, INotifyPropertyChanged, INotifyCollectionChanged
     {
     }

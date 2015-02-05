@@ -44,6 +44,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected abstract AttributeInfo VisibleAttribute { get; }
 
         /// <summary>
+        /// Gets the optional AttributeInfo for the original GUID of template 
+        /// if this module is a copy-instance of a template(and nothing else) </summary>
+        protected virtual AttributeInfo SourceGuidAttribute
+        {
+            get { return null; }
+        }
+
+        /// <summary>
+        /// Gets the optional AttributeInfo for storing whether or not unconnected
+        /// pins should be displayed.</summary>
+        protected virtual AttributeInfo ShowUnconnectedPinsAttribute
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// Gets or sets the circuit element ID</summary>
         public virtual string Id
         {
@@ -102,6 +118,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
+        /// Gets the CircuitElementInfo for this circuit element, which specifies additional options</summary>
+        public CircuitElementInfo ElementInfo
+        {
+            get { return m_elementInfo; }
+        }
+
+        /// <summary>
         /// Gets level, or depth of the element </summary>
         public int Level
         {
@@ -120,7 +143,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Tests if the element has a given output pin</summary>
+        /// Tests if the element has a given output pin.</summary>
         /// <param name="pin">Pin to test</param>
         /// <returns>True iff the element has the given output pin</returns>
         public virtual bool HasOutputPin(ICircuitPin pin)
@@ -132,18 +155,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets the input pin for the given pin index</summary>
-        /// <param name="pinIndex"></param>
-        /// <returns></returns>
+        /// Gets the input pin for the given pin index.</summary>
+        /// <param name="pinIndex">Pin index</param>
+        /// <returns>Input pin for pin index</returns>
         public virtual ICircuitPin InputPin(int pinIndex)
         {
             return Type.Inputs[pinIndex];
         }
 
         /// <summary>
-        /// Gets the output pin for the given pin index</summary>
-        /// <param name="pinIndex"></param>
-        /// <returns></returns>
+        /// Gets the output pin for the given pin index.</summary>
+        /// <param name="pinIndex">Pin index</param>
+        /// <returns>Output pin for pin index</returns>
         public virtual ICircuitPin OutputPin(int pinIndex)
         {
             return Type.Outputs[pinIndex];
@@ -151,14 +174,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         /// <summary>
-        /// Gets all the input pins for this element, including hidden pins (if this is a Group)</summary>
+        /// Gets a read-only list of all the input pins for this element, including hidden pins
+        /// (if this is a Group).</summary>
         public virtual IEnumerable<ICircuitPin> AllInputPins
         {
             get { return Type.Inputs; }
         }
 
         /// <summary>
-        /// Gets all the output pins for this element, including hidden pins (if this is a Group)</summary>
+        /// Gets a read-only list of all the output pins for this element, including hidden pins
+        /// (if this is a Group).</summary>
         public virtual IEnumerable<ICircuitPin> AllOutputPins
         {
             get { return Type.Outputs; }
@@ -236,6 +261,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
+        /// Gets or sets original GUID of template if this module is a copy-instance of a template</summary>
+        public Guid SourceGuid
+        {
+            get
+            {
+                if (SourceGuidAttribute == null)
+                    return Guid.Empty;
+                var guidValue = DomNode.GetAttribute(SourceGuidAttribute) as string;
+                if (string.IsNullOrEmpty(guidValue))
+                    return Guid.Empty;
+                return new Guid(guidValue);
+            }
+            set
+            {
+                if (SourceGuidAttribute != null)
+                    DomNode.SetAttribute(SourceGuidAttribute, value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Convert pin index to display order</summary>
         /// <param name="pinIndex">Pin index to convert</param>
         /// <param name="inputSide">Whether input side or not</param>
@@ -247,8 +292,56 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return pinIndex;
         }
 
+        /// <summary>
+        /// Performs one-time initialization when this adapter's DomNode property is set.
+        /// The DomNode property is only ever set once for the lifetime of this adapter.</summary>
+        protected override void OnNodeSet()
+        {
+            base.OnNodeSet();
+
+            m_elementInfo = new CircuitElementInfo();
+
+            if (ShowUnconnectedPinsAttribute != null)
+                m_elementInfo.ShowUnconnectedPins = GetAttribute<bool>(ShowUnconnectedPinsAttribute);
+
+            m_elementInfo.PropertyChanged += (sender, args) =>
+            {
+                if (!m_syncingElementInfo)
+                {
+                    m_syncingElementInfo = true;
+                    try
+                    {
+                        if (ShowUnconnectedPinsAttribute != null)
+                            SetAttribute(ShowUnconnectedPinsAttribute, m_elementInfo.ShowUnconnectedPins);
+                    }
+                    finally
+                    {
+                        m_syncingElementInfo = false;
+                    }
+                }
+            };
+
+            DomNode.AttributeChanged += (sender, args) =>
+            {
+                if (!m_syncingElementInfo && args.DomNode == DomNode)
+                {
+                    m_syncingElementInfo = true;
+                    try
+                    {
+                        if (args.AttributeInfo.Equivalent(ShowUnconnectedPinsAttribute))
+                            m_elementInfo.ShowUnconnectedPins = (bool) args.NewValue;
+                    }
+                    finally
+                    {
+                        m_syncingElementInfo = false;
+                    }
+                }
+            };
+        }
 
         private ICircuitElementType m_elementType;
         private Size m_size;
+        private CircuitElementInfo m_elementInfo;
+        private bool m_syncingElementInfo;
     }
 }

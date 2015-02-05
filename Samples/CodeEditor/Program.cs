@@ -1,5 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+#define PERFORCE_VERSION_CONTROL // Uses Perforce by default. Uncomment to use Subversion.
+
 using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -8,7 +10,11 @@ using System.Windows.Forms;
 
 using Sce.Atf;
 using Sce.Atf.Applications;
+#if PERFORCE_VERSION_CONTROL
 using Sce.Atf.Perforce;
+#else
+using Atf.Subversion;
+#endif
 
 namespace CodeEditor
 {
@@ -63,7 +69,11 @@ namespace CodeEditor
                 typeof(ScriptConsole),                  // provides a dockable command console for entering Python commands
                 typeof(AtfScriptVariables),             // exposes common ATF services as script variables
                 typeof(AutomationService),              // provides facilities to run an automated script using the .NET remoting service
+#if PERFORCE_VERSION_CONTROL
                 typeof(PerforceService),                // Perforce plugin
+#else 
+                typeof(SubversionService),              // SVN plugin
+#endif
                 typeof(SourceControlCommands),          // source control commmands to interact with Perforce plugin
                 typeof(SourceControlContext)            // source control context component
                 );
@@ -89,6 +99,11 @@ namespace CodeEditor
             //  would implement IDocumentClient and this customization of DefaultTabCommands wouldn't be necessary.
             var tabCommands = container.GetExportedValue<DefaultTabCommands>();
             tabCommands.IsDocumentControl = controlInfo => controlInfo.Client is Editor;
+
+#if !PERFORCE_VERSION_CONTROL
+            var sourceControlCommands = container.GetExportedValue<SourceControlCommands>();
+            sourceControlCommands.RefreshStatusOnSave = true;
+#endif
 
             // Initialize components that require it. Initialization often can't be done in the constructor,
             //  or even after imports have been satisfied by MEF, since we allow circular dependencies between

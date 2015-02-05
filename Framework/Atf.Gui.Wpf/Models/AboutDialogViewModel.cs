@@ -54,28 +54,7 @@ namespace Sce.Atf.Wpf.Models
         {
             get
             {
-                string result = string.Empty;
-                var assm = Assembly.GetEntryAssembly();
-                object[] attributes = assm.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    result = (attributes[0] as AssemblyInformationalVersionAttribute).InformationalVersion;
-                }
-                else
-                {
-                    Version version = assm.GetName().Version;
-                    if (version != null)
-                    {
-                        result = version.ToString();
-                    }
-                    else
-                    {
-                        // if that fails, try to get the version from a resource in the Application.
-                        result = GetLogicalResourceString(m_xPathVersion);
-                    }
-                }
-
-                return result;
+                return AtfVersion.GetVersion().ToString();
             }
         }
 

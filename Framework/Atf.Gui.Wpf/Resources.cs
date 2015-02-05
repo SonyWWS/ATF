@@ -19,7 +19,7 @@ namespace Sce.Atf.Wpf
 
         /// <summary>
         /// Call this dummy function during your application's start to force the static constructor to
-        /// register the resources in this class.</summary>
+        /// register the resources in this class</summary>
         public static void Register()
         {
         }
@@ -36,18 +36,30 @@ namespace Sce.Atf.Wpf
         [ResourceDictionaryResourceAttribute("PropertyEditors.xaml")]
         public static readonly string PropertyEditorsDictionary = null;
 
+        /// <summary>
+        /// Resource key used in XAML files for a dialog error image</summary>
         [ImageResource("dialog_error.xaml")]
         public static readonly ResourceKey DialogErrorImageKey;
+        /// <summary>
+        /// Resource key used in XAML files for a dialog information image</summary>
         [ImageResource("dialog_information.xaml")]
         public static readonly ResourceKey DialogInformationImageKey;
+        /// <summary>
+        /// Resource key used in XAML files for dialog question image</summary>
         [ImageResource("dialog_question.xaml")]
         public static readonly ResourceKey DialogQuestionImageKey;
+        /// <summary>
+        /// Resource key used in XAML files for dialog warning image</summary>
         [ImageResource("dialog_warning.xaml")]
         public static readonly ResourceKey DialogWarningImageKey;
 
+        /// <summary>
+        /// Resource key used in XAML files for dialog root border style</summary>
         public static readonly ResourceKey DialogRootBorderStyleKey
             = new ComponentResourceKey(typeof(Resources), "DialogRootBorderStyle");
 
+        /// <summary>
+        /// Resource key used in XAML files for switching to a dialog</summary>
         public static readonly ResourceKey SwitchToDialogKey
             = new ComponentResourceKey(typeof(Resources), "SwitchToDialog");
 

@@ -71,10 +71,7 @@ namespace FileExplorerSample
 
             m_mainForm.SplitContainer.Panel2.Controls.Add(m_listView);
 
-            SettingsServices.RegisterSettings(
-                m_settingsService,
-                this,
-                new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", null, null));
+            m_settingsService.RegisterSettings(this, new BoundPropertyDescriptor(this, () => ListViewSettings, "ListViewSettings", null, null));
         }
 
         #endregion
@@ -248,6 +245,7 @@ namespace FileExplorerSample
 
             static FileListView()
             {
+                #pragma warning disable 0219
                 string dummy = Resources.FolderImage; // force initialization of image resources
             }
         }

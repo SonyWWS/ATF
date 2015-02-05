@@ -34,7 +34,7 @@ namespace DomTreeEditorSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("DOM Tree Editor"), appURL, richTextBox, null, null, true);
+                "DOM Tree Editor".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

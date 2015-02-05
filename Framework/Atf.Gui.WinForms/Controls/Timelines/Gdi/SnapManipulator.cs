@@ -23,7 +23,7 @@ namespace Sce.Atf.Controls.Timelines
         public SnapManipulator(TimelineControl owner)
         {
             m_owner = owner;
-            m_owner.GetSnapOffset = new TimelineControl.SnapOffsetFinder(GetSnapOffset);
+            m_owner.GetSnapOffset = GetSnapOffset;
             m_owner.Paint += owner_paint;
             m_owner.MouseUp += owner_MouseUp;
             m_owner.MouseDown += owner_MouseDown;

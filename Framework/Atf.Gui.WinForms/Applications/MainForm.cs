@@ -249,10 +249,15 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets and sets the ToolStripContainer's state</summary>
+        [Browsable(false)]
         public string ToolStripContainerSettings
         {
             get
             {
+                // The default constructor doesn't create this.
+                if (m_toolStripContainer == null)
+                    return String.Empty;
+
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", Encoding.UTF8.WebName, "yes"));
                 XmlElement root = xmlDoc.CreateElement("ToolStripContainerSettings");
@@ -274,9 +279,10 @@ namespace Sce.Atf.Applications
                 //        A third option would be to continue to bail here, but FORCE a redelivery of the settings
                 //        later when we're ready for them (ie: OnLoad).
                 //        See also other comments in this file labled SCREAM_TOOLBAR_STATE_ISSUE
-                if (!m_mainFormLoaded)
+                if (!m_mainFormLoaded || m_toolStripContainer==null)
                     return;
 
+                var comparer = new ElementSortComparer<XmlElement>();
                 Dictionary<string, ToolStrip> toolStrips = new Dictionary<string, ToolStrip>();
                 Dictionary<string, ToolStripItem> toolStripItems = new Dictionary<string, ToolStripItem>();
 
@@ -315,80 +321,53 @@ namespace Sce.Atf.Applications
                         else
                             continue;
 
-                        string[] coords;
-
-                        // load panel state
-                        int i = 0;
-
                         List<XmlElement> stripElements = new List<XmlElement>();
                         foreach (XmlElement toolStripElement in panelElement.ChildNodes)
                             stripElements.Add(toolStripElement);
 
-                        // Use Linq's stable sort to preserve the order of elements 
-                        var orderedToolStrips = stripElements.OrderBy(s => s, new ElementSortComparer<XmlElement>()).ToList();
-
-                        int maxX = 0;
-                        for (int s = orderedToolStrips.Count - 1; s >= 0; --s)  // remeber the rightmost visible toolstrip location so we can add new toolstrips after it 
+                        // sort toolstrips on Y then X.
+                        // create list of ToolStrips for each row.
+                        // rows are sorted.
+                        SortedDictionary<int, List<XmlElement>>
+                            rowOrder = new SortedDictionary<int, List<XmlElement>>();
+                        foreach (XmlElement toolStripElement in stripElements)
                         {
-
-                            ToolStrip toolStrip;
-                            string toolStripName = orderedToolStrips[s].GetAttribute("Name");
-                            if (toolStrips.TryGetValue(toolStripName, out toolStrip))
+                            string[] location = toolStripElement.GetAttribute("Location").Split(',');
+                            int yloc = int.Parse(location[1]);
+                            List<XmlElement> toolstripList;
+                            if (!rowOrder.TryGetValue(yloc, out toolstripList))
                             {
-                                if (orderedToolStrips[s].ChildNodes.Count <= 1)  // to exclude toolstrips that only has a Customize dropdown button  
-                                    continue;
-
-                                if (toolStrip.Location.X >= panel.Width) // invisisble
-                                    continue;
-                                maxX = int.Parse(orderedToolStrips[s].GetAttribute("Location").Split(',')[0]);
-                                if (maxX < panel.Width)
-                                    break;
-
+                                toolstripList = new List<XmlElement>();
+                                rowOrder.Add(yloc, toolstripList);
                             }
-
+                            toolstripList.Add(toolStripElement);
                         }
-
-                        Dictionary<int, int> rowLengthsByY = new Dictionary<int, int>(); // accumulated row length, keyed by row y position
-
-                        foreach (XmlElement toolStripElement in orderedToolStrips)
+                        // sort on x.
+                        foreach (var toolstripList in rowOrder.Values)
+                            toolstripList.Sort(comparer);
+                        
+                        int cIndex = 0; // keeps track of the toolstrip's index in Controls Collection.
+                        int prevHeight = 0; // height of the previous toolstrip in row order.
+                        // Don't use persisted y-position directly, instead compute y-position from cumulative heights of all the previous ToolStrips.  
+                        // Persisted Y-position is only used for determining Row number for each ToolStrip.
+                        int yPos = rowOrder.Count == 0 ? 0 : rowOrder.Keys.First();
+                        foreach (var toolStripElements in rowOrder.Values)
                         {
-                            string toolStripName = toolStripElement.GetAttribute("Name");
-                            ToolStrip toolStrip;
-                            if (toolStrips.TryGetValue(toolStripName, out toolStrip))
+                            yPos += prevHeight;                            
+                            foreach (XmlElement toolStripElement in toolStripElements)
                             {
+                                string toolStripName = toolStripElement.GetAttribute("Name");
+                                ToolStrip toolStrip;
+                                if (!toolStrips.TryGetValue(toolStripName, out toolStrip))
+                                    continue;
+
                                 toolStrip.Parent.Controls.Remove(toolStrip);
                                 panel.Controls.Add(toolStrip);
-                                panel.Controls.SetChildIndex(toolStrip, i);
-
-                                // load toolStrip state
-                                coords = toolStripElement.GetAttribute("Location").Split(',');
-
-                                int xPos = int.Parse(coords[0]);
-                                int yPos = int.Parse(coords[1]);
-
-                                if (!rowLengthsByY.ContainsKey(yPos))
-                                    rowLengthsByY.Add(yPos, 0); // start of a new row                            
-
-                                //  toolStrip's location compensates the actually extension of the toolstrips preceding it. 
-                                //  This is necessary after inserting new buttons among packed toolstrips.
-                                int newX = Math.Max(xPos, rowLengthsByY[yPos]);
-                                bool isMainMenu = toolStripName == "Main Menu";
-                                if (!isMainMenu && toolStripElement.ChildNodes.Count <= 1) // the toolstrip location has not been persisted previously
-                                {
-                                    if (toolStrip.Items.Count > 1) // >1 to exclude the Customize dropdown button
-                                    {
-
-                                        newX = maxX + 1;
-                                        yPos = 24;
-                                        ++maxX;
-                                    }
-                                }
-
-                                if (newX >= Width) // do not set location outside the form’s bounds,  will wrap the toolstrip down to next row(don’t know why) 
-                                    toolStrip.Location = new Point(xPos, yPos);
-                                else
-                                    toolStrip.Location = new Point(newX, yPos);
-
+                                panel.Controls.SetChildIndex(toolStrip, cIndex++);                                
+                                if (toolStrip.Height > prevHeight) prevHeight = toolStrip.Height;
+                                string[] coords = toolStripElement.GetAttribute("Location").Split(',');
+                                int xPos = int.Parse(coords[0]);                                                               
+                                toolStrip.Location = new Point(xPos, yPos);
                                 XmlNodeList itemNodes = toolStripElement.ChildNodes;
                                 int j = 0;
                                 foreach (XmlElement itemElement in itemNodes)
@@ -421,14 +400,10 @@ namespace Sce.Atf.Applications
 
                                         j++;
                                     }
-                                }
-
-                                if (toolStrip.Visible && rowLengthsByY.ContainsKey(yPos)) // update row length                                  
-                                    rowLengthsByY[yPos] = Math.Max(rowLengthsByY[yPos], xPos + ToolStripWidth(toolStrip));
-                                i++;
-                            }
-                        }
-                    }
+                                }                                
+                            } // foreach (XmlElement toolStripElement in toolStripElements)
+                        } // foreach (var toolStripElements in rowOrder.Values)                       
+                    } // foreach (XmlElement panelElement in Panels)
                 }
                 finally
                 {
@@ -439,7 +414,6 @@ namespace Sce.Atf.Applications
                     m_toolStripContainer.LeftToolStripPanel.ResumeLayout(true);
                     m_toolStripContainer.BottomToolStripPanel.ResumeLayout(true);
                     m_toolStripContainer.RightToolStripPanel.ResumeLayout(true);
-
                     m_toolStripContainer.ResumeLayout(true);
                     ResumeLayout(false);
                 }
@@ -455,9 +429,11 @@ namespace Sce.Atf.Applications
 
             foreach (ToolStrip toolStrip in panel.Controls)
             {
+                // skip invisible toolstrip
+                if (!toolStrip.Visible)
+                    continue;
                 toolStrips.Add(toolStrip.Name, toolStrip);
-                toolStrip.SuspendLayout();
-
+                toolStrip.SuspendLayout();                
                 foreach (ToolStripItem toolStripItem in toolStrip.Items)
                     toolStripItems.Add(toolStripItem.Name, toolStripItem);
             }
@@ -475,10 +451,10 @@ namespace Sce.Atf.Applications
 
             foreach (ToolStrip toolStrip in panel.Controls)
             {
-                // skip unnamed toolStrip
-                if (toolStrip.Name == null || toolStrip.Name.Trim().Length == 0)
+                // skip invisible or unnamed  toolStrip
+                if (!toolStrip.Visible || toolStrip.Name == null || toolStrip.Name.Trim().Length == 0)
                     continue;
-
+                
                 XmlElement toolStripElement = xmlDoc.CreateElement("ToolStrip");
                 panelElement.AppendChild(toolStripElement);
 

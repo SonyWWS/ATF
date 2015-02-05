@@ -11,7 +11,7 @@ using Sce.Atf.Dom;
 using Sce.Atf.VectorMath;
 
 namespace DomTreeEditorSample
-{
+{  
     /// <summary>
     /// Adapts DomNode to a Curve</summary>
     public class Curve : DomNodeAdapter, ICurve
@@ -33,7 +33,15 @@ namespace DomTreeEditorSample
         public string Name
         {
             get { return GetAttribute<string>(UISchema.curveType.nameAttribute); }
-            set { SetAttribute(UISchema.curveType.nameAttribute,value); }
+            set { SetAttribute(UISchema.curveType.nameAttribute, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets curve display name</summary>
+        public string DisplayName
+        {
+            get { return GetAttribute<string>(UISchema.curveType.displayNameAttribute); }
+            set { SetAttribute(UISchema.curveType.displayNameAttribute, value); }
         }
 
         /// <summary>
@@ -56,56 +64,32 @@ namespace DomTreeEditorSample
         /// Gets or sets minimum x value</summary>
         public float MinX
         {
-            get
-            {
-                return GetAttribute<float>(UISchema.curveType.minXAttribute);
-            }
-            set
-            {
-                SetAttribute(UISchema.curveType.minXAttribute, value);
-            }
+            get { return GetAttribute<float>(UISchema.curveType.minXAttribute); }
+            set { SetAttribute(UISchema.curveType.minXAttribute, value); }
         }
 
         /// <summary> 
         /// Gets or sets maximum x value</summary>
         public float MaxX
         {
-            get
-            {
-                return GetAttribute<float>(UISchema.curveType.maxXAttribute);
-            }
-            set
-            {
-                SetAttribute(UISchema.curveType.maxXAttribute, value);
-            }
+            get { return GetAttribute<float>(UISchema.curveType.maxXAttribute); }
+            set { SetAttribute(UISchema.curveType.maxXAttribute, value); }
         }
 
         /// <summary> 
         /// Gets or sets minimum y value</summary>
         public float MinY
         {
-            get
-            {
-                return GetAttribute<float>(UISchema.curveType.minYAttribute);
-            }
-            set
-            {
-                SetAttribute(UISchema.curveType.minYAttribute, value);
-            }
+            get { return GetAttribute<float>(UISchema.curveType.minYAttribute); }
+            set { SetAttribute(UISchema.curveType.minYAttribute, value); }
         }
 
         /// <summary> 
         /// Gets or sets maximum y value</summary>
         public float MaxY
         {
-            get
-            {
-                return GetAttribute<float>(UISchema.curveType.maxYAttribute);
-            }
-            set
-            {
-                SetAttribute(UISchema.curveType.maxYAttribute, value);
-            }
+            get { return GetAttribute<float>(UISchema.curveType.maxYAttribute); }
+            set { SetAttribute(UISchema.curveType.maxYAttribute, value); }
         }
 
         /// <summary>
@@ -128,14 +112,8 @@ namespace DomTreeEditorSample
         /// Gets or sets curve color</summary>
         public Color CurveColor
         {
-            get
-            {
-                return Color.FromArgb(GetAttribute<int>(UISchema.curveType.colorAttribute));
-            }
-            set
-            {
-                SetAttribute(UISchema.curveType.colorAttribute, value.ToArgb());
-            }
+            get { return Color.FromArgb(GetAttribute<int>(UISchema.curveType.colorAttribute)); }
+            set { SetAttribute(UISchema.curveType.colorAttribute, value.ToArgb()); }
         }
 
         /// <summary>
@@ -143,15 +121,11 @@ namespace DomTreeEditorSample
         public CurveLoopTypes PreInfinity
         {
             get
-            {
-                
+            {                
                 string str = GetAttribute<string>(UISchema.curveType.preInfinityAttribute);
                 return (CurveLoopTypes)Enum.Parse(typeof(CurveLoopTypes), str);                
             }
-            set
-            {
-                SetAttribute(UISchema.curveType.preInfinityAttribute, value.ToString());
-            }
+            set { SetAttribute(UISchema.curveType.preInfinityAttribute, value.ToString()); }
         }
 
         /// <summary>
@@ -163,10 +137,7 @@ namespace DomTreeEditorSample
                 string str = GetAttribute<string>(UISchema.curveType.postInfinityAttribute);
                 return (CurveLoopTypes)Enum.Parse(typeof(CurveLoopTypes), str);
             }
-            set
-            {
-                SetAttribute(UISchema.curveType.postInfinityAttribute, value.ToString());
-            }
+            set { SetAttribute(UISchema.curveType.postInfinityAttribute, value.ToString()); }
             
         }
 
@@ -228,15 +199,6 @@ namespace DomTreeEditorSample
         private ReadOnlyCollection<IControlPoint> m_readonlyPointList;
         private bool m_visible = true;
         private InterpolationTypes m_interpolationType = InterpolationTypes.Hermite;
-        #endregion
-
-        /// <summary>
-        /// Gets/Sets if curve must enforce limits on control points.
-        /// If true, control points cannot be translated outside curve limits.</summary>
-        public static bool EnforceCurveLimits
-        {
-            get;
-            set;
-        }
+        #endregion        
     }
 }

@@ -36,7 +36,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public D2dCircuitRenderer(D2dDiagramTheme theme, IDocumentRegistry documentRegistry = null)
         {
             m_theme = theme;
-            m_theme.Redraw += new EventHandler(theme_Redraw);
+            m_theme.Redraw += theme_Redraw;
             SetPinSpacing();
             m_elementBody.RadiusX = 6;
             m_elementBody.RadiusY = 6;
@@ -57,7 +57,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Specifies the pin drawing style </summary>
+        /// Specifies the pin drawing style.</summary>
         public enum PinStyle
         {
             Default, // non-filled, location adjacent to border but internal
@@ -83,7 +83,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Get the display name of the circuit element, which is drawn below and outside the circuit element. 
-        /// Returns null or the empty string to not draw anything in this place</summary>
+        /// Returns null or the empty string to not draw anything in this place</summary>    
         /// <param name="element">Circuit element</param>
         /// <returns>Display name of the circuit element</returns>
         protected virtual string GetElementDisplayName(TElement element)
@@ -128,7 +128,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 if (m_theme != value)
                 {
                     if (m_theme != null)
-                        m_theme.Redraw -= new EventHandler(theme_Redraw);
+                        m_theme.Redraw -= theme_Redraw;
                     SetPinSpacing();
                     m_theme = value;
                 }
@@ -144,7 +144,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (disposing)
             {
-                m_theme.Redraw -= new EventHandler(theme_Redraw);
+                m_theme.Redraw -= theme_Redraw;
                 m_subGraphPinBrush.Dispose();
             }
             base.Dispose(disposing);
@@ -170,6 +170,25 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (e.Item.Is<ICircuitElementType>())
                 Invalidate(e.Item.Cast<ICircuitElementType>());
+            m_graphHelper.Invalidate();
+        }
+
+        /// <summary>
+        /// Is called when a graph object (a wire or a circuit element) has been removed</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
+        public override void OnGraphObjectRemoved(object sender, ItemRemovedEventArgs<object> e)
+        {
+            m_graphHelper.Invalidate();
+        }
+
+        /// <summary>
+        /// Is called when a graph object (a wire or a circuit element) has been inserted</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
+        public override void OnGraphObjectInserted(object sender, ItemInsertedEventArgs<object> e)
+        {
+            m_graphHelper.Invalidate();
         }
 
         /// <summary>
@@ -203,8 +222,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 case DiagramDrawingStyle.DropTarget:
                 case DiagramDrawingStyle.DragSource:
                 default:
-                    Draw(element, g, false);
+                    // draw outline first to avoid selection highlight on the border is drawn on top of the pins
                     DrawOutline(element, m_theme.GetOutLineBrush(style), g);
+                    Draw(element, g, false);
                     break;
 
                 case DiagramDrawingStyle.Ghosted:
@@ -272,7 +292,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets group pin position in group local space</summary>
         /// <param name="groupPin">Group pin</param>
-        /// <param name="group">Owner</param>/param>
+        /// <param name="group">Owner</param>
         /// <param name="inputSide">True if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
         /// <returns>Group pin position</returns>
@@ -557,6 +577,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 var labelBounds = new RectangleF(
                     bounds.Left, bounds.Bottom + m_pinMargin, bounds.Width, m_rowSpacing);
 
+                var hitRecord = PickShowPinsToggle(pickedElement, p, g);
+                if (hitRecord != null)
+                    return hitRecord;
+
                 label = new DiagramLabel(
                       new Rectangle((int)labelBounds.Left, (int)labelBounds.Top, (int)labelBounds.Width, (int)labelBounds.Height),
                       TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
@@ -566,7 +590,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
                 {
-                    var hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
+                    hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
                     if (hitRecord != null)
                         return hitRecord;
 
@@ -698,12 +722,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             ICircuitElementType type = element.Type;
 
             bool groupExpanded = false;
-            ICircuitGroupType<TElement, TWire, TPin> group = null;
-            if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
-            {
-                group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+            var group = element.As<ICircuitGroupType<TElement, TWire, TPin>>();
+            if (group != null)
                 groupExpanded = group.Expanded;
-            }
 
             // Check if the user is actively connecting wires. If there are no connections that can
             //  be made to this element, then draw it as a ghost.
@@ -741,15 +762,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var titleRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, titleHeight);
 
             var fillBrush = m_theme.GetCustomOrDefaultBrush(type.Name);
+            var titileFillBrush = m_theme.GetFillTitleBrush(type.Name);
             var gradientBrush = fillBrush as D2dLinearGradientBrush;
             if (gradientBrush != null)
             {
                 gradientBrush.StartPoint = bounds.Location;
                 gradientBrush.EndPoint = new PointF(bounds.Left, bounds.Bottom);
             }
-            else
-                fillBrush = m_theme.FillBrush;
-
+  
             if (useRoundedRect)
             {
                 g.FillRoundedRectangle(m_elementBody, fillBrush);
@@ -757,12 +777,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     var titleBody = m_elementBody;
                     titleBody.Rect = new RectangleF(bounds.X, bounds.Y, bounds.Width, titleHeight);
-                    g.FillRoundedRectangle(titleBody, m_theme.GetFillTitleBrush(element.Type.Name));
+                    var gradient = titileFillBrush as D2dLinearGradientBrush;
+                    if (gradient != null)
+                    {
+                        gradient.StartPoint = titleBody.Rect.Location;
+                        gradient.EndPoint = new PointF(titleBody.Rect.Right, titleBody.Rect.Bottom);
+                    }
+                    g.FillRoundedRectangle(titleBody, titileFillBrush);
                     // We don't want the lower part of the title rect rounded. D2d does not support half-rounded rect, fill again
                     var lowerRect = new RectangleF(bounds.X, bounds.Y + titleHeight * 0.5f, bounds.Width, titleHeight * 0.5f);
-                    g.FillRectangle(lowerRect, m_theme.GetFillTitleBrush(element.Type.Name));
+                    g.FillRectangle(lowerRect, titileFillBrush);
 
-                    g.DrawRoundedRectangle(m_elementBody, m_theme.GetFillTitleBrush(element.Type.Name));
+                    g.DrawRoundedRectangle(m_elementBody, titileFillBrush);
                 }
                 if (outline)
                     g.DrawRoundedRectangle(m_elementBody, m_theme.OutlineBrush);
@@ -772,22 +798,31 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 g.FillRectangle(bounds, fillBrush);
                 if (TitleBackgroundFilled)
                 {
-                    g.FillRectangle(titleRect, m_theme.GetFillTitleBrush(element.Type.Name));
-                    g.DrawRectangle(bounds, m_theme.GetFillTitleBrush(element.Type.Name), 1);
+                    var gradient = titileFillBrush as D2dLinearGradientBrush;
+                    if (gradient != null)
+                    {
+                        gradient.StartPoint = titleRect.Location;
+                        gradient.EndPoint = new PointF(titleRect.Right, titleRect.Bottom);
+                    }
+                    g.FillRectangle(titleRect, titileFillBrush);
+                    g.DrawRectangle(bounds, titileFillBrush, 1);
                 }
                 if (outline)
                     g.DrawRectangle(bounds, m_theme.OutlineBrush);
             }
 
             // draw the separate line between title and content
-            if (!TitleBackgroundFilled && 
+            if (!TitleBackgroundFilled &&
                 (info.Size.Height > TitleHeight + 2 * m_pinMargin)) // check non-empty content
                 g.DrawLine(p.X, p.Y + titleHeight, p.X + info.Size.Width, p.Y + titleHeight, m_theme.OutlineBrush);
 
             if (drawPins)
             {
+                IList<ICircuitPin> visibleInputPins = GetVisibleInputPins(element);
+                IList<ICircuitPin> visibleOutputPins = GetVisibleOutputPins(element);
+
                 int pinY = titleHeight + m_pinMargin;
-                foreach (TPin inputPin in type.Inputs)
+                foreach (TPin inputPin in visibleInputPins)
                 {
                     EdgeRouteDrawMode pinDrawMode = GetEdgeRouteDrawMode(element, inputPin);
                     if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
@@ -809,7 +844,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 pinY = titleHeight + m_pinMargin;
                 int i = 0;
-                foreach (TPin outputPin in type.Outputs)
+                foreach (TPin outputPin in visibleOutputPins)
                 {
                     EdgeRouteDrawMode pinDrawMode = GetEdgeRouteDrawMode(element, outputPin);
                     if (pinDrawMode != EdgeRouteDrawMode.CannotConnect)
@@ -851,38 +886,34 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 string title = GetElementTitle(element);
                 if (!string.IsNullOrEmpty(title))
                 {
-                    var halignment = m_theme.TextFormat.TextAlignment;
-                    var valignment = m_theme.TextFormat.ParagraphAlignment;
+                    var hAlignment = m_theme.TextFormat.TextAlignment;
+                    var vAlignment = m_theme.TextFormat.ParagraphAlignment;
 
                     m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
                     m_theme.TextFormat.ParagraphAlignment = D2dParagraphAlignment.Center;
 
-                    int titleOffset = 0;
-                    if (group != null)
-                        titleOffset += 2 * ExpanderSize;
-                    RectangleF textRect = new RectangleF(titleRect.X + titleOffset, titleRect.Y, titleRect.Width - titleOffset, titleRect.Height);
+                    var textRect = new RectangleF(titleRect.X, titleRect.Y, titleRect.Width, titleRect.Height);
                     g.DrawText(title, m_theme.TextFormat, textRect, m_theme.TextBrush);
 
-                    m_theme.TextFormat.TextAlignment = halignment;
-                    m_theme.TextFormat.ParagraphAlignment = valignment;
+                    m_theme.TextFormat.TextAlignment = hAlignment;
+                    m_theme.TextFormat.ParagraphAlignment = vAlignment;
                 }
 
                 string displayName = GetElementDisplayName(element);
                 if (!string.IsNullOrEmpty(displayName))
                 {
-
-                    RectangleF alignRect = new RectangleF(bounds.Left - MaxNameOverhang, bounds.Bottom + m_pinMargin,
+                    var alignRect = new RectangleF(bounds.Left - MaxNameOverhang, bounds.Bottom + m_pinMargin,
                         bounds.Width + 2 * MaxNameOverhang, m_rowSpacing);
                     var textAlignment = m_theme.TextFormat.TextAlignment;
                     m_theme.TextFormat.TextAlignment = D2dTextAlignment.Center;
                     g.DrawText(displayName, m_theme.TextFormat, alignRect, m_theme.TextBrush);
                     m_theme.TextFormat.TextAlignment = textAlignment;
-
                 }
             }
 
             if (element.Is<IReference<TElement>>())
-                g.DrawLink(p.X + bounds.Width - 2 * ExpanderSize, p.Y + 2 * m_pinMargin + 1, ExpanderSize, m_theme.HotBrush);
+                g.DrawLink(p.X + bounds.Width - m_pinMargin - 2 - 2 * ExpanderSize, //make room for GetShowPinsRect()
+                    p.Y + 2 * m_pinMargin + 1, ExpanderSize, m_theme.HotBrush);
 
             if (group != null)
             {
@@ -893,6 +924,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 {
                     DrawExpandedGroup(element, g);
                 }
+            }
+
+            // Draw the "show unconnected pins" button if possible.
+            if (HasShowUnconnectedPinsToggle(element))
+            {
+                RectangleF showPinsRect = GetShowPinsRect(bounds);
+                bool showUnconnectedPins = element.ElementInfo.ShowUnconnectedPins;
+                g.DrawEyeIcon(showPinsRect, showUnconnectedPins ? m_theme.TextBrush : m_theme.HiddenBrush, 0.5f);
             }
         }
 
@@ -925,8 +964,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             DrawExpandedGroupPins(element, g);
 
             // ensure to draw the drag target first,  prevent it from hiding the drag sources 
-            var subNodes = group.SubNodes.ToArray();
-            for (int i = 0; i < subNodes.Count(); ++i)
+            TElement[] subNodes = group.SubNodes.ToArray();
+            for (int i = 0; i < subNodes.Length; ++i)
             {
                 var subNode = subNodes[i];
                 DiagramDrawingStyle customStyle = GetCustomStyle(subNode);
@@ -1134,20 +1173,42 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private TPin PickPin(TElement element, bool inputSide, int pinX, int elementY, ElementTypeInfo info, PointF p)
         {
+            IList<ICircuitPin> visibleInputs = GetVisibleInputPins(element);
+            IList<ICircuitPin> visibleOutputs = GetVisibleOutputPins(element);
+            
+            IList<ICircuitPin> visiblePins, allPins;
+            if (inputSide)
+            {
+                visiblePins = visibleInputs;
+                allPins = element.Type.Inputs;
+            }
+            else
+            {
+                visiblePins = visibleOutputs;
+                allPins = element.Type.Outputs;
+            }
+
             int pickTolerance = m_theme.PickTolerance;
-            var pins = inputSide ? element.Type.Inputs : element.Type.Outputs;
+
             if (RouteConnecting == null || // or for expanded group pins, 
-               (element.Is<ICircuitGroupType<TElement, TWire, TPin>>() && element.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded))
+                (element.Is<ICircuitGroupType<TElement, TWire, TPin>>() && element.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded))
             {
                 // normal picking rectangles; the user may want to select the circuit element instead, for example
                 int pinIndex = 0;
-                foreach (TPin pin in pins)
+                int iVisiblePin = 0;
+                foreach (TPin pin in allPins)
                 {
-                    int y = elementY + GetPinOffset(element, pinIndex, inputSide);
-                    var normalPinBounds = new RectangleF(pinX, y, m_pinSize, m_pinSize);
-                    normalPinBounds.Inflate(pickTolerance, pickTolerance);
-                    if (normalPinBounds.Contains(p.X, p.Y))
-                        return pin;
+                    if (iVisiblePin == visiblePins.Count)
+                        break;
+                    if (pin == visiblePins[iVisiblePin])
+                    {
+                        ++iVisiblePin;
+                        int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                        var normalPinBounds = new RectangleF(pinX, y, m_pinSize, m_pinSize);
+                        normalPinBounds.Inflate(pickTolerance, pickTolerance);
+                        if (normalPinBounds.Contains(p.X, p.Y))
+                            return pin;
+                    }
                     ++pinIndex;
                 }
             }
@@ -1156,20 +1217,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 // Use Extra-large picking rectangles for the pins since the user is actively making a connection.
                 // info.Size.Width is larger (?) and more accurate for the width than element.Bounds.
                 int pinIndex = 0;
-                foreach (TPin pin in pins)
+                int iVisiblePin = 0;
+                foreach (TPin pin in allPins)
                 {
-                    int y = elementY + GetPinOffset(element, pinIndex, inputSide);
-                    ++pinIndex;
-                    EdgeRouteDrawMode drawMode = GetEdgeRouteDrawMode(element, pin);
-                    if (drawMode == EdgeRouteDrawMode.CanConnect)
+                    if (iVisiblePin == visiblePins.Count)
+                        break;
+                    if (pin == visiblePins[iVisiblePin])
                     {
-                        var currentBounds = new RectangleF(pinX, y, info.Size.Width, m_pinSize);
-                        currentBounds.Inflate(pickTolerance, pickTolerance);
-                        if (currentBounds.Contains(p.X, p.Y))
-                            return pin;
+                        ++iVisiblePin;
+                        int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                        EdgeRouteDrawMode drawMode = GetEdgeRouteDrawMode(element, pin);
+                        if (drawMode == EdgeRouteDrawMode.CanConnect)
+                        {
+                            var currentBounds = new RectangleF(pinX, y, info.Size.Width, m_pinSize);
+                            currentBounds.Inflate(pickTolerance, pickTolerance);
+                            if (currentBounds.Contains(p.X, p.Y))
+                                return pin;
+                        }
                     }
+                    ++pinIndex;
                 }
-
             }
             return null;
         }
@@ -1190,9 +1257,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 expanderRect.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
                 if (expanderRect.Contains(p))
                 {
-                    var diagExapander = new DiagramExpander(expanderRect);
+                    var diagExpander = new DiagramExpander(expanderRect);
 
-                    var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement.Cast<TElement>(), diagExapander);
+                    var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement.Cast<TElement>(), diagExpander);
                     if (stack.Count > 1)
                     {
                         result.SubItem = current;
@@ -1218,6 +1285,64 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
 
                 }
+            } while (goDown);
+
+            return null;
+        }
+
+        // Try to pick the expander on a circuit element or group element, recursively
+        private GraphHitRecord<TElement, TWire, TPin> PickShowPinsToggle(
+            TElement pickedElement, PointF p, D2dGraphics g)
+        {
+            var stack = new Stack<TElement>();
+            stack.Push(pickedElement);
+
+            bool goDown;
+            do
+            {
+                TElement current = stack.Peek();
+                RectangleF elementBounds = GetBounds(current, g);
+                elementBounds.Offset(ParentWorldOffset(stack));
+
+                var group = current.As<ICircuitGroupType<TElement, TWire, TPin>>();
+
+                // Check for the "show unconnected pins" button.
+                if (HasShowUnconnectedPinsToggle(current))
+                {
+                    RectangleF toggleRect = GetShowPinsRect(elementBounds);
+                    toggleRect.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                    if (toggleRect.Contains(p))
+                    {
+                        var toggle = new ShowPinsToggle(toggleRect);
+
+                        var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement, toggle);
+                        if (stack.Count > 1)
+                        {
+                            result.SubItem = current;
+                            result.HitPathInversed = stack;
+                        }
+                        return result;
+                    }
+                }
+
+                goDown = false;
+                if (group != null)
+                {
+                    foreach (var child in group.SubNodes)
+                    {
+                        // only push in the first child that hits the point                  
+                        RectangleF bounds = GetBounds(child, g);
+                        bounds.Offset(WorldOffset(stack));
+                        bounds.Inflate(m_theme.PickTolerance, m_theme.PickTolerance);
+                        if (bounds.Contains(p.X, p.Y))
+                        {
+                            stack.Push(child.Cast<TElement>());
+                            goDown = true;
+                            break;
+                        }
+                    }
+                }
+
             } while (goDown);
 
             return null;
@@ -1404,48 +1529,85 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             // look it up in the cache
             ICircuitElementType type = element.Type;
             string title = GetElementTitle(element);
+            var group = element.As<ICircuitGroupType<TElement, TWire, TPin>>();
+
             ElementTypeInfo cachedInfo;
             if (m_elementTypeCache.TryGetValue(type, out cachedInfo))
             {
-                if (cachedInfo.numInputs != type.Inputs.Count || cachedInfo.numOutputs != type.Outputs.Count ||
-                    cachedInfo.Title != title)
+                if (cachedInfo.numInputs != type.Inputs.Count ||
+                    cachedInfo.numOutputs != type.Outputs.Count)
                 {
-                    m_elementTypeCache.Remove(type);
                     Invalidate(type);
                 }
                 else
-                    return cachedInfo;
-            }
+                {
+                    if (title.Length > cachedInfo.TitleLength) // need to expand element width
+                    {
+                        // font usually not fixed width, + 1 to compensate   
+                        float extra = (title.Length - cachedInfo.TitleLength + 1) * cachedInfo.TitleWidth / cachedInfo.TitleLength;
+                        float newTitleWdith = cachedInfo.TitleWidth + extra + TitleBarPadding;
+                        if (newTitleWdith > cachedInfo.ContentWidth)
+                        {
+                            var adjusted = new ElementTypeInfo(cachedInfo);
+                            adjusted.Size.Width = (int) newTitleWdith;
+                            for (int i = 0; i < adjusted.OutputLeftX.Length; ++i)
+                                adjusted.OutputLeftX[i] += (int)(newTitleWdith - cachedInfo.Size.Width);
+                            cachedInfo = adjusted;
+                        }
+                    }
+                    else if (title.Length < cachedInfo.TitleLength)// need to shrink element width
+                    {
+                        float extra = (cachedInfo.TitleLength - title.Length) * cachedInfo.TitleWidth / cachedInfo.TitleLength;
+                        float newTitleWdith = cachedInfo.TitleWidth - extra + TitleBarPadding;
+                        if (newTitleWdith > cachedInfo.ContentWidth)
+                        {
+                            var adjusted = new ElementTypeInfo(cachedInfo);
+                            adjusted.Size.Width = (int) newTitleWdith;
+                            for (int i = 0; i < adjusted.OutputLeftX.Length; ++i)
+                                adjusted.OutputLeftX[i] -= (int)(cachedInfo.Size.Width - newTitleWdith);
+                            cachedInfo = adjusted;
+                        }
+                    }
 
+                    // Adjust the size of regular (non-group) elements to account for hidden pins.
+                    // Regular elements share one ElementTypeInfo for each type of element, so we need to
+                    //  make a copy before we modify it.
+                    if (group == null)
+                    {
+                        // The cached ElementTypeInfo assumes all pins are visible on a regular element.
+                        IList<ICircuitPin> visibleInputPins = GetVisibleInputPins(element);
+                        IList<ICircuitPin> visibleOutputPins = GetVisibleOutputPins(element);
+                        if (visibleInputPins.Count != type.Inputs.Count ||
+                            visibleOutputPins.Count != type.Outputs.Count)
+                        {
+                            cachedInfo = new ElementTypeInfo(cachedInfo);
+                            int gapOnRightOfImage = cachedInfo.Size.Width - cachedInfo.Interior.Right;
+                            int gapOnLeftOfImage = cachedInfo.Interior.Left;
+                            cachedInfo.Size.Height = CalculateElementHeight(
+                                visibleInputPins.Count, visibleOutputPins.Count, type,
+                                gapOnRightOfImage < gapOnLeftOfImage);
+                            cachedInfo.Interior.Y = cachedInfo.Size.Height - type.InteriorSize.Height;
+                        }
+                    }
+                    return cachedInfo;
+                }
+            }
 
             // not in cache, recompute
-            if (element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
-            {
-                var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
-                if (m_elementTypeCache.TryGetValue(group, out cachedInfo))
-                {
-                    if (cachedInfo.numInputs != group.Inputs.Count || cachedInfo.numOutputs != group.Outputs.Count ||
-                        cachedInfo.Title != title)
-                    {
-                        m_elementTypeCache.Remove(group);
-                        Invalidate(group);
-                    }
-                    else
-                        return cachedInfo;
-                }
+            if (group != null)
                 return GetHierarchicalElementTypeInfo(group, g);
-
-            }
 
             ElementSizeInfo sizeInfo = GetElementSizeInfo(type, g, title);
             var info = new ElementTypeInfo
             {
-                Title = title,
+                TitleLength = title.Length,
+                TitleWidth = sizeInfo.TitleWidth,
+                ContentWidth = sizeInfo.ContentWidth,
                 Size = sizeInfo.Size,
                 Interior = sizeInfo.Interior,
                 OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
                 numInputs = type.Inputs.Count,
-                numOutputs = type.Outputs.Count,
+                numOutputs = type.Outputs.Count
             };
 
             m_elementTypeCache.Add(type, info);
@@ -1468,34 +1630,36 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             else
                 g.MeasureText(type.Name, m_theme.TextFormat);
 
-            int width = (int)typeNameSize.Width + 2 * m_pinMargin + 4 * ExpanderSize + 1;
+            int width = (int)typeNameSize.Width + TitleBarPadding;
 
-            IList<ICircuitPin> inputPins = type.Inputs;
-            IList<ICircuitPin> outputPins = type.Outputs;
+            // If this is a group, it must be collapsed, because expanded groups
+            // are handled by GetHierarchicalElementSizeInfo.
+            bool isCollapsedGroup = type.Is<ICircuitGroupType<TElement, TWire, TPin>>();
+
+            IList<ICircuitPin> inputPins;
+            IList<ICircuitPin> outputPins;
+            if (isCollapsedGroup)
+            {
+                var group = type.Cast<TElement>();
+                inputPins = GetVisibleInputPins(group);
+                outputPins = GetVisibleOutputPins(group);
+            }
+            else
+            {
+                inputPins = type.Inputs;
+                outputPins = type.Outputs;
+            }
             int inputCount = inputPins.Count;
             int outputCount = outputPins.Count;
-            int minRows = Math.Min(inputCount, outputCount);
-            int maxRows = Math.Max(inputCount, outputCount);
-
-            bool isCollapsedGroup = false;
-            if (type.Is<ICircuitGroupType<TElement, TWire, TPin>>())
-            {
-                // If this is a group, it must be collapsed, because expanded groups
-                // are handled by GetHierarchicalElementSizeInfo.
-                isCollapsedGroup = true;
-            }
 
             int[] outputLeftX = new int[outputCount];
-
-            int height = m_rowSpacing + 2 * m_pinMargin;
-            height += Math.Max(
-                maxRows * m_rowSpacing,
-                minRows * m_rowSpacing + type.InteriorSize.Height - m_pinMargin);
+            int maxRows = Math.Max(inputCount, outputCount);
 
             bool imageRight = true;
+            float rowWidth = 0;
             for (int i = 0; i < maxRows; i++)
             {
-                double rowWidth = 2 * m_pinMargin;
+                rowWidth = 2 * m_pinMargin;
                 if (inputCount > i)
                 {
                     var pinText = inputPins[i].Name;
@@ -1529,8 +1693,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 width = Math.Max(width, type.InteriorSize.Width + 2);
 
             width = Math.Max(width, MinElementWidth);
-            height = Math.Max(height, MinElementHeight);
 
+            int height = CalculateElementHeight(inputCount, outputCount, type, imageRight);
             Size size = new Size(width, height);
             Rectangle interior = new Rectangle(
                 imageRight ? width - type.InteriorSize.Width : 1,
@@ -1541,7 +1705,32 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             for (int i = 0; i < outputLeftX.Length; i++)
                 outputLeftX[i] = width - m_pinMargin - m_pinSize - outputLeftX[i];
 
-            return new ElementSizeInfo(size, interior, outputLeftX);
+            var result = new ElementSizeInfo(size, interior, outputLeftX);
+            result.TitleWidth = typeNameSize.Width;
+            result.ContentWidth = rowWidth;
+            return result;
+        }
+
+        private int CalculateElementHeight(int inputCount, int outputCount, ICircuitElementType type, bool imageRight)
+        {
+            int minRows, maxRows;
+            if (imageRight)
+            {
+                minRows = outputCount;
+                maxRows = inputCount;
+            }
+            else
+            {
+                minRows = inputCount;
+                maxRows = outputCount;
+            }
+
+            int height = m_rowSpacing + 2 * m_pinMargin;
+            height += Math.Max(
+                maxRows * m_rowSpacing,
+                minRows * m_rowSpacing + type.InteriorSize.Height - m_pinMargin);
+            height = Math.Max(height, MinElementHeight);
+            return height;
         }
 
         private ElementTypeInfo GetHierarchicalElementTypeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
@@ -1550,7 +1739,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             var info = new ElementTypeInfo
             {
-                Title = GetElementTitle(group.As<TElement>()),
+                TitleLength = GetElementTitle(group.As<TElement>()).Length,
                 Size = sizeInfo.Size,
                 Interior = sizeInfo.Interior,
                 OutputLeftX = sizeInfo.OutputLeftX.ToArray(),
@@ -1568,10 +1757,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Element size info; cannot be null</returns>
         protected virtual ElementSizeInfo GetHierarchicalElementSizeInfo(ICircuitGroupType<TElement, TWire, TPin> group, D2dGraphics g)
         {
+            string title = GetElementTitle(group.As<TElement>());
+
             if (!group.Expanded) // group element collapsed, treat like non-Hierarchical node
-                return GetElementSizeInfo(group, g, GetElementTitle(group.As<TElement>()));
-
-
+                return GetElementSizeInfo(group, g, title);
 
             Rectangle grpBounds;
             if (group.AutoSize)
@@ -1599,6 +1788,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     {
                         grpBounds = Rectangle.Union(grpBounds, new Rectangle(subNode.Bounds.Location, sizeInfo.Size));
                     }
+                }
+
+                // For an empty group, make sure there's enough room for the title.
+                if (grpBounds.Width == 0)
+                {
+                    SizeF typeNameSize = g.MeasureText(title, m_theme.TextFormat);
+                    grpBounds.Width = (int)typeNameSize.Width + TitleBarPadding;
                 }
 
                 // compensate group pin positions
@@ -1648,7 +1844,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
             // measure offset of right pins
-            int outputCount = group.Outputs.Count();
+            int outputCount = group.Outputs.Count;
             int[] grpOutputLeftX = new int[outputCount];
             for (int i = 0; i < grpOutputLeftX.Length; i++)
             {
@@ -1677,15 +1873,109 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
 
                 return new ElementSizeInfo(grpBounds.Size,
-                                               grpBounds,
-                                               grpOutputLeftX);
+                grpBounds,
+                grpOutputLeftX);
             }
 
             return new ElementSizeInfo(
-                grpBounds.Size,
-                new Rectangle(0, 0, 0, 0),
-                grpOutputLeftX);
+               grpBounds.Size,
+               new Rectangle(0, 0, 0, 0),
+               grpOutputLeftX);
 
+        }
+
+        private IList<ICircuitPin> GetVisibleInputPins(ICircuitElement element)
+        {
+            ICircuitElementType type = element.Type;
+            IList<ICircuitPin> visiblePins = type.Inputs;
+
+            if (!element.ElementInfo.ShowUnconnectedPins)
+            {
+                visiblePins = new List<ICircuitPin>();
+                IList<TWire> wires = m_graphHelper.GetInputWires((TElement) element);
+                foreach (var pin in element.Type.Inputs)
+                {
+                    for (int iWire = wires.Count; --iWire >= 0; ) // performance-critical loop
+                    {
+                        if (wires[iWire].ToRoute == pin)
+                        {
+                            visiblePins.Add(pin);
+                            break;
+                        }
+
+                        // If 'element' is in a group and the corresponding group pin is marked
+                        //  as being visible, include 'pin' in the visible list.
+                        var group = m_graphHelper.GetOwningGroup((TElement)element);
+                        if (group != null)
+                        {
+                            bool foundConnectingWire = false;
+                            //'Inputs' is only visible pins. This is a performance-critical loop.
+                            IList<ICircuitPin> groupPins = group.Inputs;
+                            for (int iGroupPin = groupPins.Count; --iGroupPin >= 0; )
+                            {
+                                var groupPin = (ICircuitGroupPin<TElement>)groupPins[iGroupPin];
+                                if (groupPin.InternalElement.Type.GetInputPin(groupPin.InternalPinIndex) == pin)
+                                {
+                                    visiblePins.Add(pin);
+                                    foundConnectingWire = true;
+                                    break;
+                                }
+                            }
+                            if (foundConnectingWire)
+                                break;
+                        }
+                    }
+                }
+            }
+            
+            return visiblePins;
+        }
+
+        private IList<ICircuitPin> GetVisibleOutputPins(ICircuitElement element)
+        {
+            ICircuitElementType type = element.Type;
+            IList<ICircuitPin> visiblePins = type.Outputs;
+
+            if (!element.ElementInfo.ShowUnconnectedPins)
+            {
+                visiblePins = new List<ICircuitPin>();
+                IList<TWire> wires = m_graphHelper.GetOutputWires((TElement)element);
+                foreach (var pin in element.Type.Outputs)
+                {
+                    for (int iWire = wires.Count; --iWire >= 0; ) // performance-critical loop
+                    {
+                        if (wires[iWire].FromRoute == pin)
+                        {
+                            visiblePins.Add(pin);
+                            break;
+                        }
+
+                        // If 'element' is in a group and the corresponding group pin is marked
+                        //  as being visible, include 'pin' in the visible list.
+                        var group = m_graphHelper.GetOwningGroup((TElement)element);
+                        if (group != null)
+                        {
+                            bool foundConnectingWire = false;
+                            //'Outputs' is only visible pins. This is a performance-critical loop.
+                            IList<ICircuitPin> groupPins = group.Outputs;
+                            for (int iGroupPin = groupPins.Count; --iGroupPin >= 0; )
+                            {
+                                var groupPin = (ICircuitGroupPin<TElement>)groupPins[iGroupPin];
+                                if (groupPin.InternalElement.Type.GetOutputPin(groupPin.InternalPinIndex) == pin)
+                                {
+                                    visiblePins.Add(pin);
+                                    foundConnectingWire = true;
+                                    break;
+                                }
+                            }
+                            if (foundConnectingWire)
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return visiblePins;
         }
 
         private void DrawWire(
@@ -1804,35 +2094,33 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (inputSide)
             {
-                if (pinIndex < element.Type.Inputs.Count())
+                var pin = element.Type.GetInputPin(pinIndex);
+                if (pin.Is<ICircuitGroupPin<TElement>>())
                 {
-                    var pin = element.Type.Inputs[pinIndex];
-                    if (pin.Is<ICircuitGroupPin<TElement>>())
+                    var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                    if (group.Expanded)
                     {
-                        var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
-                        if (group.Expanded)
-                        {
-                            var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
-                            return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
-                        }
+                        var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                        return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
                     }
                 }
+                IList<ICircuitPin> visiblePins = GetVisibleInputPins(element);
+                pinIndex = visiblePins.IndexOf(pin);
             }
             else
             {
-                if (pinIndex < element.Type.Outputs.Count())
+                var pin = element.Type.GetOutputPin(pinIndex);
+                if (pin.Is<ICircuitGroupPin<TElement>>())
                 {
-                    var pin = element.Type.Outputs[pinIndex];
-                    if (pin.Is<ICircuitGroupPin<TElement>>())
+                    var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+                    if (group.Expanded)
                     {
-                        var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
-                        if (group.Expanded)
-                        {
-                            var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
-                            return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
-                        }
+                        var grpPin = pin.Cast<ICircuitGroupPin<TElement>>();
+                        return grpPin.Bounds.Location.Y + m_groupPinExpandedOffset + group.Info.Offset.Y;
                     }
                 }
+                IList<ICircuitPin> visiblePins = GetVisibleOutputPins(element);
+                pinIndex = visiblePins.IndexOf(pin);
             }
 
             return m_rowSpacing + 2 * m_pinMargin + pinIndex * m_rowSpacing + m_pinOffset + m_pinSize / 2;
@@ -1949,7 +2237,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private RectangleF GetPointsBounds(IEnumerable<PointF> points)
         {
-            var pts = points.ToArray();
             float minX = points.Min(p => p.X);
             float minY = points.Min(p => p.Y);
             float maxX = points.Max(p => p.X);
@@ -1965,6 +2252,31 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected RectangleF GetExpanderRect(PointF p)
         {
             return new RectangleF(p.X + m_pinMargin + 1, p.Y + 2 * m_pinMargin + 1, ExpanderSize, ExpanderSize);
+        }
+
+        /// <summary>
+        /// Gets the location of the "show unconnected pins" button bounding box within a circuit
+        /// element's bounding box.</summary>
+        /// <param name="bounds">Circuit element's bounding box</param>
+        /// <returns>Location of "show unconnected pins" button bounding box</returns>
+        protected RectangleF GetShowPinsRect(RectangleF bounds)
+        {
+            return new RectangleF(
+                bounds.Right - m_pinMargin - 1 - ExpanderSize,
+                bounds.Y + 2 * m_pinMargin + 1,
+                ExpanderSize,
+                ExpanderSize);
+        }
+
+        /// <summary>
+        /// Gets whether or not the "show unconnected pins" toggle should appear on this element.</summary>
+        /// <param name="element">Element tested</param>
+        /// <returns>Whether or not "show unconnected pins" toggle should appear</returns>
+        protected bool HasShowUnconnectedPinsToggle(TElement element)
+        {
+            // Don't draw this button on expanded groups because all the pins are visible regardless.
+            var group = element.As<ICircuitGroupType<TElement, TWire, TPin>>();
+            return group == null || !group.Expanded;
         }
 
         /// <summary>
@@ -2065,15 +2377,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
+        /// Gets the amount of space in the circuit element's title bar needed for things besides the title.
+        /// Space is needed for the group's expand/collapse triangle icon, the template link icon, and the
+        /// show/hide unconnected pins eye icon.</summary>
+        private int TitleBarPadding
+        {
+            get { return 3 * m_pinMargin + 4 * ExpanderSize + 3; }
+        }
+
+        /// <summary>
         /// accumulated offset of next to top drawing stack
         /// </summary>
         private Point ParentWorldOffset(IEnumerable<TElement> graphPath)
         {
-
             var offset = new Point();
             Point node_delta = Point.Empty;
 
-            foreach (var element in graphPath.Skip(1)) // m_graphPath is a stack, top item is the most nested 
+            foreach (var element in graphPath.Skip(1)) // m_graphPath is a stack of groups and the top item is the most nested
             {
                 node_delta = SubGraphOffset(element);
 
@@ -2086,37 +2406,69 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             return offset;
-
         }
 
         private void DocumentRegistryOnDocumentRemoved(object sender, ItemRemovedEventArgs<IDocument> itemRemovedEventArgs)
         {
+            // Remove the old cache for ICircuitElementTypes to avoid a memory leak.
             m_cachePerDocument.Remove(itemRemovedEventArgs.Item);
         }
 
         private void DocumentRegistryOnActiveDocumentChanging(object sender, EventArgs eventArgs)
         {
+            // Save the current cache for ICircuitElementTypes to our cache-per-document.
             if (m_documentRegistry.ActiveDocument != null)
                 m_cachePerDocument[m_documentRegistry.ActiveDocument] = m_elementTypeCache;
         }
 
         private void DocumentRegistryOnActiveDocumentChanged(object sender, EventArgs eventArgs)
         {
+            // Create the ICircuitElementType cache or retrieve it from our cache-per-document.
             if (m_documentRegistry.ActiveDocument == null ||
                 !m_cachePerDocument.TryGetValue(m_documentRegistry.ActiveDocument, out m_elementTypeCache))
             {
                 m_elementTypeCache = new Dictionary<ICircuitElementType, ElementTypeInfo>();
             }
+
+            // Rebuild the graph helper.
+            m_graphHelper = new GraphHelper(m_documentRegistry.ActiveDocument.As<IGraph<TElement, TWire, TPin>>());
         }
 
-        #region Private Classes
-
         /// <summary>
-        /// Class to hold cached element type layout, in pixels (or DIPs)</summary>
+        /// Class to hold cached element type layout, in pixels (or DIPs).</summary>
         protected class ElementTypeInfo
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ElementTypeInfo"/> class.</summary>
+            public ElementTypeInfo()
+            {
+            }
+
+            /// <summary>
+            /// Copy constructor for <see cref="ElementTypeInfo"/> class.</summary>
+            /// <param name="orig">Original ElementTypeInfo</param>
+            public ElementTypeInfo(ElementTypeInfo orig)
+            {
+                Title = orig.Title;
+                TitleLength = orig.TitleLength;
+                TitleWidth = orig.TitleWidth;
+                ContentWidth = orig.ContentWidth;
+                Size = orig.Size;
+                Interior = orig.Interior;
+                OutputLeftX = new int[orig.OutputLeftX.Length];
+                Array.Copy(orig.OutputLeftX, OutputLeftX, orig.OutputLeftX.Length);
+                numInputs = orig.numInputs;
+                numOutputs = orig.numOutputs;
+            }
+
             /// <summary>Element title</summary>
             public string Title;
+            /// <summary>Element title length</summary>
+            public int TitleLength;
+            /// <summary>Element title width</summary>
+            public float TitleWidth;
+            /// <summary>Element content Length</summary>
+            public float ContentWidth;
             /// <summary>Element size</summary>
             public Size Size;
             /// <summary>Element interior size</summary>
@@ -2124,7 +2476,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             /// <summary>Array of horizontal offsets of output pins in pixels</summary>
             public int[] OutputLeftX;
 
-            // The following are properties of the ICircuitElementType that reflect info in the cached object
+            // The following are properties of the ICircuitElementType that reflect info in the cached object.
             // If any of these differ from the cached object the cached object should be invalidated so it can be re-drawn to reflect these changes.
             /// <summary>
             /// Number of input pins. Property of the ICircuitElementType that reflects info in the cached object.</summary>
@@ -2150,6 +2502,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_outputLeftX = outputLeftX;
             }
 
+
+            /// <summary>
+            /// Gets the title width in pixels</summary>
+            public float TitleWidth { get; set; }
+
+            /// <summary>
+            /// Gets the content width in pixels</summary>
+            public float ContentWidth { get; set; }
+
+
             /// <summary>
             /// Gets the size in pixels. The size includes the whole visual circuit element
             /// but not the label below it.</summary>
@@ -2168,11 +2530,189 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             private readonly IEnumerable<int> m_outputLeftX;
         }
 
-        #endregion
-
         /// <summary>
         /// Size of category expanders in pixels</summary>
         protected const int ExpanderSize = GdiUtil.ExpanderSize;
+
+        /// <summary>
+        /// A helper class to work with IGraphs more efficiently by caching connections between circuit
+        /// elements, wires, pins, and circuit groups.</summary>
+        private class GraphHelper
+        {
+            /// <summary>
+            /// Constructor</summary>
+            /// <param name="graph">The graph to examine. If the graph changes, call Invalidate().</param>
+            public GraphHelper(IGraph<TElement, TWire, TPin> graph)
+            {
+                Graph = graph;
+            }
+
+            /// <summary>
+            /// Gets the graph that was used to construct this GraphHelper</summary>
+            public IGraph<TElement, TWire, TPin> Graph
+            {
+                get;
+                private set;
+            }
+
+            /// <summary>
+            /// Gets the circuit group that owns the given circuit element, or null, if there is none</summary>
+            /// <param name="element">circuit element</param>
+            /// <returns>owning circuit group, or null</returns>
+            public ICircuitGroupType<TElement, TWire, TPin> GetOwningGroup(TElement element)
+            {
+                RebuildIfDirty();
+                ElementHelper elementHelper;
+                if (m_elementToHelper.TryGetValue(element, out elementHelper))
+                    return elementHelper.OwningGroup;
+                return null;
+            }
+
+            /// <summary>
+            /// Gets the wires that connect to input pins on the given circuit element, including wires
+            /// that connect to the corresponding input pins on an owning group</summary>
+            /// <param name="element">circuit element</param>
+            /// <returns>the input wires</returns>
+            public IList<TWire> GetInputWires(TElement element)
+            {
+                RebuildIfDirty();
+                ElementHelper elementHelper;
+                if (m_elementToHelper.TryGetValue(element, out elementHelper))
+                    return elementHelper.InputWires;
+                return EmptyArray<TWire>.Instance;
+            }
+
+            /// <summary>
+            /// Gets the wires that connect to output pins on the given circuit element, including wires
+            /// that connect to the corresponding output pins on an owning group</summary>
+            /// <param name="element">circuit element</param>
+            /// <returns>the input wires</returns>
+            public IList<TWire> GetOutputWires(TElement element)
+            {
+                RebuildIfDirty();
+                ElementHelper elementHelper;
+                if (m_elementToHelper.TryGetValue(element, out elementHelper))
+                    return elementHelper.OutputWires;
+                return EmptyArray<TWire>.Instance;
+            }
+
+            /// <summary>
+            /// Call this if the original graph has changed, so that the cached data can be invalidated</summary>
+            public void Invalidate()
+            {
+                m_elementToHelper.Clear();
+            }
+
+            private void RebuildIfDirty()
+            {
+                if (m_elementToHelper.Count == 0)  // dirty?
+                {
+                    if (Graph != null)
+                    {
+                        foreach (TElement element in Graph.Nodes)
+                            AddElementsRecursively(element, null);
+
+                        // Now that all elements are stored, we can add wires.
+                        foreach (TWire wire in Graph.Edges)
+                            AddWire(wire);
+                        foreach (TElement element in Graph.Nodes)
+                            AddWiresOfGroups(element);
+                    }
+                }
+            }
+
+            private void AddElementsRecursively(TElement element, ICircuitGroupType<TElement, TWire, TPin> owningGroup)
+            {
+                var elementHelper = new ElementHelper(owningGroup);
+                m_elementToHelper[element] = elementHelper;
+
+                var group = element.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                if (group != null)
+                {
+                    foreach (TElement subElement in group.SubNodes)
+                        AddElementsRecursively(subElement, group);
+                }
+            }
+
+            private void AddWiresOfGroups(TElement element)
+            {
+                var group = element.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                if (group != null)
+                {
+                    foreach (TWire wire in group.SubEdges)
+                        AddWire(wire);
+                    foreach (TElement subElement in group.SubNodes)
+                        AddWiresOfGroups(subElement);
+                }
+            }
+
+            private void AddWire(TWire wire)
+            {
+                // Remember the connection to the element that this wire is an input to.
+                ElementHelper helper = m_elementToHelper[wire.ToNode];
+                helper.InputWires.Add(wire);
+
+                // If the connected element is a group, remember the connection to the child element, too.
+                var groupPin = wire.ToRoute.As<ICircuitGroupPin<TElement>>();
+                if (groupPin != null)
+                {
+                    do
+                    {
+                        TElement internalElement = groupPin.InternalElement;
+                        m_elementToHelper[internalElement].InputWires.Add(wire);
+                        groupPin = internalElement.Type.GetInputPin(groupPin.InternalPinIndex).As<ICircuitGroupPin<TElement>>();
+                    } while (groupPin != null);
+                }
+
+                // Remember the connection to the element that this wire is an output from.
+                helper = m_elementToHelper[wire.FromNode];
+                helper.OutputWires.Add(wire);
+
+                // If the connected element is a group, remember the connection to the child element, too.
+                groupPin = wire.FromRoute.As<ICircuitGroupPin<TElement>>();
+                if (groupPin != null)
+                {
+                    do
+                    {
+                        TElement internalElement = groupPin.InternalElement;
+                        m_elementToHelper[internalElement].OutputWires.Add(wire);
+                        groupPin = internalElement.Type.GetOutputPin(groupPin.InternalPinIndex).As<ICircuitGroupPin<TElement>>();
+                    } while (groupPin != null);
+                }
+            }
+
+            private class ElementHelper
+            {
+                public ElementHelper(ICircuitGroupType<TElement, TWire, TPin> owningGroup)
+                {
+                    m_owningGroup = owningGroup;
+                }
+
+                public IList<TWire> InputWires
+                {
+                    get { return m_inputWires; }
+                }
+
+                public IList<TWire> OutputWires
+                {
+                    get { return m_outputWires; }
+                }
+
+                public ICircuitGroupType<TElement, TWire, TPin> OwningGroup
+                {
+                    get { return m_owningGroup; }
+                }
+
+                private readonly ICircuitGroupType<TElement, TWire, TPin> m_owningGroup;
+                private readonly List<TWire> m_inputWires = new List<TWire>();
+                private readonly List<TWire> m_outputWires = new List<TWire>();
+            }
+
+            private readonly Dictionary<TElement,ElementHelper> m_elementToHelper =
+                new Dictionary<TElement, ElementHelper>();
+        }
+
+        private GraphHelper m_graphHelper = new GraphHelper(null);
         private D2dBrush m_subGraphPinBrush;
 
         private D2dRoundedRect m_elementBody = new D2dRoundedRect();
@@ -2190,10 +2730,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
         private Dictionary<ICircuitElementType, ElementTypeInfo> m_elementTypeCache = new Dictionary<ICircuitElementType, ElementTypeInfo>();
-        private readonly Stack<TElement> m_graphPath = new Stack<TElement>(); // current drawing stack
+        private readonly Stack<TElement> m_graphPath = new Stack<TElement>(); // Current drawing stack. Every TElement is a group. Top is most nested.
         private readonly Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>> m_cachePerDocument =
             new Dictionary<IDocument, Dictionary<ICircuitElementType, ElementTypeInfo>>();
-        private IDocumentRegistry m_documentRegistry;
+        private readonly IDocumentRegistry m_documentRegistry;
         private PinStyle m_pinDrawStyle;
 
         private int m_maxCollapsedGroupPinNameLength;
@@ -2201,7 +2741,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         private const int MinElementWidth = 4;
         private const int MinElementHeight = 4;
-        //private const int HighlightingWidth = 3;
         private const int MaxNameOverhang = 64;
     }
 }

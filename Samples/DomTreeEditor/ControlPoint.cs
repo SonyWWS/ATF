@@ -28,13 +28,7 @@ namespace DomTreeEditorSample
         {
             get { return GetAttribute<float>(UISchema.controlPointType.xAttribute); }
             set 
-            {
-                if (Curve.EnforceCurveLimits)
-                {
-                    ICurve cv = Parent;
-                    if (cv != null && (value > cv.MaxX || value < cv.MinX))
-                        return;
-                }
+            {                
                 SetAttribute(UISchema.controlPointType.xAttribute, value); 
             }
         }
@@ -45,13 +39,7 @@ namespace DomTreeEditorSample
         {
             get { return GetAttribute<float>(UISchema.controlPointType.yAttribute); }
             set 
-            {
-                if (Curve.EnforceCurveLimits)
-                {
-                    ICurve cv = Parent;
-                    if (cv != null && (value > cv.MaxY || value < cv.MinY))
-                        return;
-                }
+            {                
                 SetAttribute(UISchema.controlPointType.yAttribute, value); 
             }
             

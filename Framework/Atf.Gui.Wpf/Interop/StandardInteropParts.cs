@@ -18,9 +18,9 @@ namespace Sce.Atf.Wpf.Interop
             {
                 return new TypeCatalog(
                     typeof(MainWindowAdapter),
-                    typeof(ContextMenuService)
-                    //typeof(DialogService),
-                    //typeof(ControlHostServiceAdapter)
+                    typeof(ContextMenuService),
+                    typeof(DialogService),
+                    typeof(ControlHostServiceAdapter)
                     );
             }
         }

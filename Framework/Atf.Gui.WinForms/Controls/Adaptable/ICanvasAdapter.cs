@@ -11,7 +11,7 @@ namespace Sce.Atf.Controls.Adaptable
     public interface ICanvasAdapter
     {
         /// <summary>
-        /// Gets or sets the canvas bounds</summary>
+        /// Gets or sets the canvas bounds in world coordinates</summary>
         Rectangle Bounds
         {
             get;
@@ -24,7 +24,7 @@ namespace Sce.Atf.Controls.Adaptable
 
         /// <summary>
         /// Gets or sets the window's bounding rectangle, which defines the visible
-        /// area of the canvas</summary>
+        /// area of the canvas, in the window's client coordinates</summary>
         Rectangle WindowBounds
         {
             get;

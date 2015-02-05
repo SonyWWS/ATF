@@ -20,8 +20,7 @@ namespace Sce.Atf.Wpf.Models
     public class MainMenuViewModel : NotifyPropertyChangedBase
     {
         /// <summary>
-        /// View models which are bound to in xaml
-        /// </summary>
+        /// Get view models that are bound to in XAML</summary>
         public IEnumerable<IMenuModel> Menus
         {
             get
@@ -69,8 +68,7 @@ namespace Sce.Atf.Wpf.Models
         private ObservableCollection<IMenuModel> m_rootMenuModels;
 
         /// <summary>
-        /// Imported root menu definitions
-        /// </summary>
+        /// Set imported root menu definitions</summary>
         [ImportMany(AllowRecomposition = true)]
         private IMenu[] MenuDefinitions
         {
@@ -84,8 +82,7 @@ namespace Sce.Atf.Wpf.Models
         private IMenu[] m_menuDefinitions;
 
         /// <summary>
-        /// Imported menu items to place in menus
-        /// </summary>
+        /// Set imported menu items to place in menus</summary>
         [ImportMany(AllowRecomposition = true)]
         private IMenuItem[] MenuItems
         {
@@ -132,27 +129,38 @@ namespace Sce.Atf.Wpf.Models
     }
 
     /// <summary>
-    /// Interface for menu view model
-    /// This is the interface bound to in XAML
+    /// Interface for menu view model.
+    /// This is the interface bound to in XAML.
     /// This is exposed publicly so that users can restyle the application menus
-    /// using styles and data templates
-    /// </summary>
+    /// using styles and data templates.</summary>
     public interface IMenuModel
     {
+        /// <summary>
+        /// Get menu text string</summary>
         string Text { get; }
-        
+
+        /// <summary>
+        /// Get menu description text string</summary>
         string Description { get; }
 
+        /// <summary>
+        /// Get child menus</summary>
         ObservableCollection<object> Children { get; }
 
+        /// <summary>
+        /// Get whether menu visible</summary>
         bool IsVisible { get; }
     }
 
     /// <summary>
-    /// Menu View Model. Used for sub menus and as a base class for root menus.
-    /// </summary>
+    /// Menu View Model. Used for sub menus and as a base class for root menus.</summary>
     public class MenuModel : NotifyPropertyChangedBase, IMenuModel
     {
+        /// <summary>
+        /// Constructor with parent, text, and description</summary>
+        /// <param name="parent">Parent MenuModel</param>
+        /// <param name="text">Menu text</param>
+        /// <param name="description">Menu description</param>
         public MenuModel(MenuModel parent, string text, string description)
         {
             m_parent = parent;
@@ -162,21 +170,29 @@ namespace Sce.Atf.Wpf.Models
 
         #region IMenuModel Members
 
+        /// <summary>
+        /// Get menu text string</summary>
         public string Text
         {
             get { return m_text; }
         }
 
+        /// <summary>
+        /// Get menu description text string</summary>
         public string Description
         {
             get { return m_description; }
         }
 
+        /// <summary>
+        /// Get child menus</summary>
         public ObservableCollection<object> Children
         {
             get { return GetChildren(); }
         }
-                
+
+        /// <summary>
+        /// Get whether menu visible</summary>
         public bool IsVisible
         {
             get { return GetSubtree().OfType<ICommandItem>().Any(); }
@@ -184,8 +200,13 @@ namespace Sce.Atf.Wpf.Models
 
         #endregion
 
+        /// <summary>
+        /// Get parent MenuModel</summary>
         public MenuModel Parent { get { return m_parent; } }
 
+        /// <summary>
+        /// Enumerate all MenuModels in menu subtree</summary>
+        /// <returns>Enumeration of all MenuModels in menu subtree</returns>
         protected IEnumerable<object> GetSubtree()
         {
             foreach (object child in Children)
@@ -201,6 +222,9 @@ namespace Sce.Atf.Wpf.Models
             }
         }
 
+        /// <summary>
+        /// Obtain all child MenuModels</summary>
+        /// <returns>Child MenuModels</returns>
         protected virtual ObservableCollection<object> GetChildren()
         {
             return m_children;
@@ -214,35 +238,53 @@ namespace Sce.Atf.Wpf.Models
     }
 
     /// <summary>
-    /// View model for a root menu
-    /// </summary>
+    /// View model for a root menu</summary>
     internal class RootMenuModel : MenuModel
     {
+        /// <summary>
+        /// Constructor with IMenu</summary>
+        /// <param name="def">IMenu for root</param>
         public RootMenuModel(IMenu def)
             : this(def.MenuTag, def.Text, def.Description)
         {
         }
 
+        /// <summary>
+        /// Constructor with menu tag, test, and description</summary>
+        /// <param name="menuTag">Menu tag</param>
+        /// <param name="text">Menu text</param>
+        /// <param name="description">Menu description</param>
         public RootMenuModel(object menuTag, string text, string description)
             : base(null, text, description)
         {
             MenuTag = menuTag;
         }
 
+        /// <summary>
+        /// Get menu tag</summary>
         public object MenuTag { get; private set; }
 
+        /// <summary>
+        /// Add menu item to menu</summary>
+        /// <param name="item">IMenuItem</param>
         public void AddItem(IMenuItem item)
         {
             m_items.Add(item);
             Invalidate();
         }
 
+        /// <summary>
+        /// Remove menu item from menu</summary>
+        /// <param name="item">IMenuItem</param>
         public void RemoveItem(IMenuItem item)
         {
             if(m_items.Remove(item))
                 Invalidate();
         }
 
+        /// <summary>
+        /// Obtain all child MenuModels</summary>
+        /// <returns>Child MenuModels</returns>
         protected override ObservableCollection<object> GetChildren()
         {
             if (m_requiresRefresh)
@@ -386,8 +428,7 @@ namespace Sce.Atf.Wpf.Models
     }
 
     /// <summary>
-    /// View model for a menu separator
-    /// </summary>
+    /// View model for a menu separator</summary>
     internal class Separator : NotifyPropertyChangedBase
     {
     }

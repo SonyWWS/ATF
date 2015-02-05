@@ -22,8 +22,6 @@ namespace Sce.Atf.Applications
             MultiSelect = false;
             GridLines = true;
             Sorting = SortOrder.Ascending;
-
-            m_contextRegistry = contextRegistry;
         }
 
         /// <summary>
@@ -154,6 +152,5 @@ namespace Sce.Atf.Applications
         }
 
         private IQueryableResultContext m_queryResultContext;
-        private IContextRegistry m_contextRegistry;
     }
 }

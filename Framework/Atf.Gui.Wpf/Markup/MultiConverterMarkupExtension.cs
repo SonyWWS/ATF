@@ -33,6 +33,7 @@ namespace Sce.Atf.Wpf.Markup
         /// <summary>
         /// Converts source values to a value for the binding target. The data binding engine calls this method
         /// when it propagates the values from source bindings to the binding target.</summary>
+        /// <exception cref="NotSupportedException"> is thrown</exception>
         /// <param name="values">The array of values that the source bindings in the System.Windows.Data.MultiBinding 
         /// produces. The value System.Windows.DependencyProperty.UnsetValue indicates 
         /// that the source binding has no value to provide for conversion.</param>
@@ -52,6 +53,7 @@ namespace Sce.Atf.Wpf.Markup
 
         /// <summary>
         /// Converts a binding target value to the source binding values</summary>
+        /// <exception cref="NotSupportedException"> is thrown</exception>
         /// <param name="value">The value that the binding target produces</param>
         /// <param name="targetTypes">The array of types to convert to. The array length indicates the number and 
         /// types of values that are suggested for the method to return.</param>

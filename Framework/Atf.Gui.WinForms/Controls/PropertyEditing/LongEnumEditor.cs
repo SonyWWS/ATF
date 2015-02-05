@@ -12,14 +12,14 @@ namespace Sce.Atf.Controls.PropertyEditing
     /// <summary>
     /// Property editor for choosing from a list of predefined values, like from an enumerated
     /// type. The values can be long and the drop-down list will resize itself to accommodate the
-    /// longest display names. If TestEditEnabled is true, the user can enter an arbitrary string.</summary>
+    /// longest display names. If TextEditEnabled is true, the user can enter an arbitrary string.</summary>
     /// <remarks>
     /// It is recommended that you use Sce.Atf.Controls.PropertyEditing.IntEnumTypeConverter
     /// as the TypeConverter for this editor's property, to support enum stored as int.
     /// A LongEnumEditor is created for each PropertyDescriptor, for each
     /// selection change. PropertyDescriptors are shared between property editors,
     /// such as GridView and PropertyGridView.
-    /// TestEditEnabled will be ignored if TypeConverter is used</remarks>
+    /// TextEditEnabled will be ignored if TypeConverter is used</remarks>
     public class LongEnumEditor : IPropertyEditor, IAnnotatedParams
     {
         /// <summary>
@@ -44,7 +44,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Gets or sets whether the user can set the value of the property to an
         /// arbitrary text string, rather than only choosing from the list.
         /// The default is false.
-        /// This property will be ignred if TypeCoverter is used</summary>
+        /// This property will be ignored if TypeCoverter is used.</summary>
         public bool TextEditEnabled { get; set; }
 
         private int m_maxDropDownItems = 6;
@@ -141,6 +141,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 SetDropDownWidth();
                 FontChanged += (sender, e) => SetDropDownWidth();
+                RefreshValue();
             }
 
             protected override void OnDrawItem(DrawItemEventArgs e)
@@ -197,7 +198,19 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             protected override void OnLostFocus(EventArgs e)
             {
-                SetProperty();
+                object value = m_context.GetValue();
+                string txtVal = null;
+                var converter = m_context.Descriptor.Converter;
+                if (converter != null && converter.CanConvertTo(typeof(string)))
+                    txtVal = IdToDisplayName((string)converter.ConvertTo(value, typeof(string)));
+                else
+                    txtVal = IdToDisplayName((string)value);
+
+                if (txtVal != Text)
+                {
+                    SetProperty();
+                }
+                
                 base.OnLostFocus(e);
             }
 
@@ -210,18 +223,14 @@ namespace Sce.Atf.Controls.PropertyEditing
             private void SetProperty()
             {
                 if (!m_refreshing)
-                {
-                    if (Text != m_lastEdit)
-                    {
-                        m_lastEdit = Text;
-                        string val = DisplayNameToId(Text);
-                        //Note: m_context.SetValue(val) use converter,
-                        // so there is no need to use Converter here.                        
-                        // however, m_context.GetValue(); doesn't use converter that is why
-                        // we need to use converter in the method RefreshValue().
-                        // This is inconsistent behavior.
-                        m_context.SetValue(val);
-                    }
+                {                    
+                    string val = DisplayNameToId(Text);
+                    //Note: m_context.SetValue(val) use converter,
+                    // so there is no need to use Converter here.                        
+                    // however, m_context.GetValue(); doesn't use converter that is why
+                    // we need to use converter in the method RefreshValue().
+                    // This is inconsistent behavior.
+                    m_context.SetValue(val);
                 }
             }
 
@@ -245,13 +254,8 @@ namespace Sce.Atf.Controls.PropertyEditing
                         if (converter != null && converter.CanConvertTo(typeof(string)))
                             txtVal = IdToDisplayName((string)converter.ConvertTo(value, typeof(string)));
                         else
-                            txtVal = IdToDisplayName((string)value);
-                        
-                        if (txtVal != m_lastEdit)
-                        {
-                            Text = txtVal;
-                            m_lastEdit = txtVal;
-                        }
+                            txtVal = IdToDisplayName((string)value);                                                
+                        Text = txtVal;
                         Enabled = !m_context.IsReadOnly;
                     }
 
@@ -332,8 +336,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
 
             #endregion
-            
-            private string m_lastEdit;
+                        
             private string[] m_names;
             private string[] m_displayNames;
             private Image[] m_images;

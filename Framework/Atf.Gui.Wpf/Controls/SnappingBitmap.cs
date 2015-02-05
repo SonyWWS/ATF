@@ -15,10 +15,10 @@ namespace Sce.Atf.Wpf.Controls
         /// Constructor</summary>
         public SnappingBitmap()
         {
-            m_sourceDownloaded = new EventHandler(OnSourceDownloaded);
-            m_sourceFailed = new EventHandler<ExceptionEventArgs>(OnSourceFailed);
+            m_sourceDownloaded = OnSourceDownloaded;
+            m_sourceFailed = OnSourceFailed;
 
-            LayoutUpdated += new EventHandler(OnLayoutUpdated);
+            LayoutUpdated += OnLayoutUpdated;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Sce.Atf.Wpf.Controls
                 null,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure,
-                new PropertyChangedCallback(SnappingBitmap.OnSourceChanged)));
+                SnappingBitmap.OnSourceChanged));
 
         /// <summary>
         /// Gets and sets the bitmap source</summary>
@@ -91,21 +91,21 @@ namespace Sce.Atf.Wpf.Controls
 
         private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            SnappingBitmap bitmap = (SnappingBitmap)d;
+            var bitmap = (SnappingBitmap)d;
 
-            BitmapSource oldValue = (BitmapSource)e.OldValue;
-            BitmapSource newValue = (BitmapSource)e.NewValue;
+            var oldValue = (BitmapSource)e.OldValue;
+            var newValue = (BitmapSource)e.NewValue;
 
-            if (((oldValue != null) && (bitmap.m_sourceDownloaded != null)) && (!oldValue.IsFrozen && (oldValue is BitmapSource)))
+            if (((oldValue != null) && (bitmap.m_sourceDownloaded != null)) && (!oldValue.IsFrozen))
             {
-                ((BitmapSource)oldValue).DownloadCompleted -= bitmap.m_sourceDownloaded;
-                ((BitmapSource)oldValue).DownloadFailed -= bitmap.m_sourceFailed;
+                oldValue.DownloadCompleted -= bitmap.m_sourceDownloaded;
+                oldValue.DownloadFailed -= bitmap.m_sourceFailed;
                 // ((BitmapSource)newValue).DecodeFailed -= bitmap._sourceFailed; // 3.5
             }
-            if (((newValue != null) && (newValue is BitmapSource)) && !newValue.IsFrozen)
+            if (newValue != null && !newValue.IsFrozen)
             {
-                ((BitmapSource)newValue).DownloadCompleted += bitmap.m_sourceDownloaded;
-                ((BitmapSource)newValue).DownloadFailed += bitmap.m_sourceFailed;
+                newValue.DownloadCompleted += bitmap.m_sourceDownloaded;
+                newValue.DownloadFailed += bitmap.m_sourceFailed;
                 // ((BitmapSource)newValue).DecodeFailed += bitmap._sourceFailed; // 3.5
             }
         }
@@ -118,7 +118,7 @@ namespace Sce.Atf.Wpf.Controls
 
         private void OnSourceFailed(object sender, ExceptionEventArgs e)
         {
-            Source = null; // setting a local value seems scetchy...
+            Source = null; // setting a local value seems sketchy...
 
             BitmapFailed(this, e);
         }

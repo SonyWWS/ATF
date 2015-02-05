@@ -91,6 +91,10 @@
       <Project>{C7A306E0-32AE-4053-8882-E1A1E702C139}</Project>
       <Name>Atf.Perforce.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Subversion\Atf.Subversion.vs2010.csproj">
+      <Project>{ad8b5500-d8e2-4609-beca-c405ea22b1ae}</Project>
+      <Name>Atf.Subversion.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Atf.SyntaxEditorControl\Atf.SyntaxEditorControl.vs2010.csproj">
       <Project>{D1A78912-9AD2-4555-8560-B251A4D751DC}</Project>
       <Name>Atf.SyntaxEditorControl</Name>
@@ -102,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\File_edit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ja\Localization.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,7 +11,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Registers persistent application settings</summary>
-        /// <param name="uid">Unique identifer for settings</param>
+        /// <param name="uid">Unique identifier for settings</param>
         /// <param name="properties">Property descriptors to get/set values</param>
         /// <remarks>If a property's value is an XML document, the header will be removed when saving
         /// and won't be restored when loading.</remarks>

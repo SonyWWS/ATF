@@ -23,7 +23,7 @@ namespace DomTreeEditorSample
         /// <returns>Item's name in the context, or null if none</returns>
         public string GetName(object item)
         {
-            UIObject uiObject = Adapters.As<UIObject>(item);
+            UIObject uiObject = item.As<UIObject>();
             if (uiObject != null)
                 return uiObject.Name;
 
@@ -36,7 +36,7 @@ namespace DomTreeEditorSample
         /// <returns>True iff the item can be named</returns>
         public bool CanSetName(object item)
         {
-            return Adapters.Is<UIObject>(item);
+            return item.Is<UIObject>();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace DomTreeEditorSample
         /// <param name="name">New item name</param>
         public void SetName(object item, string name)
         {
-            UIObject uiObject = Adapters.As<UIObject>(item);
+            UIObject uiObject = item.As<UIObject>();
             if (uiObject != null)
                 uiObject.Name = name;
         }
@@ -59,7 +59,8 @@ namespace DomTreeEditorSample
         /// <returns>True iff the context can copy</returns>
         public bool CanCopy()
         {
-            return Adapters.Any<UIObject>(Selection);
+            return Selection.Any<UIObject>()
+                 || Selection.Any<Curve>();
         }
 
         /// <summary>
@@ -69,8 +70,13 @@ namespace DomTreeEditorSample
         public object Copy()
         {
             IEnumerable<UIObject> uiObjects = Selection.AsIEnumerable<UIObject>();
-            IEnumerable<DomNode> rootNodes = DomNode.GetRoots(Adapters.AsIEnumerable<DomNode>(uiObjects));
+            IEnumerable<Curve> curves = Selection.AsIEnumerable<Curve>();
+
+            IEnumerable<DomNode> rootNodes = DomNode.GetRoots(uiObjects.AsIEnumerable<DomNode>());
+            IEnumerable<DomNode> rootNodes2 = DomNode.GetRoots(curves.AsIEnumerable<DomNode>());
+
             List<object> copies = new List<object>(DomNode.Copy(rootNodes));
+            copies.AddRange(rootNodes2);
             return new DataObject(copies.ToArray());
         }
 
@@ -85,8 +91,8 @@ namespace DomTreeEditorSample
             if (items == null || items.Length == 0)
                 return false;
 
-            IEnumerable<DomNode> childNodes = Adapters.AsIEnumerable<DomNode>(items);
-            DomNode parent = Adapters.As<DomNode>(m_insertionParent);
+            IEnumerable<DomNode> childNodes = items.AsIEnumerable<DomNode>();
+            DomNode parent = m_insertionParent.As<DomNode>();
             if (parent != null)
             {
                 foreach (DomNode child in childNodes)
@@ -200,7 +206,7 @@ namespace DomTreeEditorSample
             if (items == null || items.Length == 0)
                 return;
 
-            IEnumerable<DomNode> childNodes = Adapters.AsIEnumerable<DomNode>(items);
+            IEnumerable<DomNode> childNodes = items.AsIEnumerable<DomNode>();
             // if no items are parented, then we should clone the items, which must be from the clipboard
             bool fromScrap = true;
             foreach (DomNode child in childNodes)
@@ -219,7 +225,7 @@ namespace DomTreeEditorSample
                     child.InitializeExtensions();
             }
 
-            DomNode parent = Adapters.As<DomNode>(m_insertionParent);
+            DomNode parent = m_insertionParent.As<DomNode>();
             if (parent != null)
             {
                 foreach (DomNode child in childNodes)
@@ -258,7 +264,7 @@ namespace DomTreeEditorSample
         /// <returns>True iff can delete selected items</returns>
         public bool CanDelete()
         {
-            return Adapters.Any<DomNode>(Selection); // 
+            return Selection.Any<DomNode>(); // 
         }
 
         /// <summary>

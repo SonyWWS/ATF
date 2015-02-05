@@ -38,8 +38,8 @@ namespace FsmEditorSample
             {
                 if (m_control != null)
                 {
-                    m_control.SizeChanged -= new EventHandler(control_SizeChanged);
-                    m_control.VisibleChanged -= new EventHandler(control_VisibleChanged);
+                    m_control.SizeChanged -= control_SizeChanged;
+                    m_control.VisibleChanged -= control_VisibleChanged;
                 }
 
                 m_control = value;
@@ -48,8 +48,8 @@ namespace FsmEditorSample
                 if (m_control != null)
                 {
                     m_layoutConstraints = m_control.AsAll<ILayoutConstraint>();
-                    m_control.SizeChanged += new EventHandler(control_SizeChanged);
-                    m_control.VisibleChanged += new EventHandler(control_VisibleChanged);
+                    m_control.SizeChanged += control_SizeChanged;
+                    m_control.VisibleChanged += control_VisibleChanged;
                 }
 
                 SetCanvasBounds();
@@ -92,8 +92,8 @@ namespace FsmEditorSample
         /// <returns>bounding rectangle of all FSM items in client coordinates</returns>
         public Rectangle GetBounds()
         {
-            List<object> items = new List<object>(Adapters.AsIEnumerable<object>(m_fsm.States));
-            items.AddRange(Adapters.AsIEnumerable<object>(m_fsm.Annotations));
+            List<object> items = new List<object>(m_fsm.States.AsIEnumerable<object>());
+            items.AddRange(m_fsm.Annotations.AsIEnumerable<object>());
             Rectangle bounds = GetBounds(items);
             return bounds;
         }
@@ -159,14 +159,14 @@ namespace FsmEditorSample
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified ILayoutContext.GetBounds(object item, out Rectangle bounds)
         {
-            State state = Adapters.As<State>(item);
+            State state = item.As<State>();
             if (state != null)
             {
                 bounds = state.Bounds;
                 return BoundsSpecified.All;
             }
 
-            Annotation annotation = Adapters.As<Annotation>(item);
+            Annotation annotation = item.As<Annotation>();
             if (annotation != null)
             {
                 bounds = annotation.Bounds;
@@ -183,10 +183,10 @@ namespace FsmEditorSample
         /// <returns>Value indicating which parts of the item's bounds can be set</returns>
         BoundsSpecified ILayoutContext.CanSetBounds(object item)
         {
-            if (Adapters.Is<State>(item))
+            if (item.Is<State>())
                 return BoundsSpecified.All;
 
-            if (Adapters.Is<Annotation>(item))
+            if (item.Is<Annotation>())
                 return BoundsSpecified.Location;
 
             return BoundsSpecified.None;

@@ -83,7 +83,9 @@ namespace Sce.Atf.Core
         }
 
         /// <summary>Add an "alias" to an existing option; this alias can be used
-        /// instead of the option name.</summary>
+        /// instead of the option name</summary>
+        /// <param name="aliasName">Alias name</param>
+        /// <param name="optionName">Option name</param>
         public void AddAlias(string aliasName, string optionName)
         {
             System.Diagnostics.Debug.Assert(_options.ContainsKey(optionName));

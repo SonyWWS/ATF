@@ -103,7 +103,9 @@
     <EmbeddedResource Include="schemas\FSM_customized.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="data\Example.fsm" />
     <EmbeddedResource Include="Resources\About.rtf" />
     <None Include="schemas\GenSchemaDef.bat" />

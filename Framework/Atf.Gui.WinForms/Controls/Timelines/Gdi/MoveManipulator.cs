@@ -378,7 +378,7 @@ namespace Sce.Atf.Controls.Timelines
             try
             {
                 s_snapOptions.FilterContext = snapperEvent;
-                s_snapOptions.Filter = new TimelineControl.SnapFilter(MoveSnapFilter);
+                s_snapOptions.Filter = MoveSnapFilter;
                 snapOffset = m_owner.GetSnapOffset(movingPoints, s_snapOptions);
             }
             finally

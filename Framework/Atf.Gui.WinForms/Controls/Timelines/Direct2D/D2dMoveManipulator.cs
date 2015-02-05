@@ -526,7 +526,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             try
             {
                 s_snapOptions.FilterContext = snapperEvent;
-                s_snapOptions.Filter = new D2dTimelineControl.SnapFilter(MoveSnapFilter);
+                s_snapOptions.Filter = MoveSnapFilter;
                 snapOffset = m_owner.GetSnapOffset(movingPoints, s_snapOptions);
             }
             finally

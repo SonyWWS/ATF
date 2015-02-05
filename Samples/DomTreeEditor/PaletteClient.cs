@@ -34,7 +34,7 @@ namespace DomTreeEditorSample
         void IInitializable.Initialize()
         {
             // add item types to palette
-            string name = Localizer.Localize("UI Objects");
+            string name = "UI Objects".Localize();
             m_paletteService.AddItem(UISchema.UIPackageType.Type, name, this);
             m_paletteService.AddItem(UISchema.UIFormType.Type, name, this);
             m_paletteService.AddItem(UISchema.UIShaderType.Type, name, this);

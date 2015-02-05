@@ -252,7 +252,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         }
 
         /// <summary>
-        /// Does the command</summary>
+        /// Do the command</summary>
         /// <param name="commandTag">Command to be done</param>
         public void DoCommand(object commandTag)
         {

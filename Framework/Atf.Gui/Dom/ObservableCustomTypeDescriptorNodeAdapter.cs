@@ -15,7 +15,7 @@ namespace Sce.Atf.Dom
         /// Creates an array of property descriptors that are associated with the adapted DomNode's
         /// DomNodeType. No duplicates will be in the array (based on the property descriptor's Name
         /// property). </summary>
-        /// <returns></returns>
+        /// <returns>Array of property descriptors associated with adapted DomNode's DomNodeType</returns>
         protected virtual System.ComponentModel.PropertyDescriptor[] GetPropertyDescriptors()
         {
             HashSet<string> names = new HashSet<string>();

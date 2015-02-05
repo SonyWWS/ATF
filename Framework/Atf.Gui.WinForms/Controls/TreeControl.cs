@@ -219,6 +219,14 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
+        /// Gets the height and width of the client area of the control actual available for drawing,
+        /// excluding horizontal and vertical scrollbars </summary>
+        internal Size ActualClientSize
+        {
+            get { return m_clientSize; }
+        }
+
+        /// <summary>
         /// Gets or sets whether Nodes are automatically expanded when
         /// the user hovers the mouse over them during drag and drop</summary>
         public bool DragHoverExpand
@@ -468,7 +476,7 @@ namespace Sce.Atf.Controls
         {
             UpdateNodeMeasurements();
 
-            int y = clientPoint.Y + m_vScroll;
+            int y = clientPoint.Y + m_vScroll - ContentVerticalOffset;
             foreach (Node node in VisibleNodes)
             {
                 int rowHeight = GetRowHeight(node);
@@ -628,11 +636,7 @@ namespace Sce.Atf.Controls
             {
                 if (info.Node == m_labelEditNode)
                 {
-                    m_textBox.Bounds = new Rectangle(
-                        info.LabelLeft,
-                        info.Y,
-                        m_clientSize.Width - info.LabelLeft + 1,
-                        FontHeight + Margin.Top + 1);
+                    m_textBox.Bounds = GetLabelEditBounds(info);
 
                     m_textBox.Text = m_labelEditNode.Label;
                     m_textBox.SelectAll();
@@ -642,6 +646,19 @@ namespace Sce.Atf.Controls
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the bounding rectangle for label editing.</summary>
+        /// <param name="info">Node layout information</param>
+        /// <returns>Bounding rectangle for label editing</returns>
+        protected virtual Rectangle GetLabelEditBounds(NodeLayoutInfo info)
+        {
+            return new Rectangle(
+                        info.LabelLeft,
+                        info.Y,
+                        m_clientSize.Width - info.LabelLeft + 1,
+                        FontHeight + Margin.Top + 1);
         }
 
         /// <summary>
@@ -1617,6 +1634,8 @@ namespace Sce.Atf.Controls
                     {
                         m_itemRenderer.DrawLabel(node, g, info.LabelLeft + filterOffset, rowCenterY - node.LabelHeight / 2);
                     }
+
+                    m_itemRenderer.DrawData(node, g, info.LabelLeft + filterOffset, rowCenterY - node.LabelHeight / 2);
                     if (node == dragNode)
                     { 
                         g.DrawLine(Pens.Red,
@@ -1854,19 +1873,46 @@ namespace Sce.Atf.Controls
 
         #endregion
 
-        private class NodeLayoutInfo
+        /// <summary>
+        /// Class to encapsulate node layout information.</summary>
+        protected class NodeLayoutInfo
         {
+            /// <summary>
+            /// The node with information.</summary>
             public Node Node;
+            /// <summary>
+            /// The x-coordinate of the upper-left corner of the node.</summary>
             public int X;
+            /// <summary>
+            /// The y-coordinate of the upper-left corner of the node.</summary>
             public int Y;
+            /// <summary>
+            /// The level of the node in the tree.</summary>
             public int Depth;
+            /// <summary>
+            /// The x-coordinate of the upper-left corner of the node image that indicates its state.</summary>
             public int StateImageLeft;
+            /// <summary>
+            /// The x-coordinate of the upper-left corner of the node icon image.</summary>
             public int ImageLeft;
+            /// <summary>
+            /// The x-coordinate of the upper-left corner of the drawn label text.</summary>
             public int LabelLeft;
         }
 
-        // Gets layout info of the visible nodes
-        private IEnumerable<NodeLayoutInfo> NodeLayout
+        /// <summary>
+        /// Get or sets the vertical offset to be added to draw all tree nodes</summary>
+        public int ContentVerticalOffset
+        {
+            get { return m_contentVerticalOffset; }
+            set { m_contentVerticalOffset = value; }
+        }
+
+        /// <summary>
+        /// Gets layout info of the visible nodes.</summary>
+        /// <value>
+        /// Enumeration of NodeLayoutInfo objects</value>
+        protected IEnumerable<NodeLayoutInfo> NodeLayout
         {
             get
             {
@@ -1876,7 +1922,7 @@ namespace Sce.Atf.Controls
                 int yPadding = Margin.Top;
 
                 int x = -m_hScroll + xPadding;
-                int y = -m_vScroll + yPadding;
+                int y = -m_vScroll + yPadding + ContentVerticalOffset;
 
                 bool drawExpanders = DrawExpanders;
 
@@ -1937,7 +1983,9 @@ namespace Sce.Atf.Controls
             }
         }
 
-        private enum HitType
+        /// <summary>
+        /// Type of object hit.</summary>
+        protected enum HitType
         {
             None,
             Expander,
@@ -1946,18 +1994,32 @@ namespace Sce.Atf.Controls
             Label,
         }
 
-        private struct HitRecord
+        /// <summary>
+        /// Structure to encapsulate hit information.</summary>
+        protected struct HitRecord
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="HitRecord"/> struct.</summary>
+            /// <param name="type">The type of object hit</param>
+            /// <param name="node">The node hit</param>
             public HitRecord(HitType type, Node node)
             {
                 Type = type;
                 Node = node;
             }
+            /// <summary>
+            /// The type of object hit.</summary>
             public readonly HitType Type;
+            /// <summary>
+            /// The node hit.</summary>
             public Node Node;
         }
 
-        private HitRecord Pick(Point p)
+        /// <summary>
+        /// Obtain hit information for a given point.</summary>
+        /// <param name="p">The point to obtain info for</param>
+        /// <returns>HitRecord for given point</returns>
+        protected HitRecord Pick(Point p)
         {
             UpdateNodeMeasurements();
             int xPadding = Margin.Left;
@@ -2017,7 +2079,7 @@ namespace Sce.Atf.Controls
         /// Checks everything--label, expander, checkbox, source control state image, regular image.</summary>
         /// <param name="node">Node whose height is calculated</param>
         /// <returns>Total height, in pixels, needed by this Node, including a margin</returns>
-        private int GetRowHeight(Node node)
+        public int GetRowHeight(Node node)
         {
             int rowHeight = node.LabelHeight;
 
@@ -2149,6 +2211,13 @@ namespace Sce.Atf.Controls
             public Node Parent
             {
                 get { return m_parent; }
+            }
+
+            /// <summary>
+            /// Gets the node's control.</summary>
+            public TreeControl TreeControl
+            {
+                get { return m_owner; }
             }
 
             /// <summary>
@@ -2580,7 +2649,10 @@ namespace Sce.Atf.Controls
         private bool m_expandOnSingleClick;
         private bool m_dragBetween;
         private bool m_showDragBetweenCue;
-        private bool m_handleKeyUp;
+        /// <summary>
+        /// Whether key up event was handled or not.</summary>
+        protected bool m_handleKeyUp;
+        private int m_contentVerticalOffset;
 
         private KeyboardShortcuts m_navigationKeyBehavior;
         private LabelEditModes m_labelEditMode = LabelEditModes.Default;

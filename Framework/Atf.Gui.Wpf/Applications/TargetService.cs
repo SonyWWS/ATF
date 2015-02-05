@@ -17,6 +17,8 @@ using Sce.Atf.Wpf.Models;
 
 namespace Sce.Atf.Wpf.Applications
 {
+    /// <summary>
+    /// Standard component implementation of ITargetService</summary>
     [Export(typeof(ITargetService))]
     [Export(typeof(TargetService))]
     [Export(typeof(ICommandClient))]
@@ -40,6 +42,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish initializing component by registering settings and commands</summary>
         public void Initialize()
         {
             if (m_settingsService != null)
@@ -72,6 +76,8 @@ namespace Sce.Atf.Wpf.Applications
 
         #region ITargetService Members
 
+        /// <summary>
+        /// Get enumeration of protocols supported</summary>
         public IEnumerable<IProtocol> Protocols
         {
             get { return m_protocols.GetValues<IProtocol>(); }
@@ -130,10 +136,9 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         /// <summary>
-        /// Select a target given its name
-        /// Exception will be thrown if the parameter is invalid or the target not found 
-        /// </summary>
-        /// <param name="name">name of the target to be selected</param>
+        /// Select a target, given its name</summary>
+        /// <exception cref="ArgumentException"> if the parameter is invalid or the target not found</exception>
+        /// <param name="target">Name of the target to be selected</param>
         public void SelectTarget(ITarget target)
         {
             Requires.NotNull(target, "target");
@@ -149,8 +154,8 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         /// <summary>
-        /// Show target dialog
-        /// </summary>
+        /// Show target dialog</summary>
+        /// <returns>Nullable Boolean signifying how window was closed by user</returns>
         public bool? ShowTargetDialog()
         {
             var tvm = new TargetDialogViewModel(m_targets, m_protocols.GetValues<IProtocol>());
@@ -169,11 +174,18 @@ namespace Sce.Atf.Wpf.Applications
 
         #region ICommandClient Members
 
+        /// <summary>
+        /// Checks whether the client can do the command if it handles it</summary>
+        /// <param name="tag">Command to be done</param>
+        /// <returns>True iff client can do the command</returns>
         public bool CanDoCommand(object tag)
         {
             return tag is Command;
         }
 
+        /// <summary>
+        /// Do the command</summary>
+        /// <param name="tag">Command to be done</param>
         public void DoCommand(object tag)
         {
             if (tag is Command)
@@ -187,6 +199,10 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Updates command state for given command</summary>
+        /// <param name="commandTag">Command</param>
+        /// <param name="commandState">Command state to update</param>
         public void UpdateCommand(object commandTag, Sce.Atf.Applications.CommandState commandState) { }
 
         #endregion
@@ -305,6 +321,10 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Find Type for its name</summary>
+        /// <param name="typeName">Type name</param>
+        /// <returns>Type corresponding to name</returns>
         public static Type FindType(string typeName)
         {
             return AppDomain.CurrentDomain.GetAssemblies()

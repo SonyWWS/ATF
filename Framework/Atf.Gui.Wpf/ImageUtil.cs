@@ -24,6 +24,11 @@ namespace Sce.Atf.Wpf
             return BitmapFrame.Create(RenderToBitmapSource(visual, scale));
         }
 
+        /// <summary>
+        /// Renders a visual UI element to a BitmapSourceBitmapSource, which represents a single, constant set of pixels at a certain size and resolution</summary>
+        /// <param name="visual">Visual UI element to be rendered</param>
+        /// <param name="scale">Scale factor</param>
+        /// <returns>BitmapSource from visual UI element</returns>
         public static BitmapSource RenderToBitmapSource(this UIElement visual, double scale)
         {
             Matrix m = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
@@ -47,6 +52,10 @@ namespace Sce.Atf.Wpf
             return renderTarget;
         }
 
+        /// <summary>
+        /// From a file, obtain an ImageSource, which represents an object type with width, height, and Image Metadata</summary>
+        /// <param name="path">Image path</param>
+        /// <returns>ImageSource from file</returns>
         public static ImageSource CreateFromFile(string path)
         {
             Requires.NotNull(path, "Invalid path");
@@ -98,6 +107,10 @@ namespace Sce.Atf.Wpf
             encoder.Save(stream);
         }
 
+        /// <summary>
+        /// Obtain a Bitmap from a BitmapSource</summary>
+        /// <param name="bitmapsource">BitmapSource object</param>
+        /// <returns>Bitmap from BitmapSource</returns>
         public static System.Drawing.Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {
             System.Drawing.Bitmap bitmap;
@@ -115,6 +128,10 @@ namespace Sce.Atf.Wpf
             return bitmap;
         }
 
+        /// <summary>
+        /// Obtain a BitmapSource from a Bitmap</summary>
+        /// <param name="bitmap">Bitmap</param>
+        /// <returns>BitmapSource from Bitmap</returns>
         public static BitmapSource BitmapToSource(System.Drawing.Bitmap bitmap)
         {
             BitmapSource destination;
@@ -162,6 +179,11 @@ namespace Sce.Atf.Wpf
             encoder.Save(stream);
         }
 
+        /// <summary>
+        /// Renders a window to a BitmapSourceBitmapSource, which represents a single,
+        /// constant set of pixels at a certain size and resolution</summary>
+        /// <param name="w">Window to render</param>
+        /// <returns>BitmapSource from window</returns>
         public static BitmapSource CaptureWindow(Window w)
         {
             return RenderToBitmapSource(w, 1.0);

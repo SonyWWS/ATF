@@ -95,7 +95,7 @@ namespace Sce.Atf.Wpf.Applications.WebServices
             }
             catch (Exception e)
             {
-                NotifyClients(("Version Check Failed" + e.Message).Localize(), true);
+                NotifyClients("Version Check Failed".Localize() + e.Message, true);
             }
         }
 

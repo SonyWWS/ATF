@@ -5,12 +5,12 @@ using System;
 namespace Sce.Atf.Applications
 {
     /// <summary>
-    /// Source control revison</summary>
+    /// Source control revision</summary>
     public class SourceControlRevision
     {
         /// <summary>
         /// Constructor for revision explicitly identified by its revision number</summary>
-        /// <param name="revisionNumber">Revison number</param>
+        /// <param name="revisionNumber">Revision number</param>
         public SourceControlRevision(int revisionNumber)
         {
             m_kind = SourceControlRevisionKind.Number;
@@ -77,7 +77,7 @@ namespace Sce.Atf.Applications
         {
             get
             {
-                if (m_kind != SourceControlRevisionKind.Date || m_dateTime == null)
+                if (m_kind != SourceControlRevisionKind.Date)
                     throw new InvalidOperationException("This revision is not a Date");
                 return m_dateTime;
             }

@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Applications\AppearanceService.cs" />
     <Compile Include="Applications\AtfApp.cs" />
+    <Compile Include="Applications\AtfScriptVariables.cs" />
     <Compile Include="Applications\AutoDocumentService.cs" />
     <Compile Include="Applications\BoundsSpecified.cs" />
     <Compile Include="Applications\CommandDef.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Applications\MessageBoxService.cs" />
     <Compile Include="Applications\OutputService.cs" />
     <Compile Include="Applications\PaletteService.cs" />
+    <Compile Include="Applications\PropertyEditor.cs" />
     <Compile Include="Applications\SettingsService.cs" />
     <Compile Include="Applications\StandardEditCommands.cs" />
     <Compile Include="Applications\StandardMenus.cs" />
@@ -210,6 +212,10 @@
     <Compile Include="Controls\ManageWindowLayoutsDialog.xaml.cs">
       <DependentUpon>ManageWindowLayoutsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PropertyEditing\PropertyGridView.xaml.cs">
+      <DependentUpon>PropertyGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyEditing\PropertyView.cs" />
     <Compile Include="Controls\PropertyEditing\StandardValuesConverter.cs" />
     <Compile Include="Controls\PropertyEditing\ValueEditors\FilePathValueEditor.cs" />
     <Compile Include="Controls\PropertyEditing\ValueEditors\FolderPathValueEditor.cs" />
@@ -226,6 +232,7 @@
       <DependentUpon>SettingsLoadSaveDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SizeBasedTemplateSelector.cs" />
+    <Compile Include="Controls\SizeToContentDecorator.cs" />
     <Compile Include="Controls\SnappingBitmap.cs" />
     <Compile Include="Controls\SplitButton.cs" />
     <Compile Include="Controls\StylableListView.cs" />
@@ -487,6 +494,10 @@
     <Page Include="Controls\ProgressDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PropertyEditing\PropertyGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SettingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -533,7 +533,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 IControlPoint p = points[i];
                 if ((x - p.X) < -s_epsilone)
                     return i;
-                else if ((x - p.X) > s_epsilone)
+                if ((x - p.X) > s_epsilone)
                     continue;
                 else
                     return -1;
@@ -584,7 +584,7 @@ namespace Sce.Atf.Controls.CurveEditing
             return result;
         }
 
-        private static float s_epsilone = 0.0001f;
+        private static float s_epsilone = 0.001f;
         private static float MaxTan = 1000000.0f; //5729577.9485111479f from Maya animEngine.c didn't work for Guerrilla for some reason
     }
 }

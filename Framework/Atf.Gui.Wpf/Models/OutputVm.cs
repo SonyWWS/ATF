@@ -101,10 +101,10 @@ namespace Sce.Atf.Wpf.Models
     public class OutputItemVm : NotifyPropertyChangedBase
     {
         /// <summary>
-        /// Constructor</summary>
-        /// <param name="time"></param>
-        /// <param name="messageType"></param>
-        /// <param name="message"></param>
+        /// Constructor with timestamp, message type, and message</summary>
+        /// <param name="time">Output message timestamp</param>
+        /// <param name="messageType">Type of output message (error, warning, info)</param>
+        /// <param name="message">Output message text</param>
         public OutputItemVm(DateTime time, OutputMessageType messageType, string message)
         {
             Time = time;

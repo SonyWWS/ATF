@@ -70,7 +70,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// Dependency property representing the value of the data source</summary>
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(object), typeof(DataPipe),
-            new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnSourceChanged)));
+            new FrameworkPropertyMetadata(null, OnSourceChanged));
 
         private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -85,7 +85,7 @@ namespace Sce.Atf.Wpf.Behaviors
 
         /// <summary>
         /// Create a freezable instance of a DataPipe</summary>
-        /// <returns></returns>
+        /// <returns>Freezable instance of DataPipe</returns>
         protected override Freezable CreateInstanceCore()
         {
             return new DataPipe();

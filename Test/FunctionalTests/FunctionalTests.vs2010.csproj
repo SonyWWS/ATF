@@ -67,6 +67,7 @@
     <Compile Include="FileExplorerTests.cs" />
     <Compile Include="LiveConnectServiceTests.cs" />
     <Compile Include="SimpleDomEditorTests.cs" />
+    <Compile Include="SimpleDomEditorWpfTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="CircuitEditorTests.cs" />
     <Compile Include="CodeEditorTests.cs" />
@@ -76,10 +77,9 @@
     <Compile Include="SimpleDomNoXmlEditorTests.cs" />
     <Compile Include="StatechartEditorTests.cs" />
     <Compile Include="TimelineEditorTests.cs" />
+    <Compile Include="TreeListControlTests.cs" />
     <Compile Include="TreeListEditorTests.cs" />
     <Compile Include="UsingDomTests.cs" />
-    <Compile Include="WinFormsAppTests.cs" />
-    <Compile Include="WpfAppTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CircuitEditorTestScripts\AddAllItems.py">

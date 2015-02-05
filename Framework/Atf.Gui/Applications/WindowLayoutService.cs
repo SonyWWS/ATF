@@ -295,6 +295,9 @@ namespace Sce.Atf.Applications
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(value))
+                        return;
+
                     var xmlDoc = new XmlDocument();
                     xmlDoc.LoadXml(value);
 

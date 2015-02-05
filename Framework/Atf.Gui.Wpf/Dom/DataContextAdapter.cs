@@ -7,24 +7,27 @@ using Sce.Atf.Adaptation;
 namespace Sce.Atf.Wpf.Dom
 {
     /// <summary>
-    /// Utility class used to adapt FrameworkElement DataContext using ATF IAdaptable pattern
-    /// This class overrides the DataContext property metadata for TElement allowing it to coerce
-    /// DataContext value changes and attempt adaptation
-    /// 
-    /// In order to use this class, call Initialize() before the framework element is used
-    /// e/g in the static constructor:
-    /// 
+    /// Utility class used to adapt FrameworkElement DataContext using ATF IAdaptable pattern.
+    /// This class overrides the DataContext property metadata for TElement, allowing it to coerce
+    /// DataContext value changes and attempt adaptation.
+    /// </summary>
+    /// <example>In order to use this class, call Initialize() before the framework element is used,
+    /// for example, in the static constructor:
+    /// <code>
     ///     static MyUserControl()
     ///     {
-    ///         DataContextAdapter<MyUserControl, MyViewModel>.Register();
+    ///         DataContextAdapter&lt;MyUserControl, MyViewModel&gt;.Register();
     ///     }
-    /// </summary>
+    /// </code>
+    /// </example>
     /// <typeparam name="Telement">Type of element</typeparam>
     /// <typeparam name="Tdata">Type to adapt data context to</typeparam>
     public static class DataContextAdapter<Telement, Tdata>
         where Telement : FrameworkElement
         where Tdata : class
     {
+        /// <summary>
+        /// Static constructor</summary>
         static DataContextAdapter()
         {
             FrameworkElement.DataContextProperty.OverrideMetadata(typeof(Telement),
@@ -33,8 +36,7 @@ namespace Sce.Atf.Wpf.Dom
         }
 
         /// <summary>
-        /// Force static init
-        /// </summary>
+        /// Function to force static initialization</summary>
         public static void Register()
         {
         }

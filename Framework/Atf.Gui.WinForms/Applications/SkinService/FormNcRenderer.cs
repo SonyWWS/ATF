@@ -446,6 +446,8 @@ namespace Sce.Atf.Applications
                 if (m_form.MinimizeBox)
                     m_captionButtons.Add(new CustomCaptionButton(HitTest.HTMINBUTTON));
             }
+            UpdateBounds();
+            UpdateCaptionButtons();
         }
         private Size GetCaptionButtonSize()
         {

@@ -108,7 +108,6 @@ namespace Sce.Atf.Controls.Adaptable
                 AdaptedControl.Focused)
             {
                 object pickedItem = null;
-                object pickedPart = null;
                 DiagramHitRecord hitRecord = null;
                 foreach (IPickingAdapter pickingAdapter in AdaptedControl.AsAll<IPickingAdapter>())
                 {
@@ -116,7 +115,6 @@ namespace Sce.Atf.Controls.Adaptable
                     if (hitRecord.Item != null)
                     {
                         pickedItem = hitRecord.Item;
-                        pickedPart = hitRecord.Part;
                         break;
                     }
                 }
@@ -128,8 +126,6 @@ namespace Sce.Atf.Controls.Adaptable
                         hitRecord = pickingAdapter.Pick(new Point(e.X, e.Y));
                         if (hitRecord.Item != null)
                         {
-                            pickedItem = hitRecord.Item;
-                            pickedPart = hitRecord.Part;
                             break;
                         }
                     }

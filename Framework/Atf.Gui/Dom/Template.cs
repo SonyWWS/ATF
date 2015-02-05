@@ -34,5 +34,5 @@ namespace Sce.Atf.Dom
         public abstract DomNode Target { get; set; }
 
         #endregion
-    }
+      }
 }

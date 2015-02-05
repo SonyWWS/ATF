@@ -72,9 +72,9 @@
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="eventType">
-        <xs:attribute name="name" type="xs:string" />
-        <xs:attribute name="length" type="xs:float" default ="1.0"/>
-        <xs:attribute name="color" type="xs:integer"/>
+        <xs:attribute name="name" type="xs:string" default="Interval"/>
+        <xs:attribute name="length" type="xs:float" default="5.0"/>
+        <xs:attribute name="color" type="xs:integer" default="-16776961"/> <!--blue-->
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -131,10 +131,10 @@
                                     editor="Sce.Atf.Controls.PropertyEditing.FileUriEditor,Atf.Gui.WinForms:Timeline files (*.timeline)|*.timeline"/>
       </xs:appinfo>
     </xs:annotation>
-    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" default="Reference"/>
     <xs:attribute name="start" type="xs:float"/>
     <xs:attribute name="description" type="xs:string"/>
-    <xs:attribute name="color" type="xs:integer" default="-32640"/>
+    <xs:attribute name="color" type="xs:integer" default="-32640"/><!--sort of a salmon color-->
     <xs:attribute name="ref" type="xs:anyURI" />
   </xs:complexType>
   

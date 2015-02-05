@@ -188,7 +188,7 @@ namespace Sce.Atf.Applications
 
             //Process the output as it is received, otherwise long scripts timeout because
             //the buffer fills up.
-            m_process.OutputDataReceived += new DataReceivedEventHandler(Process_OutputDataReceived);
+            m_process.OutputDataReceived += Process_OutputDataReceived;
             m_process.BeginOutputReadLine();
 
             return m_process;
@@ -330,16 +330,16 @@ namespace Sce.Atf.Applications
         protected string ExecuteStatementSafe(string statement, int timeoutInSec)
         {
             string result = null;
-            ThreadStart tStart = new ThreadStart(delegate()
+            ThreadStart tStart = delegate()
+            {
+                try
                 {
-                    try
-                    {
-                        result = m_automationService.ExecuteStatement(statement);
-                    }
+                    result = m_automationService.ExecuteStatement(statement);
+                }
                     //If this call does timeout, then an exception may cause a crash when the connection is forced closed
-                    catch (SocketException)
-                    { }
-                });
+                catch (SocketException)
+                { }
+            };
             Thread t = new Thread(tStart);
             t.Start();
 
@@ -378,16 +378,16 @@ namespace Sce.Atf.Applications
         protected string ExecuteScriptSafe(string scriptPath, int timeoutInSecs)
         {
             string result = null;
-            ThreadStart tStart = new ThreadStart(delegate()
+            ThreadStart tStart = delegate()
             {
                 try
                 {
                     result = m_automationService.ExecuteScript(scriptPath);
                 }
-                //If this call does timeout, then an exception may cause a crash when the connection is forced closed
+                    //If this call does timeout, then an exception may cause a crash when the connection is forced closed
                 catch (SocketException)
                 { }
-            });
+            };
             Thread t = new Thread(tStart);
             t.Start();
 

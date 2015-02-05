@@ -30,9 +30,13 @@ namespace Sce.Atf
                 if (translations.Count == 1)
                     return translations[0].Item2;
 
+                // Look for an exact context match.
                 int i = translations.FindIndex(pair => pair.Item1.Equals(context));
                 if (i >= 0)
                     return translations[i].Item2;
+
+                // The context in the database may be out of sync from the code. Any translation is better than none.
+                return translations[0].Item2;
             }
 
             return s;
@@ -59,7 +63,7 @@ namespace Sce.Atf
                 if (String.IsNullOrEmpty(translation))
                     continue;
 
-                // An asterisk substitites to the id.
+                // An asterisk substitutes to the id.
                 if (translation == "*")
                     translation = id;
 

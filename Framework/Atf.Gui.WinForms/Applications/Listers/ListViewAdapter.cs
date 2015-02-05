@@ -784,7 +784,6 @@ namespace Sce.Atf.Applications
                 IntPtr newColumn = new IntPtr(e.Column);
                 IntPtr prevColumn = new IntPtr(m_column);
                 User32.HDITEM hdItem;
-                IntPtr rtn;
 
                 if (m_column == e.Column)
                     m_direction = -m_direction;
@@ -793,15 +792,15 @@ namespace Sce.Atf.Applications
                     // Clear icon from the previous column.
                     hdItem = new User32.HDITEM();
                     hdItem.mask = User32.HDI_FORMAT;
-                    rtn = User32.SendMessageITEM(hHeader, User32.HDM_GETITEM, prevColumn, ref hdItem);
+                    User32.SendMessageITEM(hHeader, User32.HDM_GETITEM, prevColumn, ref hdItem);
                     hdItem.fmt &= ~User32.HDF_SORTDOWN & ~User32.HDF_SORTUP;
-                    rtn = User32.SendMessageITEM(hHeader, User32.HDM_SETITEM, prevColumn, ref hdItem);
+                    User32.SendMessageITEM(hHeader, User32.HDM_SETITEM, prevColumn, ref hdItem);
                 }
 
                 // Set icon on the new column.
                 hdItem = new User32.HDITEM();
                 hdItem.mask = User32.HDI_FORMAT;
-                rtn = User32.SendMessageITEM(hHeader, User32.HDM_GETITEM, newColumn, ref hdItem);
+                User32.SendMessageITEM(hHeader, User32.HDM_GETITEM, newColumn, ref hdItem);
                 if (m_direction == 1)
                 {
                     hdItem.fmt &= ~User32.HDF_SORTDOWN;
@@ -812,7 +811,7 @@ namespace Sce.Atf.Applications
                     hdItem.fmt &= ~User32.HDF_SORTUP;
                     hdItem.fmt |= User32.HDF_SORTDOWN;
                 }
-                rtn = User32.SendMessageITEM(hHeader, User32.HDM_SETITEM, newColumn, ref hdItem);
+                User32.SendMessageITEM(hHeader, User32.HDM_SETITEM, newColumn, ref hdItem);
               
 
                 m_column = e.Column;

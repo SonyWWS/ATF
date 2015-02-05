@@ -18,7 +18,7 @@ namespace SimpleDomEditorSample
         public GenericSelectionContext()
         {
             m_selection = new Selection<object>();
-            m_selection.Changed += new EventHandler(selection_Changed);
+            m_selection.Changed += selection_Changed;
 
             // suppress compiler warning
             if (SelectionChanging == null) return;

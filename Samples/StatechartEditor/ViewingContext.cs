@@ -40,8 +40,8 @@ namespace StatechartEditorSample
             {
                 if (m_control != null)
                 {
-                    m_control.SizeChanged -= new EventHandler(control_SizeChanged);
-                    m_control.VisibleChanged -= new EventHandler(control_VisibleChanged);
+                    m_control.SizeChanged -= control_SizeChanged;
+                    m_control.VisibleChanged -= control_VisibleChanged;
                 }
 
                 m_control = value;
@@ -50,8 +50,8 @@ namespace StatechartEditorSample
                 if (m_control != null)
                 {
                     m_layoutConstraints = m_control.AsAll<ILayoutConstraint>();
-                    m_control.SizeChanged += new EventHandler(control_SizeChanged);
-                    m_control.VisibleChanged += new EventHandler(control_VisibleChanged);
+                    m_control.SizeChanged += control_SizeChanged;
+                    m_control.VisibleChanged += control_VisibleChanged;
                 }
 
                 SetCanvasBounds();
@@ -94,8 +94,8 @@ namespace StatechartEditorSample
         /// <returns>Bounding rectangle of all statechart items in client coordinates</returns>
         public Rectangle GetBounds()
         {
-            List<object> items = new List<object>(Adapters.AsIEnumerable<object>(m_statechart.States));
-            items.AddRange(Adapters.AsIEnumerable<object>(m_document.Annotations));
+            List<object> items = new List<object>(m_statechart.States.AsIEnumerable<object>());
+            items.AddRange(m_document.Annotations.AsIEnumerable<object>());
             Rectangle bounds = GetBounds(items);
             return bounds;
         }
@@ -161,14 +161,14 @@ namespace StatechartEditorSample
         /// <returns>Value indicating which parts of bounding rectangle are meaningful</returns>
         BoundsSpecified ILayoutContext.GetBounds(object item, out Rectangle bounds)
         {
-            StateBase stateBase = Adapters.As<StateBase>(item);
+            StateBase stateBase = item.As<StateBase>();
             if (stateBase != null)
             {
                 bounds = stateBase.Bounds;
                 return BoundsSpecified.All;
             }
 
-            Annotation annotation = Adapters.As<Annotation>(item);
+            Annotation annotation = item.As<Annotation>();
             if (annotation != null)
             {
                 bounds = annotation.Bounds;
@@ -186,7 +186,7 @@ namespace StatechartEditorSample
         /// <returns>Value indicating which parts of the item's bounds can be set</returns>
         BoundsSpecified ILayoutContext.CanSetBounds(object item)
         {
-            StateBase stateBase = Adapters.As<StateBase>(item);
+            StateBase stateBase = item.As<StateBase>();
             if (stateBase != null)
             {
                 if (stateBase is State)
@@ -195,7 +195,7 @@ namespace StatechartEditorSample
                     return BoundsSpecified.Location;
             }
 
-            if (Adapters.Is<Annotation>(item))
+            if (item.Is<Annotation>())
                 return BoundsSpecified.Location;
 
             return BoundsSpecified.None;

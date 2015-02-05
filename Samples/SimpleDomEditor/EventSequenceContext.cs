@@ -45,9 +45,9 @@ namespace SimpleDomEditorSample
         /// Raises the HistoryContext NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(DomNode_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(DomNode_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(DomNode_ChildRemoved);
+            DomNode.AttributeChanged += DomNode_AttributeChanged;
+            DomNode.ChildInserted += DomNode_ChildInserted;
+            DomNode.ChildRemoved += DomNode_ChildRemoved;
 
             m_listViewAdapter = new ListViewAdapter(m_listView);
             m_listViewAdapter.AllowSorting = true;
@@ -91,7 +91,7 @@ namespace SimpleDomEditorSample
         /// Gets names for table columns</summary>
         public string[] ColumnNames
         {
-            get { return new string[] { Localizer.Localize("Name"), Localizer.Localize("Duration") }; }
+            get { return new string[] { "Name".Localize(), "Duration".Localize() }; }
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace SimpleDomEditorSample
         /// <param name="info">Display info to update</param>
         public void GetInfo(object item, ItemInfo info)
         {
-            Event _event = Adapters.As<Event>(item);
+            Event _event = item.As<Event>();
             info.Label = _event.Name;
             info.ImageIndex = info.GetImageList().Images.IndexOfKey(Resources.EventImage);
             info.Properties = new object[] { _event.Duration };
@@ -176,7 +176,7 @@ namespace SimpleDomEditorSample
                 return false;
 
             foreach (object item in items)
-                if (!Adapters.Is<Event>(item))
+                if (!item.Is<Event>())
                     return false;
 
             return true;
@@ -192,9 +192,9 @@ namespace SimpleDomEditorSample
             if (items == null)
                 return;
 
-            DomNode[] itemCopies = DomNode.Copy(Adapters.AsIEnumerable<DomNode>(items));
+            DomNode[] itemCopies = DomNode.Copy(items.AsIEnumerable<DomNode>());
             IList<Event> events = this.Cast<EventSequence>().Events;
-            foreach (Event _event in Adapters.AsIEnumerable<Event>(itemCopies))
+            foreach (Event _event in itemCopies.AsIEnumerable<Event>())
                 events.Add(_event);
 
             Selection.SetRange(itemCopies);

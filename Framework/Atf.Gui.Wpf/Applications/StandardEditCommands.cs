@@ -42,7 +42,7 @@ namespace Sce.Atf.Wpf.Applications
                 "Cut".Localize("Cut the selection and place it on the clipboard"),
                 "Cut the selection and place it on the clipboard".Localize(),
                 Keys.X | Keys.Control,
-                null,
+                Sce.Atf.Resources.CutImage,
                 CommandVisibility.ApplicationMenu | CommandVisibility.ContextMenu | CommandVisibility.Menu,
                 this);
 
@@ -53,7 +53,7 @@ namespace Sce.Atf.Wpf.Applications
                 "Copy".Localize("Copy the selection and place it on the clipboard"),
                 "Copy the selection and place it on the clipboard".Localize(),
                 Keys.C | Keys.Control,
-                null,
+                Sce.Atf.Resources.CopyImage,
                 CommandVisibility.ApplicationMenu | CommandVisibility.ContextMenu | CommandVisibility.Menu,
                 this);
 
@@ -64,7 +64,7 @@ namespace Sce.Atf.Wpf.Applications
                 "Paste".Localize("Paste the contents of the clipboard and make that the new selection"),
                 "Paste the contents of the clipboard and make that the new selection".Localize(),
                 Keys.V | Keys.Control,
-                null,
+                Sce.Atf.Resources.PasteImage,
                 CommandVisibility.ApplicationMenu | CommandVisibility.ContextMenu | CommandVisibility.Menu,
                 this);
 
@@ -75,7 +75,7 @@ namespace Sce.Atf.Wpf.Applications
                 "Delete".Localize("Delete the selection"),
                 "Delete the selection".Localize(),
                 Keys.Delete,
-                null,
+                Sce.Atf.Resources.DeleteImage,
                 CommandVisibility.ApplicationMenu | CommandVisibility.ContextMenu | CommandVisibility.Menu,
                 this);
         }
@@ -473,7 +473,11 @@ namespace Sce.Atf.Wpf.Applications
             OnDeleted(EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Get ICommandService for edit commands</summary>
         protected ICommandService CommandService { get { return m_commandService; } }
+        /// <summary>
+        /// Get IContextRegistry for edit commands</summary>
         protected IContextRegistry ContextRegistry { get { return m_contextRegistry; } }
 
         private readonly ICommandService m_commandService;

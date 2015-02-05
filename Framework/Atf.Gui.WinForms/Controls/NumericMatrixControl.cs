@@ -58,29 +58,26 @@ namespace Sce.Atf.Controls
             m_rows = rows;
             m_columns = columns;
 
-            for (int i = 0; i < Controls.Count; )
-            {
-                Control control = Controls[0];
-                control.Parent = null;
-                control.Dispose();
-            }
+            while (Controls.Count > 0)
+                Controls[0].Dispose();
 
             SuspendLayout();
-            NumericTextBox textBox = null;
+
+            // custom tab handling.
+            TabStop = false;            
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    textBox = new NumericTextBox(m_numericType);
-                    textBox.BorderStyle = BorderStyle.None;
+                    var textBox = new NumericTextBox(m_numericType);
+                    textBox.TabStop = false;
+                    textBox.BorderStyle = BorderStyle.FixedSingle;
                     textBox.Name = "M" + i + j;                                      
                     textBox.ScaleFactor = m_scaleFactor;
                     textBox.ValueEdited += textBox_ValueEdited;
                     Controls.Add(textBox);
                 }
-            }
-            // TODO needs dpi adjustment
-            Size = new Size(80 * columns, textBox.Height * rows - 1);
+            }            
             ResumeLayout();
         }
 
@@ -197,28 +194,26 @@ namespace Sce.Atf.Controls
         /// <param name="e">An <see cref="T:System.EventArgs"></see> that contains the event data</param>
         protected override void OnResize(EventArgs e)
         {
-            int desiredHeight = (Controls[0].Height + 1) * m_rows;
-            if (Height != desiredHeight)
-                Height = desiredHeight;
-
+            UpdateHeight();
             SuspendLayout();
-
-            int width = Width - Margin.Left - Margin.Right;
-            m_coordinateWidth = width / m_columns;
-
-            int y = Margin.Top;
+            
+            int cellWidth = ClientSize.Width / m_columns;
+            int rowHeight = Controls[0].Height;
+            int y = 0;
             for (int i = 0; i < m_rows; i++)
-            {
-                NumericTextBox textBox = null;
-                int x = Margin.Left;
+            {                
+                int x = 0;
                 for (int j = 0; j < m_columns; j++)
                 {
-                    textBox = Controls[i * m_columns + j] as NumericTextBox;
-                    textBox.Bounds = new Rectangle(x + 1, y, m_coordinateWidth - 2, textBox.Height);
-                    x += m_coordinateWidth + 1;
+                    // give remaining width to last cell in each row.
+                    int w = j == m_columns - 1 ? ClientSize.Width - x : cellWidth;
+
+                    var textBox = Controls[i * m_columns + j] as NumericTextBox;
+                    textBox.Bounds = new Rectangle(x , y, w , textBox.Height);
+                    x += cellWidth - 1;
                 }
 
-                y += textBox.Height + 1;
+                y += rowHeight-1;
             }
 
             ResumeLayout(true);
@@ -226,33 +221,18 @@ namespace Sce.Atf.Controls
             base.OnResize(e);
         }
 
-        
-
         /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Control.Paint"></see> event</summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data</param>
-        protected override void OnPaint(PaintEventArgs e)
+        /// Updates control</summary>
+        /// <param name="e">Event arguments</param>
+        protected override void OnFontChanged(EventArgs e)
         {
-            base.OnPaint(e);
+            // copied from PropertyView's OnFontChanged().
+            // Call the base first so that FontHeight is updated before we call UpdateRowHeight().
+            base.OnFontChanged(e);
 
-            int y = Margin.Top;
-            NumericTextBox textBox = Controls[0] as NumericTextBox; ;
-            for (int i = 0; i < m_rows - 1; i++)
-            {
-                y += textBox.Height;
-                e.Graphics.DrawLine(SystemPens.Control, 0, y, Width, y);
-                ++y;
-            }
-
-            int x = Margin.Left;
-            
-            for (int j = 0; j < m_columns; ++j)
-            {
-                x += (m_coordinateWidth);
-                e.Graphics.DrawLine(SystemPens.Control, x, 0, x, Height);
-                x += 1;
-
-            }
+            UpdateHeight();            
+            PerformLayout();
+            Invalidate();
         }
 
         /// <summary>
@@ -323,6 +303,12 @@ namespace Sce.Atf.Controls
             get { return m_component; }
         }
 
+        private void UpdateHeight()
+        {
+            if (Controls.Count > 0)
+                Height = m_rows * (Controls[0].Height - 1) + 1;
+        }
+
         private void textBox_ValueEdited(object sender, EventArgs e)
         {
             NumericTextBox textbox = (NumericTextBox)sender;
@@ -371,7 +357,7 @@ namespace Sce.Atf.Controls
         private Array m_lastChange;
         private Array m_lastEdit;
         private int m_component;
-        private int m_coordinateWidth;
+      //  private int m_coordinateWidth;
         private bool m_editing;
     }
 }

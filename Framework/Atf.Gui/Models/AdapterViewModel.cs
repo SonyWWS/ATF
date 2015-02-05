@@ -25,6 +25,8 @@ namespace Sce.Atf.Models
         {
         }
 
+        /// <summary>
+        /// Get adapter object</summary>
         [Browsable(false)]
         public object As
         {
@@ -65,11 +67,15 @@ namespace Sce.Atf.Models
 
         #endregion
 
+        /// <summary>
+        /// Raise PropertyChanged event</summary>
+        /// <param name="propertyName">Name of changed property</param>
         protected virtual void RaisePropertyChanged(string propertyName)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>Handle PropertyChanged event</summary>
         /// <param name="e">PropertyChangedEventArgs for event</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {

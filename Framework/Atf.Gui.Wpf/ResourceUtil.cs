@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 namespace Sce.Atf.Wpf
 {
     /// <summary>
-    /// Resource keys for styles and images</summary>
+    /// Resource utility extension methods</summary>
     public static class ResourceUtil
     {
         /// <summary>
@@ -64,7 +64,7 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        /// Gets the ResourceKey, if available, from the image name. This allows WPF apps to use both
+        /// Gets the ResourceKey, if available, from the image name. This allows WPF applications to use both
         /// WPF-based resources and embedded WinForms style resources.</summary>
         /// <remarks>
         /// WPF resources in Atf.Gui.Wpf, and any other WPF resources explicitly registered by calling 
@@ -75,7 +75,7 @@ namespace Sce.Atf.Wpf
         /// usage in CommandService.RegisterCommandInfo, which allows both WPF and WinForms resources
         /// to be used as menu/toolbar icons.</remarks>
         /// <param name="imageName">Name of the image</param>
-        /// <returns>The image's resource key if it exists, otherwise returns imageName.</returns>
+        /// <returns>The image's resource key if it exists, otherwise returns imageName</returns>
         public static object GetKeyFromImageName(string imageName)
         {
             if (s_resourceKeys.ContainsKey(imageName))
@@ -91,7 +91,7 @@ namespace Sce.Atf.Wpf
         /// <returns>The value returned by the value.Invoke call</returns>
         /// <remarks>
         /// For example:
-        ///     var company = assembly.GetAssemblyAttribute<AssemblyCompanyAttribute>(v => v.Company);
+        ///     var company = assembly.GetAssemblyAttribute&lt;AssemblyCompanyAttribute&gt;(v => v.Company);
         /// </remarks>
         public static string GetAssemblyAttribute<T>(this Assembly assembly, Func<T, string> value)
             where T : Attribute
@@ -107,6 +107,25 @@ namespace Sce.Atf.Wpf
         public static ImageSource GetImage(string name)
         {
             return string.IsNullOrEmpty(name) ? null : Application.Current.Resources[name] as ImageSource;
+        }
+
+        /// <summary>
+        /// Converts a WinForms style image resource to a WPF BitmapImage</summary>
+        /// <param name="winFormsImage">The WinForms resource</param>
+        /// <returns>The converted bitmap</returns>
+        public static BitmapImage ConvertWinFormsImage(System.Drawing.Image winFormsImage)
+        {
+            if (winFormsImage == null) return null;
+
+            MemoryStream stream = new MemoryStream();
+            winFormsImage.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = new MemoryStream(stream.ToArray());
+            bitmapImage.EndInit();
+
+            return bitmapImage;
         }
 
         private static bool TryGetImageResource(Type owningType, FieldInfo field, ResourceDictionary imageResources, string subPath)

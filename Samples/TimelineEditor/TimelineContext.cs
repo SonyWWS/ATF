@@ -569,7 +569,7 @@ namespace TimelineEditorSample
             HashSet<DomNode> set = new HashSet<DomNode>();
             foreach (object item in items)
             {
-                DomNode node = Adapters.As<DomNode>(item);
+                DomNode node = item.As<DomNode>();
                 if (node != null && !set.Contains(node))
                     set.Add(node);
             }
@@ -674,7 +674,6 @@ namespace TimelineEditorSample
             ITimelineReference reference = droppedItem.As<ITimelineReference>();
             if (reference != null)
             {
-                reference.Name = "Reference";
                 ((Timeline)targetTimeline).AddReference(reference);
                 return;
             }

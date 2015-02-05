@@ -43,7 +43,7 @@ namespace Sce.Atf
     public static class TypeUtil
     {
         /// <summary>
-        /// Gets a PropertyInfo (for access to property metadata) from a type and
+        /// Get a PropertyInfo (for access to property metadata) from a type and
         /// a lambda expression containing a property of the type</summary>
         /// <typeparam name="T">Type whose property changes</typeparam>
         /// <param name="propertySelector">Lambda expression containing the property</param>
@@ -93,6 +93,11 @@ namespace Sce.Atf
             return propertyInfo;
         }
 
+        /// <summary>
+        /// Get a PropertyInfo (for access to property metadata) from
+        /// a lambda expression containing a property</summary>
+        /// <param name="propertySelector">Lambda expression containing the property</param>
+        /// <returns>PropertyInfo from the property</returns>
         public static PropertyInfo GetPropertyInfo(Expression<Func<object>> propertySelector)
         {
             PropertyInfo propertyInfo = null;
@@ -123,6 +128,11 @@ namespace Sce.Atf
             return propertyInfo;
         }
 
+        /// <summary>
+        /// Get a PropertyDescriptor from a lambda expression containing a property</summary>
+        /// <typeparam name="T">Type whose property changes</typeparam>
+        /// <param name="propertySelector">Lambda expression containing the property</param>
+        /// <returns>PropertyDescriptor from property</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static PropertyDescriptor GetPropertyDescriptor<T>(Expression<Func<T, object>> propertySelector)
         {

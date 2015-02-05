@@ -15,16 +15,19 @@ using Sce.Atf.Applications;
 namespace Sce.Atf.Wpf.Behaviors
 {
     /// <summary>
-    /// Base class for Selection Behaviors
-    /// Can be used on Selectors or TreeViews
-    /// </summary>
+    /// Base class for Selection Behaviors.
+    /// Can be used on Selectors or TreeViews</summary>
     public abstract class SelectionBehaviorBase : Behavior<Selector>
     {
+        /// <summary>
+        /// Selection context dependency property</summary>
         public static readonly DependencyProperty SelectionContextProperty =
             DependencyProperty.Register("SelectionContext", 
                 typeof(ISelectionContext), typeof(SelectionBehaviorBase), 
                     new PropertyMetadata(default(ISelectionContext), SelectionContextPropertyChanged));
 
+        /// <summary>
+        /// Get or set selection context dependency property</summary>
         public ISelectionContext SelectionContext
         {
             get { return (ISelectionContext)GetValue(SelectionContextProperty); }
@@ -36,9 +39,13 @@ namespace Sce.Atf.Wpf.Behaviors
            ((SelectionBehaviorBase)d).ChangedContext(e.OldValue as ISelectionContext);
         }
 
+        /// <summary>
+        /// Whether to enable selection dependency property</summary>
         public static readonly DependencyProperty EnableSelectionClearProperty =
             DependencyProperty.Register("EnableSelectionClear", typeof(bool), typeof(SelectionBehaviorBase));
 
+        /// <summary>
+        /// Get or set enable selection dependency property</summary>
         public bool EnableSelectionClear
         {
             get { return (bool)GetValue(EnableSelectionClearProperty); }
@@ -66,7 +73,9 @@ namespace Sce.Atf.Wpf.Behaviors
         }
 
         #region Overrides
-        
+
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -75,6 +84,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewMouseDown += SelectorMouseDown;
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
@@ -87,18 +98,25 @@ namespace Sce.Atf.Wpf.Behaviors
 
         #region Virtuals
 
+        /// <summary>
+        /// Handle AssociatedObjectSelectionChanged event</summary>
         protected virtual void OnSelectionContextChanged()
         {
         }
 
+        /// <summary>
+        /// Handle SelectionContextSelectionChanging event</summary>
         protected virtual void OnSelectionContextSelectionChanging()
         {
         }
 
+        /// <summary>
+        /// Handle SelectionContextSelectionChanged event</summary>
         protected virtual void OnSelectionContextSelectionChanged()
         {
         }
 
+        /// <summary>Handle AssociatedObjectSelectionChanged event</summary>
         /// <param name="addeditems">List of items added</param>
         /// <param name="removedItems">List of items removed</param>
         protected virtual void OnAssociatedObjectSelectionChanged(IList addeditems, IList removedItems)
@@ -156,6 +174,8 @@ namespace Sce.Atf.Wpf.Behaviors
     {
         #region Overrides
 
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -401,10 +421,19 @@ namespace Sce.Atf.Wpf.Behaviors
         #endregion
     }
 
+    /// <summary>
+    /// Adapter for TwoWaySelectionBehavior</summary>
     public class AdaptingTwoWaySelectionBehavior : TwoWaySelectionBehavior
     {
+        /// <summary>
+        /// Get or set adapter Type</summary>
         public Type AdapterType { get; set; }
 
+        /// <summary>
+        /// Adapt item to AdapterType</summary>
+        /// <exception cref="InvalidOperationException"> if AdapterType not set</exception>
+        /// <param name="item">Item to adapt</param>
+        /// <returns>Adapter for item of AdapterType</returns>
         protected override object ConvertFromSelectionContext(object item)
         {
             if (AdapterType == null)

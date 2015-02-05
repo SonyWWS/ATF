@@ -6,11 +6,15 @@
 #	directory and going up the directory hierarchy until a directory name containing "atf" is
 #	found.
 # Paths with spaces in them need double quotes around the path.
-..\..\bin\wws_atf\Debug.vs2010\Atf.Core.dll Framework\Atf.Core\Resources\Localization.xml
-"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.dll" "Framework\Atf.Gui\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.OpenGL.dll" "Framework\Atf.Gui.OpenGL\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.WinForms.dll" "Framework\Atf.Gui.WinForms\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.Wpf.dll" "Framework\Atf.Gui.Wpf\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\Atf.Perforce.dll" "Framework\Atf.Perforce\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\CircuitEditor.exe" "Samples\CircuitEditor\Resources\Localization.xml"
-"..\..\bin\wws_atf\Debug.vs2010\TimelineEditor.exe" "Samples\TimelineEditor\Resources\Localization.xml"
+# The paths below are intended for the Subversion directory layout. For GitHub, replace "..\..\bin"
+#   with ".\bin".
+#..\..\bin\wws_atf\Debug.vs2010\Atf.Core.dll Framework\Atf.Core\Resources\Localization.xml
+#"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.dll" "Framework\Atf.Gui\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.OpenGL.dll" "Framework\Atf.Gui.OpenGL\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.WinForms.dll" "Framework\Atf.Gui.WinForms\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.Wpf.dll" "Framework\Atf.Gui.Wpf\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\Atf.Perforce.dll" "Framework\Atf.Perforce\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\CircuitEditor.exe" "Samples\CircuitEditor\Resources\Localization.xml"
+#"..\..\bin\wws_atf\Debug.vs2010\TimelineEditor.exe" "Samples\TimelineEditor\Resources\Localization.xml"
+#"..\..\bin\wws_leveleditor\Debug.vs2010\LevelEditor.exe" "..\wws_leveleditor\LevelEditor\Resources\Localization.xml"
+"..\..\bin\wws_atf\Debug.vs2010\CodeEditor.exe" "Samples\CodeEditor\Resources\Localization.xml"

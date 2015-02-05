@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
@@ -52,10 +53,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             m_name = name;
             m_isConnector = isConnector;
-            m_size = size;
+            //m_size = size;
             m_image = image;
-            m_inputPins = inputPins;
-            m_outputPins = outputPins;
+            m_inputPins = inputPins.OrderBy(n => n.Index).ToArray();
+            m_outputPins = outputPins.OrderBy(n => n.Index).ToArray();
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private string m_name;
         private ICircuitPin[] m_inputPins;
         private ICircuitPin[] m_outputPins;
-        private Size m_size;
+        //private Size m_size;
         private Image m_image;
         private bool m_isConnector;
     }

@@ -22,7 +22,9 @@ namespace UnitTests.Atf.Dom
             test.BaseType = baseType;
             Assert.AreEqual(test.BaseType, baseType);
 
+            #pragma warning disable 219 //Disable the unused local variable warning. We need the side-effect of creating the DomNode.
             DomNode node = new DomNode(test);
+            #pragma warning restore 219
             // base type is now frozen
             Assert.Throws<InvalidOperationException>(delegate { test.BaseType = new DomNodeType("newBase"); });
 
@@ -37,6 +39,7 @@ namespace UnitTests.Atf.Dom
             test.BaseType = baseType;
             Assert.AreEqual(test.BaseType, baseType);
 
+            // ReSharper disable once RedundantAssignment
             node = new DomNode(test);
             Assert.Throws<InvalidOperationException>(delegate { test.BaseType = new DomNodeType("newBase"); });
         }

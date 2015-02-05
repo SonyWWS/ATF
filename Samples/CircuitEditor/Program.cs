@@ -89,7 +89,7 @@ namespace CircuitEditorSample
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
                                                         //  Reset All, Copy Value, Paste Value, Copy All, Paste All
 
-                typeof(HistoryLister),                  // vistual list of undo/redo stack
+                typeof(HistoryLister),                  // visual list of undo/redo stack
                 typeof(PrototypeLister),                // editable palette of instantiable item groups
                 typeof(LayerLister),                    // editable tree view of layers
 
@@ -98,20 +98,17 @@ namespace CircuitEditorSample
                 typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.
                 typeof(DomRecorder),                    // records and displays changes to the DOM for diagnostic purposes
 
-                typeof(DiagramTheme),                   // rendering theme for diagrams
-
                 typeof(Editor),                         // editor which manages circuit documents and controls
                 typeof(SchemaLoader),                   // loads circuit schema and extends types
                 typeof(GroupingCommands),               // circuit group/ungroup commands
                 typeof(CircuitControlRegistry),         // circuit controls management
-                typeof(MasteringCommands),              // circuit master/unmaster commands
                 typeof(LayeringCommands),               // "Add Layer" command
                 typeof(GraphViewCommands),              // zooming with presets
                 typeof(PerformanceMonitor),             // displays the frame rate and memory usage
                 typeof(DefaultTabCommands),             // provides the default commands related to document tab Controls
                 typeof(ModulePlugin),                   // component that defines circuit module types
                 typeof(TemplateLister),                 // template library for subgraph referencing or instancing 
-                typeof(TemplatingCommands),             // commands for promoting/depromoting graph elements to/from template library 
+                typeof(TemplatingCommands),             // commands for promoting/demoting graph elements to/from template library 
                 //typeof(TemplatingSupervisor),         // templated instances copy-on-edit support(optionally)
 
                 typeof(AnnotatingCommands),             // annotating commands

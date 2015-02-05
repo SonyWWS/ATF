@@ -9,9 +9,17 @@ using Sce.Atf.Adaptation;
 
 namespace Sce.Atf.Dom
 {
+    /// <summary>
+    /// DomNodeListAdapter with methods to facilitate observing changes and handling a list</summary>
+    /// <typeparam name="T">Adapted list item type that adapts a DomNode or is a DomNode.
+    /// Should implement IAdaptable. Examples include DomNodeAdapter, DomNode, and IAdapter.</typeparam>
     public class ObservableDomNodeListAdapter<T> : DomNodeListAdapter<T>, IObservableCollection<T>, IObservableCollection
         where T : class
     {
+        /// <summary>
+        /// Constructor with DomNode and ChildInfo</summary>
+        /// <param name="node">Node to observe</param>
+        /// <param name="childInfo">Node ChildInfo</param>
         public ObservableDomNodeListAdapter(DomNode node, ChildInfo childInfo)
             : base(node, childInfo)
         {
@@ -21,23 +29,18 @@ namespace Sce.Atf.Dom
             node.ChildRemoved += Node_ChildRemoved;
         }
 
-        #region IEnumerable Members
-
-        public new IEnumerator GetEnumerator()
-        {
-            return base.GetEnumerator();
-        }
-
-        #endregion
-
         #region INotifyPropertyChanged Members
 
+        /// <summary>
+        /// PropertyChanged event</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
         #region INotifyCollectionChanged Members
 
+        /// <summary>
+        /// CollectionChanged event</summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         #endregion
@@ -67,6 +70,9 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Handle CollectionChanged event</summary>
+        /// <param name="e">Notify CollectionChanged event arguments</param>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             var handler = CollectionChanged;
@@ -76,6 +82,9 @@ namespace Sce.Atf.Dom
             }
         }
 
+        /// <summary>
+        /// Handle PropertyChanged event</summary>
+        /// <param name="e">PropertyChanged event arguments</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             var handler = PropertyChanged;
@@ -83,15 +92,6 @@ namespace Sce.Atf.Dom
             {
                 handler(this, e);
             }
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return base.GetEnumerator();
         }
 
         #endregion

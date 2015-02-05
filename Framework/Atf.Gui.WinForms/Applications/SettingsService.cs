@@ -194,7 +194,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Registers persistent application settings</summary>
-        /// <param name="uid">Unique identifer for settings</param>
+        /// <param name="uid">Unique identifier for settings</param>
         /// <param name="settings">The property descriptors that have the ability to get and set the
         /// setting when 'null' is passed into their GetValue and SetValue methods.
         /// BoundPropertyDescriptor does this.</param>
@@ -361,7 +361,6 @@ namespace Sce.Atf.Applications
         public void SaveSettings()
         {
             string tempNew = string.Empty;
-            string tempBackup = Path.Combine(Path.GetDirectoryName(m_settingsPath), "~Settings.xml");
 
             string mutexName = GetMutexName(m_settingsPath);
             using (Mutex saveMutex = new Mutex(false, mutexName))
@@ -376,8 +375,14 @@ namespace Sce.Atf.Applications
                     using (Stream stream = File.Create(tempNew))
                         Serialize(stream);
 
+                    // Make sure the settings directory exists. Do nothing if it already exists.
+                    string settingsDir = Path.GetDirectoryName(m_settingsPath);
+                    Directory.CreateDirectory(settingsDir);
+
                     // Erase old backup (if any) and move current settings file (if any).
-                    File.Delete(tempBackup);
+                    string tempBackup = Path.Combine(settingsDir, "~Settings.xml");
+                    if (File.Exists(tempBackup)) // seems unnecessary, but Dan put this check in the WPF version --Ron
+                        File.Delete(tempBackup);
                     if (File.Exists(m_settingsPath))
                         File.Move(m_settingsPath, tempBackup);
 
@@ -390,6 +395,10 @@ namespace Sce.Atf.Applications
                     // Catch and ignore TargetInvocationException happening if Windows
                     // is shut down with the application still running.
                     // TO DO: Find a way to successfully save settings and exit on shutdown.
+                }
+                catch (Exception ex)
+                {
+                    Outputs.WriteLine(OutputMessageType.Error, ex.Message);
                 }
                 finally
                 {
@@ -735,7 +744,7 @@ namespace Sce.Atf.Applications
                 }
             }
 
-            if (string.IsNullOrEmpty(valueString))
+            if (valueString==null)
                 return;
 
             XmlDocument xmlDoc = block.OwnerDocument;

@@ -30,12 +30,6 @@ namespace Sce.Atf.Atgi
         /// <returns>Root element metadata for the reader's current XML node</returns>
         protected override ChildInfo CreateRootElement(XmlReader reader, Uri rootUri)
         {
-            string fileNameForm = reader.GetAttribute("filenameform");
-            if (fileNameForm != null)
-            {
-                m_relativeFilePaths = (fileNameForm == "atgrootrelative");
-            }
-
             // ignore the ATGI version in the document, and use the loaded ATGI schema instead
             AtgiSchemaTypeLoader atgiSchemaTypeLoader = TypeLoader as AtgiSchemaTypeLoader;
             if (atgiSchemaTypeLoader != null)
@@ -153,7 +147,5 @@ namespace Sce.Atf.Atgi
         //    }
         //    return false;
         //}
-
-        private bool m_relativeFilePaths = true;
     }
 }

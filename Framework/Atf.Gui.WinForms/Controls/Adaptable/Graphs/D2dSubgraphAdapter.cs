@@ -100,22 +100,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Items that overlap with the rectangle, in client coordinates</returns>
         public override IEnumerable<object> Pick(Rectangle pickRect)
         {
-#if CS_4
             Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
             RectangleF rect = D2dUtil.Transform(invXform, pickRect);
             IEnumerable<object> pickedGraphNodes = base.Pick(pickRect);
-#else
-            // workaround a C#3 compiler bug( CS1911 warning)
-            Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
-            RectangleF rect = D2dUtil.Transform(invXform, pickRect);
-            List<object> pickedGraphNodes = new List<object>();
-            foreach (TNode node in m_graph.Nodes)
-            {
-                RectangleF nodeBounds = m_renderer.GetBounds(node, m_d2dGraphics); // in graph space
-                if (nodeBounds.IntersectsWith(rect))
-                    pickedGraphNodes.Add(node);
-            }
-#endif
             foreach (var pickedGraphNode in pickedGraphNodes) 
                 yield return pickedGraphNode;
            

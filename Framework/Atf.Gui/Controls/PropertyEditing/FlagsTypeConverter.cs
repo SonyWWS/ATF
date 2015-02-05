@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Sce.Atf.Controls.PropertyEditing
@@ -109,7 +110,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <returns>True iff this instance can convert to the specified context</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)
         {
-            return destType == typeof(string);
+            return destType == typeof(string)
+                || destType == typeof(int)
+                || destType == typeof(uint);
         }
 
         /// <summary>Converts the given value object to the specified type, using the specified
@@ -124,10 +127,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                 object value,
                 Type destType)
         {
-            if (value is int && destType == typeof(string))
+            if ((value is int || value is uint) && destType == typeof(string))
             {
                 // int to string
-                int flagsValue = (int)value;
+                int flagsValue = Convert.ToInt32(value);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < m_values.Length; i++)
                 {
@@ -162,6 +165,20 @@ namespace Sce.Atf.Controls.PropertyEditing
                 }
                 return displayNames;
             }
+            else if (value is string && destType == typeof(int))
+            {
+                string[] internalNames = ((string)value).Split('|');
+
+                int result = internalNames.Aggregate(0, (current, internalName) => current | GetValue(internalName));
+                return result;
+            }
+            else if (value is string && destType == typeof(uint))
+            {
+                string[] internalNames = ((string)value).Split('|');
+
+                int result = internalNames.Aggregate(0, (current, internalName) => current | GetValue(internalName));
+                return Convert.ToUInt32(result);
+            }
 
             return base.ConvertTo(context, culture, value, destType);
         }
@@ -184,6 +201,16 @@ namespace Sce.Atf.Controls.PropertyEditing
                     return m_displayNames[i];
             }
             return null;
+        }
+
+        private int GetValue(string internalName)
+        {
+            for (int i = 0; i < m_names.Length; i++)
+            {
+                if (m_names[i] == internalName)
+                    return m_values[i];
+            }
+            return 0;
         }
 
         #region IAnnotatedParams Members

@@ -38,7 +38,7 @@ namespace Sce.Atf.Models
         public CheckedTreeNode(object value, string name, bool? isChecked, bool isEnabled)
         {
             Children = new ObservableCollection<CheckedTreeNode>();
-            Children.CollectionChanged += new NotifyCollectionChangedEventHandler(Children_CollectionChanged);
+            Children.CollectionChanged += Children_CollectionChanged;
             Value = value;
             Name = name;
             IsChecked = isChecked;

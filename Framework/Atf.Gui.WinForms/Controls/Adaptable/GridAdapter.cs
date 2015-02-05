@@ -178,12 +178,6 @@ namespace Sce.Atf.Controls.Adaptable
             float intensity = ((float)gridColor.R + (float)gridColor.G + (float)gridColor.B) / 3;
             float shading =  (intensity < 128) ? m_gridContrast : -m_gridContrast;
             m_gridColor = ColorUtil.GetShade(gridColor, 1 + shading);
-            var d2dAdaptable = AdaptedControl as D2dAdaptableControl;
-            if (d2dAdaptable != null)
-            {
-                var gridPen = d2dAdaptable.D2dGraphics.CreateSolidBrush(m_gridColor);
-              //  d2dAdaptable.Theme.GridPen = gridPen;
-            }
             Invalidate();
         }
 
@@ -227,7 +221,6 @@ namespace Sce.Atf.Controls.Adaptable
 
                 Matrix transform = m_transformAdapter.Transform;
                 RectangleF clientRect = AdaptedControl.ClientRectangle;
-                RectangleF canvasRect = GdiUtil.InverseTransform(transform, clientRect);
                 
                 // draw horizontal lines
                // ChartUtil.DrawHorizontalGrid(transform, canvasRect, m_verticalGridSpacing, d2dControl.Theme.GridPen, d2dControl.D2dGraphics);

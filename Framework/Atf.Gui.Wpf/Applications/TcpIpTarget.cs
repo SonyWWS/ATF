@@ -144,8 +144,8 @@ namespace Sce.Atf.Wpf.Applications
         }
 
         /// <summary>
-        /// Gets a hash code based on the Host and HardwareId properties.</summary>
-        /// <returns></returns>
+        /// Gets a hash code based on the Host and HardwareId properties</summary>
+        /// <returns>Hash code based on the Host and HardwareId properties</returns>
         public override int GetHashCode()
         {
             int hash = 0;
@@ -172,7 +172,7 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Restores the target's properties from XML</summary>
-        /// <param name="reader"></param>
+        /// <param name="reader">XmlReader to use</param>
         public void ReadXml(XmlReader reader)
         {
             Name = reader.GetAttribute("name");
@@ -184,7 +184,7 @@ namespace Sce.Atf.Wpf.Applications
 
         /// <summary>
         /// Serializes the target's properties to XML</summary>
-        /// <param name="writer"></param>
+        /// <param name="writer">XmlWriter to use</param>
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("name", Name);

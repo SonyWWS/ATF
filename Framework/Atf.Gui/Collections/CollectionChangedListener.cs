@@ -12,8 +12,7 @@ using System.Reflection;
 namespace Sce.Atf.Collections
 {
     /// <summary>
-    /// Listens for specific property changes for all items within a collection.
-    /// </summary>
+    /// Class that listens for specific property changes for all items within a collection</summary>
     public class CollectionChangeListener : ChangeListener
     {
         #region Private Fields
@@ -25,6 +24,10 @@ namespace Sce.Atf.Collections
 
         #region Ctors
 
+        /// <summary>
+        /// Constructor with collection and property name</summary>
+        /// <param name="collection">Collection whose changes are listened to</param>
+        /// <param name="propertyName">Property whose value change is listened to</param>
         public CollectionChangeListener(INotifyCollectionChanged collection, string propertyName)
         {
             m_value = collection;
@@ -137,23 +140,36 @@ namespace Sce.Atf.Collections
     }
 
     /// <summary>
-    /// Abstract class to handle listening for changes on a view model.
-    /// </summary>
+    /// Abstract class to handle listening for changes on a view model</summary>
     public abstract class ChangeListener : INotifyPropertyChanged, IDisposable
     {
+        /// <summary>
+        /// Name of property whose change is listened to</summary>
         protected string PropertyName;
 
+        /// <summary>
+        /// Stop listening for changes</summary>
         protected abstract void Unsubscribe();
 
         #region INotifyPropertyChanged
 
+        /// <summary>
+        /// Property changed event</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Raise property changed event</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="propertyName">Property whose value change is listened to</param>
         protected virtual void RaisePropertyChanged(object sender, string propertyName)
         {
             OnPropertyChanged(sender, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Handle property changed event</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Property changed event arguments</param>
         protected virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var handler = PropertyChanged;
@@ -165,12 +181,18 @@ namespace Sce.Atf.Collections
 
         #region IDisposable
 
+        /// <summary>
+        /// Dispose of resources</summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Dispose of resources</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources;
+        /// false to release only unmanaged resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -179,6 +201,8 @@ namespace Sce.Atf.Collections
             }
         }
 
+        /// <summary>
+        /// Default destructor</summary>
         ~ChangeListener()
         {
             Dispose(false);
@@ -186,11 +210,20 @@ namespace Sce.Atf.Collections
 
         #endregion
 
+        /// <summary>
+        /// Create a ChangeListener for item whose property value can change</summary>
+        /// <param name="value">Item whose property value change is listened to</param>
+        /// <returns>ChangeListener for item</returns>
         public static ChangeListener Create(INotifyPropertyChanged value)
         {
             return Create(value, null);
         }
 
+        /// <summary>
+        /// Create a ChangeListener for item whose value can change</summary>
+        /// <param name="value">Item whose property value change is listened to</param>
+        /// <param name="propertyName">Property whose value change is listened to</param>
+        /// <returns>ChangeListener for item</returns>
         public static ChangeListener Create(INotifyPropertyChanged value, string propertyName)
         {
             if (value is INotifyCollectionChanged)
@@ -203,12 +236,13 @@ namespace Sce.Atf.Collections
     }
 
     /// <summary>
-    /// Used to listen for property changes on a child view model.
-    /// </summary>
+    /// Class used to listen for property changes on a child view model</summary>
     public class ChildChangeListener : ChangeListener
     {
         #region Fields
 
+        /// <summary>
+        /// Type of item whose property value change is listened to</summary>
         protected static readonly Type m_inotifyType = typeof(INotifyPropertyChanged);
         private readonly INotifyPropertyChanged m_value;
         private readonly Type m_type;
@@ -218,6 +252,9 @@ namespace Sce.Atf.Collections
 
         #region Ctors
 
+        /// <summary>
+        /// Constructor with item</summary>
+        /// <param name="instance">Item whose property value change is listened to</param>
         public ChildChangeListener(INotifyPropertyChanged instance)
         {
             Requires.NotNull(instance, "instance");
@@ -228,6 +265,10 @@ namespace Sce.Atf.Collections
             Subscribe();
         }
 
+        /// <summary>
+        /// Constructor with item and property</summary>
+        /// <param name="instance">Item whose property value change is listened to</param>
+        /// <param name="propertyName">Name of property whose value change is listened to</param>
         public ChildChangeListener(INotifyPropertyChanged instance, string propertyName)
             : this(instance)
         {
@@ -313,6 +354,10 @@ namespace Sce.Atf.Collections
             RaisePropertyChanged(sender, e.PropertyName);
         }
 
+        /// <summary>
+        /// Raise property changed event</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="propertyName">Property changing</param>
         protected override void RaisePropertyChanged(object sender, string propertyName)
         {
             base.RaisePropertyChanged(sender, string.Format("{0}{1}{2}", PropertyName, PropertyName != null ? "." : null, propertyName));

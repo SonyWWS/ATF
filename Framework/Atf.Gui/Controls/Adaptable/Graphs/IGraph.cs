@@ -4,16 +4,12 @@ using System.Collections.Generic;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
-#if CS_4
     /// <summary>
     /// Interface for a graph, a collection of nodes with connecting edges</summary>
     /// <typeparam name="TNode">Node</typeparam>
     /// <typeparam name="TEdge">Edge</typeparam>
     /// <typeparam name="TEdgeRoute">Edge route</typeparam>
     public interface IGraph<out TNode, out TEdge, out TEdgeRoute>
-#else
-    public interface IGraph<TNode, TEdge, TEdgeRoute>
-#endif
         where TNode : class, IGraphNode
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
         where TEdgeRoute : class, IEdgeRoute

@@ -509,8 +509,8 @@ namespace Sce.Atf
             /// <param name="pattern2">High-value in "between" numerical pattern match</param>
             public NumberReplaceQueryPattern(double pattern1, double pattern2)
             {
-                m_pattern1 = pattern1;
-                m_pattern2 = pattern2;
+                //m_pattern1 = pattern1;
+                //m_pattern2 = pattern2;
             }
 
             #region IReplacingQueryPattern
@@ -539,8 +539,8 @@ namespace Sce.Atf
             }
             #endregion
 
-            double m_pattern1;
-            double m_pattern2;
+            //double m_pattern1;
+            //double m_pattern2;
         }
 
         /// <summary>

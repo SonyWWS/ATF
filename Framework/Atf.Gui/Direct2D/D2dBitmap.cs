@@ -106,8 +106,16 @@ namespace Sce.Atf.Direct2D
             {// this resource does not need to be recreated
                 return;
             }
-            Create();         
-            m_rtNumber = m_owner.RenderTargetNumber;
+
+            if (m_bitmap == null)
+            {                
+                Dispose();
+            }
+            else
+            {
+                Create();
+                m_rtNumber = m_owner.RenderTargetNumber;
+            }
         }
 
         internal SharpDX.Direct2D1.Bitmap NativeBitmap

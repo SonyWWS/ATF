@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 namespace LocalizableStringExtractor
 {
@@ -16,5 +13,27 @@ namespace LocalizableStringExtractor
         }
         public readonly string Text;
         public readonly string Context;
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as LocalizableString;
+            return
+                other != null &&
+                other.Text == Text &&
+                other.Context == Context;
+        }
+
+        public override int GetHashCode()
+        {
+            // http://stackoverflow.com/questions/18065251/concise-way-to-combine-field-hashcodes
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + Text.GetHashCode();
+                hash = hash * 23 + Context.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

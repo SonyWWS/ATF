@@ -177,8 +177,8 @@ namespace UnitTests.Atf
         public void TestChangeEvents()
         {
             ActiveCollection<object> test = new ActiveCollection<object>();
-            test.ActiveItemChanging += new EventHandler(test_ActiveItemChanging);
-            test.ActiveItemChanged += new EventHandler(test_ActiveItemChanged);
+            test.ActiveItemChanging += test_ActiveItemChanging;
+            test.ActiveItemChanged += test_ActiveItemChanged;
             object a = new object();
             test.Add(a);
             Assert.True(m_changedEvents == 1);

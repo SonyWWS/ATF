@@ -169,7 +169,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Method called when the window layout service's layouts changing event is fired</summary>
+        /// Method called when the window layout service's layouts changing event is triggered</summary>
         protected override void OnWindowLayoutServiceLayoutsChanging()
         {
             if (CommandService == null)
@@ -188,7 +188,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Method called when the window layout service's layouts changed event is fired</summary>
+        /// Method called when the window layout service's layouts changed event is triggered</summary>
         protected override void OnWindowLayoutServiceLayoutsChanged()
         {
             if (CommandService == null)

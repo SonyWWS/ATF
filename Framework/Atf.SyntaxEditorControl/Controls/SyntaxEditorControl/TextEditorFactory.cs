@@ -5,7 +5,7 @@
     public static class TextEditorFactory
     {
         /// <summary>
-        /// Creates and intializes a new SyntaxEditorControl</summary>
+        /// Creates and initializes a new SyntaxEditorControl</summary>
         /// <returns>A new SyntaxEditorControl</returns>
         public static ISyntaxEditorControl CreateSyntaxHighlightingEditor()
         {
@@ -13,7 +13,7 @@
         }
 
         /// <summary>
-        /// Creates and intializes a new SyntaxEditorFindReplaceOptions object</summary>
+        /// Creates and initializes a new SyntaxEditorFindReplaceOptions object</summary>
         /// <returns>A new SyntaxEditorFindReplaceOptions object</returns>
         public static ISyntaxEditorFindReplaceOptions CreateSyntaxEditorFindReplaceOptions()
         {

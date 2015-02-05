@@ -45,7 +45,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 return null;
 
             bool toolStripLabelEnabled = (Parameters != null && Parameters.Length > 2 && Boolean.Parse(Parameters[2]));
-            var control =  new CollectionControl(this, context, toolStripLabelEnabled);
+            var control = new CollectionControl(this, context, toolStripLabelEnabled);
             SkinService.ApplyActiveSkin(control);
             return control;
         }
@@ -121,10 +121,12 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// <param name="editor">Embedded property editor</param>
             /// <param name="context">Context for embedded property editing controls</param>
             /// <param name="toolStripLabelsEnabled">Whether toolstrip labels are enabled or not</param>
-            public CollectionControl(EmbeddedCollectionEditor editor, PropertyEditorControlContext context, bool toolStripLabelsEnabled)
+            public CollectionControl(EmbeddedCollectionEditor editor, PropertyEditorControlContext context,
+                bool toolStripLabelsEnabled)
             {
                 m_editor = editor;
                 m_context = context;
+                m_parentPropertyGridView = context.EditingControlOwner as PropertyGridView;
 
                 // Get active contexts and subscribe to ContextChanged event
                 IContextRegistry contextRegistry = m_context.ContextRegistry;
@@ -205,8 +207,6 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_toolStrip.SizeChanged += toolStrip_SizeChanged;
             }
 
-            
-
             /// <summary>
             /// Performs custom actions on toolstrip SizeChanged events</summary>
             /// <param name="sender">Sender</param>
@@ -277,7 +277,6 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 base.Dispose(disposing);
             }
-
 
             /// <summary>
             /// Processes a dialog key</summary>
@@ -636,7 +635,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         else
                         {
                             itemControl = new ItemControl(m_itemControls.Count, item,
-                                m_singletonMode, m_indexColumnWidth, TransactionContext);
+                                m_singletonMode, m_indexColumnWidth, TransactionContext, m_parentPropertyGridView);
                             SkinService.ApplyActiveSkin(itemControl);
                             Controls.Add(itemControl);                            
                             itemControl.MouseUp += itemControl_MouseUp;
@@ -1120,7 +1119,8 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// Control shell for individual child items</summary>
             private class ItemControl : Panel
             {
-                public ItemControl(int index, object item, bool singletonMode, int indexColumnWidth, object context)
+                public ItemControl(int index, object item, bool singletonMode, int indexColumnWidth, object context,
+                    PropertyGridView parentPropertyGridView)
                 {
                     m_editControl = new PropertyGridView
                     {
@@ -1128,7 +1128,15 @@ namespace Sce.Atf.Controls.PropertyEditing
                         PropertySorting = PropertySorting.None,
                         Dock = DockStyle.Fill,
                     };
-                   
+
+                    m_parentPropertyGridView = parentPropertyGridView;
+                    if (m_parentPropertyGridView != null)
+                    {
+                        m_editControl.CustomizeAttributes = m_parentPropertyGridView.CustomizeAttributes;
+                        m_editControl.DescriptionSetter = parentPropertyGridView.DescriptionSetter;
+                        m_parentPropertyGridView.SelectedPropertyChanged += ParentSelectedPropertyChanged;
+                    }
+
                     m_editControl.Invalidated += editControl_Invalidated;
                     m_editControl.MouseUp += editControl_MouseUp;
                     Controls.Add(m_editControl);
@@ -1138,6 +1146,13 @@ namespace Sce.Atf.Controls.PropertyEditing
                     GotFocus += (sender, e) => m_editControl.Focus();
                     m_editControl.GotFocus += (sender, e) => UpdateSelection();
 
+                }
+
+                private void ParentSelectedPropertyChanged(object sender, EventArgs eventArgs)
+                {
+                    m_editControl.ClearSelectedProperty();
+                    CollectionControl p = (CollectionControl)Parent;
+                    p.SelectItemControl(null);
                 }
 
                 private bool m_useModifierKeys;
@@ -1150,6 +1165,14 @@ namespace Sce.Atf.Controls.PropertyEditing
                 protected override void Dispose(bool disposing)
                 {
                     Clear();
+                    if (disposing)
+                    {
+                        if (m_parentPropertyGridView != null)
+                        {
+                            m_parentPropertyGridView.SelectedPropertyChanged -= ParentSelectedPropertyChanged;
+                            m_parentPropertyGridView = null;
+                        }
+                    }
                     base.Dispose(disposing);
                 }
 
@@ -1302,6 +1325,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 private bool m_selected;
                 private Label m_selectButton;
                 private PropertyGridView m_editControl;
+                private PropertyGridView m_parentPropertyGridView;
 
                 // In singleton mode theres only 1 item in the collection
                 // and it is impossible to add or remove items
@@ -1340,6 +1364,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             // Context and editor - assigned by constructor and never changed
             private readonly PropertyEditorControlContext m_context;
             private readonly EmbeddedCollectionEditor m_editor;
+            private readonly PropertyGridView m_parentPropertyGridView;
 
             // Cached item controls - cleared when main selection changes
             private readonly Dictionary<object, ItemControl> m_itemControls = new Dictionary<object, ItemControl>();

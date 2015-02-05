@@ -105,7 +105,7 @@ namespace ModelViewerSample
 
             foreach (SceneNode node in root.Children)
             {
-                IBoundable boundable = Adapters.As<IBoundable>(node.DomNode);
+                IBoundable boundable = node.DomNode.As<IBoundable>();
                 Sphere3F localSphere = new Sphere3F();
 
                 if (boundable != null)

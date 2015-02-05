@@ -18,7 +18,7 @@ namespace UnitTests.Atf
             Lazy<object> lazy2 = new Lazy<object>();
             Lazy<object>[] test = new Lazy<object>[] { lazy1, lazy2 };
             // test static method
-            Utilities.TestSequenceEqual(Lazies.GetValues(test), lazy1.Value, lazy2.Value);
+            Utilities.TestSequenceEqual(test.GetValues(), lazy1.Value, lazy2.Value);
             // test extension method
             Utilities.TestSequenceEqual(test.GetValues(), lazy1.Value, lazy2.Value);
         }

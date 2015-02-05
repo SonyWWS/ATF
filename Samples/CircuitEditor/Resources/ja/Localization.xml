@@ -33,7 +33,7 @@
   <StringItem id="Show Virtual links" context="" translation="仮想リンクを表示" />
   <StringItem id="Circuit Editor" context="" translation="CircuitEditor" />
   <StringItem id="Show virtual links between group pin and its associated subnodes when a group is expanded" context="" translation="グループの展開時に、グループピンと、それに関連するサブノード間の仮想リンクを表示します。" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/Adaptable+Controls" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
   <StringItem id="Circuit" context="" translation="回路" />
   <StringItem id="Circuits" context="" translation="回路" />
   <StringItem id="Comment" context="" translation="コメント" />
@@ -75,5 +75,5 @@
   <StringItem id="Layer name" context="" translation="レイヤー名" />
   <StringItem id="Name" context="" translation="名前" />
   <StringItem id="Prototype folder name" context="" translation="プロトタイプフォルダー名" />
-  <StringItem id="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample" context="" translation="http://wiki.ship.scea.com/confluence/display/WWSSDKATF/ATF+Circuit+Editor+Sample_j" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" />
 </StringLocalizationTable>

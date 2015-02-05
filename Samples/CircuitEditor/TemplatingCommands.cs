@@ -183,8 +183,8 @@ namespace CircuitEditorSample
                 DomNode parent = null;
                 foreach (var item in items)
                 {
-                    bool validCandiate = circuitEditingContext.Selection.Contains(item) && 
-                        (item.Is<GroupInstance>() || item.Is<ModuleInstance>())  ;
+                    bool validCandiate = circuitEditingContext.Selection.Contains(item) &&
+                        (item.Is<GroupReference>() || item.Is<ModuleReference>());
                     if (!validCandiate)
                         return false;
                     if (CircuitUtil.IsTemplateTargetMissing(item))
@@ -232,9 +232,9 @@ namespace CircuitEditorSample
                 copy.Cast<Module>().Bounds = originalRefs[i].Cast<Module>().Bounds;
                 copy.Cast<Module>().Position = originalRefs[i].Cast<Module>().Position;
                 copy.Cast<Module>().SourceGuid = originalRefs[i].Cast<Module>().SourceGuid;
-                if (originalRefs[i].Is<GroupInstance>())
+                if (originalRefs[i].Is<GroupReference>())
                 {
-                    copy.Cast<Group>().Expanded = originalRefs[i].Cast<GroupInstance>().Expanded;
+                    copy.Cast<Group>().Expanded = originalRefs[i].Cast<GroupReference>().Expanded;
                 }
 
                 // reroute external connections from original modules to replaced template instances.
@@ -378,14 +378,13 @@ namespace CircuitEditorSample
                 // currently two types that reference templates: GroupInstance or ModuleInstance
                 DomNode refNode;
 
-                var groupInstance = node.As<GroupInstance>();
+                var groupInstance = node.As<GroupReference>();
                 if (groupInstance != null)
                 {
                     if (newNodeGuidDictionary.TryGetValue(groupInstance.Template.Guid.ToString(), out refNode))
                     {
                         groupInstance.Template = refNode.As<Template>();
-                        groupInstance.ProxyGroup = null;// reset
-
+   
                         // need to reset pin targets due to DomNode replacements 
                         var graphContainer = groupInstance.DomNode.Parent.Cast<ICircuitContainer>();
                         foreach (var edge in graphContainer.Wires)
@@ -401,21 +400,21 @@ namespace CircuitEditorSample
                     }                 
                 }
 
-                var moduleInstance = node.As<ModuleInstance>();
-                if (moduleInstance != null)
+                var moduleReference = node.As<ModuleReference>();
+                if (moduleReference != null)
                 {
-                    if (newNodeGuidDictionary.TryGetValue(moduleInstance.Template.Guid.ToString(), out refNode))
+                    if (newNodeGuidDictionary.TryGetValue(moduleReference.Template.Guid.ToString(), out refNode))
                     {
-                        moduleInstance.Template = refNode.As<Template>();
+                        moduleReference.Template = refNode.As<Template>();
 
                         // need to reset pin targets due to DomNode replacements 
-                        var graphContainer = moduleInstance.DomNode.Parent.Cast<ICircuitContainer>();
+                        var graphContainer = moduleReference.DomNode.Parent.Cast<ICircuitContainer>();
                         foreach (var edge in graphContainer.Wires)
                         {
-                            if (edge.OutputElement.DomNode == moduleInstance.DomNode)
+                            if (edge.OutputElement.DomNode == moduleReference.DomNode)
                                 edge.OutputPinTarget = null;
 
-                            if (edge.InputElement.DomNode == moduleInstance.DomNode)
+                            if (edge.InputElement.DomNode == moduleReference.DomNode)
                                 edge.InputPinTarget = null;
                         }
                     }

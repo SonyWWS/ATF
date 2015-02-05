@@ -16,7 +16,7 @@ namespace UnitTests.Atf.Adaptation
         {
             object test = null;
 
-            Assert.Null(Adapters.As(test, null));
+            Assert.Null(test.As(null));
             // test extension method
             Assert.Null(test.As(null));
         }
@@ -24,14 +24,14 @@ namespace UnitTests.Atf.Adaptation
         [Test]
         public void TestAs_WithNullType()
         {
-            Assert.Throws<ArgumentNullException>(delegate { Adapters.As(this, null); });
+            Assert.Throws<ArgumentNullException>(delegate { this.As(null); });
         }
 
         [Test]
         public void TestAs_CastFirst()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.AreSame(Adapters.As(adaptable, typeof(IAdaptable)), adaptable);
+            Assert.AreSame(adaptable.As(typeof(IAdaptable)), adaptable);
             Assert.False(adaptable.AsCalled);
         }
 
@@ -39,7 +39,7 @@ namespace UnitTests.Atf.Adaptation
         public void TestAs_GetAdapterIfCastFails()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.NotNull(Adapters.As(adaptable, typeof(string)));
+            Assert.NotNull(adaptable.As(typeof(string)));
             Assert.True(adaptable.AsCalled);
         }
 
@@ -47,7 +47,7 @@ namespace UnitTests.Atf.Adaptation
         public void TestAs_CastAndGetAdapterFail()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.Null(Adapters.As(adaptable, typeof(TestAdapters)));
+            Assert.Null(adaptable.As(typeof(TestAdapters)));
             Assert.True(adaptable.AsCalled);
         }
 
@@ -56,7 +56,7 @@ namespace UnitTests.Atf.Adaptation
         {
             object test = null;
 
-            Assert.Null(Adapters.As<object>(test));
+            Assert.Null(test.As<object>());
             // test extension method
             Assert.Null(test.As<object>());
         }
@@ -65,7 +65,7 @@ namespace UnitTests.Atf.Adaptation
         public void TestAsGeneric_CastFirst()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.AreSame(Adapters.As<IAdaptable>(adaptable), adaptable);
+            Assert.AreSame(adaptable.As<IAdaptable>(), adaptable);
             Assert.False(adaptable.AsCalled);
         }
 
@@ -73,7 +73,7 @@ namespace UnitTests.Atf.Adaptation
         public void TestAsGeneric_GetAdapterIfCastFails()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.NotNull(Adapters.As<string>(adaptable));
+            Assert.NotNull(adaptable.As<string>());
             Assert.True(adaptable.AsCalled);
         }
 
@@ -81,7 +81,7 @@ namespace UnitTests.Atf.Adaptation
         public void TestAsGeneric_CastAndGetAdapterFail()
         {
             SimpleAdaptable adaptable = new SimpleAdaptable();
-            Assert.Null(Adapters.As<TestAdapters>(adaptable));
+            Assert.Null(adaptable.As<TestAdapters>());
             Assert.True(adaptable.AsCalled);
         }
 
@@ -91,12 +91,12 @@ namespace UnitTests.Atf.Adaptation
             SimpleAdaptable adaptable = null;
 
             // test null check
-            Assert.Throws<AdaptationException>(delegate() { Adapters.Cast(adaptable, typeof(object)); });
+            Assert.Throws<AdaptationException>(delegate() { adaptable.Cast(typeof(object)); });
             Assert.Throws<AdaptationException>(delegate() { adaptable.Cast(typeof(object)); });
 
             // test successful adaptation
             adaptable = new SimpleAdaptable();
-            Assert.NotNull(Adapters.Cast(adaptable, typeof(IAdaptable)));
+            Assert.NotNull(adaptable.Cast(typeof(IAdaptable)));
             Assert.False(adaptable.AsCalled);
             adaptable = new SimpleAdaptable();
             Assert.NotNull(adaptable.Cast(typeof(IAdaptable)));
@@ -109,12 +109,12 @@ namespace UnitTests.Atf.Adaptation
             SimpleAdaptable adaptable = null;
 
             // test null check
-            Assert.Throws<AdaptationException>(delegate() { Adapters.Cast<object>(adaptable); });
+            Assert.Throws<AdaptationException>(delegate() { adaptable.Cast<object>(); });
             Assert.Throws<AdaptationException>(delegate() { adaptable.Cast<object>(); });
 
             // test successful adaptation
             adaptable = new SimpleAdaptable();
-            Assert.NotNull(Adapters.Cast<IAdaptable>(adaptable));
+            Assert.NotNull(adaptable.Cast<IAdaptable>());
             Assert.False(adaptable.AsCalled);
             adaptable = new SimpleAdaptable();
             Assert.NotNull(adaptable.Cast<IAdaptable>());
@@ -127,18 +127,18 @@ namespace UnitTests.Atf.Adaptation
             SimpleAdaptable adaptable = null;
 
             // test null check
-            Assert.False(Adapters.Is(adaptable, typeof(object)));
+            Assert.False(adaptable.Is(typeof(object)));
             Assert.False(adaptable.Is(typeof(object)));
 
             // test successful adaptation
             adaptable = new SimpleAdaptable();
-            Assert.True(Adapters.Is(adaptable, typeof(IAdaptable)));
+            Assert.True(adaptable.Is(typeof(IAdaptable)));
             adaptable = new SimpleAdaptable();
             Assert.NotNull(adaptable.Is(typeof(IAdaptable)));
 
             // test failed adaptation
             adaptable = new SimpleAdaptable();
-            Assert.False(Adapters.Is(adaptable, typeof(TestAdapters)));
+            Assert.False(adaptable.Is(typeof(TestAdapters)));
             adaptable = new SimpleAdaptable();
             Assert.False(adaptable.Is(typeof(TestAdapters)));
         }
@@ -149,18 +149,18 @@ namespace UnitTests.Atf.Adaptation
             SimpleAdaptable adaptable = null;
 
             // test null check
-            Assert.False(Adapters.Is<object>(adaptable));
+            Assert.False(adaptable.Is<object>());
             Assert.False(adaptable.Is<object>());
 
             // test successful adaptation
             adaptable = new SimpleAdaptable();
-            Assert.True(Adapters.Is<IAdaptable>(adaptable));
+            Assert.True(adaptable.Is<IAdaptable>());
             adaptable = new SimpleAdaptable();
             Assert.NotNull(adaptable.Is<IAdaptable>());
 
             // test failed adaptation
             adaptable = new SimpleAdaptable();
-            Assert.False(Adapters.Is<TestAdapters>(adaptable));
+            Assert.False(adaptable.Is<TestAdapters>());
             adaptable = new SimpleAdaptable();
             Assert.False(adaptable.Is<TestAdapters>());
         }
@@ -171,18 +171,18 @@ namespace UnitTests.Atf.Adaptation
             string str = null;
 
             // test null check
-            CollectionAssert.IsEmpty(Adapters.AsAll(str, typeof(object)));
+            CollectionAssert.IsEmpty(str.AsAll(typeof(object)));
             CollectionAssert.IsEmpty(str.AsAll(typeof(object)));
 
             // test handling non-IDecoratable
             str = "a";
-            Utilities.TestSequenceEqual(Adapters.AsAll(str, typeof(string)), str);
+            Utilities.TestSequenceEqual(str.AsAll(typeof(string)), str);
             Utilities.TestSequenceEqual(str.AsAll(typeof(string)), str);
 
             // test IDecoratable calls
             SimpleDecoratable test;
             test = new SimpleDecoratable();
-            Utilities.TestSequenceEqual(Adapters.AsAll(test, typeof(string)), SimpleDecoratable.Decorators);
+            Utilities.TestSequenceEqual(test.AsAll(typeof(string)), SimpleDecoratable.Decorators);
             Assert.True(test.AsAllCalled);
             test = new SimpleDecoratable();
             Utilities.TestSequenceEqual(test.AsAll(typeof(string)), SimpleDecoratable.Decorators);
@@ -195,18 +195,18 @@ namespace UnitTests.Atf.Adaptation
             string str = null;
 
             // test null check
-            CollectionAssert.IsEmpty(Adapters.AsAll<object>(str));
+            CollectionAssert.IsEmpty(str.AsAll<object>());
             CollectionAssert.IsEmpty(str.AsAll<object>());
 
             // test handling non-IDecoratable
             str = "a";
-            Utilities.TestSequenceEqual(Adapters.AsAll<string>(str), str);
+            Utilities.TestSequenceEqual(str.AsAll<string>(), str);
             Utilities.TestSequenceEqual(str.AsAll<string>(), str);
 
             // test IDecoratable calls
             SimpleDecoratable test;
             test = new SimpleDecoratable();
-            Utilities.TestSequenceEqual(Adapters.AsAll<string>(test), SimpleDecoratable.Decorators);
+            Utilities.TestSequenceEqual(test.AsAll<string>(), SimpleDecoratable.Decorators);
             Assert.True(test.AsAllCalled);
             test = new SimpleDecoratable();
             Utilities.TestSequenceEqual(test.AsAll<string>(), SimpleDecoratable.Decorators);
@@ -219,22 +219,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            CollectionAssert.IsEmpty(Adapters.AsIEnumerable(test, typeof(object)));
+            CollectionAssert.IsEmpty(test.AsIEnumerable(typeof(object)));
             CollectionAssert.IsEmpty(test.AsIEnumerable(typeof(object)));
 
             // test adaptation failure
             test = new object[1];
-            CollectionAssert.IsEmpty(Adapters.AsIEnumerable(test, typeof(object)));
+            CollectionAssert.IsEmpty(test.AsIEnumerable(typeof(object)));
             CollectionAssert.IsEmpty(test.AsIEnumerable(typeof(object)));
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Utilities.TestSequenceEqual(Adapters.AsIEnumerable(test, typeof(string)), "a", "b");
+            Utilities.TestSequenceEqual(test.AsIEnumerable(typeof(string)), "a", "b");
             Utilities.TestSequenceEqual(test.AsIEnumerable(typeof(string)), "a", "b");
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Utilities.TestSequenceEqual(Adapters.AsIEnumerable(test, typeof(string)), "a");
+            Utilities.TestSequenceEqual(test.AsIEnumerable(typeof(string)), "a");
             Utilities.TestSequenceEqual(test.AsIEnumerable(typeof(string)), "a");
         }
 
@@ -244,22 +244,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            CollectionAssert.IsEmpty(Adapters.AsIEnumerable<object>(test));
+            CollectionAssert.IsEmpty(test.AsIEnumerable<object>());
             CollectionAssert.IsEmpty(test.AsIEnumerable<object>());
 
             // test adaptation failure
             test = new object[1];
-            CollectionAssert.IsEmpty(Adapters.AsIEnumerable<object>(test));
+            CollectionAssert.IsEmpty(test.AsIEnumerable<object>());
             CollectionAssert.IsEmpty(test.AsIEnumerable<object>());
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Utilities.TestSequenceEqual(Adapters.AsIEnumerable<object>(test), "a", "b");
+            Utilities.TestSequenceEqual(test.AsIEnumerable<object>(), "a", "b");
             Utilities.TestSequenceEqual(test.AsIEnumerable<object>(), "a", "b");
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Utilities.TestSequenceEqual(Adapters.AsIEnumerable<string>(test), "a");
+            Utilities.TestSequenceEqual(test.AsIEnumerable<string>(), "a");
             Utilities.TestSequenceEqual(test.AsIEnumerable<string>(), "a");
         }
 
@@ -269,22 +269,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            Assert.False(Adapters.Any(test, typeof(object)));
+            Assert.False(test.Any(typeof(object)));
             Assert.False(test.Any(typeof(object)));
 
             // test adaptation failure
             test = new object[1];
-            Assert.False(Adapters.Any(test, typeof(object)));
+            Assert.False(test.Any(typeof(object)));
             Assert.False(test.Any(typeof(object)));
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Assert.True(Adapters.Any(test, typeof(string)));
+            Assert.True(test.Any(typeof(string)));
             Assert.True(test.Any(typeof(string)));
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Assert.True(Adapters.Any(test, typeof(string)));
+            Assert.True(test.Any(typeof(string)));
             Assert.True(test.Any(typeof(string)));
         }
 
@@ -294,22 +294,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            Assert.False(Adapters.Any<object>(test));
+            Assert.False(test.Any<object>());
             Assert.False(test.Any<object>());
 
             // test adaptation failure
             test = new object[1];
-            Assert.False(Adapters.Any<object>(test));
+            Assert.False(test.Any<object>());
             Assert.False(test.Any<object>());
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Assert.True(Adapters.Any<string>(test));
+            Assert.True(test.Any<string>());
             Assert.True(test.Any<string>());
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Assert.True(Adapters.Any<string>(test));
+            Assert.True(test.Any<string>());
             Assert.True(test.Any<string>());
         }
 
@@ -319,22 +319,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            Assert.True(Adapters.All(test, typeof(object)));
+            Assert.True(test.All(typeof(object)));
             Assert.True(test.All(typeof(object)));
 
             // test adaptation failure
             test = new object[1];
-            Assert.False(Adapters.All(test, typeof(object)));
+            Assert.False(test.All(typeof(object)));
             Assert.False(test.All(typeof(object)));
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Assert.True(Adapters.All(test, typeof(string)));
+            Assert.True(test.All(typeof(string)));
             Assert.True(test.All(typeof(string)));
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Assert.False(Adapters.All(test, typeof(string)));
+            Assert.False(test.All(typeof(string)));
             Assert.False(test.All(typeof(string)));
         }
 
@@ -344,22 +344,22 @@ namespace UnitTests.Atf.Adaptation
             object[] test = null;
 
             // test null check
-            Assert.True(Adapters.All<object>(test));
+            Assert.True(test.All<object>());
             Assert.True(test.All<object>());
 
             // test adaptation failure
             test = new object[1];
-            Assert.False(Adapters.All<object>(test));
+            Assert.False(test.All<object>());
             Assert.False(test.All<object>());
 
             // test adaptation success
             test = new object[] { "a", "b" };
-            Assert.True(Adapters.All<string>(test));
+            Assert.True(test.All<string>());
             Assert.True(test.All<string>());
 
             // test adaptation success/failure
             test = new object[] { "a", this };
-            Assert.False(Adapters.All<string>(test));
+            Assert.False(test.All<string>());
             Assert.False(test.All<string>());
         }
     }

@@ -82,7 +82,7 @@ namespace StatechartEditorSample
                 typeof(HelpAboutCommand),               // Help -> About command
 
                 typeof(PaletteService),                 // global palette, for drag/drop instancing
-                typeof(HistoryLister),                  // vistual list of undo/redo stack
+                typeof(HistoryLister),                  // visual list of undo/redo stack
                 typeof(PropertyEditor),                 // property grid for editing selected objects
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
@@ -93,8 +93,6 @@ namespace StatechartEditorSample
                 typeof(Outputs),                        // service that provides static methods for writing to IOutputWriter objects.
                 typeof(ErrorDialogService),             // displays errors to the user in a message box. Implements IOutputWriter.
                 typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.
-
-                typeof(DiagramTheme),                   // rendering theme for diagrams
 
                 typeof(Editor),                         // editor which manages statechart documents and controls
                 typeof(PaletteClient),                  // component which adds items to palette

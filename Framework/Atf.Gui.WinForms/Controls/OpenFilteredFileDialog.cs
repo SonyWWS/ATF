@@ -108,7 +108,7 @@ namespace Sce.Atf.Controls
                     s_lastLocation = RestoreBounds.Location;
                 }
 
-                if (SelectedFileNames.Count() > 0)
+                if (SelectedFileNames.Any())
                 {
                     LastAccessedDirectory = Path.GetDirectoryName(SelectedFileNames.First());
                 }

@@ -143,11 +143,11 @@ namespace Sce.Atf.Wpf.Behaviors
         /// when the event is fired (if the bound ICommand accepts an argument
         /// of type EventArgs).
         /// <para>For example, use a RelayCommand&lt;MouseEventArgs&gt; to get
-        /// the arguments of a MouseMove event.</para> </summary>
+        /// the arguments of a MouseMove event.</para></summary>
         public bool PassEventArgsToCommand { get; set; }
 
         /// <summary>
-        /// Provides a simple way to invoke this trigger programatically
+        /// Provides a simple way to invoke this trigger programmatically
         /// without any EventArgs.</summary>
         public void Invoke()
         {
@@ -165,7 +165,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Executes the trigger.
         /// <para>To access the EventArgs of the fired event, use a RelayCommand&lt;EventArgs&gt;
-        /// and leave the CommandParameter and CommandParameterValue empty!</para> </summary>
+        /// and leave the CommandParameter and CommandParameterValue empty.</para></summary>
         /// <param name="parameter">The EventArgs of the fired event.</param>
         protected override void Invoke(object parameter)
         {

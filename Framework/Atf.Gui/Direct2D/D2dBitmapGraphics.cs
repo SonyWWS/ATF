@@ -15,7 +15,10 @@ namespace Sce.Atf.Direct2D
         public D2dBitmap GetBitmap()
         {
             var rt = (BitmapRenderTarget)D2dRenderTarget;
-            return new D2dBitmap(this, rt.Bitmap);
+
+            // pass m_owner instead of "this"
+            // To allow disposing D2dBitmap when render target recreated.
+            return new D2dBitmap(m_owner, rt.Bitmap);
         }
 
         /// <summary>
@@ -27,10 +30,13 @@ namespace Sce.Atf.Direct2D
             // that created this D2dBitmapGraphics.
         }
 
-        internal D2dBitmapGraphics(BitmapRenderTarget renderTarget)
+        internal D2dBitmapGraphics(D2dGraphics owner,BitmapRenderTarget renderTarget)
             : base(renderTarget)
-        {            
+        {
+            m_owner = owner;
         }
+
+        private readonly D2dGraphics m_owner;
     }
 
     /// <summary>

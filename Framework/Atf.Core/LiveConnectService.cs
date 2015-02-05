@@ -9,7 +9,7 @@ namespace Sce.Atf
 {
     /// <summary>
     /// This service exposes WWS SDK's LiveConnect, which provides a way to communicate between
-    /// applications that are on the same subnet using automated discovery and zero-configuration.
+    /// applications that are on the same subnet, using automated discovery and zero-configuration.
     /// Messages are broadcast and listened to on named channels. LiveConnectService hard-codes
     /// the channel to be "ATF_Global".
     /// Bonjour must be installed first. Bonjour64.msi can be installed for 64-bit Windows operating

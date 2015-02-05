@@ -23,7 +23,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Constructor with PropertyGridMode</summary>
-        /// <param name="mode">Flags specifiying the GridControl's features and appearance</param>
+        /// <param name="mode">Flags specifying the GridControl's features and appearance</param>
         public GridControl(PropertyGridMode mode)
             : this(mode, new GridView())
         {
@@ -31,7 +31,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Constructor</summary>
-        /// <param name="mode">Flags specifiying the GridControl's features and appearance</param>
+        /// <param name="mode">Flags specifying the GridControl's features and appearance</param>
         /// <param name="gridView">The GridView to be used. Can be sub-classed to customize its behavior.</param>
         public GridControl(PropertyGridMode mode, GridView gridView)
         {

@@ -22,7 +22,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         public D2dSnapManipulator(D2dTimelineControl owner)
         {
             m_owner = owner;
-            m_owner.GetSnapOffset = new D2dTimelineControl.SnapOffsetFinder(GetSnapOffset);
+            m_owner.GetSnapOffset = GetSnapOffset;
             m_owner.DrawingD2d += owner_DrawingD2d;
             m_owner.MouseUp += owner_MouseUp;
             m_owner.MouseDown += owner_MouseDown;
@@ -106,7 +106,6 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                     dist < m_dist)
                 {
                     m_snapToPoint = snapToPoint;
-                    m_snapToEvent = snapToEvent;
                     m_dist = dist;
                 }
             }
@@ -144,7 +143,6 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             private readonly float m_snapFromPoint;
             private float m_dist;
             private float m_snapToPoint;
-            private IEvent m_snapToEvent;
         }
 
         /// <summary>

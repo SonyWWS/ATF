@@ -82,25 +82,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             base.Dispose(disposing);
         }
 
-        private void DrawEyeIcon(RectangleF rect, D2dBrush pen, float strokeWidth, D2dGraphics g)
-        {
-            //g.DrawRectangle(rect, pen);
-            float delta =  rect.Width/3;
-            var p1 = new PointF(rect.X, rect.Y + rect.Height/2);
-            var p2 = new PointF(p1.X + delta, rect.Y);
-            var p3 = new PointF(p1.X + 2 * delta, rect.Y);
-            var p4 = new PointF(rect.X+rect.Width, rect.Y + rect.Height/2);
-            g.DrawBezier(p1,p2,p3,p4,pen,strokeWidth);// top lid
-            p2 = new PointF(p2.X , rect.Y + rect.Height );
-            p3 = new PointF(p3.X , rect.Y + rect.Height );
-            g.DrawBezier(p1, p2, p3, p4, pen, strokeWidth); //bottom lid
-
-            PointF irisCenter = new PointF(rect.X + rect.Width/2, rect.Y + rect.Height/2);
-            float irisRadius = 0.2f*Math.Min(rect.Width, rect.Height);
-            RectangleF irisRect = new RectangleF(irisCenter.X - irisRadius, irisCenter.Y - irisRadius, 2* irisRadius, 2* irisRadius);
-            g.DrawEllipse(irisRect, pen, strokeWidth *1.8f);
-        }
-       
         /// <summary>
         /// Draws floating group pin</summary>
         /// <param name="grpPin">Group pin</param>
@@ -174,13 +155,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (!grpPin.Info.ExternalConnected)
             {
                 RectangleF eyeRect = GetVisibilityCheckRect(grpPin, inputSide);
-                DrawEyeIcon(eyeRect, grpPin.Info.Visible ? m_visiblePinBrush : m_hiddrenPinBrush, 1.0f, g);
-
+                g.DrawEyeIcon(eyeRect, grpPin.Info.Visible ? m_visiblePinBrush : m_hiddrenPinBrush, 1.0f);
             }
             
             // draw fake edge that connects group pin fake node
             DrawGroupPinNodeFakeEdge(grpPin, p, inputSide, style, g);
-         }
+        }
 
 
         /// <summary>
@@ -344,7 +324,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private void DrawGroupPinNodeFakeEdge(ICircuitGroupPin<TElement> grpPin, PointF grpPinPos, bool inputSide, DiagramDrawingStyle style, D2dGraphics g)
         {
             ElementTypeInfo info = GetElementTypeInfo(grpPin.InternalElement, g);
-            D2dBrush pen = (style == DiagramDrawingStyle.Normal) ? SubGraphPinBrush : Theme.GetOutLineBrush(style);
             if (inputSide)
             {             
                 PointF op = grpPinPos;

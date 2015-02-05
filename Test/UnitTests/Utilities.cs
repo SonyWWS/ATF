@@ -11,7 +11,7 @@ namespace UnitTests
     {
         public static void TestSequenceEqual<T>(IEnumerable<T> actual, params T[] expected)
         {
-            Assert.True(Enumerable.SequenceEqual(actual, (IEnumerable<T>)expected));
+            Assert.True(actual.SequenceEqual((IEnumerable<T>)expected));
         }
 
         public static void TestSequenceContainSameItems<T>(IEnumerable<T> actual, params T[] expected)

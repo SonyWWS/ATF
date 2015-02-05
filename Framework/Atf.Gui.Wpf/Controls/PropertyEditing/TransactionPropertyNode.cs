@@ -5,12 +5,13 @@ using System;
 namespace Sce.Atf.Wpf.Controls.PropertyEditing
 {
     /// <summary>
-    /// PropertyNode where setting the property value is done as a transaction
+    /// PropertyNode where setting the property value is done as a transaction.
     /// Holds a weak reference to the TX context</summary>
     public class TransactionPropertyNode : DynamicPropertyNode
     {
         /// <summary>
-        /// Constructor</summary>
+        /// Constructor with ITransactionContext</summary>
+        /// <param name="context">ITransactionContext</param>
         public TransactionPropertyNode(ITransactionContext context)
         {
             if(context != null)
@@ -21,8 +22,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         /// <summary>
         /// Gets the transaction context from the owner
-        /// Does not hold a strong reference to the context
-        /// </summary>
+        /// Does not hold a strong reference to the context</summary>
         public ITransactionContext TransactionContext
         {
             get

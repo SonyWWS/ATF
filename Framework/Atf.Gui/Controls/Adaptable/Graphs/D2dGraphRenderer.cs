@@ -266,6 +266,21 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
         }
 
+        /// <summary>
+        /// Is called when a graph object (a wire or a circuit element) has been removed</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
+        public virtual void OnGraphObjectRemoved(object sender, ItemRemovedEventArgs<object> e)
+        {
+        }
+
+        /// <summary>
+        /// Is called when a graph object (a wire or a circuit element) has been inserted</summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
+        public virtual void OnGraphObjectInserted(object sender, ItemInsertedEventArgs<object> e)
+        {
+        }
 
         /// <summary>
         /// Set a custom style that overrides default one during graph rendering </summary>
@@ -328,6 +343,5 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         private readonly Dictionary<object, DiagramDrawingStyle> m_customStyles = new Dictionary<object, DiagramDrawingStyle>();
- 
     }
 }

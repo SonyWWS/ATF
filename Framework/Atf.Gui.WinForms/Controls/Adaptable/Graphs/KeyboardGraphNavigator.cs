@@ -99,7 +99,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 keyData == Keys.Down ||
                 keyData == Keys.Left)
             {
-                TNode startElement = Adapters.As<TNode>(m_selectionContext.LastSelected);
+                TNode startElement = m_selectionContext.LastSelected.As<TNode>();
                 if (startElement != null)
                 {
                     Rectangle nearestRect;

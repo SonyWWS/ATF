@@ -135,12 +135,16 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region HeaderProperty Property
 
+        /// <summary>
+        /// Get or set grid header DependencyProperty value</summary>
         public PropertyNode HeaderProperty
         {
             get { return (PropertyNode)GetValue(HeaderPropertyProperty); }
             set { SetValue(HeaderPropertyProperty, value); }
         }
 
+        /// <summary>
+        /// Grid header DependencyProperty</summary>
         public static readonly DependencyProperty HeaderPropertyProperty =
             DependencyProperty.Register("HeaderProperty", typeof(PropertyNode), typeof(PropertyGrid), new UIPropertyMetadata(null));
 
@@ -148,9 +152,13 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #region TransactionContext Property
 
+        /// <summary>
+        /// Transaction context DependencyProperty</summary>
         public static readonly DependencyProperty TransactionContextProperty =
            DependencyProperty.Register("TransactionContext", typeof(object), typeof(PropertyGrid), new PropertyMetadata(default(object), TransactionContextPropertyChanged));
 
+        /// <summary>
+        /// Get or set transaction context DependencyProperty value</summary>
         public object TransactionContext
         {
             get { return (object)GetValue(TransactionContextProperty); }
@@ -406,18 +414,22 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             get { return new ComponentResourceKey(typeof(PropertyGrid), "ComboEditorTemplate"); }
         }
 
+        /// <summary>
+        /// Get standard values editor template resource key used in XAML files</summary>
         public static ComponentResourceKey StandardValuesEditorTemplateKey
         {
             get { return new ComponentResourceKey(typeof(PropertyGrid), "StandardValuesEditorTemplate"); }
         }
 
+        /// <summary>
+        /// Get Boolean editor style resource key used in XAML files</summary>
         public static ComponentResourceKey BoolEditorStyleKey
         {
             get { return new ComponentResourceKey(typeof(PropertyGrid), "BoolEditorStyle"); }
         }
 
         /// <summary>
-        /// Resource key used in XAML files for the bool editor template</summary>
+        /// Get resource key used in XAML files for the Boolean editor template</summary>
         public static ComponentResourceKey BoolEditorTemplateKey
         {
             get { return new ComponentResourceKey(typeof(PropertyGrid), "BoolEditorTemplate"); }
@@ -532,6 +544,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
 
         #endregion
 
+        /// <summary>
+        /// Get or set ObservableCollection of ValueEditors</summary>
         public ObservableCollection<ValueEditor> Editors { get; set; }
 
         /// <summary>
@@ -604,7 +618,9 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             node.Dispose();
         }
 
-        protected virtual void RebuildPopertyNodesImpl()
+        /// <summary>
+        /// Rebuild property nodes implementation function</summary>
+        protected virtual void RebuildPropertyNodesImpl()
         {
             DestroyPropertyNodes();
 
@@ -674,6 +690,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             HeaderProperty = headerPropertyNode;
         }
 
+        /// <summary>
+        /// Destroy all property nodes</summary>
         protected virtual void DestroyPropertyNodes()
         {
             if (m_listener != null)
@@ -699,7 +717,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             }
         }
 
-        private void RebuildPopertyNodes()
+        private void RebuildPropertyNodes()
         {
             if (IsLoaded)
             {
@@ -721,12 +739,12 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         private void BindingUpdateTimer_Tick(object sender, EventArgs e)
         {
             m_bindingUpdateTimer.Stop();
-            RebuildPopertyNodesImpl();
+            RebuildPropertyNodesImpl();
         }
 
         private void PropertyGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            RebuildPopertyNodes();
+            RebuildPropertyNodes();
         }
 
         private void PropertyGrid_Unloaded(object sender, RoutedEventArgs e)
@@ -771,12 +789,12 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             if (collection != null)
                 collection.CollectionChanged += Instances_CollectionChanged;
 
-            RebuildPopertyNodes();
+            RebuildPropertyNodes();
         }
 
         private void Instances_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            RebuildPopertyNodes();
+            RebuildPropertyNodes();
         }
 
         #region IDisposable Members

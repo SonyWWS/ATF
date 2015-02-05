@@ -77,13 +77,13 @@ namespace Sce.Atf.Wpf.Behaviors
 
             if ((bool)e.NewValue)
             {
-                textBlock.PreviewMouseLeftButtonUp += new MouseButtonEventHandler(textBlock_MouseLeftButtonUp);
-                textBlock.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(textBlock_PreviewMouseLeftButtonDown);
+                textBlock.PreviewMouseLeftButtonUp += textBlock_MouseLeftButtonUp;
+                textBlock.PreviewMouseLeftButtonDown += textBlock_PreviewMouseLeftButtonDown;
             }
             else
             {
-                textBlock.PreviewMouseLeftButtonUp -= new MouseButtonEventHandler(textBlock_MouseLeftButtonUp);
-                textBlock.PreviewMouseLeftButtonDown -= new MouseButtonEventHandler(textBlock_PreviewMouseLeftButtonDown);
+                textBlock.PreviewMouseLeftButtonUp -= textBlock_MouseLeftButtonUp;
+                textBlock.PreviewMouseLeftButtonDown -= textBlock_PreviewMouseLeftButtonDown;
             }
         }
 
@@ -188,7 +188,7 @@ namespace Sce.Atf.Wpf.Behaviors
             m_textBox.AcceptsTab = false;
             //_textBox.MaxLength = adornedElement.MaxLength;
             m_textBox.KeyUp += TextBox_KeyUp;
-            m_textBox.LostFocus += new RoutedEventHandler(TextBox_LostFocus);
+            m_textBox.LostFocus += TextBox_LostFocus;
             m_textBox.SelectAll();
             m_collection.Add(m_textBox);
         }
@@ -289,6 +289,8 @@ namespace Sce.Atf.Wpf.Behaviors
         //}
 
 
+        /// <summary>
+        /// Dispose of resources</summary>
         public void Dispose()
         {
             BindingOperations.ClearBinding(m_textBox, TextBox.TextProperty);

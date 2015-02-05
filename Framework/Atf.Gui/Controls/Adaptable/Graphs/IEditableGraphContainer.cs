@@ -2,7 +2,6 @@
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
-#if CS_4
     /// <summary>
     /// Interface for container of graph objects. Its methods allow moving items in and out of the container and resizing it.</summary>
     /// <typeparam name="TNode">IGraphNode object</typeparam>
@@ -13,13 +12,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         where TNode : class, IGraphNode
         where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
         where TEdgeRoute : class, IEdgeRoute
-#else
-    public interface IEditableGraphContainer<TNode, TEdge, TEdgeRoute>:
-        IEditableGraph<TNode, TEdge, TEdgeRoute>
-        where TNode : class, IGraphNode
-        where TEdge : class, IGraphEdge<TNode, TEdgeRoute>
-        where TEdgeRoute : class, IEdgeRoute
-#endif
     {
         /// <summary>
         /// Can move the given nodes into the new container</summary>    

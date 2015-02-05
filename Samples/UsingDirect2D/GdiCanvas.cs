@@ -26,21 +26,6 @@ namespace UsingDirect2D
 
             // create few solid color bruhes.
             m_brush1 = new SolidBrush(Color.White);
-            m_brush2 = new SolidBrush(Color.White);
-            m_brush3 = new SolidBrush(Color.White);
-
-
-            // create linear gradient brush for painting complex state (state samples).
-            // copied from state machine editor.
-            Color stateColor1 = System.Drawing.Color.FromArgb(142, 182, 243);
-            float retain = 0.75f;
-            int stred = (int)(stateColor1.R * retain);
-            int stgreen = (int)(stateColor1.G * retain);
-            int stblue = (int)(stateColor1.B * retain);
-            Color stateColor2 = Color.FromArgb(stred, stgreen, stblue);
-            
-            //m_titlebrush = m_d2dGraphics.CreateLinearGradientBrush(gradstops);
-
 
             // create bitmap resources
             m_bmp = new Bitmap("Resources\\Level1.png");
@@ -415,8 +400,6 @@ namespace UsingDirect2D
 
         private Bitmap m_bmp;
         private SolidBrush m_brush1;
-        private SolidBrush m_brush2;
-        private SolidBrush m_brush3;
 
         private Font m_info;
 
@@ -439,11 +422,6 @@ namespace UsingDirect2D
         private List<Rectangle> m_rects
             = new List<Rectangle>();
 
-
-
-        private List<PointF> m_connectedLines
-            = new List<PointF>();
-
         private List<Line> m_lines
             = new List<Line>();
 
@@ -453,11 +431,7 @@ namespace UsingDirect2D
         private List<PointF> m_texts
             = new List<PointF>();
 
-        private List<State> m_states
-            = new List<State>();
-
         private StringFormat m_strFormat;
-        private RectangleF m_infoRect = new RectangleF(0, 0, 500, 32);
 
         private enum SampleDrawings
         {

@@ -14,8 +14,8 @@ namespace Sce.Atf.Wpf.Interop
     {
         /// <summary>
         /// Converts a System.Windows.Forms.Keys to an Sce.Atf.Input.Keys</summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="keys">WfKeys enum</param>
+        /// <returns>Converted AtfKeys enum</returns>
         public static AtfKeys ToAtf(WfKeys keys)
         {
             return (AtfKeys)keys;
@@ -24,8 +24,8 @@ namespace Sce.Atf.Wpf.Interop
         /// <summary>
         /// Converts an enumerable list of System.Windows.Forms.Keys to an
         /// enumerable list of Sce.Atf.Input.Keys</summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="keys">Enumerable list of WfKeys</param>
+        /// <returns>Converted enumerable list of AtfKeys</returns>
         public static IEnumerable<AtfKeys> ToAtf(IEnumerable<WfKeys> keys)
         {
             foreach (WfKeys wfKey in keys)
@@ -34,8 +34,8 @@ namespace Sce.Atf.Wpf.Interop
 
         /// <summary>
         /// Converts a Sce.Atf.Input.Keys to a System.Windows.Forms.Keys</summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="keys">AtfKeys enum</param>
+        /// <returns>Converted WfKeys enum</returns>
         public static WfKeys ToWf(AtfKeys keys)
         {
             return (WfKeys)keys;
@@ -44,8 +44,8 @@ namespace Sce.Atf.Wpf.Interop
         /// <summary>
         /// Converts an enumerable list of Sce.Atf.Input.Keys to an
         /// enumerable list of System.Windows.Forms.Keys</summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="keys">Enumerable list of AtfKeys</param>
+        /// <returns>Converted enumerable list of WfKeys</returns>
         public static IEnumerable<WfKeys> ToWf(IEnumerable<AtfKeys> keys)
         {
             foreach (AtfKeys atfKey in keys)
@@ -54,8 +54,8 @@ namespace Sce.Atf.Wpf.Interop
 
         /// <summary>
         /// Converts a System.Windows.Input.Key to an Sce.Atf.Input.Keys</summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="wpfKey">WpfKey enum</param>
+        /// <returns>Converted AtfKeys enum</returns>
         public static AtfKeys ToAtf(WpfKey wpfKey)
         {
             return (AtfKeys)System.Windows.Input.KeyInterop.VirtualKeyFromKey(wpfKey);
@@ -63,8 +63,8 @@ namespace Sce.Atf.Wpf.Interop
 
         /// <summary>
         /// Converts a System.Windows.Input.ModifierKey to an Sce.Atf.Input.Keys</summary>
-        /// <param name="wpfKey"></param>
-        /// <returns></returns>
+        /// <param name="wpfKey">WpfModifierKeys enum</param>
+        /// <returns>Converted AtfKeys enum</returns>
         public static AtfKeys ToAtf(WpfModifierKeys wpfKey)
         {
             var atfKey = AtfKeys.None;
@@ -83,8 +83,8 @@ namespace Sce.Atf.Wpf.Interop
         /// Converts a Sce.Atf.Input.Keys to a System.Windows.Input.Key</summary>
         /// <remarks>Warning: this will only return a single Key as the WPF Key 
         /// structure is not flags based</remarks>
-        /// <param name="atfKey"></param>
-        /// <returns></returns>
+        /// <param name="atfKey">AtfKeys enum</param>
+        /// <returns>Converted WpfKey enum</returns>
         public static WpfKey ToWpf(AtfKeys atfKey)
         {
             var keys = atfKey & ~AtfKeys.Modifiers;
@@ -93,8 +93,8 @@ namespace Sce.Atf.Wpf.Interop
 
         /// <summary>
         /// Converts a Sce.Atf.Input.Keys to a System.Windows.Input.ModifierKeys</summary>
-        /// <param name="atfKeys"></param>
-        /// <returns></returns>
+        /// <param name="atfKeys">AtfKeys enum</param>
+        /// <returns>Converted WpfModifierKeys enum</returns>
         public static WpfModifierKeys ToWpfModifiers(AtfKeys atfKeys)
         {
             // TODO: need to verify this all works correctly

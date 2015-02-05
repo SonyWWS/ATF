@@ -2,6 +2,8 @@
 
 namespace Sce.Atf.Applications
 {
+    /// <summary>
+    /// Enumeration for file dialog result</summary>
     public enum FileDialogResult
     {
         Yes,

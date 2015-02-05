@@ -146,6 +146,8 @@ namespace Sce.Atf.Wpf.Dom
 
         #region IInitializable Members
 
+        /// <summary>
+        /// Finish initializing component by registering control</summary>
         public virtual void Initialize()
         {
             var view = new DomRecorderView { DataContext = m_data };

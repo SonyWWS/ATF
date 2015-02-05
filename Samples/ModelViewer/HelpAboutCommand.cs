@@ -34,7 +34,7 @@ namespace ModelViewerSample
             string appURL = "https://github.com/SonyWWS/ATF/wiki";
 
             AboutDialog dialog = new AboutDialog(
-                Localizer.Localize("Model Viewer"), appURL, richTextBox, null, null, true);
+                "Model Viewer".Localize(), appURL, richTextBox, null, null, true);
             dialog.ShowDialog();
         }
     }

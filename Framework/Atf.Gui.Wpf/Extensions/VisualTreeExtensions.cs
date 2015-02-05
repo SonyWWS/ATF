@@ -6,45 +6,43 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Sce.Atf.Wpf.Behaviors;
 
 namespace Sce.Atf.Wpf
 {
+    /// <summary>
+    /// Extension methods for visual trees</summary>
     public static class VisualTreeExtensions
     {
         /// <summary>
         /// This is a workaround for a .NET4 bug in which sometimes a sentinel object is
-        /// returned from a DataContext of a FrameworkElement
-        /// http://social.msdn.microsoft.com/Forums/nl/wpf/thread/e6643abc-4457-44aa-a3ee-dd389c88bd86
-        /// </summary>
+        /// returned from a DataContext of a FrameworkElement.
+        /// http://social.msdn.microsoft.com/Forums/nl/wpf/thread/e6643abc-4457-44aa-a3ee-dd389c88bd86 </summary>
         /// <param name="e">FrameworkElement</param>
         /// <returns>DataContext of FrameworkElement</returns>
         public static object SafeGetDataContext(this FrameworkElement e)
         {
-#if CS_4
             object dataContext = e.DataContext;
             if (s_disconnectedItem != null && dataContext == s_disconnectedItem)
                 return null;
             return dataContext;
-#else
-            return e.DataContext;
-#endif
         }
 
-#if CS_4
         private static readonly object s_disconnectedItem = typeof(System.Windows.Data.BindingExpressionBase)
             .GetField("DisconnectedItem", BindingFlags.Static | BindingFlags.NonPublic)
             .GetValue(null);
-#endif
 
 
         /// <summary>
-        /// Searches through subtree of a FrameworkElement and returns the first
-        /// FrameworkElement of type T and name found
-        /// </summary>
+        /// Search through subtree of a FrameworkElement and return the first
+        /// FrameworkElement of type T and name found</summary>
+        /// <remarks>Recursive function</remarks>
+        /// <typeparam name="T">FrameworkElement type to search for</typeparam>
+        /// <param name="referenceElement">Subtree to search</param>
+        /// <param name="name">Name to search for</param>
+        /// <returns>FrameworkElement found or null if not found</returns>
         public static T GetFrameworkElementByName<T>(this FrameworkElement referenceElement, String name)
             where T : FrameworkElement
         {
@@ -88,6 +86,12 @@ namespace Sce.Atf.Wpf
             return foundChild;
         }
 
+        /// <summary>
+        /// Search through subtree of a DependencyObject and return the first object of given type</summary>
+        /// <remarks>Recursive function</remarks>
+        /// <typeparam name="T">Type searched for</typeparam>
+        /// <param name="parent">DependencyObject to search</param>
+        /// <returns>First object of type T or default value for T if not found</returns>
         public static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
         {
             T child = default(T);
@@ -107,6 +111,12 @@ namespace Sce.Atf.Wpf
             return child;
         }
 
+        /// <summary>
+        /// Search through subtree of a FrameworkElement and return the first object of given type</summary>
+        /// <remarks>Recursive function</remarks>
+        /// <typeparam name="T">Type searched for</typeparam>
+        /// <param name="referenceElement">FrameworkElement to search</param>
+        /// <returns>First object of type T or default value for T if not found</returns>
         public static T GetFrameworkElementByType<T>(this FrameworkElement referenceElement)
             where T : FrameworkElement
         {
@@ -127,6 +137,12 @@ namespace Sce.Atf.Wpf
             return child;
         }
 
+        /// <summary>
+        /// Search through subtree of a FrameworkElement and return enumeration of objects of given type</summary>
+        /// <remarks>Recursive function</remarks>
+        /// <typeparam name="T">Type searched for</typeparam>
+        /// <param name="referenceElement">FrameworkElement to search</param>
+        /// <returns>Enumeration of objects of type T</returns>
         public static IEnumerable<T> GetFrameworkElementsByType<T>(this FrameworkElement referenceElement)
            where T : FrameworkElement
         {
@@ -144,12 +160,21 @@ namespace Sce.Atf.Wpf
             }
         }
 
+        /// <summary>
+        /// Find nearest ancestor of given type of DependencyObject</summary>
+        /// <typeparam name="T">Type searched for</typeparam>
+        /// <param name="obj">DependencyObject searched</param>
+        /// <returns>Nearest ancestor of given type</returns>
         public static T FindParent<T>(this DependencyObject obj) where T : DependencyObject
         {
             return obj == null ? null : obj.GetAncestors().OfType<T>().FirstOrDefault();
         }
 
-        /// <remarks>Includes element.</remarks>
+        /// <summary>
+        /// Enumerate all ancestors of a DependencyObject</summary>
+        /// <remarks>Enumeration includes element itself</remarks>
+        /// <param name="element">DependencyObject whose ancestors are obtained</param>
+        /// <returns>Enumeration of all object's ancestors, including itself</returns>
         public static IEnumerable<DependencyObject> GetAncestors(this DependencyObject element)
         {
             Requires.NotNull(element, "element");
@@ -163,9 +188,10 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        /// Searches up through the visual hierarchy and returns the first DependencyObject
-        /// of type T found
-        /// </summary>
+        /// Search up through the visual hierarchy and return the first DependencyObject of type T found</summary>
+        /// <typeparam name="T">Type searched for</typeparam>
+        /// <param name="dep">DependencyObject to search</param>
+        /// <returns>First DependencyObject of type T found</returns>
         public static T FindAncestor<T>(this DependencyObject dep)
             where T : class
         {
@@ -173,10 +199,9 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        /// Enumerates the lineage of a DependencyObject
-        /// </summary>
-        /// <param name="dep">DependencyObject</param>
-        /// <returns></returns>
+        /// Enumerate the lineage of a DependencyObject from both visual and logical trees</summary>
+        /// <param name="dep">DependencyObject to determine lineage of</param>
+        /// <returns>Enumeration of lineage DependencyObjects from both visual and logical trees, including the object itself</returns>
         public static IEnumerable<DependencyObject> GetLineage(this DependencyObject dep)
         {
             DependencyObject current = dep;
@@ -190,10 +215,9 @@ namespace Sce.Atf.Wpf
 
 
         /// <summary>
-        /// Enumerates the subtree of a DependencyObject in post-order (breadth first)
-        /// </summary>
+        /// Enumerate the subtree of a DependencyObject in post-order (breadth first)</summary>
         /// <param name="dep">DependencyObject</param>
-        /// <returns></returns>
+        /// <returns>Enumeration of DependencyObjects</returns>
         public static IEnumerable<DependencyObject> GetSubtree(this DependencyObject dep)
         {
             var nodes = new Queue<DependencyObject>();
@@ -213,6 +237,10 @@ namespace Sce.Atf.Wpf
             }
         }
 
+        /// <summary>
+        /// Get DependencyObject parent in visual or logical tree</summary>
+        /// <param name="dep">DependencyObject to get parent for</param>
+        /// <returns>DependencyObject parent, which may be in visual or logical tree. If no parent, return null.</returns>
         public static DependencyObject GetVisualOrLogicalParent(this DependencyObject dep)
         {
             if (dep == null)
@@ -238,6 +266,12 @@ namespace Sce.Atf.Wpf
             return LogicalTreeHelper.GetParent(dep);
         }
 
+        /// <summary>
+        /// Find the item container from a given item in an ItemsControl ancestor, searching up the tree</summary>
+        /// <remarks>Throws <see cref="ArgumentNullException"/> if itemsControl or child is null</remarks>
+        /// <param name="itemsControl">Control ancestor container</param>
+        /// <param name="child">Item</param>
+        /// <returns>Item container from given item, which may be the item. If itemsControl empty, return null.</returns>
         public static UIElement GetItemContainerFromChildElement(ItemsControl itemsControl, UIElement child)
         {
             Requires.NotNull(itemsControl, "itemsControl");
@@ -270,6 +304,10 @@ namespace Sce.Atf.Wpf
             return null;
         }
 
+        /// <summary>
+        /// Get generated DependencyObject at mouse pointer in an ItemsControl, searching up the tree to find a generated object</summary>
+        /// <param name="parent">ItemsControl containing object</param>
+        /// <returns>DependencyObject at a point or null if no object at point or object not generated</returns>
         public static object GetItemAtMousePoint(this ItemsControl parent)
         {
             // Dan - this is a fix to fix a null reference exception caused when switching
@@ -283,6 +321,12 @@ namespace Sce.Atf.Wpf
             return null;
         }
 
+        /// <summary>
+        /// Get item container at point in an ItemsControl, searching up the tree to find a generated object</summary>
+        /// <remarks>The similar function GetItemAtPoint() returns a data item rather than an item container</remarks>
+        /// <param name="itemsControl">ItemsControl containing item container</param>
+        /// <param name="p">Point</param>
+        /// <returns>Item container at point or null if no item at point or item not generated</returns>
         public static DependencyObject GetItemContainerAtPoint(this ItemsControl itemsControl, Point p)
         {
             if (itemsControl is TreeView)
@@ -295,6 +339,12 @@ namespace Sce.Atf.Wpf
             return null;
         }
 
+        /// <summary>
+        /// Get data item at a point in an ItemsControl, searching up the tree to find a generated object</summary>
+        /// <remarks>The similar function GetItemContainerAtPoint() returns an item container rather than a data item</remarks>
+        /// <param name="itemsControl">ItemsControl containing data item</param>
+        /// <param name="p">Point</param>
+        /// <returns>Data item at a point or null if no object at point or object not generated</returns>
         public static object GetItemAtPoint(this ItemsControl itemsControl, Point p)
         {
             if (itemsControl is TreeView)
@@ -320,6 +370,12 @@ namespace Sce.Atf.Wpf
             return null;
         }
 
+        /// <summary>
+        /// Get TreeView data item in TreeView at point, searching up the tree</summary>
+        /// <remarks>The similar function GetItemContainerAtPoint() returns an item container rather than a data item</remarks>
+        /// <param name="treeView">TreeView</param>
+        /// <param name="p">Point</param>
+        /// <returns>TreeView data item in TreeView at point or null if no object at point</returns>
         public static object GetItemAtPoint(this TreeView treeView, Point p)
         {
             var tvi = treeView.GetItemContainerAtPoint(p);
@@ -338,6 +394,12 @@ namespace Sce.Atf.Wpf
             return null;
         }
 
+        /// <summary>
+        /// Get TreeView item container in TreeView at point, searching up the tree</summary>
+        /// <remarks>The similar function GetItemAtPoint() returns a data item rather than an item container</remarks>
+        /// <param name="treeView">TreeView</param>
+        /// <param name="p">Point</param>
+        /// <returns>TreeViewItem in TreeView at point or null if no object at point</returns>
         public static TreeViewItem GetItemContainerAtPoint(this TreeView treeView, Point p)
         {
             var dep = treeView.InputHitTest(p) as DependencyObject;

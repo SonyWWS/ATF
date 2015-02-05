@@ -15,7 +15,9 @@ namespace UnitTests.Atf
         [Test]
         public void TestConstructor()
         {
+            #pragma warning disable 219 //disable warning about 'test' not being used
             CollectionAdapter<object, string> test;
+            #pragma warning restore 219
             Assert.Throws<ArgumentNullException>(
                 delegate() { test = new CollectionAdapter<object, string>(null); });
         }

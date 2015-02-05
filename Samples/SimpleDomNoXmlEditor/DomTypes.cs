@@ -63,22 +63,22 @@ namespace SimpleDomNoXmlEditorSample
             eventType.Type.SetTag(
                 new NodeTypePaletteItem(
                     eventType.Type,
-                    Localizer.Localize("Event"),
-                    Localizer.Localize("Event in a sequence"),
+                    eventType.Name,
+                    "Event in a sequence".Localize(),
                     Resources.EventImage));
 
             animationResourceType.Type.SetTag(
                 new NodeTypePaletteItem(
                     animationResourceType.Type,
-                    Localizer.Localize("Animation"),
-                    Localizer.Localize("Animation resource"),
+                    animationResourceType.Name,
+                    "Animation resource".Localize(),
                     Resources.AnimationImage));
 
             geometryResourceType.Type.SetTag(
                 new NodeTypePaletteItem(
                     geometryResourceType.Type,
-                    Localizer.Localize("Geometry"),
-                    Localizer.Localize("Geometry resource"),
+                    geometryResourceType.Name,
+                    "Geometry resource".Localize(),
                     Resources.GeometryImage));
 
             // register property descriptors on state, transition, folder types
@@ -87,22 +87,22 @@ namespace SimpleDomNoXmlEditorSample
                 new PropertyDescriptorCollection(
                     new Sce.Atf.Dom.PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 eventType.nameAttribute,
                                 null,
-                                Localizer.Localize("Event name"),
+                                "Event name".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Time"),
+                                "Time".Localize(),
                                 eventType.timeAttribute,
                                 null,
-                                Localizer.Localize("Event starting time"),
+                                "Event starting time".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Duration"),
+                                "Duration".Localize(),
                                 eventType.durationAttribute,
                                 null,
-                                Localizer.Localize("Event duration"),
+                                "Event duration".Localize(),
                                 false),
                     }));
 
@@ -110,34 +110,34 @@ namespace SimpleDomNoXmlEditorSample
                 new PropertyDescriptorCollection(
                     new Sce.Atf.Dom.PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 animationResourceType.nameAttribute,
                                 null,
-                                Localizer.Localize("Animation name"),
+                                "Animation name".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Size"),
+                                "Size".Localize(),
                                 animationResourceType.sizeAttribute,
                                 null,
-                                Localizer.Localize("Size of animation, in bytes"),
+                                "Size of animation, in bytes".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("# Tracks"),
+                                "# Tracks".Localize(),
                                 animationResourceType.tracksAttribute,
                                 null,
-                                Localizer.Localize("Number of tracks in animation"),
+                                "Number of tracks in animation".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Duration"),
+                                "Duration".Localize(),
                                 animationResourceType.durationAttribute,
                                 null,
-                                Localizer.Localize("Duration of animation, in milliseconds"),
+                                "Duration of animation, in milliseconds".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Compressed"),
+                                "Compressed".Localize(),
                                 animationResourceType.compressedAttribute,
                                 null,
-                                Localizer.Localize("Whether or not animation is compressed"),
+                                "Whether or not animation is compressed".Localize(),
                                 false,
                                 new BoolEditor()),
                     }));
@@ -146,34 +146,34 @@ namespace SimpleDomNoXmlEditorSample
                 new PropertyDescriptorCollection(
                     new Sce.Atf.Dom.PropertyDescriptor[] {
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Name"),
+                                "Name".Localize(),
                                 geometryResourceType.nameAttribute,
                                 null,
-                                Localizer.Localize("Geometry name"),
+                                "Geometry name".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Size"),
+                                "Size".Localize(),
                                 geometryResourceType.sizeAttribute,
                                 null,
-                                Localizer.Localize("Size of geometry, in bytes"),
+                                "Size of geometry, in bytes".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("# Bones"),
+                                "# Bones".Localize(),
                                 geometryResourceType.bonesAttribute,
                                 null,
-                                Localizer.Localize("Number of bones in geometry"),
+                                "Number of bones in geometry".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("# Vertices"),
+                                "# Vertices".Localize(),
                                 geometryResourceType.verticesAttribute,
                                 null,
-                                Localizer.Localize("Number of vertices in geometry"),
+                                "Number of vertices in geometry".Localize(),
                                 true),
                             new AttributePropertyDescriptor(
-                                Localizer.Localize("Primitive Kind"),
+                                "Primitive Kind".Localize(),
                                 geometryResourceType.primitiveTypeAttribute,
                                 null,
-                                Localizer.Localize("Kind of primitives in geometry"),
+                                "Kind of primitives in geometry".Localize(),
                                 false,
                                 new EnumUITypeEditor(primitiveKinds),
                                 new EnumTypeConverter(primitiveKinds)),
@@ -225,11 +225,18 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(durationAttribute);
                 Type.Define(resourceChild);
                 resourceChild.AddRule(new ChildCountRule(1, int.MaxValue));
+
+                nameAttribute.DefaultValue = Name; //set it here so as to not require tricky static field ordering
             }
+
+            /// <summary>
+            /// The user-readable name</summary>
+            public static string Name = "Event".Localize();
 
             /// <summary>
             /// Type for event</summary>
             public readonly static DomNodeType Type = new DomNodeType("eventType");
+
             /// <summary>
             /// AttributeInfo for event name</summary>
             public readonly static AttributeInfo nameAttribute =
@@ -293,8 +300,6 @@ namespace SimpleDomNoXmlEditorSample
         //    </xs:extension>
         //  </xs:complexContent>
         //</xs:complexType>
-        /// <summary>
-        /// Animation sequence type</summary>
         public static class animationResourceType
         {
             static animationResourceType()
@@ -305,11 +310,18 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(compressedAttribute);
                 Type.Define(tracksAttribute);
                 Type.Define(durationAttribute);
+
+                nameAttribute.DefaultValue = Name; //set it here so as to not require tricky static field ordering
             }
+
+            /// <summary>
+            /// The user-readable name</summary>
+            public static string Name = "Animation".Localize();
 
             /// <summary>
             /// Type for animation resource</summary>
             public readonly static DomNodeType Type = new DomNodeType("animationResourceType");
+
             /// <summary>
             /// AttributeInfo for animation resource name</summary>
             public readonly static AttributeInfo nameAttribute =
@@ -390,11 +402,18 @@ namespace SimpleDomNoXmlEditorSample
                 Type.Define(primitiveTypeAttribute);
                 primitiveTypeAttribute.AddRule(primitiveTypeRule);
                 primitiveTypeAttribute.DefaultValue = primitiveKinds[0];
+
+                nameAttribute.DefaultValue = Name; //set it here so as to not require tricky static field ordering
             }
 
             /// <summary>
-            /// Geometry resouce DomNodeType</summary>
+            /// The user-readable name</summary>
+            public static string Name = "Geometry".Localize();
+
+            /// <summary>
+            /// Geometry resource DomNodeType</summary>
             public readonly static DomNodeType Type = new DomNodeType("geometryResourceType");
+
             /// <summary>
             /// Name attribute</summary>
             public readonly static AttributeInfo nameAttribute =

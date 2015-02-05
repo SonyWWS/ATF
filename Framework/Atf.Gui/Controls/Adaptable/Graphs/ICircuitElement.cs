@@ -13,5 +13,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get;
         }
+
+        /// <summary>
+        /// Gets additional information and options about this circuit element</summary>
+        /// <value>
+        /// The element information</value>
+        CircuitElementInfo ElementInfo { get; }
     }
 }

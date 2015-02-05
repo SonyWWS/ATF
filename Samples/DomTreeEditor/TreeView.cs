@@ -20,9 +20,9 @@ namespace DomTreeEditorSample
         /// Performs initialization when the adapter is connected to the tree view's DomNode</summary>
         protected override void OnNodeSet()
         {
-            DomNode.AttributeChanged += new EventHandler<AttributeEventArgs>(root_AttributeChanged);
-            DomNode.ChildInserted += new EventHandler<ChildEventArgs>(root_ChildInserted);
-            DomNode.ChildRemoved += new EventHandler<ChildEventArgs>(root_ChildRemoved);
+            DomNode.AttributeChanged += root_AttributeChanged;
+            DomNode.ChildInserted += root_ChildInserted;
+            DomNode.ChildRemoved += root_ChildRemoved;
             Reloaded.Raise(this, EventArgs.Empty);
             
             base.OnNodeSet();
@@ -73,8 +73,8 @@ namespace DomTreeEditorSample
                     if (childInfo == UISchema.curveType.controlPointChild)
                         continue;
                     // skip over curves
-                    if (childInfo == UISchema.UIAnimationType.curveChild)
-                        continue;
+                    //if (childInfo == UISchema.UIAnimationType.curveChild)
+                    //    continue;
 
                     if (childInfo.IsList)
                     {
@@ -121,6 +121,13 @@ namespace DomTreeEditorSample
 
                     info.Label = "[" + label + "]";
                 }
+                else if (node.Is<Curve>())
+                {
+                    Curve cv = node.Cast<Curve>();
+                    info.Label = string.IsNullOrWhiteSpace(cv.DisplayName) ? cv.Name : cv.DisplayName;
+                    info.ImageIndex = info.GetImageList().Images.IndexOfKey(Resources.CurveImage);
+
+                }
                 else
                 {
                     NodeTypePaletteItem paletteItem = node.Type.GetTag<NodeTypePaletteItem>();
@@ -131,7 +138,7 @@ namespace DomTreeEditorSample
                     }
                 }
 
-                info.IsLeaf = !Enumerable.Any(GetChildren(item));
+                info.IsLeaf = !GetChildren(item).Any();
                 return;
             }
             else
@@ -150,7 +157,7 @@ namespace DomTreeEditorSample
 
         private void root_AttributeChanged(object sender, AttributeEventArgs e)
         {
-            Event.Raise<ItemChangedEventArgs<object>>(ItemChanged, this, new ItemChangedEventArgs<object>(e.DomNode));
+            ItemChanged.Raise(this, new ItemChangedEventArgs<object>(e.DomNode));
 
             // because references use the name of the referenced item as their label, we should
             //  update all references to this DomNode. Fortunately, we can use the ReferenceValidator
@@ -164,8 +171,7 @@ namespace DomTreeEditorSample
                     if ((reference.First.Type == UISchema.UIRefType.Type) &&
                         (reference.Second.Equivalent(UISchema.UIRefType.refAttribute)))
                     {
-                        Event.Raise<ItemChangedEventArgs<object>>(
-                            ItemChanged, this, new ItemChangedEventArgs<object>(reference.First));
+                        ItemChanged.Raise(this, new ItemChangedEventArgs<object>(reference.First));
                     }
                 }
             }
@@ -173,14 +179,12 @@ namespace DomTreeEditorSample
 
         private void root_ChildInserted(object sender, ChildEventArgs e)
         {
-            Event.Raise<ItemInsertedEventArgs<object>>(
-                ItemInserted, this, new ItemInsertedEventArgs<object>(-1, e.Child, e.Parent));
+            ItemInserted.Raise(this, new ItemInsertedEventArgs<object>(-1, e.Child, e.Parent));
         }
 
         private void root_ChildRemoved(object sender, ChildEventArgs e)
         {
-            Event.Raise<ItemRemovedEventArgs<object>>(
-                ItemRemoved, this, new ItemRemovedEventArgs<object>(-1, e.Child, e.Parent));
+            ItemRemoved.Raise(this, new ItemRemovedEventArgs<object>(-1, e.Child, e.Parent));
         }
 
         private int GetChildIndex(object child, object parent)

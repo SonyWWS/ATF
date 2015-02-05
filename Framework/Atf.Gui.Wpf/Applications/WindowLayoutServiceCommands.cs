@@ -123,6 +123,9 @@ namespace Sce.Atf.Wpf.Applications
         //    new KeyGesture(Key.NumPad9, ModifierKeys.Control),
         //};
 
+        /// <summary>
+        /// Show the 'save layout as' dialog</summary>
+        /// <remarks>Programmatic method for showing the 'save layout as' dialog</remarks>
         public override void ShowSaveLayoutAsDialog()
         {
             var vm = new WindowLayoutNewViewModel(WindowLayoutService.Layouts);
@@ -136,6 +139,9 @@ namespace Sce.Atf.Wpf.Applications
             // todo: Assign Shortcut
         }
 
+        /// <summary>
+        /// Shows the manage layouts dialog</summary>
+        /// <remarks>Programmatic method for showing the 'manage layouts' dialog</remarks>
         public override void ShowManageLayoutsDialog()
         {
             var layouts = new List<Pair<string, Keys>>();
@@ -187,6 +193,8 @@ namespace Sce.Atf.Wpf.Applications
             }
         }
 
+        /// <summary>
+        /// Method called when the window layout service's layouts changing event is triggered</summary>
         protected override void OnWindowLayoutServiceLayoutsChanging()
         {
             if (CommandService == null)
@@ -202,6 +210,8 @@ namespace Sce.Atf.Wpf.Applications
             m_dictCommands.Clear();
         }
 
+        /// <summary>
+        /// Method called when the window layout service's layouts changed event is triggered</summary>
         protected override void OnWindowLayoutServiceLayoutsChanged()
         {
             if (CommandService == null)

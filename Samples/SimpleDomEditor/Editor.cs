@@ -85,11 +85,14 @@ namespace SimpleDomEditorSample
         /// <summary>
         /// Information about the document client</summary>
         public static DocumentClientInfo DocumentClientInfo = new DocumentClientInfo(
-            Localizer.Localize("Event Sequence"),
+            "Event Sequence".Localize(),
             new string[] { ".xml", ".esq" },
             Sce.Atf.Resources.DocumentImage,
             Sce.Atf.Resources.FolderImage,
-            true);
+            true)
+        {
+            DefaultExtension = ".xml" //avoids requiring the user to choose a filename when creating a new doc
+        };
 
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
@@ -159,7 +162,7 @@ namespace SimpleDomEditorSample
         /// <param name="document">Document to show</param>
         public void Show(IDocument document)
         {
-            EventSequenceContext context = Adapters.As<EventSequenceContext>(document);
+            EventSequenceContext context = document.As<EventSequenceContext>();
             m_controlHostService.Show(context.ListView);
         }
 
@@ -184,7 +187,7 @@ namespace SimpleDomEditorSample
         /// <param name="document">Document to close</param>
         public void Close(IDocument document)
         {
-            EventSequenceContext context = Adapters.As<EventSequenceContext>(document);
+            EventSequenceContext context = document.As<EventSequenceContext>();
             m_controlHostService.UnregisterControl(context.ListView);
             context.ControlInfo = null;
 

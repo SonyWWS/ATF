@@ -18,8 +18,7 @@ using Sce.Atf;
 namespace Sce.Atf.Wpf.Docking
 {
     /// <summary>
-    /// TabLayout that represents its children as tabs
-    /// </summary>
+    /// TabLayout that represents its children as tabs</summary>
     public class TabLayout : TabControl, IDockContent, IDockLayout, IXmlSerializable
     {
         #region Private Properties
@@ -36,17 +35,29 @@ namespace Sce.Atf.Wpf.Docking
 
         #endregion
 
+        /// <summary>
+        /// Header DependencyProperty, which designates header text of tab window</summary>
         public static DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(String), typeof(TabLayout));
+        /// <summary>
+        /// Icon DependencyProperty</summary>
         public static DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(object), typeof(TabLayout));
 
+        /// <summary>
+        /// ItemsCount DependencyProperty</summary>
         public static DependencyProperty ItemsCountProperty = DependencyProperty.Register("ItemsCount", typeof(int), typeof(TabLayout));
+        /// <summary>
+        /// Get or set ItemsCount DependencyProperty</summary>
         public int ItemsCount
         {
             get { return ((int)(base.GetValue(TabLayout.ItemsCountProperty))); }
             set { base.SetValue(TabLayout.ItemsCountProperty, value); }
         }
 
+        /// <summary>
+        /// ItemStyle DependencyProperty</summary>
         public static DependencyProperty ItemStyleProperty = DependencyProperty.Register("ItemStyle", typeof(Style), typeof(TabLayout));
+        /// <summary>
+        /// Get or set ItemStyle DependencyProperty</summary>
         public Style ItemStyle
         {
             get { return ((Style)(base.GetValue(TabLayout.ItemStyleProperty))); }
@@ -56,7 +67,11 @@ namespace Sce.Atf.Wpf.Docking
         private TabItem m_movingTabItem;
         private Point m_dragStartPosition;
 
+        /// <summary>
+        /// Children DependencyProperty</summary>
         public static DependencyProperty ChildrenProperty = DependencyProperty.Register("Children", typeof(ObservableCollection<DockContent>), typeof(TabLayout));
+        /// <summary>
+        /// Get or set Children DependencyProperty</summary>
         public ObservableCollection<DockContent> Children
         {
             get { return ((ObservableCollection<DockContent>)(base.GetValue(TabLayout.ChildrenProperty))); }
@@ -64,18 +79,18 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         /// <summary>
-        /// Returns the root dock panel
-        /// </summary>
+        /// Get the root dock panel</summary>
         public DockPanel Root { get; private set; }
 
+        /// <summary>
+        /// Static constructor that overrides the style that is used by styling</summary>
         static TabLayout()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TabLayout), new FrameworkPropertyMetadata(typeof(TabLayout)));
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
+        /// Constructor with root dock panel</summary>
         /// <param name="dockPanel">Root dock panel</param>
         public TabLayout(DockPanel dockPanel)
         {
@@ -83,7 +98,7 @@ namespace Sce.Atf.Wpf.Docking
             Header = String.Empty;
             Children = new ObservableCollection<DockContent>();
             ItemsCount = 0;
-            SizeChanged += new SizeChangedEventHandler(TabLayout_SizeChanged);
+            SizeChanged += TabLayout_SizeChanged;
             //PreviewMouseDown += TabControl_PreviewMouseDown;
             MouseMove += TabControl_MouseMove;
             MouseUp += TabControl_MouseUp;
@@ -92,7 +107,7 @@ namespace Sce.Atf.Wpf.Docking
             m_timer = new System.Timers.Timer();
             m_timer.AutoReset = false;
             m_timer.Interval = 500;
-            m_timer.Elapsed += new System.Timers.ElapsedEventHandler(Timer_Elapsed);
+            m_timer.Elapsed += Timer_Elapsed;
         }
 
         void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -113,16 +128,18 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
         /// <summary>
-        /// Constructor used when deserialising
-        /// </summary>
+        /// Constructor used when deserialising</summary>
         /// <param name="dockPanel">Root dock panel</param>
-        /// <param name="reader">Source xml</param>
+        /// <param name="reader">Source XML</param>
         public TabLayout(DockPanel dockPanel, XmlReader reader)
             : this(dockPanel)
         {
             ReadXml(reader);
         }
-
+        
+        /// <summary>
+        /// Handle SelectionChanged event and perform custom actions</summary>
+        /// <param name="e">Arguments describing change</param>
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
@@ -146,6 +163,9 @@ namespace Sce.Atf.Wpf.Docking
             UpdateIconAndHeader();
         }
 
+        /// <summary>
+        /// Get TabItem DependencyObject to serve as item container in TabLayout</summary>
+        /// <returns>TabItem DependencyObject item container in TabLayout</returns>
         protected override DependencyObject GetContainerForItemOverride()
         {
             TabItem tabItem = new TabItem();
@@ -155,7 +175,7 @@ namespace Sce.Atf.Wpf.Docking
             }
             tabItem.PreviewMouseDown += TabControl_PreviewMouseDown;
             tabItem.AllowDrop = true;
-            tabItem.DragEnter += new DragEventHandler(TabItem_DragEnter);
+            tabItem.DragEnter += TabItem_DragEnter;
             return tabItem;
         }
 
@@ -181,10 +201,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
-        /// Add new content, the new content is single content
-        /// </summary>
+        /// <summary>Add new content; the new content is single content</summary>
         /// <param name="toItem">Next to this item</param>
-        /// <param name="item">New Item</param>
+        /// <param name="content"></param>
         private void AddOneItem(DockContent toItem, DockContent content)
         {
             if (toItem != null && !Children.Contains(toItem))
@@ -192,7 +211,7 @@ namespace Sce.Atf.Wpf.Docking
                 throw new ArgumentOutOfRangeException();
             }
             int index = toItem != null ? Children.IndexOf(toItem) : Children.Count;
-            content.PropertyChanged += new PropertyChangedEventHandler(Content_PropertyChanged);
+            content.PropertyChanged += Content_PropertyChanged;
             Children.Insert(index, content);
             ItemsCount = Children.Count;
             SelectedIndex = Items.Count - 1;
@@ -234,8 +253,7 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         /// <summary>
-        /// Removes given item
-        /// </summary>
+        /// Removes given item</summary>
         /// <param name="item">Item to remove</param>
         public void RemoveItem(DockContent item)
         {
@@ -311,8 +329,7 @@ namespace Sce.Atf.Wpf.Docking
             UpdateIconAndHeader();
         }
         /// <summary>
-        /// Activate this content (focus)
-        /// </summary>
+        /// Activate this content (focus)</summary>
         public void Activate()
         {
             FrameworkElement element = SelectedItem as FrameworkElement;
@@ -322,10 +339,15 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Deactivate this content (give up focus)</summary>
         public void Deactivate()
         {
         }
 
+        /// <summary>
+        /// Return selected dock content</summary>
+        /// <returns>Selected dock content</returns>
         public DockContent GetActiveContent()
         {
             return (SelectedItem != null) ? (DockContent)SelectedItem : null;
@@ -333,26 +355,40 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockableContent Members
 
+        /// <summary>
+        /// Content closed event</summary>
         public event ContentClosedEvent Closing;
 
+        /// <summary>
+        /// Get or set Header DependencyProperty, which designates header text of tab window</summary>
         public String Header
         {
             get { return ((String)(base.GetValue(TabLayout.HeaderProperty))); }
             set { base.SetValue(TabLayout.HeaderProperty, value); }
         }
+        /// <summary>
+        /// Get or set Icon DependencyProperty</summary>
         public object Icon
         {
             get { return ((base.GetValue(TabLayout.IconProperty))); }
             set { base.SetValue(TabLayout.IconProperty, value); }
         }
 
+        /// <summary>
+        /// Get the unique ID for TabLayout</summary>
         public String UID { get { return String.Empty; } }
 
+        /// <summary>
+        /// Get the content for TabLayout</summary>
         public Object Content { get { return this; } }
 
+        /// <summary>
+        /// Get whether TabLayout visible</summary>
         bool IDockContent.IsVisible { get { return true; } }
 
         private bool m_isFocused;
+        ///<summary> 
+        ///Get focus state of TabLayout</summary>
         bool IDockContent.IsFocused
         {
             get { return m_isFocused; }
@@ -362,6 +398,8 @@ namespace Sce.Atf.Wpf.Docking
         private event EventHandler<BooleanArgs> m_isVisibleChanged;
         #pragma warning restore 0067
 
+        /// <summary>
+        /// Event triggered when the IsVisible property changes</summary>
         event EventHandler<BooleanArgs> IDockContent.IsVisibleChanged
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -371,6 +409,8 @@ namespace Sce.Atf.Wpf.Docking
         }
 
         private event EventHandler<BooleanArgs> m_isFocusedChanged;
+        /// <summary>
+        /// Event triggered when the IsFocused property changes</summary>
         event EventHandler<BooleanArgs> IDockContent.IsFocusedChanged
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -379,6 +419,10 @@ namespace Sce.Atf.Wpf.Docking
             remove { m_isFocusedChanged -= value; }
         }
 
+        /// <summary>
+        /// Handle Close event and perform custom actions</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Arguments describing change</param>
         public void OnClose(object sender, ContentClosedEventArgs args)
         {
             if (args.ContentToClose == ContentToClose.Current && Children.Count > 1)
@@ -406,11 +450,18 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IXmlSerializable Members
 
+        /// <summary>
+        /// Reserved and should not be used</summary>
+        /// <exception cref="NotImplementedException"> is raised if called</exception>
+        /// <returns>XmlSchema describing XML representation of object</returns>
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Generate object from its XML representation</summary>
+        /// <param name="reader">XmlReader stream from which object is deserialized</param>
         public void ReadXml(System.Xml.XmlReader reader)
         {
             reader.Read();
@@ -443,6 +494,9 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Convert object into its XML representation</summary>
+        /// <param name="writer">XmlWriter stream to which object is serialized</param>
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteStartElement(this.GetType().Name);
@@ -460,6 +514,10 @@ namespace Sce.Atf.Wpf.Docking
 
         #region IDockLayout Members
 
+        /// <summary>
+        /// Hit test the position and return content at that position</summary>
+        /// <param name="position">Position to test</param>
+        /// <returns>Content if hit, null otherwise</returns>
         public DockContent HitTest(Point position)
         {
             Rect rect = new Rect(0, 0, ActualWidth, ActualHeight);
@@ -474,16 +532,29 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as direct child</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff the content is child of this control</returns>
         public bool HasChild(IDockContent content)
         {
             return Children.Any(x => x == content);
         }
 
+        /// <summary>
+        /// Check if the layout contains the content as child or descendant</summary>
+        /// <param name="content">Content to search for</param>
+        /// <returns>True iff content is child or descendant</returns>
         public bool HasDescendant(IDockContent content)
         {
             return HasChild(content);
         }
 
+        /// <summary>
+        /// Dock the new content next to content</summary>
+        /// <param name="nextTo">Dock content to add new content next to</param>
+        /// <param name="newContent">New content to be docked</param>
+        /// <param name="dockTo">Side of nextTo content where new content should be docked</param>
         public void Dock(IDockContent nextTo, IDockContent newContent, DockTo dockTo)
         {
             TabLayout tabLayout = newContent as TabLayout;
@@ -506,6 +577,9 @@ namespace Sce.Atf.Wpf.Docking
             UpdateLayout();
         }
 
+        /// <summary>
+        /// Undock given content</summary>
+        /// <param name="content">Content to undock</param>
         public void Undock(IDockContent content)
         {
             foreach (IDockContent contentItem in Children)
@@ -522,15 +596,24 @@ namespace Sce.Atf.Wpf.Docking
             }
         }
 
+        /// <summary>
+        /// Undock given child layout</summary>
+        /// <param name="child">Child layout to undock</param>
         public void Undock(IDockLayout child)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Replace the old layout with new layout child</summary>
+        /// <param name="oldLayout">Old layout to be replaced</param>
+        /// <param name="newLayout">New layout that replaces old layout</param>
         public void Replace(IDockLayout oldLayout, IDockLayout newLayout)
         {
         }
 
+        /// <summary>
+        /// Close the layout</summary>
         public void Close()
         {
             while (Children.Count > 0)
@@ -540,6 +623,10 @@ namespace Sce.Atf.Wpf.Docking
             ItemsCount = 0;
         }
 
+        /// <summary>
+        /// Return the content's parent as an IDockLayout</summary>
+        /// <param name="content">The docked content whose parent is requested</param>
+        /// <returns>The parent as IDockLayout</returns>
         IDockLayout IDockLayout.FindParentLayout(IDockContent content)
         {
             return (content is DockContent && Children.Contains((DockContent)content)) ? this : null;
@@ -550,6 +637,8 @@ namespace Sce.Atf.Wpf.Docking
         #region INotifyPropertyChanged Members
 
         #pragma warning disable 0067
+        /// <summary>
+        /// Property value changed event</summary>
         public event PropertyChangedEventHandler PropertyChanged;
         #pragma warning restore 0067
 

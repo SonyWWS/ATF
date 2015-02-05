@@ -10,14 +10,15 @@ namespace Sce.Atf.Wpf.Behaviors
 {
     /// <summary>
     /// Behavior to catch mouse down events and set ATF context registry active context to the current 
-    /// data context of the element.
-    /// </summary>
+    /// data context of the element</summary>
     public class ActivateContextBehavior : Behavior<FrameworkElement>
     {
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
-            AssociatedObject.PreviewMouseDown += new MouseButtonEventHandler(AssociatedObject_PreviewMouseDown);
-            AssociatedObject.GotFocus += new RoutedEventHandler(AssociatedObject_GotFocus);
+            AssociatedObject.PreviewMouseDown += AssociatedObject_PreviewMouseDown;
+            AssociatedObject.GotFocus += AssociatedObject_GotFocus;
         }
 
         void AssociatedObject_GotFocus(object sender, RoutedEventArgs e)

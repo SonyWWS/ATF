@@ -64,7 +64,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <param name="e">Event args</param>
         void BgwDoWork(object sender, DoWorkEventArgs e)
         {
-            var bgw = sender as BackgroundWorker;
+            //var bgw = sender as BackgroundWorker;
             var result = new List<TargetInfo>();
             result.AddRange(FindTargets());
             e.Result = result;                                  

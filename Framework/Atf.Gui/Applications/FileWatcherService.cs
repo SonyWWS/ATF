@@ -11,8 +11,8 @@ namespace Sce.Atf.Applications
     /// <summary>
     /// Service to watch for changes to files; it requires an ISynchronizeInvoke
     /// component to ensure that notification events are raised on the UI thread</summary>
-    /// For WinForms apps, the MainForm provides the ISynchronizeInvoke component. For
-    /// WPF apps, include Sce.Atf.Wpf.Applications.SynchronizeInvoke in your TypeCatalog.</remarks>
+    /// <remarks>For WinForms applications, the MainForm provides the ISynchronizeInvoke component. For
+    /// WPF applications, include Sce.Atf.Wpf.Applications.SynchronizeInvoke in your TypeCatalog.</remarks>
     [Export(typeof(IFileWatcherService))]
     [Export(typeof(FileWatcherService))]
     [PartCreationPolicy(CreationPolicy.Shared)]

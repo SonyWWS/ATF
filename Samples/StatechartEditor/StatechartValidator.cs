@@ -19,7 +19,7 @@ namespace StatechartEditorSample
         /// Raises the DomNodeAdapter NodeSet event and performs custom processing.</summary>
         protected override void OnNodeSet()
         {
-            DomNode.ChildInserting += new EventHandler<ChildEventArgs>(DomNode_ChildInserting);
+            DomNode.ChildInserting += DomNode_ChildInserting;
 
             base.OnNodeSet();
         }
@@ -44,7 +44,7 @@ namespace StatechartEditorSample
                         if (transition.FromState.Type == StateType.Final)
                         {
                             throw new InvalidTransactionException(
-                                Localizer.Localize("Can't have a transition from the final state"));
+                                "Can't have a transition from the final state".Localize());
                         }
                     }
                     if (transition.ToState.IsPseudoState)
@@ -52,7 +52,7 @@ namespace StatechartEditorSample
                         if (transition.ToState.Type == StateType.Start)
                         {
                             throw new InvalidTransactionException(
-                                Localizer.Localize("Can't have a transition to the start state"));
+                                "Can't have a transition to the start state".Localize());
                         }
                     }
                 }
@@ -67,7 +67,7 @@ namespace StatechartEditorSample
                 {
                     string typeName = Enum.GetName(typeof(StateType), type);
                     throw new InvalidTransactionException(
-                        Localizer.Localize("Each statechart cannot have more than one psuedo-state of type: ") +
+                        "Each statechart cannot have more than one psuedo-state of type: ".Localize() +
                         typeName);
                 }
             }

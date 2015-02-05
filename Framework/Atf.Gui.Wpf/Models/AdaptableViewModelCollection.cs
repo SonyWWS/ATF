@@ -20,22 +20,33 @@ namespace Sce.Atf.Wpf.Models
     /// view models rather than shared view models. 
     /// For example a list of DomNodes could be visible in two WPF list views at the same time.  These may both require
     /// the same type of view model to adapt the DomNodes but each may require a separate copy of the view model rather 
-    /// than both sharing the same as would happen with normal Dom adaptation. </remarks>
+    /// than both sharing the same as would happen with normal Dom adaptation.</remarks>
     public class AdaptableViewModelCollection<T, U> : AdaptableObservableCollection<T, U>
         where T : class
         where U : class, IAdapter, new()
     {
+        /// <summary>
+        /// Constructor with collection</summary>
+        /// <param name="collection">IObservableCollection of underlying list type</param>
         public AdaptableViewModelCollection(IObservableCollection<T> collection)
             : this(collection, new AdapterCreator<U>())
         {
         }
 
+        /// <summary>
+        /// Constructor with collection and adapter creator</summary>
+        /// <param name="collection">IObservableCollection of underlying list type</param>
+        /// <param name="adapterCreator">IAdapterCreator to create adapter for collection</param>
         public AdaptableViewModelCollection(IObservableCollection<T> collection, IAdapterCreator adapterCreator)
             : base(collection)
         {
             m_adapterCreator = adapterCreator;
         }
 
+        /// <summary>
+        /// Converts the item to the adapted list type</summary>
+        /// <param name="item">Item to convert</param>
+        /// <returns>Item, converted to the adapted list type</returns>
         protected override U Convert(T item)
         {
             U value;

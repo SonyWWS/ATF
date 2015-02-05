@@ -17,6 +17,8 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets menu item's description</summary>
         string Description { get; set; }
 
+        /// <summary>
+        /// Gets whether menu item is visible</summary>
         bool IsVisible { get; }
 
         /// <summary>
@@ -27,6 +29,8 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets or sets menu item's unique group ID</summary>
         object GroupTag { get; }
 
+        /// <summary>
+        /// Gets enumeration of menu path</summary>
         IEnumerable<string> MenuPath { get; }
     }
 }

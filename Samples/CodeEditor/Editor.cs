@@ -54,6 +54,8 @@ namespace CodeEditor
         [Import(AllowDefault = true)]
         private SourceControlService m_sourceControlService = null;
 
+        #pragma warning disable 0414
+
         [Export(typeof(IDocumentClient))]
         private DocumentClient m_txtDocumentClient;
 
@@ -108,8 +110,8 @@ namespace CodeEditor
                 Command.FindReplace,
                 StandardMenu.Edit,
                 StandardCommandGroup.EditOther,
-                "Find and Replace...",
-                "Find and replace text",
+                "Find and Replace...".Localize(),
+                "Find and replace text".Localize(),
                 Keys.None,
                 Resources.FindImage,
                 CommandVisibility.Menu,
@@ -119,8 +121,8 @@ namespace CodeEditor
                 Command.Goto,
                 StandardMenu.Edit,
                 StandardCommandGroup.EditOther,
-                "Go to...",
-                "Go to line",
+                "Go to...".Localize(),
+                "Go to line".Localize(),
                 Keys.None,
                 null,
                 CommandVisibility.Menu,
@@ -325,8 +327,6 @@ namespace CodeEditor
             if (document == null)
                 return;
             document.ControlInfo.Image = m_sourceControlService.GetSourceControlStatusIcon(e.Uri, e.Status);
-            if (e.Status == SourceControlStatus.CheckedIn)
-                document.Read();
         }
 
         // update source control status icon on the document tab

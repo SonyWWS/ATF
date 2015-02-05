@@ -15,6 +15,16 @@ namespace Sce.Atf.Wpf
     [Obsolete("Please use Sce.Atf.Wpf.ResourceUtil instead.")]
     public static class WpfResourceUtil
     {
+        /// <summary>
+        /// Retrieves the custom attribute of the specified type applied to the assembly</summary>
+        /// <typeparam name="T">Type of custom attribute</typeparam>
+        /// <param name="assembly">Assembly the attribute is applied to</param>
+        /// <param name="value">Function called with the attribute as a parameter</param>
+        /// <returns>The value returned by the value.Invoke call</returns>
+        /// <example>
+        /// An example of GetAssemblyAttribute usage:
+        /// <code>var company = assembly.GetAssemblyAttribute&lt;AssemblyCompanyAttribute&gt;(v => v.Company);</code>
+        /// </example>
         public static string GetAssemblyAttribute<T>(this Assembly assembly, Func<T, string> value)
             where T : Attribute
         {

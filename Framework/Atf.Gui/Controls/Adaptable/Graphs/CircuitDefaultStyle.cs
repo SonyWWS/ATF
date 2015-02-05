@@ -34,7 +34,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         static private EdgeStyle s_edgeStyle= EdgeStyle.Default;
-        static private bool s_showExpandedGroupPins = true;
+        static private bool s_showExpandedGroupPins; //consider keeping this default value in sync with Circuit.xsd
         static private bool s_showVirtualLinks = true;
   
     }

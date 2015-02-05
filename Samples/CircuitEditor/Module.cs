@@ -49,20 +49,19 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Gets or sets original GUID of template if this module is a copy-instance of a template</summary>
-        public Guid SourceGuid
+        /// Gets the optional AttributeInfo for the original GUID of template 
+        /// if this module is a copy-instance of a template(and nothing else) </summary>
+        protected override AttributeInfo SourceGuidAttribute
         {
-            get
-            {
-                var guidValue = DomNode.GetAttribute(Schema.moduleType.sourceGuidAttribute) as string;
-                if (string.IsNullOrEmpty(guidValue))
-                    return Guid.Empty;
-                return new Guid(guidValue);
-            }
-            set
-            {
-                DomNode.SetAttribute(Schema.moduleType.sourceGuidAttribute, value.ToString());
-            }
+            get { return Schema.moduleType.sourceGuidAttribute; }
+        }
+
+        /// <summary>
+        /// Gets the optional AttributeInfo for storing whether or not unconnected
+        /// pins should be displayed.</summary>
+        protected override AttributeInfo ShowUnconnectedPinsAttribute
+        {
+            get { return Schema.moduleType.showUnconnectedPinsAttribute; }
         }
     }
 }

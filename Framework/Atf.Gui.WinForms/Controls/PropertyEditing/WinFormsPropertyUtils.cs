@@ -51,7 +51,6 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             public StandardValuesUIEditor(PropertyDescriptor descriptor)
             {
-                m_descriptor = descriptor;
                 m_converter = descriptor.Converter;
                 if (m_converter == null)
                     throw new ArgumentException("descriptor has no Converter");
@@ -123,8 +122,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 return value.ToString();
             }
-
-            private PropertyDescriptor m_descriptor;
+                
             private readonly TypeConverter m_converter;
             private IWindowsFormsEditorService m_editorService;
 
@@ -150,10 +148,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                     object value = Items[e.Index];
                     string valueString = m_editor.GetValueAsText(value);
 
-                    Brush brush = (e.Index == base.SelectedIndex) ?
-                                                                      SystemBrushes.HighlightText :
-                                                                                                      SystemBrushes.WindowText;
-                    e.Graphics.DrawString(valueString, base.Font, brush, e.Bounds);
+                    Brush brush = (e.Index == SelectedIndex) ? SystemBrushes.HighlightText : new SolidBrush(ForeColor);
+                    e.Graphics.DrawString(valueString, Font, brush, e.Bounds);
+                    if (brush != SystemBrushes.HighlightText)
+                        brush.Dispose();
                 }
 
                 protected override void OnMeasureItem(MeasureItemEventArgs e)

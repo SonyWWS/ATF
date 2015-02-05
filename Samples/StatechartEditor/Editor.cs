@@ -58,7 +58,6 @@ namespace StatechartEditorSample
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
             m_documentService = documentService;
-            m_prototypeLister = prototypeLister;
 
             m_schemaLoader = schemaLoader;
 
@@ -82,7 +81,6 @@ namespace StatechartEditorSample
         private IContextRegistry m_contextRegistry;
         private IDocumentRegistry m_documentRegistry;
         private IDocumentService m_documentService;
-        private PrototypeLister m_prototypeLister;
 
         [Import(AllowDefault = true)]
         private IStatusService m_statusService = null;
@@ -145,7 +143,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Document editor information for statechart editor</summary>
         public static DocumentClientInfo EditorInfo =
-            new DocumentClientInfo(Localizer.Localize("Statechart"), ".statechart", null, null);
+            new DocumentClientInfo("Statechart".Localize(), ".statechart", null, null);
 
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
@@ -295,7 +293,7 @@ namespace StatechartEditorSample
         /// <param name="document">Document to show</param>
         public void Show(IDocument document)
         {
-            ViewingContext viewingContext = Adapters.Cast<ViewingContext>(document);
+            ViewingContext viewingContext = document.Cast<ViewingContext>();
             m_controlHostService.Show(viewingContext.Control);
         }
 
@@ -320,7 +318,7 @@ namespace StatechartEditorSample
         /// <param name="document">Document to close</param>
         public void Close(IDocument document)
         {
-            EditingContext context = Adapters.As<EditingContext>(document);
+            EditingContext context = document.As<EditingContext>();
 
             // close all active EditingContexts in the document
             foreach (DomNode node in context.DomNode.Subtree)
@@ -331,7 +329,7 @@ namespace StatechartEditorSample
             m_documentRegistry.Remove(document);
 
             // finally unregister the control
-            ViewingContext viewingContext = Adapters.Cast<ViewingContext>(document);
+            ViewingContext viewingContext = document.Cast<ViewingContext>();
             m_controlHostService.UnregisterControl(viewingContext.Control);
             viewingContext.Control.Dispose();
             viewingContext.Control = null;
@@ -465,7 +463,7 @@ namespace StatechartEditorSample
         {
             // handle states and transitions
             StringBuilder sb = new StringBuilder();
-            ICustomTypeDescriptor customTypeDescriptor = Adapters.As<ICustomTypeDescriptor>(hoverTarget);
+            ICustomTypeDescriptor customTypeDescriptor = hoverTarget.As<ICustomTypeDescriptor>();
             if (customTypeDescriptor != null)
             {
                 // Get properties interface

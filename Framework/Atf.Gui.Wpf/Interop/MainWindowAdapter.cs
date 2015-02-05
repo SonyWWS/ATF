@@ -51,12 +51,7 @@ namespace Sce.Atf.Wpf.Interop
         {
             if (m_settingsService != null)
             {
-                SettingsServices.RegisterSettings(m_settingsService,
-                    this,
-                    new BoundPropertyDescriptor(this, () => MainFormBounds, "MainFormBounds", null, null),
-                    new BoundPropertyDescriptor(this, () => MainFormWindowState, "MainFormWindowState", null, null)
-                    //new BoundPropertyDescriptor(this, () => ToolStripContainerSettings, "ToolStripContainerSettings", null, null)
-                );
+                m_settingsService.RegisterSettings(this, new BoundPropertyDescriptor(this, () => MainFormBounds, "MainFormBounds", null, null), new BoundPropertyDescriptor(this, () => MainFormWindowState, "MainFormWindowState", null, null));
             }
         }
 

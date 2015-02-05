@@ -12,8 +12,12 @@ using Sce.Atf.Applications;
 
 namespace Sce.Atf.Wpf.Behaviors
 {
+    /// <summary>
+    /// Behavior for last item hit</summary>
     public class LastHitAwareBehavior : Behavior<ItemsControl>
     {
+        /// <summary>
+        /// Handle Attached event by subscribing to mouse events</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -23,6 +27,8 @@ namespace Sce.Atf.Wpf.Behaviors
             AssociatedObject.PreviewQueryContinueDrag += AssociatedObject_PreviewQueryContinueDrag;
         }
 
+        /// <summary>
+        /// Handle Detaching event by unsubscribing from mouse events</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
@@ -60,6 +66,8 @@ namespace Sce.Atf.Wpf.Behaviors
         }
     }
 
+    /// <summary>
+    /// Mouse utility functions</summary>
     public class MouseUtilities
     {
         [StructLayout(LayoutKind.Sequential)]
@@ -69,6 +77,12 @@ namespace Sce.Atf.Wpf.Behaviors
             public Int32 Y;
         };
 
+        /// <summary>
+        /// Move the cursor to specified screen coordinates. For more details, see
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/ms648394%28v=vs.85%29.aspx .</summary>
+        /// <param name="x">X screen coordinate to move cursor to</param>
+        /// <param name="y">Y screen coordinate to move cursor to</param>
+        /// <returns>Nonzero iff successful</returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern bool SetCursorPos(int x, int y);
 
@@ -78,6 +92,10 @@ namespace Sce.Atf.Wpf.Behaviors
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hwnd, ref Win32Point pt);
 
+        /// <summary>
+        /// Get corrected cursor coordinates relative to Visual</summary>
+        /// <param name="relativeTo">Visual to get coordinates relative to</param>
+        /// <returns>Cursor position in current coordinate system of the Visual</returns>
         public static Point CorrectGetPosition(Visual relativeTo)
         {
             Win32Point w32Mouse = new Win32Point();

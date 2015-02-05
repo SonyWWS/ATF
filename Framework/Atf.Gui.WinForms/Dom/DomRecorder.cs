@@ -84,7 +84,7 @@ namespace Sce.Atf.Dom
                 TreeListView.Name,
                 "Records DOM events on the active context and displays them".Localize(),
                 StandardControlGroup.Bottom, null,
-                @"http://www.ship.scea.com/portal/search/search.action?q=DomRecorder+OR+%22DOM+Recorder%22&context=resource_WIKI%7CWWSSDKATFhttp://www.ship.scea.com/portal/search/search.action?q=DomRecorder+OR+%22DOM+Recorder%22&context=resource_WIKI%7CWWSSDKATF".Localize());
+                "https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&q=DomRecorder+or+Recorder".Localize());
             info.VisibleByDefault = false;
 
             controlHostService.RegisterControl(m_uberControl, info, this);

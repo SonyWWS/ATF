@@ -11,7 +11,7 @@ namespace Sce.Atf.Wpf.Markup
     public sealed class TypeConverterExtension : MarkupExtension
     {
         /// <summary>
-        /// Gets or sets the source type for the <see cref="TypeConverter"/>.</summary>
+        /// Gets or sets the source type for the <see cref="TypeConverter"/></summary>
         [ConstructorArgument("sourceType")]
         public Type SourceType
         {
@@ -20,7 +20,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Gets or sets the target type for the <see cref="TypeConverter"/>.</summary>
+        /// Gets or sets the target type for the <see cref="TypeConverter"/></summary>
         [ConstructorArgument("targetType")]
         public Type TargetType
         {
@@ -29,7 +29,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Gets or sets the name of the source type for the <see cref="TypeConverter"/>.</summary>
+        /// Gets or sets the name of the source type for the <see cref="TypeConverter"/></summary>
         [ConstructorArgument("sourceTypeName")]
         public string SourceTypeName
         {
@@ -38,7 +38,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Gets or sets the name of the target type for the <see cref="TypeConverter"/>.</summary>
+        /// Gets or sets the name of the target type for the <see cref="TypeConverter"/></summary>
         [ConstructorArgument("targetTypeName")]
         public string TargetTypeName
         {
@@ -47,7 +47,7 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Constructs a default instance of the <c>TypeConverterExtension</c> class.</summary>
+        /// Constructs a default instance of the <c>TypeConverterExtension</c> class</summary>
         public TypeConverterExtension()
         {
             m_sourceTypeExtension = new TypeExtension();
@@ -56,7 +56,7 @@ namespace Sce.Atf.Wpf.Markup
 
         /// <summary>
         /// Constructs an instance of <c>TypeConverterExtension</c> with the specified source 
-        /// and target types.</summary>
+        /// and target types</summary>
         /// <param name="sourceType">The source type for the <see cref="TypeConverter"/>.</param>
         /// <param name="targetType">The target type for the <see cref="TypeConverter"/>.</param>
         public TypeConverterExtension(Type sourceType, Type targetType)
@@ -67,7 +67,7 @@ namespace Sce.Atf.Wpf.Markup
 
         /// <summary>
         /// Constructs an instance of <c>TypeConverterExtension</c> with the specified source 
-        /// and target types.</summary>
+        /// and target types</summary>
         /// <param name="sourceTypeName">The source type name for the <see cref="TypeConverter"/>.</param>
         /// <param name="targetTypeName">The target type name for the <see cref="TypeConverter"/>.</param>
         public TypeConverterExtension(string sourceTypeName, string targetTypeName)
@@ -77,9 +77,9 @@ namespace Sce.Atf.Wpf.Markup
         }
 
         /// <summary>
-        /// Provides an instance of <see cref="TypeConverter"/> based on this <c>TypeConverterExtension</c>.</summary>
-        /// <param name="serviceProvider">An object that can provide services.</param>
-        /// <returns>The instance of <see cref="TypeConverter"/>.</returns>
+        /// Provides an instance of <see cref="TypeConverter"/> based on this <c>TypeConverterExtension</c></summary>
+        /// <param name="serviceProvider">An object that can provide services</param>
+        /// <returns>The instance of <see cref="TypeConverter"/></returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             Type sourceType = null;

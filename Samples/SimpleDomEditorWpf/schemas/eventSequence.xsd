@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="eventSequence_1_0"
+  xmlns="eventSequence_1_0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--Abstract base type for resources-->
+  <xs:complexType name="resourceType" abstract="true">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="size" type="xs:integer" use="required"/>
+    <xs:attribute name="compressed" type="xs:boolean"/>
+  </xs:complexType>
+
+  <!--Event, with name, start time, duration and a list of resources-->
+  <xs:complexType name ="eventType">
+    <xs:sequence>
+      <xs:element name="resource" type="resourceType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="time" type="xs:integer"/>
+    <xs:attribute name="duration" type="xs:integer"/>
+  </xs:complexType>
+
+  <!--Derive an animation resource type-->
+  <xs:complexType name="animationResourceType">
+    <xs:complexContent>
+      <xs:extension base="resourceType">
+        <xs:attribute name="tracks" type="xs:integer"/>
+        <xs:attribute name="duration" type="xs:integer"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="primitiveType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Lines"/>
+      <xs:enumeration value="Line_Strips"/>
+      <xs:enumeration value="Polygons"/>
+      <xs:enumeration value="Polylist"/>
+      <xs:enumeration value="Triangles"/>
+      <xs:enumeration value="Triangle_Strips"/>
+      <xs:enumeration value="Bezier_Curves"/>
+      <xs:enumeration value="Bezier_Surfaces"/>
+      <xs:enumeration value="Subdivision_Surfaces"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!--Derive a geometry resource type-->
+  <xs:complexType name="geometryResourceType">
+    <xs:complexContent>
+      <xs:extension base="resourceType">
+        <xs:attribute name="bones" type="xs:integer"/>
+        <xs:attribute name="vertices" type="xs:integer"/>
+        <xs:attribute name="primitiveType" type="primitiveType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--Event sequence, a sequence of events-->
+  <xs:complexType name ="eventSequenceType">
+    <xs:sequence>
+      <xs:element name="event" type="eventType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--Declare the root element of the document-->
+  <xs:element name="eventSequence" type="eventSequenceType"/>
+  
+</xs:schema>

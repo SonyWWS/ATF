@@ -316,6 +316,9 @@ namespace Sce.Atf.Wpf
             return CanExecute((T)parameter);
         }
 
+        /// <summary>
+        /// Execute command</summary>
+        /// <param name="parameter">Parameter passed to delegate</param>
         void ICommand.Execute(object parameter)
         {
             Execute((T)parameter);
@@ -334,33 +337,36 @@ namespace Sce.Atf.Wpf
     }
 
     /// <summary>
-    ///     This class allows delegating the commanding logic to methods passed as parameters,
-    ///     and enables a View to bind commands to objects that are not part of the element tree.
-    /// </summary>
+    /// This class allows delegating the commanding logic to methods passed as parameters,
+    /// and enables a View to bind commands to objects that are not part of the element tree.</summary>
     /// <typeparam name="T1">Type of the parameter passed to the delegates</typeparam>
+    /// <typeparam name="T2">Type of parameter in method that is passed as parameter</typeparam>
     public class DelegateCommand<T1, T2> : ICommand
     {
         #region Constructors
 
         /// <summary>
-        ///     Constructor
-        /// </summary>
+        /// Constructor with method</summary>
+        /// <param name="m_executeMethod">Method to execute</param>
         public DelegateCommand(Action<T2> m_executeMethod)
             : this(m_executeMethod, null, false)
         {
         }
 
         /// <summary>
-        ///     Constructor
-        /// </summary>
+        /// Constructor with execute and can execute methods</summary>
+        /// <param name="m_executeMethod">Execute method</param>
+        /// <param name="m_canExecuteMethod">Can execute method</param>
         public DelegateCommand(Action<T2> m_executeMethod, Func<T1, bool> m_canExecuteMethod)
             : this(m_executeMethod, m_canExecuteMethod, false)
         {
         }
 
         /// <summary>
-        ///     Constructor
-        /// </summary>
+        /// Constructor with execute and can execute methods and flag to enable or disable CommandManager's automatic requery</summary>
+        /// <param name="executeMethod">Execute method</param>
+        /// <param name="canExecuteMethod">Can execute method</param>
+        /// <param name="isAutomaticRequeryDisabled">Flag for disabling automatic requery</param>
         public DelegateCommand(Action<T2> executeMethod, Func<T1, bool> canExecuteMethod, bool isAutomaticRequeryDisabled)
         {
             Requires.NotNull(executeMethod, "executeMethod");
@@ -375,8 +381,9 @@ namespace Sce.Atf.Wpf
         #region Public Methods
 
         /// <summary>
-        ///     Method to determine if the command can be executed
-        /// </summary>
+        /// Method to determine if the command can be executed</summary>
+        /// <param name="parameter">Method's parameter</param>
+        /// <returns>True iff this command can be executed</returns>
         public bool CanExecute(T1 parameter)
         {
             if (m_canExecuteMethod != null)
@@ -387,8 +394,8 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        ///     Execution of the command
-        /// </summary>
+        /// Execution of the command</summary>
+        /// <param name="parameter">Method's parameter</param>
         public void Execute(T2 parameter)
         {
             if (m_executeMethod != null)
@@ -398,24 +405,21 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        ///     Raises the CanExecuteChaged event
-        /// </summary>
+        ///     Raises the CanExecuteChaged event</summary>
         public void RaiseCanExecuteChanged()
         {
             OnCanExecuteChanged();
         }
 
         /// <summary>
-        ///     Protected virtual method to raise CanExecuteChanged event
-        /// </summary>
+        /// Protected virtual method to raise CanExecuteChanged event</summary>
         protected virtual void OnCanExecuteChanged()
         {
             CommandManagerHelper.CallWeakReferenceHandlers(m_canExecuteChangedHandlers);
         }
 
         /// <summary>
-        ///     Property to enable or disable CommandManager's automatic requery on this command
-        /// </summary>
+        /// Property to enable or disable CommandManager's automatic requery on this command</summary>
         public bool IsAutomaticRequeryDisabled
         {
             get

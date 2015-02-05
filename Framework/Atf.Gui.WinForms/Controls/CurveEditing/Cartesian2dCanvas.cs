@@ -22,12 +22,8 @@ namespace Sce.Atf.Controls.CurveEditing
             Size = new System.Drawing.Size(400, 400);
             BackColor = System.Drawing.Color.FromArgb(161, 161, 161);
             ResumeLayout(false);
-            m_font = new Font(Font.Name, 8.25f);
-            m_axisNameFont = new Font("Trebuchet MS", 13.0f);
-            m_verticalText.FormatFlags = StringFormatFlags.DirectionVertical;
-            m_verticalText.Alignment = StringAlignment.Near;
-            m_verticalText.LineAlignment = StringAlignment.Near;                                               
-
+            m_scaleTextFont = new Font(Font.Name, 8.25f);            
+            
             SetStyle(ControlStyles.UserPaint
                 | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.OptimizedDoubleBuffer
@@ -35,9 +31,10 @@ namespace Sce.Atf.Controls.CurveEditing
                 , true);
                         
             MinimumSize = new Size(10, 10);
-            Zoom_d = new PointD(1, 1);            
+            Zoom_d = new PointD(1, 1);
         }
 
+        
         /// <summary>
         /// Frames to fit a given graph rectangle</summary>
         /// <param name="rect">Rectangle to frame</param>
@@ -169,10 +166,10 @@ namespace Sce.Atf.Controls.CurveEditing
                    (at.X - m_trans.X) / zm.X,
                    (at.Y - m_trans.Y) / zm.Y);
             Zoom_d = new PointD(zm.X * xs, zm.Y * ys);
+            zm = Zoom_d;
             Pan_d = new PointD((at.X - zoomCenterStart.X * zm.X),
                 (at.Y - zoomCenterStart.Y * zm.Y));
             Invalidate();
-
         }
 
         /// <summary>
@@ -334,12 +331,12 @@ namespace Sce.Atf.Controls.CurveEditing
                 // xform x from graph to client space.
                 float xpos = GraphToClient(x);                
                 string strVal = Math.Round(x, 9).ToString();
-                SizeF sz = g.MeasureString(strVal, m_font);
+                SizeF sz = g.MeasureString(strVal, m_scaleTextFont);
                 float hw = sz.Width * 0.5f;
                 // check for overlap
                 if (lastTextEnd < (xpos - hw))
                 {
-                    g.DrawString(strVal, m_font, gridTextBrush, xpos - hw, heightWithMargin - sz.Height);
+                    g.DrawString(strVal, m_scaleTextFont, m_scaleTextBrush, xpos - hw, heightWithMargin - sz.Height);
                     lastTextEnd = xpos + hw;
                 }
                 
@@ -353,7 +350,7 @@ namespace Sce.Atf.Controls.CurveEditing
         {
             if (g == null)
                 throw new ArgumentNullException("g");
-            float textHeight = g.MeasureString("+1289E", m_font).Height;
+            float textHeight = g.MeasureString("+1289E", m_scaleTextFont).Height;
 
             double ytop = ClientToGraph_d(0, 0).Y;
             double ybottom = ClientToGraph_d(0, m_clientSize.Y).Y;
@@ -369,7 +366,7 @@ namespace Sce.Atf.Controls.CurveEditing
             {
                 float ypos = (float)(m_trans.Y + y * m_scale.Y);                
                 string strVal = Math.Round(y, 9).ToString();                
-                g.DrawString(strVal, m_font, gridTextBrush, GridTextMargin, ypos - textHeight / 2);
+                g.DrawString(strVal, m_scaleTextFont, m_scaleTextBrush, GridTextMargin, ypos - textHeight / 2);
             }                   
         }
 
@@ -378,7 +375,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawHorizontalMajorTicks(Graphics g)
         {
-            DrawHorizontalTicks(g, gridLinePen, m_majorTickY);                
+            DrawHorizontalTicks(g, m_majorGridlinePen, m_majorTickY);                
         }
 
         /// <summary>
@@ -386,7 +383,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawVerticalMajorTicks(Graphics g)
         {
-            DrawVerticalMajorTicks(g, gridLinePen, m_majorTickX);            
+            DrawVerticalTicks(g, m_majorGridlinePen, m_majorTickX);            
         }
 
         /// <summary>
@@ -394,33 +391,39 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawHorizontalMinorTicks(Graphics g)
         {
-            DrawHorizontalTicks(g, tickPen, m_majorTickY / m_numOfMinorTicks);            
+           DrawHorizontalTicks(g, m_minorGridlinePen, m_majorTickY / m_numOfMinorTicks);            
         }
+
 
         /// <summary>
         /// Draws vertical grid lines with minor ticks</summary>        
         /// <param name="g">Graphics object</param>
         public virtual void DrawVerticalMinorTicks(Graphics g)
         {
-            DrawVerticalMajorTicks(g, tickPen, m_majorTickX / m_numOfMinorTicks);
+           DrawVerticalTicks(g, m_minorGridlinePen, m_majorTickX / m_numOfMinorTicks);
         }
+        
         /// <summary>
         /// Draws x and y labels</summary>
         /// <param name="g">Graphics object</param>
         /// <param name="xLabel">X-axis label</param>
-        /// <param name="yLabel">Y-axis label</param>
-        
-        public virtual void DrawXYLabel(Graphics g, string xLabel, string yLabel)
+        /// <param name="yLabel">Y-axis label</param>        
+        /// <param name="color">Optional color</param>        
+        public virtual void DrawXYLabel(Graphics g, string xLabel, string yLabel, Color? color = null)
         {
-            g.DrawString(xLabel, m_axisNameFont, gridTextBrush, 120, ClientSize.Height - 2.0f * m_axisNameFont.Height);
-            // Set format of string.
-
-            Matrix xform = g.Transform;
-            g.RotateTransform(-90);
-            g.TranslateTransform(30, ClientSize.Height - ClientSize.Height / 8, MatrixOrder.Append);
-            // Draw string to screen.
-            g.DrawString(yLabel, m_axisNameFont, gridTextBrush, 0, 0);
-            g.Transform = xform;            
+            Color c = color != null ? color.Value : Color.Black;
+            
+            using (SolidBrush brush = new SolidBrush(c))
+            {
+                float margin = Math.Min( 2.0f * m_axisLabelFont.Height,40);
+                float leadingspace = 120;
+                g.DrawString(xLabel, m_axisLabelFont, brush, leadingspace, ClientSize.Height - margin);               
+                Matrix xform = g.Transform;
+                g.RotateTransform(-90);
+                g.TranslateTransform(margin, ClientSize.Height - leadingspace, MatrixOrder.Append);
+                g.DrawString(yLabel, m_axisLabelFont, brush, 0, 0);
+                g.Transform = xform;
+            }
         }
 
         /// <summary>
@@ -532,7 +535,64 @@ namespace Sce.Atf.Controls.CurveEditing
                 Invalidate();
             }
         }
+        
+        /// <summary>
+        /// Gets or sets Brush used for drawing 
+        /// number scale along the axes</summary>
+        public Brush ScaleTextBrush
+        {
+            get { return m_scaleTextBrush; }
+            set { SetDisposableVar(ref m_scaleTextBrush, value); }
+        }
+        private Brush m_scaleTextBrush = new SolidBrush(Color.Black);
 
+        /// <summary>
+        /// Gets or sets Font used for drawing
+        /// number scale along the axes</summary>
+        public Font ScaleTextFont
+        {
+            get { return m_scaleTextFont; }
+            set { SetDisposableVar(ref m_scaleTextFont, value); }
+        }
+        private Font m_scaleTextFont;
+
+
+        /// <summary>
+        /// Gets or sets Pen used for drawing major gridlines</summary>
+        public Pen MajorGridlinePen
+        {
+            get { return m_majorGridlinePen; }
+            set { SetDisposableVar(ref m_majorGridlinePen, value); }
+        }        
+        private Pen m_majorGridlinePen = new Pen(Color.FromArgb(180, 180, 180));
+
+        /// <summary>
+        /// Gets or sets Pen used for drawing minor gridlines.</summary>
+        public Pen MinorGridlinePen
+        {
+            get { return m_minorGridlinePen; }
+            set { SetDisposableVar(ref m_minorGridlinePen, value); }
+        }
+        private Pen m_minorGridlinePen = new Pen(Color.FromArgb(200, 200, 200));
+
+        /// <summary>
+        /// Gets or sets Pen used for drawing the axes.</summary>
+        public Pen AxisPen
+        {
+            get { return m_axisPen; }
+            set { SetDisposableVar(ref m_axisPen, value); }
+        }
+        private Pen m_axisPen = new Pen(Color.Black);
+
+        /// <summary>
+        /// Gets or sets Font used for drawing axis labels</summary>
+        public Font AxisLabelFont
+        {
+            get { return m_axisLabelFont; }
+            set { SetDisposableVar(ref m_axisLabelFont, value); }
+        }
+        private Font m_axisLabelFont = new Font("Trebuchet MS", 13.0f);
+     
         /// <summary>
         /// Gets or sets color used to draw coordinate axes</summary>
         public Color AxisColor
@@ -545,16 +605,28 @@ namespace Sce.Atf.Controls.CurveEditing
         /// Gets or sets color used for drawing grid</summary>
         public Color GridColor
         {
-            get { return gridLinePen.Color; }
-            set { gridLinePen.Color = value; }
+            get { return m_majorGridlinePen.Color; }
+            set { m_majorGridlinePen.Color = value; }
         }
 
         /// <summary>
         /// Gets or sets color used for drawing scale numbers, x and y axis labels</summary>
         public Color TextColor
         {
-            get { return gridTextBrush.Color; }
-            set { gridTextBrush.Color = value; }
+            get 
+            {
+                SolidBrush sb = m_scaleTextBrush as SolidBrush;
+                if (sb == null)
+                    throw new InvalidOperationException("ScaleTextBrush is null or not a SolidBruhs");
+                return sb.Color; 
+            }
+            set 
+            {
+                SolidBrush sb = m_scaleTextBrush as SolidBrush;
+                if (sb == null)
+                    throw new InvalidOperationException("ScaleTextBrush is null or not a SolidBruhs");
+                sb.Color = value; 
+            }
         }
 
 
@@ -761,7 +833,7 @@ namespace Sce.Atf.Controls.CurveEditing
             if (Control.MouseButtons == MouseButtons.None)
             {
                 float zf = (1.0f + e.Delta / 1200.0f);
-                SetZoom(new Point(e.X, e.Y), zf, zf);
+                SetZoom(e.Location, zf, zf);
             }
         }
 
@@ -777,8 +849,31 @@ namespace Sce.Atf.Controls.CurveEditing
            
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.Windows.Forms.Control" /> and its child controls and 
+        /// optionally releases the managed resources.</summary>
+        /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // The setters will dispose and set to null
+                ScaleTextBrush = null;
+                ScaleTextFont = null;
+                MajorGridlinePen = null;
+                MinorGridlinePen = null;
+                AxisPen = null;
+                AxisLabelFont = null;
+            }
+            base.Dispose(disposing);
+        }
+        private void SetDisposableVar<T>(ref T mvar, T value) where T : class , IDisposable
+        {
+            if (mvar != null) mvar.Dispose();
+            mvar = value;
+        }
 
-        private void DrawVerticalMajorTicks(Graphics g, Pen p, double tickLength)
+        private void DrawVerticalTicks(Graphics g, Pen p, double tickLength)
         {
             if (g == null)
                 throw new ArgumentNullException("g");
@@ -948,16 +1043,7 @@ namespace Sce.Atf.Controls.CurveEditing
         private double m_majorTickSpacing = 50.0f;        
         private const float  GridTextMargin = 3.0f;
         private double m_majorTickY = 60;
-        private double m_majorTickX = 60;
-       
-        // color, pen, and brushes        
-        private readonly SolidBrush gridTextBrush = new SolidBrush(Color.Black);
-        private readonly Pen gridLinePen = new Pen(Color.FromArgb(180, 180, 180));
-        private readonly Pen tickPen = new Pen(Color.FromArgb(200, 200, 200));
-        private readonly Pen m_axisPen = new Pen(Color.Black);
-        private readonly Font m_font;
-        private readonly Font m_axisNameFont;
-        private readonly StringFormat m_verticalText = new StringFormat();
+        private double m_majorTickX = 60;               
         private OriginLockMode m_lockorg = OriginLockMode.Free;
     }
 

@@ -289,6 +289,7 @@
     <Compile Include="Controls\Adaptable\RectangleDragSelector.cs" />
     <Compile Include="Controls\Adaptable\ScrollbarAdapter.cs" />
     <Compile Include="Controls\Adaptable\SelectionAdapter.cs" />
+    <Compile Include="Controls\Adaptable\ShowPinsToggle.cs" />
     <Compile Include="Controls\Adaptable\TransformAdapter.cs" />
     <Compile Include="Controls\Adaptable\ViewingAdapter.cs" />
     <Compile Include="Controls\BoolInputControl.cs">
@@ -343,6 +344,11 @@
     <Compile Include="Controls\DataBoundListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\DataEditing\ColorDataEditor.cs" />
+    <Compile Include="Controls\DataEditing\DataEditor.cs" />
+    <Compile Include="Controls\DataEditing\DataEditorTheme.cs" />
+    <Compile Include="Controls\DataEditing\FloatDataEditor.cs" />
+    <Compile Include="Controls\DataEditing\StringDataEditor.cs" />
     <Compile Include="Controls\Direct2DControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -565,6 +571,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeItemRenderer.cs" />
+    <Compile Include="Controls\TreeListControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeListItemRenderer.cs" />
     <Compile Include="Controls\TreeListView.Column.cs" />
     <Compile Include="Controls\TreeListView.cs" />
     <Compile Include="Controls\TreeListView.ListView.cs" />

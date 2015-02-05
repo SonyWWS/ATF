@@ -39,7 +39,7 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Event that is raised when a resouce has been loaded</summary>
+        /// Event that is raised when a resource has been loaded</summary>
         event EventHandler<ItemChangedEventArgs<IResource>> ResourceLoaded;
 
         /// <summary>

@@ -1,14 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
+  <StringItem id="Skins" context="" translation="スキン" />
+  <StringItem id="Appearance" context="" translation="外観" />
+  <StringItem id="Theme" context="" translation="テーマ" />
+  <StringItem id="Theme" context="" translation="テーマ" />
+  <StringItem id="Theme" context="" translation="テーマ" />
+  <StringItem id="Auto-load Documents" context="" translation="ドキュメントの自動読み込み" />
+  <StringItem id="Load previously open documents on application startup" context="" translation="アプリケーションの起動時に前回開いていたドキュメントを読み込みます。" />
+  <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="新しいドキュメントを自動作成" />
+  <StringItem id="Create a new empty document on application startup" context="" translation="アプリケーションの起動時に新しい空のドキュメントを作成します。" />
+  <StringItem id="Documents" context="" translation="ドキュメント" />
   <StringItem id="Activate Control" context="" translation="アクティブなコントロール" />
   <StringItem id="Could not load window layout" context="" translation="ウィンドウレイアウトを読み込めません。" />
   <StringItem id="Show/Hide " context="" translation="表示/非表示 " />
   <StringItem id="Show/Hide " context="" translation="表示/非表示 " />
   <StringItem id="Rename" context="" translation="名前を変更" />
   <StringItem id="Rename" context="" translation="名前を変更" />
-  <StringItem id="About" context="" translation="バージョン情報" />
-  <StringItem id="Help" context="" translation="ヘルプ" />
-  <StringItem id="Help" context="" translation="ヘルプ" />
+  <StringItem id="Close" context="Close file" translation="閉じる" />
+  <StringItem id="Save" context="" translation="保存" />
+  <StringItem id="Discard" context="" translation="破棄" />
+  <StringItem id="_About" context="" translation="バージョン情報(_A)" />
+  <StringItem id="Help/Help" context="" translation="ヘルプ/ヘルプ" />
   <StringItem id="Help" context="" translation="ヘルプ" />
   <StringItem id="Help" context="" translation="ヘルプ" />
   <StringItem id="Show Context Help" context="" translation="コンテキストヘルプを表示" />
@@ -16,24 +28,22 @@
   <StringItem id="Uncheck this to hide help commands in context menus" context="" translation="コンテキストメニューにヘルプコマンドを表示しない場合は選択を解除します。" />
   <StringItem id="_Contents" context="" translation="コンテンツ(_C)" />
   <StringItem id="Help Contents" context="" translation="ヘルプコンテンツ" />
+  <StringItem id="_Release Notes" context="" translation="リリースノート (_R)" />
+  <StringItem id="Release Notes" context="" translation="リリースノート" />
   <StringItem id="_About" context="" translation="バージョン情報(_A)" />
   <StringItem id="Shows Information About Application" context="" translation="アプリケーションの情報を表示します。" />
-  <StringItem id="_File" context="" translation="ファイル(_F)" />
-  <StringItem id="File Commands" context="" translation="ファイルコマンド" />
-  <StringItem id="_Edit" context="" translation="編集(_E)" />
-  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
-  <StringItem id="_View" context="" translation="表示(_V)" />
-  <StringItem id="View Commands" context="" translation="表示コマンド" />
-  <StringItem id="Modify" context="" translation="変更" />
-  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
-  <StringItem id="_Format" context="" translation="フォーマット(_F)" />
-  <StringItem id="Formatting Commands" context="" translation="フォーマットコマンド" />
-  <StringItem id="_Window" context="" translation="ウィンドウ(_W)" />
-  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
-  <StringItem id="_Help" context="" translation="ヘルプ(_H)" />
-  <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
   <StringItem id="Output" context="" translation="出力" />
   <StringItem id="View errors, warnings, and informative messages" context="" translation="エラー、警告、情報メッセージを表示。" />
+  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="切り取り" />
+  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="選択部分を切り取り、クリップボードに配置します。" />
+  <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="コピー" />
+  <StringItem id="Copy the selection and place it on the clipboard" context="" translation="選択部分をクリップボードにコピーします。" />
+  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="貼り付け" />
+  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="クリップボードの内容を貼り付け、貼り付けた内容を選択します。" />
+  <StringItem id="Delete" context="Delete the selection" translation="削除" />
+  <StringItem id="Delete the selection" context="" translation="選択部分を削除します。" />
+  <StringItem id="Cut" context="Cut the selection" translation="切り取り" />
+  <StringItem id="Delete" context="" translation="削除" />
   <StringItem id="_File" context="" translation="ファイル(_F)" />
   <StringItem id="File Commands" context="" translation="ファイルコマンド" />
   <StringItem id="_Edit" context="" translation="編集(_E)" />
@@ -49,13 +59,57 @@
   <StringItem id="_Help" context="" translation="ヘルプ(_H)" />
   <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
   <StringItem id="Ready" context="Application is ready" translation="準備完了" />
-  <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
-  <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="Targets" context="" translation="ターゲット" />
+  <StringItem id="_Targets" context="" translation="ターゲット (_T)" />
+  <StringItem id="Edit Targets" context="" translation="ターゲットの編集" />
+  <StringItem id="Enter a port between 0 and 65535" context="" translation="0 ～ 65535 の間のポート番号を入力してください。" />
+  <StringItem id="Check In Files" context="" translation="ファイルをチェックイン" />
+  <StringItem id="Reconcile Offline Work" context="" translation="オフラインで行った作業を調整します。" />
+  <StringItem id="Send Feedback" context="" translation="フィードバックを送信" />
+  <StringItem id="Send Feedback..." context="" translation="フィードバックを送信..." />
+  <StringItem id="Report bug or request feature" context="" translation="バグ報告または機能要望" />
+  <StringItem id="Version Check Failed" context="" translation="バージョンチェックに失敗しました。" />
+  <StringItem id="Check for update..." context="" translation="アップデートを確認..." />
+  <StringItem id="Check for product update" context="" translation="製品アップデートを確認" />
+  <StringItem id="Check for update at startup" context="" translation="起動時にアップデートを確認" />
+  <StringItem id="Check for product update at startup" context="" translation="起動時に製品アップデートを確認" />
+  <StringItem id="Application" context="" translation="アプリケーション" />
+  <StringItem id="Your version is {0}" context="" translation="使用中のバージョンは、{0} です。" />
+  <StringItem id="The most recent version is {0}" context="" translation="最新のバージョンは、{0} です。" />
+  <StringItem id="Would you like to download the latest version?" context="" translation="最新バージョンをダウンロードしますか?" />
+  <StringItem id="Update" context="" translation="アップデート" />
+  <StringItem id="Cannot open url:" context="" translation="次の URL を開くことができません:" />
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="This software is up to date." context="" translation="このソフトウェアは最新版です。" />
+  <StringItem id="Updater" context="" translation="アップデーター" />
+  <StringItem id="Saves the layout to a new configuration" context="" translation="新しい構成にレイアウトを保存します。" />
+  <StringItem id="Manages the current layouts" context="" translation="現在のレイアウトを管理します。" />
+  <StringItem id="Drag Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="Drag Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="Drag Drop" context="" translation="ドラッグアンドドロップ" />
+  <StringItem id="DomRecorder" context="" translation="DomRecorder" />
+  <StringItem id="Records DOM events on the active context and displays them" context="" translation="アクティブなコンテキスト上の DOM イベントを記録し、表示します。" />
+  <StringItem id="Yes" context="" translation="はい" />
+  <StringItem id="No" context="" translation="いいえ" />
+  <StringItem id="Cancel" context="" translation="キャンセル" />
+  <StringItem id="Find File" context="" translation="ファイルを検索" />
+  <StringItem id="Find Targets" context="" translation="ターゲットを検索" />
+  <StringItem id="Preferences" context="" translation="基本設定" />
+  <StringItem id="Reset all preferences to their default values?" context="" translation="すべての設定値をデフォルトにリセットしますか?" />
+  <StringItem id="Reset All Preferences" context="" translation="すべての設定をリセット" />
+  <StringItem id="Load and Save Settings" context="" translation="設定を読み込み/保存" />
+  <StringItem id="Targets" context="" translation="ターゲット" />
+  <StringItem id="Edit TCP/IP Target" context="" translation="TCP/IP ターゲットを編集" />
+  <StringItem id="New Layout" context="" translation="新しいレイアウト" />
+  <StringItem id="Reset Property" context="" translation="プロパティをリセット" />
   <StringItem id="Edit Property" context="" translation="プロパティを編集" />
-  <StringItem id="Unhandled Exception" context="" translation="未処理例外" />
+  <StringItem id="An error has occurred" context="" translation="エラーが発生しました。" />
   <StringItem id="About" context="" translation="バージョン情報" />
   <StringItem id="Error" context="" translation="エラー" />
   <StringItem id="Please wait..." context="" translation="お待ちください..." />
   <StringItem id="Progress" context="" translation="進行状況" />
   <StringItem id="Edit Label" context="" translation="ラベルを編集" />
+  <StringItem id="Check/Uncheck" context="" translation="選択/選択解除" />
 </StringLocalizationTable>

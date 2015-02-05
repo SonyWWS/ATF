@@ -89,9 +89,8 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
             m_theSocket = null;
             m_curTarget = null;
-            m_recieveClb = new AsyncCallback(ReceiveClb);
-            m_connectClb = new AsyncCallback(ConnectClb);
-            m_callingThreadId = Thread.CurrentThread.ManagedThreadId;
+            m_recieveClb = ReceiveClb;
+            m_connectClb = ConnectClb;
             m_ConnectionInProgress = false;
             MessageSize = maximumMessageSize;
         }
@@ -428,7 +427,6 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         private readonly AsyncCallback m_connectClb;   // recieve callback.        
         private readonly SynchronizationContext m_cctx;
         private volatile object m_syncSocket = new object(); // used to synchronization.
-        private int m_callingThreadId; // the id of the thread that instantiated this object.
         private int m_messageSize;
         private volatile bool m_ConnectionInProgress;
     }

@@ -7,8 +7,17 @@ using System.Linq;
 
 namespace Sce.Atf.Dom
 {
+    /// <summary>
+    /// DomNodeAdapter that facilitates observing property changes in DomNode children</summary>
     public abstract class ObservableDomNodeAdapter : DomNodeAdapter, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Perform initialization when the adapter's node is set.
+        /// Check all property descriptors of all registered adapter types and when an ObservableDomPropertyAttribute
+        /// is present on the descriptor, finds the AttributeInfo and ChildInfo with matching name on the DomNodeType,
+        /// and sets PropertyChangedEventArgs tags to match.
+        /// This method is called each time the adapter is connected to its underlying node.
+        /// Typically overridden by creators of DOM adapters.</summary>
         protected override void OnNodeSet()
         {
             base.OnNodeSet();
@@ -71,11 +80,10 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Checks all property descriptors of adapter type and when an ObservableDomPropertyAttribute
-        /// is present on the descriptor, finds the AttributeInfo with matching name on the DomNodeType
-        /// and sets PropertyChangedEventArgs tags to match
-        /// </summary>
-        /// <param name="adapterType"></param>
-        /// <param name="nodeType"></param>
+        /// is present on the descriptor, finds the AttributeInfo with matching name on the DomNodeType,
+        /// and sets PropertyChangedEventArgs tags to match</summary>
+        /// <param name="adapterType">Type of adapter</param>
+        /// <param name="nodeType">DomNode type</param>
         private static void AddAttributeTags(Type adapterType, DomNodeType nodeType)
         {
             foreach (var property in adapterType.GetProperties())
@@ -91,7 +99,7 @@ namespace Sce.Atf.Dom
                         var currentType = nodeType;
                         var attributeInfo = currentType.GetAttributeInfo(attributeName);
                        
-                        Requires.NotNull(attributeInfo, "Unrecognised attribute name in ObservableDomPropertyAttribute");
+                        Requires.NotNull(attributeInfo, "Unrecognized attribute name in ObservableDomPropertyAttribute");
 
                         // Each base type may have duplicate attributeInfo if it is an inherited attribute
                         // We need to set the tag on each base attributeInfo so that the PropertyChanged event
@@ -116,10 +124,11 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Similar to above but for ChildInfo
-        /// </summary>
-        /// <param name="adapterType"></param>
-        /// <param name="nodeType"></param>
+        /// Checks all property descriptors of adapter type and when an ObservableDomPropertyAttribute
+        /// is present on the descriptor, finds the ChildInfo with matching name on the DomNodeType,
+        /// and sets PropertyChangedEventArgs tags to match</summary>
+        /// <param name="adapterType">Type of adapter</param>
+        /// <param name="nodeType">DomNode type</param>
         private static void AddChildTags(Type adapterType, DomNodeType nodeType)
         {
             foreach (var property in adapterType.GetProperties())
@@ -135,7 +144,7 @@ namespace Sce.Atf.Dom
                         var currentType = nodeType;
                         var childInfo = currentType.GetChildInfo(childName);
 
-                        Requires.NotNull(childInfo, "Unrecognised childInfo in ObservableDomPropertyAttribute");
+                        Requires.NotNull(childInfo, "Unrecognized childInfo in ObservableDomPropertyAttribute");
 
                         // Each base type may have duplicate childInfo if it is an inherited childInfo
                         // We need to set the tag on each base childInfo so that the PropertyChanged event
@@ -161,10 +170,9 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// On attribute changed attempt to get PropertyChangedEventArgs tags from 
-        /// AttributeInfo and raise events
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// AttributeInfo and raise events</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Attribute event arguments</param>
         private void DomNode_AttributeChanged(object sender, AttributeEventArgs e)
         {
             if (e.DomNode != DomNode)
@@ -220,6 +228,8 @@ namespace Sce.Atf.Dom
 
         #region INotifyPropertyChanged Members
 
+        /// <summary>
+        /// Property changed event</summary>
         public event PropertyChangedEventHandler PropertyChanged
         {
             add
@@ -240,11 +250,17 @@ namespace Sce.Atf.Dom
 
         #endregion
 
+        /// <summary>
+        /// Raise PropertyChanged event</summary>
+        /// <param name="propertyName">Name of changed property</param>
         protected void RaisePropertyChanged(string propertyName)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Handle PropertyChanged event</summary>
+        /// <param name="e">PropertyChanged event arguments</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             var handler = m_propertyChanged;

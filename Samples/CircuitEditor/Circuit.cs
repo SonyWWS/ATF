@@ -10,9 +10,6 @@ namespace CircuitEditorSample
     /// <summary>
     /// Adapts DomNode to a circuit and observable context with change notification events</summary>
     public class Circuit : Sce.Atf.Controls.Adaptable.Graphs.Circuit, IGraph<Module, Connection, ICircuitPin>
-#if !CS_4
-        , IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>
-#endif
     {
         /// <summary>
         /// Performs initialization when the adapter is connected to the circuit's DomNode</summary>
@@ -21,7 +18,7 @@ namespace CircuitEditorSample
             // cache these list wrapper objects
             m_modules = new DomNodeListAdapter<Module>(DomNode, Schema.circuitType.moduleChild);
             m_connections = new DomNodeListAdapter<Connection>(DomNode, Schema.circuitType.connectionChild);
-            m_annotations = new DomNodeListAdapter<Annotation>(DomNode, Schema.circuitType.annotationChild);
+            new DomNodeListAdapter<Annotation>(DomNode, Schema.circuitType.annotationChild);
             base.OnNodeSet();
         }
 
@@ -71,29 +68,11 @@ namespace CircuitEditorSample
             }
         }
 
-        // In VS2008, without C# 4's covariance and contravariance, we have to manually implement variations of
-        //  interfaces that use the 'out' or 'in' keywords on the generic type parameters.
-#if !CS_4
-        /// <summary>
-        /// Gets enumeration of all connections between visible nodes in the circuit</summary>
-        IEnumerable<IGraphEdge<IGraphNode, IEdgeRoute>> IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>.Edges
-        {
-            get { return ((IGraph<Module, Connection, ICircuitPin>) this).Edges.Cast<IGraphEdge<IGraphNode, IEdgeRoute>>(); }
-        }
-
-        /// <summary>
-        /// Gets enumeration of all nodes in the circuit</summary>
-        IEnumerable<IGraphNode> IGraph<IGraphNode, IGraphEdge<IGraphNode, IEdgeRoute>, IEdgeRoute>.Nodes
-        {
-            get { return ((IGraph<Module, Connection, ICircuitPin>)this).Nodes.Cast<IGraphNode>(); }
-        }
-#endif
 
         #endregion
        
 
         private DomNodeListAdapter<Module> m_modules;
         private DomNodeListAdapter<Connection> m_connections;
-        private DomNodeListAdapter<Annotation> m_annotations;
     }
 }

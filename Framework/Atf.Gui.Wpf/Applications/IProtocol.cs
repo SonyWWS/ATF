@@ -23,29 +23,33 @@ namespace Sce.Atf.Wpf.Applications
         Version Version { get; }
 
         /// <summary>
-        /// Returns true if this protocol is capable of discovering for targets</summary>
+        /// Get whether this protocol is capable of discovering targets</summary>
         bool CanFindTargets { get; }
 
         /// <summary>
         /// Discovers the available targets</summary>
+        /// <returns>Available targets</returns>
         IEnumerable<ITarget> FindTargets();
 
         /// <summary>
         /// Create a new transport layer object</summary>
+        /// <param name="target">Target for protocol</param>
+        /// <returns>Transport layer object</returns>
         ITransportLayer CreateTransportLayer(ITarget target);
 
         /// <summary>
-        /// Returns true if this protocol is capable of dealing with user defined targets</summary>
+        /// Get whether this protocol is capable of dealing with user defined targets</summary>
         bool CanCreateUserTarget { get; }
 
         /// <summary>
-        /// If CanCreateUserTarget is true then creates a new user target</summary>
-        /// <returns>created target</returns>
+        /// If CanCreateUserTarget is true, creates a new user target</summary>
+        /// <param name="args">Target arguments</param>
+        /// <returns>Created target</returns>
         ITarget CreateUserTarget(string[] args);
 
         /// <summary>
         /// Display a dialog allowing user to edit a target</summary>
-        /// <param name="target">target to edit</param>
+        /// <param name="target">Target to edit</param>
         /// <returns>true if target modified</returns>
         bool EditUserTarget(ITarget target);
     }

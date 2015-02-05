@@ -13,6 +13,8 @@ namespace Sce.Atf.Wpf.Behaviors
     /// </summary>
     public class ListBoxScrollToEndBehavior : Behavior<ListBox>
     {
+        /// <summary>
+        /// Handle Attached event</summary>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -23,6 +25,8 @@ namespace Sce.Atf.Wpf.Behaviors
 
         }
 
+        /// <summary>
+        /// Handle Detaching event</summary>
         protected override void OnDetaching()
         {
             base.OnDetaching();
