@@ -1,6 +1,8 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Drawing;
@@ -13,6 +15,7 @@ using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.Controls.Adaptable;
 using Sce.Atf.Controls.Adaptable.Graphs;
+using Sce.Atf.Controls.PropertyEditing;
 using Sce.Atf.Dom;
 
 using CircuitEditorSample.Tests;
@@ -140,6 +143,10 @@ namespace CircuitEditorSample
             batch.AddPart(new WebHelpCommands("https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample".Localize()));
             container.Compose(batch);
 
+            // Add a customized category comparer to the object palette.
+            var paletteService = container.GetExportedValue<PaletteService>();
+            paletteService.CategoryComparer = new CategoryComparer();
+
             // Initialize components that require it. Initialization often can't be done in the constructor,
             //  or even after imports have been satisfied by MEF, since we allow circular dependencies between
             //  components, via the System.Lazy class. IInitializable allows components to defer some operations
@@ -153,6 +160,29 @@ namespace CircuitEditorSample
 
             // Give components a chance to clean up.
             container.Dispose();
+        }
+
+        // Demonstrates the PaletteService.CategoryComparer feature.
+        private class CategoryComparer : IComparer<string>
+        {
+            // returns -1, 0, or 1, if x is before, the same as, or after y.
+            public int Compare(string x, string y)
+            {
+                // If both categories are the same (including if they are both s_lastCategory), return 0.
+                if (x == y)
+                    return 0;
+
+                // Place this category last.
+                if (x == s_lastCategory)
+                    return 1;
+                if (y == s_lastCategory)
+                    return -1;
+
+                // Otherwise, sort in alphabetical order.
+                return string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase);
+            }
+
+            private static readonly string s_lastCategory = "Misc".Localize("abbreviation for miscellaneous");
         }
     }
 }

@@ -53,8 +53,27 @@ namespace Sce.Atf.Applications
                     StandardControlGroup.Left, null,
                     "https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&q=PaletteService+or+Palette".Localize()),
                 this);
+        }
 
-            m_paletteTreeAdapter = new PaletteTreeAdapter(this, m_searchInput);
+        /// <summary>
+        /// Gets or sets the category comparer. The default value is null. By default, the
+        /// categories are sorted alphabetically. Set this early, before any palette items
+        /// are added.</summary>
+        /// <value>The category comparer, that compares two category names (strings)</value>
+        /// <exception cref="System.InvalidOperationException">CategoryComparer can only be set before palette items are added</exception>
+        public IComparer<string> CategoryComparer
+        {
+            get { return m_categoryComparer; }
+            set
+            {
+                if (value != m_categoryComparer)
+                {
+                    if (m_paletteTreeAdapter != null)
+                        throw new InvalidOperationException(
+                            "CategoryComparer can only be set before palette items are added");
+                    m_categoryComparer = value;
+                }
+            }
         }
 
         /// <summary>
@@ -72,6 +91,8 @@ namespace Sce.Atf.Applications
 
             treeControlAdapter = new TreeControlAdapter(treeControl);
         }
+
+        private IComparer<string> m_categoryComparer;
 
         #region IInitializable Members
 
@@ -161,7 +182,7 @@ namespace Sce.Atf.Applications
             if (categoryName != null)
             {
                 m_objectClients.Add(item, client);
-                m_paletteTreeAdapter.AddItem(item, categoryName);
+                TreeAdapter.AddItem(item, categoryName);
             }
         }
 
@@ -170,7 +191,7 @@ namespace Sce.Atf.Applications
         /// <param name="item">Item to remove</param>
         public void RemoveItem(object item)
         {
-            m_paletteTreeAdapter.RemoveItem(item);
+            TreeAdapter.RemoveItem(item);
 
             m_objectClients.Remove(item);
         }
@@ -183,12 +204,12 @@ namespace Sce.Atf.Applications
         {
             m_searchInput.ClearSearch();
 
-            m_paletteTreeAdapter.RemoveAllItems();
+            TreeAdapter.RemoveAllItems();
 
             m_objectClients.Clear();
             TreeControl.Root.Clear();
 
-            m_paletteTreeAdapter.RefreshControl();
+            TreeAdapter.RefreshControl();
         }
 
         #region IControlHostClient Members
@@ -252,7 +273,7 @@ namespace Sce.Atf.Applications
 
         private void mainWindow_Loaded(object sender, EventArgs e)
         {
-            TreeView = m_paletteTreeAdapter;
+            TreeView = TreeAdapter;
             if (PersistExpandedCategories && m_settingsService != null)
             {                
                 m_settingsService.RegisterSettings(
@@ -275,7 +296,7 @@ namespace Sce.Atf.Applications
                 if (m_searching)
                 {
                     // get the tree control to force-reload the tree data
-                    m_paletteTreeAdapter.RefreshControl();
+                    TreeAdapter.RefreshControl();
                     RestoreExpansion();
                 }
                 m_searching = false;
@@ -288,15 +309,15 @@ namespace Sce.Atf.Applications
                 m_searching = true;
             }
 
-            m_paletteTreeAdapter.RefreshControl();
+            TreeAdapter.RefreshControl();
 
             // expand categories that have matched children
-            foreach (object category in m_paletteTreeAdapter.GetChildren(m_paletteTreeAdapter))
+            foreach (object category in TreeAdapter.GetChildren(TreeAdapter))
             {
-                foreach (object typeName in m_paletteTreeAdapter.GetChildren(category))
+                foreach (object typeName in TreeAdapter.GetChildren(category))
                 {
                     ItemInfo info = new WinFormsItemInfo();
-                    m_paletteTreeAdapter.GetInfo(typeName, info);
+                    TreeAdapter.GetInfo(typeName, info);
                     if (m_searchInput.Matches(info.Label))
                     {
                         TreeControlAdapter.Expand(category);
@@ -311,7 +332,7 @@ namespace Sce.Atf.Applications
         private void RememberExpansion()
         {
             m_expandedCollections.Clear();
-            foreach (string category in m_paletteTreeAdapter.GetChildren(m_paletteTreeAdapter))
+            foreach (string category in TreeAdapter.GetChildren(TreeAdapter))
             {
                 if (TreeControlAdapter.IsExpanded(category))
                     m_expandedCollections.Add(category);
@@ -326,13 +347,29 @@ namespace Sce.Atf.Applications
             }
         }
 
+        // Gets the PaletteTreeAdapter with lazy construction, so as to avoid having to call
+        //  a virtual method in the constructor. Calling GetCategoryComparer() in the Initialize()
+        //  might be too late, because other MEF components may call AddItem() in their Initialize()
+        //  methods.
+        private PaletteTreeAdapter TreeAdapter
+        {
+            get
+            {
+                if (m_paletteTreeAdapter == null)
+                    m_paletteTreeAdapter = new PaletteTreeAdapter(this, m_searchInput, CategoryComparer);
+                return m_paletteTreeAdapter;
+            }
+        }
+
         // class to adapt IPaletteContext to the ITreeView required by TreeControlAdapter
         private class PaletteTreeAdapter : ITreeView, IItemView, IObservableContext
         {
-            public PaletteTreeAdapter(PaletteService paletteService, StringSearchInputUI searchInput)
+            public PaletteTreeAdapter(PaletteService paletteService, StringSearchInputUI searchInput,
+                IComparer<string> categoryComparer)
             {
                 m_paletteService = paletteService;
                 m_searchInput = searchInput;
+                m_categories = new SortedDictionary<string, List<object>>(categoryComparer);
 
                 if (ItemChanged == null) return; // inhibit compiler warning
                 if (Reloaded == null) return;
@@ -473,8 +510,7 @@ namespace Sce.Atf.Applications
 
             #endregion
 
-            private readonly SortedDictionary<string, List<object>> m_categories =
-                new SortedDictionary<string, List<object>>();
+            private readonly SortedDictionary<string, List<object>> m_categories;
         }
 
         /// <summary>
@@ -503,7 +539,7 @@ namespace Sce.Atf.Applications
         private bool m_persistExpandedCategories = true;
         private readonly List<string> m_expandedCollections = new List<string>();
 
-        private readonly PaletteTreeAdapter m_paletteTreeAdapter;
+        private PaletteTreeAdapter m_paletteTreeAdapter;
         private readonly Dictionary<object, IPaletteClient> m_objectClients =
             new Dictionary<object, IPaletteClient>();
     }

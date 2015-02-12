@@ -90,7 +90,8 @@ namespace CircuitEditorSample
                 "Create a moveable resizable comment on the circuit canvas".Localize(),
                 Resources.AnnotationImage);
 
-            m_paletteService.AddItem(annotationItem, PaletteCategory, this);
+            m_paletteService.AddItem(
+                annotationItem, "Misc".Localize("abbreviation for miscellaneous"), this);
 
             // define editable properties on annotation
             Schema.annotationType.Type.SetTag(
