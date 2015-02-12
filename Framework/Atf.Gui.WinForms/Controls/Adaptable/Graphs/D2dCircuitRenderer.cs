@@ -762,6 +762,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var titleRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, titleHeight);
 
             var fillBrush = m_theme.GetCustomOrDefaultBrush(type.Name);
+            if (!element.ElementInfo.IsValid)
+            {
+                fillBrush = m_theme.ErrorBrush;
+            }
             var titileFillBrush = m_theme.GetFillTitleBrush(type.Name);
             var gradientBrush = fillBrush as D2dLinearGradientBrush;
             if (gradientBrush != null)

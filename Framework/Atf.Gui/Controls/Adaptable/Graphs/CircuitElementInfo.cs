@@ -18,6 +18,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             set { PropertyChanged.NotifyIfChanged(ref m_showUnconnectedPins, value, () => ShowUnconnectedPins); }
         }
 
+        /// <summary>
+        /// Gets/sets a value that indicates whether the element holds valid information</summary>
+        public bool IsValid 
+        {
+            get { return m_valid; }
+            set { PropertyChanged.NotifyIfChanged(ref m_valid, value, () => IsValid); }       
+        }
+
+
         #region INotifyPropertyChanged members
 
         /// <summary>
@@ -27,5 +36,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         #endregion
 
         private bool m_showUnconnectedPins = true;
+        private bool m_valid = true;
     }
 }

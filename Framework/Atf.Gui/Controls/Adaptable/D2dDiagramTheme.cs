@@ -41,7 +41,7 @@ namespace Sce.Atf.Controls.Adaptable
             m_hiddenBrush = D2dFactory.CreateSolidBrush(Color.LightGray);
             m_templatedInstance = D2dFactory.CreateSolidBrush(Color.Yellow);
             m_copyInstance = D2dFactory.CreateSolidBrush(Color.Green);     
-            m_errorBrush = D2dFactory.CreateSolidBrush(Color.Tomato);
+            //m_errorBrush = D2dFactory.CreateSolidBrush(Color.Tomato);
             m_infoBrush = D2dFactory.CreateSolidBrush(SystemColors.Info);            
             m_hoverBorderBrush = D2dFactory.CreateSolidBrush(SystemColors.ControlDarkDark);
 
@@ -55,6 +55,14 @@ namespace Sce.Atf.Controls.Adaptable
                 new D2dGradientStop(Color.LightSteelBlue, 1.0f),
             };
             m_fillLinearGradientBrush = D2dFactory.CreateLinearGradientBrush(gradstops);
+
+            D2dGradientStop[] errorStops = 
+            { 
+                new D2dGradientStop(Color.White, 0),
+                new D2dGradientStop(Color.MediumVioletRed, 1.0f),
+            };
+            m_errorBrush = D2dFactory.CreateLinearGradientBrush(errorStops);
+
             StrokeWidth = 2;
         }
        
