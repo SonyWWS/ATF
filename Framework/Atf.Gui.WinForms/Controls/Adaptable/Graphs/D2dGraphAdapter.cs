@@ -85,7 +85,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Rendering style set by SetStyle, Normal if no override is set</returns>
         public virtual DiagramDrawingStyle GetStyle(object item)
         {
-            DiagramDrawingStyle result = DiagramDrawingStyle.Normal;
+            // Give the renderer an opportunity to override our style selection.
+            DiagramDrawingStyle result = m_renderer.GetCustomStyle(item);
+            if (result != DiagramDrawingStyle.None)
+                return result;
+
+            result = DiagramDrawingStyle.Normal;
             // no override
             if (m_visibilityContext != null && !m_visibilityContext.IsVisible(item))
             {
@@ -114,7 +119,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 else if (item.Is<Group>())
                     result = DiagramDrawingStyle.CopyInstance;
                 else
-                result = DiagramDrawingStyle.Hot;
+                    result = DiagramDrawingStyle.Hot;
             }
             else if (m_renderer.RouteConnecting != null)
             {
@@ -359,39 +364,58 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
 
             // Draw normal nodes first
-            TNode selectedGroup = null;
+            TNode containerOfSelectedNode = null;
             var draggingNodes = new List<TNode>();
-            var expandedGroupNodes = new List<TNode>();
+            var selectedNodes = new List<TNode>();
+            var expandedGroups = new List<TNode>();
             foreach (var node in m_graph.Nodes)
             {
                 RectangleF nodeBounds = m_renderer.GetBounds(node, m_d2dGraphics);
                 if (boundsGr.IntersectsWith(nodeBounds))
                 {
-                    bool expandedGroup = false;
-                    if (node.Is<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>())
+                    DiagramDrawingStyle drawStyle = GetStyle(node);
+                    
+                    // Draw all dragged nodes (even expanded groups) last.
+                    if (drawStyle == DiagramDrawingStyle.DragSource)
                     {
-                        var group = node.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                        group.Info.PickingPriority = 0;
-                        if (group.Expanded)
-                        {
-
-                            if (node == ActiveContainer())
-                                selectedGroup = node;
-                            else
-                                expandedGroupNodes.Add(node);
-                            expandedGroup = true;
-                        }
+                        draggingNodes.Add(node);
                     }
-
-                    if (!expandedGroup)
+                    else
                     {
-                        if (m_renderer.GetCustomStyle(node) == DiagramDrawingStyle.DragSource)
-                            draggingNodes.Add(node);
+                        // Draw selected nodes nodes after normal nodes. If the node
+                        //  is hot, check if it's selected.
+                        if (drawStyle == DiagramDrawingStyle.Selected ||
+                            drawStyle == DiagramDrawingStyle.LastSelected ||
+                            (drawStyle == DiagramDrawingStyle.Hot && m_selectionContext != null &&
+                                m_selectionContext.SelectionContains(node)))
+                        {
+                            selectedNodes.Add(node);
+                        }
                         else
                         {
-                            m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
-                            if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                                TryDrawAssociatedEdges(node, boundsGr);
+                            // Expanded groups are drawn after normal nodes.
+                            bool expandedGroup = false;
+                            var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                            if (group != null)
+                            {
+                                group.Info.PickingPriority = 0;
+                                if (group.Expanded)
+                                {
+                                    if (node == ActiveContainer())
+                                        containerOfSelectedNode = node;
+                                    else
+                                        expandedGroups.Add(node);
+                                    expandedGroup = true;
+                                }
+                            }
+
+                            // Draw normal nodes and collapsed groups.
+                            if (!expandedGroup)
+                            {
+                                m_renderer.Draw(node, drawStyle, m_d2dGraphics);
+                                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                                    TryDrawAssociatedEdges(node, boundsGr);
+                            }
                         }
                     }
                 }
@@ -399,8 +423,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     TryDrawAssociatedEdges(node, boundsGr);
             }
 
+            // Draw expanded groups on top of normal sibling nodes, so that normal nodes that overlap
+            //  these groups don't appear as if they are in the groups.
             int pickPriority = 0;
-            foreach (var node in expandedGroupNodes)
+            foreach (var node in expandedGroups)
             {
                 var group = node.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
                 group.Info.PickingPriority = pickPriority++;
@@ -409,13 +435,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     TryDrawAssociatedEdges(node, boundsGr);
             }
 
-            if (selectedGroup != null)
+            // Draw the expanded group that contains a selected or dragged child node, so that
+            //  if multiple expanded groups overlap, that the user can see the owning group.
+            if (containerOfSelectedNode != null)
             {
-                var group = selectedGroup.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                var group = containerOfSelectedNode.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
                 group.Info.PickingPriority = pickPriority++;
-                m_renderer.Draw(selectedGroup, GetStyle(selectedGroup), m_d2dGraphics);
+                m_renderer.Draw(containerOfSelectedNode, GetStyle(containerOfSelectedNode), m_d2dGraphics);
                 if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(selectedGroup, boundsGr);
+                    TryDrawAssociatedEdges(containerOfSelectedNode, boundsGr);
+            }
+
+            // Draw selected nodes.
+            foreach (var node in selectedNodes)
+            {
+                var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                if (group != null)
+                    group.Info.PickingPriority = pickPriority++;
+                m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
+                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                    TryDrawAssociatedEdges(node, boundsGr);
             }
 
             // Draw dragging nodes last to ensure they are visible (necessary for container-crossing move operation)

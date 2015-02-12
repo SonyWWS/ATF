@@ -77,20 +77,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Gets or sets picking priority</summary>
-        public int PickingPriority
-        {
-            get { return m_pickingPriority; }
-            set { m_pickingPriority = value; }
-        }
+        /// Gets or sets the picking priority. When multiple groups overlap, the higher
+        /// priority group has a higher number and is visually drawn on top of lower
+        /// priority groups.</summary>
+        public int PickingPriority { get; set; }
 
         private Size m_minSize;
         private Point m_offset;
         private bool m_showExpandedGroupPins;
         private bool m_editing;
-        private int m_pickingPriority;
         private IEnumerable<ICircuitPin> m_hiddenInputPins = EmptyEnumerable<ICircuitPin>.Instance;
         private IEnumerable<ICircuitPin> m_hiddenOutputPins = EmptyEnumerable<ICircuitPin>.Instance;
-
     }
 }
