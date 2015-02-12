@@ -81,7 +81,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Performs custom actions for a node that has been added to the DOM subtree</summary>
+        /// Performs custom actions for a node that has been added to our DOM subtree.
+        /// This method is called for each DomNode added and for each of that DomNode's
+        /// children, and their children and so on, in depth-first order.</summary>
         /// <param name="node">Added node</param>
         /// <remarks>Method overrides must call the base method.</remarks>
         protected override void AddNode(DomNode node)
@@ -96,7 +98,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Performs custom actions for a node that has been removed from the DOM subtree</summary>
+        /// Performs custom actions for a node that has been removed from our DOM subtree.
+        /// This method is called for each DomNode removed and for that DomNode's children,
+        /// and their children and so on, in depth-first order.</summary>
         /// <param name="node">Removed node</param>
         /// <remarks>Method overrides must call the base method.</remarks>
         protected override void RemoveNode(DomNode node)
