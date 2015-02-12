@@ -93,26 +93,31 @@ namespace Sce.Atf.Applications
 
             if (!m_suppressedMessages.Contains(messageId))
             {
-                // lazily create error dialog
-                if (m_errorDialog == null)
+                // Check for illegal cross-thread operation. m_owner may not be a Control and the InvokeIfRequired
+                //  extension method will handle that.
+                (m_owner as Control).InvokeIfRequired(() =>
                 {
-                    m_errorDialog = new ErrorDialog();
-                    m_errorDialog.StartPosition = FormStartPosition.CenterScreen;
-                    m_errorDialog.SuppressMessageClicked += errorDialog_SuppressMessageClicked;
-                    m_errorDialog.FormClosed += errorDialog_FormClosed;
-                }
+                    // lazily create error dialog
+                    if (m_errorDialog == null)
+                    {
+                        m_errorDialog = new ErrorDialog();
+                        m_errorDialog.StartPosition = FormStartPosition.CenterScreen;
+                        m_errorDialog.SuppressMessageClicked += errorDialog_SuppressMessageClicked;
+                        m_errorDialog.FormClosed += errorDialog_FormClosed;
+                    }
 
-                if (messageType == OutputMessageType.Error)
-                    m_errorDialog.Text = "Error!".Localize();
-                else if (messageType == OutputMessageType.Warning)
-                    m_errorDialog.Text = "Warning".Localize();
-                else if (messageType == OutputMessageType.Info)
-                    m_errorDialog.Text = "Info".Localize();           
+                    if (messageType == OutputMessageType.Error)
+                        m_errorDialog.Text = "Error!".Localize();
+                    else if (messageType == OutputMessageType.Warning)
+                        m_errorDialog.Text = "Warning".Localize();
+                    else if (messageType == OutputMessageType.Info)
+                        m_errorDialog.Text = "Info".Localize();
 
-                m_errorDialog.MessageId = messageId;
-                m_errorDialog.Message = message;
-                m_errorDialog.Visible = false; //Just in case a second error message comes through, because...
-                m_errorDialog.Show(m_owner); //if Visible is true, Show() crashes. Should this be the modal ShowDialog(m_owner)?
+                    m_errorDialog.MessageId = messageId;
+                    m_errorDialog.Message = message;
+                    m_errorDialog.Visible = false; //Just in case a second error message comes through, because...
+                    m_errorDialog.Show(m_owner); //if Visible is true, Show() crashes.
+                });
             }
         }
 

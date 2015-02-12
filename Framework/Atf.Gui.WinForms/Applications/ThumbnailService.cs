@@ -28,9 +28,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Initializes the service</summary>
-        public void Initialize()
+        public virtual void Initialize()
         {
-            // Empty implementation but the IInitializable interface is required by ATF's MEF architecture.
         }
 
         #endregion

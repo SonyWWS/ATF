@@ -111,12 +111,12 @@ namespace Sce.Atf
         /// <summary>
         /// Performs the standard WinForms check for an illegal cross-thread call on a control.
         /// See: http://andyclymer.blogspot.com/2006/07/custom-controls-and-cross-_115218128668993214.html </summary>
-        /// <param name="control">Control to be checked</param>
+        /// <param name="control">Control to be checked. Can be null, in which case no exception is thrown.</param>
         /// <remarks>Throws InvalidOperationException exception if illegal cross-thread call.</remarks>
         /// <exception cref="InvalidOperationException">Illegal cross-thread call</exception>
-        public static void CheckForIllegalCrossThreadCall(Control control)
+        public static void CheckForIllegalCrossThreadCall(this Control control)
         {
-            if (Control.CheckForIllegalCrossThreadCalls &&
+            if (control != null && Control.CheckForIllegalCrossThreadCalls &&
                 control.InvokeRequired)
             {
                 throw new InvalidOperationException("Illegal cross-thread call");
@@ -125,11 +125,12 @@ namespace Sce.Atf
 
         /// <summary>
         /// Uses a Control's Invoke() method to call the given delegate, if necessary</summary>
-        /// <param name="control">The Control that may have been created on a thread other than the current thread</param>
+        /// <param name="control">The Control that may have been created on a thread other than
+        /// the current thread. Can be null, in which case 'action' is always performed.</param>
         /// <param name="action">The action to perform, e.g., () => { control.Refresh(); }</param>
-        public static void InvokeIfRequired(Control control, Action action)
+        public static void InvokeIfRequired(this Control control, Action action)
         {
-            if (control.InvokeRequired)
+            if (control != null && control.InvokeRequired)
                 control.Invoke(action);
             else
                 action();
