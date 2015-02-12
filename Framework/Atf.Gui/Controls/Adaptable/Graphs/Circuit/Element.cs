@@ -299,7 +299,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             base.OnNodeSet();
 
-            m_elementInfo = new CircuitElementInfo();
+            m_elementInfo = CreateElementInfo();
 
             if (ShowUnconnectedPinsAttribute != null)
                 m_elementInfo.ShowUnconnectedPins = GetAttribute<bool>(ShowUnconnectedPinsAttribute);
@@ -337,6 +337,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// Creates the circuit element information object</summary>
+        /// <returns></returns>
+        /// <remarks>This is called just once, after the DomNode property has been set.</remarks>
+        protected virtual CircuitElementInfo CreateElementInfo()
+        {
+            return new CircuitElementInfo();
         }
 
         private ICircuitElementType m_elementType;

@@ -120,6 +120,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets or sets D2dDiagramTheme</summary>
+        /// <remarks>Setting this is efficient, and can be used to control the appearance of
+        /// individual circuit elements. This will work as long as the different themes don't
+        /// change the sizes of circuit elements, because of the current limitations of
+        /// m_elementTypeCache.</remarks>
         public D2dDiagramTheme Theme
         {
             get { return m_theme; }
@@ -131,6 +135,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         m_theme.Redraw -= theme_Redraw;
                     SetPinSpacing();
                     m_theme = value;
+                    if (m_theme != null)
+                        m_theme.Redraw += theme_Redraw;
                 }
             }
         }
@@ -595,8 +601,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         return hitRecord;
 
                     // check title bar
-                    var titkeBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
-                    if (titkeBar.Contains(p))
+                    var titleBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
+                    if (titleBar.Contains(p))
                         return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
 
 
