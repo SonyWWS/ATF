@@ -154,15 +154,12 @@ namespace Sce.Atf.Wpf.Interop
             get { return m_mainFormBounds; }
             set
             {
-                double sw = SystemParameters.VirtualScreenWidth;
-                double sh = SystemParameters.VirtualScreenHeight;
-                if (value.X >= 0 && value.X < sw && value.Y >= 0 && value.Y < sh)
-                {
-                    MainWindow.Left = value.X;
-                    MainWindow.Top = value.Y;
-                    MainWindow.Width = value.Width;
-                    MainWindow.Height = value.Height;
-                }
+                MainWindow.Width = Math.Max(value.Width, SystemParameters.MinimumWindowWidth);
+                MainWindow.Height = Math.Max(value.Height, SystemParameters.MinimumWindowHeight);
+                MainWindow.Left = Math.Max(SystemParameters.VirtualScreenLeft, 
+                    Math.Min(value.X, SystemParameters.VirtualScreenWidth + SystemParameters.VirtualScreenLeft - MainWindow.Width));
+                MainWindow.Top = Math.Max(SystemParameters.VirtualScreenTop, 
+                    Math.Min(value.Y, SystemParameters.VirtualScreenHeight + SystemParameters.VirtualScreenTop - MainWindow.Height));
             }
         }
         private Rect m_mainFormBounds;

@@ -73,6 +73,13 @@ namespace Sce.Atf.Wpf.Docking
             Activated += FloatingWindow_Activated;
             LocationChanged += FloatingWindow_LocationChanged;
             SizeChanged += FloatingWindow_SizeChanged;
+
+            // Allow floating windows to handle shortcut keys
+            var window = Application.Current.MainWindow;
+            if ((window != null) && (window.InputBindings != null))
+            {
+                InputBindings.AddRange(window.InputBindings);
+            }
         }
         /// <summary>
         /// Static constructor that overrides the style that is used by styling</summary>
@@ -244,8 +251,17 @@ namespace Sce.Atf.Wpf.Docking
                 }
                 if(m_dragging)
                 {
-                    Left = Left + pos.X - m_lastMousePos.X;
-                    Top = Top + pos.Y - m_lastMousePos.Y;
+                    if (WindowState == WindowState.Maximized)
+                    {
+                        WindowState = WindowState.Normal;
+                        Left = 0.0;
+                        Top = 0.0;
+                    }
+                    else
+                    {
+                        Left = Left + pos.X - m_lastMousePos.X;
+                        Top = Top + pos.Y - m_lastMousePos.Y;
+                    }
                     m_lastMousePos = pos;
                     List<IDockable> dockOver = Root.FindElementsAt(e);
                     DockDragDropEventArgs args = new DockDragDropEventArgs(DockedContent, e);
@@ -439,10 +455,12 @@ namespace Sce.Atf.Wpf.Docking
                         Width = contentSettings.Size.Width;
                         Height = contentSettings.Size.Height;
 
-                        Left = Math.Max(0, Math.Min(Left, SystemParameters.VirtualScreenWidth - Width));
-                        Top = Math.Max(0, Math.Min(Top, SystemParameters.VirtualScreenHeight - Height));
-                        Width = Math.Max(Math.Min(Width, SystemParameters.VirtualScreenWidth - Left), 100);
-                        Height = Math.Max(Math.Min(Height, SystemParameters.VirtualScreenHeight - Top), 100);
+                        Width = Math.Max(Width, SystemParameters.MinimumWindowWidth);
+                        Height = Math.Max(Height, SystemParameters.MinimumWindowHeight);
+                        Left = Math.Max(SystemParameters.VirtualScreenLeft, 
+                            Math.Min(Left, SystemParameters.VirtualScreenWidth + SystemParameters.VirtualScreenLeft - Width));
+                        Top = Math.Max(SystemParameters.VirtualScreenTop, 
+                            Math.Min(Top, SystemParameters.VirtualScreenHeight + SystemParameters.VirtualScreenTop - Height));
 
                         reader.ReadEndElement();
                     }

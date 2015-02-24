@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:behaviors="clr-namespace:Sce.Atf.Wpf.Behaviors;assembly=Atf.Gui.Wpf" 
+             xmlns:m="clr-namespace:Sce.Atf.Wpf.Markup;assembly=Atf.Gui.Wpf" 
              xmlns:sample="clr-namespace:SimpleDomEditorWpfSample"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -20,14 +21,14 @@
             </i:Interaction.Behaviors>
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Name">
+                    <GridViewColumn Header="{m:Loc Name}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Duration">
+                    <GridViewColumn Header="{m:Loc Duration}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Duration}"/>
