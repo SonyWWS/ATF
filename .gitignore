@@ -4,6 +4,7 @@
 # Authoring Tools Framework specific directories
 /bin/
 /lib/
+/.svn/
 
 # User-specific files
 *.suo
