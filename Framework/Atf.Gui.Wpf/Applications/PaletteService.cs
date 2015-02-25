@@ -27,8 +27,8 @@ namespace Sce.Atf.Wpf.Applications
         {
             m_controlInfo = m_controlHostService.RegisterControl(
                 new PaletteContent(this),
-                "Palette", 
-                "Creates new instances", 
+                "Palette".Localize(),
+                "Creates new instances".Localize(),
                 Sce.Atf.Applications.StandardControlGroup.Left,
                 s_paletteControl.ToString(), this);
         }

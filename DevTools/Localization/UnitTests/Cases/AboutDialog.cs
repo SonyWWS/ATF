@@ -80,6 +80,11 @@ namespace Sce.Atf.Controls
                 credits.Add(string.Format("Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen," +
                     " Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott." +
                     " Copyright © 2014 Sony Computer Entertainment America LLC".Localize("{0} is the version number"), v));
+
+                // Test a commented-out version of Localize().
+                //credits.Add(string.Format("Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen," +
+                //    " Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott." +
+                //    " Copyright © 2014 Sony Computer Entertainment America LLC".Localize("{0} is the version number"), v));
             }
 
             pictureBox.Size = logo.Size;

@@ -47,7 +47,7 @@ namespace UnitTests
                 return -2;
 
             }
-            
+
             runner.Run(new UnitTestListener());
 
             if (runner.TestResult.IsFailure)

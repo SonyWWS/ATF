@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="Timeline Editor Sample" context="" translation="TimelineEditor サンプル" />
-  <StringItem id="Timeline Editor Sample" context="" translation="TimelineEditor サンプル" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Timeline-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Timeline-Editor-Sample" />
   <StringItem id="Drag and Drop" context="" translation="ドラッグアンドドロップ" />
-  <StringItem id="Timeline" context="" translation="タイムライン" />
-  <StringItem id="The file above was changed outside the editor." context="" translation="上記のファイルは、エディターを使用せずに変更されています。" />
-  <StringItem id="Reload, and lose all changes made in the editor?" context="" translation="読み込み直して、エディターでの変更をすべて放棄しますか?" />
   <StringItem id="File Changed, Reload?" context="" translation="ファイルが変更されました。読み込み直しますか?" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Timeline-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Timeline-Editor-Sample" />
   <StringItem id="Timeline" context="" translation="タイムライン" />
+  <StringItem id="Timeline Editor Sample" context="" translation="TimelineEditor サンプル" />
   <StringItem id="Timeline events must have a positive integer start time" context="" translation="タイムラインイベントの開始時間は正の整数値である必要があります。" />
   <StringItem id="Timeline intervals must have an integer length" context="" translation="タイムラインの間隔は、整数である必要があります。" />
 </StringLocalizationTable>

@@ -7,7 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
-
+using Sce.Atf;
 using Sce.Atf.Applications;
 using Sce.Atf.Wpf;
 using Sce.Atf.Wpf.Applications;
@@ -32,6 +32,13 @@ namespace SimpleDomEditorWpfSample
     /// versions of ATF's docking, document management, and property editing components.</summary>
     public partial class App : AtfApp
     {
+        public App()
+        {
+            // Support localization into other languages by searching for embedded resource
+            //  XML files for each target language.
+            Localizer.SetStringLocalizer(new EmbeddedResourceStringLocalizer());
+        }
+
         /// <summary>
         /// Gets MEF AggregateCatalog for application</summary>
         protected override AggregateCatalog GetCatalog()

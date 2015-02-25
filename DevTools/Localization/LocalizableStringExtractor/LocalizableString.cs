@@ -1,10 +1,12 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
+
 namespace LocalizableStringExtractor
 {
     /// <summary>
     /// Contains the data for each English word or phrase that is to be translated.</summary>
-    public class LocalizableString
+    public class LocalizableString : IComparable<LocalizableString>
     {
         public LocalizableString(string text, string context)
         {
@@ -13,6 +15,15 @@ namespace LocalizableStringExtractor
         }
         public readonly string Text;
         public readonly string Context;
+
+        #region IComparable
+
+        public int CompareTo(LocalizableString other)
+        {
+            return Text.CompareTo(other.Text);
+        }
+
+        #endregion
 
         public override bool Equals(object obj)
         {

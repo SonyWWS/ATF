@@ -26,11 +26,10 @@ namespace Sce.Atf
             string language = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName; //"en" or "ja"
             string culture = Thread.CurrentThread.CurrentUICulture.Name; //"en-US" or "ja-JP"
 
-            // In the satellite assembly model, the English version is in the root directory plus our
-            //  source code is written in English. No use doing a lot of searching for English translations.
-            // Yes, this doesn't work if we port ATF to English-Australia. Unlikely!
-            if (language == "en")
-                return;
+            // Embedded resource namespaces can't contain certain characters and get renamed
+            //  automatically by the compiler. So, '-' got replaced by '_' while compiling.
+            // https://msdn.microsoft.com/en-us/library/ms145952.aspx
+            culture = culture.Replace('-', '_');
 
             // To speed things up, only check the GAC if this assembly has been installed in the GAC.
             // This allows us to skip mscorlib, etc.

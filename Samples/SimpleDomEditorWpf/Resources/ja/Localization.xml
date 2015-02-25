@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="# Bones" context="" translation="ボーンの数" />
+  <StringItem id="# Tracks" context="" translation="トラックの数" />
+  <StringItem id="# Vertices" context="" translation="頂点の数" />
+  <StringItem id="Animation" context="" translation="アニメーション" />
+  <StringItem id="Animation name" context="" translation="アニメーションの名前" />
+  <StringItem id="Animation resource" context="" translation="アニメーションリソース" />
+  <StringItem id="Compressed" context="" translation="圧縮" />
+  <StringItem id="Duration" context="" translation="長さ" />
+  <StringItem id="Duration of animation, in milliseconds" context="" translation="アニメーションの長さ (ミリ秒)" />
+  <StringItem id="Event" context="" translation="イベント" />
+  <StringItem id="Event duration" context="" translation="イベントの長さ" />
+  <StringItem id="Event in a sequence" context="" translation="シーケンスに含まれるイベント" />
+  <StringItem id="Event name" context="" translation="イベントの名前" />
+  <StringItem id="Event Sequence" context="" translation="イベントシーケンス" />
+  <StringItem id="Event starting time" context="" translation="イベントの開始時間" />
+  <StringItem id="Events" context="" translation="イベント" />
+  <StringItem id="Geometry" context="" translation="ジオメトリ" />
+  <StringItem id="Geometry name" context="" translation="ジオメトリの名前" />
+  <StringItem id="Geometry resource" context="" translation="ジオメトリリソース" />
+  <StringItem id="Kind of primitives in geometry" context="" translation="ジオメトリ内のプリミティブの種類" />
+  <StringItem id="Name" context="" translation="名前" />
+  <StringItem id="Number of bones in geometry" context="" translation="ジオメトリ内のボーンの数" />
+  <StringItem id="Number of tracks in animation" context="" translation="アニメーションのトラック数" />
+  <StringItem id="Number of vertices in geometry" context="" translation="ジオメトリ内の頂点数" />
+  <StringItem id="Primitive Kind" context="" translation="プリミティブの種類" />
+  <StringItem id="Resources" context="" translation="リソース" />
+  <StringItem id="Resources for selected Event" context="" translation="選択されたイベントのリソース" />
+  <StringItem id="Size" context="" translation="サイズ" />
+  <StringItem id="Size of animation, in bytes" context="" translation="アニメーションのサイズ (バイト)" />
+  <StringItem id="Size of geometry, in bytes" context="" translation="ジオメトリのサイズ (バイト)" />
+  <StringItem id="Time" context="" translation="時間" />
+  <StringItem id="Whether or not animation is compressed" context="" translation="アニメーションの圧縮の有無" />
+</StringLocalizationTable>

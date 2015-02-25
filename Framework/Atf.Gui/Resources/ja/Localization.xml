@@ -1,82 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
-  <StringItem id="Command Icon Size" context="" translation="コマンドアイコンのサイズ" />
-  <StringItem id="Size of icons on Toolbar buttons" context="" translation="ツールバーボタンのアイコンのサイズ。" />
-  <StringItem id="Application" context="" translation="アプリケーション" />
-  <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
-  <StringItem id="Customize keyboard shortcuts" context="" translation="キーボードショートカットをカスタマイズします。" />
-  <StringItem id="Error" context="" translation="エラー" />
-  <StringItem id="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" context="" translation="IP エンドポイントの形式は、「192.168.0.120:9000」のようになります。" />
-  <StringItem id="OSC Receiving Port Number" context="" translation="ポート番号を受診する OSC" />
-  <StringItem id="The IP Port number that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するためにリッスンする IP ポート番号" />
-  <StringItem id="Primary Destination IP Endpoint" context="" translation="プライマリの接続先の IP エンドポイント" />
-  <StringItem id="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" context="" translation="このアプリケーションからの Open Sound Control メッセージ送信先のプライマリ IP アドレスおよびポート番号。 自動構成であるため、追加の送信先が追加可能です。" />
-  <StringItem id="Preferred Receiving IP Address" context="" translation="優先される受信 IP アドレス" />
-  <StringItem id="The preferred IP address that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するために優先的にリッスンする IP アドレス。" />
-  <StringItem id="OSC Input" context="The name of a command" translation="OSC 入力" />
-  <StringItem id="Vita Target" context="" translation="Vita ターゲット" />
-  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
-  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
-  <StringItem id="Add New " context="" translation="新規追加 " />
-  <StringItem id="Creates a new target" context="" translation="新しいターゲットを作成します。" />
-  <StringItem id="Remove " context="" translation="削除 " />
-  <StringItem id="Remove selected target" context="" translation="選択したターゲットを削除します。" />
-  <StringItem id="Add New " context="" translation="新規追加 " />
-  <StringItem id="Remove " context="" translation="削除 " />
-  <StringItem id="Add New " context="" translation="新規追加 " />
-  <StringItem id="Remove " context="" translation="削除 " />
-  <StringItem id="The IP address format should be like &quot;192.168.0.1:12345&quot; or &quot;2001:740:8deb:0::1:12345&quot;" context="" translation="IP アドレスの形式は、「192.168.0.1:12345」または「2001:740:8deb:0::1:12345」のようになります。" />
-  <StringItem id="The scope type is unknown" context="" translation="スコープの種類が不明です。" />
-  <StringItem id="The name must not be empty or all whitespace" context="" translation="名前を空のままにしたり、空白文字のみにすることはできません。" />
-  <StringItem id="The property name is unknown: " context="" translation="プロパティ名が不明です。 " />
-  <StringItem id="TCP Target" context="" translation="TCP ターゲット" />
-  <StringItem id="Targets" context="" translation="ターゲット" />
-  <StringItem id="X86 Target" context="" translation="X86 ターゲット" />
-  <StringItem id="PS3 Target" context="" translation="PS3 ターゲット" />
-  <StringItem id="PS4 Target" context="" translation="PS4 ターゲット" />
-  <StringItem id="Preferences..." context="Edit user preferences" translation="基本設定..." />
-  <StringItem id="Edit user preferences" context="" translation="ユーザー設定を編集します。" />
-  <StringItem id="Load or Save Settings..." context="" translation="@設定を読み込み/保存..." />
-  <StringItem id="User can save or load application settings from files" context="" translation="アプリケーション設定の、ファイルへの保存またはファイルからの読み込みです。" />
-  <StringItem id="Can't load settings" context="" translation="設定を読み込めません" />
-  <StringItem id="There was a problem opening the file" context="" translation="ファイルを開く際に次の問題が発生しました" />
-  <StringItem id="There was a problem saving the file" context="" translation="ファイルを保存する際に次の問題が発生しました" />
-  <StringItem id="Save" context="" translation="保存" />
-  <StringItem id="File extension not supported" context="" translation="サポートされていないファイル拡張子です。" />
+  <StringItem id="&amp;About" context="Get information about application" translation="バージョン情報(&amp;A)" />
+  <StringItem id="(none)" context="No flags" translation="(なし)" />
+  <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0}ファイル" />
   <StringItem id="A file with that name is already open" context="" translation="同名のファイルがすでに開いています。" />
-  <StringItem id="Document Saved" context="" translation="ドキュメントが保存されました。" />
-  <StringItem id="Document Saved As" context="" translation="Document Saved As" />
-  <StringItem id="Couldn't save all documents" context="" translation="一部のドキュメントが保存されませんでした。" />
-  <StringItem id="All documents saved" context="" translation="すべてのドキュメントが保存されました。" />
-  <StringItem id="New {0}" context="" translation="{0}を新規作成" />
-  <StringItem id="New" context="Name of a command" translation="新規" />
-  <StringItem id="Creates a new {0} document" context="{0} is the type of document to create" translation="新しい{0}ドキュメントを作成します。" />
-  <StringItem id="Open {0}" context="" translation="{0}を開く" />
-  <StringItem id="Open" context="Name of a command" translation="開く" />
-  <StringItem id="Open an existing {0} document" context="" translation="既存の{0}ドキュメントを開きます。" />
-  <StringItem id="Source Control/Enable" context="" translation="ソース管理/有効化" />
-  <StringItem id="Enable source control" context="" translation="Enable source control" />
-  <StringItem id="Source Control/Open Connection..." context="" translation="ソース管理/接続を開く..." />
-  <StringItem id="Source control connection" context="" translation="ソース管理の接続" />
-  <StringItem id="Source Control/Add" context="" translation="ソース管理/追加" />
-  <StringItem id="Add to source control" context="" translation="ソース管理に追加します。" />
-  <StringItem id="Source Control/Check In" context="" translation="ソース管理/チェックイン" />
-  <StringItem id="Check in to source control" context="" translation="ソース管理にチェックインします。" />
-  <StringItem id="Source Control/Check Out" context="" translation="ソース管理/チェックアウト" />
-  <StringItem id="Check out from source control" context="" translation="ソース管理からチェックアウトします。" />
-  <StringItem id="Source Control/Get Latest Version" context="" translation="ソース管理/最新版を取得" />
-  <StringItem id="Get latest version from source control" context="" translation="ソース管理から最新版を取得します。" />
-  <StringItem id="Source Control/Revert" context="Revert add or check out from source control" translation="ソース管理/元に戻す" />
-  <StringItem id="Revert add or check out from source control" context="" translation="ソース管理への追加またはチェックアウトを元に戻します。" />
-  <StringItem id="Source Control/Refresh Status" context="" translation="ソース管理/最新の状態に更新" />
-  <StringItem id="Refresh status in source control" context="" translation="ソース管理の情報を最新の状態に更新します。" />
-  <StringItem id="Source Control/Reconcile Offline Work..." context="" translation="ソース管理/オフライン作業を調整" />
-  <StringItem id="Reconcile Offline Work" context="" translation="オフラインで行った作業を調整します。" />
-  <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
-  <StringItem id="Disable Source Control" context="" translation="ソース管理を無効にする" />
+  <StringItem id="Activate Window" context="" translation="ウィンドウをアクティブにします。" />
+  <StringItem id="Add an existing asset" context="" translation="Add an existing asset" />
   <StringItem id="Add document {0} to version control?" context="" translation="ドキュメント {0} をバージョン管理に追加しますか?" />
   <StringItem id="Add Document to Version Control" context="this is the title of a dialog box that is asking a question" translation="ドキュメントをバージョン管理に追加" />
+  <StringItem id="Add to source control" context="" translation="ソース管理に追加します。" />
+  <StringItem id="Add/Existing Asset" context="" translation="Add/Existing Asset" />
+  <StringItem id="Align bottoms of selected items" context="" translation="選択したアイテムの下端を揃えます。" />
+  <StringItem id="Align centers of selected items" context="" translation="選択したアイテムの中央を揃えます。" />
+  <StringItem id="Align left sides of selected items" context="" translation="選択したアイテムの左端を揃えます。" />
+  <StringItem id="Align middles of selected items" context="" translation="選択したアイテムの上下の中央を揃えます。" />
+  <StringItem id="Align right sides of selected items" context="" translation="選択したアイテムの右端を揃えます。" />
+  <StringItem id="Align selected items to x/y grid" context="" translation="選択したアイテムを、X/Y グリッドに揃えます。" />
+  <StringItem id="Align tops of selected items" context="" translation="選択したアイテムの上端を揃えます。" />
+  <StringItem id="Align/Bottoms" context="Align bottoms of selected items" translation="整列/下揃え" />
+  <StringItem id="Align/Centers" context="Align centers of selected items" translation="整列/中央揃え" />
+  <StringItem id="Align/Lefts" context="Align left sides of selected items" translation="整列/左揃え" />
+  <StringItem id="Align/Middles" context="" translation="整列/上下中央揃え" />
+  <StringItem id="Align/Rights" context="Align right sides of selected items" translation="整列/右揃え" />
+  <StringItem id="Align/To Grid" context="Align selected items to x/y grid" translation="整列/グリッド" />
+  <StringItem id="Align/Tops" context="Align tops of selected items" translation="整列/上揃え" />
+  <StringItem id="All" context="As in 'All files'" translation="すべての" />
+  <StringItem id="All Changes will be lost. Do you want to proceed?" context="" translation="変更はすべて失われます。続行しますか？" />
+  <StringItem id="All documents saved" context="" translation="すべてのドキュメントが保存されました。" />
+  <StringItem id="All files" context="" translation="All files" />
+  <StringItem id="All Files" context="" translation="All Files" />
+  <StringItem id="Application" context="" translation="アプリケーション" />
+  <StringItem id="Assets/Reload Asset" context="" translation="Assets/Reload Asset" />
+  <StringItem id="Assets/Unload Unused Assets" context="" translation="Assets/Unload Unused Assets" />
+  <StringItem id="Back" context="the back side of the model that is being viewed" translation="裏面" />
+  <StringItem id="Bottom" context="the bottom side of the model that is being viewed" translation="下部" />
+  <StringItem id="Can't load settings" context="" translation="設定を読み込めません" />
+  <StringItem id="Check in to source control" context="" translation="ソース管理にチェックインします。" />
+  <StringItem id="Check Out File" context="this is the title of a dialog box that is asking a question" translation="ファイルをチェックアウト" />
+  <StringItem id="Check out from source control" context="" translation="ソース管理からチェックアウトします。" />
   <StringItem id="Check out the file
 
 {0}
@@ -86,170 +47,205 @@ to be able to save the changes?" context="" translation="ファイル
 {0}
 
 をチェックアウトして変更を保存しますか?" />
-  <StringItem id="Check Out File" context="this is the title of a dialog box that is asking a question" translation="ファイルをチェックアウト" />
-  <StringItem id="All Changes will be lost. Do you want to proceed?" context="" translation="変更はすべて失われます。続行しますか？" />
-  <StringItem id="Proceed with Revert?" context="" translation="元に戻して続行しますか?" />
-  <StringItem id="Undo {0}" context="{0} is the name of the command" translation="「{0}」を元に戻す" />
-  <StringItem id="Redo {0}" context="{0} is the name of the command " translation="「{0}」をやり直す" />
-  <StringItem id="Untitled" context="" translation="無題" />
-  <StringItem id="Untitled" context="" translation="無題" />
-  <StringItem id="Untitled" context="" translation="無題" />
-  <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="最近使用したファイルの数" />
-  <StringItem id="Number of recent files to display in File Menu" context="" translation="[ファイル] &gt; [最近使用したファイル] メニューに表示するファイルの数。" />
-  <StringItem id="Documents" context="" translation="ドキュメント" />
-  <StringItem id="Pin file" context="Pin active file to the recent files list" translation="ファイルをピン留め" />
-  <StringItem id="Pin active file to the recent files list" context="" translation="アクティブなファイルを最近使用したファイルのリストに常に含めます。" />
-  <StringItem id="Recent Files" context="" translation="最近使用したファイル" />
-  <StringItem id="empty" context="" translation="なし" />
-  <StringItem id="No entries in recent files list" context="" translation="最近使用したファイルはありません。" />
-  <StringItem id="Must be between 1 and 32" context="" translation="1～32 の間である必要があります。" />
-  <StringItem id="Pin active document" context="" translation="アクティブなドキュメントをピン留め" />
-  <StringItem id="Pin {0}" context="{0} will be replaced with a file name" translation="{0} をピン留め" />
-  <StringItem id="Unpin {0}" context="{0} will be replaced with a file name " translation="{0} のピン留めを解除" />
-  <StringItem id="Recent Files" context="" translation="最近使用したファイル" />
-  <StringItem id="Open a recently used file" context="" translation="最近使用されたファイルを開きます。" />
-  <StringItem id="Layouts" context="" translation="レイアウト" />
-  <StringItem id="Save Layout As..." context="" translation="レイアウトに名前を付けて保存..." />
-  <StringItem id="Manage Layouts..." context="" translation="レイアウトを管理..." />
-  <StringItem id="Group" context="" translation="グループ" />
-  <StringItem id="(none)" context="No flags" translation="(なし)" />
-  <StringItem id="Unknown error code" context="" translation="未知のエラーコード" />
-  <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0}ファイル" />
-  <StringItem id="All files" context="" translation="すべてのファイル" />
-  <StringItem id="All" context="As in 'All files'" translation="すべての" />
-  <StringItem id="Misc" context="Miscellaneous category" translation="その他" />
-  <StringItem id="Back" context="the back side of the model that is being viewed" translation="裏面" />
-  <StringItem id="Bottom" context="the bottom side of the model that is being viewed" translation="下部" />
-  <StringItem id="Front" context="the front side of the model that is being viewed" translation="前面" />
-  <StringItem id="Left" context="the left side of the model that is being viewed" translation="左" />
-  <StringItem id="Right" context="the right side of the model that is being viewed" translation="右" />
-  <StringItem id="Top" context="the top side of the model that is being viewed" translation="上部" />
-  <StringItem id="Perspective" context="a 3D perspective view of the model" translation="3D 投影" />
-  <StringItem id="Save" context="Save the active file" translation="保存" />
-  <StringItem id="Save the active file" context="" translation="アクティブなファイルを保存します。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Save As ..." context="Save the active file under a new name" translation="名前を付けて保存..." />
-  <StringItem id="Save the active file under a new name" context="" translation="アクティブなファイルに名前を付けて保存します。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Save All" context="Saves all open files" translation="すべて保存" />
-  <StringItem id="Save all open files" context="" translation="開いているファイルをすべて保存します。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
   <StringItem id="Close" context="Close the active file" translation="閉じる" />
   <StringItem id="Close the active file" context="" translation="アクティブなファイルを閉じます。" />
-  <StringItem id="Print..." context="Print the active document" translation="印刷..." />
-  <StringItem id="Print the active document" context="" translation="アクティブなドキュメントを印刷します。" />
-  <StringItem id="Page Setup..." context="Set up page for printing" translation="ページ設定..." />
-  <StringItem id="Set up page for printing" context="" translation="印刷のためのページ設定をします。" />
-  <StringItem id="Print Preview..." context="Show a print preview of the active document" translation="印刷プレビュー..." />
-  <StringItem id="Show a print preview of the active document" context="" translation="アクティブなドキュメントの印刷プレビューを表示します。" />
-  <StringItem id="Exit" context="Exit the application" translation="終了" />
-  <StringItem id="Exit Application" context="" translation="アプリケーションを終了します。" />
-  <StringItem id="Undo" context="Undo the last change" translation="元に戻す" />
-  <StringItem id="Undo the last change" context="" translation="直前の変更を元に戻します。" />
-  <StringItem id="Redo" context="Redo the last edit" translation="やり直し" />
-  <StringItem id="Redo the last edit" context="" translation="直前の編集をやり直します。" />
-  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="切り取り" />
-  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="選択部分を切り取り、クリップボードに配置します。" />
+  <StringItem id="Command Icon Size" context="" translation="コマンドアイコンのサイズ" />
   <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="コピー" />
   <StringItem id="Copy the selection and place it on the clipboard" context="" translation="選択部分をクリップボードにコピーします。" />
-  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="貼り付け" />
-  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="クリップボードの内容を貼り付け、貼り付けた内容を選択します。" />
+  <StringItem id="Could not find plugin: " context="" translation="Could not find plugin: " />
+  <StringItem id="Couldn't save all documents" context="" translation="一部のドキュメントが保存されませんでした。" />
+  <StringItem id="Creates a new {0} document" context="{0} is the type of document to create" translation="新しい{0}ドキュメントを作成します。" />
+  <StringItem id="Creates a new target" context="" translation="新しいターゲットを作成します。" />
+  <StringItem id="Customize keyboard shortcuts" context="" translation="キーボードショートカットをカスタマイズします。" />
+  <StringItem id="Cut" context="Cut the selection and place it on the clipboard" translation="切り取り" />
+  <StringItem id="Cut the selection and place it on the clipboard" context="" translation="選択部分を切り取り、クリップボードに配置します。" />
   <StringItem id="Delete" context="Delete the selection" translation="削除" />
   <StringItem id="Delete the selection" context="" translation="選択部分を削除します。" />
-  <StringItem id="Select All" context="Select all items" translation="すべて選択" />
-  <StringItem id="Select all items" context="" translation="すべてのアイテムを選択します。" />
   <StringItem id="Deselect All" context="Deselect all items" translation="すべて選択解除" />
   <StringItem id="Deselect all items" context="" translation="アイテムの選択をすべて解除します。" />
-  <StringItem id="Invert Selection" context="Select unselected items and deselect selected items" translation="選択を切り替え" />
-  <StringItem id="Select unselected items and deselect selected items" context="" translation="選択されていないアイテムを選択し、選択されているアイテムの選択を解除します。" />
-  <StringItem id="Lock" context="" translation="ロック" />
-  <StringItem id="Lock the selection to disable editing" context="" translation="選択部分が編集できないようにロックします。" />
-  <StringItem id="Unlock" context="Unlock the selection to enable editing" translation="ロックを解除" />
-  <StringItem id="Unlock the selection to enable editing" context="" translation="選択部分が編集できるようにロックを解除します。" />
-  <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
-  <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Group" context="Group the selection into a single item" translation="グループ" />
-  <StringItem id="Group the selection into a single item" context="" translation="選択部分をグループとして 1 つにまとめます。" />
-  <StringItem id="Ungroup" context="Ungroup any selected groups" translation="グループ化解除" />
-  <StringItem id="Ungroup any selected groups" context="" translation="選択されたグループのグループ化を解除します。" />
-  <StringItem id="Hide" context="Hide all selected objects" translation="隠す" />
-  <StringItem id="Hide all selected objects" context="" translation="選択したオブジェクトすべてを隠します。" />
-  <StringItem id="Show" context="Show all selected objects" translation="表示" />
-  <StringItem id="Show all selected objects" context="" translation="選択したオブジェクトすべてを表示します。" />
-  <StringItem id="Show Last Hidden" context="Show the last hidden object" translation="直前に隠したオブジェクトを表示" />
-  <StringItem id="Show the last hidden object" context="" translation="直前に隠したオブジェクトを表示します。" />
-  <StringItem id="Show All" context="Show all hidden objects" translation="すべて表示" />
-  <StringItem id="Show all hidden objects" context="" translation="隠したオブジェクトすべてを表示します。" />
-  <StringItem id="Isolate" context="Show only the selected objects and hide all others" translation="選択的表示" />
-  <StringItem id="Show only the selected objects and hide all others" context="" translation="選択したオブジェクトのみを表示し、ほかのすべてを隠します。" />
-  <StringItem id="Frame Selection" context="Frame selection in view" translation="選択範囲を最大表示" />
-  <StringItem id="Frames all selected objects in the current view" context="" translation="選択したオブジェクトすべてが現在のビューに収まるように表示します。" />
-  <StringItem id="Frame All" context="Frame all objects in view" translation="全体を最大表示" />
-  <StringItem id="Frames all objects in the current view" context="" translation="すべてのオブジェクトが現在のビューに収まるように表示します。" />
-  <StringItem id="Zoom In" context="Zoom In" translation="拡大" />
-  <StringItem id="Zoom In" context="" translation="拡大" />
-  <StringItem id="Zoom Out" context="Zoom Out" translation="縮小" />
-  <StringItem id="Zoom Out" context="" translation="縮小" />
-  <StringItem id="Zoom Reset" context="Zoom Reset" translation="リセット" />
-  <StringItem id="Zoom Reset" context="" translation="リセット" />
-  <StringItem id="Fit In Active View" context="Pan and Zoom to center selection" translation="現在のビューに表示" />
-  <StringItem id="Pan and Zoom to center selection" context="" translation="パンおよびズームで選択部分が中央に表示されるようにします。" />
-  <StringItem id="Align/Lefts" context="Align left sides of selected items" translation="整列/左揃え" />
-  <StringItem id="Align left sides of selected items" context="" translation="選択したアイテムの左端を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/Rights" context="Align right sides of selected items" translation="整列/右揃え" />
-  <StringItem id="Align right sides of selected items" context="" translation="選択したアイテムの右端を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/Centers" context="Align centers of selected items" translation="整列/中央揃え" />
-  <StringItem id="Align centers of selected items" context="" translation="選択したアイテムの中央を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/Tops" context="Align tops of selected items" translation="整列/上揃え" />
-  <StringItem id="Align tops of selected items" context="" translation="選択したアイテムの上端を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/Bottoms" context="Align bottoms of selected items" translation="整列/下揃え" />
-  <StringItem id="Align bottoms of selected items" context="" translation="選択したアイテムの下端を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/Middles" context="" translation="整列/上下中央揃え" />
-  <StringItem id="Align middles of selected items" context="" translation="選択したアイテムの上下の中央を揃えます。" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
-  <StringItem id="Align/To Grid" context="Align selected items to x/y grid" translation="整列/グリッド" />
-  <StringItem id="Align selected items to x/y grid" context="" translation="選択したアイテムを、X/Y グリッドに揃えます。" />
-  <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="サイズ/等しくする" />
-  <StringItem id="Make selected items have the same size" context="" translation="選択したアイテムのサイズを等しくします。" />
-  <StringItem id="Size/Make Widths Equal" context="Make selected items have the same width" translation="サイズ/幅を等しくする" />
-  <StringItem id="Make selected items have the same width" context="" translation="選択したアイテムの幅を等しくします。" />
-  <StringItem id="Size/Make Heights Equal" context="Make selected items have the same height" translation="サイズ/高さを等しくする" />
-  <StringItem id="Make selected items have the same height" context="" translation="選択したアイテムの高さを等しくします。" />
-  <StringItem id="Size/Size to Grid" context="Make selected items sizes align to x/y grid" translation="サイズ/グリッド" />
-  <StringItem id="Make selected items sizes align to x/y grid" context="" translation="選択したアイテムのサイズを、X/Y グリッドに揃えます。" />
-  <StringItem id="Split Horizontal" context="Split the window horizontally" translation="左右に分割" />
-  <StringItem id="Split the window horizontally" context="" translation="ウィンドウを左右に分割します。" />
-  <StringItem id="Split Vertical" context="Split the window vertically" translation="上下に分割" />
-  <StringItem id="Split the window vertically" context="" translation="ウィンドウを上下に分割します。" />
-  <StringItem id="Remove Split" context="Remove the split" translation="分割を解除" />
-  <StringItem id="Remove the split" context="" translation="分割を解除します。" />
-  <StringItem id="Tile Horizontal" context="Tile Documents Horizontally" translation="左右に並べて表示" />
-  <StringItem id="Tile the documents, as separate visible items, horizontally" context="" translation="複数のドキュメントを左右に並べて表示します。" />
-  <StringItem id="Tile Vertical" context="Tile Documents Vertically" translation="上下に並べて表示" />
-  <StringItem id="Tile the documents, as separate visible items, vertically" context="" translation="複数のドキュメントを上下に並べて表示します。" />
-  <StringItem id="Tile Overlapping" context="Tile Documents Overlapping" translation="重ねて表示" />
-  <StringItem id="Tile the documents, all together as tabbed items, in the central region of the application" context="" translation="ドキュメントにタブを付け、アプリケーションの中央部分に重ねて表示します。" />
-  <StringItem id="&amp;About" context="Get information about application" translation="バージョン情報(&amp;A)" />
-  <StringItem id="Get information about application" context="" translation="アプリケーションの情報を表示します。" />
+  <StringItem id="Details View" context="Show detailed view of assets" translation="詳細表示" />
+  <StringItem id="Disable Source Control" context="" translation="ソース管理を無効にする" />
+  <StringItem id="Document Saved" context="" translation="ドキュメントが保存されました。" />
+  <StringItem id="Document Saved As" context="" translation="Document Saved As" />
+  <StringItem id="Documents" context="" translation="ドキュメント" />
+  <StringItem id="Edit" context="this is the name of a menu" translation="編集" />
+  <StringItem id="Edit Label" context="" translation="ラベルを編集" />
+  <StringItem id="Edit plugin list" context="" translation="Edit plugin list" />
+  <StringItem id="Edit user preferences" context="" translation="ユーザー設定を編集します。" />
+  <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Neighborhood で Vita ターゲットを編集。" />
+  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
+  <StringItem id="Enable source control" context="" translation="Enable source control" />
+  <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
+  <StringItem id="Error" context="" translation="エラー" />
+  <StringItem id="Exit" context="Exit the application" translation="終了" />
+  <StringItem id="Exit Application" context="" translation="アプリケーションを終了します。" />
   <StringItem id="File" context="this is the name of a menu" translation="ファイル" />
   <StringItem id="File Commands" context="" translation="ファイルコマンド" />
-  <StringItem id="Edit" context="this is the name of a menu" translation="編集" />
-  <StringItem id="Editing Commands" context="" translation="編集コマンド" />
-  <StringItem id="View" context="this is the name of a menu" translation="表示" />
-  <StringItem id="View Commands" context="'View' is a noun. This text is a description of the View menu" translation="表示コマンド" />
-  <StringItem id="Modify" context="this is the name of a menu" translation="変更" />
-  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
+  <StringItem id="File extension not supported" context="" translation="サポートされていないファイル拡張子です。" />
+  <StringItem id="Fit In Active View" context="Pan and Zoom to center selection" translation="現在のビューに表示" />
   <StringItem id="Format" context="this is the name of a menu" translation="フォーマット" />
   <StringItem id="Formatting Commands" context="" translation="フォーマットコマンド" />
-  <StringItem id="Window" context="this is the name of a menu" translation="ウィンドウ" />
-  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
+  <StringItem id="Frame All" context="Frame all objects in view" translation="全体を最大表示" />
+  <StringItem id="Frame Selection" context="Frame selection in view" translation="選択範囲を最大表示" />
+  <StringItem id="Frames all objects in the current view" context="" translation="すべてのオブジェクトが現在のビューに収まるように表示します。" />
+  <StringItem id="Frames all selected objects in the current view" context="" translation="選択したオブジェクトすべてが現在のビューに収まるように表示します。" />
+  <StringItem id="Front" context="the front side of the model that is being viewed" translation="前面" />
+  <StringItem id="Get information about application" context="" translation="アプリケーションの情報を表示します。" />
+  <StringItem id="Get latest version from source control" context="" translation="ソース管理から最新版を取得します。" />
+  <StringItem id="Group" context="Group the selection into a single item" translation="グループ" />
+  <StringItem id="Group" context="" translation="グループ" />
+  <StringItem id="Group the selection into a single item" context="" translation="選択部分をグループとして 1 つにまとめます。" />
   <StringItem id="Help" context="this is the name of a menu" translation="ヘルプ" />
   <StringItem id="Help Commands" context="" translation="ヘルプコマンド" />
+  <StringItem id="Hide" context="Hide all selected objects" translation="隠す" />
+  <StringItem id="Hide all selected objects" context="" translation="選択したオブジェクトすべてを隠します。" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" context="" translation="https://github.com/SonyWWS/ATF/wiki/Using-Standard-Command-Components" />
+  <StringItem id="Invert Selection" context="Select unselected items and deselect selected items" translation="選択を切り替え" />
+  <StringItem id="Isolate" context="Show only the selected objects and hide all others" translation="選択的表示" />
+  <StringItem id="Keyboard Shortcuts" context="" translation="キーボードショートカット" />
+  <StringItem id="Layouts" context="" translation="レイアウト" />
+  <StringItem id="Left" context="the left side of the model that is being viewed" translation="左" />
+  <StringItem id="Load or Save Settings..." context="" translation="@設定を読み込み/保存..." />
+  <StringItem id="Lock" context="" translation="ロック" />
+  <StringItem id="Lock the selection to disable editing" context="" translation="選択部分が編集できないようにロックします。" />
+  <StringItem id="Lock UI Layout" context="" translation="UI レイアウトをロック" />
+  <StringItem id="Make selected items have the same height" context="" translation="選択したアイテムの高さを等しくします。" />
+  <StringItem id="Make selected items have the same size" context="" translation="選択したアイテムのサイズを等しくします。" />
+  <StringItem id="Make selected items have the same width" context="" translation="選択したアイテムの幅を等しくします。" />
+  <StringItem id="Make selected items sizes align to x/y grid" context="" translation="選択したアイテムのサイズを、X/Y グリッドに揃えます。" />
+  <StringItem id="Manage Layouts..." context="" translation="レイアウトを管理..." />
+  <StringItem id="Misc" context="Miscellaneous category" translation="その他" />
+  <StringItem id="Modify" context="this is the name of a menu" translation="変更" />
+  <StringItem id="Modify Commands" context="" translation="変更コマンド" />
+  <StringItem id="Must be between 1 and 32" context="" translation="1～32 の間である必要があります。" />
+  <StringItem id="New" context="Name of a command" translation="新規" />
+  <StringItem id="New {0}" context="" translation="{0}を新規作成" />
+  <StringItem id="No entries in recent files list" context="" translation="最近使用したファイルはありません。" />
+  <StringItem id="Number of recent files to display in File Menu" context="" translation="[ファイル] &gt; [最近使用したファイル] メニューに表示するファイルの数。" />
+  <StringItem id="Open" context="Name of a command" translation="開く" />
+  <StringItem id="Open {0}" context="" translation="{0}を開く" />
+  <StringItem id="Open a recently used file" context="" translation="最近使用されたファイルを開きます。" />
+  <StringItem id="Open an existing {0} document" context="" translation="既存の{0}ドキュメントを開きます。" />
+  <StringItem id="OSC Input" context="The name of a command" translation="OSC 入力" />
+  <StringItem id="OSC Receiving Port Number" context="" translation="ポート番号を受診する OSC" />
+  <StringItem id="Page Setup..." context="Set up page for printing" translation="ページ設定..." />
+  <StringItem id="Pan and Zoom to center selection" context="" translation="パンおよびズームで選択部分が中央に表示されるようにします。" />
+  <StringItem id="Paste" context="Paste the contents of the clipboard and make that the new selection" translation="貼り付け" />
+  <StringItem id="Paste the contents of the clipboard and make that the new selection" context="" translation="クリップボードの内容を貼り付け、貼り付けた内容を選択します。" />
+  <StringItem id="Perspective" context="a 3D perspective view of the model" translation="3D 投影" />
+  <StringItem id="Pin {0}" context="{0} will be replaced with a file name" translation="{0} をピン留め" />
+  <StringItem id="Pin active document" context="" translation="アクティブなドキュメントをピン留め" />
+  <StringItem id="Pin active file to the recent files list" context="" translation="アクティブなファイルを最近使用したファイルのリストに常に含めます。" />
+  <StringItem id="Pin file" context="Pin active file to the recent files list" translation="ファイルをピン留め" />
+  <StringItem id="Plugins" context="" translation="プラグイン" />
+  <StringItem id="Preferences..." context="Edit user preferences" translation="基本設定..." />
+  <StringItem id="Preferred Receiving IP Address" context="" translation="優先される受信 IP アドレス" />
+  <StringItem id="Primary Destination IP Endpoint" context="" translation="プライマリの接続先の IP エンドポイント" />
+  <StringItem id="Print Preview..." context="Show a print preview of the active document" translation="印刷プレビュー..." />
+  <StringItem id="Print the active document" context="" translation="アクティブなドキュメントを印刷します。" />
+  <StringItem id="Print..." context="Print the active document" translation="印刷..." />
+  <StringItem id="Proceed with Revert?" context="" translation="元に戻して続行しますか?" />
+  <StringItem id="PS3 Target" context="" translation="PS3 ターゲット" />
+  <StringItem id="PS4 Target" context="" translation="PS4 ターゲット" />
+  <StringItem id="Ready" context="Application is ready" translation="準備完了" />
+  <StringItem id="Recent Files" context="" translation="最近使用したファイル" />
+  <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="最近使用したファイルの数" />
+  <StringItem id="Reconcile Offline Work" context="" translation="オフラインで行った作業を調整します。" />
+  <StringItem id="Redo" context="Redo the last edit" translation="やり直し" />
+  <StringItem id="Redo {0}" context="{0} is the name of the command" translation="「{0}」をやり直す" />
+  <StringItem id="Redo the last edit" context="" translation="直前の編集をやり直します。" />
+  <StringItem id="Refresh status in source control" context="" translation="ソース管理の情報を最新の状態に更新します。" />
+  <StringItem id="Reload Asset" context="" translation="アセットの再ロード" />
+  <StringItem id="Remove " context="" translation="削除 " />
+  <StringItem id="Remove selected target" context="" translation="選択したターゲットを削除します。" />
+  <StringItem id="Remove Split" context="Remove the split" translation="分割を解除" />
+  <StringItem id="Remove the split" context="" translation="分割を解除します。" />
+  <StringItem id="Revert add or check out from source control" context="" translation="ソース管理への追加またはチェックアウトを元に戻します。" />
+  <StringItem id="Right" context="the right side of the model that is being viewed" translation="右" />
+  <StringItem id="Save" context="Save the active file" translation="保存" />
+  <StringItem id="Save" context="" translation="保存" />
+  <StringItem id="Save All" context="Saves all open files" translation="すべて保存" />
+  <StringItem id="Save all open files" context="" translation="開いているファイルをすべて保存します。" />
+  <StringItem id="Save As ..." context="Save the active file under a new name" translation="名前を付けて保存..." />
+  <StringItem id="Save Layout As..." context="" translation="レイアウトに名前を付けて保存..." />
+  <StringItem id="Save the active file" context="" translation="アクティブなファイルを保存します。" />
+  <StringItem id="Save the active file under a new name" context="" translation="アクティブなファイルに名前を付けて保存します。" />
+  <StringItem id="Select All" context="Select all items" translation="すべて選択" />
+  <StringItem id="Select all items" context="" translation="すべてのアイテムを選択します。" />
+  <StringItem id="Select unselected items and deselect selected items" context="" translation="選択されていないアイテムを選択し、選択されているアイテムの選択を解除します。" />
   <StringItem id="Set Selection" context="" translation="選択範囲を設定" />
+  <StringItem id="Set up page for printing" context="" translation="印刷のためのページ設定をします。" />
+  <StringItem id="Show" context="Show all selected objects" translation="表示" />
+  <StringItem id="Show a print preview of the active document" context="" translation="アクティブなドキュメントの印刷プレビューを表示します。" />
+  <StringItem id="Show All" context="Show all hidden objects" translation="すべて表示" />
+  <StringItem id="Show all hidden objects" context="" translation="隠したオブジェクトすべてを表示します。" />
+  <StringItem id="Show all selected objects" context="" translation="選択したオブジェクトすべてを表示します。" />
+  <StringItem id="Show detailed view of assets" context="" translation="Show detailed view of assets" />
+  <StringItem id="Show Last Hidden" context="Show the last hidden object" translation="直前に隠したオブジェクトを表示" />
+  <StringItem id="Show only the selected objects and hide all others" context="" translation="選択したオブジェクトのみを表示し、ほかのすべてを隠します。" />
+  <StringItem id="Show the last hidden object" context="" translation="直前に隠したオブジェクトを表示します。" />
+  <StringItem id="Show thumbnail view of assets" context="" translation="Show thumbnail view of assets" />
+  <StringItem id="Size of icons on Toolbar buttons" context="" translation="ツールバーボタンのアイコンのサイズ。" />
+  <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="サイズ/等しくする" />
+  <StringItem id="Size/Make Heights Equal" context="Make selected items have the same height" translation="サイズ/高さを等しくする" />
+  <StringItem id="Size/Make Widths Equal" context="Make selected items have the same width" translation="サイズ/幅を等しくする" />
+  <StringItem id="Size/Size to Grid" context="Make selected items sizes align to x/y grid" translation="サイズ/グリッド" />
+  <StringItem id="Source control connection" context="" translation="ソース管理の接続" />
+  <StringItem id="Source Control/Add" context="" translation="ソース管理/追加" />
+  <StringItem id="Source Control/Check In" context="" translation="ソース管理/チェックイン" />
+  <StringItem id="Source Control/Check Out" context="" translation="ソース管理/チェックアウト" />
+  <StringItem id="Source Control/Enable" context="" translation="ソース管理/有効化" />
+  <StringItem id="Source Control/Get Latest Version" context="" translation="ソース管理/最新版を取得" />
+  <StringItem id="Source Control/Open Connection..." context="" translation="ソース管理/接続を開く..." />
+  <StringItem id="Source Control/Reconcile Offline Work..." context="" translation="ソース管理/オフライン作業を調整" />
+  <StringItem id="Source Control/Refresh Status" context="" translation="ソース管理/最新の状態に更新" />
+  <StringItem id="Source Control/Revert" context="Revert add or check out from source control" translation="ソース管理/元に戻す" />
+  <StringItem id="Split Horizontal" context="Split the window horizontally" translation="左右に分割" />
+  <StringItem id="Split the window horizontally" context="" translation="ウィンドウを左右に分割します。" />
+  <StringItem id="Split the window vertically" context="" translation="ウィンドウを上下に分割します。" />
+  <StringItem id="Split Vertical" context="Split the window vertically" translation="上下に分割" />
+  <StringItem id="Targets" context="" translation="ターゲット" />
+  <StringItem id="TCP Target" context="" translation="TCP ターゲット" />
+  <StringItem id="The format for an IP end point is like &quot;192.168.0.120:9000&quot;" context="" translation="IP エンドポイントの形式は、「192.168.0.120:9000」のようになります。" />
+  <StringItem id="The IP address format should be like &quot;192.168.0.1:12345&quot; or &quot;2001:740:8deb:0::1:12345&quot;" context="" translation="IP アドレスの形式は、「192.168.0.1:12345」または「2001:740:8deb:0::1:12345」のようになります。" />
+  <StringItem id="The IP Port number that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するためにリッスンする IP ポート番号" />
+  <StringItem id="The name must not be empty or all whitespace" context="" translation="名前を空のままにしたり、空白文字のみにすることはできません。" />
+  <StringItem id="The preferred IP address that this app listens to for receiving Open Sound Control messages" context="" translation="このアプリケーションが Open Sound Control メッセージを受信するために優先的にリッスンする IP アドレス。" />
+  <StringItem id="The primary IP address and port number that this app sends Open Sound Control messages to. Additional destinations can be added due to auto-configuration" context="" translation="このアプリケーションからの Open Sound Control メッセージ送信先のプライマリ IP アドレスおよびポート番号。 自動構成であるため、追加の送信先が追加可能です。" />
+  <StringItem id="The property name is unknown: " context="" translation="プロパティ名が不明です。 " />
+  <StringItem id="The scope type is unknown" context="" translation="スコープの種類が不明です。" />
+  <StringItem id="There was a problem opening the file" context="" translation="ファイルを開く際に次の問題が発生しました" />
+  <StringItem id="There was a problem saving the file" context="" translation="ファイルを保存する際に次の問題が発生しました" />
+  <StringItem id="Thumbnail View" context="" translation="サムネイル表示" />
+  <StringItem id="Tile Horizontal" context="Tile Documents Horizontally" translation="左右に並べて表示" />
+  <StringItem id="Tile Overlapping" context="Tile Documents Overlapping" translation="重ねて表示" />
+  <StringItem id="Tile the documents, all together as tabbed items, in the central region of the application" context="" translation="ドキュメントにタブを付け、アプリケーションの中央部分に重ねて表示します。" />
+  <StringItem id="Tile the documents, as separate visible items, horizontally" context="" translation="複数のドキュメントを左右に並べて表示します。" />
+  <StringItem id="Tile the documents, as separate visible items, vertically" context="" translation="複数のドキュメントを上下に並べて表示します。" />
+  <StringItem id="Tile Vertical" context="Tile Documents Vertically" translation="上下に並べて表示" />
+  <StringItem id="Top" context="the top side of the model that is being viewed" translation="上部" />
+  <StringItem id="Undo" context="Undo the last change" translation="元に戻す" />
+  <StringItem id="Undo {0}" context="{0} is the name of the command " translation="「{0}」を元に戻す" />
+  <StringItem id="Undo the last change" context="" translation="直前の変更を元に戻します。" />
+  <StringItem id="Ungroup" context="Ungroup any selected groups" translation="グループ化解除" />
+  <StringItem id="Ungroup any selected groups" context="" translation="選択されたグループのグループ化を解除します。" />
+  <StringItem id="Unknown error code" context="" translation="未知のエラーコード" />
+  <StringItem id="Unload unused Assets" context="" translation="Unload unused Assets" />
+  <StringItem id="Unlock" context="Unlock the selection to enable editing" translation="ロックを解除" />
+  <StringItem id="Unlock the selection to enable editing" context="" translation="選択部分が編集できるようにロックを解除します。" />
+  <StringItem id="Unpin {0}" context="{0} will be replaced with a file name " translation="{0} のピン留めを解除" />
+  <StringItem id="Untitled" context="" translation="無題" />
+  <StringItem id="User can save or load application settings from files" context="" translation="アプリケーション設定の、ファイルへの保存またはファイルからの読み込みです。" />
+  <StringItem id="View" context="this is the name of a menu" translation="表示" />
+  <StringItem id="View Commands" context="'View' is a noun. This text is a description of the View menu" translation="表示コマンド" />
+  <StringItem id="Vita Target" context="" translation="Vita ターゲット" />
+  <StringItem id="Window" context="this is the name of a menu" translation="ウィンドウ" />
+  <StringItem id="Window Management Commands" context="" translation="ウィンドウ管理コマンド" />
+  <StringItem id="X86 Target" context="" translation="X86 ターゲット" />
+  <StringItem id="Zoom In" context="" translation="拡大" />
+  <StringItem id="Zoom In" context="Zoom In" translation="拡大" />
+  <StringItem id="Zoom Out" context="" translation="縮小" />
+  <StringItem id="Zoom Out" context="Zoom Out" translation="縮小" />
+  <StringItem id="Zoom Reset" context="" translation="リセット" />
+  <StringItem id="Zoom Reset" context="Zoom Reset" translation="リセット" />
 </StringLocalizationTable>

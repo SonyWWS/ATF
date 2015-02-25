@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -22,6 +24,15 @@ namespace LocalizableStringExtractor
         public Window1()
         {
             InitializeComponent();
+
+            var progressBar = (ProgressBar)this.FindName("ExtractionProgressBar");
+            progressBar.Minimum = 0;
+            progressBar.Maximum = 1;
+            progressBar.Value = 0;
+            m_extractor.ProgressChanged += (sender, args) =>
+            {
+                progressBar.Value = m_extractor.Progress;
+            };
         }
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
@@ -35,11 +46,11 @@ namespace LocalizableStringExtractor
             Close();
         }
 
-        private void AssembliesBtn_Click(object sender, RoutedEventArgs e)
+        private void DirectoriesBtn_Click(object sender, RoutedEventArgs e)
         {
             m_extractor.OpenSettingsFile();
         }
 
-        private Extractor m_extractor = new Extractor();
+        private readonly Extractor m_extractor = new Extractor();
     }
 }

@@ -1,68 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="Circuit Editor Sample" context="" translation="Circuit Editor Sample" />
-  <StringItem id="Master" context="this is the name of a command" translation="Master" />
-  <StringItem id="Creates a custom module type from the selection" context="" translation="Creates a custom module type from the selection" />
-  <StringItem id="Unmaster" context="this is the name of a command" translation="Unmaster" />
-  <StringItem id="Expands the last selected custom module" context="" translation="Expands the last selected custom module" />
-  <StringItem id="Can't remove connectors from sub-circuits" context="" translation="Can't remove connectors from sub-circuits" />
-  <StringItem id="Can't use a sub-circuit inside itself" context="" translation="Can't use a sub-circuit inside itself" />
-  <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" context="" translation="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" />
-  <StringItem id="Overwrite / Add" context="" translation="Overwrite / Add" />
-  <StringItem id="Overwrite" context="" translation="Overwrite" />
+  <StringItem id="16-to-1 Multiplexer" context="" translation="16-to-1 Multiplexer" />
+  <StringItem id="1-to-16 Demultiplexer" context="" translation="1-to-16 Demultiplexer" />
   <StringItem id="Add" context="" translation="Add" />
-  <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="Circuit Template File (*.circuit)|*.circuit" />
-  <StringItem id="Input Files" context="" translation="Input Files" />
-  <StringItem id="first" context="as in, 'the first file'" translation="first" />
-  <StringItem id="second" context="as in, 'the second file'" translation="second" />
-  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="structure" />
-  <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="subStream0" />
-  <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="sub-stream 0" />
-  <StringItem id="Create Circuit Programmatically" context="" translation="Create Circuit Programmatically" />
-  <StringItem id="Wire Style" context="" translation="Wire Style" />
+  <StringItem id="And" context="" translation="And" />
+  <StringItem id="BackColor" context="" translation="BackColor" />
+  <StringItem id="Button" context="" translation="Button" />
+  <StringItem id="Circuit" context="" translation="Circuit" />
   <StringItem id="Circuit Editor" context="" translation="Circuit Editor" />
+  <StringItem id="Circuit Editor Sample" context="" translation="Circuit Editor Sample" />
+  <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="Circuit Template File (*.circuit)|*.circuit" />
+  <StringItem id="Circuits" context="" translation="Circuits" />
+  <StringItem id="Comment" context="" translation="Comment" />
+  <StringItem id="Comment background color" context="" translation="Comment background color" />
+  <StringItem id="Comment foreground color" context="" translation="Comment foreground color" />
+  <StringItem id="Comment Text" context="" translation="Comment Text" />
+  <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="Create a moveable resizable comment on the circuit canvas" />
+  <StringItem id="Create Circuit Programmatically" context="" translation="Create Circuit Programmatically" />
+  <StringItem id="Data" context="" translation="Data" />
   <StringItem id="Default Edge Style" context="" translation="Default Edge Style" />
+  <StringItem id="first" context="as in, 'the first file'" translation="first" />
+  <StringItem id="ForeColor" context="" translation="ForeColor" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" />
+  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="In" context="" translation="In" />
+  <StringItem id="In1" context="input pin #1" translation="In1" />
+  <StringItem id="In1" context="" translation="In1" />
+  <StringItem id="In10" context="" translation="In10" />
+  <StringItem id="In11" context="" translation="In11" />
+  <StringItem id="In12" context="" translation="In12" />
+  <StringItem id="In13" context="" translation="In13" />
+  <StringItem id="In14" context="" translation="In14" />
+  <StringItem id="In15" context="" translation="In15" />
+  <StringItem id="In16" context="" translation="In16" />
+  <StringItem id="In2" context="input pin #2" translation="In2" />
+  <StringItem id="In2" context="" translation="In2" />
+  <StringItem id="In3" context="" translation="In3" />
+  <StringItem id="In4" context="" translation="In4" />
+  <StringItem id="In5" context="" translation="In5" />
+  <StringItem id="In6" context="" translation="In6" />
+  <StringItem id="In7" context="" translation="In7" />
+  <StringItem id="In8" context="" translation="In8" />
+  <StringItem id="In9" context="" translation="In9" />
+  <StringItem id="Initial Directory" context="" translation="Initial Directory" />
+  <StringItem id="Input Files" context="" translation="Input Files" />
+  <StringItem id="Layer name" context="" translation="Layer name" />
+  <StringItem id="Light" context="" translation="Light" />
+  <StringItem id="Light source" context="" translation="Light source" />
+  <StringItem id="Logical AND" context="" translation="Logical AND" />
+  <StringItem id="Logical OR" context="" translation="Logical OR" />
+  <StringItem id="Manufacturer" context="" translation="Manufacturer" />
+  <StringItem id="Misc" context="abbreviation for miscellaneous" translation="Misc" />
+  <StringItem id="Module name" context="" translation="Module name" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="On" context="" translation="On" />
+  <StringItem id="On/Off Button" context="" translation="On/Off Button" />
+  <StringItem id="Or" context="" translation="Or" />
+  <StringItem id="Out" context="" translation="Out" />
+  <StringItem id="Out1" context="" translation="Out1" />
+  <StringItem id="Out10" context="" translation="Out10" />
+  <StringItem id="Out11" context="" translation="Out11" />
+  <StringItem id="Out12" context="" translation="Out12" />
+  <StringItem id="Out13" context="" translation="Out13" />
+  <StringItem id="Out14" context="" translation="Out14" />
+  <StringItem id="Out15" context="" translation="Out15" />
+  <StringItem id="Out16" context="" translation="Out16" />
+  <StringItem id="Out2" context="" translation="Out2" />
+  <StringItem id="Out3" context="" translation="Out3" />
+  <StringItem id="Out4" context="" translation="Out4" />
+  <StringItem id="Out5" context="" translation="Out5" />
+  <StringItem id="Out6" context="" translation="Out6" />
+  <StringItem id="Out7" context="" translation="Out7" />
+  <StringItem id="Out8" context="" translation="Out8" />
+  <StringItem id="Out9" context="" translation="Out9" />
+  <StringItem id="Overwrite" context="" translation="Overwrite" />
+  <StringItem id="Overwrite / Add" context="" translation="Overwrite / Add" />
+  <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" context="" translation="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" />
+  <StringItem id="Pause" context="" translation="Pause" />
+  <StringItem id="Prototype folder name" context="" translation="Prototype folder name" />
+  <StringItem id="Reset" context="" translation="Reset" />
+  <StringItem id="second" context="as in, 'the second file'" translation="second" />
+  <StringItem id="Select1" context="" translation="Select1" />
+  <StringItem id="Select2" context="" translation="Select2" />
+  <StringItem id="Select3" context="" translation="Select3" />
+  <StringItem id="Select4" context="" translation="Select4" />
   <StringItem id="Show Expanded Group Pins" context="" translation="Show Expanded Group Pins" />
   <StringItem id="Show group pins when a group is expanded" context="" translation="Show group pins when a group is expanded" />
   <StringItem id="Show Virtual links" context="" translation="Show Virtual links" />
   <StringItem id="Show virtual links between group pin and its associated subnodes when a group is expanded" context="" translation="Show virtual links between group pin and its associated subnodes when a group is expanded" />
-  <StringItem id="Initial Directory" context="" translation="Initial Directory" />
-  <StringItem id="The initial directory for documents" context="" translation="The initial directory for documents" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
-  <StringItem id="Circuit" context="" translation="Circuit" />
-  <StringItem id="Circuits" context="" translation="Circuits" />
-  <StringItem id="Comment" context="" translation="Comment" />
-  <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="Create a moveable resizable comment on the circuit canvas" />
-  <StringItem id="Text" context="" translation="Text" />
-  <StringItem id="Comment Text" context="" translation="Comment Text" />
-  <StringItem id="BackColor" context="" translation="BackColor" />
-  <StringItem id="Comment background color" context="" translation="Comment background color" />
-  <StringItem id="ForeColor" context="" translation="ForeColor" />
-  <StringItem id="Comment foreground color" context="" translation="Comment foreground color" />
-  <StringItem id="Button" context="" translation="Button" />
-  <StringItem id="On/Off Button" context="" translation="On/Off Button" />
-  <StringItem id="Out" context="" translation="Out" />
-  <StringItem id="Light" context="" translation="Light" />
-  <StringItem id="Light source" context="" translation="Light source" />
-  <StringItem id="In" context="" translation="In" />
-  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="Speaker" />
-  <StringItem id="Volume" context="loudness" translation="Volume" />
-  <StringItem id="And" context="" translation="And" />
-  <StringItem id="Logical AND" context="" translation="Logical AND" />
-  <StringItem id="In1" context="input pin #1" translation="In1" />
-  <StringItem id="In2" context="input pin #2" translation="In2" />
-  <StringItem id="Or" context="" translation="Or" />
-  <StringItem id="Logical OR" context="" translation="Logical OR" />
   <StringItem id="Sound" context="" translation="Sound" />
   <StringItem id="Sound Player" context="" translation="Sound Player" />
-  <StringItem id="On" context="" translation="On" />
-  <StringItem id="Reset" context="" translation="Reset" />
-  <StringItem id="Pause" context="" translation="Pause" />
-  <StringItem id="Name" context="" translation="Name" />
-  <StringItem id="Module name" context="" translation="Module name" />
-  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="Speaker" />
+  <StringItem id="structure" context="this is the name of a group of circuit elements; the name is arbitrary" translation="structure" />
+  <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="sub-stream 0" />
+  <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="subStream0" />
+  <StringItem id="Text" context="" translation="Text" />
+  <StringItem id="The initial directory for documents" context="" translation="The initial directory for documents" />
   <StringItem id="Unique ID" context="" translation="Unique ID" />
-  <StringItem id="Layer name" context="" translation="Layer name" />
-  <StringItem id="Prototype folder name" context="" translation="Prototype folder name" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" />
+  <StringItem id="Wire Style" context="" translation="Wire Style" />
 </StringLocalizationTable>

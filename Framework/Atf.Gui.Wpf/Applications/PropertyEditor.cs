@@ -39,7 +39,7 @@ namespace Sce.Atf.Wpf.Applications
 
             m_controlDef = new ControlDef()
             {
-                Name = "Property Grid".Localize(),
+                Name = "Property Editor".Localize(),
                 Description = "Edits selected object properties".Localize(),
                 Group = StandardControlGroup.Right,
                 Id = s_propertyGridId.ToString()

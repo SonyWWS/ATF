@@ -60,12 +60,6 @@ namespace Sce.Atf
             string language = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName; //"en" or "ja"
             string culture = Thread.CurrentThread.CurrentUICulture.Name; //"en-US" or "ja-JP"
 
-            // In the satellite assembly model, the English version is in the root directory.
-            // Let's have a quick return in this case to avoid uselessly searching for \en-US and \en
-            // sub-directories. Yes, this doesn't work if we port ATF to English-Australia. Unlikely!
-            if (language == "en")
-                return defaultPath;
-
             string file = Path.GetFileName(defaultPath);
             string baseDir = Path.GetDirectoryName(defaultPath);
 

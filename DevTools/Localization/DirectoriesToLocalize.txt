@@ -1,0 +1,20 @@
+# This text file specifies the root directories to search code files for and
+#	the resulting XML file to produce from those code files.
+# Each line has a pair of paths. The first is the path to a directory of code files.
+#	The second path is the destination XML file.
+# The two paths must be separated by a single space.
+# Each path needs to be a relative path to the root ATF directory.
+# The root of the ATF directory is found by searching from LocalizableStringExtractor's starting
+#	directory and going up the directory hierarchy until a directory name containing "atf" is
+#	found.
+# Paths with spaces in them need double quotes around the path.
+Framework\Atf.Core Framework\Atf.Core\Resources\Localization.xml
+Framework\Atf.Gui Framework\Atf.Gui\Resources\Localization.xml
+Framework\Atf.Gui.OpenGL Framework\Atf.Gui.OpenGL\Resources\Localization.xml
+Framework\Atf.Gui.WinForms Framework\Atf.Gui.WinForms\Resources\Localization.xml
+Framework\Atf.Gui.Wpf Framework\Atf.Gui.Wpf\Resources\Localization.xml
+Framework\Atf.Perforce Framework\Atf.Perforce\Resources\Localization.xml
+"Samples\CircuitEditor" Samples\CircuitEditor\Resources\Localization.xml
+"Samples\CodeEditor" "Samples\CodeEditor\Resources\Localization.xml"
+"Samples\TimelineEditor" "Samples\TimelineEditor\Resources\Localization.xml"
+"Samples\SimpleDomEditorWpf" "Samples\SimpleDomEditorWpf\Resources\Localization.xml"

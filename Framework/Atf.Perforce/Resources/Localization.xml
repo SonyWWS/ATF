@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
+  <StringItem id="Enable or Disable Perforce Service" context="" translation="Enable or Disable Perforce Service" />
+  <StringItem id="File Status Cache Timeout" context="" translation="File Status Cache Timeout" />
   <StringItem id="For user {0} with workspace {1} on server {2}." context="" translation="For user {0} with workspace {1} on server {2}." />
   <StringItem id="Perforce Connection History" context="" translation="Perforce Connection History" />
   <StringItem id="Perforce Default Connection" context="" translation="Perforce Default Connection" />
-  <StringItem id="Enable or Disable Perforce Service" context="" translation="Enable or Disable Perforce Service" />
-  <StringItem id="File Status Cache Timeout" context="" translation="File Status Cache Timeout" />
   <StringItem id="Rate at which cached Perforce file records are updated" context="" translation="Rate at which cached Perforce file records are updated" />
 </StringLocalizationTable>

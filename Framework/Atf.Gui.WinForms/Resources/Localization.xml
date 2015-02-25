@@ -1,359 +1,356 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="Auto-load Documents" context="" translation="Auto-load Documents" />
-  <StringItem id="Load previously open documents on application startup" context="" translation="Load previously open documents on application startup" />
-  <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="Auto New Document" />
-  <StringItem id="Create a new empty document on application startup" context="" translation="Create a new empty document on application startup" />
-  <StringItem id="Documents" context="" translation="Documents" />
-  <StringItem id="Customize" context="" translation="Customize" />
-  <StringItem id="Press F1 for more info" context="" translation="Press F1 for more info" />
-  <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
-  <StringItem id="Unlock UI Layout" context="" translation="Unlock UI Layout" />
-  <StringItem id="Activate Window" context="" translation="Activate Window" />
-  <StringItem id="Close" context="" translation="Close" />
-  <StringItem id="Closes the current Tab panel" context="" translation="Closes the current Tab panel" />
-  <StringItem id="Close All But This" context="" translation="Close All But This" />
-  <StringItem id="Closes all but the current Tab panel" context="" translation="Closes all but the current Tab panel" />
-  <StringItem id="Copy Full Path" context="" translation="Copy Full Path" />
-  <StringItem id="Copies the file path for the document" context="" translation="Copies the file path for the document" />
-  <StringItem id="Open Containing Folder" context="" translation="Open Containing Folder" />
-  <StringItem id="Opens the folder containing the document in Windows Explorer" context="" translation="Opens the folder containing the document in Windows Explorer" />
-  <StringItem id="Error!" context="" translation="Error!" />
-  <StringItem id="Warning" context="" translation="Warning" />
-  <StringItem id="Info" context="" translation="Info" />
-  <StringItem id="Close" context="Close file" translation="Close" />
-  <StringItem id="&amp;Save" context="The '&amp;' is optional and means that Alt+S is the keyboard shortcut on this button" translation="&amp;Save" />
   <StringItem id="&amp;Discard" context="The '&amp;' is optional and means that Alt+D is the keyboard shortcut on this button" translation="&amp;Discard" />
-  <StringItem id="Grid Property Editor" context="" translation="Grid Property Editor" />
-  <StringItem id="Edits selected object properties" context="" translation="Edits selected object properties" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
-  <StringItem id="An application built using the Authoring Tools Framework" context="" translation="An application built using the Authoring Tools Framework" />
-  <StringItem id="About this Application" context="" translation="About this Application" />
-  <StringItem id="Edit Label" context="" translation="Edit Label" />
-  <StringItem id="Tree View" context="" translation="Tree View" />
+  <StringItem id="&amp;Save" context="The '&amp;' is optional and means that Alt+S is the keyboard shortcut on this button" translation="&amp;Save" />
+  <StringItem id="(Multiple)" context="CurveTypeSelector" translation="(Multiple)" />
+  <StringItem id="(none)" context="No flags" translation="(none)" />
+  <StringItem id="[{0} items]" context="a number of items" translation="[{0} items]" />
+  <StringItem id="{0} commands currently do not use their default shortcuts." context="{0} is a number" translation="{0} commands currently do not use their default shortcuts." />
   <StringItem id="&lt; Clean State &gt;" context="" translation="&lt; Clean State &gt;" />
-  <StringItem id="Layers" context="" translation="Layers" />
-  <StringItem id="Edits document layers" context="" translation="Edits document layers" />
-  <StringItem id="Copy items from the document and paste them here to create layers whose visibility can be controlled by clicking on a check box." context="" translation="Copy items from the document and paste them here to create layers whose visibility can be controlled by clicking on a check box." />
-  <StringItem id="Show/Hide Layer" context="" translation="Show/Hide Layer" />
-  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
-  <StringItem id="Project Lister" context="" translation="Project Lister" />
-  <StringItem id="Lists objects in the current document" context="" translation="Lists objects in the current document" />
-  <StringItem id="Prototypes" context="" translation="Prototypes" />
-  <StringItem id="Creates new instances from prototypes" context="" translation="Creates new instances from prototypes" />
-  <StringItem id="Copy items from the document and paste them here to create prototypes that can be dragged and dropped onto a canvas." context="" translation="Copy items from the document and paste them here to create prototypes that can be dragged and dropped onto a canvas." />
-  <StringItem id="Resources" context="" translation="Resources" />
-  <StringItem id="Lists available resources" context="" translation="Lists available resources" />
-  <StringItem id="Details View" context="" translation="Details View" />
-  <StringItem id="Switch to details view" context="" translation="Switch to details view" />
-  <StringItem id="Thumbnail View" context="" translation="Thumbnail View" />
-  <StringItem id="Switch to thumbnail view" context="" translation="Switch to thumbnail view" />
-  <StringItem id="Target name already exist" context="" translation="Target name already exist" />
-  <StringItem id="Target not selected" context="" translation="Target not selected" />
-  <StringItem id="Delete target {0}" context="" translation="Delete target {0}" />
-  <StringItem id="Edit Target" context="" translation="Edit Target" />
-  <StringItem id="Add Target" context="" translation="Add Target" />
-  <StringItem id="Fill target name" context="" translation="Fill target name" />
-  <StringItem id="Fill host name" context="" translation="Fill host name" />
-  <StringItem id="Invalid port number" context="" translation="Invalid port number" />
-  <StringItem id="Targets" context="" translation="Targets" />
-  <StringItem id="Controls for managing targets." context="" translation="Controls for managing targets." />
-  <StringItem id="UI Settings" context="" translation="UI Settings" />
-  <StringItem id="Selected Targets" context="" translation="Selected Targets" />
-  <StringItem id="Target ..." context="" translation="Target ..." />
-  <StringItem id="Edit targets" context="" translation="Edit targets" />
-  <StringItem id="Copies the OSC address of this property to the clipboard" context="" translation="Copies the OSC address of this property to the clipboard" />
-  <StringItem id="Copy OSC Address" context="" translation="Copy OSC Address" />
-  <StringItem id="The receiving port number or IP address are not correctly formatted." context="" translation="The receiving port number or IP address are not correctly formatted." />
-  <StringItem id="The destination port number or IP address are not correctly formatted." context="" translation="The destination port number or IP address are not correctly formatted." />
-  <StringItem id="Output" context="title of Output window" translation="Output" />
-  <StringItem id="View errors, warnings, and informative messages" context="" translation="View errors, warnings, and informative messages" />
-  <StringItem id="Error" context="Label for error message" translation="Error" />
-  <StringItem id="Warning" context="Label for warning message" translation="Warning" />
-  <StringItem id="Info" context="Label for informative message" translation="Info" />
-  <StringItem id="Palette" context="" translation="Palette" />
-  <StringItem id="Creates new instances" context="" translation="Creates new instances" />
-  <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" />
-  <StringItem id="Performance Monitor" context="" translation="Performance Monitor" />
-  <StringItem id="Displays performance data on the currently active Control" context="" translation="Displays performance data on the currently active Control" />
-  <StringItem id="Copy Property" context="Copies this property's value to the local clipboard" translation="Copy Property" />
-  <StringItem id="Copies this property's value to the to local clipboard" context="" translation="Copies this property's value to the to local clipboard" />
-  <StringItem id="Paste Property" context="Pastes the local clipboard into this property's value" translation="Paste Property" />
-  <StringItem id="Pastes the local clipboard into this property's value" context="" translation="Pastes the local clipboard into this property's value" />
-  <StringItem id="Reset Property" context="Reset the current property to its default value" translation="Reset Property" />
-  <StringItem id="Reset the current property to its default value" context="" translation="Reset the current property to its default value" />
-  <StringItem id="Copy All" context="Copies all properties to the local clipboard" translation="Copy All" />
-  <StringItem id="Copies all properties to the local clipboard" context="" translation="Copies all properties to the local clipboard" />
-  <StringItem id="Paste All" context="Pastes the local clipboard into all properties" translation="Paste All" />
-  <StringItem id="Pastes the local clipboard into all properties" context="" translation="Pastes the local clipboard into all properties" />
-  <StringItem id="Reset All" context="Reset all properties to their default values" translation="Reset All" />
-  <StringItem id="Reset all properties to their default values" context="" translation="Reset all properties to their default values" />
-  <StringItem id="View In Text Editor" context="Open the file in the associated text editor" translation="View In Text Editor" />
-  <StringItem id="Open the file in the associated text editor" context="" translation="Open the file in the associated text editor" />
-  <StringItem id="Paste: {0}" context="'Paste' is a verb and this is the name of a command" translation="Paste: {0}" />
-  <StringItem id="Reset: {0}" context="'Reset' is a verb and this is the name of a command" translation="Reset: {0}" />
-  <StringItem id="Paste All" context="'Paste' is a verb and this is the name of a command" translation="Paste All" />
-  <StringItem id="Reset All Properties" context="'Reset' is a verb and this is the name of a command" translation="Reset All Properties" />
-  <StringItem id="Property Editor" context="" translation="Property Editor" />
-  <StringItem id="Rename..." context="Rename selected objects" translation="Rename..." />
-  <StringItem id="Rename selected objects" context="" translation="Rename selected objects" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" context="" translation="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" />
-  <StringItem id="Search and Replace" context="" translation="Search and Replace" />
-  <StringItem id="Search for elements managed within the currently selected subwindow, and optionally replace their values" context="" translation="Search for elements managed within the currently selected subwindow, and optionally replace their values" />
-  <StringItem id="Reset All Preferences" context="Reset all preferences to their default values?" translation="Reset All Preferences" />
-  <StringItem id="Reset all preferences to their default values?" context="" translation="Reset all preferences to their default values?" />
-  <StringItem id="Export settings" context="" translation="Export settings" />
-  <StringItem id="Setting file" context="" translation="Setting file" />
-  <StringItem id="Import settings" context="" translation="Import settings" />
-  <StringItem id="Preferences" context="" translation="Preferences" />
-  <StringItem id="Can't load settings" context="" translation="Can't load settings" />
-  <StringItem id="Preferences..." context="Edit user preferences" translation="Preferences..." />
-  <StringItem id="Edit user preferences" context="" translation="Edit user preferences" />
-  <StringItem id="Load or Save Settings..." context="" translation="Load or Save Settings..." />
-  <StringItem id="User can save or load application settings from files" context="" translation="User can save or load application settings from files" />
-  <StringItem id="Would you like to save the changes?" context="" translation="Would you like to save the changes?" />
-  <StringItem id="Unsaved changes" context="" translation="Unsaved changes" />
-  <StringItem id="File" context="" translation="File" />
-  <StringItem id="New" context="" translation="New" />
-  <StringItem id="Open..." context="" translation="Open..." />
-  <StringItem id="Save" context="" translation="Save" />
-  <StringItem id="Save As..." context="" translation="Save As..." />
-  <StringItem id="Exit" context="" translation="Exit" />
-  <StringItem id="Skin Editor" context="" translation="Skin Editor" />
-  <StringItem id="Most Recently Used Skin File" context="" translation="Most Recently Used Skin File" />
-  <StringItem id="Error loading skin file." context="" translation="Error loading skin file." />
-  <StringItem id="Edit Skin..." context="Show Skin Editor and open current skin file." translation="Edit Skin..." />
-  <StringItem id="Edit skin." context="" translation="Edit skin." />
-  <StringItem id="Load Skin..." context="Load and apply a skin file." translation="Load Skin..." />
-  <StringItem id="Load and apply a skin file." context="" translation="Load and apply a skin file." />
-  <StringItem id="Reset Skin to Default" context="Reset active skin to the default skin." translation="Reset Skin to Default" />
-  <StringItem id="Reset active skin to the default skin." context="" translation="Reset active skin to the default skin." />
-  <StringItem id="Cut" context="Cut the selection" translation="Cut" />
-  <StringItem id="Delete" context="" translation="Delete" />
-  <StringItem id="Ready" context="Application is ready" translation="Ready" />
-  <StringItem id="Ready" context="" translation="Ready" />
-  <StringItem id="Source Control/Enable" context="" translation="Source Control/Enable" />
-  <StringItem id="Enable source control" context="" translation="Enable source control" />
-  <StringItem id="Source Control/Open Connection..." context="" translation="Source Control/Open Connection..." />
-  <StringItem id="Source control connection" context="" translation="Source control connection" />
-  <StringItem id="Source Control/Add" context="" translation="Source Control/Add" />
-  <StringItem id="Add to source control" context="" translation="Add to source control" />
-  <StringItem id="Source Control/Check In" context="" translation="Source Control/Check In" />
-  <StringItem id="Check in to source control" context="" translation="Check in to source control" />
-  <StringItem id="Source Control/Check Out" context="" translation="Source Control/Check Out" />
-  <StringItem id="Check out from source control" context="" translation="Check out from source control" />
-  <StringItem id="Source Control/Get Latest Version" context="" translation="Source Control/Get Latest Version" />
-  <StringItem id="Get latest version from source control" context="" translation="Get latest version from source control" />
-  <StringItem id="Source Control/Revert" context="Revert add or check out from source control" translation="Source Control/Revert" />
-  <StringItem id="Revert add or check out from source control" context="" translation="Revert add or check out from source control" />
-  <StringItem id="Source Control/Refresh Status" context="" translation="Source Control/Refresh Status" />
-  <StringItem id="Refresh status in source control" context="" translation="Refresh status in source control" />
-  <StringItem id="Source Control/Reconcile Offline Work..." context="" translation="Source Control/Reconcile Offline Work..." />
-  <StringItem id="Reconcile Offline Work" context="" translation="Reconcile Offline Work" />
-  <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
-  <StringItem id="Disable Source Control" context="" translation="Disable Source Control" />
+  <StringItem id="About" context="" translation="About" />
+  <StringItem id="About this Application" context="" translation="About this Application" />
+  <StringItem id="Activate Window" context="" translation="Activate Window" />
+  <StringItem id="Add" context="" translation="Add" />
+  <StringItem id="Add {0}" context="" translation="Add {0}" />
+  <StringItem id="add array element" context="" translation="add array element" />
+  <StringItem id="Add array element" context="" translation="Add array element" />
+  <StringItem id="Add Control Point" context="" translation="Add Control Point" />
   <StringItem id="Add document {0} to version control?" context="" translation="Add document {0} to version control?" />
   <StringItem id="Add document to Version Control" context="" translation="Add document to Version Control" />
-  <StringItem id="Check out this file to be able to save the changes?" context="" translation="Check out this file to be able to save the changes?" />
-  <StringItem id="Check Out File" context="" translation="Check Out File" />
-  <StringItem id="All changes will be lost. Do you want to proceed?" context="" translation="All changes will be lost. Do you want to proceed?" />
-  <StringItem id="Proceed with Revert?" context="" translation="Proceed with Revert?" />
-  <StringItem id="Online Help" context="" translation="Online Help" />
-  <StringItem id="Opens an online help page for this app" context="" translation="Opens an online help page for this app" />
-  <StringItem id="Send Feedback" context="" translation="Send Feedback" />
-  <StringItem id="Send Feedback..." context="" translation="Send Feedback..." />
-  <StringItem id="Report bug or request feature" context="" translation="Report bug or request feature" />
-  <StringItem id="Version Check Failed" context="" translation="Version Check Failed" />
-  <StringItem id="Check for update..." context="" translation="Check for update..." />
-  <StringItem id="Check for product update" context="" translation="Check for product update" />
-  <StringItem id="Check for update at startup" context="" translation="Check for update at startup" />
-  <StringItem id="Check for product update at startup" context="" translation="Check for product update at startup" />
-  <StringItem id="Application" context="" translation="Application" />
-  <StringItem id="There is a newer version of this program available." context="" translation="There is a newer version of this program available." />
-  <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
-  <StringItem id="The most recent version is {0}" context="" translation="The most recent version is {0}" />
-  <StringItem id="Would you like to download the latest version?" context="" translation="Would you like to download the latest version?" />
-  <StringItem id="Update" context="this is the title of a dialog box" translation="Update" />
-  <StringItem id="Cannot open url:" context="" translation="Cannot open url:" />
-  <StringItem id="Error" context="" translation="Error" />
-  <StringItem id="This software is up to date." context="" translation="This software is up to date." />
-  <StringItem id="Updater" context="" translation="Updater" />
-  <StringItem id="Save layout as..." context="" translation="Save layout as..." />
-  <StringItem id="Manage layouts..." context="" translation="Manage layouts..." />
-  <StringItem id="About" context="" translation="About" />
-  <StringItem id="Yellow" context="" translation="Yellow" />
-  <StringItem id="Blue" context="" translation="Blue" />
-  <StringItem id="Green" context="" translation="Green" />
-  <StringItem id="Pink" context="" translation="Pink" />
-  <StringItem id="Purple" context="" translation="Purple" />
-  <StringItem id="Gray" context="" translation="Gray" />
-  <StringItem id="Drag Items" context="" translation="Drag Items" />
-  <StringItem id="Canvas Bounds" context="" translation="Canvas Bounds" />
-  <StringItem id="Resize Annotation" context="" translation="Resize Annotation" />
-  <StringItem id="Edit Annotation" context="the name of a command" translation="Edit Annotation" />
-  <StringItem id="Grid" context="Grid location constraint" translation="Grid" />
-  <StringItem id="Show Expanded Group Pins" context="" translation="Show Expanded Group Pins" />
-  <StringItem id="Reset Group Pin Names" context="" translation="Reset Group Pin Names" />
-  <StringItem id="Hide Unconnected Pins" context="" translation="Hide Unconnected Pins" />
-  <StringItem id="Group" context="a verb" translation="Group" />
-  <StringItem id="Ungroup" context="a verb" translation="Ungroup" />
-  <StringItem id="Toggle Show Group Pins When Expanded" context="" translation="Toggle Show Group Pins When Expanded" />
-  <StringItem id="Reset Pin Names on &quot;{0}&quot;" context="" translation="Reset Pin Names on &quot;{0}&quot;" />
-  <StringItem id="Show Expanded Group Pins on &quot;{0}&quot;" context="" translation="Show Expanded Group Pins on &quot;{0}&quot;" />
-  <StringItem id="Hide Unconnected Pins on &quot;{0}&quot;" context="" translation="Hide Unconnected Pins on &quot;{0}&quot;" />
-  <StringItem id="Group" context="a noun" translation="Group" />
+  <StringItem id="Add External Template Folder" context="" translation="Add External Template Folder" />
   <StringItem id="Add Layer" context="" translation="Add Layer" />
-  <StringItem id="Creates a new layer folder" context="" translation="Creates a new layer folder" />
-  <StringItem id="New Layer" context="" translation="New Layer" />
-  <StringItem id="Prototype" context="Circuit prototype" translation="Prototype" />
-  <StringItem id="Drag Edge" context="" translation="Drag Edge" />
-  <StringItem id="Resize States" context="" translation="Resize States" />
-  <StringItem id="Hex must be a hex value between 00000000 and FFFFFFFF" context="" translation="Hex must be a hex value between 00000000 and FFFFFFFF" />
-  <StringItem id="Hue must be a number between 0 and 360" context="" translation="Hue must be a number between 0 and 360" />
-  <StringItem id="Saturation must be a number between 0 and 100" context="" translation="Saturation must be a number between 0 and 100" />
-  <StringItem id="Brightness must be a number between 0 and 100" context="" translation="Brightness must be a number between 0 and 100" />
-  <StringItem id="Red must be a number between 0 and 255" context="" translation="Red must be a number between 0 and 255" />
-  <StringItem id="Green must be a number between 0 and 255" context="" translation="Green must be a number between 0 and 255" />
-  <StringItem id="Blue must be a number between 0 and 255" context="" translation="Blue must be a number between 0 and 255" />
-  <StringItem id="Alpha must be a number between 0 and 255" context="" translation="Alpha must be a number between 0 and 255" />
-  <StringItem id="Cyan must be a number between 0 and 100" context="" translation="Cyan must be a number between 0 and 100" />
-  <StringItem id="Magenta must be a number between 0 and 100" context="" translation="Magenta must be a number between 0 and 100" />
-  <StringItem id="Yellow must be a number between 0 and 100" context="" translation="Yellow must be a number between 0 and 100" />
-  <StringItem id="Key must be a number between 0 and 100" context="" translation="Key must be a number between 0 and 100" />
-  <StringItem id="Undo" context="" translation="Undo" />
-  <StringItem id="Redo" context="" translation="Redo" />
-  <StringItem id="Edit Tangent" context="" translation="Edit Tangent" />
-  <StringItem id="Unify Tangents" context="" translation="Unify Tangents" />
-  <StringItem id="Break Tangents" context="" translation="Break Tangents" />
-  <StringItem id="Edit Pre-Infinity" context="" translation="Edit Pre-Infinity" />
-  <StringItem id="Edit Post-Infinity" context="" translation="Edit Post-Infinity" />
-  <StringItem id="Snap" context="" translation="Snap" />
-  <StringItem id="Move" context="" translation="Move" />
-  <StringItem id="Scale" context="" translation="Scale" />
-  <StringItem id="Resize Curve Limit" context="could be phrased as 'resize the boundary of the curve'" translation="Resize Curve Limit" />
-  <StringItem id="Add Control Point" context="" translation="Add Control Point" />
-  <StringItem id="Insert Control Point" context="" translation="Insert Control Point" />
-  <StringItem id="Pre-Infinity" context="" translation="Pre-Infinity" />
-  <StringItem id="Post-Infinity" context="" translation="Post-Infinity" />
-  <StringItem id="Curve" context="" translation="Curve" />
-  <StringItem id="Edit" context="" translation="Edit" />
-  <StringItem id="Tangents" context="" translation="Tangents" />
-  <StringItem id="In Tangent" context="" translation="In Tangent" />
-  <StringItem id="Out Tangent" context="" translation="Out Tangent" />
-  <StringItem id="Help" context="" translation="Help" />
-  <StringItem id="Quick Help..." context="" translation="Quick Help..." />
-  <StringItem id="Options" context="" translation="Options" />
-  <StringItem id="Input Mode" context="" translation="Input Mode" />
-  <StringItem id="Basic" context="" translation="Basic" />
-  <StringItem id="Advanced" context="" translation="Advanced" />
-  <StringItem id="Flip Y-Axis" context="" translation="Flip Y-Axis" />
-  <StringItem id="Lock Origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock Origin" />
-  <StringItem id="Type" context="curve types" translation="Type" />
-  <StringItem id="Type of Selected Curve(s)" context="" translation="Type of Selected Curve(s)" />
-  <StringItem id="Linear" context="" translation="Linear" />
-  <StringItem id="Smooth" context="" translation="Smooth" />
-  <StringItem id="Stats" context="" translation="Stats" />
-  <StringItem id="Mouse Position" context="" translation="Mouse Position" />
   <StringItem id="Add Point" context="" translation="Add Point" />
-  <StringItem id="Edit Point" context="" translation="Edit Point" />
-  <StringItem id="(Multiple)" context="CurveTypeSelector" translation="(Multiple)" />
-  <StringItem id="Curve Editor" context="" translation="Curve Editor" />
-  <StringItem id="Edits selected object curves" context="" translation="Edits selected object curves" />
-  <StringItem id="Input mode" context="" translation="Input mode" />
-  <StringItem id="Lock origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock origin" />
-  <StringItem id="Flip Y-axis" context="same as 'flip vertical axis'" translation="Flip Y-axis" />
-  <StringItem id="These commands currently do not use their default shortcuts:" context="" translation="These commands currently do not use their default shortcuts:" />
-  <StringItem id="{0} commands currently do not use their default shortcuts." context="{0} is a number" translation="{0} commands currently do not use their default shortcuts." />
-  <StringItem id="Reset all commands to the default shortcuts?" context="" translation="Reset all commands to the default shortcuts?" />
-  <StringItem id="New folder" context="" translation="New folder" />
-  <StringItem id="Computer" context="" translation="Computer" />
-  <StringItem id="Select a directory" context="" translation="Select a directory" />
-  <StringItem id="Open" context="" translation="Open" />
-  <StringItem id="Control's Name: {0}" context="" translation="Control's Name: {0}" />
-  <StringItem id="Max frames per second: {0}" context="" translation="Max frames per second: {0}" />
-  <StringItem id="Total frame count: {0}" context="" translation="Total frame count: {0}" />
-  <StringItem id="Managed memory (KB): {0}" context="" translation="Managed memory (KB): {0}" />
-  <StringItem id="Unmanaged memory (KB): {0}" context="" translation="Unmanaged memory (KB): {0}" />
-  <StringItem id="Target: {0}" context="'target' is the Windows Control that is being analyzed" translation="Target: {0}" />
-  <StringItem id="Number of rendered frames: {0}" context="" translation="Number of rendered frames: {0}" />
-  <StringItem id="Mean rendering time: {0}ms or {1} ticks" context="" translation="Mean rendering time: {0}ms or {1} ticks" />
-  <StringItem id="Fastest rendering time: {0}ms or {1} ticks" context="" translation="Fastest rendering time: {0}ms or {1} ticks" />
-  <StringItem id="Slowest rendering time: {0}ms or {1} ticks" context="" translation="Slowest rendering time: {0}ms or {1} ticks" />
-  <StringItem id="The performance report is in the clipboard" context="" translation="The performance report is in the clipboard" />
-  <StringItem id="Add" context="" translation="Add" />
-  <StringItem id="Add array element" context="" translation="Add array element" />
-  <StringItem id="Up" context="this is the name of a button that causes the selected item to be moved up in a list" translation="Up" />
-  <StringItem id="Down" context="this is the name of a button that causes the selected item to be moved down in a list" translation="Down" />
-  <StringItem id="add array element" context="" translation="add array element" />
-  <StringItem id="Disabled because no elements selected" context="" translation="Disabled because no elements selected" />
-  <StringItem id="Move {0} selected elements up" context="" translation="Move {0} selected elements up" />
-  <StringItem id="Can't move up because first element selected" context="" translation="Can't move up because first element selected" />
-  <StringItem id="Move {0} selected elements down" context="" translation="Move {0} selected elements down" />
-  <StringItem id="Can't move down because last element selected" context="" translation="Can't move down because last element selected" />
-  <StringItem id="Move elements" context="" translation="Move elements" />
-  <StringItem id="Disabled because no array elements selected" context="" translation="Disabled because no array elements selected" />
-  <StringItem id="Delete {0} selected array elements" context="" translation="Delete {0} selected array elements" />
-  <StringItem id="Delete selected array element" context="" translation="Delete selected array element" />
-  <StringItem id="delete array element" context="" translation="delete array element" />
-  <StringItem id="delete array elements" context="" translation="delete array elements" />
-  <StringItem id="edit array element" context="" translation="edit array element" />
-  <StringItem id="Always disabled" context="" translation="Always disabled" />
-  <StringItem id="Add {0}" context="" translation="Add {0}" />
-  <StringItem id="Choose child type to add" context="Could be phrased, 'Choose the type of child to add to this list of child objects'" translation="Choose child type to add" />
-  <StringItem id="Disabled because no items are selected" context="" translation="Disabled because no items are selected" />
-  <StringItem id="Delete {0} selected items" context="" translation="Delete {0} selected items" />
-  <StringItem id="Move {0} selected items up" context="" translation="Move {0} selected items up" />
-  <StringItem id="Can't move up because first item is selected" context="" translation="Can't move up because first item is selected" />
-  <StringItem id="Move {0} selected items down" context="" translation="Move {0} selected items down" />
-  <StringItem id="Can't move down because last item is selected" context="" translation="Can't move down because last item is selected" />
-  <StringItem id="[{0} items]" context="a number of items" translation="[{0} items]" />
-  <StringItem id="Insert child" context="" translation="Insert child" />
-  <StringItem id="Remove children" context="" translation="Remove children" />
-  <StringItem id="Move children" context="" translation="Move children" />
-  <StringItem id="(none)" context="No flags" translation="(none)" />
-  <StringItem id="Property Organization" context="Could be rephrased as 'How do you want these properties to be organized?'" translation="Property Organization" />
-  <StringItem id="Unsorted" context="" translation="Unsorted" />
+  <StringItem id="Add Target" context="" translation="Add Target" />
+  <StringItem id="Add Template Folder" context="" translation="Add Template Folder" />
+  <StringItem id="Add to source control" context="" translation="Add to source control" />
+  <StringItem id="Added Collection Item" context="" translation="Added Collection Item" />
+  <StringItem id="Advanced" context="" translation="Advanced" />
+  <StringItem id="All changes will be lost. Do you want to proceed?" context="" translation="All changes will be lost. Do you want to proceed?" />
+  <StringItem id="Alpha must be a number between 0 and 255" context="" translation="Alpha must be a number between 0 and 255" />
   <StringItem id="Alphabetical" context="" translation="Alphabetical" />
-  <StringItem id="Categorized" context="" translation="Categorized" />
-  <StringItem id="Categorized Alphabetical Properties" context="" translation="Categorized Alphabetical Properties" />
   <StringItem id="Alphabetical Categories" context="" translation="Alphabetical Categories" />
   <StringItem id="Alphabetical Categories And Properties" context="" translation="Alphabetical Categories And Properties" />
-  <StringItem id="Property Show / Hide" context="" translation="Property Show / Hide" />
-  <StringItem id="Added Collection Item" context="" translation="Added Collection Item" />
-  <StringItem id="Removed Collection Item" context="" translation="Removed Collection Item" />
+  <StringItem id="Always disabled" context="" translation="Always disabled" />
+  <StringItem id="An application built using the Authoring Tools Framework" context="" translation="An application built using the Authoring Tools Framework" />
+  <StringItem id="Analysis" context="" translation="Analysis" />
+  <StringItem id="Application" context="" translation="Application" />
+  <StringItem id="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" context="{0} is the version number" translation="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" />
+  <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="Auto New Document" />
+  <StringItem id="Auto-load Documents" context="" translation="Auto-load Documents" />
+  <StringItem id="Basic" context="" translation="Basic" />
+  <StringItem id="Blue" context="" translation="Blue" />
+  <StringItem id="Blue must be a number between 0 and 255" context="" translation="Blue must be a number between 0 and 255" />
+  <StringItem id="Break Tangents" context="" translation="Break Tangents" />
+  <StringItem id="Brightness must be a number between 0 and 100" context="" translation="Brightness must be a number between 0 and 100" />
+  <StringItem id="Cannot open url:" context="" translation="Cannot open url:" />
+  <StringItem id="Can't load settings" context="" translation="Can't load settings" />
+  <StringItem id="Can't move down because last element selected" context="" translation="Can't move down because last element selected" />
+  <StringItem id="Can't move down because last item is selected" context="" translation="Can't move down because last item is selected" />
+  <StringItem id="Can't move up because first element selected" context="" translation="Can't move up because first element selected" />
+  <StringItem id="Can't move up because first item is selected" context="" translation="Can't move up because first item is selected" />
+  <StringItem id="Canvas Bounds" context="" translation="Canvas Bounds" />
+  <StringItem id="Categorized" context="" translation="Categorized" />
+  <StringItem id="Categorized Alphabetical Properties" context="" translation="Categorized Alphabetical Properties" />
+  <StringItem id="Check for product update" context="" translation="Check for product update" />
+  <StringItem id="Check for product update at startup" context="" translation="Check for product update at startup" />
+  <StringItem id="Check for update at startup" context="" translation="Check for update at startup" />
+  <StringItem id="Check for update..." context="" translation="Check for update..." />
+  <StringItem id="Check in to source control" context="" translation="Check in to source control" />
+  <StringItem id="Check Out File" context="" translation="Check Out File" />
+  <StringItem id="Check out from source control" context="" translation="Check out from source control" />
+  <StringItem id="Check out this file to be able to save the changes?" context="" translation="Check out this file to be able to save the changes?" />
+  <StringItem id="Choose child type to add" context="Could be phrased, 'Choose the type of child to add to this list of child objects'" translation="Choose child type to add" />
+  <StringItem id="Clear" context="Pressing this button clears the contents of a list" translation="Clear" />
+  <StringItem id="Clear Search" context="'Clear' is a verb" translation="Clear Search" />
+  <StringItem id="Close" context="" translation="Close" />
+  <StringItem id="Close" context="Close file" translation="Close" />
+  <StringItem id="Close All But This" context="" translation="Close All But This" />
+  <StringItem id="Closes all but the current Tab panel" context="" translation="Closes all but the current Tab panel" />
+  <StringItem id="Closes the current Tab panel" context="" translation="Closes the current Tab panel" />
+  <StringItem id="Computer" context="" translation="Computer" />
+  <StringItem id="Controls for managing targets." context="" translation="Controls for managing targets." />
+  <StringItem id="Control's Name: {0}" context="" translation="Control's Name: {0}" />
+  <StringItem id="Copies all properties to the local clipboard" context="" translation="Copies all properties to the local clipboard" />
+  <StringItem id="Copies the file path for the document" context="" translation="Copies the file path for the document" />
+  <StringItem id="Copies the OSC address of this property to the clipboard" context="" translation="Copies the OSC address of this property to the clipboard" />
+  <StringItem id="Copies this property's value to the to local clipboard" context="" translation="Copies this property's value to the to local clipboard" />
+  <StringItem id="Copy All" context="" translation="Copy All" />
+  <StringItem id="Copy All" context="Copies all properties to the local clipboard" translation="Copy All" />
+  <StringItem id="Copy Full Path" context="" translation="Copy Full Path" />
+  <StringItem id="Copy items from the document and paste them here to create layers whose visibility can be controlled by clicking on a check box." context="" translation="Copy items from the document and paste them here to create layers whose visibility can be controlled by clicking on a check box." />
+  <StringItem id="Copy items from the document and paste them here to create prototypes that can be dragged and dropped onto a canvas." context="" translation="Copy items from the document and paste them here to create prototypes that can be dragged and dropped onto a canvas." />
+  <StringItem id="Copy OSC Address" context="" translation="Copy OSC Address" />
+  <StringItem id="Copy Property" context="Copies this property's value to the local clipboard" translation="Copy Property" />
+  <StringItem id="Create a new empty document on application startup" context="" translation="Create a new empty document on application startup" />
+  <StringItem id="Creates a new layer folder" context="" translation="Creates a new layer folder" />
+  <StringItem id="Creates a new template folder" context="" translation="Creates a new template folder" />
+  <StringItem id="Creates new instances" context="" translation="Creates new instances" />
+  <StringItem id="Creates new instances from prototypes" context="" translation="Creates new instances from prototypes" />
+  <StringItem id="Curve" context="" translation="Curve" />
+  <StringItem id="Curve Editor" context="" translation="Curve Editor" />
+  <StringItem id="Customize" context="" translation="Customize" />
+  <StringItem id="Cut" context="Cut the selection" translation="Cut" />
+  <StringItem id="Cyan must be a number between 0 and 100" context="" translation="Cyan must be a number between 0 and 100" />
+  <StringItem id="Deep Analysis" context="a checkbox that enables or disables a time-consuming analysis" translation="Deep Analysis" />
+  <StringItem id="Delete" context="" translation="Delete" />
+  <StringItem id="Delete {0} selected array elements" context="" translation="Delete {0} selected array elements" />
+  <StringItem id="Delete {0} selected items" context="" translation="Delete {0} selected items" />
+  <StringItem id="delete array element" context="" translation="delete array element" />
+  <StringItem id="delete array elements" context="" translation="delete array elements" />
+  <StringItem id="Delete selected array element" context="" translation="Delete selected array element" />
+  <StringItem id="Delete target {0}" context="" translation="Delete target {0}" />
+  <StringItem id="Demote To Copy Instance" context="" translation="Demote To Copy Instance" />
+  <StringItem id="Description" context="" translation="Description" />
+  <StringItem id="Details View" context="" translation="Details View" />
+  <StringItem id="Disable Source Control" context="" translation="Disable Source Control" />
+  <StringItem id="Disabled because no array elements selected" context="" translation="Disabled because no array elements selected" />
+  <StringItem id="Disabled because no elements selected" context="" translation="Disabled because no elements selected" />
+  <StringItem id="Disabled because no items are selected" context="" translation="Disabled because no items are selected" />
+  <StringItem id="Displays performance data on the currently active Control" context="" translation="Displays performance data on the currently active Control" />
+  <StringItem id="Documents" context="" translation="Documents" />
+  <StringItem id="DOM Explorer" context="" translation="DOM Explorer" />
+  <StringItem id="DOM Recorder" context="DOM means Document Object Model" translation="DOM Recorder" />
+  <StringItem id="Down" context="this is the name of a button that causes the selected item to be moved down in a list" translation="Down" />
+  <StringItem id="Drag and Drop" context="" translation="Drag and Drop" />
+  <StringItem id="Drag Edge" context="" translation="Drag Edge" />
+  <StringItem id="Drag Items" context="" translation="Drag Items" />
+  <StringItem id="Edit" context="" translation="Edit" />
+  <StringItem id="Edit Annotation" context="the name of a command" translation="Edit Annotation" />
+  <StringItem id="edit array element" context="" translation="edit array element" />
+  <StringItem id="Edit Label" context="" translation="Edit Label" />
+  <StringItem id="Edit Point" context="" translation="Edit Point" />
+  <StringItem id="Edit Post-Infinity" context="" translation="Edit Post-Infinity" />
+  <StringItem id="Edit Pre-Infinity" context="" translation="Edit Pre-Infinity" />
+  <StringItem id="Edit skin." context="" translation="Edit skin." />
+  <StringItem id="Edit Skin..." context="Show Skin Editor and open current skin file." translation="Edit Skin..." />
+  <StringItem id="Edit Tangent" context="" translation="Edit Tangent" />
+  <StringItem id="Edit Target" context="" translation="Edit Target" />
+  <StringItem id="Edit targets" context="" translation="Edit targets" />
+  <StringItem id="Edit user preferences" context="" translation="Edit user preferences" />
+  <StringItem id="Edit: {0}" context="" translation="Edit: {0}" />
+  <StringItem id="Edits document layers" context="" translation="Edits document layers" />
+  <StringItem id="Edits selected object curves" context="" translation="Edits selected object curves" />
+  <StringItem id="Edits selected object properties" context="" translation="Edits selected object properties" />
+  <StringItem id="Enable source control" context="" translation="Enable source control" />
+  <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
+  <StringItem id="Error" context="Label for error message" translation="Error" />
+  <StringItem id="Error" context="" translation="Error" />
+  <StringItem id="Error loading skin file." context="" translation="Error loading skin file." />
+  <StringItem id="Error!" context="" translation="Error!" />
+  <StringItem id="Exit" context="" translation="Exit" />
+  <StringItem id="Export settings" context="" translation="Export settings" />
+  <StringItem id="Fastest rendering time: {0}ms or {1} ticks" context="" translation="Fastest rendering time: {0}ms or {1} ticks" />
+  <StringItem id="File" context="" translation="File" />
+  <StringItem id="Fill host name" context="" translation="Fill host name" />
+  <StringItem id="Fill target name" context="" translation="Fill target name" />
+  <StringItem id="Flip Y-axis" context="same as 'flip vertical axis'" translation="Flip Y-axis" />
+  <StringItem id="Flip Y-Axis" context="" translation="Flip Y-Axis" />
+  <StringItem id="Generic View of DOM" context="" translation="Generic View of DOM" />
+  <StringItem id="Get latest version from source control" context="" translation="Get latest version from source control" />
+  <StringItem id="Gray" context="" translation="Gray" />
+  <StringItem id="Green" context="" translation="Green" />
+  <StringItem id="Green must be a number between 0 and 255" context="" translation="Green must be a number between 0 and 255" />
+  <StringItem id="Grid" context="Grid location constraint" translation="Grid" />
+  <StringItem id="Grid Property Editor" context="" translation="Grid Property Editor" />
+  <StringItem id="Group" context="a verb" translation="Group" />
+  <StringItem id="Group" context="a noun" translation="Group" />
+  <StringItem id="Help" context="" translation="Help" />
+  <StringItem id="Hex must be a hex value between 00000000 and FFFFFFFF" context="" translation="Hex must be a hex value between 00000000 and FFFFFFFF" />
+  <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" />
+  <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" context="" translation="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" />
+  <StringItem id="Hue must be a number between 0 and 360" context="" translation="Hue must be a number between 0 and 360" />
+  <StringItem id="Import settings" context="" translation="Import settings" />
+  <StringItem id="Import Templates from Document" context="" translation="Import Templates from Document" />
+  <StringItem id="Import Templates from Document..." context="" translation="Import Templates from Document..." />
+  <StringItem id="In Tangent" context="" translation="In Tangent" />
+  <StringItem id="Info" context="Label for informative message" translation="Info" />
+  <StringItem id="Info" context="" translation="Info" />
+  <StringItem id="Input mode" context="" translation="Input mode" />
+  <StringItem id="Input Mode" context="" translation="Input Mode" />
+  <StringItem id="Insert child" context="" translation="Insert child" />
+  <StringItem id="Insert Control Point" context="" translation="Insert Control Point" />
+  <StringItem id="Invalid port number" context="" translation="Invalid port number" />
+  <StringItem id="Key must be a number between 0 and 100" context="" translation="Key must be a number between 0 and 100" />
+  <StringItem id="Layers" context="" translation="Layers" />
+  <StringItem id="Linear" context="" translation="Linear" />
+  <StringItem id="Lists available resources" context="" translation="Lists available resources" />
+  <StringItem id="Lists objects in the current document" context="" translation="Lists objects in the current document" />
+  <StringItem id="Load and apply a skin file." context="" translation="Load and apply a skin file." />
+  <StringItem id="Load or Save Settings..." context="" translation="Load or Save Settings..." />
+  <StringItem id="Load previously open documents on application startup" context="" translation="Load previously open documents on application startup" />
+  <StringItem id="Load Skin..." context="Load and apply a skin file." translation="Load Skin..." />
+  <StringItem id="Lock origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock origin" />
+  <StringItem id="Lock Origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock Origin" />
+  <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
+  <StringItem id="Magenta must be a number between 0 and 100" context="" translation="Magenta must be a number between 0 and 100" />
+  <StringItem id="Manage layouts..." context="" translation="Manage layouts..." />
+  <StringItem id="Managed memory (KB): {0}" context="" translation="Managed memory (KB): {0}" />
+  <StringItem id="Max frames per second: {0}" context="" translation="Max frames per second: {0}" />
+  <StringItem id="Mean rendering time: {0}ms or {1} ticks" context="" translation="Mean rendering time: {0}ms or {1} ticks" />
+  <StringItem id="Most Recently Used Skin File" context="" translation="Most Recently Used Skin File" />
+  <StringItem id="Mouse Position" context="" translation="Mouse Position" />
+  <StringItem id="Move" context="" translation="Move" />
+  <StringItem id="Move {0} selected elements down" context="" translation="Move {0} selected elements down" />
+  <StringItem id="Move {0} selected elements up" context="" translation="Move {0} selected elements up" />
+  <StringItem id="Move {0} selected items down" context="" translation="Move {0} selected items down" />
+  <StringItem id="Move {0} selected items up" context="" translation="Move {0} selected items up" />
+  <StringItem id="Move children" context="" translation="Move children" />
+  <StringItem id="Move elements" context="" translation="Move elements" />
+  <StringItem id="Move Events" context="Move Manipulator's undo / redo description for moving timeline events" translation="Move Events" />
   <StringItem id="Moved Collection Item Down" context="" translation="Moved Collection Item Down" />
   <StringItem id="Moved Collection Item Up" context="" translation="Moved Collection Item Up" />
-  <StringItem id="Reset: {0}" context="" translation="Reset: {0}" />
-  <StringItem id="Edit: {0}" context="" translation="Edit: {0}" />
-  <StringItem id="Search" context="'Search' is a verb" translation="Search" />
-  <StringItem id="Clear Search" context="'Clear' is a verb" translation="Clear Search" />
-  <StringItem id="Reset all properties" context="" translation="Reset all properties" />
   <StringItem id="Navigate back to parent of selected object" context="" translation="Navigate back to parent of selected object" />
-  <StringItem id="Resets the property to its default value" context="" translation="Resets the property to its default value" />
-  <StringItem id="Move Events" context="Move Manipulator's undo / redo description for moving timeline events" translation="Move Events" />
-  <StringItem id="Resize Events" context="scale manipulator's undo / redo description for resizing timeline events" translation="Resize Events" />
-  <StringItem id="Select a layout" context="" translation="Select a layout" />
-  <StringItem id="DOM Explorer" context="" translation="DOM Explorer" />
-  <StringItem id="Generic View of DOM" context="" translation="Generic View of DOM" />
-  <StringItem id="Trans.#" context="transaction number" translation="Trans.#" />
-  <StringItem id="Description" context="" translation="Description" />
-  <StringItem id="Analysis" context="" translation="Analysis" />
-  <StringItem id="Copy All" context="" translation="Copy All" />
-  <StringItem id="Clear" context="Pressing this button clears the contents of a list" translation="Clear" />
-  <StringItem id="Deep Analysis" context="a checkbox that enables or disables a time-consuming analysis" translation="Deep Analysis" />
-  <StringItem id="DOM Recorder" context="DOM means Document Object Model" translation="DOM Recorder" />
-  <StringItem id="Records DOM events on the active context and displays them" context="" translation="Records DOM events on the active context and displays them" />
-  <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" />
-  <StringItem id="Templates" context="" translation="Templates" />
-  <StringItem id="Reference subgraphs from templates" context="" translation="Reference subgraphs from templates" />
-  <StringItem id="Add Template Folder" context="" translation="Add Template Folder" />
-  <StringItem id="Creates a new template folder" context="" translation="Creates a new template folder" />
-  <StringItem id="Import Templates from Document..." context="" translation="Import Templates from Document..." />
-  <StringItem id="Import Templates from Document" context="" translation="Import Templates from Document" />
-  <StringItem id="Promote To Template Library" context="" translation="Promote To Template Library" />
-  <StringItem id="Demote To Copy Instance" context="" translation="Demote To Copy Instance" />
-  <StringItem id="Rescan Template Documents" context="" translation="Rescan Template Documents" />
+  <StringItem id="New" context="" translation="New" />
+  <StringItem id="New folder" context="" translation="New folder" />
+  <StringItem id="New Layer" context="" translation="New Layer" />
   <StringItem id="New Template Folder" context="" translation="New Template Folder" />
-  <StringItem id="Add External Template Folder" context="" translation="Add External Template Folder" />
+  <StringItem id="Number of rendered frames: {0}" context="" translation="Number of rendered frames: {0}" />
+  <StringItem id="Online Help" context="" translation="Online Help" />
+  <StringItem id="Open" context="" translation="Open" />
+  <StringItem id="Open Containing Folder" context="" translation="Open Containing Folder" />
+  <StringItem id="Open the file in the associated text editor" context="" translation="Open the file in the associated text editor" />
+  <StringItem id="Open..." context="" translation="Open..." />
+  <StringItem id="Opens an online help page for this app" context="" translation="Opens an online help page for this app" />
+  <StringItem id="Opens the folder containing the document in Windows Explorer" context="" translation="Opens the folder containing the document in Windows Explorer" />
+  <StringItem id="Options" context="" translation="Options" />
+  <StringItem id="Out Tangent" context="" translation="Out Tangent" />
+  <StringItem id="Output" context="title of Output window" translation="Output" />
+  <StringItem id="Palette" context="" translation="Palette" />
+  <StringItem id="Paste All" context="'Paste' is a verb and this is the name of a command" translation="Paste All" />
+  <StringItem id="Paste All" context="Pastes the local clipboard into all properties" translation="Paste All" />
+  <StringItem id="Paste Property" context="Pastes the local clipboard into this property's value" translation="Paste Property" />
+  <StringItem id="Paste: {0}" context="'Paste' is a verb and this is the name of a command" translation="Paste: {0}" />
+  <StringItem id="Pastes the local clipboard into all properties" context="" translation="Pastes the local clipboard into all properties" />
+  <StringItem id="Pastes the local clipboard into this property's value" context="" translation="Pastes the local clipboard into this property's value" />
+  <StringItem id="Performance Monitor" context="" translation="Performance Monitor" />
+  <StringItem id="Pink" context="" translation="Pink" />
+  <StringItem id="Post-Infinity" context="" translation="Post-Infinity" />
+  <StringItem id="Preferences" context="" translation="Preferences" />
+  <StringItem id="Preferences..." context="Edit user preferences" translation="Preferences..." />
+  <StringItem id="Pre-Infinity" context="" translation="Pre-Infinity" />
+  <StringItem id="Proceed with Revert?" context="" translation="Proceed with Revert?" />
+  <StringItem id="Project Lister" context="" translation="Project Lister" />
+  <StringItem id="Promote To Template Library" context="" translation="Promote To Template Library" />
+  <StringItem id="Property Editor" context="" translation="Property Editor" />
+  <StringItem id="Property Organization" context="Could be rephrased as 'How do you want these properties to be organized?'" translation="Property Organization" />
+  <StringItem id="Property Show / Hide" context="" translation="Property Show / Hide" />
+  <StringItem id="Prototype" context="Circuit prototype" translation="Prototype" />
+  <StringItem id="Prototypes" context="" translation="Prototypes" />
+  <StringItem id="Purple" context="" translation="Purple" />
+  <StringItem id="Quick Help..." context="" translation="Quick Help..." />
+  <StringItem id="Ready" context="Application is ready" translation="Ready" />
+  <StringItem id="Ready" context="" translation="Ready" />
+  <StringItem id="Reconcile Offline Work" context="" translation="Reconcile Offline Work" />
+  <StringItem id="Records DOM events on the active context and displays them" context="" translation="Records DOM events on the active context and displays them" />
+  <StringItem id="Red must be a number between 0 and 255" context="" translation="Red must be a number between 0 and 255" />
+  <StringItem id="Redo" context="" translation="Redo" />
+  <StringItem id="Reference subgraphs from templates" context="" translation="Reference subgraphs from templates" />
+  <StringItem id="Refresh status in source control" context="" translation="Refresh status in source control" />
   <StringItem id="Reload External Templates" context="" translation="Reload External Templates" />
+  <StringItem id="Remove children" context="" translation="Remove children" />
+  <StringItem id="Removed Collection Item" context="" translation="Removed Collection Item" />
+  <StringItem id="Rename selected objects" context="" translation="Rename selected objects" />
+  <StringItem id="Rename..." context="Rename selected objects" translation="Rename..." />
+  <StringItem id="Report bug or request feature" context="" translation="Report bug or request feature" />
+  <StringItem id="Rescan Template Documents" context="" translation="Rescan Template Documents" />
+  <StringItem id="Reset active skin to the default skin." context="" translation="Reset active skin to the default skin." />
+  <StringItem id="Reset All" context="Reset all properties to their default values" translation="Reset All" />
+  <StringItem id="Reset all commands to the default shortcuts?" context="" translation="Reset all commands to the default shortcuts?" />
+  <StringItem id="Reset All Preferences" context="Reset all preferences to their default values?" translation="Reset All Preferences" />
+  <StringItem id="Reset all preferences to their default values?" context="" translation="Reset all preferences to their default values?" />
+  <StringItem id="Reset all properties" context="" translation="Reset all properties" />
+  <StringItem id="Reset All Properties" context="'Reset' is a verb and this is the name of a command" translation="Reset All Properties" />
+  <StringItem id="Reset all properties to their default values" context="" translation="Reset all properties to their default values" />
+  <StringItem id="Reset Group Pin Names" context="" translation="Reset Group Pin Names" />
+  <StringItem id="Reset Pin Names on &quot;{0}&quot;" context="" translation="Reset Pin Names on &quot;{0}&quot;" />
+  <StringItem id="Reset Property" context="Reset the current property to its default value" translation="Reset Property" />
+  <StringItem id="Reset Skin to Default" context="Reset active skin to the default skin." translation="Reset Skin to Default" />
+  <StringItem id="Reset the current property to its default value" context="" translation="Reset the current property to its default value" />
+  <StringItem id="Reset: {0}" context="" translation="Reset: {0}" />
+  <StringItem id="Reset: {0}" context="'Reset' is a verb and this is the name of a command" translation="Reset: {0}" />
+  <StringItem id="Resets the property to its default value" context="" translation="Resets the property to its default value" />
+  <StringItem id="Resize Annotation" context="" translation="Resize Annotation" />
+  <StringItem id="Resize Curve Limit" context="could be phrased as 'resize the boundary of the curve'" translation="Resize Curve Limit" />
+  <StringItem id="Resize Events" context="scale manipulator's undo / redo description for resizing timeline events" translation="Resize Events" />
+  <StringItem id="Resize States" context="" translation="Resize States" />
+  <StringItem id="Resources" context="" translation="Resources" />
+  <StringItem id="Revert add or check out from source control" context="" translation="Revert add or check out from source control" />
+  <StringItem id="Saturation must be a number between 0 and 100" context="" translation="Saturation must be a number between 0 and 100" />
+  <StringItem id="Save" context="" translation="Save" />
+  <StringItem id="Save As..." context="" translation="Save As..." />
+  <StringItem id="Save layout as..." context="" translation="Save layout as..." />
+  <StringItem id="Scale" context="" translation="Scale" />
+  <StringItem id="Search" context="'Search' is a verb" translation="Search" />
+  <StringItem id="Search and Replace" context="" translation="Search and Replace" />
+  <StringItem id="Search for elements managed within the currently selected subwindow, and optionally replace their values" context="" translation="Search for elements managed within the currently selected subwindow, and optionally replace their values" />
+  <StringItem id="Select a directory" context="" translation="Select a directory" />
+  <StringItem id="Select a layout" context="" translation="Select a layout" />
+  <StringItem id="Selected Targets" context="" translation="Selected Targets" />
+  <StringItem id="Send Feedback" context="" translation="Send Feedback" />
+  <StringItem id="Send Feedback..." context="" translation="Send Feedback..." />
+  <StringItem id="Setting file" context="" translation="Setting file" />
+  <StringItem id="Show Expanded Group Pins" context="" translation="Show Expanded Group Pins" />
+  <StringItem id="Show Expanded Group Pins on &quot;{0}&quot;" context="" translation="Show Expanded Group Pins on &quot;{0}&quot;" />
+  <StringItem id="Show/Hide Layer" context="" translation="Show/Hide Layer" />
+  <StringItem id="Skin Editor" context="" translation="Skin Editor" />
+  <StringItem id="Slowest rendering time: {0}ms or {1} ticks" context="" translation="Slowest rendering time: {0}ms or {1} ticks" />
+  <StringItem id="Smooth" context="" translation="Smooth" />
+  <StringItem id="Snap" context="" translation="Snap" />
+  <StringItem id="Source control connection" context="" translation="Source control connection" />
+  <StringItem id="Source Control/Add" context="" translation="Source Control/Add" />
+  <StringItem id="Source Control/Check In" context="" translation="Source Control/Check In" />
+  <StringItem id="Source Control/Check Out" context="" translation="Source Control/Check Out" />
+  <StringItem id="Source Control/Enable" context="" translation="Source Control/Enable" />
+  <StringItem id="Source Control/Get Latest Version" context="" translation="Source Control/Get Latest Version" />
+  <StringItem id="Source Control/Open Connection..." context="" translation="Source Control/Open Connection..." />
+  <StringItem id="Source Control/Reconcile Offline Work..." context="" translation="Source Control/Reconcile Offline Work..." />
+  <StringItem id="Source Control/Refresh Status" context="" translation="Source Control/Refresh Status" />
+  <StringItem id="Source Control/Revert" context="Revert add or check out from source control" translation="Source Control/Revert" />
+  <StringItem id="Stats" context="" translation="Stats" />
+  <StringItem id="Switch to details view" context="" translation="Switch to details view" />
+  <StringItem id="Switch to thumbnail view" context="" translation="Switch to thumbnail view" />
+  <StringItem id="Tangents" context="" translation="Tangents" />
+  <StringItem id="Target ..." context="" translation="Target ..." />
+  <StringItem id="Target name already exist" context="" translation="Target name already exist" />
+  <StringItem id="Target not selected" context="" translation="Target not selected" />
+  <StringItem id="Target: {0}" context="'target' is the Windows Control that is being analyzed" translation="Target: {0}" />
+  <StringItem id="Targets" context="" translation="Targets" />
+  <StringItem id="Templates" context="" translation="Templates" />
+  <StringItem id="The destination port number or IP address are not correctly formatted." context="" translation="The destination port number or IP address are not correctly formatted." />
+  <StringItem id="The most recent version is {0}" context="" translation="The most recent version is {0}" />
+  <StringItem id="The performance report is in the clipboard" context="" translation="The performance report is in the clipboard" />
+  <StringItem id="The receiving port number or IP address are not correctly formatted." context="" translation="The receiving port number or IP address are not correctly formatted." />
+  <StringItem id="There is a newer version of this program available." context="" translation="There is a newer version of this program available." />
+  <StringItem id="These commands currently do not use their default shortcuts:" context="" translation="These commands currently do not use their default shortcuts:" />
+  <StringItem id="This software is up to date." context="" translation="This software is up to date." />
+  <StringItem id="Thumbnail View" context="" translation="Thumbnail View" />
+  <StringItem id="Toggle Show Group Pins When Expanded" context="" translation="Toggle Show Group Pins When Expanded" />
+  <StringItem id="Total frame count: {0}" context="" translation="Total frame count: {0}" />
+  <StringItem id="Trans.#" context="transaction number" translation="Trans.#" />
+  <StringItem id="Tree View" context="" translation="Tree View" />
+  <StringItem id="Type" context="curve types" translation="Type" />
+  <StringItem id="Type of Selected Curve(s)" context="" translation="Type of Selected Curve(s)" />
+  <StringItem id="UI Settings" context="" translation="UI Settings" />
+  <StringItem id="Undo" context="" translation="Undo" />
+  <StringItem id="Ungroup" context="a verb" translation="Ungroup" />
+  <StringItem id="Unify Tangents" context="" translation="Unify Tangents" />
+  <StringItem id="Unlock UI Layout" context="" translation="Unlock UI Layout" />
+  <StringItem id="Unmanaged memory (KB): {0}" context="" translation="Unmanaged memory (KB): {0}" />
+  <StringItem id="Unsaved changes" context="" translation="Unsaved changes" />
+  <StringItem id="Unsorted" context="" translation="Unsorted" />
+  <StringItem id="Up" context="this is the name of a button that causes the selected item to be moved up in a list" translation="Up" />
+  <StringItem id="Update" context="this is the title of a dialog box" translation="Update" />
+  <StringItem id="Updater" context="" translation="Updater" />
+  <StringItem id="User can save or load application settings from files" context="" translation="User can save or load application settings from files" />
+  <StringItem id="Version Check Failed" context="" translation="Version Check Failed" />
+  <StringItem id="View errors, warnings, and informative messages" context="" translation="View errors, warnings, and informative messages" />
+  <StringItem id="View In Text Editor" context="Open the file in the associated text editor" translation="View In Text Editor" />
+  <StringItem id="Warning" context="" translation="Warning" />
+  <StringItem id="Warning" context="Label for warning message" translation="Warning" />
+  <StringItem id="Would you like to save the changes?" context="" translation="Would you like to save the changes?" />
+  <StringItem id="Yellow" context="" translation="Yellow" />
+  <StringItem id="Yellow must be a number between 0 and 100" context="" translation="Yellow must be a number between 0 and 100" />
+  <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
 </StringLocalizationTable>

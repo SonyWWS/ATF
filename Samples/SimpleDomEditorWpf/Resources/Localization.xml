@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="# Bones" context="" translation="# Bones" />
+  <StringItem id="# Tracks" context="" translation="# Tracks" />
+  <StringItem id="# Vertices" context="" translation="# Vertices" />
+  <StringItem id="Animation" context="" translation="Animation" />
+  <StringItem id="Animation name" context="" translation="Animation name" />
+  <StringItem id="Animation resource" context="" translation="Animation resource" />
+  <StringItem id="Compressed" context="" translation="Compressed" />
+  <StringItem id="Duration" context="" translation="Duration" />
+  <StringItem id="Duration of animation, in milliseconds" context="" translation="Duration of animation, in milliseconds" />
+  <StringItem id="Event" context="" translation="Event" />
+  <StringItem id="Event duration" context="" translation="Event duration" />
+  <StringItem id="Event in a sequence" context="" translation="Event in a sequence" />
+  <StringItem id="Event name" context="" translation="Event name" />
+  <StringItem id="Event Sequence" context="" translation="Event Sequence" />
+  <StringItem id="Event starting time" context="" translation="Event starting time" />
+  <StringItem id="Events" context="" translation="Events" />
+  <StringItem id="Geometry" context="" translation="Geometry" />
+  <StringItem id="Geometry name" context="" translation="Geometry name" />
+  <StringItem id="Geometry resource" context="" translation="Geometry resource" />
+  <StringItem id="Kind of primitives in geometry" context="" translation="Kind of primitives in geometry" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="Number of bones in geometry" context="" translation="Number of bones in geometry" />
+  <StringItem id="Number of tracks in animation" context="" translation="Number of tracks in animation" />
+  <StringItem id="Number of vertices in geometry" context="" translation="Number of vertices in geometry" />
+  <StringItem id="Primitive Kind" context="" translation="Primitive Kind" />
+  <StringItem id="Resources" context="" translation="Resources" />
+  <StringItem id="Resources for selected Event" context="" translation="Resources for selected Event" />
+  <StringItem id="Size" context="" translation="Size" />
+  <StringItem id="Size of animation, in bytes" context="" translation="Size of animation, in bytes" />
+  <StringItem id="Size of geometry, in bytes" context="" translation="Size of geometry, in bytes" />
+  <StringItem id="Time" context="" translation="Time" />
+  <StringItem id="Whether or not animation is compressed" context="" translation="Whether or not animation is compressed" />
+</StringLocalizationTable>
