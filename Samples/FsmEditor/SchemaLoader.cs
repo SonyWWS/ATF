@@ -1,11 +1,15 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Reflection;
 using System.Xml.Schema;
 
 using Sce.Atf;
+using Sce.Atf.Adaptation;
+using Sce.Atf.Applications;
 using Sce.Atf.Controls.PropertyEditing;
 using Sce.Atf.Dom;
 
@@ -17,17 +21,36 @@ namespace FsmEditorSample
     /// Loads the FSM schema, registers data extensions on the DOM types, annotates
     /// the types with display information and PropertyDescriptors</summary>
     [Export(typeof(SchemaLoader))]
+    [Export(typeof(IInitializable))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class SchemaLoader : XmlSchemaTypeLoader
+    public class SchemaLoader : XmlSchemaTypeLoader, IInitializable
     {
         /// <summary>
         /// Constructor</summary>
-        public SchemaLoader()
+        [ImportingConstructor]
+        public SchemaLoader(PropertyEditor propertyEditor)
         {
+            m_propertyEditor = propertyEditor;
             // set resolver to locate embedded .xsd file
             SchemaResolver = new ResourceStreamResolver(Assembly.GetExecutingAssembly(), "FsmEditorSample/schemas");
             Load("FSM_customized.xsd");
         }
+
+        #region IInitializable Members
+
+        void IInitializable.Initialize()
+        {
+            // Set custom display options for the 2-column PropertyEditor
+            PropertyGridView propertyGridView = m_propertyEditor.PropertyGrid.PropertyGridView;
+            if (propertyGridView.CustomizeAttributes != null)
+                throw new InvalidOperationException("Someone else set PropertyGridView's CustomizeAttributes already");
+            propertyGridView.CustomizeAttributes = new[]
+                {
+                    new PropertyView.CustomizeAttribute("Triggers".Localize(), horizontalEditorOffset:0, nameHasWholeRow:true),                    
+                };
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets the schema namespace</summary>
@@ -153,6 +176,96 @@ namespace FsmEditorSample
                                 false),
                     }));
 
+               
+                Schema.triggerType.Type.SetTag(
+                    new PropertyDescriptorCollection(
+                        new PropertyDescriptor[] {
+                            new AttributePropertyDescriptor(
+                                "Label".Localize(),
+                                Schema.triggerType.labelAttribute,
+                                null,
+                                "Label displayed on trigger".Localize(),
+                                false),                            
+                            new AttributePropertyDescriptor(
+                                "Id".Localize(),
+                                Schema.triggerType.idAttribute,
+                                null,
+                                "Trigger id".Localize(),
+                                false),
+                            new AttributePropertyDescriptor(
+                                "Active".Localize(),
+                                Schema.triggerType.activeAttribute,
+                                null,
+                                "Is trigger active".Localize(),
+                                false,
+                                new BoolEditor())
+
+                }));
+
+
+
+                // TransitionType have a collection of child triggers.
+                // use EmbeddedCollectionEditor to edit children (edit, add, remove, move).
+                // Note: EmbeddedCollectionEditor needs some work (efficiency and implementation issues).
+
+                var collectionEditor = new EmbeddedCollectionEditor();
+
+                // the following  lambda's handles (add, remove, move ) items.
+                collectionEditor.GetItemInsertersFunc = (context) =>
+                {
+                    var insertors
+                        = new EmbeddedCollectionEditor.ItemInserter[1];
+
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                    {
+                        var childDescriptor
+                            = context.Descriptor as ChildPropertyDescriptor;
+                        if (childDescriptor != null)
+                        {
+                            insertors[0] = new EmbeddedCollectionEditor.ItemInserter(childDescriptor.ChildInfo.Type.Name,
+                        delegate
+                        {
+                            DomNode node = new DomNode(childDescriptor.ChildInfo.Type);
+                            if (node.Type.IdAttribute != null)
+                            {
+                                node.SetAttribute(node.Type.IdAttribute, node.Type.Name);
+                            }
+                            list.Add(node);
+                            return node;
+                        });
+                            return insertors;
+                        }
+                    }
+                    return EmptyArray<EmbeddedCollectionEditor.ItemInserter>.Instance;
+                };
+
+
+                collectionEditor.RemoveItemFunc = (context, item) =>
+                {
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                        list.Remove(item.Cast<DomNode>());
+                };
+
+
+                collectionEditor.MoveItemFunc = (context, item, delta) =>
+                {
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                    {
+                        DomNode node = item.Cast<DomNode>();
+                        int index = list.IndexOf(node);
+                        int insertIndex = index + delta;
+                        if (insertIndex < 0 || insertIndex >= list.Count)
+                            return;
+                        list.RemoveAt(index);
+                        list.Insert(insertIndex, node);
+                    }
+
+                };
+
+
                 Schema.transitionType.Type.SetTag(
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
@@ -161,19 +274,20 @@ namespace FsmEditorSample
                                 Schema.transitionType.labelAttribute,
                                 null,
                                 "Label displayed on transition".Localize(),
-                                false),
-                            new AttributePropertyDescriptor(
-                                "Trigger".Localize(),
-                                Schema.transitionType.triggerAttribute,
-                                null,
-                                "Event which triggers transition".Localize(),
-                                false),
+                                false),                            
                             new AttributePropertyDescriptor(
                                 "Action".Localize(),
                                 Schema.transitionType.actionAttribute,
                                 null,
                                 "Action performed when making transition".Localize(),
                                 false),
+                           new ChildPropertyDescriptor(
+                               "Triggers".Localize(),
+                               Schema.transitionType.triggerChild,
+                               null,
+                               "List of triggers".Localize(),
+                               false,
+                               collectionEditor)
                         }));
 
                 Schema.prototypeFolderType.Type.SetTag(
@@ -202,5 +316,7 @@ namespace FsmEditorSample
                 break;
             }
         }
+
+        private readonly PropertyEditor m_propertyEditor;
     }
 }

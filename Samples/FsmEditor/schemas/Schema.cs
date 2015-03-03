@@ -3,6 +3,9 @@
 // Command Line:  DomGen "FSM_customized.xsd" "Schema.cs" "http://sony.com/gametech/fsms/1_0" "FsmEditorSample"
 // -------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 using Sce.Atf.Dom;
 
 namespace FsmEditorSample
@@ -13,13 +16,25 @@ namespace FsmEditorSample
 
         public static void Initialize(XmlSchemaTypeCollection typeCollection)
         {
-            fsmType.Type = typeCollection.GetNodeType("fsmType");
+            Initialize((ns,name)=>typeCollection.GetNodeType(ns,name),
+                (ns,name)=>typeCollection.GetRootElement(ns,name));
+        }
+
+        public static void Initialize(IDictionary<string, XmlSchemaTypeCollection> typeCollections)
+        {
+            Initialize((ns,name)=>typeCollections[ns].GetNodeType(name),
+                (ns,name)=>typeCollections[ns].GetRootElement(name));
+        }
+
+        private static void Initialize(Func<string, string, DomNodeType> getNodeType, Func<string, string, ChildInfo> getRootElement)
+        {
+            fsmType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "fsmType");
             fsmType.stateChild = fsmType.Type.GetChildInfo("state");
             fsmType.transitionChild = fsmType.Type.GetChildInfo("transition");
             fsmType.annotationChild = fsmType.Type.GetChildInfo("annotation");
             fsmType.prototypeFolderChild = fsmType.Type.GetChildInfo("prototypeFolder");
 
-            stateType.Type = typeCollection.GetNodeType("stateType");
+            stateType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "stateType");
             stateType.entryActionAttribute = stateType.Type.GetAttributeInfo("entryAction");
             stateType.actionAttribute = stateType.Type.GetAttributeInfo("action");
             stateType.exitActionAttribute = stateType.Type.GetAttributeInfo("exitAction");
@@ -31,29 +46,34 @@ namespace FsmEditorSample
             stateType.hiddenAttribute = stateType.Type.GetAttributeInfo("hidden");
             stateType.startAttribute = stateType.Type.GetAttributeInfo("start");
 
-            transitionType.Type = typeCollection.GetNodeType("transitionType");
-            transitionType.triggerAttribute = transitionType.Type.GetAttributeInfo("trigger");
+            transitionType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "transitionType");
             transitionType.actionAttribute = transitionType.Type.GetAttributeInfo("action");
             transitionType.labelAttribute = transitionType.Type.GetAttributeInfo("label");
             transitionType.sourceAttribute = transitionType.Type.GetAttributeInfo("source");
             transitionType.destinationAttribute = transitionType.Type.GetAttributeInfo("destination");
+            transitionType.triggerChild = transitionType.Type.GetChildInfo("trigger");
 
-            annotationType.Type = typeCollection.GetNodeType("annotationType");
+            triggerType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "triggerType");
+            triggerType.labelAttribute = triggerType.Type.GetAttributeInfo("label");
+            triggerType.idAttribute = triggerType.Type.GetAttributeInfo("id");
+            triggerType.activeAttribute = triggerType.Type.GetAttributeInfo("active");
+
+            annotationType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "annotationType");
             annotationType.textAttribute = annotationType.Type.GetAttributeInfo("text");
             annotationType.xAttribute = annotationType.Type.GetAttributeInfo("x");
             annotationType.yAttribute = annotationType.Type.GetAttributeInfo("y");
 
-            prototypeFolderType.Type = typeCollection.GetNodeType("prototypeFolderType");
+            prototypeFolderType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "prototypeFolderType");
             prototypeFolderType.nameAttribute = prototypeFolderType.Type.GetAttributeInfo("name");
             prototypeFolderType.prototypeFolderChild = prototypeFolderType.Type.GetChildInfo("prototypeFolder");
             prototypeFolderType.prototypeChild = prototypeFolderType.Type.GetChildInfo("prototype");
 
-            prototypeType.Type = typeCollection.GetNodeType("prototypeType");
+            prototypeType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "prototypeType");
             prototypeType.nameAttribute = prototypeType.Type.GetAttributeInfo("name");
             prototypeType.stateChild = prototypeType.Type.GetChildInfo("state");
             prototypeType.transitionChild = prototypeType.Type.GetChildInfo("transition");
 
-            fsmRootElement = typeCollection.GetRootElement("fsm");
+            fsmRootElement = getRootElement(NS, "fsm");
         }
 
         public static class fsmType
@@ -83,11 +103,19 @@ namespace FsmEditorSample
         public static class transitionType
         {
             public static DomNodeType Type;
-            public static AttributeInfo triggerAttribute;
             public static AttributeInfo actionAttribute;
             public static AttributeInfo labelAttribute;
             public static AttributeInfo sourceAttribute;
             public static AttributeInfo destinationAttribute;
+            public static ChildInfo triggerChild;
+        }
+
+        public static class triggerType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo labelAttribute;
+            public static AttributeInfo idAttribute;
+            public static AttributeInfo activeAttribute;
         }
 
         public static class annotationType

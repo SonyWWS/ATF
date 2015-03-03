@@ -3,13 +3,12 @@
   targetNamespace="http://sony.com/gametech/fsms/1_0"
 	xmlns="http://sony.com/gametech/fsms/1_0"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
+    
   <xs:include schemaLocation="FSM.xsd"/>
-
-  <!--Redefine basic FSM schema to add actions and triggers-->
-  
+       
+  <!--Redefine basic FSM schema to add actions and triggers-->  
   <xs:redefine schemaLocation="FSM.xsd">
-
+      
     <xs:complexType name="stateType">
       <xs:complexContent>
         <xs:extension base="stateType">
@@ -19,11 +18,13 @@
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
-
+      
     <xs:complexType name="transitionType">
       <xs:complexContent>
         <xs:extension base="transitionType">
-          <xs:attribute name="trigger" type="xs:string" use="optional" />
+            <xs:sequence>
+                <xs:element name="trigger" type="triggerType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>            
           <xs:attribute name="action" type="xs:string" use="optional" />
         </xs:extension>
       </xs:complexContent>
