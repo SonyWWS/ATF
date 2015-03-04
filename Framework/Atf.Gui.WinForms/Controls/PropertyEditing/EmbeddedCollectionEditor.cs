@@ -646,8 +646,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                         if (m_singletonMode)
                             itemControl.Dock = DockStyle.Fill;
-
-                        m_oldHeights[itemControl] = itemControl.Height;
+                        
                         top += itemControl.Height;
                         m_itemControls.Add(item, itemControl);
                         SubscribeItemEvents(itemControl);
@@ -886,38 +885,31 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             private void SubscribeItemEvents(ItemControl itemControl)
             {                
-                if (itemControl.CanChangeSize)
-                    itemControl.SizeChanged += itemControl_SizeChanged;
+                itemControl.SizeChanged += itemControl_SizeChanged;
             }
 
             private void UnsubscribeItemEvents(ItemControl itemControl)
             {             
-                if (itemControl.CanChangeSize)
-                    itemControl.SizeChanged -= itemControl_SizeChanged;
+                itemControl.SizeChanged -= itemControl_SizeChanged;
             }
           
             void itemControl_SizeChanged(object sender, EventArgs e)
             {
-                ItemControl itemControl = sender as ItemControl;
-                if (itemControl == null)
+                if (m_processingPendingChanges || !Visible)
                     return;
 
-                int oldHeight;
-                if (m_oldHeights.TryGetValue(itemControl, out oldHeight) && oldHeight != itemControl.Height)
+                int top = m_toolStrip.Visible ? m_toolStrip.Height : 0;                
+                var sortedControls = new List<ItemControl>(m_itemControls.Values);
+                sortedControls.Sort((a, b) => a.Index.CompareTo(b.Index));
+
+                bool vi = Visible;
+                foreach (var item in sortedControls)
                 {
-                    // Delta = change in height
-                    int delta = itemControl.Height - oldHeight;
-
-                    // Increase the height by delta
-                    Height += delta;
-
-                    // Move later ItemControls down by delta);)
-                    foreach (ItemControl other in m_itemControls.Values)
-                        if (other.Index > itemControl.Index)
-                            other.Top += delta;
-
-                    m_oldHeights[itemControl] = itemControl.Height;
+                    item.Top = top;
+                    top += item.Height;
                 }
+
+                Height = top;
             }
 
             /// <summary>
@@ -1136,8 +1128,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         m_editControl.DescriptionSetter = parentPropertyGridView.DescriptionSetter;
                         m_parentPropertyGridView.SelectedPropertyChanged += ParentSelectedPropertyChanged;
                     }
-
-                    m_editControl.Invalidated += editControl_Invalidated;
+                  
                     m_editControl.MouseUp += editControl_MouseUp;
                     Controls.Add(m_editControl);
 
@@ -1146,6 +1137,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                     GotFocus += (sender, e) => m_editControl.Focus();
                     m_editControl.GotFocus += (sender, e) => UpdateSelection();
 
+                    m_editControl.EditingContextUpdated += (sender, e) =>
+                    {
+                        Height = m_editControl.GetPreferredHeight();
+                    };
                 }
 
                 private void ParentSelectedPropertyChanged(object sender, EventArgs eventArgs)
@@ -1186,15 +1181,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_index = index;
                     m_singletonMode = singletonMode;
                     var editingContext = new EmbeddedPropertyEditingContext(new[] { item }, context);
-                    foreach (PropertyDescriptor desc in PropertyEditingContext.GetPropertyDescriptors(editingContext))
-                    {
-                        if (desc.GetEditor(typeof(object)) != null)
-                        {
-                            CanChangeSize = true;
-                            break;
-                        }
-                    }
-
+                    
                     if (!m_singletonMode)
                     {
                         // we need a label
@@ -1224,14 +1211,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_editControl.EditingContext = editingContext;
                     Height = m_editControl.GetPreferredHeight();
                 }
-
-                // If the height of the contained control (property grid) changes
-                // we need to adjust the height of the item control to match it
-                private void editControl_Invalidated(object sender, InvalidateEventArgs e)
-                {
-                    Height = m_editControl.GetPreferredHeight();
-                }
-              
+                
                 private void editControl_MouseUp(object sender, MouseEventArgs e)
                 {
                     // Let listeners see right-click events so that they can show context menus.
@@ -1318,9 +1298,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         return Index % 2 == 0 ? BackColor : alternate;
                     }
                 }
-
-                public bool CanChangeSize { get; private set; }
-
+               
                 private int m_index;
                 private bool m_selected;
                 private Label m_selectButton;
@@ -1371,9 +1349,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             // Controls that have been marked as not visible and are available for new items.
             private readonly List<ItemControl> m_unusedItemControls = new List<ItemControl>();
-
-            private readonly Dictionary<ItemControl, int> m_oldHeights = new Dictionary<ItemControl, int>();
-
+            
             // Contexts: we need to keep them as members to be able to unsubscribe subscribed events
             private IObservableContext m_observableContext;
             private IValidationContext m_validationContext;

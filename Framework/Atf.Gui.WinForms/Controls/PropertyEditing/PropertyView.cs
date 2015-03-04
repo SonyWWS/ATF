@@ -183,6 +183,11 @@ namespace Sce.Atf.Controls.PropertyEditing
         public event EventHandler EditingContextChanged;
 
         /// <summary>
+        /// Event that is raised after the editing context updates</summary>
+        public event EventHandler EditingContextUpdated;
+
+
+        /// <summary>
         /// Gets or sets the current property editing context</summary>
         public IPropertyEditingContext EditingContext
         {
@@ -282,6 +287,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             // when assigning new editing-context.
             RefreshEditingControls(); 
             Invalidate();
+            EditingContextUpdated.Raise(this, EventArgs.Empty);
         }
 
         private void observableContext_ItemInserted(object sender, ItemInsertedEventArgs<object> e)

@@ -62,7 +62,7 @@ namespace FsmEditorSample
                 typeof(StandardFileCommands),           // standard File menu commands for New, Open, Save, SaveAs, Close
                 typeof(MainWindowTitleService),         // tracks document changes and updates main form title
                 typeof(TabbedControlSelector),          // enable ctrl-tab selection of documents and controls within the app
-
+                typeof(SkinService),                    // skin service.
                 typeof(ContextRegistry),                // central context registry with change notification
                 typeof(StandardFileExitCommand),        // standard File exit menu command
                 typeof(StandardEditCommands),           // standard Edit menu commands for copy/paste

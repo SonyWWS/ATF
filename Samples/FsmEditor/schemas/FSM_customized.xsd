@@ -11,7 +11,7 @@
       
     <xs:complexType name="stateType">
       <xs:complexContent>
-        <xs:extension base="stateType">
+        <xs:extension base="stateType">            
           <xs:attribute name="entryAction" type="xs:string"  use="optional" />
           <xs:attribute name="action" type="xs:string"  use="optional" />
           <xs:attribute name="exitAction" type="xs:string"  use="optional" />

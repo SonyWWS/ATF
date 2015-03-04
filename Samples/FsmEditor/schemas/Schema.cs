@@ -56,7 +56,7 @@ namespace FsmEditorSample
             triggerType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "triggerType");
             triggerType.labelAttribute = triggerType.Type.GetAttributeInfo("label");
             triggerType.idAttribute = triggerType.Type.GetAttributeInfo("id");
-            triggerType.activeAttribute = triggerType.Type.GetAttributeInfo("active");
+            triggerType.actionAttribute = triggerType.Type.GetAttributeInfo("action");
 
             annotationType.Type = getNodeType("http://sony.com/gametech/fsms/1_0", "annotationType");
             annotationType.textAttribute = annotationType.Type.GetAttributeInfo("text");
@@ -115,7 +115,7 @@ namespace FsmEditorSample
             public static DomNodeType Type;
             public static AttributeInfo labelAttribute;
             public static AttributeInfo idAttribute;
-            public static AttributeInfo activeAttribute;
+            public static AttributeInfo actionAttribute;
         }
 
         public static class annotationType

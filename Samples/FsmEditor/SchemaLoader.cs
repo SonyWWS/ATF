@@ -127,6 +127,66 @@ namespace FsmEditorSample
 
                 // register property descriptors on state, transition, folder types
 
+                // TransitionType have a collection of child triggers.
+                // use EmbeddedCollectionEditor to edit children (edit, add, remove, move).
+                // Note: EmbeddedCollectionEditor needs some work (efficiency and implementation issues).                
+                var collectionEditor = new EmbeddedCollectionEditor();
+
+                // the following  lambda's handles (add, remove, move ) items.
+                collectionEditor.GetItemInsertersFunc = (context) =>
+                {
+                    var insertors
+                        = new EmbeddedCollectionEditor.ItemInserter[1];
+
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                    {
+                        var childDescriptor
+                            = context.Descriptor as ChildPropertyDescriptor;
+                        if (childDescriptor != null)
+                        {
+                            insertors[0] = new EmbeddedCollectionEditor.ItemInserter(childDescriptor.ChildInfo.Type.Name,
+                        delegate
+                        {
+                            DomNode node = new DomNode(childDescriptor.ChildInfo.Type);
+                            if (node.Type.IdAttribute != null)
+                            {
+                                node.SetAttribute(node.Type.IdAttribute, node.Type.Name);
+                            }
+                            list.Add(node);
+                            return node;
+                        });
+                            return insertors;
+                        }
+                    }
+                    return EmptyArray<EmbeddedCollectionEditor.ItemInserter>.Instance;
+                };
+
+
+                collectionEditor.RemoveItemFunc = (context, item) =>
+                {
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                        list.Remove(item.Cast<DomNode>());
+                };
+
+
+                collectionEditor.MoveItemFunc = (context, item, delta) =>
+                {
+                    var list = context.GetValue() as IList<DomNode>;
+                    if (list != null)
+                    {
+                        DomNode node = item.Cast<DomNode>();
+                        int index = list.IndexOf(node);
+                        int insertIndex = index + delta;
+                        if (insertIndex < 0 || insertIndex >= list.Count)
+                            return;
+                        list.RemoveAt(index);
+                        list.Insert(insertIndex, node);
+                    }
+
+                };
+
                 Schema.stateType.Type.SetTag(
                     new PropertyDescriptorCollection(
                         new PropertyDescriptor[] {
@@ -193,77 +253,17 @@ namespace FsmEditorSample
                                 "Trigger id".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                "Active".Localize(),
-                                Schema.triggerType.activeAttribute,
+                                "Action".Localize(),
+                                Schema.triggerType.actionAttribute,
                                 null,
-                                "Is trigger active".Localize(),
-                                false,
-                                new BoolEditor())
+                                "Action on trigger".Localize(),
+                                false)
 
                 }));
 
 
 
-                // TransitionType have a collection of child triggers.
-                // use EmbeddedCollectionEditor to edit children (edit, add, remove, move).
-                // Note: EmbeddedCollectionEditor needs some work (efficiency and implementation issues).
-
-                var collectionEditor = new EmbeddedCollectionEditor();
-
-                // the following  lambda's handles (add, remove, move ) items.
-                collectionEditor.GetItemInsertersFunc = (context) =>
-                {
-                    var insertors
-                        = new EmbeddedCollectionEditor.ItemInserter[1];
-
-                    var list = context.GetValue() as IList<DomNode>;
-                    if (list != null)
-                    {
-                        var childDescriptor
-                            = context.Descriptor as ChildPropertyDescriptor;
-                        if (childDescriptor != null)
-                        {
-                            insertors[0] = new EmbeddedCollectionEditor.ItemInserter(childDescriptor.ChildInfo.Type.Name,
-                        delegate
-                        {
-                            DomNode node = new DomNode(childDescriptor.ChildInfo.Type);
-                            if (node.Type.IdAttribute != null)
-                            {
-                                node.SetAttribute(node.Type.IdAttribute, node.Type.Name);
-                            }
-                            list.Add(node);
-                            return node;
-                        });
-                            return insertors;
-                        }
-                    }
-                    return EmptyArray<EmbeddedCollectionEditor.ItemInserter>.Instance;
-                };
-
-
-                collectionEditor.RemoveItemFunc = (context, item) =>
-                {
-                    var list = context.GetValue() as IList<DomNode>;
-                    if (list != null)
-                        list.Remove(item.Cast<DomNode>());
-                };
-
-
-                collectionEditor.MoveItemFunc = (context, item, delta) =>
-                {
-                    var list = context.GetValue() as IList<DomNode>;
-                    if (list != null)
-                    {
-                        DomNode node = item.Cast<DomNode>();
-                        int index = list.IndexOf(node);
-                        int insertIndex = index + delta;
-                        if (insertIndex < 0 || insertIndex >= list.Count)
-                            return;
-                        list.RemoveAt(index);
-                        list.Insert(insertIndex, node);
-                    }
-
-                };
+               
 
 
                 Schema.transitionType.Type.SetTag(
