@@ -710,8 +710,9 @@ namespace Sce.Atf.Wpf.Docking
                                 {
                                     // To-do: create "dummy content" like in DockPanelSuite, so that if the
                                     //  window were to be created later, we could apply the layout. For now,
-                                    //  setting the Owner magically allows this hidden FloatingWindow to be
-                                    //  closed later and avoids hanging the app.
+                                    // just set the owner. This ties the FloatingWindow to the main window, and 
+                                    // allows the app to shut down properly with the default Application.ShutdownMode 
+                                    // of OnLastWindowClose.
                                     window.Owner = Window.GetWindow(this);
                                 }
                             } while (reader.ReadToNextSibling(typeof(FloatingWindow).Name));
