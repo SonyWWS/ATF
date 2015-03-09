@@ -1124,8 +1124,11 @@ namespace Sce.Atf.Applications
                     text,
                     "Activate Window".Localize());
 
-                // CanDoCommand() always returns true, so let's disable polling.
-                commandInfo.EnableCheckCanDoEvent(this);
+                // CanDoCommand() always returns true, but UpdateCommand() updates 1) the menu
+                //  text from the Control's text and 2) the menu check mark depending on whether
+                //  the Control is visible and not hidden. We'd also have to keep track of these
+                //  CommandInfo objects. The performance gains don't seem worth the complexity.
+                //commandInfo.EnableCheckCanDoEvent(this);
 
                 m_commandService.RegisterCommand(commandInfo, this);
             }

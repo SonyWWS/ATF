@@ -261,8 +261,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Event handler that is called when the owning command client (ICommandClient)
-        /// may have changed the CanDoCommand() result. See EnableCheckCanDoEvent() and
-        /// OnCheckCanDo().</summary>
+        /// may have changed the CanDoCommand() result or needs to have UpdateCommand()
+        /// called. See EnableCheckCanDoEvent() and OnCheckCanDo().</summary>
         /// <remarks>This event is only applicable to WinForms version of CommandService.</remarks>
         public event EventHandler CheckCanDo;
 
