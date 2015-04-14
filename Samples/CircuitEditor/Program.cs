@@ -19,6 +19,7 @@ using Sce.Atf.Controls.PropertyEditing;
 using Sce.Atf.Dom;
 
 using CircuitEditorSample.Tests;
+using PropertyGrid = Sce.Atf.Controls.PropertyEditing.PropertyGrid;
 
 namespace CircuitEditorSample
 {
@@ -87,7 +88,7 @@ namespace CircuitEditorSample
 
                 typeof(PaletteService),                 // global palette, for drag/drop instancing
 
-                typeof(PropertyEditor),                 // property grid for editing selected objects
+                typeof(MyPropertyEditor),               // property grid for editing selected objects; uses tooltips to show property descriptions
                 typeof(GridPropertyEditor),             // grid control for editing selected objects
                 typeof(PropertyEditingCommands),        // commands for PropertyEditor and GridPropertyEditor, like Reset,
                                                         //  Reset All, Copy Value, Paste Value, Copy All, Paste All
@@ -183,6 +184,39 @@ namespace CircuitEditorSample
             }
 
             private static readonly string s_lastCategory = "Misc".Localize("abbreviation for miscellaneous");
+        }
+
+        [Export(typeof(IInitializable))]
+        [Export(typeof(IControlHostClient))]
+        [Export(typeof(PropertyEditor))]
+        [PartCreationPolicy(CreationPolicy.Any)]
+        // Demonstrates using tooltips instead of an embedded Control to display property descriptions.
+        private class MyPropertyEditor : PropertyEditor
+        {
+            /// <summary>
+            /// Constructor with parameters</summary>
+            /// <param name="commandService">ICommandService</param>
+            /// <param name="controlHostService">IControlHostService</param>
+            /// <param name="contextRegistry">IContextRegistry</param>
+            [ImportingConstructor]
+            public MyPropertyEditor(
+                ICommandService commandService,
+                IControlHostService controlHostService,
+                IContextRegistry contextRegistry)
+                : base(commandService, controlHostService, contextRegistry)
+            {
+            }
+
+            protected override void Configure(out PropertyGrid propertyGrid, out ControlInfo controlInfo)
+            {
+                // Test that DisplayTooltips works instead of the usual DisplayDescriptions.
+                propertyGrid = new PropertyGrid(PropertyGridMode.DisplayTooltips, new PropertyGridView());
+                controlInfo = new ControlInfo(
+                    "Property Editor".Localize(),
+                    "Edits selected object properties".Localize(),
+                    StandardControlGroup.Right, null,
+                    "https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF".Localize());
+            }
         }
     }
 }

@@ -499,10 +499,10 @@ namespace Sce.Atf.Controls.PropertyEditing
         {
             if (!m_dragging)
             {
-                m_toolTip.RemoveAll();
-                bool handled = m_resetButton.MouseMove(e);                                              
+                bool handled = m_resetButton.MouseMove(e);
                 if (handled)
-                {                            
+                {
+                    m_toolTip.RemoveAll();
                     Cursor = Cursors.Arrow;                    
                     return;
                 }                 
