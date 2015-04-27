@@ -96,7 +96,7 @@ namespace Sce.Atf.Controls
         {
             int x = p.X - Bounds.Left;
 
-            if (x >= Theme.Padding.Left && x <= Theme.Padding.Left + SliderWidth)
+            if (ShowSlider && x >= Theme.Padding.Left && x <= Theme.Padding.Left + SliderWidth)
                 EditingMode = EditMode.BySlider;
             else
             {
@@ -110,12 +110,11 @@ namespace Sce.Atf.Controls
         {
             m_startValue = Value;
 
-         
-
             if (EditingMode == EditMode.ByTextBox)
             {
+                int textBoxOffset = ShowSlider ? SliderWidth + Theme.Padding.Left : 0;
                 TextBox.Text = Value.ToString("F");
-                TextBox.Bounds = new Rectangle(Bounds.Left + SliderWidth + Theme.Padding.Left, Bounds.Top, Bounds.Width - SliderWidth - Theme.Padding.Left, Bounds.Height);
+                TextBox.Bounds = new Rectangle(Bounds.Left + textBoxOffset, Bounds.Top, Bounds.Width - textBoxOffset, Bounds.Height);
                 TextBox.SelectAll();
                 TextBox.Show();
                 TextBox.Focus();
@@ -142,9 +141,8 @@ namespace Sce.Atf.Controls
         /// <param name="e">The <see cref="MouseEventArgs" /> instance containing the event data</param>
         public override void OnMouseMove(MouseEventArgs e)
         {
-            if (EditingMode == EditMode.BySlider)
+            if (ShowSlider && EditingMode == EditMode.BySlider)
                 Value = GetSliderFloatValue(e.X);
-
         }
 
         /// <summary>
@@ -152,12 +150,14 @@ namespace Sce.Atf.Controls
         /// <param name="e">The <see cref="MouseEventArgs" /> instance containing the event data</param>
         public override void OnMouseDown(MouseEventArgs e)
         {
-            if (EditingMode == EditMode.BySlider)
+            if (ShowSlider && EditingMode == EditMode.BySlider)
                 Value = GetSliderFloatValue(e.X);
         }
 
         private float GetSliderFloatValue(int x)
         {
+            if (!ShowSlider)
+                throw new InvalidOperationException("ShowSlider must be true");
             float t = ((float)(x - Bounds.Left - Theme.Padding.Left)) / SliderWidth;
             float newValue = Min + t * (Max - Min);
             //System.Diagnostics.Trace.TraceInformation("Slider value {0}", newValue); 
@@ -199,7 +199,7 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Gets or sets the width of the slider.</summary>
+        /// Gets or sets the width of the slider. Is only useful if ShowSlider is true.</summary>
         /// <value>
         /// The width of the slider.</value>
         public int SliderWidth
