@@ -938,36 +938,57 @@ namespace Sce.Atf.Applications
             return converter;
         }
 
-        private static object GetInstance(ValueInfo valueInfo)
+        private static object GetInstance(object obj, PropertyInfo propertyInfo, ValueInfo valueInfo)
         {
             // Convert a ValueInfo to an actual object instance
             object instance = null;
 
-            // First create the object
-            if (valueInfo.ConstructorParams.Count == 0)
-            {
-                instance = valueInfo.Type == typeof(string) ? valueInfo.Value.Clone() : Activator.CreateInstance(valueInfo.Type);
-            }
-            else
-            {
-                Type[] paramTypeArray = valueInfo.ConstructorParams.Select(param => param.Type).ToArray();
-                ConstructorInfo constructor = valueInfo.Type.GetConstructor(paramTypeArray);
+            // If the property on 'obj' already exists and doesn't require special constructor
+            //  parameters, then re-use it. This fixes problems when the property has been set
+            //  already using an object of a derived type, in which case the skin file should
+            //  not try to re-create the object, but should instead just set properties on the
+            //  existing object.
+            if (propertyInfo != null && propertyInfo.CanRead && valueInfo.ConstructorParams.Count == 0)
+                instance = propertyInfo.GetValue(obj, null);
 
-                if (constructor != null)
-                    instance = constructor.Invoke(valueInfo.ConstructorParams.Select(param => GetInstance(param)).ToArray());
+            if (instance == null)
+            {
+                // We must create the object for the property.
+                if (valueInfo.ConstructorParams.Count == 0)
+                {
+                    instance = valueInfo.Type == typeof (string)
+                        ? valueInfo.Value.Clone()
+                        : Activator.CreateInstance(valueInfo.Type);
+                }
+                else
+                {
+                    Type[] paramTypeArray = valueInfo.ConstructorParams.Select(param => param.Type).ToArray();
+                    ConstructorInfo constructor = valueInfo.Type.GetConstructor(paramTypeArray);
+
+                    if (constructor != null)
+                        instance =
+                            constructor.Invoke(valueInfo.ConstructorParams.Select(
+                            param => GetInstance(null, null, param)).ToArray());
+                }
             }
 
             // Then set any properties
             foreach (Setter setter in valueInfo.Setters)
             {
-                PropertyInfo propertyInfo = valueInfo.Type.GetProperty(setter.PropertyName, PropertyLookupType);
-                if (instance == null)
-                    throw new InvalidOperationException("Could not find a property named '" + setter.PropertyName + "'.");
+                PropertyInfo childPropertyInfo = valueInfo.Type.GetProperty(setter.PropertyName, PropertyLookupType);
+                if (childPropertyInfo == null)
+                {
+                    Outputs.WriteLine(OutputMessageType.Warning,
+                                        "The skin " + ActiveSkin.SkinFile +
+                                        " attempted to set a property on an object of type " + valueInfo.Type.FullName +
+                                        ", but this property, " + setter.PropertyName + ", doesn't exist.");
+                    continue;
+                }
 
                 if (setter.ValueInfo != null)
-                    propertyInfo.SetValue(instance, GetInstance(setter.ValueInfo), null);
+                    childPropertyInfo.SetValue(instance, GetInstance(instance, childPropertyInfo, setter.ValueInfo), null);
                 else if (setter.ListInfo != null)
-                    propertyInfo.SetValue(instance, GetInstance(setter.ListInfo), null);
+                    childPropertyInfo.SetValue(instance, GetInstance(setter.ListInfo), null);
                 else
                     throw new InvalidOperationException("Setter '" + setter.PropertyName + "' doesn't have a valueInfo, nor listInfo, specified.  Must have one (and only one) of either.");
             }
@@ -995,9 +1016,9 @@ namespace Sce.Atf.Applications
             instance = Activator.CreateInstance(typedListType);
 
             var addMethod = typedListType.GetMethod("Add");
-            foreach (var item in listInfo.Values)
+            foreach (ValueInfo item in listInfo.Values)
             {
-                var newEntry = GetInstance(item);
+                var newEntry = GetInstance(null, null, item);
                 addMethod.Invoke(instance, new object[] { newEntry });
             }
             
@@ -1078,42 +1099,7 @@ namespace Sce.Atf.Applications
                 Type styleType = style.TargetType;
 
                 foreach (Setter setter in style.Setters)
-                {
-                    try
-                    {
-                        // save off the old property value
-                        PropertyInfo propertyInfo = styleType.GetProperty(setter.PropertyName, PropertyLookupType);
-                        if (propertyInfo != null)
-                        {
-                            var tuple = new Tuple<WeakKey<object>, PropertyInfo>(
-                                new WeakKey<object>(obj), propertyInfo);
-                            if (!s_originalPropertyValues.ContainsKey(tuple))
-                            {
-                                object propertyValue = propertyInfo.GetValue(obj, null);
-                                
-                                // 'null' is a valid property value in some cases. 
-                                if (propertyValue != null &&
-                                    typeof (ICloneable).IsAssignableFrom(propertyInfo.PropertyType))
-                                {
-                                    propertyValue = ((ICloneable)propertyValue).Clone();
-                                }
-
-                                s_originalPropertyValues.Add(tuple, propertyValue);
-                            }
-                        }
-                        else
-                        {
-                            Outputs.WriteLine(OutputMessageType.Warning,
-                                                "The skin " + ActiveSkin.SkinFile +
-                                                " attempted to set a property on an object of type " + styleType +
-                                                ", but this property, " + setter.PropertyName + ", doesn't exist.");
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // we don't want to error out
-                    }
-                }
+                    SaveOriginalPropertyValues(obj, setter);
             }
 
             if (control != null)
@@ -1121,6 +1107,59 @@ namespace Sce.Atf.Applications
                 foreach (Control child in control.Controls)
                     SaveOriginalPropertyValues(child);
                 control.ResumeLayout();
+            }
+        }
+
+        private static void SaveOriginalPropertyValues(object obj, Setter setter)
+        {
+            Type objType = obj.GetType();
+
+            // There's no point in saving the property value of an object that is a value type,
+            //  because each boxed instance of a value type is unique.
+            if (objType.IsValueType)
+                return;
+
+            try
+            {
+                // Save off the old property value. The desired type (Setter.ValueInfo.Type) is
+                //  allowed to be a derived type of obj's type, so the setter's PropertyName may
+                //  not exist on 'obj'.
+                PropertyInfo propertyInfo = objType.GetProperty(setter.PropertyName, PropertyLookupType);
+                if (propertyInfo != null)
+                {
+                    var tuple = new Tuple<WeakKey<object>, PropertyInfo>(
+                        new WeakKey<object>(obj), propertyInfo);
+                    if (!s_originalPropertyValues.ContainsKey(tuple))
+                    {
+                        object propertyValue = propertyInfo.GetValue(obj, null);
+
+                        // 'null' is a valid property value in some cases.
+                        if (propertyValue != null &&
+                            typeof(ICloneable).IsAssignableFrom(propertyInfo.PropertyType))
+                        {
+                            propertyValue = ((ICloneable)propertyValue).Clone();
+                        }
+
+                        s_originalPropertyValues.Add(tuple, propertyValue);
+
+                        if (setter.ValueInfo != null)
+                        {
+                            foreach (Setter childSetter in setter.ValueInfo.Setters)
+                                SaveOriginalPropertyValues(propertyValue, childSetter);
+                        }
+                    }
+                }
+                else
+                {
+                    Outputs.WriteLine(OutputMessageType.Warning,
+                                        "The skin " + ActiveSkin.SkinFile +
+                                        " attempted to set a property on an object of type " + objType +
+                                        ", but this property, " + setter.PropertyName + ", doesn't exist.");
+                }
+            }
+            catch (Exception)
+            {
+                // we don't want to error out
             }
         }
 
@@ -1141,7 +1180,7 @@ namespace Sce.Atf.Applications
                     PropertyInfo propertyInfo = style.TargetType.GetProperty(setter.PropertyName, PropertyLookupType);
                     object newPropertyValue;
                     if (setter.ValueInfo != null)
-                        newPropertyValue = GetInstance(setter.ValueInfo);
+                        newPropertyValue = GetInstance(s_ncSkin, propertyInfo, setter.ValueInfo);
                     else if (setter.ListInfo != null)
                         newPropertyValue = GetInstance(setter.ListInfo);
                     else
@@ -1191,7 +1230,7 @@ namespace Sce.Atf.Applications
                         PropertyInfo propertyInfo = style.TargetType.GetProperty(setter.PropertyName, PropertyLookupType);
                         object newPropertyValue;
                         if (setter.ValueInfo != null)
-                            newPropertyValue = GetInstance(setter.ValueInfo);
+                            newPropertyValue = GetInstance(obj, propertyInfo, setter.ValueInfo);
                         else if (setter.ListInfo != null)
                             newPropertyValue = GetInstance(setter.ListInfo);
                         else
