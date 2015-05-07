@@ -1209,39 +1209,48 @@ namespace Sce.Atf.Applications
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    // The dock panel must be cleared of all contents before deserializing.
-                    foreach (ControlInfo info in m_controls)
+                    m_dockPanel.SuspendLayout(true);
+                    try
                     {
-                        DockContent dockContent = FindContent(info);
-                        //It's important to set DockState to Unknown before setting DockPanel to null,
-                        //  to avoid a crash.
-                        dockContent.DockState = DockState.Unknown;
-                        dockContent.DockPanel = null;
-                        dockContent.FloatPane = null;
-                        dockContent.Pane = null;
-                    }
-
-                    DeserializeDockContent deserializer = StringToDockContent;
-                    m_dockPanel.LoadFromXml(stream, deserializer, true);
-
-                    // Put back any docking content that had no persisted state.
-                    // We iterate through m_dockContent rather than m_controls because m_controls can get
-                    //  modified inside the loop, when calling ShowDockContent.
-                    foreach (var pair in m_dockContent)
-                    {
-                        DockContent dockContent = pair.Value;
-                        if (dockContent.DockPanel == null)
+                        // The dock panel must be cleared of all contents before deserializing.
+                        var contents = new IDockContent[m_dockPanel.Contents.Count];
+                        m_dockPanel.Contents.CopyTo(contents, 0);
+                        for (int i = 0; i < contents.Length; i++)
                         {
-                            ControlInfo info = pair.Key;
-                            UpdateDockContent(dockContent, info);
-                            ShowDockContent(dockContent, info);
+                            var dockContent = (DockContent)contents[i];
+                            // Setting DockState causes a crash when hiding unregistered DockContents below.
+                            // DockPanelSuite's DockSample simply sets DockPanel to null, but inside the
+                            //  SuspendLayout and ResumeLayout pair.
+                            //dockContent.DockState = DockState.Unknown;
+                            dockContent.DockPanel = null;
+                        }
+
+                        DeserializeDockContent deserializer = StringToDockContent;
+                        m_dockPanel.LoadFromXml(stream, deserializer, true);
+
+                        // Put back any docking content that had no persisted state.
+                        // We iterate through m_dockContent rather than m_controls because m_controls can get
+                        //  modified inside the loop, when calling ShowDockContent.
+                        foreach (var pair in m_dockContent)
+                        {
+                            DockContent dockContent = pair.Value;
+                            if (dockContent.DockPanel == null)
+                            {
+                                ControlInfo info = pair.Key;
+                                UpdateDockContent(dockContent, info);
+                                ShowDockContent(dockContent, info);
+                            }
+                        }
+
+                        // Hide these unregistered DockContents until client code calls RegisterControl().
+                        foreach (DockContent unregisteredContent in m_unregisteredContents)
+                        {
+                            unregisteredContent.Hide();
                         }
                     }
-
-                    // Hide these unregistered DockContents until client code calls RegisterControl().
-                    foreach (DockContent unregisteredContent in m_unregisteredContents)
+                    finally
                     {
-                        unregisteredContent.Hide();
+                        m_dockPanel.ResumeLayout(true, true);
                     }
                 }
             }
