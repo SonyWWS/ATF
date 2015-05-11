@@ -859,7 +859,12 @@ namespace Sce.Atf.Applications
             if (controlInfo.Client.Close(control))
             {
                 // unregister center controls for the client if they haven't already done it
-                if (IsCenterGroup(controlInfo.Group))
+                bool unregisterOnClose =
+                    controlInfo.UnregisterOnClose.HasValue ?
+                    controlInfo.UnregisterOnClose.Value :
+                    IsCenterGroup(controlInfo.Group);
+
+                if (unregisterOnClose)
                 {
                     UnregisterControl(control);
                     if (m_activeDockContent == dockContent)

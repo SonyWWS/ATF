@@ -172,9 +172,26 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets or sets whether this control should be considered a document in the menu, and thus
-        /// separated from other general windows. Is only applicable if ShowInMenu is true.
-        /// This System.Nullable.HasValue is false by default.</summary>
+        /// If this nullable has a value, then that value will determine the behavior when the user
+        /// clicks on the 'X' to close the Control. If Value is true, the Control will be unregistered
+        /// and the corresponding menu item will be removed. If Value is false, then the Control will
+        /// be hidden and the corresponding menu item will be unchecked.
+        /// If this nullable does not have a value (the default) then when a Form/Control is closed
+        /// because the user clicked on the 'X' button, the Control is unregistered if the Control is
+        /// in the center group (either StandardControlGroup.Center or StandardControlGroup.CenterPermanent),
+        /// otherwise the Control is simply hidden.</summary>
+        public bool? UnregisterOnClose
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets whether this control should be considered a document. If HasValue is true
+        /// and if Value is true, then the following special behavior occurs: 1) The Window layout
+        /// will be preserved if the document is eventually opened. 2) The Description will be used
+        /// in the menu name instead of DockContent.Text. 3) The menu command will appear in a separate
+        /// group (StandardCommandGroup.WindowDocuments). This System.Nullable.HasValue is false by default.</summary>
         /// <remarks>Description for a document control by convention is the full path of the document.</remarks>
         public bool? IsDocument
         {
