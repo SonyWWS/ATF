@@ -601,8 +601,36 @@ namespace Sce.Atf.Applications.NetworkTargetServices
                 ListViewSelectTargets(itemsToSelect, true);
         }
 
+        /// <summary>
+        /// Sets which targets are selected (as indicated by a checked radio button) and clears
+        /// previously selected targets.</summary>
+        /// <param name="targets">The targets to indicate as being selected / checked.</param>
+        /// <param name="valueEqual">If 'true', then the given TargetInfos will be tested for
+        /// equivalency with existing TargetInfo objects but will not replace them.</param>
         private void ListViewSelectTargets(IEnumerable<TargetInfo> targets, bool valueEqual)
         {
+            //--------------------------------------------------------------------------------------------------
+            // The list returned by SelectedTargets is based on the checked states in the list view.
+            //
+            // When the user clicks a radio button in the GUI to set a new target, the previous selection
+            // is un-checked. (See listView_ItemChecked.) As a result, there is only ever 1 item in the
+            // SelectedTargets list. Client code assumes this, and uses SelectedTargets.FirstOrDefault() to
+            // get the (presumed) one and only selected target.
+            //
+            // But when client code sets SelectedTargets by hand, the previous selected item in the list
+            // control is not automatically un-checked. As a result, SelectedTargets returns 2 items!
+            // If the previously selected item happened to be first in the list control, SelectedTargets
+            // will have the old, supposedly de-selected, item at the head of the list. SelectedTargets.FirstOrDefault()
+            // will yield the wrong item, and the client will attempt to connect to the wrong device.
+            //
+            // So, we need to clear all the checked states in the list control before setting a new selection.
+            //--------------------------------------------------------------------------------------------------
+            foreach (ListViewItem item in m_listView.Items)
+            {
+                if ((item != null) && item.Checked)
+                    item.Checked = false;
+            }
+
             List<TargetInfo> targetsToSelect = null; 
             if (valueEqual)
             {
