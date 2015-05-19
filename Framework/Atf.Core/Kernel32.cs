@@ -1,5 +1,6 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace Sce.Atf
@@ -53,6 +54,15 @@ namespace Sce.Atf
             GlobalMemoryStatusEx(memoryStatus);
             return (int)(memoryStatus.ullTotalPhys / (1024 * 1024));// convert bytes to megabytes
         }
+
+        /// <summary>
+        /// Copies a block of memory from one location to another.</summary>
+        /// <param name="dest">A pointer to the starting address of the copied block's destination.</param>
+        /// <param name="src">A pointer to the starting address of the block of memory to copy.</param>
+        /// <param name="count">The size of the block of memory to copy, in bytes.</param>
+        [DllImport("kernel32.dll", EntryPoint = "RtlCopyMemory", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public static extern void CopyMemory(IntPtr dest, IntPtr src, UIntPtr count);
+
     }
 }
 

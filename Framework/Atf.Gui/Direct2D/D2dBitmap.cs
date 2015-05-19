@@ -1,11 +1,10 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
-//using System.Drawing;
 
 using System;
+using System.Runtime.InteropServices;
 using GdiPixelFormat = System.Drawing.Imaging.PixelFormat;
 
 using SharpDX;
-//using SharpDX.Direct2D1;
 
 namespace Sce.Atf.Direct2D
 {
@@ -19,6 +18,9 @@ namespace Sce.Atf.Direct2D
         {
             get
             {
+                if (IsDisposed)
+                    throw new InvalidOperationException("This bitmap is disposed");
+
                 return new System.Drawing.Size(m_nativeBitmap.PixelSize.Width
                 , m_nativeBitmap.PixelSize.Height);
             }
@@ -30,7 +32,12 @@ namespace Sce.Atf.Direct2D
         /// D2dBitmap.PixelSize.</summary>
         public System.Drawing.SizeF Size
         {
-            get { return new System.Drawing.SizeF(m_nativeBitmap.Size.Width, m_nativeBitmap.Size.Height); }
+            get 
+            {
+                if (IsDisposed)
+                    throw new InvalidOperationException("This bitmap is disposed");
+                return new System.Drawing.SizeF(m_nativeBitmap.Size.Width, m_nativeBitmap.Size.Height); 
+            }
         }
 
         /// <summary>
@@ -51,6 +58,9 @@ namespace Sce.Atf.Direct2D
         /// outside this class.</summary>
         public void Update()
         {
+            if (IsDisposed)
+                throw new InvalidOperationException("This bitmap is disposed");
+
             if (m_bitmap == null)
                 return; // m_bitmap can be null when this is a bitmapgraphics.
 
@@ -69,7 +79,74 @@ namespace Sce.Atf.Direct2D
         /// <remarks>Pitch = pixel width * bytes per pixel + memory padding</remarks>
         public void CopyFromMemory(byte[] bytes, int stride)
         {
-            m_nativeBitmap.CopyFromMemory(bytes, stride);
+            if (IsDisposed)
+                throw new InvalidOperationException("This bitmap is disposed");
+
+            GCHandle pinnedArray = new GCHandle();
+            try
+            {
+                pinnedArray = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+                IntPtr pointer = pinnedArray.AddrOfPinnedObject();                
+                CopyFromMemory(pointer, stride);
+            }
+            finally
+            {
+                if (pinnedArray.IsAllocated)
+                    pinnedArray.Free();
+            }            
+        }
+
+
+        /// <summary>
+        /// Copy raw memory into bitmap.</summary>
+        /// <param name="data">Data to copy</param>
+        /// <param name="stride">The width of a scan line in bytes</param>
+        /// <remarks> stride = pixel width * bytes per pixel + memory padding</remarks>
+        public void CopyFromMemory(IntPtr data, int stride)
+        {
+            if (IsDisposed)
+                throw new InvalidOperationException("This bitmap is disposed");
+
+            m_nativeBitmap.CopyFromMemory(data, stride);
+            
+            if (m_bitmap != null)
+            {
+                // lock the m_bitmap and get pointer to the first pixel.
+                System.Drawing.Imaging.BitmapData
+                    bitmapdata = m_bitmap.LockBits(new System.Drawing.Rectangle(0, 0, m_bitmap.Width, m_bitmap.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                    m_bitmap.PixelFormat);
+                if (bitmapdata.Stride == stride)
+                    Kernel32.CopyMemory(bitmapdata.Scan0, data, (UIntPtr)(stride * m_bitmap.Height));
+                m_bitmap.UnlockBits(bitmapdata);
+            }
+        }
+
+        /// <summary>
+        /// Copy the given int array into bitmap.
+        /// Each int is a four channel BGRA color.</summary>
+        /// <param name="data">Data to copy</param>        
+        /// <remarks> The size of data must be equal to pixel (Width * Height) </remarks>
+        public void CopyFromMemory(int[] data)
+        {
+            if (IsDisposed)
+                throw new InvalidOperationException("This bitmap is disposed");
+
+            if (data.Length != (PixelSize.Width * PixelSize.Height))
+                throw new InvalidOperationException("The length of data must be equal to (PixelSize.Width * PixelSize.Height)");
+            
+            GCHandle pinnedArray = new GCHandle();
+            try
+            {
+                pinnedArray = GCHandle.Alloc(data, GCHandleType.Pinned);
+                IntPtr pointer = pinnedArray.AddrOfPinnedObject();
+                int stride = PixelSize.Width * 4;
+                CopyFromMemory(pointer, stride);
+            }
+            finally
+            {
+                if (pinnedArray.IsAllocated)
+                    pinnedArray.Free();
+            }
         }
 
         internal D2dBitmap(D2dGraphics owner, SharpDX.Direct2D1.Bitmap bmp)
@@ -84,11 +161,26 @@ namespace Sce.Atf.Direct2D
         internal D2dBitmap(D2dGraphics owner, System.Drawing.Bitmap bmp)
         {
             if (bmp.PixelFormat != GdiPixelFormat.Format32bppPArgb)
-                throw new System.ArgumentException("pixel format must be GdiPixelFormat.Format32bppPArgb");                
+                throw new System.ArgumentException("pixel format must be GdiPixelFormat.Format32bppPArgb");
 
             m_owner = owner;
             m_bitmap = bmp;
             Create();
+            m_owner.RecreateResources += RecreateResources;
+            m_rtNumber = owner.RenderTargetNumber;
+        }
+
+        internal D2dBitmap(D2dGraphics owner, int width, int height)
+        {
+            if (width < 1 || height < 1)
+                throw new ArgumentOutOfRangeException("Width and height must be greater than zero");
+
+            m_owner = owner;
+            var props = new SharpDX.Direct2D1.BitmapProperties();
+            props.DpiX = m_owner.DotsPerInch.Width;
+            props.DpiY = m_owner.DotsPerInch.Height;
+            props.PixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied);
+            m_nativeBitmap = new SharpDX.Direct2D1.Bitmap(m_owner.D2dRenderTarget, new Size2(width, height), props);
             m_owner.RecreateResources += RecreateResources;
             m_rtNumber = owner.RenderTargetNumber;
         }
@@ -151,8 +243,7 @@ namespace Sce.Atf.Direct2D
 
         internal void Create()
         {
-            if (m_bitmap == null)
-                return;
+            if (m_bitmap == null) return;
 
             if (m_nativeBitmap != null)
             {
