@@ -92,7 +92,7 @@ namespace Sce.Atf.Direct2D
                 trimmingOptions.Delimiter = tmpTrimming.Delimiter;
                 trimmingOptions.DelimiterCount = tmpTrimming.DelimiterCount;
                 trimmingOptions.Granularity = (D2dTrimmingGranularity)tmpTrimming.Granularity;
-                trimmingSign.Dispose();
+                if(trimmingSign != null) trimmingSign.Dispose();
                 return trimmingOptions;
             }
 
