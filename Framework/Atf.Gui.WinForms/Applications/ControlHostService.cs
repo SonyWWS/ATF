@@ -1116,16 +1116,19 @@ namespace Sce.Atf.Applications
         {
             if (m_commandService != null)
             {
-                bool isDocument;
-                if (info.IsDocument.HasValue)
-                    isDocument = info.IsDocument.Value;
+                object groupTag;
+                if (info.MenuGroupTag != null)
+                    groupTag = info.MenuGroupTag;
+                else if ((info.IsDocument.HasValue && info.IsDocument.Value) ||
+                         info.Client is IDocumentClient)
+                    groupTag = StandardCommandGroup.WindowDocuments;
                 else
-                    isDocument = info.Client is IDocumentClient;
+                    groupTag = StandardCommandGroup.WindowGeneral;
 
                 var commandInfo = new CommandInfo(
                     info.Control,
                     StandardMenu.Window,
-                    isDocument ? StandardCommandGroup.WindowDocuments : StandardCommandGroup.WindowGeneral,
+                    groupTag,
                     text,
                     "Activate Window".Localize());
 

@@ -172,6 +172,13 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
+        /// Gets or sets an object that will be used to group together menu commands in the
+        /// Windows menu. Is only meaningful if ShowInMenu is true. If null, the group tag
+        /// will be either StandardCommandGroup.WindowDocuments (if the control is a document)
+        /// or StandardCommandGroup.WindowGeneral.</summary>
+        public object MenuGroupTag { get; set; }
+
+        /// <summary>
         /// If this nullable has a value, then that value will determine the behavior when the user
         /// clicks on the 'X' to close the Control. If Value is true, the Control will be unregistered
         /// and the corresponding menu item will be removed. If Value is false, then the Control will
