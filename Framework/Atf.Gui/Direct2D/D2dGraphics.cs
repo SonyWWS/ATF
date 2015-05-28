@@ -636,12 +636,12 @@ namespace Sce.Atf.Direct2D
                 = new SharpDX.DirectWrite.TextLayout(D2dFactory.NativeDwFactory,
                     text, textFormat.NativeTextFormat, rtsize.Width, rtsize.Height))
             {
+                layout.TextAlignment = SharpDX.DirectWrite.TextAlignment.Leading;
+                layout.ParagraphAlignment = SharpDX.DirectWrite.ParagraphAlignment.Near;
                 if (textFormat.Underlined)
-                    layout.SetUnderline(true,
-                                        new SharpDX.DirectWrite.TextRange(0, text.Length));
+                    layout.SetUnderline(true,new SharpDX.DirectWrite.TextRange(0, text.Length));
                 if (textFormat.Strikeout)
-                    layout.SetStrikethrough(true,
-                                            new SharpDX.DirectWrite.TextRange(0, text.Length));
+                    layout.SetStrikethrough(true,new SharpDX.DirectWrite.TextRange(0, text.Length));
                 m_renderTarget.DrawTextLayout(upperLeft.ToSharpDX(),
                     layout,
                     brush.NativeBrush,
@@ -670,9 +670,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="brush">The brush used to paint the text</param>
         public void DrawText(string text, D2dTextFormat textFormat, RectangleF layoutRect, D2dBrush brush)
         {
-            using (var layout
-                = new SharpDX.DirectWrite.TextLayout(D2dFactory.NativeDwFactory
-                    , text, textFormat.NativeTextFormat, layoutRect.Width, layoutRect.Height))
+            using (var layout = new SharpDX.DirectWrite.TextLayout(D2dFactory.NativeDwFactory, text, textFormat.NativeTextFormat, layoutRect.Width, layoutRect.Height))
             {
                 if (textFormat.Underlined)
                     layout.SetUnderline(true, new SharpDX.DirectWrite.TextRange(0, text.Length));

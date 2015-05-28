@@ -275,7 +275,15 @@ namespace Sce.Atf.Direct2D
         {
             var textlayout = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, 
                 layoutWidth, layoutHeight);
-            return new D2dTextLayout(text, textlayout);
+
+            if (textFormat.Underlined)
+                textlayout.SetUnderline(true, new SharpDX.DirectWrite.TextRange(0, text.Length));
+            if (textFormat.Strikeout)
+                textlayout.SetStrikethrough(true, new SharpDX.DirectWrite.TextRange(0, text.Length));
+
+            var d2dTextLayout = new D2dTextLayout(text, textlayout);
+            d2dTextLayout.DrawTextOptions = textFormat.DrawTextOptions;
+            return d2dTextLayout;
         }
 
         /// <summary>
@@ -311,7 +319,17 @@ namespace Sce.Atf.Direct2D
 
             var textlayout = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, 
                 layoutWidth, layoutHeight, 1, matrix, true);
-            return new D2dTextLayout(text, textlayout);
+
+            if (textFormat.Underlined)
+                textlayout.SetUnderline(true, new SharpDX.DirectWrite.TextRange(0, text.Length));
+            if (textFormat.Strikeout)
+                textlayout.SetStrikethrough(true, new SharpDX.DirectWrite.TextRange(0, text.Length));
+
+
+            var d2dTextLayout = new D2dTextLayout(text, textlayout);
+            d2dTextLayout.DrawTextOptions = textFormat.DrawTextOptions;
+            return d2dTextLayout;
+            
         }
 
         /// <summary>
