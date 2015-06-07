@@ -164,38 +164,44 @@ namespace Sce.Atf.Dom
             }
             else
             {
-                ChildInfo actualChildInfo = node.ChildInfo;
-
-                var substitutionGroupRule = node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault();
-                if (substitutionGroupRule != null)
+                ChildInfo actualChildInfo = null;
+                if (node.Type == node.ChildInfo.Type)
                 {
-                    var substituteChildInfo = substitutionGroupRule.Substitutions.FirstOrDefault(x => x.Type.IsAssignableFrom(node.Type));
-                    if (substituteChildInfo == null)
-                    {
-                        throw new InvalidOperationException("No suitable Substitution Group found for node " + node);
-                    }
-
-                    actualChildInfo = substituteChildInfo;
-                    m_elementNS = m_typeCollection.TargetNamespace;
-
-                    index = substituteChildInfo.Type.Name.LastIndexOf(':');
-                    if (index >= 0)
-                        m_elementNS = substituteChildInfo.Type.Name.Substring(0, index);
-
-                    // It is possible that an element of this namspace has not
-                    // yet been written.  If the lookup fails then get the prefix from
-                    // the type collection
-                    m_elementPrefix = writer.LookupPrefix(m_elementNS);
-                    if (m_elementPrefix == null)
-                    {
-                        m_elementPrefix = m_typeCollection.GetPrefix(m_elementNS);
-                    }
-
+                    actualChildInfo = node.ChildInfo;
                 }
-                else
+
+                if (actualChildInfo == null)
                 {
-                    // not the root, so all schema namespaces have been defined
-                    m_elementPrefix = writer.LookupPrefix(m_elementNS);
+                    var substitutionGroupRule = node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault();
+                    if (substitutionGroupRule != null)
+                    {
+                        var substituteChildInfo = substitutionGroupRule.Substitutions.FirstOrDefault(x => x.Type.IsAssignableFrom(node.Type));
+                        if (substituteChildInfo == null)
+                        {
+                            throw new InvalidOperationException("No suitable Substitution Group found for node " + node);
+                        }
+
+                        actualChildInfo = substituteChildInfo;
+                        m_elementNS = m_typeCollection.TargetNamespace;
+
+                        index = substituteChildInfo.Type.Name.LastIndexOf(':');
+                        if (index >= 0)
+                            m_elementNS = substituteChildInfo.Type.Name.Substring(0, index);
+
+                        // It is possible that an element of this namspace has not
+                        // yet been written.  If the lookup fails then get the prefix from
+                        // the type collection
+                        m_elementPrefix = writer.LookupPrefix(m_elementNS);
+                        if (m_elementPrefix == null)
+                        {
+                            m_elementPrefix = m_typeCollection.GetPrefix(m_elementNS);
+                        }
+                    }
+                    else
+                    {
+                        // not the root, so all schema namespaces have been defined
+                        m_elementPrefix = writer.LookupPrefix(m_elementNS);
+                    }
                 }
 
                 if (m_elementPrefix == null)
