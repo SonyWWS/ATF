@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+  targetNamespace="test"
+	xmlns="test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:complexType name="basicType">
+		<xs:attribute name="name" type="xs:string" />
+	</xs:complexType>
+	<xs:element name="basic" type="basicType"/>
+
+	<xs:complexType name="containerType">
+		<xs:complexContent>
+			<xs:extension base="basicType">
+				<xs:sequence>
+					<xs:element ref="basic" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="container" type="containerType" substitutionGroup="basic"/>
+
+	<xs:complexType name="someOtherType">
+		<xs:complexContent>
+			<xs:extension base="basicType">
+				<xs:attribute name="special" type="xs:boolean" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="someOther" type="someOtherType" substitutionGroup="basic"/>
+
+	<xs:complexType name="rootType">
+		<xs:sequence>
+			<xs:element ref="basic" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="root" type="rootType"/>
+
+</xs:schema>

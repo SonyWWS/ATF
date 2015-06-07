@@ -39,3 +39,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Atf.Gui")]
 [assembly: InternalsVisibleTo("Atf.Gui.WinForms")]
 [assembly: InternalsVisibleTo("Atf.Gui.Wpf")]
+[assembly: InternalsVisibleTo("UnitTests")]
