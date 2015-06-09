@@ -21,11 +21,10 @@ namespace UnitTests.Atf.Dom
                 containerType.GetChildInfo("basic").Rules.OfType<SubstitutionGroupChildRule>().SingleOrDefault();
 
             Assert.NotNull(subRule, "No SubstitutionGroupChildRule was generated.");
-            Assert.AreEqual(subRule.Substitutions.Count(), 2, "Wrong number of substitutions for rule.");
-            Assert.NotNull(subRule.Substitutions.SingleOrDefault(s => s.Type.Name == "test:containerType"),
-                "Missing containerType substitution in rule.");
-            Assert.NotNull(subRule.Substitutions.SingleOrDefault(s => s.Type.Name == "test:someOtherType"),
-                "Missing someOtherType substitution in rule.");
+            Assert.AreEqual(3, subRule.Substitutions.Count(), "Wrong number of substitutions for rule.");
+            Assert.NotNull(subRule.Substitutions.SingleOrDefault(s => s.Type.Name == "test:containerType"), "Missing containerType substitution in rule.");
+            Assert.NotNull(subRule.Substitutions.SingleOrDefault(s => s.Type.Name == "test:middleType"), "Missing middleType substitution in rule.");
+            Assert.NotNull(subRule.Substitutions.SingleOrDefault(s => s.Type.Name == "test:descendantType"), "Missing descendantType substitution in rule.");
         }
 
         [Test]
@@ -34,14 +33,16 @@ namespace UnitTests.Atf.Dom
             var loader = GetSchemaLoader();
             DomNode node;
             string output;
-            string testDoc = @"<root>
-									<basic name=""something""/>
-									<someOther name=""some-other-thing"" special=""true"" />
-									<container name=""some-container"">
-										<someOther name=""some-nested-thing"" special=""false"" />
-										<someOther name=""some-other-nested-thing"" special=""false"" />
-									</container>
-								</root>";
+            string testDoc = @"﻿<?xml version=""1.0"" encoding=""utf-8""?>
+<root>
+	<basic name=""something""/>
+	<middle name=""some-other-thing"" special=""true"" />
+    <descendant name=""leaf-thing"" special=""true"" extra=""important"" />
+	<container name=""some-container"">
+		<middle name=""some-nested-thing"" special=""false"" />
+		<middle name=""some-other-nested-thing"" special=""false"" />
+	</container>
+</root>";
 
             using (Stream s = CreateStreamFromString(testDoc))
             {
@@ -49,11 +50,12 @@ namespace UnitTests.Atf.Dom
                 node = reader.Read(s, null);
             }
 
-            Assert.AreEqual(node.Children.Count(), 3);
+            Assert.AreEqual(4, node.Children.Count());
             var children = node.Children.ToList();
-            Assert.AreEqual(children[0].Type.Name, "test:basicType");
-            Assert.AreEqual(children[1].Type.Name, "test:someOtherType");
-            Assert.AreEqual(children[2].Type.Name, "test:containerType");
+            Assert.AreEqual("test:basicType", children[0].Type.Name);
+            Assert.AreEqual("test:middleType", children[1].Type.Name);
+            Assert.AreEqual("test:descendantType", children[2].Type.Name);
+            Assert.AreEqual("test:containerType", children[3].Type.Name);
 
 
             using (MemoryStream s = new MemoryStream())
@@ -63,15 +65,17 @@ namespace UnitTests.Atf.Dom
                 output = Encoding.UTF8.GetString(s.ToArray());
             }
 
-            Assert.AreEqual(output, @"﻿<?xml version=""1.0"" encoding=""utf-8""?>
+            Assert.AreEqual(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
 <root xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xs=""http://www.w3.org/2001/XMLSchema"" xmlns=""test"">
 	<basic name=""something"" />
-	<someOther name=""some-other-thing"" special=""true"" />
+	<middle name=""some-other-thing"" special=""true"" />
+	<descendant name=""leaf-thing"" special=""true"" extra=""important"" />
 	<container name=""some-container"">
-		<someOther name=""some-nested-thing"" />
-		<someOther name=""some-other-nested-thing"" />
+		<middle name=""some-nested-thing"" />
+		<middle name=""some-other-nested-thing"" />
 	</container>
-</root>");
+</root>",
+                output);
         }
 
         private XmlSchemaTypeLoader GetSchemaLoader()
