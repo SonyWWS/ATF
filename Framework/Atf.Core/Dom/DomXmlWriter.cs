@@ -1,6 +1,7 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -164,18 +165,22 @@ namespace Sce.Atf.Dom
             }
             else
             {
-                ChildInfo actualChildInfo = null;
-                if (node.Type == node.ChildInfo.Type)
-                {
-                    actualChildInfo = node.ChildInfo;
-                }
+                // not the root, so all schema namespaces have been defined
+                m_elementPrefix = writer.LookupPrefix(m_elementNS);
 
-                if (actualChildInfo == null)
+                ChildInfo actualChildInfo = node.ChildInfo;
+
+                if (node.Type != node.ChildInfo.Type)
                 {
                     var substitutionGroupRule = node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault();
                     if (substitutionGroupRule != null)
                     {
-                        var substituteChildInfo = substitutionGroupRule.Substitutions.FirstOrDefault(x => x.Type.IsAssignableFrom(node.Type));
+                        var substituteChildInfo =
+                            node.Type.Lineage.Join(substitutionGroupRule.Substitutions, 
+                                n => n.Name, 
+                                s => s.Type.Name,
+                                (n, s) => s
+                            ).FirstOrDefault();
                         if (substituteChildInfo == null)
                         {
                             throw new InvalidOperationException("No suitable Substitution Group found for node " + node);
@@ -196,11 +201,6 @@ namespace Sce.Atf.Dom
                         {
                             m_elementPrefix = m_typeCollection.GetPrefix(m_elementNS);
                         }
-                    }
-                    else
-                    {
-                        // not the root, so all schema namespaces have been defined
-                        m_elementPrefix = writer.LookupPrefix(m_elementNS);
                     }
                 }
 

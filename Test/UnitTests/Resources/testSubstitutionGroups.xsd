@@ -20,14 +20,23 @@
 	</xs:complexType>
 	<xs:element name="container" type="containerType" substitutionGroup="basic"/>
 
-	<xs:complexType name="someOtherType">
+	<xs:complexType name="middleType">
 		<xs:complexContent>
 			<xs:extension base="basicType">
 				<xs:attribute name="special" type="xs:boolean" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="someOther" type="someOtherType" substitutionGroup="basic"/>
+	<xs:element name="middle" type="middleType" substitutionGroup="basic"/>
+
+	<xs:complexType name="descendantType">
+		<xs:complexContent>
+			<xs:extension base="middleType">
+				<xs:attribute name="extra" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="descendant" type="descendantType" substitutionGroup="basic"/>
 
 	<xs:complexType name="rootType">
 		<xs:sequence>
