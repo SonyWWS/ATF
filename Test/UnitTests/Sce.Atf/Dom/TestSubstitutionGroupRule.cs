@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿// See License.txt.
+
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,17 +35,16 @@ namespace UnitTests.Atf.Dom
             var loader = GetSchemaLoader();
             DomNode node;
             string output;
-            string testDoc = @"﻿<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
-	<basic name=""something""/>
+            const string testDoc = @"﻿<?xml version=""1.0"" encoding=""utf-8""?>
+<root xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xs=""http://www.w3.org/2001/XMLSchema"" xmlns=""test"">
+	<basic name=""something"" />
 	<middle name=""some-other-thing"" special=""true"" />
-    <descendant name=""leaf-thing"" special=""true"" extra=""important"" />
+	<descendant name=""leaf-thing"" special=""true"" extra=""important"" />
 	<container name=""some-container"">
-		<middle name=""some-nested-thing"" special=""false"" />
-		<middle name=""some-other-nested-thing"" special=""false"" />
+		<middle name=""some-nested-thing"" />
+		<middle name=""some-other-nested-thing"" special=""true"" />
 	</container>
 </root>";
-
             using (Stream s = CreateStreamFromString(testDoc))
             {
                 DomXmlReader reader = new DomXmlReader(loader);
@@ -65,17 +66,7 @@ namespace UnitTests.Atf.Dom
                 output = Encoding.UTF8.GetString(s.ToArray());
             }
 
-            Assert.AreEqual(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
-<root xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xs=""http://www.w3.org/2001/XMLSchema"" xmlns=""test"">
-	<basic name=""something"" />
-	<middle name=""some-other-thing"" special=""true"" />
-	<descendant name=""leaf-thing"" special=""true"" extra=""important"" />
-	<container name=""some-container"">
-		<middle name=""some-nested-thing"" />
-		<middle name=""some-other-nested-thing"" />
-	</container>
-</root>",
-                output);
+            Assert.AreEqual(testDoc, output);
         }
 
         private XmlSchemaTypeLoader GetSchemaLoader()

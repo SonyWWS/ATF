@@ -1,7 +1,6 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -170,14 +169,16 @@ namespace Sce.Atf.Dom
 
                 ChildInfo actualChildInfo = node.ChildInfo;
 
+                // Check for substitutions. They're not mandatory if the node type is an exact match to the child info type.
+                // http://www.w3schools.com/schema/schema_complex_subst.asp
                 if (node.Type != node.ChildInfo.Type)
                 {
                     var substitutionGroupRule = node.ChildInfo.Rules.OfType<SubstitutionGroupChildRule>().FirstOrDefault();
                     if (substitutionGroupRule != null)
                     {
-                        var substituteChildInfo =
-                            node.Type.Lineage.Join(substitutionGroupRule.Substitutions, 
-                                n => n.Name, 
+                        ChildInfo substituteChildInfo =
+                            node.Type.Lineage.Join(substitutionGroupRule.Substitutions,
+                                n => n.Name,
                                 s => s.Type.Name,
                                 (n, s) => s
                             ).FirstOrDefault();
@@ -193,9 +194,9 @@ namespace Sce.Atf.Dom
                         if (index >= 0)
                             m_elementNS = substituteChildInfo.Type.Name.Substring(0, index);
 
-                        // It is possible that an element of this namspace has not
+                        // It is possible that an element of this namespace has not
                         // yet been written.  If the lookup fails then get the prefix from
-                        // the type collection
+                        // the type collection.
                         m_elementPrefix = writer.LookupPrefix(m_elementNS);
                         if (m_elementPrefix == null)
                         {
