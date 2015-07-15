@@ -787,15 +787,15 @@ namespace Sce.Atf.Applications
                 if (m_activeDockContent != null &&
                     m_activeDockContent.Controls.Count > 0)
                 {
-                    DockPaneStripBase dockPaneStrip = GetDockPaneStripBase(m_activeDockContent);
-                    if (dockPaneStrip != null)
-                        dockPaneStrip.MouseUp -= dockPaneStrip_MouseUp;
+                    m_activeDockContent.DockStateChanged -= ActiveDockContentStateChanged;
+                    SetActiveDockPaneStripBase(null);
                     DeactivateClient(m_activeDockContent.Controls[0]);
                 }
 
                 if (activeContent != null &&
                     activeContent.Controls.Count > 0)
                 {
+                    activeContent.DockStateChanged += ActiveDockContentStateChanged;
                     ActivateClient(activeContent.Controls[0]);
 
                     ControlInfo activeControlInfo = FindControlInfo(activeContent.Controls[0]);
@@ -810,12 +810,29 @@ namespace Sce.Atf.Applications
                         controlInfo.InActiveGroup = activePane.Contains(controlInfo.HostControl);
 
                     DockPaneStripBase dockPaneStrip = GetDockPaneStripBase(activeContent);
-                    if (dockPaneStrip != null)
-                        dockPaneStrip.MouseUp += dockPaneStrip_MouseUp;
+                    SetActiveDockPaneStripBase(dockPaneStrip);
                 }
 
                 m_activeDockContent = activeContent;
             }
+        }
+
+        private void SetActiveDockPaneStripBase(DockPaneStripBase newDockPaneStripBase)
+        {
+            if (m_activeDockPaneStripBase != newDockPaneStripBase)
+            {
+                if (m_activeDockPaneStripBase != null)
+                    m_activeDockPaneStripBase.MouseUp -= dockPaneStrip_MouseUp;
+                m_activeDockPaneStripBase = newDockPaneStripBase;
+                if (m_activeDockPaneStripBase != null)
+                    m_activeDockPaneStripBase.MouseUp += dockPaneStrip_MouseUp;
+            }
+        }
+
+        private void ActiveDockContentStateChanged(object sender, EventArgs e)
+        {
+            DockPaneStripBase dockPaneStrip = GetDockPaneStripBase(m_activeDockContent);
+            SetActiveDockPaneStripBase( dockPaneStrip);
         }
 
         private DockPaneStripBase GetDockPaneStripBase(DockContent dockContent)
@@ -1552,6 +1569,7 @@ namespace Sce.Atf.Applications
 
         private readonly DockPanel m_dockPanel;
         private DockContent m_activeDockContent;
+        private DockPaneStripBase m_activeDockPaneStripBase;
         private ToolStripContainer m_toolStripContainer;
         private string m_dockPanelState;
         private bool m_formLoaded;
