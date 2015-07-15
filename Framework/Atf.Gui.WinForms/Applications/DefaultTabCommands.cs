@@ -36,12 +36,16 @@ namespace Sce.Atf.Applications
             IControlHostService controlHostService,
             IControlRegistry controlRegistry)
         {
-            m_commandService = commandService;
-            m_controlHostService = controlHostService;
-            m_controlRegistry = controlRegistry;
+            CommandService = commandService;
+            ControlHostService = controlHostService;
+            ControlRegistry = controlRegistry;
         }
 
-        private enum Command
+        /// <summary>
+        /// These are the commands that this component registers with the command service.
+        /// Override Initialize to register additional commands or to unregister any of these
+        /// default commands.</summary>
+        protected enum Command
         {
             CloseCurrentTab,
             CloseOtherTabs,
@@ -53,7 +57,7 @@ namespace Sce.Atf.Applications
         /// Finishes initializing component by registering tab commands</summary>
         public virtual void Initialize()
         {
-            m_commandService.RegisterCommand(
+            CommandService.RegisterCommand(
                     Command.CloseCurrentTab,
                     null,
                     null,
@@ -64,7 +68,7 @@ namespace Sce.Atf.Applications
                     CommandVisibility.ContextMenu,
                     this);
 
-            m_commandService.RegisterCommand(
+            CommandService.RegisterCommand(
                 Command.CloseOtherTabs,
                 null,
                 null,
@@ -75,7 +79,7 @@ namespace Sce.Atf.Applications
                 CommandVisibility.ContextMenu,
                 this);
 
-            m_commandService.RegisterCommand(
+            CommandService.RegisterCommand(
                     Command.CopyFullPath,
                     null,
                     null,
@@ -86,7 +90,7 @@ namespace Sce.Atf.Applications
                     CommandVisibility.ContextMenu,
                     this);
 
-            m_commandService.RegisterCommand(
+            CommandService.RegisterCommand(
                 Command.OpenContainingFolder,
                 null,
                 null,
@@ -96,15 +100,45 @@ namespace Sce.Atf.Applications
                 null,
                 CommandVisibility.ContextMenu,
                 this);
+
+            ControlRegistry.ActiveControlChanged += (sender, args) =>
+            {
+                m_documentExists = false;
+                if (IsDocumentControl(ControlRegistry.ActiveControl))
+                {
+                    string documentPath = GetDocumentPath(ControlRegistry.ActiveControl);
+                    try
+                    {
+                        // for example, circuit group windows are titled "MyFileName:MyGroupName"
+                        if (PathUtil.IsValidPath(documentPath))
+                            m_documentExists = File.Exists(documentPath);
+                    }
+                    catch (IOException)
+                    {
+                    }
+                }
+            };
         }
 
         /// <summary>
         /// Gets or sets the method used to test if a ControlInfo should have document-related
         /// commands. If this method returns true, then the ControlInfo's Description should be
-        /// the file path of the document. By default, document commands are available for tabs
-        /// that are owned by an IDocumentClient. This field cannot be null.</summary>
+        /// the file path of the document; override GetDocumentPath() to customize how the path
+        /// is found. By default, document commands are available for tabs that are owned by an
+        /// IDocumentClient. This field cannot be null.</summary>
         public Func<ControlInfo, bool> IsDocumentControl =
             controlInfo => controlInfo.Client.Is<IDocumentClient>();
+
+        /// <summary>
+        /// Gets the full path name of the document represented by the given ControlInfo.</summary>
+        /// <param name="info">The ControlInfo that IsDocumentControl() says is a document</param>
+        /// <returns>The full file path of the document represented by 'info', or null</returns>
+        protected virtual string GetDocumentPath(ControlInfo info)
+        {
+            string path = info.Description;
+            path = path.Trim(s_invalidFileNameChars);
+            return path;
+        }
 
         #region IContextMenuCommandProvider Members
 
@@ -151,27 +185,14 @@ namespace Sce.Atf.Applications
                 switch ((Command)commandTag)
                 {
                     case Command.CloseCurrentTab:
-                        return m_controlRegistry.ActiveControl.Group != StandardControlGroup.CenterPermanent;
+                        return ControlRegistry.ActiveControl.Group != StandardControlGroup.CenterPermanent;
 
                     case Command.CloseOtherTabs:
                         return docInfos.Length > 1;
 
                     case Command.CopyFullPath:
                     case Command.OpenContainingFolder:
-                        {
-                            string controlDescription = GetDocumentPath(m_controlRegistry.ActiveControl);
-                            bool exists = false;
-                            try
-                            {
-                                // for example, circuit group windows are titled "MyFileName:MyGroupName"
-                                if (PathUtil.IsValidPath(controlDescription))
-                                    exists = File.Exists(controlDescription);
-                            }
-                            catch (IOException)
-                            {
-                            }
-                            return exists;
-                        }
+                        return m_documentExists; // Use a cached value to avoid file I/O spam.
                 }
             }
 
@@ -186,20 +207,20 @@ namespace Sce.Atf.Applications
             switch ((Command)commandTag)
             {
                 case Command.CloseCurrentTab:
-                    Close(m_controlRegistry.ActiveControl);
+                    Close(ControlRegistry.ActiveControl);
                     break;
 
                 case Command.CloseOtherTabs:
-                    CloseOthers(m_controlRegistry.ActiveControl);
+                    CloseOthers(ControlRegistry.ActiveControl);
                     break;
 
                 case Command.CopyFullPath:
-                    Clipboard.SetDataObject(m_controlRegistry.ActiveControl.Description, true);
+                    Clipboard.SetDataObject(GetDocumentPath(ControlRegistry.ActiveControl), true);
                     break;
 
                 case Command.OpenContainingFolder:
                     // Open in Explorer and select the file. http://support.microsoft.com/kb/314853
-                    System.Diagnostics.Process.Start("explorer.exe", "/e,/select," + m_controlRegistry.ActiveControl.Description);
+                    System.Diagnostics.Process.Start("explorer.exe", "/e,/select," + GetDocumentPath(ControlRegistry.ActiveControl));
                     break;
             }
 
@@ -219,7 +240,7 @@ namespace Sce.Atf.Applications
         {
             if (info.Client.Close(info.Control))
             {
-                m_controlHostService.UnregisterControl(info.Control);
+                ControlHostService.UnregisterControl(info.Control);
             }
         }
 
@@ -235,32 +256,26 @@ namespace Sce.Atf.Applications
         private ControlInfo[] GetDocumentControls()
         {
             var infos = new List<ControlInfo>();
-            foreach (ControlInfo info in m_controlHostService.Controls)
+            foreach (ControlInfo info in ControlHostService.Controls)
                 if (IsDocumentControl(info))
                     infos.Add(info);
 
             return infos.ToArray();
         }
 
-        // Gets the document's full path name, trimmed of invalid characters, like the '*' if the document
-        //  was modified. Assumes that 'info' represents a document.
-        private string GetDocumentPath(ControlInfo info)
-        {
-            string path = info.Description;
-            path = path.Trim(s_invalidFileNameChars);
-            return path;
-        }
+        /// <summary>
+        /// Gets the ICommandService used by this component</summary>
+        protected ICommandService CommandService { get; private set; }
 
         /// <summary>
-        /// Gets ICommandService</summary>
-        protected ICommandService CommandService
-        {
-            get { return m_commandService; }
-        }
+        /// Gets the IControlHostService used by this component</summary>
+        protected IControlHostService ControlHostService { get; private set; }
 
-        private readonly ICommandService m_commandService;
-        private readonly IControlHostService m_controlHostService;
-        private readonly IControlRegistry m_controlRegistry;
+        /// <summary>
+        /// Gets the IControlRegistry used by this component</summary>
+        protected IControlRegistry ControlRegistry { get; private set; }
+
+        private bool m_documentExists; // Does the active control represent a document that exists?
         private static readonly char[] s_invalidFileNameChars = Path.GetInvalidFileNameChars();
     }
 }

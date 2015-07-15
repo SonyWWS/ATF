@@ -223,10 +223,7 @@ namespace Sce.Atf.Applications
             if (commandTag is RecentDocumentInfo) return true;
 
             if ((commandTag is Command) && ((Command)commandTag) == Command.Pin)
-            {
-                if ((!string.IsNullOrEmpty(m_activeDocument)) && (File.Exists(m_activeDocument)))
-                    return true;
-            }
+                return m_canPin; // Use a cached value to avoid file I/O spam.
 
             return false;
         }
@@ -442,11 +439,14 @@ namespace Sce.Atf.Applications
             if (activeDocument != null)
             {
                 m_activeDocument = activeDocument.Uri.AbsolutePath;
+                m_canPin = File.Exists(m_activeDocument);
             }
             else
             {
                 m_activeDocument = string.Empty;
+                m_canPin = false;
             }
+
             UpdateRecentFilesMenuItems();
         }
 
@@ -568,6 +568,7 @@ namespace Sce.Atf.Applications
             new PinnableActiveCollection<RecentDocumentInfo>(DefaultRecentDocumentCount);
         private readonly List<RecentDocumentInfo> m_registeredRecentDocs = new List<RecentDocumentInfo>(DefaultRecentDocumentCount);
         private string m_activeDocument;
+        private bool m_canPin;
         private CommandInfo m_emptyMruCommandInfo = null;
     }
 }
