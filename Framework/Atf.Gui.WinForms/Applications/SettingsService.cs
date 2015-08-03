@@ -880,12 +880,6 @@ namespace Sce.Atf.Applications
             return safeName;
         }
 
-        private string PropertyViewState
-        {
-            get { return m_propertyViewState; }
-            set { m_propertyViewState = value; }
-        }
-
         private class SettingsInfo
         {
             public SettingsInfo(string name)
