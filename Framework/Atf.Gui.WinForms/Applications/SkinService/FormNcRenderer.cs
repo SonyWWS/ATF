@@ -101,15 +101,6 @@ namespace Sce.Atf.Applications
             {
                 CustomPaintDisabled = m_form == null || m_form.Parent != null;
             };
-
-            Application.ApplicationExit += (sender, e) =>
-            {
-                if (s_context != null)
-                {
-                    s_context.Dispose();
-                    s_context = null;
-                }
-            };
         }
 
         /// <summary>
@@ -624,7 +615,13 @@ namespace Sce.Atf.Applications
         private static Pen s_genPen = new Pen(Color.White);
         private static SolidBrush s_genBrush = new SolidBrush(Color.White);
 
+        // s_context was previously disposed of during the Application.ApplicationExit event.
+        // There is no need to dispose of this resource when the application is exiting.
+        //  Also, for some apps with multiple GUI threads, this event could be fired while the
+        //  app is still running. In this case, disposing the resource will crash the application.
+        //  For example, the Metrics splash screen causes this event to fire when metrics starts.
         private static BufferedGraphicsContext s_context;
+
         private static StringFormat s_captionFormat;
         private bool m_showIcon;
         private Rectangle m_iconRect; // icon rect in window space.        
