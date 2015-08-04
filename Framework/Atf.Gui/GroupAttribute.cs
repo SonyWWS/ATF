@@ -12,14 +12,15 @@ namespace Sce.Atf
     {
         /// <summary>
         /// Constructor</summary>
-        /// <param name="groupName">Group name</param>
+        /// <param name="groupName">Unique group name, used as an identifier and not displayed to the end user</param>
         public GroupAttribute(string groupName)
         {
             m_groupName = groupName;
         }
 
         /// <summary>
-        /// Gets the group name (used for key)</summary>
+        /// Gets the group name, which is used as a unique identifier and is not displayed to the end user.
+        /// DataBoundListView does not show group names because its ShowGroups property must be false.</summary>
         public string GroupName
         {
             get { return m_groupName; }
@@ -30,7 +31,7 @@ namespace Sce.Atf
         public string Header { get; set; }
 
         /// <summary>
-        /// Gets or sets the property names that are read-only</summary>
+        /// Gets or sets the comma-separated user-readable property names that are read-only</summary>
         public string ReadOnlyProperties
         {
             get
@@ -44,7 +45,7 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Gets or sets the property names that are edited only by external editors</summary>
+        /// Gets or sets the comma-separated user-readable property names that are edited only by external editors</summary>
         public string ExternalEditorProperties
         {
             get

@@ -20,6 +20,14 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
+        /// Returns the minimum value used when validating an attribute value</summary>
+        public double MinimumValue { get { return m_minimum; } }
+
+        /// <summary>
+        /// Returns whether the minimum value is inclusive when validating an attribute value</summary>
+        public bool IsInclusive { get { return m_inclusive; } }
+
+        /// <summary>
         /// Validates the given value for assignment to the given attribute</summary>
         /// <param name="value">Value to validate</param>
         /// <param name="info">Attribute info</param>

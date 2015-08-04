@@ -36,10 +36,13 @@ namespace Sce.Atf.Applications
             out ControlInfo controlInfo)
         {
             controlInfo = new ControlInfo(
-                "Layers".Localize(),
+                "Layers", //Is the ID in the layout. We'll localize DisplayName instead.
                 "Edits document layers".Localize(),
                 StandardControlGroup.Right,
-                s_layerImage);
+                s_layerImage)
+            {
+                DisplayName = "Layers".Localize()
+            };
 
             TreeControl.ShowRoot = false;
             TreeControl.AllowDrop = true;

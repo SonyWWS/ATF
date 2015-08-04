@@ -155,16 +155,21 @@ namespace Sce.Atf.Controls
 
         /// <summary>
         /// Gets or sets the renderer responsible for drawing the items that are in the tree control.
-        /// This allows for advanced customization, such as using multiple fonts and colors.</summary>
+        /// This allows for advanced customization, such as using multiple fonts and colors. Note
+        /// that if this TreeControl is a TreeListControl, then the TreeItemRenderer must be a
+        /// TreeListItemRenderer.</summary>
         public TreeItemRenderer ItemRenderer
         {
             get { return m_itemRenderer; }
             set
             {
+                bool changed = m_itemRenderer != value;
                 m_itemRenderer = value;
                 m_itemRenderer.Owner = this;
                 Indent = Indent;// make sure that the Indent is sufficient, given a new expander size
                 Invalidate();
+                if (changed)
+                    OnItemRendererChanged(EventArgs.Empty);
             }
         }
 
@@ -681,6 +686,18 @@ namespace Sce.Atf.Controls
         public void ClearSelection()
         {
             SetSelection(null);
+        }
+
+        /// <summary>
+        /// Event that is raised after the value of ItemRenderer property changes</summary>
+        public event EventHandler ItemRendererChanged;
+
+        /// <summary>
+        /// Raises the ItemRendererChanged event</summary>
+        /// <param name="e">Event args</param>
+        protected virtual void OnItemRendererChanged(EventArgs e)
+        {
+            ItemRendererChanged.Raise(this, e);
         }
 
         /// <summary>

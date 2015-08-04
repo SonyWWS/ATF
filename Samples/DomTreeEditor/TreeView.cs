@@ -72,9 +72,10 @@ namespace DomTreeEditorSample
                     // skip over control points.
                     if (childInfo == UISchema.curveType.controlPointChild)
                         continue;
-                    // skip over curves
-                    //if (childInfo == UISchema.UIAnimationType.curveChild)
-                    //    continue;
+
+                    // skip over UITransformType
+                    if (childInfo.Type == UISchema.UITransformType.Type)
+                        continue;
 
                     if (childInfo.IsList)
                     {
@@ -134,12 +135,13 @@ namespace DomTreeEditorSample
                     if (paletteItem != null)
                     {
                         info.ImageIndex = info.GetImageList().Images.IndexOfKey(paletteItem.ImageName);
-                        info.Label = node.GetId();
+                        
                     }
+
+                    info.Label = node.GetId();
                 }
 
-                info.IsLeaf = !GetChildren(item).Any();
-                return;
+                info.IsLeaf = !GetChildren(item).Any();                
             }
             else
             {
@@ -151,6 +153,9 @@ namespace DomTreeEditorSample
                     info.IsLeaf = true;
                 }
             }
+
+            if (string.IsNullOrEmpty(info.Label))
+                throw new ArgumentException("info.lable");
         }
 
         #endregion

@@ -56,7 +56,7 @@ namespace DomTreeEditorSample
                 typeof(AtfUsageLogger),                 // logs computer info to an ATF server
                 typeof(CrashLogger),                    // logs unhandled exceptions to an ATF server
                 typeof(UnhandledExceptionService),      // catches unhandled exceptions, displays info, and gives user a chance to save
-
+                typeof(SkinService),
                 typeof(DocumentRegistry),               // central document registry with change notification
                 typeof(FileDialogService),              // standard Windows file dialogs
                 typeof(AutoDocumentService),            // opens documents from last session, or creates a new document, on startup

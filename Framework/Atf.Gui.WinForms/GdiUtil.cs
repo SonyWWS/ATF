@@ -815,6 +815,40 @@ namespace Sce.Atf
             DrawExpander(x, y, ExpanderSize, p, expanded, g);
         }
 
+        /// <summary>
+        /// Draws a tree-control style expander.</summary>
+        /// <param name="g"></param>
+        /// <param name="x">X-coordinate of expander top left corner</param>
+        /// <param name="y">Y-coordinate of expander top left corner</param>
+        /// <param name="size">Size of expander, in pixels</param>
+        /// <param name="expanded">Whether or not expander should appear "expanded"</param>
+        /// <param name="brush">Brush used for filling background if not null.</param>
+        /// <param name="pen">Pen for drawing outline if not null.</param>
+        public static void DrawExpander(Graphics g,
+            int x, 
+            int y, 
+            int size, 
+            bool expanded,
+            Brush brush,
+            Pen   pen)
+        {
+            s_expanderPoints[0] = new Point(x, y + size);
+            if (expanded)
+            {                
+                s_expanderPoints[1] = new Point(x + size, y + size);
+                s_expanderPoints[2] = new Point(x + size, y);                
+            }
+            else
+            {
+                s_expanderPoints[1] = new Point(x + size, y + size / 2);
+                s_expanderPoints[2] = new Point(x, y);            
+            }
+
+            if (brush != null)
+                g.FillPolygon(brush, s_expanderPoints);
+            if (pen != null)
+                g.DrawPolygon(pen, s_expanderPoints);
+        }
 
         /// <summary>
         /// Draws a tree-control style expander, which looks like a square with
@@ -842,8 +876,10 @@ namespace Sce.Atf
                 g.DrawPolygon(pen, s_expanderPoints);
             }
 
-            //g.DrawRectangle(pen, x, y, size, size);
 
+            // old style expander
+
+            //g.DrawRectangle(pen, x, y, size, size);
             //int lineLength = size - 4;
             //int center = size / 2;
             //g.DrawLine(pen, x + 2, y + center, x + 2 + lineLength, y + center);

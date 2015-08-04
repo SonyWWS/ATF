@@ -1,8 +1,12 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
@@ -438,6 +442,16 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         #endregion
 
+        /// <summary>
+        /// Handles the URL in the selected property's description that was clicked on by
+        /// the user.</summary>
+        /// <param name="url">URL (e.g., https://, file://, etc.)</param>
+        /// <remarks>The default behavior is to let Windows open the URL.</remarks>
+        protected virtual void LinkClicked(string url)
+        {
+            System.Diagnostics.Process.Start(url);
+        }
+
         #region Event Handlers
 
         private void propertyGrid_EditingContextChanged(object sender, EventArgs e)
@@ -535,22 +549,63 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
         }
 
-        private class DescriptionControl : Control
+        private class DescriptionControl : RichTextBox
         {
             public DescriptionControl(PropertyGrid propertyGrid)
             {
                 m_propertyGrid = propertyGrid;
                 m_textBrush = new SolidBrush(SystemColors.WindowText);
                 CreateBoldFont();
+                ReadOnly = true;
+
+                // The method of inserting hyperlinks below will not work if DetectUrls is true
+                //  because editing RichTextBox's text adjacent to the hyperlink will break the
+                //  hyperlink.
+                DetectUrls = false;
             }
 
+            protected override void OnLinkClicked(LinkClickedEventArgs e)
+            {
+                base.OnLinkClicked(e);
+
+                //The hyperlink's user-readable text is (annoyingly) included with the URL like this:
+                //  "Atlassian#http://atlassian.com"
+                //Since we only support hyperlinks in the wiki format (DetectUrls is false), the '#'
+                //  will always be there, between the user-readable text and the URL. We just want the URL.
+                string url = e.LinkText;
+                int iSeparator = url.IndexOf('#');
+                if (iSeparator >= 0)
+                {
+                    //The empty string is returned if iSeparator + 1 == url.Length.
+                    url = url.Substring(iSeparator + 1);
+                }
+
+                // Unescape backslashes.
+                url = url.Replace(@"\\", @"\");
+
+                m_propertyGrid.LinkClicked(url);
+            }
+
+            /// <summary>
+            /// Displays the given property name and description in this Control. The property
+            /// name will be displayed in bold and the description will start on the next line.
+            /// Hyperlinks in the description are supported using the following format:
+            /// "[Atlassian|http://atlassian.com]".</summary>
+            /// <param name="name">Property name</param>
+            /// <param name="description">Property description</param>
             public void SetDescription(string name, string description)
             {
                 m_name = name;
                 m_description = description;
 
+                List<MarkupToken> tokens = ParseMarkup(m_description).ToList();
+                var visibleDescriptionBuilder = new StringBuilder();
+                foreach (var token in tokens)
+                    visibleDescriptionBuilder.Append(token.Text);
+                string visibleDescription = visibleDescriptionBuilder.ToString();
+
                 // For the special case of having no name or description, don't display the text box.
-                if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description))
+                if (string.IsNullOrEmpty(m_name) && string.IsNullOrEmpty(visibleDescription))
                 {
                     m_propertyGrid.m_splitContainer.Panel2Collapsed = true;
                 }
@@ -558,7 +613,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                 {
                     m_propertyGrid.m_splitContainer.Panel2Collapsed = false;
                     Size sz = new Size(ClientSize.Width, int.MaxValue);
-                    sz = TextRenderer.MeasureText(m_description, Font, sz, m_TextFormatFlags);
+                    sz = TextRenderer.MeasureText(visibleDescription, Font, sz, m_TextFormatFlags);
                     if (!string.IsNullOrEmpty(m_name))
                         sz.Height += m_boldFont.Height + 2 + 12;
 
@@ -576,7 +631,69 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 m_propertyGrid.m_splitContainer.Invalidate();
 
-                Invalidate();
+                // Update the text
+                Text = string.Empty;
+                if (!string.IsNullOrEmpty(m_name))
+                {
+                    SelectionFont = m_boldFont;
+                    AppendText(m_name + Environment.NewLine);
+                }
+                if (!string.IsNullOrEmpty(visibleDescription))
+                {
+                    SelectionFont = Font;
+
+                    foreach(var token in tokens)
+                    {
+                        if (!string.IsNullOrEmpty(token.Url))
+                            InsertLink(token.Text, token.Url);
+                        else
+                            AppendText(token.Text);
+                    }
+                }
+            }
+
+            // Parses the text for one style of Atlassian Confluence hyperlink mark-ups.
+            // For example:
+            //      "Some text [Atlassian|http://atlassian.com] blah blah."
+            // ==> to 3 MarkupTokens
+            //      "Some text ", {"Atlassian", http://atlassian.com}, " blah blah."
+            private static IEnumerable<MarkupToken> ParseMarkup(string wikiText)
+            {
+                if (string.IsNullOrEmpty(wikiText))
+                    yield break;
+
+                IList<string> tokens = wikiText.SplitAndKeepDelimiters('[', '|', ']');
+                for (int i = 0; i < tokens.Count; i++)
+                {
+                    string text, url;
+                    
+                    // Look for a wiki-formed hyperlink.
+                    string a = tokens[i];
+                    text = a;
+                    url = null;
+
+                    if (a == "[")
+                    {
+                        string b = i + 1 < tokens.Count ? tokens[i + 1] : string.Empty;
+                        string c = i + 2 < tokens.Count ? tokens[i + 2] : string.Empty;
+                        string d = i + 3 < tokens.Count ? tokens[i + 3] : string.Empty;
+                        string e = i + 4 < tokens.Count ? tokens[i + 4] : string.Empty;
+                        if (c == "|" && e == "]")
+                        {
+                            text = b;
+                            url = d;
+                            i += 4;
+                        }
+                    }
+
+                    yield return new MarkupToken { Text = text, Url = url };
+                }
+            }
+
+            private class MarkupToken
+            {
+                public string Text; //the display text
+                public string Url;  //the URL behind the text, or null
             }
 
             public void ClearDescription()
@@ -584,6 +701,13 @@ namespace Sce.Atf.Controls.PropertyEditing
                 SetDescription(null, null);
             }
 
+            /// <summary>
+            /// Gets or sets the text brush used to color the text. Currently, only a
+            /// SolidBrush has any effect.</summary>
+            /// <value>The text brush</value>
+            /// <remarks>This property is for compatibility with skin (*.skn) files
+            /// and is accessed through reflection. The given brush will be owned by
+            /// this DescriptionControl and will be disposed of when it's no longer needed.</remarks>
             public Brush TextBrush
             {
                 get { return m_textBrush; }
@@ -591,6 +715,10 @@ namespace Sce.Atf.Controls.PropertyEditing
                 {
                     DisposeTextBrush();
                     m_textBrush = value;
+
+                    var solidBrush = m_textBrush as SolidBrush;
+                    if (solidBrush != null)
+                        ForeColor = solidBrush.Color;
                 }
             }
 
@@ -610,23 +738,11 @@ namespace Sce.Atf.Controls.PropertyEditing
                 base.OnFontChanged(e); //updates FontHeight property
                 DisposeBoldFont();
                 CreateBoldFont();
-            }
-
-            protected override void OnPaint(PaintEventArgs e)
-            {
-                base.OnPaint(e);
-
-                RectangleF bounds = ClientRectangle;
-                if (m_name != null && m_description != null)
-                {
-                    e.Graphics.DrawString(m_name, m_boldFont, TextBrush, bounds);
-
-                    int height = m_boldFont.Height + 2;
-                    bounds.Y += height;
-                    bounds.Height -= height;
-
-                    e.Graphics.DrawString(m_description, Font, TextBrush, bounds);
-                }
+                SetDescription(m_name, m_description);
+                
+                // It's odd that this is necessary, but changing skins requires this call,
+                //  otherwise the m_name text does not appear in bold.
+                Invalidate();
             }
 
             private void CreateBoldFont()
@@ -655,11 +771,167 @@ namespace Sce.Atf.Controls.PropertyEditing
                 }
             }
 
+            /// <summary>
+            /// Converts a normal Unicode string to the RTF format, like for a RichTextBox</summary>
+            /// <param name="unicodeString">The Unicode string</param>
+            /// <returns>7-bit ASCII with higher Unicode characters escaped for RTF files</returns>
+            private string ConvertToRtf(string unicodeString)
+            {
+                //http://en.wikipedia.org/wiki/Rich_Text_Format#Character_encoding
+                const char substitutionChar = '?';
+                IList<int> codePoints = StringUtil.GetUnicodeCodePoints(unicodeString);
+                var sb = new StringBuilder();
+                foreach (int codePoint in codePoints)
+                {
+                    if (codePoint < 128) //RTF is 7-bit ASCII
+                    {
+                        sb.Append((char) codePoint);
+                    }
+                    else if (codePoint < 65536) //escaped character can be signed 16 bit
+                    {
+                        sb.Append(@"\u");
+                        sb.Append((short) codePoint);
+                        sb.Append(substitutionChar);
+                    }
+                    else //too large! Maybe a code page could be set and then referenced?
+                    {
+                        sb.Append(substitutionChar);
+                    }
+                }
+                return sb.ToString();
+            }
+
+            // The below region of code allows a RichTextBox to have hyperlinks inserted.
+            // The original project is here:
+            // http://www.codeproject.com/Articles/9196/Links-with-arbitrary-text-in-a-RichTextBox
+            // It is licensed under Code Project License 1.02.
+            //  http://www.codeproject.com/info/cpol10.aspx
+            // Changes made:
+            // 1. The accessibility was changed from public to private.
+            // 2. Various cosmetic changes were made to fit our code standards.
+            // 3. In SetSelectionStyle(), added the try-finally to avoid a possible memory leak.
+            // 4. Added backslash escaping, so that URLs with backslashes (like with local file
+            //  system paths) don't get corrupted.
+            // 5. Added support for Unicode characters.
+            #region RichTextBoxEx project
+
+            #region Interop Defines
+            [ StructLayout( LayoutKind.Sequential )]
+		    private struct CHARFORMAT2_STRUCT
+		    {
+			    public UInt32	cbSize; 
+			    public UInt32   dwMask; 
+			    public UInt32   dwEffects; 
+			    public Int32    yHeight; 
+			    public Int32    yOffset; 
+			    public Int32	crTextColor; 
+			    public byte     bCharSet; 
+			    public byte     bPitchAndFamily; 
+			    [MarshalAs(UnmanagedType.ByValArray, SizeConst=32)]
+			    public char[]   szFaceName; 
+			    public UInt16	wWeight;
+			    public UInt16	sSpacing;
+			    public int		crBackColor; // Color.ToArgb() -> int
+			    public int		lcid;
+			    public int		dwReserved;
+			    public Int16	sStyle;
+			    public Int16	wKerning;
+			    public byte		bUnderlineType;
+			    public byte		bAnimation;
+			    public byte		bRevAuthor;
+			    public byte		bReserved1;
+		    }
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+		    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+		    private const int WM_USER			 = 0x0400;
+		    private const int EM_SETCHARFORMAT	 = WM_USER+68;
+
+		    private const int SCF_SELECTION	= 0x0001;
+
+		    #region CHARFORMAT2 Flags
+		    private const UInt32 CFE_LINK		= 0x0020;
+		    private const UInt32 CFM_LINK		= 0x00000020;
+		    #endregion
+
+		    #endregion
+
+            /// <summary>
+            /// Insert a given text at at the current input position as a link.
+            /// The link text is followed by a hash (#) and the given hyperlink text, both of
+            /// them invisible. When clicked on, the whole link text and hyperlink string are given in the
+            /// LinkClickedEventArgs.</summary>
+            /// <param name="text">Text to be inserted</param>
+            /// <param name="hyperlink">Invisible hyperlink string to be inserted</param>
+            private void InsertLink(string text, string hyperlink)
+            {
+                InsertLink(text, hyperlink, SelectionStart);
+            }
+
+            /// <summary>
+            /// Insert a given text at a given position as a link. The link text is followed by
+            /// a hash (#) and the given hyperlink text, both of them invisible.
+            /// When clicked on, the whole link text and hyperlink string are given in the
+            /// LinkClickedEventArgs.</summary>
+            /// <param name="text">Text to be inserted</param>
+            /// <param name="hyperlink">Invisible hyperlink string to be inserted</param>
+            /// <param name="position">Insert position</param>
+            private void InsertLink(string text, string hyperlink, int position)
+            {
+                if (position < 0 || position > Text.Length)
+                    throw new ArgumentOutOfRangeException("position");
+
+                // RichTextBox will treat the backslash as the beginning of a tag.
+                // We need to escape them now but then unescape them in the link handler!
+                hyperlink = hyperlink.Replace(@"\", @"\\");
+
+                // The RTF format is 7-bit ANSI only. We have to convert Unicode characters.
+                text = ConvertToRtf(text);
+                hyperlink = ConvertToRtf(hyperlink);
+
+                SelectionStart = position;
+                SelectedRtf = @"{\rtf1\ansi " + text + @"\v #" + hyperlink + @"\v0}";
+                Select(position, text.Length + hyperlink.Length + 1);
+                SetSelectionLink(true);
+                Select(position + text.Length + hyperlink.Length + 1, 0);
+            }
+
+            /// <summary>
+		    /// Set the current selection's link style</summary>
+		    /// <param name="link">true: set link style, false: clear link style</param>
+            private void SetSelectionLink(bool link)
+		    {
+			    SetSelectionStyle(CFM_LINK, link ? CFE_LINK : 0);
+		    }
+
+		    private void SetSelectionStyle(UInt32 mask, UInt32 effect)
+		    {
+			    var cf = new CHARFORMAT2_STRUCT();
+			    cf.cbSize = (UInt32)Marshal.SizeOf(cf);
+			    cf.dwMask = mask;
+			    cf.dwEffects = effect;
+
+			    var wpar = new IntPtr(SCF_SELECTION);
+			    IntPtr lpar = Marshal.AllocCoTaskMem( Marshal.SizeOf( cf ) );
+		        try
+		        {
+                    Marshal.StructureToPtr(cf, lpar, false);
+                    SendMessage(Handle, EM_SETCHARFORMAT, wpar, lpar);
+                }
+		        finally
+		        {
+                    Marshal.FreeCoTaskMem(lpar);
+		        }
+		    }
+
+            #endregion RichTextBoxEx project
+
             private string m_name;
             private string m_description;
             private Brush m_textBrush;
             private Font m_boldFont;
-            private PropertyGrid m_propertyGrid;
+            private readonly PropertyGrid m_propertyGrid;
         }
 
         private readonly SplitContainer m_splitContainer = new SplitContainer();

@@ -635,7 +635,9 @@
     <Resource Include="Resources\error.ico" />
     <Resource Include="Resources\info.ico" />
     <Resource Include="Resources\warning.ico" />
-    <EmbeddedResource Include="Resources\ja\Localization.xml" />
+    <EmbeddedResource Include="Resources\ja\Localization.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

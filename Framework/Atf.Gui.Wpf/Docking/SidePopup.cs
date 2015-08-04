@@ -154,7 +154,7 @@ namespace Sce.Atf.Wpf.Docking
 
                     if (PART_Popup.IsOpen && !PART_Popup.Resizing)
                     {
-                        Win32Calls.Win32Point pt32 = new Win32Calls.Win32Point();
+                        var pt32 = new User32.POINT();
                         Win32Calls.GetCursorPos(ref pt32);
                         Point mousePos = new Point(pt32.X, pt32.Y);
                         Point pos = PointToScreen(new Point(0, 0));

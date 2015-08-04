@@ -82,7 +82,6 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="{m:Loc Target}" Width="100" DisplayMemberBinding="{Binding Target.Name}"/>
-                    <!--<GridViewColumn Header="{m:Loc Id}" Width="100" DisplayMemberBinding="{Binding HardwareId}"/>-->
                     <GridViewColumn Header="{m:Loc Host}" Width="120" DisplayMemberBinding="{Binding Target.Host}"/>
                     <GridViewColumn Header="{m:Loc Protocol}" Width="120" DisplayMemberBinding="{Binding Protocol.Name}"/>
                     <GridViewColumn Header="{m:Loc Status}" Width="60" DisplayMemberBinding="{Binding Target.Status}"/>

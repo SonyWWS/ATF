@@ -343,10 +343,25 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             invMtrx.Invert();
             RectangleF boundsGr = Matrix3x2F.Transform(invMtrx, this.AdaptedControl.ClientRectangle);
 
+            // Either draw (most) edges first or prepare multimaps for draw-as-we-go edges.
+            List<TEdge> edgesOnGroups = null;
             if (EdgeRenderPolicy == DrawEdgePolicy.AllFirst)
             {
+                edgesOnGroups = new List<TEdge>();
                 foreach (var edge in m_graph.Edges)
-                    DrawEdge(edge, boundsGr);
+                {
+                    var group = edge.FromNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                    if (group != null && group.Expanded)
+                        edgesOnGroups.Add(edge);
+                    else
+                    {
+                        group = edge.ToNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                        if (group != null && group.Expanded)
+                            edgesOnGroups.Add(edge);
+                        else
+                            DrawEdge(edge, boundsGr);
+                    }
+                }
             }
             else
             {
@@ -361,7 +376,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     m_edgeNodeEncounter.Add(edge, 0);
                 }
             }
-
 
             // Draw normal nodes first
             TNode containerOfSelectedNode = null;
@@ -382,7 +396,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
                     else
                     {
-                        // Draw selected nodes nodes after normal nodes. If the node
+                        // Draw selected nodes after normal nodes. If the node
                         //  is hot, check if it's selected.
                         if (drawStyle == DiagramDrawingStyle.Selected ||
                             drawStyle == DiagramDrawingStyle.LastSelected ||
@@ -455,6 +469,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
                 if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
                     TryDrawAssociatedEdges(node, boundsGr);
+            }
+
+            // Draw "all first" edges that connect to expanded groups.
+            if (EdgeRenderPolicy == DrawEdgePolicy.AllFirst)
+            {
+                foreach (var edge in edgesOnGroups)
+                    DrawEdge(edge, boundsGr);
             }
 
             // Draw dragging nodes last to ensure they are visible (necessary for container-crossing move operation)
@@ -542,7 +563,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if ( e.Button == MouseButtons.None && AdaptedControl.Focused)
             {
                 IPickingAdapter2 pickAdapter = this as IPickingAdapter2;
-                var hoverHitRecord= pickAdapter.Pick(e.Location);
+                DiagramHitRecord hoverHitRecord= pickAdapter.Pick(e.Location);
                 object item = hoverHitRecord.Item;
 
                 bool redraw = false;

@@ -691,18 +691,10 @@ namespace TimelineEditorSample
         {
             if (m_mainForm == null || m_reloading)
                 return;
-            
-            Uri uri = new Uri(e.FullPath);
-            FileInfo fileInfo = new FileInfo(uri.LocalPath);
-            DateTime lastWriteTime = fileInfo.LastWriteTime;
-            DateTime loadedWriteTime;
-            if (m_loadedWriteTimes.TryGetValue(uri, out loadedWriteTime) && loadedWriteTime >= lastWriteTime)
-                return; // Already loaded most recent version of the file
 
-            TimelineDocument doc = null;
-            
             // First test if this document is a "master" document
-            doc = m_documentRegistry.GetDocument(uri) as TimelineDocument;
+            var uri = new Uri(e.FullPath);
+            var doc = m_documentRegistry.GetDocument(uri) as TimelineDocument;
             if (doc == null || doc.TimelineControl == null)
             {
                 // It's not a master document. Check if it's already loaded. Since sub-documents are read-only,
@@ -734,11 +726,6 @@ namespace TimelineEditorSample
                             "File Changed, Reload?".Localize(),
                             MessageBoxButtons.YesNo);
 
-                    // Update last write time, as the file may have been saved again while the
-                    // message box was displayed
-                    fileInfo = new FileInfo(uri.LocalPath);
-                    lastWriteTime = fileInfo.LastWriteTime;
-
                     if (result == DialogResult.Yes)
                     {                    
                         // Reload the document
@@ -746,7 +733,6 @@ namespace TimelineEditorSample
                         doc.Dirty = false;
                         Close(doc.TimelineControl);
                         Open(doc.Uri);
-                        m_loadedWriteTimes[uri] = lastWriteTime;
                         m_reloading = false;
                         InvalidateTimelineControls();
                     }
@@ -808,7 +794,6 @@ namespace TimelineEditorSample
         private ISettingsService m_settingsService;
 
         private bool m_reloading; // true while reloading the document in response to a FileWatcher.FileChanged event
-        private readonly Dictionary<Uri, DateTime> m_loadedWriteTimes = new Dictionary<Uri, DateTime>();
 
         private static SchemaLoader s_schemaLoader;
         private static readonly DocumentClientInfo s_info = new DocumentClientInfo(

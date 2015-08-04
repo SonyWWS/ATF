@@ -20,22 +20,22 @@ namespace Sce.Atf
 
         #region -- Unmanaged functions ----------------------------------------
 
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr GlobalLock(HandleRef handle);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern bool GlobalUnlock(HandleRef handle);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern int GlobalSize(HandleRef handle);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr GlobalAlloc(int uFlags, int dwBytes);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr GlobalFree(HandleRef handle);
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern int DragQueryFile(HandleRef hDrop, int iFile, StringBuilder lpszFile, int cch);
 
         #endregion

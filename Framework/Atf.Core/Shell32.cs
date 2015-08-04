@@ -15,6 +15,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// SHITEMID structure to interoperate with Shell32.dll</summary>
+        [Obsolete("Throws exception: 'cannot be marshaled as an unmanaged structure; no meaningful size or offset can be computed.'")]
         [StructLayout(LayoutKind.Sequential)]
         public struct SHITEMID
         {
@@ -25,6 +26,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// ITEMIDLIST structure to interoperate with Shell32.dll</summary>
+        [Obsolete("Throws exception: 'cannot be marshaled as an unmanaged structure; no meaningful size or offset can be computed.'")]
         [StructLayout(LayoutKind.Sequential)]
         public struct ITEMIDLIST
         {
@@ -33,7 +35,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// BROWSEINFO structure to interoperate with Shell32.dll</summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct BROWSEINFO
         {
             public IntPtr hwndOwner;
@@ -62,9 +64,32 @@ namespace Sce.Atf
         public const uint BIF_BROWSEINCLUDEFILES = 0x4000;
         public const uint BIF_SHAREABLE = 0x8000;
 
+        /* From WinNT.h, handles are the same size as pointers (see the "*name"):
+        #define DECLARE_HANDLE(name) struct name##__{int unused;}; typedef struct name##__ *name
+        
+         * From WinDef.h:
+        DECLARE_HANDLE(HICON);
+
+         * From ShellAPI.h:
+        typedef struct _SHFILEINFOA
+        {
+                HICON       hIcon;                      // out: icon
+                int         iIcon;                      // out: icon index
+                DWORD       dwAttributes;               // out: SFGAO_ flags
+                CHAR        szDisplayName[MAX_PATH];    // out: display name (or path)
+                CHAR        szTypeName[80];             // out: type name
+        } SHFILEINFOA;
+        typedef struct _SHFILEINFOW
+        {
+                HICON       hIcon;                      // out: icon
+                int         iIcon;                      // out: icon index
+                DWORD       dwAttributes;               // out: SFGAO_ flags
+                WCHAR       szDisplayName[MAX_PATH];    // out: display name (or path)
+                WCHAR       szTypeName[80];             // out: type name
+        } SHFILEINFOW; */
         /// <summary>
         /// SHFILEINFO structure to interoperate with Shell32.dll</summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct SHFILEINFO
         {
             public const int NAMESIZE = 80;
@@ -77,6 +102,7 @@ namespace Sce.Atf
             public string szTypeName;
         };
 
+        // For SHGetFileInfo's uFlags parameter:
         public const uint SHGFI_ICON = 0x000000100;     // get icon
         public const uint SHGFI_DISPLAYNAME = 0x000000200;     // get display name
         public const uint SHGFI_TYPENAME = 0x000000400;     // get type name
@@ -96,10 +122,32 @@ namespace Sce.Atf
         public const uint SHGFI_ADDOVERLAYS = 0x000000020;     // apply the appropriate overlays
         public const uint SHGFI_OVERLAYINDEX = 0x000000040;     // Get the index of the overlay
 
+        // For SHGetFileInfo's dwAttributes parameter:
         public const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
         public const uint FILE_ATTRIBUTE_NORMAL = 0x00000080;
 
-        [DllImport("Shell32.dll", CharSet = CharSet.Ansi)]
+        /* From ShellAPI.h:
+        SHSTDAPI_(DWORD_PTR) SHGetFileInfoA(LPCSTR pszPath, DWORD dwFileAttributes, __inout_bcount_opt(cbFileInfo) SHFILEINFOA *psfi,
+            UINT cbFileInfo, UINT uFlags);
+        SHSTDAPI_(DWORD_PTR) SHGetFileInfoW(LPCWSTR pszPath, DWORD dwFileAttributes, __inout_bcount_opt(cbFileInfo) SHFILEINFOW *psfi,
+            UINT cbFileInfo, UINT uFlags);
+        #ifdef UNICODE
+        #define SHGetFileInfo  SHGetFileInfoW
+        #else
+        #define SHGetFileInfo  SHGetFileInfoA
+        #endif // !UNICODE
+         */
+
+        /// <summary>
+        /// Gets file information. https://msdn.microsoft.com/en-us/library/windows/desktop/bb762179%28v=vs.85%29.aspx
+        /// </summary>
+        /// <param name="pszPath">The relative or absolute path of a file, directory, or drive</param>
+        /// <param name="dwFileAttributes">File attributes</param>
+        /// <param name="psfi">SHFILEINFO to be filled out</param>
+        /// <param name="cbFileInfo">Size of the SHFILEINFO, in bytes. Use Marshal.SizeOf().</param>
+        /// <param name="uFlags">Flags to specify what information to retrieve</param>
+        /// <returns></returns>
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(
             string pszPath,
             uint dwFileAttributes,

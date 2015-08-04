@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -155,12 +156,13 @@ namespace Sce.Atf
 
         /// <summary>
         /// Contains information about an item in a header control</summary>
-        [StructLayout(LayoutKind.Sequential)]
+        /// <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/bb775247(v=vs.85).aspx</remarks>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct HDITEM
         {
             public uint mask;
             public int cxy;
-            public String pszText;
+            public String pszText; //works for sending strings, but not for receiving. todo: use StringBuilder?
             public IntPtr hbm;
             public int cchTextMax;
             public int fmt;
@@ -274,10 +276,20 @@ namespace Sce.Atf
             public int Top;
             public int Right;
             public int Bottom;
+            public int Width
+            {
+                get { return Right - Left; }
+            }
+            public int Height
+            {
+                get { return Bottom - Top; }
+            }
         }
 
         /// <summary>
-        /// MINMAXINFO structure to interoperate with user32.dll</summary>
+        /// Information about a window's maximized size and position and its minimum and maximum
+        /// tracking size.</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632605%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct MINMAXINFO
         {
@@ -289,15 +301,30 @@ namespace Sce.Atf
         }
 
         /// <summary>
+        /// Structure with information about the size and position of a window</summary>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612%28v=vs.85%29.aspx. </remarks>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWPOS
+        {
+            public IntPtr hwnd;
+            public IntPtr hwndInsertAfter;
+            public int x;
+            public int y;
+            public int cx;
+            public int cy;
+            public uint flags;
+        }
+
+        /// <summary>
         /// Message structure for Windows messages to controls and applications. Defined in winuser.h.</summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct MSG
 
         {
-            public Int32 hWnd;
+            public IntPtr hWnd;
             public Int32 msg;
-            public Int32 wParam;
-            public Int32 lParam;
+            public IntPtr wParam;
+            public IntPtr lParam;
             public uint time;
             public POINT p;
         }
@@ -331,18 +358,6 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Sends specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">Handle to the window</param>
-        /// <param name="Msg">Message to be sent</param>
-        /// <param name="wParam">Additional message-specific information</param>
-        /// <param name="lParam">Additional message-specific information</param>
-        /// <returns>Specifies result of message processing, depending on message sent</returns>
-        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
-        [DllImport(DllName, CharSet = CharSet.Auto)]
-        public static extern uint SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-        /// <summary>
         /// Sends specified message to a window or windows</summary>
         /// <param name="hWnd">Handle to the window</param>
         /// <param name="msg">Message to be sent</param>
@@ -350,25 +365,58 @@ namespace Sce.Atf
         /// <param name="lParam">Additional message-specific information</param>
         /// <returns>Specifies result of message processing, depending on message sent</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
-        [DllImport(DllName, CharSet = CharSet.Auto)]
+        [DllImport(DllName, CharSet = CharSet.Unicode)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
-        /// Sends specified message to a window or windows</summary>
-        /// <param name="Handle">Handle to the window</param>
+        /// Sends specified message to a window or windows. This method can throw an exception for some Win32
+        /// messages, because the return value is truncated from 64-bits to 32-bits, when running as a 64-bit
+        /// process. EM_GETWORDBREAKPROC is one such message. Use the SendMessage that returns an IntPtr.</summary>
+        /// <param name="hWnd">Handle to the window</param>
         /// <param name="msg">Message to be sent</param>
         /// <param name="wParam">Additional message-specific information</param>
         /// <param name="lParam">Additional message-specific information</param>
         /// <returns>Specifies result of message processing, depending on message sent</returns>
+        /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx </remarks>
+        [Obsolete("Please use the SendMessage that returns an IntPtr. Some message types have a return value" +
+                  " that is a pointer, which will not fit in 32-bits when running in a 64-bit process.")]
+        public static uint SendMessage(IntPtr hWnd, int msg, int wParam, int lParam)
+        {
+            IntPtr result = SendMessage(hWnd, msg, (IntPtr)wParam, (IntPtr)lParam);
+            return (uint)result; //Can throw a System.OverflowException in IntPtr's int cast operator.
+        }
+
+        /// <summary>
+        /// Sends specified message to a header control. A header control is a window that is usually positioned
+        /// above columns of text or numbers. It contains a title for each column, and it can be divided into parts.</summary>
+        /// <param name="handle">Handle to the header control</param>
+        /// <param name="msg">User32.HDM_GETITEM or User32.HDM_SETITEM</param>
+        /// <param name="wParam">Additional message-specific information</param>
+        /// <param name="lParam">HDITEM object</param>
+        /// <returns>Specifies result of message processing, depending on message sent</returns>
+        /// <remarks>For details on the Win32 SendMessage:
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx
+        /// For HDM_GETITEM: https://msdn.microsoft.com/en-us/library/windows/desktop/bb775335(v=vs.85).aspx
+        /// For HDM_SETITEM: https://msdn.microsoft.com/en-us/library/windows/desktop/bb775367(v=vs.85).aspx </remarks>
         [DllImport(DllName, EntryPoint = "SendMessage")]
-        public static extern IntPtr SendMessageITEM(IntPtr Handle, Int32 msg, IntPtr wParam, ref HDITEM lParam);
+        public static extern IntPtr SendMessageITEM(IntPtr handle, Int32 msg, IntPtr wParam, ref HDITEM lParam);
+
+        [DllImport("user32.dll")]
+        public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Retrieves handle to window that has the keyboard focus</summary>
         /// <returns>Handle to window</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646294%28v=vs.85%29.aspx </remarks>
-        [DllImport(DllName, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(DllName, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Winapi)]
         public static extern IntPtr GetFocus();
+
+        /// <summary>
+        /// Retrieves handle to the given window's parent</summary>
+        /// <returns>Handle to the parent window</returns>
+        /// <remarks>For details, see https://msdn.microsoft.com/en-us/library/windows/desktop/ms633510(v=vs.85).aspx </remarks>
+        [DllImport(DllName, CharSet = CharSet.Unicode)]
+        public static extern IntPtr GetParent(IntPtr hWnd);
 
         /// <summary>
         /// Provides access to function required to delete handle. This method is used internally
@@ -391,7 +439,7 @@ namespace Sce.Atf
         /// <param name="hWnd">Control's handle</param>
         /// <param name="nBar">Orientation</param>
         /// <returns>Scroll bar position</returns>
-        [DllImport(DllName, CharSet = CharSet.Auto)]
+        [DllImport(DllName, CharSet = CharSet.Unicode)]
         public static extern int GetScrollPos(IntPtr hWnd, int nBar);
 
         // ShowWindow Constants
@@ -511,7 +559,7 @@ namespace Sce.Atf
         /// <param name="hWnd">Window handle</param>
         /// <param name="r">Rectangle obtained by function</param>
         /// <returns>Zero iff failed to get rectangle</returns>
-        [DllImport(DllName, CharSet = CharSet.Auto, ExactSpelling = true)]
+        [DllImport(DllName, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetClientRect(IntPtr hWnd, ref Rectangle r);
 
         /// <summary>
@@ -536,7 +584,7 @@ namespace Sce.Atf
         /// has no title bar or text, if the title bar is empty, or if the window or control
         /// handle is invalid, the return value is zero. To get extended error information,
         /// call GetLastError.</returns>
-        [DllImport(DllName, CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport(DllName, CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int GetWindowText(IntPtr hWnd, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpString, int nMaxCount);
 
         /// <summary>
@@ -575,7 +623,7 @@ namespace Sce.Atf
         /// Waits until one or more objects are in the signaled state or timeout occurs</summary>
         /// <param name="nCount">Number of object handles in pHandles</param>
         /// <param name="pHandles">Array of handles for objects being monitored</param>
-        /// <param name="bWaitAll">True to wait for all objects to get signalled. False if only wait until one object is signaled; 
+        /// <param name="bWaitAll">True to wait for all objects to get signaled. False if only wait until one object is signaled; 
         /// in this case, the return value indicated which object was signaled</param>
         /// <param name="dwMilliseconds">Time out period in milliseconds</param>
         /// <param name="dwWakeMask">Mask values that indicate what signals the function waits for</param>
@@ -601,16 +649,16 @@ namespace Sce.Atf
         /// Resumes drawing to the specified window handle</summary>
         /// <param name="hwnd">Handle to window</param>
         public static void StartDrawing(IntPtr hwnd)
-        {                        
-            SendMessage(hwnd, WM_SETREDRAW, 1, (int)IntPtr.Zero);
+        {
+            SendMessage(hwnd, WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
         }
 
         /// <summary>
         /// Stops drawing of the specified window handle</summary>
         /// <param name="hwnd">Handle to window</param>
         public static void StopDrawing(IntPtr hwnd)
-        {            
-            SendMessage(hwnd, WM_SETREDRAW, 0, (int)IntPtr.Zero);                        
+        {
+            SendMessage(hwnd, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
         }
 
         /// <summary>
@@ -633,7 +681,7 @@ namespace Sce.Atf
                 StartDrawing(m_hwnd);
             }
 
-            private readonly IntPtr m_hwnd;            
+            private readonly IntPtr m_hwnd;
         }
 
 
@@ -647,7 +695,7 @@ namespace Sce.Atf
         /// <param name="wParam">Additional message-specific information</param>
         /// <param name="lParam">Additional message-specific information</param>
         /// <returns>The result of calling CallNextHookEx() is typically returned.</returns>
-        public delegate int WindowsHookCallback(int code, int wParam, int lParam);
+        public delegate IntPtr WindowsHookCallback(int code, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// These are the different hook types when registering a callback with SetWindowsHookEx().
@@ -723,7 +771,7 @@ namespace Sce.Atf
         /// of the compiler warning.</param>
         /// <returns>If successful, handle to the hook procedure. If fails, NULL. 
         /// To get extended error information, call GetLastError().</returns>
-        [DllImport(DllName)]
+        [DllImport(DllName, CharSet = CharSet.Unicode)]
         public static extern IntPtr SetWindowsHookEx(HookType code, WindowsHookCallback func, IntPtr hInstance, int threadID);
 
         /// <summary>
@@ -734,15 +782,15 @@ namespace Sce.Atf
         /// <param name="lParam">lParam value passed to the current hook procedure</param>
         /// <returns>Value returned by the next hook procedure in the chain</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644974%28v=vs.85%29.aspx </remarks>
-        [DllImport(DllName)]
-        public static extern int CallNextHookEx(IntPtr hhk, int nCode, int wParam, int lParam);
+        [DllImport(DllName, CharSet = CharSet.Unicode)]
+        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Removes a hook procedure installed in a hook chain by the SetWindowsHookEx()</summary>
         /// <param name="hhk">Handle to the hook to be removed</param>
         /// <returns>Nonzero iff function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644993%28v=vs.85%29.aspx </remarks>
-        [DllImport(DllName, SetLastError = true)]
+        [DllImport(DllName, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
@@ -801,6 +849,47 @@ namespace Sce.Atf
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648400%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool DestroyCaret();
+
+        /// <summary>
+        /// ToolTip related constant, found in CommCtrl.h.</summary>
+        const int TTN_FIRST = -520;
+
+        /// <summary>
+        /// ToolTip related constant, found in CommCtrl.h.</summary>
+        public const int TTN_SHOW = (TTN_FIRST - 1);
+
+        /// <summary>
+        /// ToolTip related constant, found in CommCtrl.h.</summary>
+        public const int TTN_POP = (TTN_FIRST - 2);
+
+        /// <summary>
+        /// ToolTip related constant, found in CommCtrl.h.</summary>
+        public const int TTN_LINKCLICK = (TTN_FIRST - 3);
+
+        /// <summary>
+        /// ToolTip related constant, found in CommCtrl.h.</summary>
+        public const int TTN_GETDISPINFO = (TTN_FIRST - 10);
+
+        /// <summary>
+        /// ToolTip related constant.</summary>
+        public const int TTM_SETMAXTIPWIDTH = 0x400 + 24;
+
+        /// <summary>
+        /// ToolTip related structure. Hard to find documentation on this. I took this from ObjectListView.</summary>
+        /// <remarks>For ObjectListView, see http://objectlistview.sourceforge.net/cs/index.html </remarks>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct NMTTDISPINFO
+        {
+            public NMHDR hdr;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpszText;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szText;
+            public IntPtr hinst;
+            public int uFlags;
+            public IntPtr lParam;
+            //public int hbmp; This is documented but doesn't work
+        }
 
         private const string DllName = "user32.dll";
     }

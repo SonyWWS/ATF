@@ -37,8 +37,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             m_toolTip = new ToolTip();
 
-            m_editingControl = new PropertyEditingControl();
-
+            m_editingControl = new PropertyEditingControl();            
             m_editingControl.TabStop = false;
             m_editingControl.EditButtonSize = new Size(17, 17);
 
@@ -61,6 +60,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             EditingContext = null;
             Font = new Font("Segoe UI", 9.0f);
+            m_editingControl.Font = Font;
             ShowResetButton = true;
             ShowCopyButton = true;
             Controls.AddRange(new Control[]{
@@ -76,6 +76,17 @@ namespace Sce.Atf.Controls.PropertyEditing
                     if (!EditingContext.Is<IObservableContext>())
                         RefreshEditingControls();
                 };
+
+            FontChanged += (sender, e) => m_editingControl.Font = Font;
+            m_editingControl.FontChanged += (sender, e) =>
+                {
+                    // m_editingControl.Font need to be same as this.Font.
+                    // But skin service sets both Font properties independently.
+                    // Note: no need to guard against re-entry.
+                    m_editingControl.Font = Font;
+                };
+
+          
         }
 
         /// <summary>
@@ -698,8 +709,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             m_editingControl.Left = defaultEditorLeft;
             m_editingControl.Width = rowWidth - defaultEditorLeft;
 
-            m_editingControl.TabIndex = tabIndex++;
-            m_editingControl.Font = Font;
+            m_editingControl.TabIndex = tabIndex++;            
             // This isn't quite right. How do we know when a property editing has finished due to pressing the Enter key?
             // Let's get this figured out and then we can get rid of setting the TabIndex above, because the TabIndex
             //  only works if there is a custom property editing control.

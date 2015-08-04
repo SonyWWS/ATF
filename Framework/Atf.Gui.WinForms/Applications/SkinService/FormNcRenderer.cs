@@ -589,13 +589,13 @@ namespace Sce.Atf.Applications
 
         private void UpdateBounds()
         {           
-            RECT scrRect = new RECT();
+            var scrRect = new User32.RECT();
             GetWindowRect(m_form.Handle, ref scrRect);
             int w = scrRect.Width;
             int h = scrRect.Height;            
             m_winRect = new Rectangle(0, 0, w, h);
 
-            RECT clRect = new RECT();
+            var clRect = new User32.RECT();
             GetClientRect(m_form.Handle, ref clRect);
             int cw = clRect.Width;
             int ch = clRect.Height;
@@ -850,19 +850,10 @@ namespace Sce.Atf.Applications
 
         }
 
-        private int Get_X_LPARAMint(IntPtr lparam)
-        {
-            return (short)(lparam.ToInt32() & 0x0000FFFF);
-        }
-        private int Get_Y_LPARAM(IntPtr lparam)
-        {
-            return (short)((lparam.ToInt32() & 0xFFFF0000) >> 16);
-        }
-
-        [DllImport("uxtheme.dll")]
+        [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hwnd, String pszSubAppName, String pszSubIdList);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
@@ -876,10 +867,10 @@ namespace Sce.Atf.Applications
             }
             return GetWindowLongPtr64(hWnd, nIndex);
         }
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Unicode)]
         private static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Unicode)]
         private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -891,11 +882,11 @@ namespace Sce.Atf.Applications
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, ref User32.RECT lpRect);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
+        public static extern bool GetClientRect(IntPtr hWnd, ref User32.RECT lpRect);
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetDCEx(IntPtr hwnd, IntPtr hrgnclip, uint fdwOptions);
@@ -992,6 +983,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Structure for point</summary>
         [StructLayout(LayoutKind.Sequential)]
+        [Obsolete("Please use User32.POINT instead")]
         public struct POINT
         {
             public int X;
@@ -1001,6 +993,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Structure for rectangle</summary>
         [StructLayout(LayoutKind.Sequential)]
+        [Obsolete("Please use User32.RECT instead")]
         public struct RECT
         {
             public int Left;
@@ -1015,7 +1008,6 @@ namespace Sce.Atf.Applications
             {
                 get { return Bottom - Top; }
             }
-
         }
 
         /// <summary>
@@ -1023,6 +1015,7 @@ namespace Sce.Atf.Applications
         /// </summary>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632605%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
+        [Obsolete("Please use User32.MINMAXINFO instead")]
         public struct MINMAXINFO
         {
             public POINT ptReserved;
@@ -1039,16 +1032,17 @@ namespace Sce.Atf.Applications
         [StructLayout(LayoutKind.Sequential)]
         public struct NCCALCSIZE_PARAMS
         {
-            public RECT rect0;
-            public RECT rect1;
-            public RECT rect2;
-            public WINDOWPOS IntPtr;
+            public User32.RECT rect0;
+            public User32.RECT rect1;
+            public User32.RECT rect2;
+            public IntPtr lppos; //a pointer to a WINDOWPOS
         };
 
         /// <summary>
         /// Structure with information about the size and position of a window</summary>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612%28v=vs.85%29.aspx. </remarks>
         [StructLayout(LayoutKind.Sequential)]
+        [Obsolete("Please use User32.WINDOWPOS instead")]
         public struct WINDOWPOS
         {
             public IntPtr hwnd;
@@ -1058,37 +1052,6 @@ namespace Sce.Atf.Applications
             public int cx;
             public int cy;
             public uint flags;
-        }
-
-        private enum WINDOWPOSFlags : uint
-        {
-            SWP_DRAWFRAME = 0x0020,
-            SWP_FRAMECHANGED = 0x0020,
-            SWP_HIDEWINDOW = 0x0080,
-            SWP_NOACTIVATE = 0x0010,
-            SWP_NOCOPYBITS = 0x0100,
-            SWP_NOMOVE = 0x0002,
-            SWP_NOOWNERZORDER = 0x0200,
-            SWP_NOREDRAW = 0x0008,
-            SWP_NOREPOSITION = 0x0200,
-            SWP_NOSENDCHANGING = 0x0400,
-            SWP_NOSIZE = 0x0001,
-            SWP_NOZORDER = 0x0004,
-            SWP_SHOWWINDOW = 0x0040,
-        }
-
-        private void DisplayWINDOWPOSFlags(uint flags)
-        {
-            StringBuilder str = new StringBuilder();
-            str.AppendLine("Winpos flags:");
-            foreach (uint val in Enum.GetValues(typeof(WINDOWPOSFlags)))
-            {
-                if ((flags & val) != 0)
-                {
-                    str.AppendLine(((WINDOWPOSFlags)val).ToString());
-                }
-            }
-            Console.WriteLine(str);
         }
 
         #endregion

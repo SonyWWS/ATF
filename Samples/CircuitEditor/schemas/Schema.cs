@@ -34,7 +34,6 @@ namespace CircuitEditorSample
             circuitDocumentType.connectionChild = circuitDocumentType.Type.GetChildInfo("connection");
             circuitDocumentType.layerFolderChild = circuitDocumentType.Type.GetChildInfo("layerFolder");
             circuitDocumentType.annotationChild = circuitDocumentType.Type.GetChildInfo("annotation");
-            circuitDocumentType.subCircuitChild = circuitDocumentType.Type.GetChildInfo("subCircuit");
             circuitDocumentType.prototypeFolderChild = circuitDocumentType.Type.GetChildInfo("prototypeFolder");
             circuitDocumentType.templateFolderChild = circuitDocumentType.Type.GetChildInfo("templateFolder");
 
@@ -52,6 +51,7 @@ namespace CircuitEditorSample
             moduleType.visibleAttribute = moduleType.Type.GetAttributeInfo("visible");
             moduleType.showUnconnectedPinsAttribute = moduleType.Type.GetAttributeInfo("showUnconnectedPins");
             moduleType.sourceGuidAttribute = moduleType.Type.GetAttributeInfo("sourceGuid");
+            moduleType.validatedAttribute = moduleType.Type.GetAttributeInfo("validated");
 
             connectionType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "connectionType");
             connectionType.labelAttribute = connectionType.Type.GetAttributeInfo("label");
@@ -77,20 +77,6 @@ namespace CircuitEditorSample
             annotationType.backcolorAttribute = annotationType.Type.GetAttributeInfo("backcolor");
             annotationType.foreColorAttribute = annotationType.Type.GetAttributeInfo("foreColor");
 
-            subCircuitType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "subCircuitType");
-            subCircuitType.nameAttribute = subCircuitType.Type.GetAttributeInfo("name");
-            subCircuitType.labelAttribute = subCircuitType.Type.GetAttributeInfo("label");
-            subCircuitType.moduleChild = subCircuitType.Type.GetChildInfo("module");
-            subCircuitType.connectionChild = subCircuitType.Type.GetChildInfo("connection");
-            subCircuitType.layerFolderChild = subCircuitType.Type.GetChildInfo("layerFolder");
-            subCircuitType.annotationChild = subCircuitType.Type.GetChildInfo("annotation");
-            subCircuitType.inputChild = subCircuitType.Type.GetChildInfo("input");
-            subCircuitType.outputChild = subCircuitType.Type.GetChildInfo("output");
-
-            pinType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "pinType");
-            pinType.nameAttribute = pinType.Type.GetAttributeInfo("name");
-            pinType.typeAttribute = pinType.Type.GetAttributeInfo("type");
-
             prototypeFolderType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "prototypeFolderType");
             prototypeFolderType.nameAttribute = prototypeFolderType.Type.GetAttributeInfo("name");
             prototypeFolderType.prototypeFolderChild = prototypeFolderType.Type.GetChildInfo("prototypeFolder");
@@ -112,6 +98,10 @@ namespace CircuitEditorSample
             templateType.labelAttribute = templateType.Type.GetAttributeInfo("label");
             templateType.moduleChild = templateType.Type.GetChildInfo("module");
 
+            pinType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "pinType");
+            pinType.nameAttribute = pinType.Type.GetAttributeInfo("name");
+            pinType.typeAttribute = pinType.Type.GetAttributeInfo("type");
+
             groupPinType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "groupPinType");
             groupPinType.nameAttribute = groupPinType.Type.GetAttributeInfo("name");
             groupPinType.typeAttribute = groupPinType.Type.GetAttributeInfo("type");
@@ -130,6 +120,7 @@ namespace CircuitEditorSample
             groupType.visibleAttribute = groupType.Type.GetAttributeInfo("visible");
             groupType.showUnconnectedPinsAttribute = groupType.Type.GetAttributeInfo("showUnconnectedPins");
             groupType.sourceGuidAttribute = groupType.Type.GetAttributeInfo("sourceGuid");
+            groupType.validatedAttribute = groupType.Type.GetAttributeInfo("validated");
             groupType.expandedAttribute = groupType.Type.GetAttributeInfo("expanded");
             groupType.showExpandedGroupPinsAttribute = groupType.Type.GetAttributeInfo("showExpandedGroupPins");
             groupType.autosizeAttribute = groupType.Type.GetAttributeInfo("autosize");
@@ -142,16 +133,6 @@ namespace CircuitEditorSample
             groupType.moduleChild = groupType.Type.GetChildInfo("module");
             groupType.connectionChild = groupType.Type.GetChildInfo("connection");
             groupType.annotationChild = groupType.Type.GetChildInfo("annotation");
-
-            subCircuitInstanceType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "subCircuitInstanceType");
-            subCircuitInstanceType.nameAttribute = subCircuitInstanceType.Type.GetAttributeInfo("name");
-            subCircuitInstanceType.labelAttribute = subCircuitInstanceType.Type.GetAttributeInfo("label");
-            subCircuitInstanceType.xAttribute = subCircuitInstanceType.Type.GetAttributeInfo("x");
-            subCircuitInstanceType.yAttribute = subCircuitInstanceType.Type.GetAttributeInfo("y");
-            subCircuitInstanceType.visibleAttribute = subCircuitInstanceType.Type.GetAttributeInfo("visible");
-            subCircuitInstanceType.showUnconnectedPinsAttribute = subCircuitInstanceType.Type.GetAttributeInfo("showUnconnectedPins");
-            subCircuitInstanceType.sourceGuidAttribute = subCircuitInstanceType.Type.GetAttributeInfo("sourceGuid");
-            subCircuitInstanceType.typeAttribute = subCircuitInstanceType.Type.GetAttributeInfo("type");
 
             missingTemplateType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "missingTemplateType");
             missingTemplateType.guidAttribute = missingTemplateType.Type.GetAttributeInfo("guid");
@@ -166,6 +147,7 @@ namespace CircuitEditorSample
             missingModuleType.visibleAttribute = missingModuleType.Type.GetAttributeInfo("visible");
             missingModuleType.showUnconnectedPinsAttribute = missingModuleType.Type.GetAttributeInfo("showUnconnectedPins");
             missingModuleType.sourceGuidAttribute = missingModuleType.Type.GetAttributeInfo("sourceGuid");
+            missingModuleType.validatedAttribute = missingModuleType.Type.GetAttributeInfo("validated");
 
             moduleTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "moduleTemplateRefType");
             moduleTemplateRefType.nameAttribute = moduleTemplateRefType.Type.GetAttributeInfo("name");
@@ -175,8 +157,8 @@ namespace CircuitEditorSample
             moduleTemplateRefType.visibleAttribute = moduleTemplateRefType.Type.GetAttributeInfo("visible");
             moduleTemplateRefType.showUnconnectedPinsAttribute = moduleTemplateRefType.Type.GetAttributeInfo("showUnconnectedPins");
             moduleTemplateRefType.sourceGuidAttribute = moduleTemplateRefType.Type.GetAttributeInfo("sourceGuid");
+            moduleTemplateRefType.validatedAttribute = moduleTemplateRefType.Type.GetAttributeInfo("validated");
             moduleTemplateRefType.guidRefAttribute = moduleTemplateRefType.Type.GetAttributeInfo("guidRef");
-            moduleTemplateRefType.typeRefAttribute = moduleTemplateRefType.Type.GetAttributeInfo("typeRef");
 
             groupTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "groupTemplateRefType");
             groupTemplateRefType.nameAttribute = groupTemplateRefType.Type.GetAttributeInfo("name");
@@ -186,6 +168,7 @@ namespace CircuitEditorSample
             groupTemplateRefType.visibleAttribute = groupTemplateRefType.Type.GetAttributeInfo("visible");
             groupTemplateRefType.showUnconnectedPinsAttribute = groupTemplateRefType.Type.GetAttributeInfo("showUnconnectedPins");
             groupTemplateRefType.sourceGuidAttribute = groupTemplateRefType.Type.GetAttributeInfo("sourceGuid");
+            groupTemplateRefType.validatedAttribute = groupTemplateRefType.Type.GetAttributeInfo("validated");
             groupTemplateRefType.expandedAttribute = groupTemplateRefType.Type.GetAttributeInfo("expanded");
             groupTemplateRefType.showExpandedGroupPinsAttribute = groupTemplateRefType.Type.GetAttributeInfo("showExpandedGroupPins");
             groupTemplateRefType.autosizeAttribute = groupTemplateRefType.Type.GetAttributeInfo("autosize");
@@ -194,7 +177,6 @@ namespace CircuitEditorSample
             groupTemplateRefType.minwidthAttribute = groupTemplateRefType.Type.GetAttributeInfo("minwidth");
             groupTemplateRefType.minheightAttribute = groupTemplateRefType.Type.GetAttributeInfo("minheight");
             groupTemplateRefType.guidRefAttribute = groupTemplateRefType.Type.GetAttributeInfo("guidRef");
-            groupTemplateRefType.typeRefAttribute = groupTemplateRefType.Type.GetAttributeInfo("typeRef");
             groupTemplateRefType.refExpandedAttribute = groupTemplateRefType.Type.GetAttributeInfo("refExpanded");
             groupTemplateRefType.refShowExpandedGroupPinsAttribute = groupTemplateRefType.Type.GetAttributeInfo("refShowExpandedGroupPins");
             groupTemplateRefType.inputChild = groupTemplateRefType.Type.GetChildInfo("input");
@@ -214,7 +196,6 @@ namespace CircuitEditorSample
             public static ChildInfo connectionChild;
             public static ChildInfo layerFolderChild;
             public static ChildInfo annotationChild;
-            public static ChildInfo subCircuitChild;
             public static ChildInfo prototypeFolderChild;
             public static ChildInfo templateFolderChild;
         }
@@ -238,6 +219,7 @@ namespace CircuitEditorSample
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo validatedAttribute;
         }
 
         public static class connectionType
@@ -276,26 +258,6 @@ namespace CircuitEditorSample
             public static AttributeInfo foreColorAttribute;
         }
 
-        public static class subCircuitType
-        {
-            public static DomNodeType Type;
-            public static AttributeInfo nameAttribute;
-            public static AttributeInfo labelAttribute;
-            public static ChildInfo moduleChild;
-            public static ChildInfo connectionChild;
-            public static ChildInfo layerFolderChild;
-            public static ChildInfo annotationChild;
-            public static ChildInfo inputChild;
-            public static ChildInfo outputChild;
-        }
-
-        public static class pinType
-        {
-            public static DomNodeType Type;
-            public static AttributeInfo nameAttribute;
-            public static AttributeInfo typeAttribute;
-        }
-
         public static class prototypeFolderType
         {
             public static DomNodeType Type;
@@ -329,6 +291,13 @@ namespace CircuitEditorSample
             public static ChildInfo moduleChild;
         }
 
+        public static class pinType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo nameAttribute;
+            public static AttributeInfo typeAttribute;
+        }
+
         public static class groupPinType
         {
             public static DomNodeType Type;
@@ -352,6 +321,7 @@ namespace CircuitEditorSample
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo validatedAttribute;
             public static AttributeInfo expandedAttribute;
             public static AttributeInfo showExpandedGroupPinsAttribute;
             public static AttributeInfo autosizeAttribute;
@@ -364,19 +334,6 @@ namespace CircuitEditorSample
             public static ChildInfo moduleChild;
             public static ChildInfo connectionChild;
             public static ChildInfo annotationChild;
-        }
-
-        public static class subCircuitInstanceType
-        {
-            public static DomNodeType Type;
-            public static AttributeInfo nameAttribute;
-            public static AttributeInfo labelAttribute;
-            public static AttributeInfo xAttribute;
-            public static AttributeInfo yAttribute;
-            public static AttributeInfo visibleAttribute;
-            public static AttributeInfo showUnconnectedPinsAttribute;
-            public static AttributeInfo sourceGuidAttribute;
-            public static AttributeInfo typeAttribute;
         }
 
         public static class missingTemplateType
@@ -397,6 +354,7 @@ namespace CircuitEditorSample
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo validatedAttribute;
         }
 
         public static class moduleTemplateRefType
@@ -409,8 +367,8 @@ namespace CircuitEditorSample
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo validatedAttribute;
             public static AttributeInfo guidRefAttribute;
-            public static AttributeInfo typeRefAttribute;
         }
 
         public static class groupTemplateRefType
@@ -423,6 +381,7 @@ namespace CircuitEditorSample
             public static AttributeInfo visibleAttribute;
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
+            public static AttributeInfo validatedAttribute;
             public static AttributeInfo expandedAttribute;
             public static AttributeInfo showExpandedGroupPinsAttribute;
             public static AttributeInfo autosizeAttribute;
@@ -431,7 +390,6 @@ namespace CircuitEditorSample
             public static AttributeInfo minwidthAttribute;
             public static AttributeInfo minheightAttribute;
             public static AttributeInfo guidRefAttribute;
-            public static AttributeInfo typeRefAttribute;
             public static AttributeInfo refExpandedAttribute;
             public static AttributeInfo refShowExpandedGroupPinsAttribute;
             public static ChildInfo inputChild;

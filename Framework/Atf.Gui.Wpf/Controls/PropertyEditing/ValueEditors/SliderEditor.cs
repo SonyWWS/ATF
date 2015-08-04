@@ -32,9 +32,13 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// Gets custom context for PropertyNode</summary>
         /// <param name="node">PropertyNode </param>
         /// <returns>New custom context for PropertyNode</returns>
-        public override object GetCustomContext(PropertyNode node) 
+        public override object GetCustomContext(PropertyNode node)
         {
-            return node != null ? new SliderValueEditorContext(node) : null;
+            if (node == null)
+                return null;
+            if (m_minimum.IsNaN() || m_maximum.IsNaN()) // if range is not set
+                return new SliderValueEditorContext(node);
+            return new SliderValueEditorContext(node, m_minimum, m_maximum, true);
         }
 
         /// <summary>
@@ -47,7 +51,16 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
             return FindResource<DataTemplate>(TemplateKey, container);
         }
 
+        public void SetRange(double min, double max)
+        {
+            m_minimum = min;
+            m_maximum = max;
+        }
+
         private static SliderValueEditor s_instance = new SliderValueEditor();
+        private double m_minimum = double.NaN;
+        private double m_maximum = double.NaN;
+
     }
 
     /// <summary>
@@ -65,8 +78,8 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         {
             Node = node;
             Node.ValueChanged += OnNodeOnValueChanged;
-
             var numberRange = Node.Descriptor.Attributes[typeof(NumberRangesAttribute)] as NumberRangesAttribute;
+
             if (numberRange != null)
             {
                 m_max = numberRange.Maximum;
@@ -83,6 +96,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
                     m_max = Convert.ToDouble(dataRange.Minimum);
                     m_min = Convert.ToDouble(dataRange.Maximum);
                     m_center = (m_max - m_min) / 2.0;
+
                 }
             }
 
@@ -119,6 +133,23 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         /// <summary>
+        /// Constructor with range values as parameters instead of extracting them from pd attributes </summary>
+        /// <param name="node">Property node</param>
+        public SliderValueEditorContext(PropertyNode node, double min, double max, bool autoCommit)
+        {
+            Node = node;
+            Node.ValueChanged += OnNodeOnValueChanged;
+
+            m_max = max;
+            m_min = min;
+            m_center = (m_max - m_min) / 2.0;
+            AutoCommit = autoCommit;
+
+            Update();
+        }
+
+
+        /// <summary>
         /// Gets the ICommand to commit the edit in progress</summary>
         public ICommand CommitEditCommand
         {
@@ -130,29 +161,29 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         public virtual void CommitEdit()
         {
             if (!NumericUtil.AreClose(m_doubleValue, m_cachedValue))
-                {
-                    m_doubleValue = m_cachedValue;
+            {
+                m_doubleValue = m_cachedValue;
 
-                    Type type = Node.Descriptor.PropertyType;
-                    if (type == typeof(Int16))
-                        Node.Value = Convert.ToInt16(m_doubleValue);
-                    else if (type == typeof(UInt16))
-                        Node.Value = Convert.ToUInt16(m_doubleValue);
-                    else if (type == typeof(Int32))
-                        Node.Value = Convert.ToInt32(m_doubleValue);
-                    else if (type == typeof(UInt32))
-                        Node.Value = Convert.ToUInt32(m_doubleValue);
-                    else if (type == typeof(Int64))
-                        Node.Value = Convert.ToInt64(m_doubleValue);
-                    else if (type == typeof(UInt64))
-                        Node.Value = Convert.ToUInt64(m_doubleValue);
-                    else if (type == typeof(Single))
-                        Node.Value = Convert.ToSingle(m_doubleValue);
-                    else if (type == typeof(Double))
-                        Node.Value = m_doubleValue;
-                    else
-                        throw new NotImplementedException("Type conversion not yet supported");
-                }
+                Type type = Node.Descriptor.PropertyType;
+                if (type == typeof(Int16))
+                    Node.Value = Convert.ToInt16(m_doubleValue);
+                else if (type == typeof(UInt16))
+                    Node.Value = Convert.ToUInt16(m_doubleValue);
+                else if (type == typeof(Int32))
+                    Node.Value = Convert.ToInt32(m_doubleValue);
+                else if (type == typeof(UInt32))
+                    Node.Value = Convert.ToUInt32(m_doubleValue);
+                else if (type == typeof(Int64))
+                    Node.Value = Convert.ToInt64(m_doubleValue);
+                else if (type == typeof(UInt64))
+                    Node.Value = Convert.ToUInt64(m_doubleValue);
+                else if (type == typeof(Single))
+                    Node.Value = Convert.ToSingle(m_doubleValue);
+                else if (type == typeof(Double))
+                    Node.Value = m_doubleValue;
+                else
+                    throw new NotImplementedException("Type conversion not yet supported");
+            }
         }
 
         /// <summary>
@@ -168,12 +199,20 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         {
         }
 
+        //TOREVIEW: this call seems necessary to propagate cached property  value back to source, when PropertyGridView is used directly instead of  PropertyEditor. Do we need to introduce a flag to indicate whether to commit?
+        public bool AutoCommit { get; set; }
+
         /// <summary>
         /// Gets and sets the slider's value as a double</summary>
         public double DoubleValue
         {
             get { return m_cachedValue; }
-            set { m_cachedValue = value; }
+            set
+            {
+                m_cachedValue = value;
+                if (AutoCommit)
+                  CommitEdit();
+            }
         }
 
         /// <summary>

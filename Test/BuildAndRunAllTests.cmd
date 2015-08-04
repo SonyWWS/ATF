@@ -1,6 +1,6 @@
 :: Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
-:: This script builds all 4 configurations: 
+:: This script builds these configurations: 
 ::   - VS2010 Debug
 ::   - VS2010 Release
 :: And runs the full test suite against the release configurations:

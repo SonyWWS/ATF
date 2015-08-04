@@ -1,20 +1,38 @@
 # This text file specifies the root directories to search code files for and
 #	the resulting XML file to produce from those code files.
-# Each line has a pair of paths. The first is the path to a directory of code files.
-#	The second path is the destination XML file.
-# The two paths must be separated by a single space.
-# Each path needs to be a relative path to the root ATF directory.
-# The root of the ATF directory is found by searching from LocalizableStringExtractor's starting
-#	directory and going up the directory hierarchy until a directory name containing "atf" is
-#	found.
+
+# Each line has, in order:
+# 1) One or more source directories or project or solution paths.
+# 2) Localization.xml file path.
+# 3) Optional "-ignore" flag and list of files to ignore.
+
+# The source directory, if it contains solution files (*.sln) or project files
+#	(*.csproj) in the top level, will have those files parsed to find the actual
+#	code files. If there are no solution or project files, then the code files
+#	will be read from that directory and all sub-directories.
+
+# The destination XML file must be named Localization.xml to work with ATF's
+#	EmbeddedResourceStringLocalizer or SatelliteAssemblyStringLocalizer.
+
+# Each path needs to be either absolute or relative to this executable.
+
 # Paths with spaces in them need double quotes around the path.
-Framework\Atf.Core Framework\Atf.Core\Resources\Localization.xml
-Framework\Atf.Gui Framework\Atf.Gui\Resources\Localization.xml
-Framework\Atf.Gui.OpenGL Framework\Atf.Gui.OpenGL\Resources\Localization.xml
-Framework\Atf.Gui.WinForms Framework\Atf.Gui.WinForms\Resources\Localization.xml
-Framework\Atf.Gui.Wpf Framework\Atf.Gui.Wpf\Resources\Localization.xml
-Framework\Atf.Perforce Framework\Atf.Perforce\Resources\Localization.xml
-"Samples\CircuitEditor" Samples\CircuitEditor\Resources\Localization.xml
-"Samples\CodeEditor" "Samples\CodeEditor\Resources\Localization.xml"
-"Samples\TimelineEditor" "Samples\TimelineEditor\Resources\Localization.xml"
-"Samples\SimpleDomEditorWpf" "Samples\SimpleDomEditorWpf\Resources\Localization.xml"
+
+# These paths below are for the Subversion repository of ATF, not for GitHub.
+# For client use, you can modify this text file or run LocalizableStringExtractor
+#	from the command line, like this:
+#	LocalizableStringExtractor -s "\your\path to your\settings file.txt"
+# To automatically begin processing, you can use the "-auto" option:
+#	LocalizableStringExtractor -s "\your\path to your\settings file.txt" -auto
+#	LocalizableStringExtractor -auto
+..\..\..\components\wws_atf\Framework\Atf.Core\Atf.Core.vs2010.csproj ..\..\..\components\wws_atf\Framework\Atf.Core\Resources\Localization.xml
+..\..\..\components\wws_atf\Framework\Atf.Gui\Atf.Gui.vs2010.csproj ..\..\..\components\wws_atf\Framework\Atf.Gui\Resources\Localization.xml
+..\..\..\components\wws_atf\Framework\Atf.Gui.OpenGL\Atf.Gui.OpenGL.vs2010.csproj ..\..\..\components\wws_atf\Framework\Atf.Gui.OpenGL\Resources\Localization.xml
+..\..\..\components\wws_atf\Framework\Atf.Gui.WinForms ..\..\..\components\wws_atf\Framework\Atf.Gui.WinForms\Resources\Localization.xml
+..\..\..\components\wws_atf\Framework\Atf.Gui.Wpf ..\..\..\components\wws_atf\Framework\Atf.Gui.Wpf\Resources\Localization.xml
+..\..\..\components\wws_atf\Framework\Atf.Perforce ..\..\..\components\wws_atf\Framework\Atf.Perforce\Resources\Localization.xml
+"..\..\..\components\wws_atf\Samples\CircuitEditor" ..\..\..\components\wws_atf\Samples\CircuitEditor\Resources\Localization.xml
+"..\..\..\components\wws_atf\Samples\CodeEditor" "..\..\..\components\wws_atf\Samples\CodeEditor\Resources\Localization.xml"
+"..\..\..\components\wws_atf\Samples\TimelineEditor" "..\..\..\components\wws_atf\Samples\TimelineEditor\Resources\Localization.xml"
+"..\..\..\components\wws_atf\Samples\SimpleDomEditorWpf" "..\..\..\components\wws_atf\Samples\SimpleDomEditorWpf\Resources\Localization.xml"
+"..\..\..\components\wws_atf\Samples\FsmEditor" "..\..\..\components\wws_atf\Samples\FsmEditor\Resources\Localization.xml"

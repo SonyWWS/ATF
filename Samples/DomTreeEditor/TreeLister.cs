@@ -17,7 +17,7 @@ namespace DomTreeEditorSample
     [Export(typeof(IInitializable))]
     [Export(typeof(TreeLister))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class TreeLister : TreeControlEditor, IControlHostClient, IInitializable
+    public class TreeLister : FilteredTreeControlEditor, IControlHostClient, IInitializable
     {
         /// <summary>
         /// Constructor</summary>
@@ -61,8 +61,7 @@ namespace DomTreeEditorSample
             treeControl.Text = ("Add packages to the UI." + Environment.NewLine +
                                 "Add forms, shaders, textures, and fonts to packages." + Environment.NewLine +
                                 "Add sprites or text items to forms or sprites." + Environment.NewLine +
-                                "Drag shaders, textures, and fonts onto the reference slots of sprites and text items.").Localize();
-            treeControl.Dock = DockStyle.Fill;
+                                "Drag shaders, textures, and fonts onto the reference slots of sprites and text items.").Localize();            
             treeControl.AllowDrop = true;
             treeControl.SelectionMode = SelectionMode.MultiExtended;
         }
@@ -134,7 +133,7 @@ namespace DomTreeEditorSample
         {
             // on initialization, register our tree control with the hosting service
             m_controlHostService.RegisterControl(
-                TreeControl,
+                Control,
                 new ControlInfo(
                    "UI Tree Lister".Localize(),
                    "Displays a tree view of the UI".Localize(),
@@ -146,20 +145,20 @@ namespace DomTreeEditorSample
         {
             // get the most recent document that can provide a tree view of the UI;
             //  GetActiveDocument would also work, as long as no other component loads documents.
-            TreeView treeView = m_documentRegistry.GetMostRecentDocument<TreeView>();
+            ITreeView treeView = m_documentRegistry.GetMostRecentDocument<TreeView>();
+            if(treeView != null)
+                treeView = new FilteredTreeView(treeView, DefaultFilter);
             // if it's different, switch to it
-            if (TreeView != treeView)
+            if(!FilteredTreeView.Equals(TreeView,treeView))            
             {
+                if (TreeView != null)
+                    m_contextRegistry.RemoveContext(TreeView);
                 TreeView = treeView;
 
-                if (treeView != null)
-                {
-                    // make document the active context
-                    m_contextRegistry.ActiveContext = treeView;
+                UpdateFiltering(this, EventArgs.Empty);
 
-                    // make sure user can see our TreeControl if it was hidden
-                    m_controlHostService.Show(TreeControl);
-                }
+                if (treeView != null)
+                    m_contextRegistry.ActiveContext = TreeView;                
             }
         }
         

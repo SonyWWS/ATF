@@ -17,32 +17,6 @@ namespace CircuitEditorSample
             get { return Schema.moduleTemplateRefType.guidRefAttribute; }
         }
 
-        public override Sce.Atf.Dom.Template Template
-        {
-            get
-            {
-                var template = base.Template;
-                if (template == null) // in case reading older circuit documents before ATF3.8
-                {
-                    var target = GetReference<DomNode>(Schema.moduleTemplateRefType.typeRefAttribute);
-                    if (target != null)
-                    {
-                        template = target.Parent.As<Template>();
-                        if (template != null) // replace obsolete "typeRef" attribute with  guidRef
-                        {
-                            SetReference(Schema.moduleTemplateRefType.guidRefAttribute, template.DomNode);
-                            SetAttribute(Schema.moduleTemplateRefType.typeRefAttribute, null);
-
-                            Guid guid;
-                            if (Guid.TryParse(Id, out guid)) // avoid using GUID as ID too, because we want to resolve guid reference specially
-                                Id = "ModuleReference" + Id;
-                        }
-                    }
-                }
-                return template;
-            }
-        }
-
         #region IReference<Module>  memebers
 
         bool IReference<Module>.CanReference(Module item)

@@ -19,7 +19,15 @@ namespace Sce.Atf.Dom
             m_inclusive = inclusive;
         }
 
-                    /// <summary>
+        /// <summary>
+        /// Returns the maximum value used when validating an attribute value</summary>
+        public double MaximumValue { get { return m_maximum; } }
+
+        /// <summary>
+        /// Returns whether the maximum value is inclusive when validating an attribute value</summary>
+        public bool IsInclusive { get { return m_inclusive; } }
+
+        /// <summary>
         /// Validates the given value for assignment to the given attribute</summary>
         /// <param name="value">Value to validate</param>
         /// <param name="info">Attribute info</param>

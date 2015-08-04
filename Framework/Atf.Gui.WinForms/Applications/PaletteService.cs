@@ -48,10 +48,13 @@ namespace Sce.Atf.Applications
             m_controlHostService.RegisterControl(
                 m_control,
                 new ControlInfo(
-                    "Palette".Localize(),
+                    "Palette", //Is the ID in the layout. We'll localize DisplayName instead.
                     "Creates new instances".Localize(),
                     StandardControlGroup.Left, null,
-                    "https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&q=PaletteService+or+Palette".Localize()),
+                    "https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&q=PaletteService+or+Palette".Localize())
+                {
+                    DisplayName = "Palette".Localize()
+                },
                 this);
         }
 

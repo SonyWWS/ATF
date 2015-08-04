@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="16-to-1 Multiplexer" context="" translation="16-to-1 Multiplexer" />
-  <StringItem id="1-to-16 Demultiplexer" context="" translation="1-to-16 Demultiplexer" />
+  <StringItem id="16-to-1 Multiplexer" context="" translation="16:1 マルチプレクサー" />
+  <StringItem id="1-to-16 Demultiplexer" context="" translation="1:16 デマルチプレクサー" />
   <StringItem id="Add" context="" translation="追加" />
   <StringItem id="And" context="" translation="AND" />
-  <StringItem id="BackColor" context="" translation="BackColor" />
+  <StringItem id="Background Color" context="" translation="背景色" />
   <StringItem id="Button" context="" translation="ボタン" />
   <StringItem id="Circuit" context="" translation="回路" />
   <StringItem id="Circuit Editor" context="" translation="CircuitEditor" />
@@ -12,45 +12,45 @@
   <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="回路テンプレートファイル (*.circuit)|*.circuit" />
   <StringItem id="Circuits" context="" translation="回路" />
   <StringItem id="Comment" context="" translation="コメント" />
-  <StringItem id="Comment background color" context="" translation="コメントの背景色です。" />
-  <StringItem id="Comment foreground color" context="" translation="Comment foreground color" />
   <StringItem id="Comment Text" context="" translation="コメントのテキストです。" />
+  <StringItem id="Comment's background color" context="" translation="コメントの背景色です。" />
+  <StringItem id="Comment's foreground color" context="" translation="コメントの前景色" />
   <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="回路キャンバス上に、移動およびサイズ変更が可能なコメントを作成します。" />
   <StringItem id="Create Circuit Programmatically" context="" translation="回路をプログラムで作成" />
-  <StringItem id="Data" context="" translation="Data" />
+  <StringItem id="Data" context="" translation="データ" />
   <StringItem id="Default Edge Style" context="" translation="デフォルトのエッジスタイルです。" />
+  <StringItem id="Edits selected object properties" context="" translation="選択したオブジェクトのプロパティを編集します。" />
   <StringItem id="first" context="as in, 'the first file'" translation="ファイル 1" />
-  <StringItem id="ForeColor" context="" translation="ForeColor" />
+  <StringItem id="Foreground Color" context="" translation="前景色" />
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
   <StringItem id="ID" context="" translation="ID" />
   <StringItem id="In" context="" translation="入力" />
   <StringItem id="In1" context="input pin #1" translation="入力1" />
-  <StringItem id="In1" context="" translation="入力1" />
-  <StringItem id="In10" context="" translation="In10" />
-  <StringItem id="In11" context="" translation="In11" />
-  <StringItem id="In12" context="" translation="In12" />
-  <StringItem id="In13" context="" translation="In13" />
-  <StringItem id="In14" context="" translation="In14" />
-  <StringItem id="In15" context="" translation="In15" />
-  <StringItem id="In16" context="" translation="In16" />
+  <StringItem id="In10" context="" translation="入力10" />
+  <StringItem id="In11" context="" translation="入力11" />
+  <StringItem id="In12" context="" translation="入力12" />
+  <StringItem id="In13" context="" translation="入力13" />
+  <StringItem id="In14" context="" translation="入力14" />
+  <StringItem id="In15" context="" translation="入力15" />
+  <StringItem id="In16" context="" translation="入力16" />
   <StringItem id="In2" context="input pin #2" translation="入力2" />
-  <StringItem id="In2" context="" translation="入力2" />
-  <StringItem id="In3" context="" translation="In3" />
-  <StringItem id="In4" context="" translation="In4" />
-  <StringItem id="In5" context="" translation="In5" />
-  <StringItem id="In6" context="" translation="In6" />
-  <StringItem id="In7" context="" translation="In7" />
-  <StringItem id="In8" context="" translation="In8" />
-  <StringItem id="In9" context="" translation="In9" />
-  <StringItem id="Initial Directory" context="" translation="Initial Directory" />
+  <StringItem id="In3" context="" translation="入力3" />
+  <StringItem id="In4" context="" translation="入力4" />
+  <StringItem id="In5" context="" translation="入力5" />
+  <StringItem id="In6" context="" translation="入力6" />
+  <StringItem id="In7" context="" translation="入力7" />
+  <StringItem id="In8" context="" translation="入力8" />
+  <StringItem id="In9" context="" translation="入力9" />
+  <StringItem id="Initial Directory" context="" translation="初期ディレクトリ" />
   <StringItem id="Input Files" context="" translation="入力ファイル" />
   <StringItem id="Layer name" context="" translation="レイヤー名" />
   <StringItem id="Light" context="" translation="ライト" />
   <StringItem id="Light source" context="" translation="光源" />
   <StringItem id="Logical AND" context="" translation="論理積" />
   <StringItem id="Logical OR" context="" translation="論理和" />
-  <StringItem id="Manufacturer" context="" translation="Manufacturer" />
+  <StringItem id="Manufacturer" context="" translation="製造元" />
   <StringItem id="Misc" context="abbreviation for miscellaneous" translation="その他" />
   <StringItem id="Module name" context="" translation="モジュールの名前です。" />
   <StringItem id="Name" context="" translation="名前" />
@@ -58,34 +58,35 @@
   <StringItem id="On/Off Button" context="" translation="オン/オフボタン" />
   <StringItem id="Or" context="" translation="OR" />
   <StringItem id="Out" context="" translation="出力" />
-  <StringItem id="Out1" context="" translation="Out1" />
-  <StringItem id="Out10" context="" translation="Out10" />
-  <StringItem id="Out11" context="" translation="Out11" />
-  <StringItem id="Out12" context="" translation="Out12" />
-  <StringItem id="Out13" context="" translation="Out13" />
-  <StringItem id="Out14" context="" translation="Out14" />
-  <StringItem id="Out15" context="" translation="Out15" />
-  <StringItem id="Out16" context="" translation="Out16" />
-  <StringItem id="Out2" context="" translation="Out2" />
-  <StringItem id="Out3" context="" translation="Out3" />
-  <StringItem id="Out4" context="" translation="Out4" />
-  <StringItem id="Out5" context="" translation="Out5" />
-  <StringItem id="Out6" context="" translation="Out6" />
-  <StringItem id="Out7" context="" translation="Out7" />
-  <StringItem id="Out8" context="" translation="Out8" />
-  <StringItem id="Out9" context="" translation="Out9" />
+  <StringItem id="Out1" context="" translation="出力1" />
+  <StringItem id="Out10" context="" translation="出力10" />
+  <StringItem id="Out11" context="" translation="出力11" />
+  <StringItem id="Out12" context="" translation="出力12" />
+  <StringItem id="Out13" context="" translation="出力13" />
+  <StringItem id="Out14" context="" translation="出力14" />
+  <StringItem id="Out15" context="" translation="出力15" />
+  <StringItem id="Out16" context="" translation="出力16" />
+  <StringItem id="Out2" context="" translation="出力2" />
+  <StringItem id="Out3" context="" translation="出力3" />
+  <StringItem id="Out4" context="" translation="出力4" />
+  <StringItem id="Out5" context="" translation="出力5" />
+  <StringItem id="Out6" context="" translation="出力6" />
+  <StringItem id="Out7" context="" translation="出力7" />
+  <StringItem id="Out8" context="" translation="出力8" />
+  <StringItem id="Out9" context="" translation="出力9" />
   <StringItem id="Overwrite" context="" translation="上書き" />
   <StringItem id="Overwrite / Add" context="" translation="上書き / 追加" />
   <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?
 " context="" translation="既存のテンプレート「{0}」を「{1}」で上書きしますか? それとも新規に追加しますか?" />
   <StringItem id="Pause" context="" translation="一時停止" />
+  <StringItem id="Property Editor" context="" translation="プロパティエディター" />
   <StringItem id="Prototype folder name" context="" translation="プロトタイプフォルダー名" />
   <StringItem id="Reset" context="" translation="リセット" />
   <StringItem id="second" context="as in, 'the second file'" translation="ファイル 2" />
-  <StringItem id="Select1" context="" translation="Select1" />
-  <StringItem id="Select2" context="" translation="Select2" />
-  <StringItem id="Select3" context="" translation="Select3" />
-  <StringItem id="Select4" context="" translation="Select4" />
+  <StringItem id="Select1" context="The name of a pin on a circuit element" translation="セレクト1" />
+  <StringItem id="Select2" context="The name of a pin on a circuit element" translation="セレクト2" />
+  <StringItem id="Select3" context="The name of a pin on a circuit element" translation="セレクト3" />
+  <StringItem id="Select4" context="The name of a pin on a circuit element" translation="セレクト4" />
   <StringItem id="Show Expanded Group Pins" context="" translation="展開したグループのピンを表示" />
   <StringItem id="Show group pins when a group is expanded" context="" translation="グループの展開時に、グループピンを表示します。" />
   <StringItem id="Show Virtual links" context="" translation="仮想リンクを表示" />
@@ -97,7 +98,7 @@
   <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
   <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
   <StringItem id="Text" context="" translation="テキスト" />
-  <StringItem id="The initial directory for documents" context="" translation="The initial directory for documents" />
+  <StringItem id="The initial directory for documents" context="" translation="ドキュメントントの初期ディレクトリ" />
   <StringItem id="Unique ID" context="" translation="一意の ID" />
   <StringItem id="Wire Style" context="" translation="ワイヤーの種類" />
 </StringLocalizationTable>

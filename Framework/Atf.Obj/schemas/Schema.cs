@@ -16,16 +16,28 @@ namespace Sce.Atf.Obj
 
         public static void Initialize(XmlSchemaTypeCollection typeCollection)
         {
-            meshType.Type = typeCollection.GetNodeType("meshType");
+            Initialize((ns,name)=>typeCollection.GetNodeType(ns,name),
+                (ns,name)=>typeCollection.GetRootElement(ns,name));
+        }
+
+        public static void Initialize(IDictionary<string, XmlSchemaTypeCollection> typeCollections)
+        {
+            Initialize((ns,name)=>typeCollections[ns].GetNodeType(name),
+                (ns,name)=>typeCollections[ns].GetRootElement(name));
+        }
+
+        private static void Initialize(Func<string, string, DomNodeType> getNodeType, Func<string, string, ChildInfo> getRootElement)
+        {
+            meshType.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "meshType");
             meshType.boundingBoxAttribute = meshType.Type.GetAttributeInfo("boundingBox");
             meshType.nameAttribute = meshType.Type.GetAttributeInfo("name");
             meshType.vertexArrayChild = meshType.Type.GetChildInfo("vertexArray");
 
-            meshType_vertexArray.Type = typeCollection.GetNodeType("meshType_vertexArray");
+            meshType_vertexArray.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "meshType_vertexArray");
             meshType_vertexArray.primitivesChild = meshType_vertexArray.Type.GetChildInfo("primitives");
             meshType_vertexArray.arrayChild = meshType_vertexArray.Type.GetChildInfo("array");
 
-            vertexArray_primitives.Type = typeCollection.GetNodeType("vertexArray_primitives");
+            vertexArray_primitives.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "vertexArray_primitives");
             vertexArray_primitives.indicesAttribute = vertexArray_primitives.Type.GetAttributeInfo("indices");
             vertexArray_primitives.sizesAttribute = vertexArray_primitives.Type.GetAttributeInfo("sizes");
             vertexArray_primitives.nameAttribute = vertexArray_primitives.Type.GetAttributeInfo("name");
@@ -33,10 +45,10 @@ namespace Sce.Atf.Obj
             vertexArray_primitives.bindingChild = vertexArray_primitives.Type.GetChildInfo("binding");
             vertexArray_primitives.shaderChild = vertexArray_primitives.Type.GetChildInfo("shader");
 
-            primitives_binding.Type = typeCollection.GetNodeType("primitives_binding");
+            primitives_binding.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "primitives_binding");
             primitives_binding.sourceAttribute = primitives_binding.Type.GetAttributeInfo("source");
 
-            shaderType.Type = typeCollection.GetNodeType("shaderType");
+            shaderType.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "shaderType");
             shaderType.nameAttribute = shaderType.Type.GetAttributeInfo("name");
             shaderType.ambientAttribute = shaderType.Type.GetAttributeInfo("ambient");
             shaderType.diffuseAttribute = shaderType.Type.GetAttributeInfo("diffuse");
@@ -44,13 +56,13 @@ namespace Sce.Atf.Obj
             shaderType.specularAttribute = shaderType.Type.GetAttributeInfo("specular");
             shaderType.textureAttribute = shaderType.Type.GetAttributeInfo("texture");
 
-            vertexArray_array.Type = typeCollection.GetNodeType("vertexArray_array");
+            vertexArray_array.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "vertexArray_array");
             vertexArray_array.Attribute = vertexArray_array.Type.GetAttributeInfo("");
             vertexArray_array.countAttribute = vertexArray_array.Type.GetAttributeInfo("count");
             vertexArray_array.nameAttribute = vertexArray_array.Type.GetAttributeInfo("name");
             vertexArray_array.strideAttribute = vertexArray_array.Type.GetAttributeInfo("stride");
 
-            nodeType.Type = typeCollection.GetNodeType("nodeType");
+            nodeType.Type = getNodeType("http://www.fileformat.info/format/wavefrontobj", "nodeType");
             nodeType.boundingBoxAttribute = nodeType.Type.GetAttributeInfo("boundingBox");
             nodeType.transformAttribute = nodeType.Type.GetAttributeInfo("transform");
             nodeType.nameAttribute = nodeType.Type.GetAttributeInfo("name");

@@ -470,6 +470,14 @@ namespace Sce.Atf.Dom
             return qualifiedName.ToString();
         }
 
+        /// <summary>
+        /// Gets the dictionary of annotations that are available during the call to
+        /// Load(XmlSchemaSet).</summary>
+        protected IDictionary<NamedMetadata, IList<XmlNode>> Annotations
+        {
+            get { return m_annotations; }
+        }
+
         private IEnumerable<ChildInfo> CreateSubstitutions(Multimap<XmlQualifiedName, ChildInfo> substitutionGroups, XmlQualifiedName refName)
         {
             foreach (var group in substitutionGroups.Keys)
@@ -614,7 +622,8 @@ namespace Sce.Atf.Dom
             {
                 // must be simple type
                 XmlSchemaSimpleType simpleType = type as XmlSchemaSimpleType;
-                nodeType = WrapSimpleType(simpleType);
+                bool firstTime;
+                nodeType = WrapSimpleType(simpleType, out firstTime);
             }
             return nodeType;
         }
@@ -722,12 +731,17 @@ namespace Sce.Atf.Dom
                     DomNodeType childNodeType = null;
                     if (simpleType != null)
                     {
-                        childNodeType = WrapSimpleType(simpleType);
-                        
-                        // Add the value attribute
-                        XmlAttributeType valueAttributeType = GetAttributeType(simpleType);
-                        var valueAttributeInfo = new XmlAttributeInfo(string.Empty, valueAttributeType);
-                        childNodeType.Define(valueAttributeInfo);
+                        bool firstTime;
+                        childNodeType = WrapSimpleType(simpleType, out firstTime);
+
+                        // The collada.xsd's ListOfUInts element breaks the generated Schema.cs file otherwise.
+                        if (firstTime)
+                        {
+                            // Add the value attribute
+                            XmlAttributeType valueAttributeType = GetAttributeType(simpleType);
+                            var valueAttributeInfo = new XmlAttributeInfo(string.Empty, valueAttributeType);
+                            childNodeType.Define(valueAttributeInfo);
+                        }
                     }
                     else
                     {
@@ -801,12 +815,14 @@ namespace Sce.Atf.Dom
         }
 
         // Wrap a simple type if it's a global or root element
-        private DomNodeType WrapSimpleType(XmlSchemaSimpleType simpleType)
+        private DomNodeType WrapSimpleType(XmlSchemaSimpleType simpleType, out bool firstTime)
         {
             string typeName = simpleType.QualifiedName.ToString();
             DomNodeType nodeType;
+            firstTime = false;
             if (!m_nodeTypes.TryGetValue(typeName, out nodeType))
             {
+                firstTime = true;
                 nodeType = new DomNodeType(typeName);
                 m_nodeTypes.Add(typeName, nodeType);
 

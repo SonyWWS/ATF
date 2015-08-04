@@ -4,8 +4,10 @@ using System.Runtime.InteropServices;
 
 namespace Sce.Atf
 {
+    /// <summary>
+    /// This is the managed equivalent to DROPDESCRIPTION in the Win32 ShlObj.h.</summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Size = 1044)]
-    internal struct DropDescription
+    public struct DropDescription
     {
         public DropImageType type;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]

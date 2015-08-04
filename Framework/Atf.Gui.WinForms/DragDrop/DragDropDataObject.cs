@@ -478,10 +478,10 @@ namespace Sce.Atf
             ClearStorage();
         }
 
-        [DllImport("urlmon.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("urlmon.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         private static extern int CopyStgMedium(ref STGMEDIUM pcstgmedSrc, ref STGMEDIUM pstgmedDest);
 
-        [DllImport("ole32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        [DllImport("ole32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         private static extern void ReleaseStgMedium(ref STGMEDIUM pmedium);
 
         private void ClearStorage()

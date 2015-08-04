@@ -10,6 +10,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
     {
         /// <summary>
         /// Get or set the name of the target</summary>
+        [LocalizedName("Name")]
         public string Name
         {
             get { return m_name; }
@@ -25,6 +26,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
         /// <summary>
         /// Get or set the type of protocol the target can use</summary>
+        [LocalizedName("Platform")]
         public string Platform
         {
             get { return m_platform; }
@@ -40,6 +42,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
         /// <summary>
         /// Get or set the network endpoint in string format</summary>
+        [LocalizedName("Endpoint")]
         public string Endpoint
         {
             get { return m_endPoint; }
@@ -55,6 +58,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
         /// <summary>
         /// Get or set the type of protocol the target can use</summary>
+        [LocalizedName("Protocol")]
         public string Protocol
         {
             get { return m_protocol; }
@@ -71,6 +75,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Get or set whether the target is persisted for the current application only, current user, 
         /// or all users on a machine</summary>
+        [LocalizedName("Scope")]
         public TargetScope Scope
         {
             get { return m_scope; }

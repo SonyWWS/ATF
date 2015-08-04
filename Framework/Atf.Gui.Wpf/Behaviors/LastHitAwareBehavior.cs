@@ -70,13 +70,6 @@ namespace Sce.Atf.Wpf.Behaviors
     /// Mouse utility functions</summary>
     public class MouseUtilities
     {
-        [StructLayout(LayoutKind.Sequential)]
-        private struct Win32Point
-        {
-            public Int32 X;
-            public Int32 Y;
-        };
-
         /// <summary>
         /// Move the cursor to specified screen coordinates. For more details, see
         /// http://msdn.microsoft.com/en-us/library/windows/desktop/ms648394%28v=vs.85%29.aspx .</summary>
@@ -87,10 +80,10 @@ namespace Sce.Atf.Wpf.Behaviors
         public static extern bool SetCursorPos(int x, int y);
 
         [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(ref Win32Point pt);
+        private static extern bool GetCursorPos(ref User32.POINT pt);
 
         [DllImport("user32.dll")]
-        private static extern bool ScreenToClient(IntPtr hwnd, ref Win32Point pt);
+        private static extern bool ScreenToClient(IntPtr hwnd, ref User32.POINT pt);
 
         /// <summary>
         /// Get corrected cursor coordinates relative to Visual</summary>
@@ -98,7 +91,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <returns>Cursor position in current coordinate system of the Visual</returns>
         public static Point CorrectGetPosition(Visual relativeTo)
         {
-            Win32Point w32Mouse = new Win32Point();
+            var w32Mouse = new User32.POINT();
             GetCursorPos(ref w32Mouse);
             return relativeTo.PointFromScreen(new Point(w32Mouse.X, w32Mouse.Y));
         }

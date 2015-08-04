@@ -10,10 +10,10 @@ namespace Sce.Atf
     [StructLayout(LayoutKind.Sequential)]
     public struct BITMAP
     {
-        public long bmType;
-        public long bmWidth;
-        public long bmHeight;
-        public long bmWidthBytes;
+        public int bmType;
+        public int bmWidth;
+        public int bmHeight;
+        public int bmWidthBytes;
         public short bmPlanes;
         public short bmBitsPixel;
         public IntPtr bmBits;

@@ -1,7 +1,6 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Sce.Atf
@@ -49,7 +48,7 @@ namespace Sce.Atf
         /// <summary>
         /// Sets the IsDefault drop description flag for the associated DataObject.
         /// </summary>
-        /// <param name="dataObject">The associdated DataObject.</param>
+        /// <param name="dataObject">The associated DataObject.</param>
         /// <param name="isDefault">True to set the flag, False to unset it.</param>
         public static void SetDropDescriptionIsDefault(IComDataObject dataObject, bool isDefault)
         {
@@ -59,7 +58,7 @@ namespace Sce.Atf
         /// <summary>
         /// Sets the InvalidatedRequired drop description flag for the associated DataObject.
         /// </summary>
-        /// <param name="dataObject">The associdated DataObject.</param>
+        /// <param name="dataObject">The associated DataObject.</param>
         /// <param name="required">True to set the flag, False to unset it.</param>
         public static void SetInvalidateRequired(IComDataObject dataObject, bool required)
         {
@@ -119,7 +118,6 @@ namespace Sce.Atf
         /// </summary>
         public static object GetDropDescription(IComDataObject dataObject)
         {
-            // CFSTR_DROPDESCRIPTION
             DropDescription desc;
             if (dataObject.TryGetData("DropDescription", out desc))
             {
@@ -187,7 +185,7 @@ namespace Sce.Atf
                 if (data.TryGetData("DragWindow", out hwnd))
                 {
                     const uint WM_INVALIDATEDRAGIMAGE = 0x403;
-                    PostMessage(hwnd, WM_INVALIDATEDRAGIMAGE, IntPtr.Zero, IntPtr.Zero);
+                    User32.PostMessage(hwnd, WM_INVALIDATEDRAGIMAGE, IntPtr.Zero, IntPtr.Zero);
                 }
 
                 // The invalidate required flag only lasts for one invalidation
@@ -227,12 +225,5 @@ namespace Sce.Atf
             }
             return false;
         }
-
-        #region -- DLL imports ------------------------------------------------
-
-        [DllImport("user32.dll")]
-        private static extern void PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-
-        #endregion
     }
 }

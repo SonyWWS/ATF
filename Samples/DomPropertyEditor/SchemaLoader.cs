@@ -99,6 +99,14 @@ namespace DomPropertyEditorSample
                 //       Alternatively schema annotations can used.
                 //       However, programmatic approach is recommend because of type safety.
 
+                // To have custom URLs in the property's description in PropertyGrid,
+                //  use this Atlassian Confluence wiki format:
+                string url = "[More info|https://github.com/SonyWWS/ATF/wiki/DOM-Property-Editor-Programming-Discussion].".Localize();
+                
+                // To open a document when the user clicks the link, you can use this format,
+                //  but command-line arguments can't be passed. To prepare command-line arguments,
+                //  override PropertyGrid's LinkClicked().
+                //string url = @"[More info|./Resources/help.chm].".Localize(); //can't have command-line arguments passed
 
                 // Descriptors for armorType.
                 string general = "General".Localize();
@@ -107,7 +115,7 @@ namespace DomPropertyEditorSample
                            "Name".Localize(),
                            Schema.armorType.nameAttribute,
                            general,
-                           "Armor name".Localize(),
+                           "Armor name".Localize() + " " + url,
                            false
                     ));
 
@@ -115,7 +123,7 @@ namespace DomPropertyEditorSample
                            "Defense".Localize(),
                            Schema.armorType.defenseAttribute,
                            general,
-                           "Armor defense".Localize(),
+                           "Armor defense".Localize() + " " + url,
                            false,
                            new NumericEditor(typeof(int))
                     ));
@@ -124,7 +132,7 @@ namespace DomPropertyEditorSample
                            "Price".Localize(),
                            Schema.armorType.priceAttribute,
                            general,
-                           "Armor price in gold".Localize(),
+                           "Armor price in gold".Localize() + " " + url,
                            false,
                            new NumericEditor(typeof(int))
                     ));
@@ -137,7 +145,7 @@ namespace DomPropertyEditorSample
                          "Spike".Localize(),
                          Schema.clubType.spikesAttribute,
                          general,
-                         "Club Has Spikes".Localize(),
+                         "Club Has Spikes".Localize() + " " + url,
                          false,
                          new BoolEditor()
                   ));
@@ -147,7 +155,7 @@ namespace DomPropertyEditorSample
                        "Damage".Localize(),
                        Schema.clubType.DamageAttribute,
                        general,
-                       "Amount of damage per strike".Localize(),
+                       "Amount of damage per strike".Localize() + " " + url,
                        false,
                        new NumericEditor(typeof(int))
                 ));
@@ -156,7 +164,7 @@ namespace DomPropertyEditorSample
                         "Weight".Localize(),
                         Schema.clubType.wieghtAttribute,
                         general,
-                        "Weight of the club".Localize(),
+                        "Weight of the club".Localize() + " " + url,
                         false,
                         new NumericEditor(typeof(float))
                  ));
@@ -169,7 +177,7 @@ namespace DomPropertyEditorSample
                            "Name".Localize(),
                             Schema.gameObjectType.nameAttribute,
                             null,
-                            "Object name".Localize(),
+                            "Object name".Localize() + " " + url,
                             false
                             ));
 
@@ -179,7 +187,7 @@ namespace DomPropertyEditorSample
                             "Visible".Localize(),
                             Schema.gameObjectType.visibleAttribute,
                             null,
-                            "Show/Hide object in editor".Localize(),
+                            "Show/Hide object in editor".Localize() + " " + url,
                             false,
                             new BoolEditor()
                             ));
@@ -194,7 +202,7 @@ namespace DomPropertyEditorSample
                            "Translate".Localize(),
                            Schema.gameObjectType.translateAttribute,
                            xformCategory,
-                           "Object's position".Localize(),
+                           "Object's position".Localize() + " " + url,
                            false,
                            transEditor
                            ));
@@ -206,7 +214,7 @@ namespace DomPropertyEditorSample
                            "Scale".Localize(),
                            Schema.gameObjectType.scaleAttribute,
                            xformCategory,
-                           "Object's scale".Localize(),
+                           "Object's scale".Localize() + " " + url,
                            false,
                            scaleEditor
                            ));
@@ -219,7 +227,7 @@ namespace DomPropertyEditorSample
                            "Rotation".Localize(),
                            Schema.gameObjectType.rotateAttribute,
                            xformCategory,
-                           "Object's orientation".Localize(),
+                           "Object's orientation".Localize() + " " + url,
                            false,
                            rotationEditor
                            ));
@@ -236,7 +244,7 @@ namespace DomPropertyEditorSample
                            "Skill".Localize(),
                            Schema.orcType.skillAttribute,
                            chCategory,
-                           "Skill".Localize(),
+                           "Skill".Localize() + " " + url,
                            false,
                            new BoundedIntEditor(1,120)
                            ));
@@ -248,7 +256,7 @@ namespace DomPropertyEditorSample
                           "Weight".Localize(),
                           Schema.orcType.weightAttribute,
                           chCategory,
-                          "Weight".Localize(),
+                          "Weight".Localize() + " " + url,
                           false,                          
                           new BoundedFloatEditor(80, 400)
                           ));
@@ -280,7 +288,7 @@ namespace DomPropertyEditorSample
                          "Level".Localize(),
                          Schema.orcType.levelAttribute,
                          chCategory,
-                         "Character level".Localize(),
+                         "Character level".Localize() + " " + url,
                          false,
                          lvEnumEditor,
                          lvTypeConverter
@@ -302,7 +310,7 @@ namespace DomPropertyEditorSample
                          "Emotion".Localize(),
                          Schema.orcType.emotionAttribute,
                          chCategory,
-                         "Emotion".Localize(),
+                         "Emotion".Localize() + " " + url,
                          false,
                          emotionEditor
                          ));
@@ -318,7 +326,7 @@ namespace DomPropertyEditorSample
                         "Goals".Localize(),
                         Schema.orcType.goalsAttribute,
                         chCategory,
-                        "Goals".Localize(),
+                        "Goals".Localize() + " " + url,
                         false,
                         goalsEditor,
                         goalsConverter
@@ -330,7 +338,7 @@ namespace DomPropertyEditorSample
                        "Health".Localize(),
                        Schema.orcType.healthAttribute,
                        chCategory,
-                       "Orc's health".Localize(),
+                       "Orc's health".Localize() + " " + url,
                        false,
                        new NumericEditor(typeof(int))
                        ));
@@ -401,7 +409,7 @@ namespace DomPropertyEditorSample
                         "Armor".Localize(),
                         Schema.orcType.armorChild,
                         weaponCategory,
-                        "Armors".Localize(),
+                        "Armors".Localize() + " " + url,
                         false,
                         collectionEditor
                         ));
@@ -411,7 +419,7 @@ namespace DomPropertyEditorSample
                        "Club".Localize(),
                        Schema.orcType.clubChild,
                        weaponCategory,
-                       "Club".Localize(),
+                       "Club".Localize() + " " + url,
                        false,
                        collectionEditor
                        ));
@@ -421,7 +429,7 @@ namespace DomPropertyEditorSample
                        "Orcs".Localize(),
                        Schema.orcType.orcChild,
                        "Children".Localize(),
-                       "Orc children".Localize(),
+                       "Orc children".Localize() + " " + url,
                        false,
                        collectionEditor
                        ));
@@ -437,7 +445,7 @@ namespace DomPropertyEditorSample
                          "Skin".Localize(),
                          Schema.orcType.skinColorAttribute,
                          renderingCategory,
-                         "Skin color".Localize(),
+                         "Skin color".Localize() + " " + url,
                          false,
                          new ColorPickerEditor(),
                          new IntColorConverter()
@@ -450,7 +458,7 @@ namespace DomPropertyEditorSample
                          "Texture file".Localize(),
                          Schema.orcType.textureFileAttribute,
                          renderingCategory,
-                         "Texture file".Localize(),
+                         "Texture file".Localize() + " " + url,
                          false,
                          new FileUriEditor("Texture file (*.dds)|*.dds")
                          ));
@@ -462,7 +470,7 @@ namespace DomPropertyEditorSample
                          "Texture Transform".Localize(),
                          Schema.orcType.textureTransformAttribute,
                          renderingCategory,
-                         "Texture Transform".Localize(),
+                         "Texture Transform".Localize() + " " + url,
                          false,
                          new NumericMatrixEditor()
                          ));
@@ -475,7 +483,7 @@ namespace DomPropertyEditorSample
                          "Texture Array".Localize(),
                          Schema.orcType.textureArrayAttribute,
                          renderingCategory,
-                         "Texture Array".Localize(),
+                         "Texture Array".Localize() + " " + url,
                          false,
                          new ArrayEditor()
                          ));
@@ -488,7 +496,7 @@ namespace DomPropertyEditorSample
                         "Revision data".Localize(),
                         Schema.orcType.TextureRevDateAttribute,
                         renderingCategory,
-                        "Texture revision data and time".Localize(),
+                        "Texture revision data and time".Localize() + " " + url,
                         true
                         ));
             
@@ -499,7 +507,7 @@ namespace DomPropertyEditorSample
                         "Resource Folder".Localize(),
                         Schema.orcType.resourceFolderAttribute,
                         renderingCategory,
-                        "Resource folder".Localize(),
+                        "Resource folder".Localize() + " " + url,
                         false,
                         new FolderUriEditor()
                         ));

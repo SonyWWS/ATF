@@ -56,7 +56,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets or sets the control's name, which may be displayed as the title of
-        /// a hosting control or form</summary>
+        /// a hosting control or form, and used to identify the control when persisting
+        /// the windows layout.</summary>
         public string Name
         {
             get { return m_name; }
@@ -66,6 +67,28 @@ namespace Sce.Atf.Applications
                 {
                     Changing.Raise(this, EventArgs.Empty);
                     m_name = value;
+                    Changed.Raise(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the optional display name. By default, it is always the same value as
+        /// Name. It is used as the title of the hosting Control or Form.</summary>
+        public string DisplayName
+        {
+            get
+            {
+                if (m_displayName != null)
+                    return m_displayName;
+                return Name;
+            }
+            set
+            {
+                if (value != m_displayName)
+                {
+                    Changing.Raise(this, EventArgs.Empty);
+                    m_displayName = value;
                     Changed.Raise(this, EventArgs.Empty);
                 }
             }
@@ -265,6 +288,7 @@ namespace Sce.Atf.Applications
         private Control m_control;
         private Control m_hostControl;
         private string m_name;
+        private string m_displayName;
         private string m_description;
         private StandardControlGroup m_group;
         private Image m_image;

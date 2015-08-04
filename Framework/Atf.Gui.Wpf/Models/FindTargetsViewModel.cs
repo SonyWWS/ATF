@@ -12,6 +12,8 @@ using Sce.Atf.Wpf.Applications;
 
 namespace Sce.Atf.Wpf.Models
 {
+    /// <summary>
+    /// Interaction logic for the FindTargetsDialog that finds targets.</summary>
     class FindTargetsViewModel : DialogViewModelBase
     {
         /// <summary>

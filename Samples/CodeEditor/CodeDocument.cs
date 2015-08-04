@@ -218,7 +218,7 @@ namespace CodeEditor
                 case ".txt":
                     return "Text".Localize();
                 case ".cs":
-                    return "CSharp".Localize();
+                    return "C#".Localize();
                 case ".py":
                     return "Python".Localize();
                 case ".lua":

@@ -3,13 +3,12 @@
   <StringItem id="&amp;About" context="Get information about application" translation="&amp;About" />
   <StringItem id="(none)" context="No flags" translation="(none)" />
   <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0} files" />
+  <StringItem id="&lt;undefined&gt;" context="The '&lt;' and '&gt;' indicate that this is not a real name." translation="&lt;undefined&gt;" />
   <StringItem id="A file with that name is already open" context="" translation="A file with that name is already open" />
-  <StringItem id="Activate Window" context="" translation="Activate Window" />
-  <StringItem id="Add an existing asset" context="" translation="Add an existing asset" />
   <StringItem id="Add document {0} to version control?" context="" translation="Add document {0} to version control?" />
   <StringItem id="Add Document to Version Control" context="this is the title of a dialog box that is asking a question" translation="Add Document to Version Control" />
+  <StringItem id="Add New {0}" context="" translation="Add New {0}" />
   <StringItem id="Add to source control" context="" translation="Add to source control" />
-  <StringItem id="Add/Existing Asset" context="" translation="Add/Existing Asset" />
   <StringItem id="Align bottoms of selected items" context="" translation="Align bottoms of selected items" />
   <StringItem id="Align centers of selected items" context="" translation="Align centers of selected items" />
   <StringItem id="Align left sides of selected items" context="" translation="Align left sides of selected items" />
@@ -28,10 +27,7 @@
   <StringItem id="All Changes will be lost. Do you want to proceed?" context="" translation="All Changes will be lost. Do you want to proceed?" />
   <StringItem id="All documents saved" context="" translation="All documents saved" />
   <StringItem id="All files" context="" translation="All files" />
-  <StringItem id="All Files" context="" translation="All Files" />
   <StringItem id="Application" context="" translation="Application" />
-  <StringItem id="Assets/Reload Asset" context="" translation="Assets/Reload Asset" />
-  <StringItem id="Assets/Unload Unused Assets" context="" translation="Assets/Unload Unused Assets" />
   <StringItem id="Back" context="the back side of the model that is being viewed" translation="Back" />
   <StringItem id="Bottom" context="the bottom side of the model that is being viewed" translation="Bottom" />
   <StringItem id="Can't load settings" context="" translation="Can't load settings" />
@@ -44,7 +40,6 @@
   <StringItem id="Command Icon Size" context="" translation="Command Icon Size" />
   <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="Copy" />
   <StringItem id="Copy the selection and place it on the clipboard" context="" translation="Copy the selection and place it on the clipboard" />
-  <StringItem id="Could not find plugin: " context="" translation="Could not find plugin: " />
   <StringItem id="Couldn't save all documents" context="" translation="Couldn't save all documents" />
   <StringItem id="Creates a new {0} document" context="{0} is the type of document to create" translation="Creates a new {0} document" />
   <StringItem id="Creates a new target" context="" translation="Creates a new target" />
@@ -55,19 +50,18 @@
   <StringItem id="Delete the selection" context="" translation="Delete the selection" />
   <StringItem id="Deselect All" context="Deselect all items" translation="Deselect All" />
   <StringItem id="Deselect all items" context="" translation="Deselect all items" />
-  <StringItem id="Details View" context="Show detailed view of assets" translation="Details View" />
   <StringItem id="Disable Source Control" context="" translation="Disable Source Control" />
   <StringItem id="Document Saved" context="" translation="Document Saved" />
   <StringItem id="Document Saved As" context="" translation="Document Saved As" />
   <StringItem id="Documents" context="" translation="Documents" />
   <StringItem id="Edit" context="this is the name of a menu" translation="Edit" />
-  <StringItem id="Edit Label" context="" translation="Edit Label" />
-  <StringItem id="Edit plugin list" context="" translation="Edit plugin list" />
   <StringItem id="Edit user preferences" context="" translation="Edit user preferences" />
   <StringItem id="Edit Vita Target in Neighborhood" context="" translation="Edit Vita Target in Neighborhood" />
   <StringItem id="Editing Commands" context="" translation="Editing Commands" />
-  <StringItem id="Enable source control" context="" translation="Enable source control" />
+  <StringItem id="empty" context="" translation="empty" />
   <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
+  <StringItem id="Enable source control" context="" translation="Enable source control" />
+  <StringItem id="Endpoint" context="" translation="Endpoint" />
   <StringItem id="Error" context="" translation="Error" />
   <StringItem id="Exit" context="Exit the application" translation="Exit" />
   <StringItem id="Exit Application" context="" translation="Exit Application" />
@@ -84,8 +78,8 @@
   <StringItem id="Front" context="the front side of the model that is being viewed" translation="Front" />
   <StringItem id="Get information about application" context="" translation="Get information about application" />
   <StringItem id="Get latest version from source control" context="" translation="Get latest version from source control" />
-  <StringItem id="Group" context="Group the selection into a single item" translation="Group" />
   <StringItem id="Group" context="" translation="Group" />
+  <StringItem id="Group" context="Group the selection into a single item" translation="Group" />
   <StringItem id="Group the selection into a single item" context="" translation="Group the selection into a single item" />
   <StringItem id="Help" context="this is the name of a menu" translation="Help" />
   <StringItem id="Help Commands" context="" translation="Help Commands" />
@@ -98,6 +92,7 @@
   <StringItem id="Layouts" context="" translation="Layouts" />
   <StringItem id="Left" context="the left side of the model that is being viewed" translation="Left" />
   <StringItem id="Load or Save Settings..." context="" translation="Load or Save Settings..." />
+  <StringItem id="LocalHost" context="The English version should have had a space between the words, but it's too late to change" translation="LocalHost" />
   <StringItem id="Lock" context="" translation="Lock" />
   <StringItem id="Lock the selection to disable editing" context="" translation="Lock the selection to disable editing" />
   <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
@@ -110,6 +105,7 @@
   <StringItem id="Modify" context="this is the name of a menu" translation="Modify" />
   <StringItem id="Modify Commands" context="" translation="Modify Commands" />
   <StringItem id="Must be between 1 and 32" context="" translation="Must be between 1 and 32" />
+  <StringItem id="Name" context="" translation="Name" />
   <StringItem id="New" context="Name of a command" translation="New" />
   <StringItem id="New {0}" context="" translation="New {0}" />
   <StringItem id="No entries in recent files list" context="" translation="No entries in recent files list" />
@@ -129,7 +125,7 @@
   <StringItem id="Pin active document" context="" translation="Pin active document" />
   <StringItem id="Pin active file to the recent files list" context="" translation="Pin active file to the recent files list" />
   <StringItem id="Pin file" context="Pin active file to the recent files list" translation="Pin file" />
-  <StringItem id="Plugins" context="" translation="Plugins" />
+  <StringItem id="Platform" context="" translation="Platform" />
   <StringItem id="Preferences..." context="Edit user preferences" translation="Preferences..." />
   <StringItem id="Preferred Receiving IP Address" context="" translation="Preferred Receiving IP Address" />
   <StringItem id="Primary Destination IP Endpoint" context="" translation="Primary Destination IP Endpoint" />
@@ -137,9 +133,9 @@
   <StringItem id="Print the active document" context="" translation="Print the active document" />
   <StringItem id="Print..." context="Print the active document" translation="Print..." />
   <StringItem id="Proceed with Revert?" context="" translation="Proceed with Revert?" />
+  <StringItem id="Protocol" context="" translation="Protocol" />
   <StringItem id="PS3 Target" context="" translation="PS3 Target" />
   <StringItem id="PS4 Target" context="" translation="PS4 Target" />
-  <StringItem id="Ready" context="Application is ready" translation="Ready" />
   <StringItem id="Recent Files" context="" translation="Recent Files" />
   <StringItem id="Recent Files Count" context="Number of recent files to display in File Menu" translation="Recent Files Count" />
   <StringItem id="Reconcile Offline Work" context="" translation="Reconcile Offline Work" />
@@ -147,21 +143,21 @@
   <StringItem id="Redo {0}" context="{0} is the name of the command" translation="Redo {0}" />
   <StringItem id="Redo the last edit" context="" translation="Redo the last edit" />
   <StringItem id="Refresh status in source control" context="" translation="Refresh status in source control" />
-  <StringItem id="Reload Asset" context="" translation="Reload Asset" />
-  <StringItem id="Remove " context="" translation="Remove " />
+  <StringItem id="Remove {0}" context="" translation="Remove {0}" />
   <StringItem id="Remove selected target" context="" translation="Remove selected target" />
   <StringItem id="Remove Split" context="Remove the split" translation="Remove Split" />
   <StringItem id="Remove the split" context="" translation="Remove the split" />
   <StringItem id="Revert add or check out from source control" context="" translation="Revert add or check out from source control" />
   <StringItem id="Right" context="the right side of the model that is being viewed" translation="Right" />
-  <StringItem id="Save" context="Save the active file" translation="Save" />
   <StringItem id="Save" context="" translation="Save" />
+  <StringItem id="Save" context="Save the active file" translation="Save" />
   <StringItem id="Save All" context="Saves all open files" translation="Save All" />
   <StringItem id="Save all open files" context="" translation="Save all open files" />
   <StringItem id="Save As ..." context="Save the active file under a new name" translation="Save As ..." />
   <StringItem id="Save Layout As..." context="" translation="Save Layout As..." />
   <StringItem id="Save the active file" context="" translation="Save the active file" />
   <StringItem id="Save the active file under a new name" context="" translation="Save the active file under a new name" />
+  <StringItem id="Scope" context="" translation="Scope" />
   <StringItem id="Select All" context="Select all items" translation="Select All" />
   <StringItem id="Select all items" context="" translation="Select all items" />
   <StringItem id="Select unselected items and deselect selected items" context="" translation="Select unselected items and deselect selected items" />
@@ -172,11 +168,9 @@
   <StringItem id="Show All" context="Show all hidden objects" translation="Show All" />
   <StringItem id="Show all hidden objects" context="" translation="Show all hidden objects" />
   <StringItem id="Show all selected objects" context="" translation="Show all selected objects" />
-  <StringItem id="Show detailed view of assets" context="" translation="Show detailed view of assets" />
   <StringItem id="Show Last Hidden" context="Show the last hidden object" translation="Show Last Hidden" />
   <StringItem id="Show only the selected objects and hide all others" context="" translation="Show only the selected objects and hide all others" />
   <StringItem id="Show the last hidden object" context="" translation="Show the last hidden object" />
-  <StringItem id="Show thumbnail view of assets" context="" translation="Show thumbnail view of assets" />
   <StringItem id="Size of icons on Toolbar buttons" context="" translation="Size of icons on Toolbar buttons" />
   <StringItem id="Size/Make Equal" context="Make selected items have the same size" translation="Size/Make Equal" />
   <StringItem id="Size/Make Heights Equal" context="Make selected items have the same height" translation="Size/Make Heights Equal" />
@@ -208,7 +202,6 @@
   <StringItem id="The scope type is unknown" context="" translation="The scope type is unknown" />
   <StringItem id="There was a problem opening the file" context="" translation="There was a problem opening the file" />
   <StringItem id="There was a problem saving the file" context="" translation="There was a problem saving the file" />
-  <StringItem id="Thumbnail View" context="" translation="Thumbnail View" />
   <StringItem id="Tile Horizontal" context="Tile Documents Horizontally" translation="Tile Horizontal" />
   <StringItem id="Tile Overlapping" context="Tile Documents Overlapping" translation="Tile Overlapping" />
   <StringItem id="Tile the documents, all together as tabbed items, in the central region of the application" context="" translation="Tile the documents, all together as tabbed items, in the central region of the application" />
@@ -222,7 +215,6 @@
   <StringItem id="Ungroup" context="Ungroup any selected groups" translation="Ungroup" />
   <StringItem id="Ungroup any selected groups" context="" translation="Ungroup any selected groups" />
   <StringItem id="Unknown error code" context="" translation="Unknown error code" />
-  <StringItem id="Unload unused Assets" context="" translation="Unload unused Assets" />
   <StringItem id="Unlock" context="Unlock the selection to enable editing" translation="Unlock" />
   <StringItem id="Unlock the selection to enable editing" context="" translation="Unlock the selection to enable editing" />
   <StringItem id="Unpin {0}" context="{0} will be replaced with a file name " translation="Unpin {0}" />

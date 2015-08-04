@@ -205,6 +205,17 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         }
 
         /// <summary>
+        /// Gets or sets the world x-coordinate that begins the timeline. This is the lowest possible
+        /// coordinate that can appear when the horizontal scrollbar is all the way to the left. The
+        /// default value is zero. If setting this to something besides zero, consider deriving from
+        /// DefaultTimelineConstraints, and overriding IsStartValid().</summary>
+        public float TimelineStart
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets transform matrix for transforming canvas (world) coordinates to Windows
         /// client coordinates</summary>
         public override Matrix Transform
@@ -213,6 +224,12 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             {
                 Matrix t = base.Transform;
                 t.Translate(m_timelineRenderer.HeaderWidth, 0, MatrixOrder.Append);
+
+                // Set the world coordinate that appears on the far left of the timeline scale.
+                //  We need t = Inverse(x) * t where 'x' is the x-translation.
+                //  Inverse(x) is just the negative of the translation.
+                t.Translate(-TimelineStart, 0.0f);
+
                 return t;
             }
         }

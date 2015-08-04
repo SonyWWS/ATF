@@ -3,6 +3,9 @@
 // Command Line:  DomGen "game.xsd" "GameSchema.cs" "Game.UsingDom" "UsingDom"
 // -------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 using Sce.Atf.Dom;
 
 namespace UsingDom
@@ -13,27 +16,39 @@ namespace UsingDom
 
         public static void Initialize(XmlSchemaTypeCollection typeCollection)
         {
-            gameType.Type = typeCollection.GetNodeType("gameType");
+            Initialize((ns,name)=>typeCollection.GetNodeType(ns,name),
+                (ns,name)=>typeCollection.GetRootElement(ns,name));
+        }
+
+        public static void Initialize(IDictionary<string, XmlSchemaTypeCollection> typeCollections)
+        {
+            Initialize((ns,name)=>typeCollections[ns].GetNodeType(name),
+                (ns,name)=>typeCollections[ns].GetRootElement(name));
+        }
+
+        private static void Initialize(Func<string, string, DomNodeType> getNodeType, Func<string, string, ChildInfo> getRootElement)
+        {
+            gameType.Type = getNodeType("Game.UsingDom", "gameType");
             gameType.nameAttribute = gameType.Type.GetAttributeInfo("name");
             gameType.gameObjectChild = gameType.Type.GetChildInfo("gameObject");
 
-            gameObjectType.Type = typeCollection.GetNodeType("gameObjectType");
+            gameObjectType.Type = getNodeType("Game.UsingDom", "gameObjectType");
             gameObjectType.nameAttribute = gameObjectType.Type.GetAttributeInfo("name");
 
-            ogreType.Type = typeCollection.GetNodeType("ogreType");
+            ogreType.Type = getNodeType("Game.UsingDom", "ogreType");
             ogreType.nameAttribute = ogreType.Type.GetAttributeInfo("name");
             ogreType.sizeAttribute = ogreType.Type.GetAttributeInfo("size");
             ogreType.strengthAttribute = ogreType.Type.GetAttributeInfo("strength");
 
-            dwarfType.Type = typeCollection.GetNodeType("dwarfType");
+            dwarfType.Type = getNodeType("Game.UsingDom", "dwarfType");
             dwarfType.nameAttribute = dwarfType.Type.GetAttributeInfo("name");
             dwarfType.ageAttribute = dwarfType.Type.GetAttributeInfo("age");
             dwarfType.experienceAttribute = dwarfType.Type.GetAttributeInfo("experience");
 
-            treeType.Type = typeCollection.GetNodeType("treeType");
+            treeType.Type = getNodeType("Game.UsingDom", "treeType");
             treeType.nameAttribute = treeType.Type.GetAttributeInfo("name");
 
-            gameRootElement = typeCollection.GetRootElement("game");
+            gameRootElement = getRootElement(NS, "game");
         }
 
         public static class gameType

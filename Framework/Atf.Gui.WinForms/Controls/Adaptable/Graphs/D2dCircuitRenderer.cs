@@ -973,11 +973,31 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
             DrawExpandedGroupPins(element, g);
 
+            // draw sub-edges first unless they connect to expanded sub-groups
+            var edgesConnectingExpandedGroups = new List<TWire>();
+            foreach (TWire subEdge in group.SubEdges)
+            {
+                var subGroup = subEdge.FromNode.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                if (subGroup != null && subGroup.Expanded)
+                    edgesConnectingExpandedGroups.Add(subEdge);
+                else
+                {
+                    subGroup = subEdge.ToNode.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                    if (subGroup != null && subGroup.Expanded)
+                        edgesConnectingExpandedGroups.Add(subEdge);
+                    else
+                    {
+                        var style = GetStyle(subEdge);
+                        Draw(subEdge, style, g);
+                    }
+                }
+            }
+
             // ensure to draw the drag target first,  prevent it from hiding the drag sources 
             TElement[] subNodes = group.SubNodes.ToArray();
             for (int i = 0; i < subNodes.Length; ++i)
             {
-                var subNode = subNodes[i];
+                TElement subNode = subNodes[i];
                 DiagramDrawingStyle customStyle = GetCustomStyle(subNode);
                 if (customStyle == DiagramDrawingStyle.DropTarget)
                 {
@@ -986,7 +1006,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
             }
 
-            foreach (var subNode in subNodes)
+            foreach (TElement subNode in subNodes)
             {
                 DiagramDrawingStyle customStyle = GetCustomStyle(subNode);
                 if (customStyle == DiagramDrawingStyle.None)
@@ -1000,8 +1020,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     Draw(subNode, customStyle, g);
             }
 
-            // draw sub-edges after recursively draw sub-nodes
-            foreach (var subEdge in group.SubEdges)
+            // draw sub-edges that connect to expanded sub-groups
+            foreach (TWire subEdge in edgesConnectingExpandedGroups)
             {
                 var style = GetStyle(subEdge);
                 Draw(subEdge, style, g);

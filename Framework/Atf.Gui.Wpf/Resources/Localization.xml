@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
-  <StringItem id="_About" context="the '_' means that 'A' is a shortcut key" translation="_About" />
   <StringItem id="_About" context="" translation="_About" />
+  <StringItem id="_About" context="the '_' means that 'A' is a shortcut key" translation="_About" />
   <StringItem id="_Contents" context="the '_' means that 'C' is a shortcut key" translation="_Contents" />
   <StringItem id="_Edit" context="" translation="_Edit" />
   <StringItem id="_File" context="" translation="_File" />
@@ -77,7 +77,6 @@
   <StringItem id="Help/Help" context="" translation="Help/Help" />
   <StringItem id="Host" context="" translation="Host" />
   <StringItem id="Host:" context="" translation="Host:" />
-  <StringItem id="Id" context="" translation="Id" />
   <StringItem id="Info" context="" translation="Info" />
   <StringItem id="Layout Name" context="" translation="Layout Name" />
   <StringItem id="Load and Save Settings" context="" translation="Load and Save Settings" />
@@ -89,8 +88,6 @@
   <StringItem id="Modified files (Select items to check in)" context="" translation="Modified files (Select items to check in)" />
   <StringItem id="Modify" context="" translation="Modify" />
   <StringItem id="Modify Commands" context="" translation="Modify Commands" />
-  <StringItem id="Move Down" context="" translation="Move Down" />
-  <StringItem id="Move Up" context="" translation="Move Up" />
   <StringItem id="Name:" context="" translation="Name:" />
   <StringItem id="New Layout" context="" translation="New Layout" />
   <StringItem id="No" context="" translation="No" />
@@ -153,6 +150,7 @@
   <StringItem id="What would you like to do?" context="" translation="What would you like to do?" />
   <StringItem id="Window Management Commands" context="" translation="Window Management Commands" />
   <StringItem id="Would you like to continue the application so that you can save your work?" context="" translation="Would you like to continue the application so that you can save your work?" />
+  <StringItem id="Would you like to download the latest version?" context="" translation="Would you like to download the latest version?" />
   <StringItem id="Yes" context="" translation="Yes" />
   <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
 </StringLocalizationTable>

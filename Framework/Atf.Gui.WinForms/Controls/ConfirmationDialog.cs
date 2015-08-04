@@ -25,7 +25,8 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Gets and sets the text that appears on the Yes button. "Yes" is the default.</summary>
+        /// Gets and sets the text that appears on the Yes button. "&amp;Yes" is the default. Use the '&amp;'
+        /// to indicate the keyboard shortcut / hotkey.</summary>
         public string YesButtonText
         {
             get { return m_yesButton.Text; }
@@ -33,7 +34,8 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Gets and sets the text that appears on the No button. "No" is the default.</summary>
+        /// Gets and sets the text that appears on the No button. "&amp;No" is the default. Use the '&amp;'
+        /// to indicate the keyboard shortcut / hotkey.</summary>
         public string NoButtonText
         {
             get { return m_noButton.Text; }
@@ -41,7 +43,8 @@ namespace Sce.Atf.Controls
         }
 
         /// <summary>
-        /// Gets and sets the text that appears on the Cancel button. "Cancel" is the default.</summary>
+        /// Gets and sets the text that appears on the Cancel button. "Cancel" is the default. The ESC key
+        /// is bound to this button by default, via the CancelButton property.</summary>
         public string CancelButtonText
         {
             get { return m_cancelButton.Text; }

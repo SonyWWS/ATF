@@ -81,6 +81,13 @@ namespace TreeListControlDemo
                         Name = "Weight", 
                     };
 
+                    var awd = new BoolDataEditor(m_dataEditorTheme)
+                    {
+                        Owner = item,
+                        Value = (bool)node.Attribute("awd"),
+                        Name = "AWD",
+                    };
+
                     var color = new ColorDataEditor(m_dataEditorTheme)
                     {
                         Owner = item,
@@ -97,7 +104,9 @@ namespace TreeListControlDemo
                         Name = "MSRP", 
                         ShowSlider = true
                     };
-                    info.Properties = new object[] { mpg, weight, color, msrp };
+
+
+                    info.Properties = new object[] { mpg, weight, awd, color, msrp };
                 }
             }
             else

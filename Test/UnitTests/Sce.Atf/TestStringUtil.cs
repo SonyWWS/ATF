@@ -1,5 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Sce.Atf;
 
@@ -46,6 +48,74 @@ namespace UnitTests.Atf
 
             Assert.AreEqual(0, StringUtil.CompareNaturalOrder(a, a));
             Assert.AreEqual(0, StringUtil.CompareNaturalOrder(b, b));
+        }
+
+        [Test]
+        public void TestSplitAndKeepDelimiters()
+        {
+            // No delimiters.
+            string text = "nothing to parse";
+            IList<string> result = text.SplitAndKeepDelimiters();
+            Assert.AreEqual(result[0], "nothing to parse");
+
+            // No text!
+            text = "";
+            result = text.SplitAndKeepDelimiters();
+            Assert.IsTrue(result.Count == 0);
+            result = text.SplitAndKeepDelimiters(' ');
+            Assert.IsTrue(result.Count == 0);
+
+            // Null should be OK, too.
+            text = null;
+            result = text.SplitAndKeepDelimiters();
+            Assert.IsTrue(result.Count == 0);
+            result = text.SplitAndKeepDelimiters(' ');
+            Assert.IsTrue(result.Count == 0);
+
+            // Do some real parsing.
+            text = "[wiki links|http://www.google.com]";
+            result = text.SplitAndKeepDelimiters('[', '|', ']');
+            Assert.IsTrue(result.Count == 5);
+            Assert.AreEqual(result[0], "[");
+            Assert.AreEqual(result[1], "wiki links");
+            Assert.AreEqual(result[2], "|");
+            Assert.AreEqual(result[3], "http://www.google.com");
+            Assert.AreEqual(result[4], "]");
+
+            text = "This string has some [wiki links|http://www.google.com].";
+            result = text.SplitAndKeepDelimiters('[', '|', ']');
+            Assert.IsTrue(result.Count == 7);
+            Assert.AreEqual(result[0], "This string has some ");
+            Assert.AreEqual(result[1], "[");
+            Assert.AreEqual(result[2], "wiki links");
+            Assert.AreEqual(result[3], "|");
+            Assert.AreEqual(result[4], "http://www.google.com");
+            Assert.AreEqual(result[5], "]");
+            Assert.AreEqual(result[6], ".");
+
+            text = "Lots of [links|a]: [here|b] and [here|c] and [here|d]";
+            result = text.SplitAndKeepDelimiters('[', '|', ']');
+            Assert.IsTrue(result.Count == 24);
+            Assert.AreEqual(result[0], "Lots of ");
+            Assert.AreEqual(result[1], "[");
+            Assert.AreEqual(result[2], "links");
+            Assert.AreEqual(result[3], "|");
+            Assert.AreEqual(result[4], "a");
+            Assert.AreEqual(result[22], "d");
+            Assert.AreEqual(result[23], "]");
+
+            // Make sure that multiple delimiters in a row works as expected.
+            // Make sure that we can pass in an explicit array of delimiters, too.
+            text = "]]|||[[";
+            result = text.SplitAndKeepDelimiters(new[]{'[', '|', ']'});
+            Assert.IsTrue(result.Count == 7);
+            Assert.AreEqual(result[0], "]");
+            Assert.AreEqual(result[1], "]");
+            Assert.AreEqual(result[2], "|");
+            Assert.AreEqual(result[3], "|");
+            Assert.AreEqual(result[4], "|");
+            Assert.AreEqual(result[5], "[");
+            Assert.AreEqual(result[6], "[");
         }
     }
 }

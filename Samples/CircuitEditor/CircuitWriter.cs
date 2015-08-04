@@ -18,51 +18,7 @@ namespace CircuitEditorSample
             : base(typeCollection)
         {
             PreserveSimpleElements = true;
-        }
-
-        // Scan for all sub-circuits that are referenced directly or indirectly by a module in
-        //  the root of the document
-        public override void Write(DomNode root, Stream stream, Uri uri)
-        {
-            #pragma warning disable 618 //mastered sub-circuits are obsolete
-            m_usedSubCircuits = new HashSet<Sce.Atf.Controls.Adaptable.Graphs.SubCircuit>();
-            foreach (var module in root.Cast<Circuit>().Elements)
-                FindUsedSubCircuits(module.DomNode);
-            #pragma warning restore 618
-
-            base.Write(root, stream, uri);
-        }
-
-        #pragma warning disable 618 //mastered sub-circuits are obsolete
-        private void FindUsedSubCircuits(DomNode rootNode)
-        {
-            foreach (DomNode node in rootNode.Subtree)
-            {
-                var instance = node.As<SubCircuitInstance>();
-                if (instance != null)
-                {
-                    if (m_usedSubCircuits.Add(instance.SubCircuit))
-                    {
-                        // first time seeing this sub-circuit, so let's recursively add whatever it references
-                        foreach (Module module in instance.SubCircuit.Elements)
-                            FindUsedSubCircuits(module.DomNode);
-                    }
-                }
-            }
-        }
-        #pragma warning restore 618
-
-        // Filter out sub-circuits that are not actually needed
-        protected override void WriteElement(DomNode node, XmlWriter writer)
-        {
-            #pragma warning disable 618 //mastered sub-circuits are obsolete
-            var subCircuit = node.As<SubCircuit>();
-            if (subCircuit != null && !m_usedSubCircuits.Contains(subCircuit))
-                return;
-            #pragma warning restore 618
-
-            base.WriteElement(node, writer);
-        }
+        }   
 
         protected override void WriteChildElementsRecursive(DomNode node, XmlWriter writer)
         {
@@ -89,9 +45,6 @@ namespace CircuitEditorSample
 			return base.Convert(node, attributeInfo);
 		}
 
-        #pragma warning disable 618 //mastered sub-circuits are obsolete
-        private HashSet<Sce.Atf.Controls.Adaptable.Graphs.SubCircuit> m_usedSubCircuits;
-        #pragma warning restore 618
-    }
+     }
 
 }

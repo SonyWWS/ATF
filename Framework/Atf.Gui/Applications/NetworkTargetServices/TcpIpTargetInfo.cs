@@ -10,18 +10,22 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 {
     /// <summary>
     /// Class to describe TCP/IP target information</summary>
-    [GroupAttribute("TcpIpTargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]
+    [GroupAttribute("TcpIpTargetInfo", Header = @"TCP/IP Targets", ReadOnlyProperties = "Protocol")]//localized below
     public class TcpIpTargetInfo : TargetInfo, IPropertyValueValidator
     {
         /// <summary>
         /// Constructor</summary>
         public TcpIpTargetInfo()
         {
-            Name = "LocalHost";
-            Platform = "<undefined>";
+            Name = "LocalHost".Localize("The English version should have had a space between the words, but it's too late to change");
+            Platform = "<undefined>".Localize("The '<' and '>' indicate that this is not a real name.");
             Endpoint = "127.0.0.1:12345"; // local host
             Protocol = ProtocolName;
             Scope = TargetScope.PerApp;
+
+            // Make the GroupAttribute strings localizable, by making sure that the LocalizableStringExtractor can find them.
+            //@"TCP/IP Targets".Localize();
+            "Protocol".Localize();
         }
 
         /// <summary>

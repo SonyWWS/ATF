@@ -104,19 +104,19 @@ namespace CircuitEditorSample
                                 "Comment Text".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
-                                "BackColor".Localize(),  // name
+                                "Background Color".Localize(),  // name
                                 Schema.annotationType.backcolorAttribute, //AttributeInfo
                                 null, // category
-                                "Comment background color".Localize(), //description
+                                "Comment's background color".Localize(), //description
                                 false, //isReadOnly
                                 new Sce.Atf.Controls.PropertyEditing.ColorEditor(), // editor
                                 new Sce.Atf.Controls.PropertyEditing.IntColorConverter() // typeConverter
                                 ),
                            new AttributePropertyDescriptor(
-                                "ForeColor".Localize(),  // name
+                                "Foreground Color".Localize(),  // name
                                 Schema.annotationType.foreColorAttribute, //AttributeInfo
                                 null, // category
-                                "Comment foreground color".Localize(), //description
+                                "Comment's foreground color".Localize(), //description
                                 false, //isReadOnly
                                 new Sce.Atf.Controls.PropertyEditing.ColorEditor(), // editor
                                 new Sce.Atf.Controls.PropertyEditing.IntColorConverter() // typeConverter
@@ -229,8 +229,8 @@ namespace CircuitEditorSample
                 Resources.AndImage,
                 new ElementType.Pin[]
                 {
-                    new ElementType.Pin("In1".Localize(), "boolean", 0),
-                    new ElementType.Pin("In2".Localize(), "boolean", 1),
+                    new ElementType.Pin("In1".Localize("input pin #1"), "boolean", 0),
+                    new ElementType.Pin("In2".Localize("input pin #2"), "boolean", 1),
                     new ElementType.Pin("In3".Localize(), "boolean", 2),
                     new ElementType.Pin("In4".Localize(), "boolean", 3),
                     new ElementType.Pin("In5".Localize(), "boolean", 4),
@@ -245,10 +245,10 @@ namespace CircuitEditorSample
                     new ElementType.Pin("In14".Localize(), "boolean", 13),
                     new ElementType.Pin("In15".Localize(), "boolean", 14),
                     new ElementType.Pin("In16".Localize(), "boolean", 15),
-                    new ElementType.Pin("Select1".Localize(), "boolean", 16),
-                    new ElementType.Pin("Select2".Localize(), "boolean", 17),
-                    new ElementType.Pin("Select3".Localize(), "boolean", 18),
-                    new ElementType.Pin("Select4".Localize(), "boolean", 19),
+                    new ElementType.Pin("Select1".Localize("The name of a pin on a circuit element"), "boolean", 16),
+                    new ElementType.Pin("Select2".Localize("The name of a pin on a circuit element"), "boolean", 17),
+                    new ElementType.Pin("Select3".Localize("The name of a pin on a circuit element"), "boolean", 18),
+                    new ElementType.Pin("Select4".Localize("The name of a pin on a circuit element"), "boolean", 19),
                 },
                 new ElementType.Pin[]
                 {
@@ -264,10 +264,10 @@ namespace CircuitEditorSample
                 new ElementType.Pin[]
                 {
                     new ElementType.Pin("Data".Localize(), "boolean", 0),
-                    new ElementType.Pin("Select1".Localize(), "boolean", 1),
-                    new ElementType.Pin("Select2".Localize(), "boolean", 2),
-                    new ElementType.Pin("Select3".Localize(), "boolean", 3),
-                    new ElementType.Pin("Select4".Localize(), "boolean", 4),
+                    new ElementType.Pin("Select1".Localize("The name of a pin on a circuit element"), "boolean", 1),
+                    new ElementType.Pin("Select2".Localize("The name of a pin on a circuit element"), "boolean", 2),
+                    new ElementType.Pin("Select3".Localize("The name of a pin on a circuit element"), "boolean", 3),
+                    new ElementType.Pin("Select4".Localize("The name of a pin on a circuit element"), "boolean", 4),
                 },
                 new ElementType.Pin[]
                 {

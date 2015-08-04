@@ -4,7 +4,7 @@
   <StringItem id="1-to-16 Demultiplexer" context="" translation="1-to-16 Demultiplexer" />
   <StringItem id="Add" context="" translation="Add" />
   <StringItem id="And" context="" translation="And" />
-  <StringItem id="BackColor" context="" translation="BackColor" />
+  <StringItem id="Background Color" context="" translation="Background Color" />
   <StringItem id="Button" context="" translation="Button" />
   <StringItem id="Circuit" context="" translation="Circuit" />
   <StringItem id="Circuit Editor" context="" translation="Circuit Editor" />
@@ -12,21 +12,22 @@
   <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="Circuit Template File (*.circuit)|*.circuit" />
   <StringItem id="Circuits" context="" translation="Circuits" />
   <StringItem id="Comment" context="" translation="Comment" />
-  <StringItem id="Comment background color" context="" translation="Comment background color" />
-  <StringItem id="Comment foreground color" context="" translation="Comment foreground color" />
   <StringItem id="Comment Text" context="" translation="Comment Text" />
+  <StringItem id="Comment's background color" context="" translation="Comment's background color" />
+  <StringItem id="Comment's foreground color" context="" translation="Comment's foreground color" />
   <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="Create a moveable resizable comment on the circuit canvas" />
   <StringItem id="Create Circuit Programmatically" context="" translation="Create Circuit Programmatically" />
   <StringItem id="Data" context="" translation="Data" />
   <StringItem id="Default Edge Style" context="" translation="Default Edge Style" />
+  <StringItem id="Edits selected object properties" context="" translation="Edits selected object properties" />
   <StringItem id="first" context="as in, 'the first file'" translation="first" />
-  <StringItem id="ForeColor" context="" translation="ForeColor" />
+  <StringItem id="Foreground Color" context="" translation="Foreground Color" />
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-Circuit-Editor-Sample" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
   <StringItem id="ID" context="" translation="ID" />
   <StringItem id="In" context="" translation="In" />
   <StringItem id="In1" context="input pin #1" translation="In1" />
-  <StringItem id="In1" context="" translation="In1" />
   <StringItem id="In10" context="" translation="In10" />
   <StringItem id="In11" context="" translation="In11" />
   <StringItem id="In12" context="" translation="In12" />
@@ -35,7 +36,6 @@
   <StringItem id="In15" context="" translation="In15" />
   <StringItem id="In16" context="" translation="In16" />
   <StringItem id="In2" context="input pin #2" translation="In2" />
-  <StringItem id="In2" context="" translation="In2" />
   <StringItem id="In3" context="" translation="In3" />
   <StringItem id="In4" context="" translation="In4" />
   <StringItem id="In5" context="" translation="In5" />
@@ -78,13 +78,14 @@
   <StringItem id="Overwrite / Add" context="" translation="Overwrite / Add" />
   <StringItem id="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" context="" translation="Overwrite the existing &quot;{0}&quot;  Template with &quot;{1}&quot;, or Add new one?&#xA;" />
   <StringItem id="Pause" context="" translation="Pause" />
+  <StringItem id="Property Editor" context="" translation="Property Editor" />
   <StringItem id="Prototype folder name" context="" translation="Prototype folder name" />
   <StringItem id="Reset" context="" translation="Reset" />
   <StringItem id="second" context="as in, 'the second file'" translation="second" />
-  <StringItem id="Select1" context="" translation="Select1" />
-  <StringItem id="Select2" context="" translation="Select2" />
-  <StringItem id="Select3" context="" translation="Select3" />
-  <StringItem id="Select4" context="" translation="Select4" />
+  <StringItem id="Select1" context="The name of a pin on a circuit element" translation="Select1" />
+  <StringItem id="Select2" context="The name of a pin on a circuit element" translation="Select2" />
+  <StringItem id="Select3" context="The name of a pin on a circuit element" translation="Select3" />
+  <StringItem id="Select4" context="The name of a pin on a circuit element" translation="Select4" />
   <StringItem id="Show Expanded Group Pins" context="" translation="Show Expanded Group Pins" />
   <StringItem id="Show group pins when a group is expanded" context="" translation="Show group pins when a group is expanded" />
   <StringItem id="Show Virtual links" context="" translation="Show Virtual links" />

@@ -102,9 +102,14 @@ namespace Sce.Atf
             Control focusedControl = null;
             // To get hold of the focused control:
             IntPtr focusedHandle = User32.GetFocus();
-            if (focusedHandle != IntPtr.Zero)
+            while (focusedHandle != IntPtr.Zero)
+            {
                 // Note that if the focused Control is not a .Net control, then this will return null.
                 focusedControl = Control.FromHandle(focusedHandle);
+                if (focusedControl != null)
+                    break;
+                focusedHandle = User32.GetParent(focusedHandle);
+            }
             return focusedControl;
         }
 
@@ -437,9 +442,9 @@ namespace Sce.Atf
             }
         }
 
-        private static int ShellHookCallback(int code, int wParam, int lParam)
+        private static IntPtr ShellHookCallback(int code, IntPtr wParam, IntPtr lParam)
         {
-            int result = User32.CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
+            IntPtr result = User32.CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
             if (code < 0)
             {
                 //We need to call CallNextHookEx without further processing
@@ -478,11 +483,11 @@ namespace Sce.Atf
                 s_handlesCreatedBeforeForms.Count > 0)
             {
                 // To avoid recursively modifying s_handlesCreatedBeforeForms, copy it first.
-                int[] handleInts = s_handlesCreatedBeforeForms.ToArray();
+                IntPtr[] handleInts = s_handlesCreatedBeforeForms.ToArray();
                 s_handlesCreatedBeforeForms.Clear();
                 
                 // Try to find the Forms.
-                foreach (int handleInt in handleInts)
+                foreach (IntPtr handleInt in handleInts)
                 {
                     Control control = GetControlFromHandle(handleInt);
                     if (control != null)
@@ -499,9 +504,8 @@ namespace Sce.Atf
             return result;
         }
 
-        private static Control GetControlFromHandle(int handleInt)
+        private static Control GetControlFromHandle(IntPtr handle)
         {
-            var handle = new IntPtr(handleInt);
             var control = Control.FromHandle(handle);
 
             // The following seems to be able to catch ToolTips which do not derive from Controls.
@@ -539,7 +543,7 @@ namespace Sce.Atf
         private static readonly List<FormEventHandler> s_windowDestroyedHandlers = new List<FormEventHandler>();
         private static readonly List<ControlEventHandler> s_controlCreatedHandlers = new List<ControlEventHandler>();
         private static readonly List<ControlEventHandler> s_controlDestroyedHandlers = new List<ControlEventHandler>();
-        private static readonly List<int> s_handlesCreatedBeforeForms = new List<int>();
+        private static readonly List<IntPtr> s_handlesCreatedBeforeForms = new List<IntPtr>();
         
         //We need to prevent this delegate from being garbage collected because only native code calls it
         private static readonly User32.WindowsHookCallback s_callbackDelegate = ShellHookCallback;

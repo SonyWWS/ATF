@@ -125,45 +125,69 @@ namespace Sce.Atf.Applications
         /// <param name="e">Event args</param>
         protected override void OnLoad(System.EventArgs e)
         {
-            // TODO:  m_settingsService is intended to be initialized via MEF for ATF 3.0 applications.
-            //        For legacy applications which don't use MEF, it appears these same settings are registered explicitly
-            //        much earlier in ApplicationHostService.cs.  The problem is that we need to ensure we don't try to 
-            //        apply settings until this point, which is an open issue for legacy applications, although the default 
-            //        ISettingsService "gets lucky" and defers callbacks long enough to get by.
-            //        See also other comments in this file labled SCREAM_TOOLBAR_STATE_ISSUE
-            if (m_settingsService != null)
+            try
             {
-                m_settingsService.RegisterSettings(this,
-                    new BoundPropertyDescriptor(this, () => MainFormBounds, "MainFormBounds", null, null),
-                    new BoundPropertyDescriptor(this, () => MainFormWindowState, "MainFormWindowState", null, null));
-
-                if (m_toolStripContainer != null)
+                m_loading = true;                
+                m_showen = false;  // used to test if OnShown is called before finishing OnLoad.
+                
+                // TODO:  m_settingsService is intended to be initialized via MEF for ATF 3.0 applications.
+                //        For legacy applications which don't use MEF, it appears these same settings are registered explicitly
+                //        much earlier in ApplicationHostService.cs.  The problem is that we need to ensure we don't try to 
+                //        apply settings until this point, which is an open issue for legacy applications, although the default 
+                //        ISettingsService "gets lucky" and defers callbacks long enough to get by.
+                //        See also other comments in this file labled SCREAM_TOOLBAR_STATE_ISSUE
+                if (m_settingsService != null)
                 {
                     m_settingsService.RegisterSettings(this,
-                        new BoundPropertyDescriptor(this, () => ToolStripContainerSettings, "ToolStripContainerSettings", null, null));
+                        new BoundPropertyDescriptor(this, () => MainFormBounds, "MainFormBounds", null, null),
+                        new BoundPropertyDescriptor(this, () => MainFormWindowState, "MainFormWindowState", null, null));
+
+                    if (m_toolStripContainer != null)
+                    {
+                        m_settingsService.RegisterSettings(this,
+                            new BoundPropertyDescriptor(this, () => ToolStripContainerSettings, "ToolStripContainerSettings", null, null));
+                    }
                 }
+
+                // deserialize  mainform WindowState here works better with DockPanelSuite; 
+                // this fixes an issue to restore window size causes the form to span dual monitors   
+                // when the program starts maximized
+                m_mainFormLoaded = true;
+                if (m_maximizeWindow)
+                    WindowState = FormWindowState.Maximized;
+
+                // Call base.OnLoad(e) last to ensure Loading event to occur before Loaded event.            
+                base.OnLoad(e);
+                Loading.Raise(this, e);
+
+                // if OnShown already called then we need raise OnLoaded event here.
+                if (m_showen)
+                    Loaded.Raise(this, e);
             }
-
-            base.OnLoad(e);
-
-            // deserialize  mainform WindowState here works better with DockPanelSuite; 
-            // this fixes an issue to restore window size causes the form to span dual monitors   
-            // when the program starts maximized
-            m_mainFormLoaded = true;
-            if (m_maximizeWindow)
-                WindowState = FormWindowState.Maximized;
-
-            Loading.Raise(this, e);
+            finally
+            {
+                m_loading = false;
+            }
         }
+
+        // Note: in some cases OnShown method will be called while still 
+        // inside OnLoad which will mess up the order of Loading and Loaded events.
+        // The following two boolean variables 
+        private bool m_loading; 
+        private bool m_showen; // shown is called.
 
         /// <summary>
         /// Raises the form Shown event</summary>
         /// <param name="e">Event args</param>
         protected override void OnShown(EventArgs e)
         {
-            base.OnShown(e);
-
-            Loaded.Raise(this, e);
+            m_showen = true;
+            base.OnShown(e);            
+            // if m_loading is true then this is called before
+            // OnLoad finshed, so in this case don't raise
+            // Loaded event because we still processing Loading event.
+            if (!m_loading)
+                Loaded.Raise(this, e);
         }
 
         /// <summary>

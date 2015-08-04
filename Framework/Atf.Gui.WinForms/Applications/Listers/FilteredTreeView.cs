@@ -7,14 +7,17 @@ using System.Linq;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Controls;
 
+
 namespace Sce.Atf.Applications
 {
+    using TreeNode = TreeControl.Node;
+    using NodeFilteringStatus = TreeItemRenderer.NodeFilteringStatus;
+
     /// <summary>
     /// Helper class to adapt a data context that implements ITreeView to support filtering items in a tree view.
     /// For performance reasons, it caches the full filtered tree view after applying a filter.</summary>
-    public class FilteredTreeView : ITreeView, IAdaptable, IDecoratable
+    public class FilteredTreeView : ITreeView,IItemView,  IAdaptable, IDecoratable
     {
-
         /// <summary>
         /// Constructor</summary>
         /// <param name="treeView">Data context of ITreeView to apply a filter</param>
@@ -22,6 +25,9 @@ namespace Sce.Atf.Applications
         public FilteredTreeView(ITreeView treeView, Predicate<object> filterFunc)
         {
             m_treeView = treeView;
+            m_itemView = treeView.As<IItemView>();
+            if (filterFunc == null)
+                throw new ArgumentNullException("filterFunc cannot be null");
             m_filterFunc = filterFunc;
         }
 
@@ -55,13 +61,164 @@ namespace Sce.Atf.Applications
         /// <param name="parent">Parent</param>
         /// <returns>Children objects</returns>
         public IEnumerable<object> GetChildren(object parent)
+        {            
+            var unfiltered = m_treeView.GetChildren(parent);
+            if (IsFiltering && !m_exemptedSet.Contains(parent))
+                return unfiltered.Where(item => IsMatched(item) || m_exemptedSet.Contains(item));
+            return unfiltered;            
+        }
+        
+        internal NodeFilteringStatus GetNodeFilteringStatus(TreeNode node)
         {
-            IEnumerable<object> originalChildren = m_treeView.GetChildren(parent);
-            if (IsFiltering)
-                return originalChildren.Intersect(m_currentVisibleNodes);
-            return originalChildren;
+            NodeFilteringStatus stat = NodeFilteringStatus.Normal;
+            if(node != null && node.Tag != null && IsFiltering)
+            {
+                if (!IsFullyExpaned(node.Tag))
+                    stat |= NodeFilteringStatus.PartiallyExpanded;
+
+                bool anymatched = IsMatched(node.Tag);
+                if (anymatched)
+                {
+                    stat |= NodeFilteringStatus.Visible;
+                    
+                    // any child mat
+                    if (m_treeView.GetChildren(node.Tag).Any(IsMatched))
+                        stat |= NodeFilteringStatus.ChildVisible;
+                }               
+            }                
+            return stat;
+        }
+              
+        internal void SaveExpansion(TreeNode parent)
+        {
+            if (parent.Tag == null)
+                return;
+            var expandedItems = new List<object>();
+            foreach (var node in GetSubtree(parent))
+                if (node.Tag != null && node.Expanded)
+                    expandedItems.Add(node.Tag);
+            if (expandedItems.Count > 0)
+                m_expandedNodeMap[parent.Tag] = expandedItems;
         }
 
+        internal void RestoreExpansion(TreeControl.Node parent, TreeControlAdapter treeAdapter)
+        {
+            if (parent.Tag == null)
+                return;
+            List<object> expandedItems;
+            if (m_expandedNodeMap.TryGetValue(parent.Tag, out expandedItems))
+            {
+                m_expandedNodeMap.Remove(parent.Tag);
+                expandedItems.ForEach(item => treeAdapter.Expand(item));                
+            }
+        }
+
+        /// <summary>
+        /// Clears matched set.
+        /// Must be called when filter changes.</summary>
+        internal void ClearCache()
+        {
+            m_matchedNodes.Clear();
+            m_exemptedSet.Clear();            
+        }
+               
+
+        internal bool IsMatched(object node)
+        {            
+            // if not filtering or the node is already in the matched set.
+            if (!IsFiltering || m_matchedNodes.Contains(node)) 
+                return true;
+               
+            bool result = false;            
+            try
+            {
+                m_matching = true;
+                // perform a post-order traversal starting from node.
+                // when match found add the matched node and all its ancestors to the m_matchedNodes set
+                // and return true otherwise return false.
+                // m_matchedNodes is used for speedup future lookups.
+                m_tmpNodelist.Clear();
+                result = MatchRecv(node);
+            }
+            finally
+            {
+                m_matching = false;
+            }
+
+            return result;
+        }
+
+
+        // temp list used to hold path when traversing tree.
+        private List<object> m_tmpNodelist = new List<object>();
+        private bool MatchRecv(object node)
+        {            
+            bool result = false;            
+            m_tmpNodelist.Add(node);            
+            foreach (object child in m_treeView.GetChildren(node))
+            {
+                result = MatchRecv(child);
+                if (result )break;
+            }
+                  
+            if (!result && m_filterFunc(node))
+            {
+                for (int i = m_tmpNodelist.Count - 1; i >= 0; i--)
+                    if (!m_matchedNodes.Add(m_tmpNodelist[i])) break;
+                result = true;
+            }            
+            m_tmpNodelist.RemoveAt(m_tmpNodelist.Count - 1);           
+            return result;
+        }
+
+
+        /// <summary>
+        /// Check whether calling GetChildren(object parent) will return 
+        /// all the children.
+        /// GetChildren(object parent) could return all if every child 
+        /// either passed the filter or exempt from filtering</summary>
+        /// <param name="parent">parent item</param>
+        /// <returns>true if all the children will returned</returns>
+        internal bool IsFullyExpaned(object parent)
+        {            
+            return m_exemptedSet.Contains(parent) || !m_treeView.GetChildren(parent).Any(child => !IsMatched(child) && !m_exemptedSet.Contains(child));            
+        }
+
+
+        /// <summary>
+        /// Add any child fails the filter to exempted set.</summary>
+        /// <param name="parent">parent node</param>
+        internal void AddToExemptSet(object parent)
+        {
+            m_exemptedSet.Add(parent);
+            foreach (object child in m_treeView.GetChildren(parent))
+                if (!IsMatched(child)) 
+                    m_exemptedSet.Add(child);            
+        }
+
+
+        /// <summary>
+        /// Remove children from from exempted set</summary>
+        /// <param name="parent">parent node</param>
+        internal void RemoveFromExemptSet(object parent)
+        {
+            m_exemptedSet.Remove(parent);
+            m_treeView.GetChildren(parent).ForEach(child => m_exemptedSet.Remove(child));            
+        }
+
+        #endregion
+
+        #region IItemView Members
+
+        public void GetInfo(object item, ItemInfo info)
+        {
+            m_itemView.GetInfo(item, info);
+
+            // Call the filtered GetChildren() 
+            // to determine if node is leaf or not.
+            if (!m_matching && !info.IsLeaf)
+                info.IsLeaf = !GetChildren(item).Any();
+        }
 
         #endregion
 
@@ -101,184 +258,6 @@ namespace Sce.Atf.Applications
         /// Gets or sets whether filtering is activated</summary>
         public bool IsFiltering { get; set; }
 
-        internal void BuildTreeCache()
-        {
-            m_fullTree = null;
-            if (m_treeView.Root != null)
-            {
-                m_fullTree = new Tree<object>(m_treeView.Root);
-                BuildTree(m_fullTree);
-            }
-
-        }
-
-        private void BuildTree(Tree<object> rootNode)
-        {
-            foreach (object child in m_treeView.GetChildren(rootNode.Value))
-            {
-                Tree<object> childNode = new Tree<object>(child);
-                childNode.Parent = rootNode;
-                BuildTree(childNode);
-            }
-        }
-
-        internal void BuildVisibility()
-        {
-            // a node should be visible if it is either visible itself or have visible descendants.
-            m_visibleNodes.Clear();
-            m_opaqueNodes.Clear();
-            if (m_fullTree != null)
-            {
-                foreach (Tree<object> node in m_fullTree.PreOrder)
-                {
-                    if (m_filterFunc(node.Value))// node is a direct match
-                    {
-                        Tree<object> curNode = node;
-                        while (curNode != null && !m_visibleNodes.Contains(curNode.Value)) // its parents should be visible too
-                        {
-                            m_visibleNodes.Add(curNode.Value);
-                            curNode = curNode.Parent;
-
-                        }
-                    }
-
-                }
-                m_currentVisibleNodes = new HashSet<object>(m_visibleNodes);
-
-                // also build node opacity: true for all children nodes visible; false otherwise
-                BuildOpacity(m_fullTree);
-                m_currentOpaqueNodes = new HashSet<object>(m_opaqueNodes);
-            }
-        }
-
-        // return true when not all of its children are currently visble
-        internal bool IsNodeCurrentlyOpaque(TreeControl.Node node)
-        {
-            if (node.Tag == null)
-                return false;
-            return m_currentOpaqueNodes.Contains(node.Tag);
-        }
-
-        // return true when not all of its children are visble
-        internal bool IsNodeOpaque(TreeControl.Node node)
-        {
-            if (node.Tag == null)
-                return false;
-            return m_opaqueNodes.Contains(node.Tag);
-        }
-
-        // return true when not all of its children are visble
-        internal bool IsNodeMatched(TreeControl.Node node)
-        {
-            if (node.Tag == null)
-                return false;
-
-            return m_visibleNodes.Contains(node.Tag);
-        }
-
-        internal TreeItemRenderer.NodeFilteringStatus NodeCurrentFilteringStatus(TreeControl.Node node)
-        {
-            TreeItemRenderer.NodeFilteringStatus filteringStatus = TreeItemRenderer.NodeFilteringStatus.Normal;
-            if (node.Tag != null)
-            {
-                if (m_currentOpaqueNodes.Contains(node.Tag))
-                    filteringStatus |= TreeItemRenderer.NodeFilteringStatus.PartiallyExpanded;
-                if (m_visibleNodes.Contains(node.Tag))
-                    filteringStatus |= TreeItemRenderer.NodeFilteringStatus.Visible;
-                if (GetUnfilteredChildren(node.Tag).Any(i => m_visibleNodes.Contains(i)))
-                    filteringStatus |= TreeItemRenderer.NodeFilteringStatus.ChildVisible;
-
-            }
-            return filteringStatus;
-        }
-
-        internal void RemoveOpaqueNode(TreeControl.Node node)
-        {
-            if (m_opaqueNodes.Contains(node.Tag))
-            {
-                m_currentOpaqueNodes.Remove(node.Tag);
-            }
-        }
-
-        internal void AddOpaqueNode(TreeControl.Node node)
-        {
-            if (m_opaqueNodes.Contains(node.Tag))
-            {
-                m_currentOpaqueNodes.Add(node.Tag);
-            }
-        }
-
-        private void BuildOpacity(Tree<object> parent)
-        {
-            // a node is opaque if one, but not all,  of its children is not visible
-            int numChildrenInvisible = 0;
-            foreach (Tree<object> child in parent.Children)
-            {
-                if (!m_visibleNodes.Contains(child.Value)) // if the child's is not visible
-                    ++numChildrenInvisible;
-            }
-
-            if (numChildrenInvisible > 0 && numChildrenInvisible < parent.Children.Count)
-            {
-                if (!m_opaqueNodes.Contains(parent.Value))
-                    m_opaqueNodes.Add(parent.Value);
-
-            }
-
-            foreach (Tree<object> child in parent.Children)
-                BuildOpacity(child);
-        }
-
-        internal bool AddCurrentVisibleNode(object item)
-        {
-
-            if (item != null && (!m_currentVisibleNodes.Contains(item)))
-            {
-                return m_currentVisibleNodes.Add(item);
-            }
-            return false;
-        }
-
-        internal void RemoveVisibleNode(object item)
-        {
-
-            if (item != null && (m_currentVisibleNodes.Contains(item)))
-            {
-                m_currentVisibleNodes.Remove(item);
-            }
-
-        }
-
-        /// <summary>
-        /// Saves subtree's node expansion states and attaches it to the parent node</summary>
-        /// <param name="parent">Node whose expansion state is remembered</param>
-        public void RememberExpansion(TreeControl.Node parent)
-        {
-            if (parent.Tag != null)
-            {
-                var expandedItems = new List<object>();
-                foreach (TreeControl.Node node in GetSubtree(parent))
-                {
-                    if (node.Expanded)
-                        expandedItems.Add(node.Tag);
-                }
-                m_expandedItems[parent.Tag] = expandedItems;
-            }
-        }
-
-        /// <summary>
-        /// Restores subtree's node expansion states, if remembered</summary>
-        /// <param name="treeControlAdapter">TreeControlAdapter that performs node expansion</param>
-        /// <param name="parent">Node whose subtree's expansion state was remembered</param>
-        public void RestoreExpansion(TreeControlAdapter treeControlAdapter, TreeControl.Node parent)
-        {
-            if (parent.Tag != null && m_expandedItems.ContainsKey(parent.Tag))
-            {
-                foreach (object item in m_expandedItems[parent.Tag])
-                    treeControlAdapter.Expand(item);
-            }
-        }
-
         private IEnumerable<TreeControl.Node> GetSubtree(TreeControl.Node parent)
         {
             yield return parent;
@@ -287,18 +266,28 @@ namespace Sce.Atf.Applications
                     yield return decendent;
         }
 
-        internal IEnumerable<object> GetUnfilteredChildren(object parent)
-        {
-            return m_treeView.GetChildren(parent);
-        }
-
+        
         private readonly ITreeView m_treeView;
-        private Tree<object> m_fullTree; // unfiltered full tree
+        private readonly IItemView m_itemView;
         private readonly Predicate<object> m_filterFunc;
-        private HashSet<object> m_visibleNodes = new HashSet<object>();
-        private HashSet<object> m_currentVisibleNodes = new HashSet<object>();
-        private HashSet<object> m_opaqueNodes = new HashSet<object>();
-        private HashSet<object> m_currentOpaqueNodes;
-        private Dictionary<object, List<object>> m_expandedItems = new Dictionary<object, List<object>>();
+
+        //re-entry guard
+        private bool m_matching; 
+
+        // exempted from filtering.
+        // used for caching all the items that are exempt from filtering.
+        // the items in this set will be not filtered out.
+        // This dynamic set items will be added and removed
+        // as the user interact with TreeControl.
+        private HashSet<object> m_exemptedSet = new HashSet<object>();
+
+        // Used for caching all the nodes that matches current filter.
+        // it must be cleared whenever search pattern changeds.
+        private HashSet<object> m_matchedNodes = new HashSet<object>();
+
+        // Maps subtree item to list of expanded items in the subtree.
+        // This map used for restoring the expansion staste of a subtree.               
+        private Dictionary<object, List<object>>
+            m_expandedNodeMap = new Dictionary<object, List<object>>();        
     }
 }

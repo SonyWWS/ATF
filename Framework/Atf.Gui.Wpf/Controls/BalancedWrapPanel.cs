@@ -180,7 +180,6 @@ namespace Sce.Atf.Wpf.Controls
             }
         }
 
-        [StructLayout(LayoutKind.Sequential)]
         private struct UVSize
         {
             internal double U;

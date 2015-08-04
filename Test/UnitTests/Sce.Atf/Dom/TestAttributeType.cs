@@ -362,6 +362,61 @@ namespace UnitTests.Atf.Dom
         }
 
         [Test]
+        public void TestDateTimeConversion()
+        {
+            var test = new AttributeType("test", typeof(DateTime));
+
+            var original = new DateTime(2015, 3, 10, 4, 32, 59, DateTimeKind.Local);
+            string written = test.Convert(original);
+            var roundTrip = (DateTime)test.Convert(written);
+            Assert.IsTrue(AreEqual(original, roundTrip));
+
+            original = new DateTime(2015, 3, 10, 4, 32, 59, DateTimeKind.Utc);
+            written = test.Convert(original);
+            roundTrip = (DateTime)test.Convert(written);
+            Assert.IsTrue(AreEqual(original, roundTrip));
+
+            original = new DateTime(2015, 3, 10, 4, 32, 59, DateTimeKind.Unspecified);
+            written = test.Convert(original);
+            roundTrip = (DateTime)test.Convert(written);
+            Assert.IsTrue(AreEqual(original, roundTrip));
+
+            //The following tests the output (DateTime to string) of ATF 3.2 to 3.9,
+            //  which used the following code:
+            //result = ((DateTime)value).ToString(@"yyyy-MM-ddTHH:mm:ss.fffffffZ");
+            //  Note the appended 'Z' which is not a custom format specifier character.
+            //  The 'Z' indicates UTC time even though the DateTimeobject may not be in
+            //  UTC time.
+            original = new DateTime(2015, 3, 10, 16, 32, 00, DateTimeKind.Utc);
+            written = "2015-03-10T16:32:00.0000000Z";
+            roundTrip = (DateTime)test.Convert(written);
+            Assert.IsTrue(AreEqual(original, roundTrip));
+
+            //original = new DateTime(2015, 3, 10, 16, 32, 00, DateTimeKind.Unspecified);
+            //written = "2015-03-10T16:32:00.0000000Z";
+            //roundTrip = (DateTime)test.Convert(written);
+            //Assert.IsTrue(AreEqual(original, roundTrip));
+
+            //original = new DateTime(2015, 3, 10, 16, 32, 00, DateTimeKind.Local);
+            //written = "2015-03-10T16:32:00.0000000Z";
+            //roundTrip = (DateTime)test.Convert(written);
+            //Assert.IsTrue(AreEqual(original, roundTrip));
+        }
+
+        // The implementation of DateTime's Compare() methods does not take into account
+        //  the Kind property! So, it can't compare a UTC time and local time that mean
+        //  the same absolute time.
+        private bool AreEqual(DateTime a, DateTime b)
+        {
+            if (a.Kind != b.Kind)
+            {
+                a = a.ToUniversalTime();
+                b = b.ToUniversalTime();
+            }
+            return a.CompareTo(b) == 0;
+        }
+
+        [Test]
         public void TestConvertRelativeUriContainingSpacesToString()
         {
             var test = new AttributeType("test", typeof(Uri));
@@ -377,6 +432,7 @@ namespace UnitTests.Atf.Dom
 
             Assert.AreEqual(uriToString, uriConverted);
         }
+
         [Test]
         public void TestConvertFromString()
         {

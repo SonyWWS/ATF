@@ -780,7 +780,7 @@ namespace Sce.Atf.Applications
 
             private void listview_ColumnClick(object sender, ColumnClickEventArgs e)
             {
-                IntPtr hHeader = (IntPtr) Sce.Atf.User32.SendMessage(m_listView.Handle, Sce.Atf.User32.LVM_GETHEADER, (int)IntPtr.Zero, (int)IntPtr.Zero);
+                IntPtr hHeader = User32.SendMessage(m_listView.Handle, User32.LVM_GETHEADER, IntPtr.Zero, IntPtr.Zero);
                 IntPtr newColumn = new IntPtr(e.Column);
                 IntPtr prevColumn = new IntPtr(m_column);
                 User32.HDITEM hdItem;

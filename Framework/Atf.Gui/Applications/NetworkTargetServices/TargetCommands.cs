@@ -62,7 +62,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             {
                 if (targetProvider.CanCreateNew)
                 {
-                    string addCmdTag = AddNewString.Localize() + targetProvider.Name;
+                    string addCmdTag = GetAddNewCommandName(targetProvider.Name);
                     CommandService.RegisterCommand(
                         new CommandInfo(
                             addCmdTag,
@@ -75,7 +75,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
                     m_addTargetsCmdTags.Add(addCmdTag);
 
 
-                    string remCmdTag = "Remove ".Localize() + targetProvider.Name;
+                    string remCmdTag = GetRemoveCommandName(targetProvider.Name);
                     CommandService.RegisterCommand(
                        new CommandInfo(
                            remCmdTag,
@@ -120,7 +120,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             {
                 foreach (var targetProvider in TargetProviders)
                 {
-                    string addCmdTag = AddNewString.Localize() + targetProvider.Name;
+                    string addCmdTag = GetAddNewCommandName(targetProvider.Name);
                     if (addCmdTag.Equals(commandTag))
                     {
                         return true;
@@ -136,7 +136,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             {
                 foreach (var targetProvider in TargetProviders)
                 {
-                    string remCmdTag = RemoveTargetString.Localize() + targetProvider.Name;
+                    string remCmdTag = GetRemoveCommandName(targetProvider.Name);
                     if (remCmdTag.Equals(commandTag))
                     {
                         if (m_selectedTargets != null && m_selectedTargets.Any())
@@ -173,7 +173,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             {
                 foreach (var targetProvider in TargetProviders)
                 {
-                    string addCmdTag = AddNewString.Localize() + targetProvider.Name;
+                    string addCmdTag = GetAddNewCommandName(targetProvider.Name);
                     if (addCmdTag.Equals(commandTag))
                     {
                         targetProvider.AddTarget(targetProvider.CreateNew());
@@ -198,7 +198,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         {
             if (m_removeTargetsCmdTags.Contains(commandTag))
             {
-                commandState.Text = RemoveTargetString.Localize() + m_selectedTargets.First().Name;
+                commandState.Text = GetRemoveCommandName(m_selectedTargets.First().Name);
             }
         }
 
@@ -232,9 +232,15 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
         #endregion
 
-        private const string AddNewString = "Add New ";
-        private const string RemoveTargetString = "Remove ";
-       
+        private string GetAddNewCommandName(string targetName)
+        {
+            return string.Format("Add New {0}".Localize(), targetName);
+        }
+
+        private string GetRemoveCommandName(string targetName)
+        {
+            return string.Format("Remove {0}".Localize(), targetName);
+        }
 
         private List<object> m_addTargetsCmdTags = new List<object>();
         private List<object> m_removeTargetsCmdTags = new List<object>();

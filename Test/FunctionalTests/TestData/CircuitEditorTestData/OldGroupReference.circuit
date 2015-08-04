@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Regression testing WWSATF-1494: group template reference changed from "typeRef" attribute to "guidRef" in ATF3.8-->
+<circuit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://sony.com/gametech/circuits/1_0">
+	<module xsi:type="groupType" name="Group" label="Group" showExpandedGroupPins="true">
+		<input name=":On" type="boolean" module="Sound" />
+		<input name=":Reset" type="boolean" module="Sound" pin="1" index="1" pinY="30" />
+		<input name=":Pause" type="boolean" module="Sound" pin="2" index="2" pinY="60" />
+		<input name=":On" type="boolean" module="Sound_1" index="3" pinY="108" />
+		<input name=":Reset" type="boolean" module="Sound_1" pin="1" index="4" pinY="138" />
+		<input name=":Pause" type="boolean" module="Sound_1" pin="2" index="5" pinY="168" />
+		<output name=":Out" type="boolean" module="Button" />
+		<output name=":Out" type="boolean" module="Button_1" index="1" pinY="48" />
+		<output name=":Out" type="boolean" module="Button_2" index="3" pinY="144" />
+		<output name=":Out" type="float" module="Sound" index="2" pinY="96" />
+		<output name=":Out" type="float" module="Sound_1" index="4" pinY="192" />
+		<module xsi:type="buttonType" name="Button" />
+		<module xsi:type="buttonType" name="Button_1" y="96" />
+		<module xsi:type="buttonType" name="Button_2" y="256" />
+		<module xsi:type="soundType" name="Sound" y="160" />
+		<module xsi:type="soundType" name="Sound_1" y="320" />
+	</module>
+	<module xsi:type="groupType" name="Group_1" label="Group" x="544" showExpandedGroupPins="true">
+		<input name=":In" type="float" module="Speaker" index="1" pinY="48" />
+		<input name=":In" type="boolean" module="Light" />
+		<input name=":In" type="float" module="Speaker_1" index="4" pinY="192" />
+		<input name=":In" type="boolean" module="Light_1" index="2" pinY="96" />
+		<input name=":In" type="boolean" module="Light_2" index="3" pinY="144" />
+		<module xsi:type="speakerType" name="Speaker" y="96" />
+		<module xsi:type="lightType" name="Light" />
+		<module xsi:type="speakerType" name="Speaker_1" y="320" />
+		<module xsi:type="lightType" name="Light_1" y="160" />
+		<module xsi:type="lightType" name="Light_2" y="256" />
+	</module>
+	<module xsi:type="groupType" name="Group_2" label="Group" x="256" showExpandedGroupPins="true">
+		<input name=":In1" type="boolean" module="And" />
+		<input name=":In2" type="boolean" module="And" pin="1" index="1" pinY="30" />
+		<input name=":In1" type="boolean" module="Or" index="2" pinY="78" />
+		<input name=":In2" type="boolean" module="Or" pin="1" index="3" pinY="108" />
+		<input name=":In1" type="boolean" module="And_1" index="4" pinY="156" />
+		<input name=":In2" type="boolean" module="And_1" pin="1" index="5" pinY="186" />
+		<input name=":In1" type="boolean" module="Or_1" index="6" pinY="234" />
+		<input name=":In2" type="boolean" module="Or_1" pin="1" index="7" pinY="264" />
+		<output name=":Out" type="boolean" module="And" />
+		<output name=":Out" type="boolean" module="Or" index="1" pinY="48" />
+		<output name=":Out" type="boolean" module="And_1" index="2" pinY="96" />
+		<output name=":Out" type="boolean" module="Or_1" index="3" pinY="144" />
+		<module xsi:type="andType" name="And" />
+		<module xsi:type="orType" name="Or" y="96" />
+		<module xsi:type="andType" name="And_1" y="192" />
+		<module xsi:type="orType" name="Or_1" y="288" />
+	</module>
+	<module xsi:type="groupType" name="Group_3" label="sourceGroup" y="160" expanded="true" showExpandedGroupPins="true">
+		<input name=":On" type="boolean" module="Sound_2" />
+		<input name=":Reset" type="boolean" module="Sound_2" pin="1" index="1" pinY="30" />
+		<input name=":Pause" type="boolean" module="Sound_2" pin="2" index="2" pinY="60" />
+		<input name=":On" type="boolean" module="Sound_3" index="3" pinY="108" />
+		<input name=":Reset" type="boolean" module="Sound_3" pin="1" index="4" pinY="138" />
+		<input name=":Pause" type="boolean" module="Sound_3" pin="2" index="5" pinY="168" />
+		<output name=":Out" type="boolean" module="Button_3" />
+		<output name=":Out" type="boolean" module="Button_4" index="1" pinY="48" />
+		<output name=":Out" type="boolean" module="Button_5" index="3" pinY="144" />
+		<output name=":Out" type="float" module="Sound_2" index="2" pinY="96" />
+		<output name=":Out" type="float" module="Sound_3" index="4" pinY="192" />
+		<module xsi:type="buttonType" name="Button_3" />
+		<module xsi:type="buttonType" name="Button_4" y="96" />
+		<module xsi:type="buttonType" name="Button_5" y="256" />
+		<module xsi:type="soundType" name="Sound_2" y="160" />
+		<module xsi:type="soundType" name="Sound_3" y="320" />
+	</module>
+	<module xsi:type="groupType" name="Group_4" label="bridgeGroup" x="256" y="160" expanded="true" showExpandedGroupPins="true">
+		<input name=":In1" type="boolean" module="And_2" />
+		<input name=":In2" type="boolean" module="And_2" pin="1" index="1" pinY="30" />
+		<input name=":In1" type="boolean" module="Or_2" index="2" pinY="78" />
+		<input name=":In2" type="boolean" module="Or_2" pin="1" index="3" pinY="108" />
+		<input name=":In1" type="boolean" module="And_3" index="4" pinY="156" />
+		<input name=":In2" type="boolean" module="And_3" pin="1" index="5" pinY="186" />
+		<input name=":In1" type="boolean" module="Or_3" index="6" pinY="234" />
+		<input name=":In2" type="boolean" module="Or_3" pin="1" index="7" pinY="264" />
+		<output name=":Out" type="boolean" module="And_2" />
+		<output name=":Out" type="boolean" module="Or_2" index="1" pinY="48" />
+		<output name=":Out" type="boolean" module="And_3" index="2" pinY="96" />
+		<output name=":Out" type="boolean" module="Or_3" index="3" pinY="144" />
+		<module xsi:type="andType" name="And_2" />
+		<module xsi:type="orType" name="Or_2" y="96" />
+		<module xsi:type="andType" name="And_3" y="192" />
+		<module xsi:type="orType" name="Or_3" y="288" />
+	</module>
+	<module xsi:type="groupType" name="Group_5" label="dstGroup" x="544" y="192" expanded="true" showExpandedGroupPins="true">
+		<input name=":In" type="float" module="Speaker_2" index="1" pinY="48" />
+		<input name=":In" type="boolean" module="Light_3" />
+		<input name=":In" type="float" module="Speaker_3" index="4" pinY="192" />
+		<input name=":In" type="boolean" module="Light_4" index="2" pinY="96" />
+		<input name=":In" type="boolean" module="Light_5" index="3" pinY="144" />
+		<module xsi:type="speakerType" name="Speaker_2" y="96" />
+		<module xsi:type="lightType" name="Light_3" />
+		<module xsi:type="speakerType" name="Speaker_3" y="320" />
+		<module xsi:type="lightType" name="Light_4" y="160" />
+		<module xsi:type="lightType" name="Light_5" y="256" />
+	</module>
+	<module xsi:type="groupTemplateRefType" name="ce65258b-ef33-4579-9eee-6ef78aaa8c82" label="dstTemplate" x="544" y="640" typeRef="Group_8" refExpanded="true" />
+	<module xsi:type="groupTemplateRefType" name="3ae9af23-6772-44e4-9a4d-7e9afb4ae738" label="bridgeTemplate" x="256" y="640" typeRef="Group_7" refExpanded="true" />
+	<module xsi:type="groupTemplateRefType" name="0afef417-8a70-43c0-9608-69add7ff893e" label="sourceTemplate" y="640" typeRef="Group_6" refExpanded="true" />
+	<module xsi:type="groupTemplateRefType" name="497c3313-8b49-4099-a7cd-4660199fcf65" label="sourceGroup" y="1152" typeRef="Group_11" refExpanded="true" />
+	<module xsi:type="groupTemplateRefType" name="bb329b94-9941-4489-a011-3d5030c21fe1" label="bridgeGroup" x="256" y="1152" typeRef="Group_10" refExpanded="true" />
+	<module xsi:type="groupTemplateRefType" name="d3e18e1e-a89d-4902-88dd-756111a2350c" label="dstGroup" x="544" y="1184" typeRef="Group_9" refExpanded="true" />
+	<module xsi:type="buttonType" name="Button_12" x="-832" y="480" />
+	<module xsi:type="speakerType" name="Speaker_8" x="-416" y="512" />
+	<module xsi:type="orType" name="Or_8" x="-704" y="512" />
+	<module xsi:type="buttonType" name="Button_13" x="-832" y="576" />
+	<module xsi:type="soundType" name="Sound_8" x="-544" y="544" />
+	<module xsi:type="buttonType" name="Button_14" x="-832" y="832" />
+	<module xsi:type="speakerType" name="Speaker_9" x="-416" y="864" />
+	<module xsi:type="orType" name="Or_9" x="-704" y="864" />
+	<module xsi:type="buttonType" name="Button_15" x="-832" y="928" />
+	<module xsi:type="soundType" name="Sound_9" x="-544" y="896" />
+	<connection outputModule="Group_4" outputPin="1" inputModule="Group_5" />
+	<connection outputModule="Group_4" outputPin="3" inputModule="Group_5" inputPin="3" />
+	<connection outputModule="Group_3" outputPin="1" inputModule="Group_4" inputPin="3" />
+	<connection outputModule="Group_3" outputPin="3" inputModule="Group_4" inputPin="2" />
+	<connection outputModule="bb329b94-9941-4489-a011-3d5030c21fe1" outputPin="1" inputModule="d3e18e1e-a89d-4902-88dd-756111a2350c" />
+	<connection outputModule="bb329b94-9941-4489-a011-3d5030c21fe1" outputPin="3" inputModule="d3e18e1e-a89d-4902-88dd-756111a2350c" inputPin="3" />
+	<connection outputModule="497c3313-8b49-4099-a7cd-4660199fcf65" outputPin="1" inputModule="bb329b94-9941-4489-a011-3d5030c21fe1" inputPin="3" />
+	<connection outputModule="497c3313-8b49-4099-a7cd-4660199fcf65" outputPin="3" inputModule="bb329b94-9941-4489-a011-3d5030c21fe1" inputPin="2" />
+	<connection outputModule="Button_12" inputModule="Or_8" />
+	<connection outputModule="Button_13" inputModule="Or_8" inputPin="1" />
+	<connection outputModule="Or_8" inputModule="Sound_8" />
+	<connection outputModule="Sound_8" inputModule="Speaker_8" />
+	<connection outputModule="Button_14" inputModule="Or_9" />
+	<connection outputModule="Button_15" inputModule="Or_9" inputPin="1" />
+	<connection outputModule="Or_9" inputModule="Sound_9" />
+	<connection outputModule="Sound_9" inputModule="Speaker_9" />
+	<layerFolder name="All">
+		<layerFolder name="Bottom">
+			<moduleRef ref="497c3313-8b49-4099-a7cd-4660199fcf65" />
+			<moduleRef ref="bb329b94-9941-4489-a011-3d5030c21fe1" />
+			<moduleRef ref="d3e18e1e-a89d-4902-88dd-756111a2350c" />
+		</layerFolder>
+		<layerFolder name="Middle">
+			<moduleRef ref="ce65258b-ef33-4579-9eee-6ef78aaa8c82" />
+			<moduleRef ref="3ae9af23-6772-44e4-9a4d-7e9afb4ae738" />
+			<moduleRef ref="0afef417-8a70-43c0-9608-69add7ff893e" />
+		</layerFolder>
+		<layerFolder name="Top2">
+			<moduleRef ref="Group_3" />
+			<moduleRef ref="Group_4" />
+			<moduleRef ref="Group_5" />
+		</layerFolder>
+		<layerFolder name="Top">
+			<moduleRef ref="Group" />
+			<moduleRef ref="Group_2" />
+			<moduleRef ref="Group_1" />
+		</layerFolder>
+	</layerFolder>
+	<layerFolder name="New Layer">
+		<moduleRef ref="Button_12" />
+		<moduleRef ref="Speaker_8" />
+		<moduleRef ref="Or_8" />
+		<moduleRef ref="Button_13" />
+		<moduleRef ref="Sound_8" />
+	</layerFolder>
+	<layerFolder name="New Layer">
+		<moduleRef ref="Button_14" />
+		<moduleRef ref="Speaker_9" />
+		<moduleRef ref="Button_15" />
+		<moduleRef ref="Sound_9" />
+		<moduleRef ref="Or_9" />
+	</layerFolder>
+	<annotation text="Randomness" x="-704" y="384" width="180" height="100" />
+	<annotation text="Randomness" x="-672" y="736" width="180" height="100" />
+	<prototypeFolder />
+	<templateFolder name="_TemplateRoot_">
+		<template guid="ce65258b-ef33-4579-9eee-6ef78aaa8c82" label="dstTemplate">
+			<module xsi:type="groupType" name="Group_8" label="dstTemplate" x="544" y="640" expanded="true" showExpandedGroupPins="true">
+				<input name=":In" type="float" module="Speaker_4" index="1" pinY="48" />
+				<input name=":In" type="boolean" module="Light_6" />
+				<input name=":In" type="float" module="Speaker_5" index="4" pinY="192" />
+				<input name=":In" type="boolean" module="Light_7" index="2" pinY="96" />
+				<input name=":In" type="boolean" module="Light_8" index="3" pinY="144" />
+				<module xsi:type="speakerType" name="Speaker_4" y="96" />
+				<module xsi:type="lightType" name="Light_6" />
+				<module xsi:type="speakerType" name="Speaker_5" y="320" />
+				<module xsi:type="lightType" name="Light_7" y="160" />
+				<module xsi:type="lightType" name="Light_8" y="256" />
+			</module>
+		</template>
+		<template guid="3ae9af23-6772-44e4-9a4d-7e9afb4ae738" label="bridgeTemplate">
+			<module xsi:type="groupType" name="Group_7" label="bridgeTemplate" x="256" y="640" expanded="true" showExpandedGroupPins="true">
+				<input name=":In1" type="boolean" module="And_4" />
+				<input name=":In2" type="boolean" module="And_4" pin="1" index="1" pinY="30" />
+				<input name=":In1" type="boolean" module="Or_4" index="2" pinY="78" />
+				<input name=":In2" type="boolean" module="Or_4" pin="1" index="3" pinY="108" />
+				<input name=":In1" type="boolean" module="And_5" index="4" pinY="156" />
+				<input name=":In2" type="boolean" module="And_5" pin="1" index="5" pinY="186" />
+				<input name=":In1" type="boolean" module="Or_5" index="6" pinY="234" />
+				<input name=":In2" type="boolean" module="Or_5" pin="1" index="7" pinY="264" />
+				<output name=":Out" type="boolean" module="And_4" />
+				<output name=":Out" type="boolean" module="Or_4" index="1" pinY="48" />
+				<output name=":Out" type="boolean" module="And_5" index="2" pinY="96" />
+				<output name=":Out" type="boolean" module="Or_5" index="3" pinY="144" />
+				<module xsi:type="andType" name="And_4" />
+				<module xsi:type="orType" name="Or_4" y="96" />
+				<module xsi:type="andType" name="And_5" y="192" />
+				<module xsi:type="orType" name="Or_5" y="288" />
+			</module>
+		</template>
+		<template guid="0afef417-8a70-43c0-9608-69add7ff893e" label="sourceTemplate">
+			<module xsi:type="groupType" name="Group_6" label="sourceTemplate" y="640" expanded="true" showExpandedGroupPins="true">
+				<input name=":On" type="boolean" module="Sound_4" />
+				<input name=":Reset" type="boolean" module="Sound_4" pin="1" index="1" pinY="30" />
+				<input name=":Pause" type="boolean" module="Sound_4" pin="2" index="2" pinY="60" />
+				<input name=":On" type="boolean" module="Sound_5" index="3" pinY="108" />
+				<input name=":Reset" type="boolean" module="Sound_5" pin="1" index="4" pinY="138" />
+				<input name=":Pause" type="boolean" module="Sound_5" pin="2" index="5" pinY="168" />
+				<output name=":Out" type="boolean" module="Button_6" />
+				<output name=":Out" type="boolean" module="Button_7" index="1" pinY="48" />
+				<output name=":Out" type="boolean" module="Button_8" index="3" pinY="144" />
+				<output name=":Out" type="float" module="Sound_4" index="2" pinY="96" />
+				<output name=":Out" type="float" module="Sound_5" index="4" pinY="192" />
+				<module xsi:type="buttonType" name="Button_6" />
+				<module xsi:type="buttonType" name="Button_7" y="96" />
+				<module xsi:type="buttonType" name="Button_8" y="256" />
+				<module xsi:type="soundType" name="Sound_4" y="160" />
+				<module xsi:type="soundType" name="Sound_5" y="320" />
+			</module>
+		</template>
+		<template guid="497c3313-8b49-4099-a7cd-4660199fcf65" label="sourceGroup">
+			<module xsi:type="groupType" name="Group_11" label="sourceGroup" y="1152" expanded="true" showExpandedGroupPins="true">
+				<input name=":On" type="boolean" module="Sound_6" />
+				<input name=":Reset" type="boolean" module="Sound_6" pin="1" index="1" pinY="30" />
+				<input name=":Pause" type="boolean" module="Sound_6" pin="2" index="2" pinY="60" />
+				<input name=":On" type="boolean" module="Sound_7" index="3" pinY="108" />
+				<input name=":Reset" type="boolean" module="Sound_7" pin="1" index="4" pinY="138" />
+				<input name=":Pause" type="boolean" module="Sound_7" pin="2" index="5" pinY="168" />
+				<output name=":Out" type="boolean" module="Button_9" />
+				<output name=":Out" type="boolean" module="Button_10" index="1" pinY="48" />
+				<output name=":Out" type="boolean" module="Button_11" index="3" pinY="144" />
+				<output name=":Out" type="float" module="Sound_6" index="2" pinY="96" />
+				<output name=":Out" type="float" module="Sound_7" index="4" pinY="192" />
+				<module xsi:type="buttonType" name="Button_9" />
+				<module xsi:type="buttonType" name="Button_10" y="96" />
+				<module xsi:type="buttonType" name="Button_11" y="256" />
+				<module xsi:type="soundType" name="Sound_6" y="160" />
+				<module xsi:type="soundType" name="Sound_7" y="320" />
+			</module>
+		</template>
+		<template guid="bb329b94-9941-4489-a011-3d5030c21fe1" label="bridgeGroup">
+			<module xsi:type="groupType" name="Group_10" label="bridgeGroup" x="256" y="1152" expanded="true" showExpandedGroupPins="true">
+				<input name=":In1" type="boolean" module="And_6" />
+				<input name=":In2" type="boolean" module="And_6" pin="1" index="1" pinY="30" />
+				<input name=":In1" type="boolean" module="Or_6" index="2" pinY="78" />
+				<input name=":In2" type="boolean" module="Or_6" pin="1" index="3" pinY="108" />
+				<input name=":In1" type="boolean" module="And_7" index="4" pinY="156" />
+				<input name=":In2" type="boolean" module="And_7" pin="1" index="5" pinY="186" />
+				<input name=":In1" type="boolean" module="Or_7" index="6" pinY="234" />
+				<input name=":In2" type="boolean" module="Or_7" pin="1" index="7" pinY="264" />
+				<output name=":Out" type="boolean" module="And_6" />
+				<output name=":Out" type="boolean" module="Or_6" index="1" pinY="48" />
+				<output name=":Out" type="boolean" module="And_7" index="2" pinY="96" />
+				<output name=":Out" type="boolean" module="Or_7" index="3" pinY="144" />
+				<module xsi:type="andType" name="And_6" />
+				<module xsi:type="orType" name="Or_6" y="96" />
+				<module xsi:type="andType" name="And_7" y="192" />
+				<module xsi:type="orType" name="Or_7" y="288" />
+			</module>
+		</template>
+		<template guid="d3e18e1e-a89d-4902-88dd-756111a2350c" label="dstGroup">
+			<module xsi:type="groupType" name="Group_9" label="dstGroup" x="544" y="1184" expanded="true" showExpandedGroupPins="true">
+				<input name=":In" type="float" module="Speaker_6" index="1" pinY="48" />
+				<input name=":In" type="boolean" module="Light_9" />
+				<input name=":In" type="float" module="Speaker_7" index="4" pinY="192" />
+				<input name=":In" type="boolean" module="Light_10" index="2" pinY="96" />
+				<input name=":In" type="boolean" module="Light_11" index="3" pinY="144" />
+				<module xsi:type="speakerType" name="Speaker_6" y="96" />
+				<module xsi:type="lightType" name="Light_9" />
+				<module xsi:type="speakerType" name="Speaker_7" y="320" />
+				<module xsi:type="lightType" name="Light_10" y="160" />
+				<module xsi:type="lightType" name="Light_11" y="256" />
+			</module>
+		</template>
+	</templateFolder>
+</circuit>

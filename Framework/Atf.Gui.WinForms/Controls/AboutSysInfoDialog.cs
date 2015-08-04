@@ -30,18 +30,27 @@ namespace Sce.Atf.Controls
                 foreach (ProcessModule module in Process.GetCurrentProcess().Modules)
                 {
                     // Get version info
-                    FileVersionInfo fileVersionInfo = module.FileVersionInfo;
-                    if (String.IsNullOrEmpty(fileVersionInfo.FileVersion))
-                        continue;
+                    string versionString = "0.0"; //the default of Version()
+                    try
+                    {
+                        FileVersionInfo fileVersionInfo = module.FileVersionInfo;
+                        if (!String.IsNullOrEmpty(fileVersionInfo.FileVersion))
+                        {
+                            versionString = String.Format("{0}.{1}.{2}.{3}",
+                                fileVersionInfo.FileMajorPart,
+                                fileVersionInfo.FileMinorPart,
+                                fileVersionInfo.FileBuildPart,
+                                fileVersionInfo.FilePrivatePart);
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        //detour.dll from nVidia caused this exception on a Windows 8 laptop
+                    }
 
                     var item = new ListViewItem();
                     item.Text = module.ModuleName;
 
-                    string versionString = String.Format("{0}.{1}.{2}.{3}", 
-                        fileVersionInfo.FileMajorPart,
-                        fileVersionInfo.FileMinorPart,
-                        fileVersionInfo.FileBuildPart,
-                        fileVersionInfo.FilePrivatePart);
 
                     var subItem = new ListViewItem.ListViewSubItem(item, versionString);
                     subItem.Tag = new Version(versionString);

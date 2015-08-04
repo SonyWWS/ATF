@@ -61,6 +61,26 @@ namespace Sce.Atf.Controls
             set { m_textBrush = value; }
         }
 
+
+        /// <summary>
+        /// Gets or sets the brush used for highlighting part of the element
+        /// that matches search pattern.</summary>
+        public Brush MatchedHighlightBrush
+        {
+            get { return m_matchedHighlightBrush; }
+            set { m_matchedHighlightBrush = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets brush for background of elements that did not pass filter/// </summary>
+        public Brush NoMatchHighlightBrush
+        {
+            get { return m_noMatchHighlightBrush; }
+            set { m_noMatchHighlightBrush = value; }
+        }
+
+        //private SolidBrush m_brushMatchedHighLight = new SolidBrush(Color.FromArgb(239, 203, 5));
+        //private SolidBrush m_brushNonMatchedBg = new SolidBrush(Color.FromArgb(230, 230, 230));
         /// <summary>
         /// Gets or sets the pen for drawing the expander</summary>
         public Pen ExpanderPen
@@ -174,7 +194,7 @@ namespace Sce.Atf.Controls
             
             Font font = GetDefaultFont(node, g);
 
-            if (!string.IsNullOrEmpty(FilteringPattern))
+            if (!string.IsNullOrEmpty(FilteringPattern) && node.Label != null)
             {
                 int regularStart = 0;
                 int matchStart;
@@ -200,7 +220,7 @@ namespace Sce.Atf.Controls
                         // offset a couple of pixels to avoid obvious overlap with preceding char
                         matchedRect.X += 2;
                         matchedRect.Width -= 2;
-                        g.FillRectangle(m_brushMatchedHighLight, matchedRect);
+                        g.FillRectangle(MatchedHighlightBrush, matchedRect);
                         textLoc.X += matchedSize.Width;
                     }
                 } while (matchStart >= 0);
@@ -213,8 +233,7 @@ namespace Sce.Atf.Controls
 
                 g.FillRectangle(highlightBrush, textRect);
                 textBrush = highlightTextBrush;
-            }
-
+            }            
             g.DrawString(node.Label, font, textBrush, textRect);
         }
 
@@ -237,12 +256,16 @@ namespace Sce.Atf.Controls
         /// <param name="y">The y-coordinate of the upper-left corner of the node</param>
         public virtual void DrawBackground(TreeControl.Node node, Graphics g, int x, int y)
         {
-            if (NeedGrayBackground(node))
+
+            if (FilteringStatus != null && !string.IsNullOrEmpty(FilteringPattern))
             {
-                Rectangle bgRect = new Rectangle(Owner.Margin.Left, Owner.Margin.Top + y,
+                if ((FilteringStatus(node) & NodeFilteringStatus.Visible) == 0)
+                {
+                    Rectangle bgRect = new Rectangle(Owner.Margin.Left, Owner.Margin.Top + y,
                     Owner.Width - Owner.Margin.Left - Owner.Margin.Right, node.LabelHeight + Owner.Margin.Top + Owner.Margin.Bottom);
-                bgRect.Y -= 3;
-                g.FillRectangle(m_brushNonMatchedBg, bgRect);
+                    bgRect.Y -= 3;
+                    g.FillRectangle(NoMatchHighlightBrush, bgRect);
+                }
             }
         }
 
@@ -314,10 +337,42 @@ namespace Sce.Atf.Controls
         /// <param name="y">The y-coordinate of the upper-left corner of the expander icon</param>
         public virtual void DrawExpander(TreeControl.Node node, Graphics g, int x, int y)
         {
-            node.PartiallyExpanded = false; // reset            
-            GdiUtil.DrawExpander(x, y, ExpanderSize.Height, m_expanderPen, node.Expanded, g);
-        }
+            NodeFilteringStatus 
+                stat = FilteringStatus != null
+                ? FilteringStatus(node) : NodeFilteringStatus.Normal;
 
+            bool partial = (stat & NodeFilteringStatus.PartiallyExpanded) == NodeFilteringStatus.PartiallyExpanded;
+            bool hasChildMatch = (stat & NodeFilteringStatus.ChildVisible) == NodeFilteringStatus.ChildVisible;
+            Brush bkg = null;
+            Pen frg = null;
+            if (node.Expanded)
+            {
+                if (partial)
+                {
+                    bkg = NoMatchHighlightBrush;
+                }
+                else
+                {
+                    m_tmp.Color = m_expanderPen.Color;
+                    bkg = m_tmp;
+                }
+
+            }
+            else
+            {
+                if (hasChildMatch)
+                    bkg = m_matchedHighlightBrush;
+                else
+                    frg = m_expanderPen;
+            }
+
+            node.PartiallyExpanded = false; // reset            
+            GdiUtil.DrawExpander(g, x, y, ExpanderSize.Height, node.Expanded, bkg, frg);
+
+            //node.PartiallyExpanded = false; // reset            
+            //GdiUtil.DrawExpander(x, y, ExpanderSize.Height, m_expanderPen, node.Expanded, g);
+        }
+        private SolidBrush m_tmp = new SolidBrush(Color.Black);
 
         /// <summary>
         /// Draws the category expander icon for the Microsoft Office-like categorized palette</summary>
@@ -421,15 +476,7 @@ namespace Sce.Atf.Controls
             return font;
         }
 
-        // return false if the node itself, or any of its children label matches the searching pattern
-        private bool NeedGrayBackground(TreeControl.Node node)
-        {
-            if (string.IsNullOrEmpty(FilteringPattern))
-                return false;
-
-            return FilteringStatus == null || (FilteringStatus(node) & NodeFilteringStatus.Visible) == 0;
-        }
-
+       
         private Control m_owner;
         private readonly Dictionary<int, Font> m_fonts = new Dictionary<int, Font>();
         private Size m_checkBoxSize = new Size(16, 16);
@@ -444,8 +491,8 @@ namespace Sce.Atf.Controls
         private Pen m_expanderPen = SystemPens.ControlDarkDark;
         private Pen m_hierarchyLinePen = SystemPens.InactiveBorder;
 
-        private SolidBrush m_brushMatchedHighLight = new SolidBrush(Color.FromArgb(239, 203, 5));
-        private SolidBrush m_brushNonMatchedBg = new SolidBrush(Color.FromArgb(230, 230, 230));
+        private Brush m_matchedHighlightBrush = new SolidBrush(Color.FromArgb(239, 203, 5));
+        private Brush m_noMatchHighlightBrush = new SolidBrush(Color.FromArgb(230, 230, 230));
 
         private Color m_categoryStartColor = Color.FromArgb(0, 0, 0, 0);
         private Color m_categoryEndColor = Color.FromArgb(0, 0, 0, 0);

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<cars>
+  <America>
+    <suv name="Devastator" manufacturer="Crysis Group LLC" 
+         min ="20295" max ="32795" msrp="20295" mpg="26/19" 
+         weight="3818" color="RoyalBlue" 
+         configuration ="Limited"
+         awd="true"/>
+    <suv name="Craterer" manufacturer="General Meteors" 
+         min ="42362" max ="63335" msrp="45550" 
+         mpg="23/16" 
+         weight="5308" color="-55296" 
+         configuration ="Standard"
+         awd="false"/>
+  </America>
+
+  <Asia>
+    <suv name="Outandback" manufacturer="Boomerang Heavy Industries" min ="23407" max ="32995" msrp="24895" mpg="33/25" 
+         configuration ="Plus"
+         weight="3593" color="-12560509" awd="true"/>
+    <suv name="Carbonizer" manufacturer="Atoma Motors" min ="22142" max ="29850" msrp="26350" 
+         configuration ="Plus"
+         mpg="31/24" weight="3435" color="-7879179" awd="true"/>
+  </Asia>
+
+  <Europe>
+    <suv name="Impactor" manufacturer="Mannwagen" min ="24955" max ="39235" msrp="39235" mpg="26/21" 
+         configuration ="Standard"
+         weight="3404" color="-12800" awd="false"/>
+    <suv name="Engorger" manufacturer="Gris Cars" min ="37318" max ="47400" msrp="39700" mpg="25/16" 
+         configuration ="Limited"
+         weight="4394" color="-47872" awd="true"/>
+  </Europe>
+</cars>

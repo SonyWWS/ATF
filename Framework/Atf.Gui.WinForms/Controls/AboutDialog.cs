@@ -77,9 +77,14 @@ namespace Sce.Atf.Controls
             if (addAtfInfo)
             {
                 Version v = AtfVersion.GetVersion();
-                credits.Add(string.Format("Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen," +
+                // Use the Localizer.Localize() syntax instead of using an extension method, because
+                //  our tool, LocalizableStringExtractor, doesn't work with parentheses around the
+                //  concatenated string literal.
+                // ReSharper disable once InvokeAsExtensionMethod
+                credits.Add(string.Format(Localizer.Localize(
+                    "Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen," +
                     " Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott." +
-                    " Copyright © 2014 Sony Computer Entertainment America LLC".Localize("{0} is the version number"), v));
+                    " Copyright © 2014 Sony Computer Entertainment America LLC", "{0} is the version number"), v));
             }
 
             pictureBox.Size = logo.Size;

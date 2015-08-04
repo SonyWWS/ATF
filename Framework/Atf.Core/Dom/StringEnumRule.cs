@@ -1,6 +1,7 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 
 namespace Sce.Atf.Dom
 {
@@ -31,6 +32,13 @@ namespace Sce.Atf.Dom
                     return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the enumeration values</summary>
+        public IEnumerable<string> Values
+        {
+            get { return m_values; }
         }
 
         private readonly string[] m_values;

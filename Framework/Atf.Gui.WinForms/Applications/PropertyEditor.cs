@@ -45,10 +45,13 @@ namespace Sce.Atf.Applications
         {
             propertyGrid = new PropertyGrid();
             controlInfo = new ControlInfo(
-                "Property Editor".Localize(),
+                "Property Editor", //Is the ID in the layout. We'll localize DisplayName instead.
                 "Edits selected object properties".Localize(),
                 StandardControlGroup.Right, null,
-                "https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF".Localize());
+                "https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF".Localize())
+            {
+                DisplayName = "Property Editor".Localize()
+            };
         }
 
         /// <summary>

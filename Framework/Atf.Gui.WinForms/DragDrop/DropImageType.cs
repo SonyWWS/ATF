@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Sce.Atf
 {
-    internal enum DropImageType : int
+    public enum DropImageType : int
     {
         Invalid = -1,
         None = 0,

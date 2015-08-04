@@ -520,8 +520,9 @@ namespace Sce.Atf.Dom
                     result = ((IFormattable)value).ToString(null, CultureInfo.InvariantCulture);
                     break;
                 case AttributeTypes.DateTime:
-                    result =  ((DateTime)value).ToString(@"yyyy-MM-ddTHH:mm:ss.fffffffZ"); //always output as UTC
-                   
+                    // Persist in UTC.
+                    DateTime utc = ((DateTime)value).ToUniversalTime();
+                    result = utc.ToString("o", DateTimeFormatInfo.InvariantInfo); //round-trip
                     break;
                 case AttributeTypes.Single:
                 case AttributeTypes.Double:
@@ -704,15 +705,12 @@ namespace Sce.Atf.Dom
                 //case AttributeTypes.Reference: // references require special handling by persisters
                 //    break;
 
-                case AttributeTypes.DateTime:                
-                    if (s.EndsWith("Z")) // UTC to local
-                        result = XmlConvert.ToDateTime(s, XmlDateTimeSerializationMode.Local);
-                    else // compatible with ATF3.1 or earlier 
-                    {
-                        DateTime dateTimeResult;
-                        if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeResult))
-                            result = dateTimeResult;
-                    }
+                case AttributeTypes.DateTime:
+                    // Use local time in the client app.
+                    DateTime dateTimeResult;
+                    if (DateTime.TryParse(s, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.RoundtripKind, out dateTimeResult))
+                        dateTimeResult = dateTimeResult.ToLocalTime();
+                    result = dateTimeResult;
                     break;
 
                 case AttributeTypes.BooleanArray:

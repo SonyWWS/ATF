@@ -12,9 +12,9 @@
     <DataTemplate x:Key="{x:Static l:SliderValueEditor.TemplateKey}">
         <c:SliderBox Value="{Binding EditorContext.DoubleValue, Mode=TwoWay}" 
                      DeferDragUpdate="True" IsEnabled="{Binding IsWriteable}"
-                     StringFormat="{Binding EditorContext.FormatString, Mode=OneTime}">
-            <!--Maximum="{Binding EditorContext.Max, Mode=OneTime}"
-                     Minimum="{Binding EditorContext.Min, Mode=OneTime}"-->
+                     StringFormat="{Binding EditorContext.FormatString, Mode=OneTime}"
+                     Maximum="{Binding EditorContext.Max, Mode=OneTime}"
+                     Minimum="{Binding EditorContext.Min, Mode=OneTime}">
             <!--SmallChange="{Binding EditorContext.SmallChange, Mode=OneTime}"
                      LargeChange="{Binding EditorContext.LargeChange, Mode=OneTime}"-->
         </c:SliderBox>

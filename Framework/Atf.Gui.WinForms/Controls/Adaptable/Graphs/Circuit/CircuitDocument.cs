@@ -40,6 +40,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
+        /// Gets the optional AttributeInfo for the document version
+        /// pins should be displayed.</summary>
+        protected virtual AttributeInfo VersionAttribute 
+        {
+            get { return null; }
+        }
+
+        ///<summary>Gets the version of the tool that generated the document</summary>
+        public Version Version
+        {
+            get
+            {
+                if (VersionAttribute == null)
+                    return new Version(1, 0); // default version
+                var versionValue = DomNode.GetAttribute(VersionAttribute) as string;
+                return new Version(versionValue);
+            }
+        }
+
+        /// <summary>
         /// Gets the document client's user-readable file type name</summary>
         public override string Type
         {

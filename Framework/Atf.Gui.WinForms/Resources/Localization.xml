@@ -6,7 +6,7 @@
   <StringItem id="(none)" context="No flags" translation="(none)" />
   <StringItem id="[{0} items]" context="a number of items" translation="[{0} items]" />
   <StringItem id="{0} commands currently do not use their default shortcuts." context="{0} is a number" translation="{0} commands currently do not use their default shortcuts." />
-  <StringItem id="&lt; Clean State &gt;" context="" translation="&lt; Clean State &gt;" />
+  <StringItem id="&lt; Clean State &gt;" context="The '&lt;' and '&gt;' indicate that this is not a command name, but is the state of the document before any commands have been run." translation="&lt; Clean State &gt;" />
   <StringItem id="About" context="" translation="About" />
   <StringItem id="About this Application" context="" translation="About this Application" />
   <StringItem id="Activate Window" context="" translation="Activate Window" />
@@ -19,6 +19,7 @@
   <StringItem id="Add document to Version Control" context="" translation="Add document to Version Control" />
   <StringItem id="Add External Template Folder" context="" translation="Add External Template Folder" />
   <StringItem id="Add Layer" context="" translation="Add Layer" />
+  <StringItem id="Add New {0}" context="" translation="Add New {0}" />
   <StringItem id="Add Point" context="" translation="Add Point" />
   <StringItem id="Add Target" context="" translation="Add Target" />
   <StringItem id="Add Template Folder" context="" translation="Add Template Folder" />
@@ -131,10 +132,10 @@
   <StringItem id="Edits document layers" context="" translation="Edits document layers" />
   <StringItem id="Edits selected object curves" context="" translation="Edits selected object curves" />
   <StringItem id="Edits selected object properties" context="" translation="Edits selected object properties" />
-  <StringItem id="Enable source control" context="" translation="Enable source control" />
   <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
-  <StringItem id="Error" context="Label for error message" translation="Error" />
+  <StringItem id="Enable source control" context="" translation="Enable source control" />
   <StringItem id="Error" context="" translation="Error" />
+  <StringItem id="Error" context="Label for error message" translation="Error" />
   <StringItem id="Error loading skin file." context="" translation="Error loading skin file." />
   <StringItem id="Error!" context="" translation="Error!" />
   <StringItem id="Exit" context="" translation="Exit" />
@@ -143,8 +144,8 @@
   <StringItem id="File" context="" translation="File" />
   <StringItem id="Fill host name" context="" translation="Fill host name" />
   <StringItem id="Fill target name" context="" translation="Fill target name" />
-  <StringItem id="Flip Y-axis" context="same as 'flip vertical axis'" translation="Flip Y-axis" />
   <StringItem id="Flip Y-Axis" context="" translation="Flip Y-Axis" />
+  <StringItem id="Flip Y-axis" context="same as 'flip vertical axis'" translation="Flip Y-axis" />
   <StringItem id="Generic View of DOM" context="" translation="Generic View of DOM" />
   <StringItem id="Get latest version from source control" context="" translation="Get latest version from source control" />
   <StringItem id="Gray" context="" translation="Gray" />
@@ -152,10 +153,11 @@
   <StringItem id="Green must be a number between 0 and 255" context="" translation="Green must be a number between 0 and 255" />
   <StringItem id="Grid" context="Grid location constraint" translation="Grid" />
   <StringItem id="Grid Property Editor" context="" translation="Grid Property Editor" />
-  <StringItem id="Group" context="a verb" translation="Group" />
   <StringItem id="Group" context="a noun" translation="Group" />
+  <StringItem id="Group" context="a verb" translation="Group" />
   <StringItem id="Help" context="" translation="Help" />
   <StringItem id="Hex must be a hex value between 00000000 and FFFFFFFF" context="" translation="Hex must be a hex value between 00000000 and FFFFFFFF" />
+  <StringItem id="History" context="" translation="History" />
   <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=DomRecorder+or+Recorder" />
   <StringItem id="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" context="" translation="https://github.com/SonyWWS/ATF/search?utf8=%E2%9C%93&amp;q=PaletteService+or+Palette" />
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" context="" translation="https://github.com/SonyWWS/ATF/wiki/Property-Editing-in-ATF" />
@@ -165,8 +167,8 @@
   <StringItem id="Import Templates from Document" context="" translation="Import Templates from Document" />
   <StringItem id="Import Templates from Document..." context="" translation="Import Templates from Document..." />
   <StringItem id="In Tangent" context="" translation="In Tangent" />
-  <StringItem id="Info" context="Label for informative message" translation="Info" />
   <StringItem id="Info" context="" translation="Info" />
+  <StringItem id="Info" context="Label for informative message" translation="Info" />
   <StringItem id="Input mode" context="" translation="Input mode" />
   <StringItem id="Input Mode" context="" translation="Input Mode" />
   <StringItem id="Insert child" context="" translation="Insert child" />
@@ -181,8 +183,8 @@
   <StringItem id="Load or Save Settings..." context="" translation="Load or Save Settings..." />
   <StringItem id="Load previously open documents on application startup" context="" translation="Load previously open documents on application startup" />
   <StringItem id="Load Skin..." context="Load and apply a skin file." translation="Load Skin..." />
-  <StringItem id="Lock origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock origin" />
   <StringItem id="Lock Origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock Origin" />
+  <StringItem id="Lock origin" context="This is the name of a command. Lock is a verb. Origin is like the origin of a graph." translation="Lock origin" />
   <StringItem id="Lock UI Layout" context="" translation="Lock UI Layout" />
   <StringItem id="Magenta must be a number between 0 and 100" context="" translation="Magenta must be a number between 0 and 100" />
   <StringItem id="Manage layouts..." context="" translation="Manage layouts..." />
@@ -230,6 +232,7 @@
   <StringItem id="Preferences" context="" translation="Preferences" />
   <StringItem id="Preferences..." context="Edit user preferences" translation="Preferences..." />
   <StringItem id="Pre-Infinity" context="" translation="Pre-Infinity" />
+  <StringItem id="Press F1 for more info" context="" translation="Press F1 for more info" />
   <StringItem id="Proceed with Revert?" context="" translation="Proceed with Revert?" />
   <StringItem id="Project Lister" context="" translation="Project Lister" />
   <StringItem id="Promote To Template Library" context="" translation="Promote To Template Library" />
@@ -240,8 +243,8 @@
   <StringItem id="Prototypes" context="" translation="Prototypes" />
   <StringItem id="Purple" context="" translation="Purple" />
   <StringItem id="Quick Help..." context="" translation="Quick Help..." />
-  <StringItem id="Ready" context="Application is ready" translation="Ready" />
   <StringItem id="Ready" context="" translation="Ready" />
+  <StringItem id="Ready" context="Application is ready" translation="Ready" />
   <StringItem id="Reconcile Offline Work" context="" translation="Reconcile Offline Work" />
   <StringItem id="Records DOM events on the active context and displays them" context="" translation="Records DOM events on the active context and displays them" />
   <StringItem id="Red must be a number between 0 and 255" context="" translation="Red must be a number between 0 and 255" />
@@ -334,6 +337,7 @@
   <StringItem id="Type of Selected Curve(s)" context="" translation="Type of Selected Curve(s)" />
   <StringItem id="UI Settings" context="" translation="UI Settings" />
   <StringItem id="Undo" context="" translation="Undo" />
+  <StringItem id="Undo/Redo stack" context="" translation="Undo/Redo stack" />
   <StringItem id="Ungroup" context="a verb" translation="Ungroup" />
   <StringItem id="Unify Tangents" context="" translation="Unify Tangents" />
   <StringItem id="Unlock UI Layout" context="" translation="Unlock UI Layout" />
@@ -349,6 +353,7 @@
   <StringItem id="View In Text Editor" context="Open the file in the associated text editor" translation="View In Text Editor" />
   <StringItem id="Warning" context="" translation="Warning" />
   <StringItem id="Warning" context="Label for warning message" translation="Warning" />
+  <StringItem id="Would you like to download the latest version?" context="" translation="Would you like to download the latest version?" />
   <StringItem id="Would you like to save the changes?" context="" translation="Would you like to save the changes?" />
   <StringItem id="Yellow" context="" translation="Yellow" />
   <StringItem id="Yellow must be a number between 0 and 100" context="" translation="Yellow must be a number between 0 and 100" />

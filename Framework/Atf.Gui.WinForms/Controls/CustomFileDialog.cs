@@ -294,7 +294,7 @@ namespace Sce.Atf
         /// <param name="lParam">Additional information about message</param>
         /// <returns>0 iff default dialog box procedure processes message</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646931%28v=vs.85%29.aspx. </remarks>
-        protected delegate int WndProcDelegate(IntPtr hWnd, uint msg, int wParam, int lParam);
+        public delegate int WndProcDelegate(IntPtr hWnd, uint msg, int wParam, int lParam);
 
         /// <summary>
         /// Bitmaps for dialog open flags</summary>
@@ -341,8 +341,8 @@ namespace Sce.Atf
         /// <summary>
         /// Windows OPENFILENAME struct</summary>
         /// <remarks>See http://msdn.microsoft.com/en-us/library/ms646839(VS.85).aspx .</remarks>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        protected struct OPENFILENAME
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct OPENFILENAME
         {
             public int lStructSize;
             public IntPtr hwndOwner;
@@ -372,7 +372,7 @@ namespace Sce.Atf
             [MarshalAs(UnmanagedType.LPTStr)]
             public string lpTemplateName;
             // only if on WINNT 5.0 or higher:
-            public int pvReserved;
+            public IntPtr pvReserved;
             public int dwReserved;
             public int FlagsEx;
         }

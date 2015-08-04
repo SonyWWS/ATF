@@ -1,6 +1,8 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using NUnit.Core;
@@ -19,25 +21,36 @@ namespace UnitTests
             ServiceManager.Services.AddService(new AddinManager());
             ServiceManager.Services.AddService(new TestAgency());
 
-            string assemblyName = Assembly.GetExecutingAssembly().Location;
-            return RunAllTests(assemblyName);
+            var assemblyPaths = new List<string>
+            {
+                //Assembly.GetExecutingAssembly().Location,
+                AppDomain.CurrentDomain.Load(new AssemblyName("NativeTestHelpers")).Location
+            };
+
+            string displayName = Assembly.GetExecutingAssembly().Location;
+
+            return RunAllTests(displayName, assemblyPaths);
         }
 
         /// <summary>
         /// Runs all tests</summary>
-        /// <param name="testAssemblyName">Name of the test assembly</param>
+        /// <param name="displayName">Name of the test, which is normally the executing
+        /// assembly's Location.</param>
+        /// <param name="assemblyPaths">List of assemblies to actually test</param>
         /// <returns>0 if tests ran successfully, a negative number otherwise</returns>
-        public static int RunAllTests(string testAssemblyName)
+        public static int RunAllTests(string displayName, List<string> assemblyPaths)
         {
             TestRunner runner;
             try
             {
-                runner = MakeTestRunner(testAssemblyName);
+                var package = new TestPackage(displayName, assemblyPaths);
+                runner = new DefaultTestRunnerFactory().MakeTestRunner(package);
+                runner.Load(package);
             }
             catch (System.IO.FileLoadException)
             {
                 // likely caused by ATF source zip file downloaded from internet without unblocking it
-                Console.WriteLine("NUnit failed to load {0}", testAssemblyName);
+                Console.WriteLine("NUnit failed to load {0}", displayName);
                 Console.WriteLine(@"Possibly need to unblock the downloaded ATF source zip file before unzipping");
                 Console.WriteLine(@"(right click on the zip file -> Properties -> Unblock)");
                 return -3;
@@ -54,15 +67,6 @@ namespace UnitTests
                 return -1;
 
             return 0;
-        }
-
-        private static TestRunner MakeTestRunner(string testAssemblyName)
-        {
-            TestPackage package = new TestPackage(testAssemblyName);
-            TestRunner runner = new DefaultTestRunnerFactory().MakeTestRunner(package);
-            runner.Load(package);
-
-            return runner;
         }
     }
 

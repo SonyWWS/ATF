@@ -149,29 +149,14 @@ namespace UnitTests.Atf
             Assert.IsTrue(elem2.Type == complexType2);
             Assert.IsTrue(MinMaxCheck(elem2, 1, Int32.MaxValue));
 
-            //DomNodeType complexType7 = loader.GetNodeType("test:complexType7");
-            //Assert.IsTrue(complexType7 != null);
-            //Assert.IsTrue(!complexType7.IsAbstract);
-            //AttributeInfo attrSimpleSequence = complexType7.GetAttributeInfo("elemSimpleSequence");
-            //Assert.IsTrue(attrSimpleSequence == null); //because a sequence of simple types becomes a sequence of child DomNodes
-            //ChildInfo elemSimpleSequence = complexType7.GetChildInfo("elemSimpleSequence");
-            //Assert.IsTrue(elemSimpleSequence != null); //because a sequence of simple types becomes a sequence of child DomNodes
-            //DomNode node7 = new DomNode(complexType7);
-            //object attrObj7 = node7.GetAttribute(attrSimpleSequence);
-            //Assert.IsTrue(
-            //    attrObj7 is float[] &&
-            //    ((float[])attrObj7)[0] == 0 &&
-            //    ((float[])attrObj7)[1] == 0 &&
-            //    ((float[])attrObj7)[2] == 0); //the default vector
-            //float[][] newSequence =
-            //{
-            //    new float[] {1, 2, 3},
-            //    new float[] {4, 5, 6},
-            //    new float[] {7, 8, 9}
-            //};
-            //node7.SetAttribute(attrSimpleSequence, newSequence);
-            //attrObj7 = node7.GetAttribute(attrSimpleSequence);
-            //Assert.IsTrue(ArraysEqual(attrObj7, newSequence));
+            DomNodeType complexType7 = loader.GetNodeType("test:complexType7");
+            Assert.IsTrue(complexType7 != null);
+            ChildInfo elemSimpleSequence = complexType7.GetChildInfo("elemSimpleSequence");
+            var minMaxOccurs = elemSimpleSequence.Rules.OfType<ChildCountRule>().FirstOrDefault();
+            Assert.IsTrue(
+                minMaxOccurs != null &&
+                minMaxOccurs.Min == 3 &&
+                minMaxOccurs.Max == 3);
         }
 
         //private static bool ArraysEqual(object testObject, float[][] correctSequence)

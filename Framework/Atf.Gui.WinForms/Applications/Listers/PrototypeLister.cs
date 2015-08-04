@@ -33,10 +33,13 @@ namespace Sce.Atf.Applications
             out ControlInfo controlInfo)
         {
             controlInfo = new ControlInfo(
-                "Prototypes".Localize(),
+                "Prototypes", //Is the ID in the layout. We'll localize DisplayName instead.
                 "Creates new instances from prototypes".Localize(),
                 StandardControlGroup.Right,
-                s_factoryImage);
+                s_factoryImage)
+            {
+                DisplayName = "Prototypes".Localize()
+            };
 
             TreeControl.ShowRoot = false;
             TreeControl.AllowDrop = true;

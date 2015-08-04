@@ -978,7 +978,7 @@ namespace Sce.Atf.Applications
             if (!string.IsNullOrEmpty(dockContent.Text))
                 m_uniqueNamer.Retire(dockContent.Text);
 
-            string displayName = info.Name;
+            string displayName = info.DisplayName;
             if (info.IsDocument.HasValue && info.IsDocument.Value)
             {
                 dockContent.Text = displayName;
@@ -1109,7 +1109,7 @@ namespace Sce.Atf.Applications
         private string GetControlMenuText(Control control)
         {
             ControlInfo info = FindControlInfo(control);
-            string name = info.Name;
+            string name = info.DisplayName;
             string label = name;
             if (name.StartsWith("@")) // literal control name
             {

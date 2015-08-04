@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+
 using System.Windows;
 
 namespace LocalizableStringExtractor
 {
     /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+    /// Interaction logic for App.xaml</summary>
     public partial class App : Application
     {
     }

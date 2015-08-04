@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StringLocalizationTable>
+  <StringItem id="C#" context="" translation="C#" />
   <StringItem id="Cg" context="" translation="Cg" />
   <StringItem id="Code Editor" context="" translation="Code Editor" />
   <StringItem id="Code Editor Sample" context="" translation="Code Editor Sample" />
   <StringItem id="COLLADA" context="" translation="COLLADA" />
-  <StringItem id="CSharp" context="" translation="CSharp" />
   <StringItem id="Find and replace text" context="" translation="Find and replace text" />
   <StringItem id="Find and Replace..." context="" translation="Find and Replace..." />
   <StringItem id="Go to line" context="" translation="Go to line" />

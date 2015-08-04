@@ -138,6 +138,13 @@ namespace CircuitEditorSample
             get { return Schema.groupType.showExpandedGroupPinsAttribute; }
         }
 
+        /// <summary>
+        /// Gets showExpandedGroupPins attribute for group</summary>
+        protected override AttributeInfo ValidatedAttribute
+        {
+            get { return Schema.groupType.validatedAttribute; }
+        }
+
         protected override AttributeInfo SourceGuidAttribute
         {
             get { return Schema.groupType.sourceGuidAttribute; }

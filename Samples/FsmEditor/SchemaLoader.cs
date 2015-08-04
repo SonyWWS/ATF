@@ -247,10 +247,10 @@ namespace FsmEditorSample
                                 "Label displayed on trigger".Localize(),
                                 false),                            
                             new AttributePropertyDescriptor(
-                                "Id".Localize(),
+                                "ID".Localize(),
                                 Schema.triggerType.idAttribute,
                                 null,
-                                "Trigger id".Localize(),
+                                "Trigger ID".Localize(),
                                 false),
                             new AttributePropertyDescriptor(
                                 "Action".Localize(),

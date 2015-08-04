@@ -344,7 +344,7 @@ namespace Sce.Atf.Collada
             linestrips.extraChild = linestrips.Type.GetChildInfo("extra");
 
             ListOfUInts.Type = getNodeType("http://www.collada.org/2005/11/COLLADASchema", "ListOfUInts");
-            
+            ListOfUInts.Attribute = ListOfUInts.Type.GetAttributeInfo("");
 
             polygons.Type = getNodeType("http://www.collada.org/2005/11/COLLADASchema", "polygons");
             polygons.pAttribute = polygons.Type.GetAttributeInfo("p");
@@ -4225,7 +4225,8 @@ namespace Sce.Atf.Collada
 
         public static class ListOfUInts
         {
-            public static DomNodeType Type;            
+            public static DomNodeType Type;
+            public static AttributeInfo Attribute;
         }
 
         public static class polygons

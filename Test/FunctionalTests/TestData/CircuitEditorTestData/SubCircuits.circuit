@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--This sample doc is of version 1,  contains a sub-circuit and two instances of it-->
+<circuit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://sony.com/gametech/circuits/1_0">
+	<module xsi:type="subCircuitInstanceType" name="MasterInstance" label="Reference2" x="32" y="352" type="MasterInstance_1" />
+	<module xsi:type="subCircuitInstanceType" name="MasterInstance_2" label="Reference1" x="32" y="192" type="MasterInstance_1" />
+	<subCircuit name="MasterInstance_1">
+		<module xsi:type="buttonType" name="Button_1" x="16" y="16" />
+		<module xsi:type="andType" name="And_1" x="144" y="80" />
+		<module xsi:type="lightType" name="Light_1" x="272" y="16" />
+		<connection outputModule="Button_1" inputModule="And_1" />
+		<connection outputModule="And_1" inputModule="Light_1" />
+		<input type="boolean" />
+	</subCircuit>
+	<prototypeFolder />
+	<templateFolder name="_TemplateRoot_" />
+</circuit>

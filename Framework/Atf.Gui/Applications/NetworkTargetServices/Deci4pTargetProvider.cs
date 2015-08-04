@@ -215,7 +215,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
                     object tmInstance = Activator.CreateInstance(psp2TmType);
                     m_tmApi = (IPsp2TmApi)tmInstance;
 
-                    const uint buildVersion = 18; //TODO: either user changable(such as settings) or use reflection to extract? 
+                    const uint buildVersion = 18; //TODO: either user changeable(such as settings) or use reflection to extract? 
                     m_tmApi.CheckCompatibility(buildVersion);
                 }                     
                 m_initialized = true;
@@ -250,7 +250,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 #endif
         }
 
-        // According to research by Randon Ehle, reported by email on 5/7/2012:
+        // According to research by Brandon Ehle, reported by email on 5/7/2012:
         // http://msdn.microsoft.com/en-us/library/h01xszh2.aspx
         // The RunWorkerAsync method submits a request to start the operation running asynchronously.
         // When the request is serviced, the DoWork event is raised, which in turn starts execution of
@@ -321,9 +321,20 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
     /// <summary>
     /// Information about Deci4p target</summary>
-    [GroupAttribute("Deci4pTargetInfo", Header = "Vita Targets", ExternalEditorProperties = "Name,Platform,Endpoint,Protocol,Scope")]
+    [GroupAttribute("Deci4pTargetInfo", Header = "Vita Targets", ExternalEditorProperties = "Name,Platform,Endpoint,Protocol,Scope")]//localized below
     public class Deci4pTargetInfo : TargetInfo
     {
+        public Deci4pTargetInfo()
+        {
+            // Make the GroupAttribute strings localizable, by making sure that the LocalizableStringExtractor can find them.
+            //"Vita Targets".Localize(); //headers can't currently be displayed.
+            "Name".Localize();
+            "Platform".Localize();
+            "Endpoint".Localize();
+            "Protocol".Localize();
+            "Scope".Localize();
+        }
+
         /// <summary>
         /// Platform string for Vita target</summary>
         public const string PlatformName = @"Vita";

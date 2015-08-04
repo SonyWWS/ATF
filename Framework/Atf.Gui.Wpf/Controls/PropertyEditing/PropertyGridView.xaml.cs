@@ -32,6 +32,15 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         }
 
         /// <summary>
+        /// Gets or sets the property node factory</summary>
+        public IPropertyFactory PropertyFactory
+        {
+            get { return m_propertyGrid.PropertyFactory; }
+            set { m_propertyGrid.PropertyFactory = value; }
+        }
+
+
+        /// <summary>
         /// Handles the Reloaded event of the observableContext and updates the view's data context.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

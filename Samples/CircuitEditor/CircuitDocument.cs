@@ -9,11 +9,6 @@ namespace CircuitEditorSample
     /// ControlInfo instance used to register the viewing control in the UI</summary>
     public class CircuitDocument : Sce.Atf.Controls.Adaptable.Graphs.CircuitDocument
     {
-        /// <summary>
-        /// This property is obsolete as of ATF 3.9. It will probably be removed for ATF 3.10.</summary>
-        protected override ChildInfo SubCircuitChildInfo
-        {
-            get { return Schema.circuitDocumentType.subCircuitChild; }
-        }
+  
     }
 }

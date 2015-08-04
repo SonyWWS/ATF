@@ -3,7 +3,8 @@
   elementFormDefault="qualified"
   targetNamespace="http://sony.com/gametech/circuits/1_0"
 	xmlns="http://sony.com/gametech/circuits/1_0"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  version="2.0">
 
   <!--
   A module has a name (id), label, and position, and can be referenced by
@@ -18,6 +19,7 @@
     <xs:attribute name="showUnconnectedPins" type="xs:boolean" default="true"/>
     <!--the original GUID of the template if this module is a copy-instance of-->
     <xs:attribute name="sourceGuid" type="xs:string"/>
+    <xs:attribute name="validated" type="xs:boolean" default="true"/>
   </xs:complexType>
 
   <!--
@@ -71,7 +73,7 @@
   <xs:complexType name="groupType">
     <xs:complexContent>
       <xs:extension base="moduleType">
-        
+
         <xs:sequence>
           <xs:element name="input" type="groupPinType" minOccurs="0" maxOccurs="unbounded" />
           <xs:element name="output" type="groupPinType" minOccurs="0" maxOccurs="unbounded" />
@@ -79,10 +81,10 @@
           <xs:element name="connection" type="connectionType" minOccurs="0" maxOccurs="unbounded" />
           <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
-        
+
         <xs:attribute name="expanded" type="xs:boolean" default="false"/>
         <xs:attribute name="showExpandedGroupPins" type="xs:boolean" default="false"/>
-
+ 
         <!--container size when the group is expanded; when autosize is true, container size is computed-->
         <xs:attribute name="autosize" type="xs:boolean" default="true"/>
         <xs:attribute name="width" type="xs:int"/>
@@ -142,35 +144,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <!--
-  A sub-circuit is a circuit that defines a master module type, with custom
-  input and output pins. It can be referenced by instances, which are all
-  equivalent.
-  -->
-  <xs:complexType name ="subCircuitType">
-    <xs:complexContent>
-      <xs:extension base="circuitType">
-        <xs:sequence>
-          <xs:element name="input" type="pinType" minOccurs="0" maxOccurs="unbounded" />
-          <xs:element name="output" type="pinType" minOccurs="0" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:ID" use="required" />
-        <xs:attribute name="label" type="xs:string" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <!--
-  A sub-circuit instance is a module whose type is defined by a sub-circuit (master).
-  -->
-  <xs:complexType name="subCircuitInstanceType">
-    <xs:complexContent>
-      <xs:extension base="moduleType">
-        <xs:attribute name="type" type="xs:IDREF" use="required" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
+ 
   <!--
   A prototype is a set of modules and connections among them that can be copied and
   pasted into a circuit.
@@ -230,8 +204,6 @@
       <xs:extension base="moduleType">
         <!--<xs:IDREF value should be the guid of the template/>-->
         <xs:attribute name="guidRef" type="xs:IDREF" use="required" />
-        <!--typeRef is obsolete, replaced by guidRef; keep it so we can read older circuit docs before ATF3.8 -->
-        <xs:attribute name="typeRef" type="xs:IDREF"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -244,8 +216,6 @@
       <xs:extension base="groupType">
         <!--<xs:IDREF value should be the guid of the template/>-->
         <xs:attribute name="guidRef" type="xs:IDREF" use="required" />
-        <!--typeRef is obsolete, replaced by guidRef; keep it so we can read older circuit docs before ATF3.8 -->
-        <xs:attribute name="typeRef" type="xs:IDREF"/>
         <xs:attribute name="refExpanded" type="xs:boolean" default="false"/>
         <xs:attribute name="refShowExpandedGroupPins" type="xs:boolean" default="true"/>
       </xs:extension>
@@ -273,7 +243,6 @@
     <xs:complexContent>
       <xs:extension base="circuitType">
         <xs:sequence>
-          <xs:element name="subCircuit" type="subCircuitType" minOccurs="0" maxOccurs="unbounded" />
           <xs:element name="prototypeFolder" type="prototypeFolderType" />
           <xs:element name="templateFolder" type="templateFolderType" />
         </xs:sequence>

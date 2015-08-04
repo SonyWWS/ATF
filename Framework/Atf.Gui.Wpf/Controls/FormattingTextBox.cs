@@ -208,8 +208,6 @@ namespace Sce.Atf.Wpf.Controls
             
             if (!m_ignoreTextChanges)
             {
-                Value = UnFormat(Text);
-
                 ValueEditorUtil.ExecuteCommand(this.TextChangedCommand, this, base.Text);
                 if (IsEditing)
                 {
@@ -382,6 +380,7 @@ namespace Sce.Atf.Wpf.Controls
                 editor.UpdateTextFromValue();
         }
 
+        // Commits the change from Text to Value.
         private void UpdateChange()
         {
             if (!m_transactionOpen)
@@ -447,12 +446,15 @@ namespace Sce.Atf.Wpf.Controls
             UpdateTextFromValue();
         }
 
+        // Commits the change from Text to Value.
         private void CommitChange()
         {
             if (!m_transactionOpen)
             {
                 ValueEditorUtil.ExecuteCommand(BeginCommand, this, null);
             }
+
+            Value = UnFormat(Text);
 
             ValueEditorUtil.UpdateBinding(this, ValueProperty, false);
             ValueEditorUtil.ExecuteCommand(CommitCommand, this, null);

@@ -93,10 +93,6 @@
         <DockPanel Grid.Row="1" Grid.ColumnSpan="3" LastChildFill="False" Margin="0,12,0,0">
             <Button Command="{Binding DeleteCommand}" Margin="0" Content="{m:Loc Delete}" 
                     Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
-            <!--<Button Command="{Binding MoveUpCommand}" Content="{m:Loc Move Up}" 
-                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>-->
-            <!--<Button Command="{Binding MoveDownCommand}" Content="{m:Loc Move Down}" 
-                    Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>-->
             <Button Command="{Binding RenameCommand}" Content="{m:Loc Rename}" 
                     Style="{StaticResource {x:Static l:Resources.DialogButtonStyleKey}}"/>
             <Button DockPanel.Dock="Right" Command="{Binding OkCommand}" IsDefault="True" Content="{m:Loc OK}" 

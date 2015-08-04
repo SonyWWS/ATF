@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -33,13 +34,13 @@ namespace FunctionalTests
         }
 
         /// <summary>
-        /// Runs all tests.
-        /// </summary>
-        /// <param name="testAssemblyName">Name of the test assembly.</param>
-        /// <returns>0 if tests ran successfully, -1 otherwise</returns>
-        public static int RunAllTests(string testAssemblyName)
+        /// Runs all tests</summary>
+        /// <param name="displayName">Name of the test, which is normally the executing
+        /// assembly's Location.</param>
+        /// <returns>0 if tests ran successfully, a negative number otherwise</returns>
+        public static int RunAllTests(string displayName)
         {
-            TestRunner runner = MakeTestRunner(testAssemblyName);
+            TestRunner runner = MakeTestRunner(displayName);
             string category = ParseTestCategory();
             runner.Run(new UnitTestListener(), new TestFilter(category));
             XmlResultWriter writer = new XmlResultWriter("TestResult.xml");

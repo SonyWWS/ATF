@@ -47,9 +47,13 @@ namespace Sce.Atf.Applications
         public virtual void Initialize()
         {
             m_controlHostService.RegisterControl(m_textBox,
-                "Output".Localize("title of Output window"),
-                "View errors, warnings, and informative messages".Localize(),
-                StandardControlGroup.Bottom,
+                new ControlInfo(
+                    "Output", //Is the ID in the layout. We'll localize DisplayName instead.
+                    "View errors, warnings, and informative messages".Localize(),
+                    StandardControlGroup.Bottom, null)
+                {
+                    DisplayName = "Output".Localize("title of Output window")
+                },
                 this);
 
             RegisterCommands();

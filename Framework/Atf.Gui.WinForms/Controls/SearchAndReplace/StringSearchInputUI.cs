@@ -85,7 +85,7 @@ namespace Sce.Atf.Applications
         {
             m_patternTextBox.Text = string.Empty;
             m_patternTextRegex = string.Empty;
-            Updated.Raise(this, null);
+            Updated.Raise(this, EventArgs.Empty);
         }
 
 
@@ -124,7 +124,7 @@ namespace Sce.Atf.Applications
                 m_patternTextRegex = (patternValid) ? m_patternTextRegex : Regex.Escape(m_patternTextBox.Text);
             }
 
-            Updated.Raise(this, null);
+            Updated.Raise(this, EventArgs.Empty);
         }
 
         /// <summary>

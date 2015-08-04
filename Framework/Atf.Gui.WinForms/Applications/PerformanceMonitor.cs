@@ -27,9 +27,12 @@ namespace Sce.Atf.Applications
             m_controlRegistry = controlRegistry;
             m_controlHostService = controlHostService;
             m_controlInfo = new ControlInfo(
-                "Performance Monitor".Localize(),
+                "Performance Monitor", //Is the ID in the layout. We'll localize DisplayName instead.
                 "Displays performance data on the currently active Control".Localize(),
-                StandardControlGroup.Floating);
+                StandardControlGroup.Floating)
+            {
+                DisplayName = "Performance Monitor".Localize()
+            };
             m_controlInfo.VisibleByDefault = false;
         }
 

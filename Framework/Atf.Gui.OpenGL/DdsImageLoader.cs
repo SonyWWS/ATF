@@ -273,8 +273,12 @@ namespace Sce.Atf.Rendering
             };
         }
 
+        // This is public only to allow NativeTestHelpers to access it.
+        // Making this 'internal' and marking this assembly with InternalsVisibleToAttribute
+        //  would not work with Visual Studio's test runner and there are probably compile
+        //  dependency problems, too.
         [StructLayout(LayoutKind.Explicit)]
-        private struct DDSCAPS2
+        public struct DDSCAPS2
         {
             [FieldOffset(0)]
             public Int32 dwCaps;         // capabilities of surface wanted
@@ -297,8 +301,9 @@ namespace Sce.Atf.Rendering
             }
         }
 
+        // This is public only to allow NativeTestHelpers to access it.
         [StructLayout(LayoutKind.Explicit)]
-        private struct DDCOLORKEY
+        public struct DDCOLORKEY
         {
             [FieldOffset(0)]
             public Int32 dwColorSpaceLowValue;   // low boundary of color space that is to
@@ -308,8 +313,9 @@ namespace Sce.Atf.Rendering
             // to be treated as Color Key, inclusive
         }
 
+        // This is public only to allow NativeTestHelpers to access it.
         [StructLayout(LayoutKind.Explicit)]
-        private struct DDPIXELFORMAT
+        public struct DDPIXELFORMAT
         {
             [FieldOffset(0)]
             public Int32 dwSize;                 // size of structure
@@ -434,8 +440,9 @@ namespace Sce.Atf.Rendering
             public const int DDPF_RGB = 0x00000040;//The RGB data in the pixel format structure is valid.
         }
 
+        // This is public only to allow NativeTestHelpers to access it.
         [StructLayout(LayoutKind.Explicit)]
-        private struct DDSURFACEDESC2
+        public struct DDSURFACEDESC2
         {
             public const int Size = 124;
             [FieldOffset(0)]
@@ -497,51 +504,87 @@ namespace Sce.Atf.Rendering
             private Int32 m_dwReserved;             // reserved
 
             [FieldOffset(36)]
-            private Int32 m_lpSurface;              // pointer to the associated surface memory
+            private IntPtr m_lpSurface;              // pointer to the associated surface memory
 
             public bool HasCKDestOverlay { get { return IsSet(DDSD_CKDESTOVERLAY); } }
             public DDCOLORKEY ddckCKDestOverlay { get { CheckSet(DDSD_CKDESTOVERLAY); return m_ddckCKDestOverlay; } }
+            #if X64
+            [FieldOffset(44)]
+            #elif X86
             [FieldOffset(40)]
+            #endif
             private DDCOLORKEY m_ddckCKDestOverlay;      // color key for destination overlay use
 
             public bool HasEmptyFaceColor { get { return !IsSet(DDSD_CKDESTOVERLAY); } }
             public Int32 dwEmptyFaceColor { get { CheckNotSet(DDSD_CKDESTOVERLAY); return m_dwEmptyFaceColor; } }
+            #if X64
+            [FieldOffset(44)]
+            #elif X86
             [FieldOffset(40)]
+            #endif
             private Int32 m_dwEmptyFaceColor;       // Physical color for empty cubemap faces
 
             public bool HasCKDestBlt { get { return IsSet(DDSD_CKDESTBLT); } }
             public DDCOLORKEY ddckCKDestBlt { get { CheckSet(DDSD_CKDESTBLT); return m_ddckCKDestBlt; } }
+            #if X64
+            [FieldOffset(52)]
+            #elif X86
             [FieldOffset(48)]
+            #endif
             private DDCOLORKEY m_ddckCKDestBlt;          // color key for destination blt use
 
             public bool HasCKSrcOverlay { get { return IsSet(DDSD_CKSRCOVERLAY); } }
             public DDCOLORKEY ddckCKSrcOverlay { get { CheckSet(DDSD_CKSRCOVERLAY); return m_ddckCKSrcOverlay; } }
+            #if X64
+            [FieldOffset(60)]
+            #elif X86
             [FieldOffset(56)]
+            #endif
             private DDCOLORKEY m_ddckCKSrcOverlay;       // color key for source overlay use
 
             public bool HasCKSrcBlt { get { return IsSet(DDSD_CKSRCBLT); } }
             public DDCOLORKEY ddckCKSrcBlt { get { CheckSet(DDSD_CKSRCBLT); return m_ddckCKSrcBlt; } }
+            #if X64
+            [FieldOffset(68)]
+            #elif X86
             [FieldOffset(64)]
+            #endif
             private DDCOLORKEY m_ddckCKSrcBlt;           // color key for source blt use
 
             public bool HasPixelFormat { get { return IsSet(DDSD_PIXELFORMAT); } }
             public DDPIXELFORMAT ddpfPixelFormat { get { CheckSet(DDSD_PIXELFORMAT); return m_ddpfPixelFormat; } }
+            #if X64
+            [FieldOffset(76)]
+            #elif X86
             [FieldOffset(72)]
+            #endif
             private DDPIXELFORMAT m_ddpfPixelFormat;        // pixel format description of the surface
 
             public bool HasFVF { get { return IsSet(DDSD_FVF); } }
             public Int32 dwFVF { get { CheckSet(DDSD_FVF); return m_dwFVF; } }
+            #if X64
+            [FieldOffset(76)]
+            #elif X86
             [FieldOffset(72)]
+            #endif
             private Int32 m_dwFVF;                  // vertex format description of vertex buffers
 
             public bool HasCaps { get { return IsSet(DDSD_CAPS); } }
             public DDSCAPS2 ddsCaps { get { CheckSet(DDSD_CAPS); return m_ddsCaps; } }
+            #if X64
+            [FieldOffset(108)]
+            #elif X86
             [FieldOffset(104)]
+            #endif
             private DDSCAPS2 m_ddsCaps;                // direct draw surface capabilities
 
             public bool HasTextureStage { get { return IsSet(DDSD_TEXTURESTAGE); } }
             public Int32 dwTextureStage { get { CheckSet(DDSD_TEXTURESTAGE); return m_dwTextureStage; } }
+            #if X64
+            [FieldOffset(124)]
+            #elif X86
             [FieldOffset(120)]
+            #endif
             private Int32 m_dwTextureStage;         // stage in multitexture cascade
 
             //dwFlags
@@ -603,8 +646,6 @@ namespace Sce.Atf.Rendering
             // Reads in the header, fills in this struct, and reads in all of the pixels.
             public void Load(BinaryReader reader)
             {
-                //ms-help://MS.VSCC.v80/MS.VSIPCC.v80/MS.DirectX9.1033.2007.August/DirectX_SDK/dx9_graphics_reference_dds_file.htm
-
                 byte[] header = reader.ReadBytes(4);
                 if (header[0] != 'D' || header[1] != 'D' || header[2] != 'S' || header[3] != ' ')
                     throw new InvalidDataException("Not a DDS file");
@@ -622,7 +663,7 @@ namespace Sce.Atf.Rendering
                 m_dwMipMapCount = reader.ReadInt32();
                 m_dwAlphaBitDepth = reader.ReadInt32();
                 m_dwReserved = reader.ReadInt32();
-                m_lpSurface = reader.ReadInt32();
+                m_lpSurface = (IntPtr)reader.ReadInt32();
                 m_ddckCKDestOverlay.dwColorSpaceLowValue = reader.ReadInt32();
                 m_ddckCKDestOverlay.dwColorSpaceHighValue = reader.ReadInt32();
                 m_ddckCKDestBlt.dwColorSpaceLowValue = reader.ReadInt32();

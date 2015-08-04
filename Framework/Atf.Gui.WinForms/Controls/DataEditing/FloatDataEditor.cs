@@ -81,13 +81,33 @@ namespace Sce.Atf.Controls
                 float t = (Value - Min) / (Max - Min);
                 float thumbX = left + t * SliderWidth;
                 var thumbRectangle = new Rectangle((int)thumbX - 8, (int)area.Top, 18, 18);
-                TrackBarRenderer.DrawBottomPointingThumb(g, thumbRectangle, TrackBarThumbState.Normal);
+                if (TrackBarRenderer.IsSupported)
+                    TrackBarRenderer.DrawBottomPointingThumb(g, thumbRectangle, TrackBarThumbState.Normal);
+                else // visual styles may be disabled by the user in the operating system, roll our own
+                {
+                    thumbRectangle = new Rectangle((int) thumbX - 4, (int) area.Top, 8, 16);
+                    DrawThumb(g, thumbRectangle, TrackBarThumbState.Normal);
+                }
+
                 textOffset = SliderWidth + Theme.Padding.Left;
             }
 
             string valueString = ToString();
             g.DrawString(valueString, Theme.Font, Theme.TextBrush, left + textOffset, area.Top); 
         }
+
+        private void DrawThumb(Graphics g, Rectangle bounds, TrackBarThumbState state)
+        {
+            s_thumbPoints[0] = bounds.Location;
+            s_thumbPoints[1] = new Point(bounds.Right, bounds.Top);
+            s_thumbPoints[2] = new Point(bounds.Right, bounds.Top + bounds.Height * 3 / 4);
+            s_thumbPoints[3] = new Point((bounds.Left + bounds.Right) / 2, bounds.Top + bounds.Height);
+            s_thumbPoints[4] = new Point(bounds.Left, bounds.Top + bounds.Height * 3 / 4);
+
+            g.DrawPolygon(Theme.SliderTrackPen, s_thumbPoints);
+        }
+
+        private static Point[] s_thumbPoints = new Point[5];
 
         /// <summary>
         /// Determines the editing mode from input position.</summary>

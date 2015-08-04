@@ -1,5 +1,7 @@
 //Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+//#define TEST_COMMAND_SORTING
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -95,7 +97,7 @@ namespace Sce.Atf.Applications
                     throw new InvalidOperationException(
                         string.Format(
                             "Duplicate menu/command combination. CommandTag: {0}, MenuTag: {1}, GroupTag: {2}, MenuText: {3}",
-                            info.CommandTag, info.GroupTag, info.MenuTag, info.MenuText));
+                            info.CommandTag, info.MenuTag, info.GroupTag, info.MenuText));
                 }
 
                 RegisterCommandInfo(info);
@@ -547,6 +549,34 @@ namespace Sce.Atf.Applications
 
             foreach (Keys k in info.Shortcuts)
                 SetShortcut(k, info);
+
+            #if TEST_COMMAND_SORTING
+            // Check that the sorting can be stable
+            m_commands.Sort(new CommandComparer());
+            bool mustBeEarlier = false;
+            foreach(CommandInfo other in m_commands)
+            {
+                if (other == info)
+                    continue;
+                int comparison = Compare(info, other);
+                if (comparison == 0)
+                    Console.WriteLine("Warning: CommandInfo " + info.MenuText + " was same as " + other.MenuText);
+                else if (mustBeEarlier && comparison > 0)
+                    Console.WriteLine("Warning: CommandInfo " + info.MenuText + " should be earlier than " + other.MenuText);
+                else if (comparison < 0)
+                    mustBeEarlier = true;
+                int reverseComparison = Compare(other, info);
+                if ((reverseComparison < 0 && comparison < 0) ||
+                    (reverseComparison > 0 && comparison > 0))
+                    Console.WriteLine("Warning: CommandInfo " + info.MenuText + " failed reverse comparison with " + other.MenuText);
+            }
+            var copy = new List<CommandInfo>(m_commands);
+            copy.Sort(new CommandComparer());
+            for(int i = 0; i < m_commands.Count; i++)
+                if (copy[i] != m_commands[i])
+                    Console.WriteLine("Warning: sorting was not stable");
+
+            #endif
         }
 
         /// <summary>

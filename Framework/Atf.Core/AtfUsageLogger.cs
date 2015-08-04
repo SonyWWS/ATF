@@ -5,14 +5,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Management;
 using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
 using System.Threading;
 using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
 
 namespace Sce.Atf
 {
@@ -54,21 +50,15 @@ namespace Sce.Atf
 
 #if !PUBLIC
         // Prepares and sends the usage info. Run this on a separate thread in case it is time-consuming.
+        // Clients can turn on "Enable Just My Code" in the debugger options to avoid seeing handled
+        //  exceptions in the .NET sockets code if the server can't be found.
         private static void _SendAtfUsageInfo(object unusedState)
         {
             // GetHostName() and GetHostEntry() can throw an exception. We don't want to cause any problems for clients.
             try
             {
-                Uri recapUri = new Uri("http://sd-cdump-dev002.share.scea.com:8080");
+                var recapUri = new Uri("http://sd-cdump-dev002.share.scea.com:8080");
                 
-                // If we didn't check this first, RecapConnect.post() could cause exceptions to
-                //  be thrown within Dns.GetHostEntry(), etc. That's just the semantics of System.Net.Dns
-                //  that it communicates normal results via exceptions being thrown which is annoying to
-                //  clients if they don't have a working internet connection and they're using the
-                //  debugger with the "break on exception thrown" setting turned on.
-                if (!CanResolve(recapUri))
-                    return;
-
                 var logger = new ServerLogger();
                 logger.ServerName = recapUri;
                 logger.ApplicationName = "ATF_" + logger.ApplicationName;
@@ -87,7 +77,7 @@ namespace Sce.Atf
                 int physicalMb = Kernel32.GetPhysicalMemoryMB();
 
                 // Analyze all loaded assemblies
-                StringBuilder loadedAssemblies = new StringBuilder();
+                var loadedAssemblies = new StringBuilder();
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     string name, version;
@@ -209,101 +199,6 @@ namespace Sce.Atf
                 return result.ToString();
             return "n/a";
         }
-
-        // Tests if the domain name can be resolved without throwing any exceptions. This gets
-        //  around the very annoying Dns.GetHostEntry().
-        private static bool CanResolve(Uri server)
-        {
-            bool result = false;
-            SafeFreeAddrInfo root = null;
-            try
-            {
-                WSAData wsaData;
-                short wsaVersion = (2 << 8) | 2; //version 2.2, good since Windows 95 OSR2!
-                WSAStartup(wsaVersion, out wsaData);
-
-                AddressInfo hints = new AddressInfo();
-                int errorCode = getaddrinfo(server.Host, server.Port.ToString(), ref hints, out root);
-
-                result = (errorCode == 0); //0 means success
-            }
-            catch
-            {
-                if (root != null)
-                    root.Close();
-            }
-            finally
-            {
-                WSACleanup();
-            }
-            return result;
-        }
-
-        // copied from System.Net.WSAData using .NET Reflector
-        [StructLayout(LayoutKind.Sequential)]
-        private struct WSAData
-        {
-            public short wVersion;
-            public short wHighVersion;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x101)]
-            public string szDescription;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x81)]
-            public string szSystemStatus;
-            public short iMaxSockets;
-            public short iMaxUdpDg;
-            public IntPtr lpVendorInfo;
-        }
-
-        [DllImport("ws2_32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern int WSAStartup([In] short wVersionRequested, out WSAData lpWSAData);
-
-        [DllImport("ws2_32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern int WSACleanup();
-
-        // copied from System.Net.SafeFreeAddrInfo using .NET Reflector
-        [SuppressUnmanagedCodeSecurity]
-        private sealed class SafeFreeAddrInfo : SafeHandleZeroOrMinusOneIsInvalid
-        {
-            // Methods
-            public SafeFreeAddrInfo()
-                : base(true)
-            {
-            }
-
-            protected override bool ReleaseHandle()
-            {
-                freeaddrinfo(base.handle);
-                return true;
-            }
-        }
-
-        [Flags]
-        private enum AddressInfoHints
-        {
-            AI_CANONNAME = 2,
-            AI_NUMERICHOST = 4,
-            AI_PASSIVE = 1
-        }
-
-        // copied from System.Net.AddressInfo using .NET Reflector
-        [StructLayout(LayoutKind.Sequential)]
-        private struct AddressInfo
-        {
-            public AddressInfoHints ai_flags;
-            public AddressFamily ai_family;
-            public SocketType ai_socktype;
-            public ProtocolFamily ai_protocol;
-            public int ai_addrlen;
-            IntPtr ai_canonname;
-            IntPtr ai_addr;
-            IntPtr ai_next;
-        }
-
-        [DllImport("ws2_32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-        private static extern int getaddrinfo([In] string nodename,[In] string servicename,[In] ref AddressInfo hints,out SafeFreeAddrInfo handle);
-
-        [DllImport("ws2_32.dll", SetLastError = true, ExactSpelling = true)]
-        private static extern void freeaddrinfo([In] IntPtr info);
 
         private static bool s_atfUsageInfoLogged;
 #endif

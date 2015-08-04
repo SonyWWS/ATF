@@ -4,15 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Sce.Atf.Controls.ConsoleBox;
 
 namespace Sce.Atf.Applications
 {
     /// <summary>
-    /// Python service that provides a dockable command console for entering Python commands
-    /// and imports many common .NET and ATF types into the Python namespace</summary>
+    /// Service that provides a dockable command console for entering script commands. Requires a
+    /// ScriptingService such as PythonService. Consider also using AtfScriptVariables.</summary>
     [Export(typeof(IInitializable))]
     [Export(typeof(ScriptConsole))]
     [PartCreationPolicy(CreationPolicy.Shared)]

@@ -83,7 +83,7 @@
   </xs:simpleType>
 
   <xs:complexType name="complexType7">
-    <xs:sequence>
+    <xs:sequence minOccurs="3" maxOccurs="3">
       <xs:element name="elemSimpleSequence" type="vector3Type" minOccurs="3" maxOccurs="3"/>
     </xs:sequence>
   </xs:complexType>

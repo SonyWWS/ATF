@@ -359,6 +359,23 @@
 						</constructorParams>
 					</valueInfo>
 				</setter>
+
+                <setter propertyName="MatchedHighlightBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FFEFCB05"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+
+                <setter propertyName="NoMatchHighlightBrush">
+                    <valueInfo type="System.Drawing.SolidBrush">
+                        <constructorParams>
+                            <valueInfo type="System.Drawing.Color" value="#FF646464"/>
+                        </constructorParams>
+                    </valueInfo>
+                </setter>
+                
 				<setter propertyName="DeactiveHighlightBrush">
 					<valueInfo type="System.Drawing.SolidBrush">
 						<constructorParams>

@@ -418,10 +418,10 @@
     <value>1</value>
   </data>
   <data name="m_destinationPortNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 29</value>
+    <value>76, 29</value>
   </data>
   <data name="m_destinationPortNumber.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 20</value>
+    <value>116, 20</value>
   </data>
   <data name="m_destinationPortNumber.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -439,10 +439,10 @@
     <value>2</value>
   </data>
   <data name="m_destinationIPAddress.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 3</value>
+    <value>76, 3</value>
   </data>
   <data name="m_destinationIPAddress.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 20</value>
+    <value>116, 20</value>
   </data>
   <data name="m_destinationIPAddress.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -460,10 +460,10 @@
     <value>3</value>
   </data>
   <data name="m_noDestinationButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 55</value>
+    <value>76, 55</value>
   </data>
   <data name="m_noDestinationButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 23</value>
+    <value>116, 23</value>
   </data>
   <data name="m_noDestinationButton.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -508,7 +508,7 @@
     <value>0</value>
   </data>
   <data name="tableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label8" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label12" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_destinationPortNumber" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_destinationIPAddress" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_noDestinationButton" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,45,Percent,55" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="label8" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label12" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_destinationPortNumber" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_destinationIPAddress" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_noDestinationButton" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,37.4359,Percent,62.5641" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
     <value>217, 25</value>
@@ -562,10 +562,10 @@
     <value>2</value>
   </data>
   <data name="m_hostName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 52</value>
+    <value>79, 52</value>
   </data>
   <data name="m_hostName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 23</value>
+    <value>113, 23</value>
   </data>
   <data name="m_hostName.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -637,10 +637,10 @@
     <value>2</value>
   </data>
   <data name="m_receivingPortNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 29</value>
+    <value>79, 29</value>
   </data>
   <data name="m_receivingPortNumber.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 20</value>
+    <value>113, 20</value>
   </data>
   <data name="m_receivingPortNumber.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -685,10 +685,10 @@
     <value>4</value>
   </data>
   <data name="m_receivingIPAddresses.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 3</value>
+    <value>79, 3</value>
   </data>
   <data name="m_receivingIPAddresses.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 21</value>
+    <value>113, 21</value>
   </data>
   <data name="m_receivingIPAddresses.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -730,7 +730,7 @@
     <value>0</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_hostName" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label4" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_receivingPortNumber" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label6" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_receivingIPAddresses" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,45,Percent,55" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,33.33333,Percent,33.33333" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_hostName" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="label4" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_receivingPortNumber" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label6" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_receivingIPAddresses" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,39.48718,Percent,60.51282" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,33.33333,Percent,33.33333" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 25</value>

@@ -38,9 +38,12 @@ namespace Sce.Atf.Controls.CurveEditing
             
             m_curveEditorControl = new CurveEditingControl();
             m_controlInfo = new ControlInfo(
-                "Curve Editor".Localize(),
+                "Curve Editor", //Is the ID in the layout. We'll localize DisplayName instead.
                 "Edits selected object curves".Localize(),
-                StandardControlGroup.Bottom);
+                StandardControlGroup.Bottom)
+            {
+                DisplayName = "Curve Editor".Localize()
+            };
         }
 
         /// <summary>

@@ -46,7 +46,8 @@ namespace Sce.Atf.Applications
 
             m_commandListbox.RetrieveCommandListItem += (sender, e) =>
                 {
-                    e.Item = e.ItemIndex == 0 ? new CommandListItem("< Clean State >".Localize())
+                    e.Item = e.ItemIndex == 0 ? new CommandListItem("< Clean State >".Localize(
+                        "The '<' and '>' indicate that this is not a command name, but is the state of the document before any commands have been run."))
                         : new CommandListItem(m_commandHistory[e.ItemIndex-1].Description);                    
                 };
             
@@ -72,7 +73,8 @@ namespace Sce.Atf.Applications
                             bound, StringFormat.GenericDefault);                    
                 };
 
-            ControlInfo cinfo = new ControlInfo("History", "Undo/Redo stack", StandardControlGroup.Right);
+            var cinfo = new ControlInfo("History", "Undo/Redo stack".Localize(), StandardControlGroup.Right);
+            cinfo.DisplayName = "History".Localize();
             m_controlHostService.RegisterControl(m_commandListbox, cinfo, null);
             m_documentRegistry.ActiveDocumentChanged += m_documentRegistry_ActiveDocumentChanged;
 

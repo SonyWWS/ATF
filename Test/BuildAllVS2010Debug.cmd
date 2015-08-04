@@ -1,4 +1,5 @@
-:: Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+:: Copyright (c) Sony Computer Entertainment 2011.
+:: All rights Reserved. Confidential.
 
 @echo off
 setlocal
@@ -19,9 +20,15 @@ SET VERB=%2
 IF (%VERB%)==() SET VERB=Rebuild
 
 
-SET DEVENV100="%VS100COMNTOOLS%..\ide\devenv.com"
-IF NOT EXIST %DEVENV100% (
-echo devenv[2010] not found at %DEVENV100%, aborting
+:: Find the Visual Studio compiler. Prefer the oldest that we support, because
+::	we developers tend to use later versions day-to-day.
+IF NOT "%VS140COMNTOOLS%"==() SET DEVENV="%VS140COMNTOOLS%..\ide\devenv.com"
+IF NOT "%VS120COMNTOOLS%"==() SET DEVENV="%VS120COMNTOOLS%..\ide\devenv.com"
+IF NOT "%VS110COMNTOOLS%"==() SET DEVENV="%VS110COMNTOOLS%..\ide\devenv.com"
+IF NOT "%VS100COMNTOOLS%"==() SET DEVENV="%VS100COMNTOOLS%..\ide\devenv.com"
+
+IF NOT EXIST %DEVENV% (
+echo devenv[2010] not found at %DEVENV%, aborting
 exit /B 2
 )
 
@@ -31,7 +38,7 @@ echo ==== Building ATF VS 2010 - Debug ====
 echo.
 pushd "%~dp0"
 (
-!DEVENV100! "Everything.vs2010.sln" /!VERB! "Debug"
+!DEVENV! "Everything.vs2010.sln" /!VERB! "Debug"
 ) || (echo. & echo **** Error building ATF VS 2010 Debug **** & echo. & (IF %PAUSE%==true pause) & exit /b 1)
 popd
 

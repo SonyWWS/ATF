@@ -8,7 +8,7 @@ using System.Runtime.InteropServices.ComTypes;
 namespace Sce.Atf
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct ShDragImage
+    public struct ShDragImage
     {
         public Size sizeDragImage;
         public Point ptOffset;

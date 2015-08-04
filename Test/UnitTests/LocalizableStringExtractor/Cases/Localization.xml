@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="16-to-1 Multiplexer" context="" translation="16-to-1 Multiplexer" />
+  <StringItem id="1-to-16 Demultiplexer" context="" translation="1-to-16 Demultiplexer" />
+  <StringItem id="Add" context="" translation="Add" />
+  <StringItem id="Circuit Template File (*.circuit)|*.circuit" context="" translation="Circuit Template File (*.circuit)|*.circuit" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" context="" translation="https://github.com/SonyWWS/ATF/wiki/Adaptable-Controls" />
+  <StringItem id="Original" context="" translation="Translation" /> <!--Tested by TestExtractLocalizableStrings()-->
+  <StringItem id="Speaker" context="an electronic speaker, for playing sounds" translation="Speaker translated" /> <!--Tested by TestExtractLocalizableStrings()-->
+  <StringItem id="Speaker" context="a person speaking at a podium" translation="Speaker translated" /> <!--Tested by TestExtractLocalizableStrings()-->
+</StringLocalizationTable>

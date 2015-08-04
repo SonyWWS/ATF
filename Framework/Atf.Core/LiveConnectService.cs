@@ -160,6 +160,7 @@ namespace Sce.Atf
                     msg = "The Live Connect Service failed to initialize because Bonjour is either not installed or the Windows service, 'Bonjour Service', is not running.".Localize();
                 else
                     msg = "The Live Connect Service failed to initialize for some unknown reason: ".Localize() + error + '.';
+                msg += Environment.NewLine;
                 OutputWriter.Write(OutputMessageType.Warning, msg);
             }
         }

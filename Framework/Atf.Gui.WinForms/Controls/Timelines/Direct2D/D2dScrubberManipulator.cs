@@ -29,6 +29,8 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             Owner.MouseUp += owner_MouseUp;
             Owner.DrawingD2d += owner_DrawingD2d;
             Owner.BoundingRectUpdating += owner_BoundingRectUpdating;
+
+            m_position = owner.TimelineStart;
         }
 
         /// <summary>

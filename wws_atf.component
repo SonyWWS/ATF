@@ -5,7 +5,7 @@
   xsi:schemaLocation="http://www.ship.scea.com/wws_sdk/component/v1 http://www.ship.scea.com/wws_sdk/component/v1.xsd">
 
   <readablename>Authoring Tools Framework</readablename>
-  <version>3.9.0.13</version>
+  <version>3.10.0.1</version>
   <owner>rlittle</owner>
   <platforms>PC</platforms>
   <category>Component</category>
@@ -28,8 +28,11 @@
     <stage>
       <name>BuildAndUpload</name>
       <trigger>
-        <!-- This plan uploads a zip file, so wait a few hours so that a file doesn't upload on every check-in -->
-        <change>21600</change>
+        <!-- without a trigger, this stage is dependent on the build only stage.
+            If two checkins occur quickly, that dependency causes timing issues 
+            for the version number that gets uploaded.
+        -->
+        <change>1</change>
       </trigger>
       <ignorefail>false</ignorefail>
       <script>

@@ -27,7 +27,7 @@ namespace Sce.Atf.Applications
         /// <param name="lpWindowName">Window name (the window's title)</param>
         /// <returns>If the function succeeds, the return value is a handle to the window that has the specified class name and window name</returns>
         /// <remarks>Description copied from http://msdn.microsoft.com/en-us/library/windows/desktop/ms633499%28v=vs.85%29.aspx. </remarks>
-        [DllImport("User32.dll", EntryPoint = "FindWindow")]
+        [DllImport("User32.dll", EntryPoint = "FindWindow", CharSet = CharSet.Unicode)]
         public static extern Int32 FindWindow(String lpClassName, String lpWindowName);
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Sce.Atf.Applications
         /// <returns>Result of the message processing</returns>
         /// <remarks>Description copied from http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950%28v=vs.85%29.aspx. </remarks>
         [DllImport("User32.dll", EntryPoint = "SendMessage")]
-        public static extern int SendMessage(int hWnd, int msg, int wParam, int lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Places (posts) a message in the message queue associated with the thread that created the specified window 

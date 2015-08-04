@@ -180,13 +180,13 @@ namespace Sce.Atf.Wpf.Models
     public class ToolBarSeparator : NotifyPropertyChangedBase, IToolBarItem
     {
         /// <summary>
-        /// Get tool bar item tag object.</summary>
+        /// Get tool bar separator tag object.</summary>
         public object Tag { get { return null; } }
         /// <summary>
-        /// Get tool bar item's tool bar tag object.</summary>
+        /// Get tool bar separator's tool bar tag object.</summary>
         public object ToolBarTag { get { return null; } }
         /// <summary>
-        /// Get whether tool bar item visible.</summary>
+        /// Get whether tool bar separator visible.</summary>
         public bool IsVisible { get { return true; } }
     }
 }

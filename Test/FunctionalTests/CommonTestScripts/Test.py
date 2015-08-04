@@ -93,6 +93,10 @@ def GetNewFilePath(fileName, subDir="./"):
     True(not File.Exists(path), "Verify file does not exist: " + path)
     return path
 
+# Constructs a data file path based on the input name and standard folder
+def GetDataFilePath(fileName, subDir="./"):
+    path = Path.Combine(Environment.CurrentDirectory, "tests\TestData",subDir, fileName)
+    return path
 # ============================================================
 # Miscellaneous functions
 # ============================================================

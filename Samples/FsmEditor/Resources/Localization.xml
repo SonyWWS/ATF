@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Action" context="" translation="Action" />
+  <StringItem id="Action on trigger" context="" translation="Action on trigger" />
+  <StringItem id="Action performed when entering state" context="" translation="Action performed when entering state" />
+  <StringItem id="Action performed when exiting state" context="" translation="Action performed when exiting state" />
+  <StringItem id="Action performed when making transition" context="" translation="Action performed when making transition" />
+  <StringItem id="Action performed while in state" context="" translation="Action performed while in state" />
+  <StringItem id="Comment" context="" translation="Comment" />
+  <StringItem id="Comment on state machine" context="" translation="Comment on state machine" />
+  <StringItem id="Comment text" context="" translation="Comment text" />
+  <StringItem id="Entry Action" context="" translation="Entry Action" />
+  <StringItem id="Exit Action" context="" translation="Exit Action" />
+  <StringItem id="Finite State Machine" context="" translation="Finite State Machine" />
+  <StringItem id="FSM" context="" translation="FSM" />
+  <StringItem id="Hidden" context="" translation="Hidden" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-FSM-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-FSM-Editor-Sample" />
+  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="Label" context="" translation="Label" />
+  <StringItem id="Label displayed on transition" context="" translation="Label displayed on transition" />
+  <StringItem id="Label displayed on trigger" context="" translation="Label displayed on trigger" />
+  <StringItem id="List of triggers" context="" translation="List of triggers" />
+  <StringItem id="Name" context="" translation="Name" />
+  <StringItem id="Prototype" context="FSM prototype" translation="Prototype" />
+  <StringItem id="Prototype folder name" context="" translation="Prototype folder name" />
+  <StringItem id="Size" context="" translation="Size" />
+  <StringItem id="Start" context="" translation="Start" />
+  <StringItem id="State" context="" translation="State" />
+  <StringItem id="State in a finite state machine" context="" translation="State in a finite state machine" />
+  <StringItem id="State name" context="" translation="State name" />
+  <StringItem id="State size" context="" translation="State size" />
+  <StringItem id="Text" context="" translation="Text" />
+  <StringItem id="Trigger ID" context="" translation="Trigger ID" />
+  <StringItem id="Triggers" context="" translation="Triggers" />
+  <StringItem id="Whether or not state is hidden" context="" translation="Whether or not state is hidden" />
+  <StringItem id="Whether or not state is the start state" context="" translation="Whether or not state is the start state" />
+</StringLocalizationTable>

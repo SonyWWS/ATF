@@ -29,6 +29,10 @@ namespace Sce.Atf
             // Embedded resource namespaces can't contain certain characters and get renamed
             //  automatically by the compiler. So, '-' got replaced by '_' while compiling.
             // https://msdn.microsoft.com/en-us/library/ms145952.aspx
+            // Note that the Localization.xml files are not "strongly typed", so we can't use
+            //  StronglyTypedResourceBuilder.VerifyResourceName(). VerifyResourceName() would
+            //  change "as" (American Samoa) to "_as", but that name does not get changed by
+            //  the compiler. Since the only bad character we care about is '-', let's just fix it.
             culture = culture.Replace('-', '_');
 
             // To speed things up, only check the GAC if this assembly has been installed in the GAC.

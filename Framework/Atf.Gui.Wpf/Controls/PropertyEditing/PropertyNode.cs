@@ -346,7 +346,15 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <returns>Editor for the ValueEditor type</returns>
         public ValueEditor GetCustomEditor()
         {
+            if (mValueEditor != null)
+                return mValueEditor;
             return m_descriptor.GetEditor(typeof(ValueEditor)) as ValueEditor;
+        }
+
+        private ValueEditor mValueEditor;
+        public void SetCustomEditor(ValueEditor valueEditor)
+        {
+            mValueEditor = valueEditor;
         }
 
         /// <summary>

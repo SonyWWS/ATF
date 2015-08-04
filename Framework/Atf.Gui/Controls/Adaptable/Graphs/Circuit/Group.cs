@@ -58,6 +58,12 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         protected abstract AttributeInfo ShowExpandedGroupPinsAttribute { get; }
 
         /// <summary>
+        /// Gets the attribute for the flag which indicates if the group has been validated.</summary>
+        protected virtual AttributeInfo ValidatedAttribute { get { return null; } }
+
+
+
+        /// <summary>
         /// Gets the child info for the circuit elements contained within this group</summary>
         protected abstract ChildInfo ElementChildInfo { get; }
 
@@ -158,6 +164,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             foreach (var connection in Wires)
                 connection.SetPinTarget();
+
+            if (!Validated )
+            {
+                // normally a group node is always validated upon loading. But during version transformations, 
+                // a raw group node could be created to replace old subcircuits, in which case the group is not validated before,
+                // so group pins need regenerated
+                var internalConnections = new List<Wire>();
+                var externalConnections = new List<Wire>();
+                GetSubGraphConnections(internalConnections, externalConnections, externalConnections);
+                UpdateGroupPins(m_elements, internalConnections, externalConnections);
+                Validated = true;
+            }
 
             Info.HiddenInputPins = m_inputs.Where(x => !x.Visible).AsIEnumerable<ICircuitPin>();
             Info.HiddenOutputPins = m_outputs.Where(x => !x.Visible).AsIEnumerable<ICircuitPin>();
@@ -477,6 +495,23 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get { return GetAttribute<bool>(AutosizeAttribute); }
             set { SetAttribute(AutosizeAttribute, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets whether to the group has been validated</summary>
+        public virtual bool Validated
+        {
+            get
+            {
+                if (ValidatedAttribute!= null)
+                    return GetAttribute<bool>(ValidatedAttribute);
+                return true;
+            }
+            set
+            {
+                if (ValidatedAttribute != null)
+                    SetAttribute(ValidatedAttribute, value);
+            }
         }
 
         /// <summary>

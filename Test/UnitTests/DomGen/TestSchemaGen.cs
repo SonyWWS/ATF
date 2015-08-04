@@ -46,6 +46,8 @@ namespace UnitTests.Atf
             string importedDeclaration = "public static class importedComplexType";
             string includeTypeDeclaration = "public static class includeType";
             string excludeTypeDeclaration = "public static class excludeType";
+            string elementOfArrayOfSimpleType = "public static ChildInfo TestBoolArrayChild;";
+            string attributeOfListType = "public static AttributeInfo TestListAttribute;";
             bool foundNamespace = false;
             bool foundClassName = false;
             bool foundSchemaNamespace = false;
@@ -54,6 +56,8 @@ namespace UnitTests.Atf
             bool foundImported = false;
             bool foundIncludeType = false;
             bool foundExcludeType = false;
+            bool foundChildInfoOfElementOfArrayOfSimpleType = false;
+            bool foundAttributeOfListType = false;
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i].Trim();
@@ -73,6 +77,13 @@ namespace UnitTests.Atf
                     foundIncludeType = true;
                 else if (line.Equals(excludeTypeDeclaration))
                     foundExcludeType = true;
+                else if (line.Equals(elementOfArrayOfSimpleType))
+                    foundChildInfoOfElementOfArrayOfSimpleType = true;
+                else if (line.Equals(attributeOfListType))
+                {
+                    Assert.IsFalse(foundAttributeOfListType);
+                    foundAttributeOfListType = true;
+                }
             }
             Assert.IsTrue(foundNamespace);
             Assert.IsTrue(foundClassName);
@@ -94,6 +105,8 @@ namespace UnitTests.Atf
                 Assert.IsTrue(foundImported);
                 Assert.IsTrue(foundIncludeType);
                 Assert.IsFalse(foundExcludeType); // only excluded type
+                Assert.IsTrue(foundChildInfoOfElementOfArrayOfSimpleType);
+                Assert.IsTrue(foundAttributeOfListType);
             }
         }
     }

@@ -18,15 +18,19 @@ namespace Sce.Atf
         /// If the function fails, the return value is zero.
         /// If the buffer is too small, the function fails and the last error code is ERROR_INSUFFICIENT_BUFFER.</returns>
         /// <remarks>For more information, see the MSDN article at http://msdn.microsoft.com/en-us/library/windows/desktop/aa365461(v=vs.85).aspx </remarks>
-        [DllImport("kernel32.dll", EntryPoint = "QueryDosDeviceW")]
+        [DllImport("kernel32.dll", EntryPoint = "QueryDosDeviceW", CharSet = CharSet.Unicode)]
         public static extern uint QueryDosDeviceW(
             [In] [MarshalAsAttribute(UnmanagedType.LPWStr)] string lpDeviceName,
             [Out] [MarshalAsAttribute(UnmanagedType.LPWStr)] System.Text.StringBuilder lpTargetPath,
             uint ucchMax);
 
 
+        // This is public only to allow NativeTestHelpers to access it.
+        // Making this 'internal' and marking this assembly with InternalsVisibleToAttribute
+        //  would not work with Visual Studio's test runner and there are probably compile
+        //  dependency problems, too.
         [StructLayout(LayoutKind.Sequential)]
-        private class MEMORYSTATUSEX
+        public class MEMORYSTATUSEX
         {
             #pragma warning disable 169 //disable unused field warning
             public uint dwLength = 64;
@@ -41,7 +45,7 @@ namespace Sce.Atf
             #pragma warning restore 169
         }
 
-        [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool GlobalMemoryStatusEx(MEMORYSTATUSEX lpBuffer);
 
         /// <summary>

@@ -171,17 +171,17 @@ namespace Sce.Atf.Applications
         /// Notification when part's imports have been satisfied</summary>
         void IPartImportsSatisfiedNotification.OnImportsSatisfied()
         {
-            if (m_mainWindow == null &&
-                m_mainForm != null)
+            if (MainWindow == null &&
+                MainForm != null)
             {
-                m_mainWindow = new MainFormAdapter(m_mainForm);
+                MainWindow = new MainFormAdapter(MainForm);
             }
 
-            if (m_mainWindow == null)
+            if (MainWindow == null)
                 throw new InvalidOperationException("Can't get main window");
 
-            m_mainWindow.Loading += mainWindow_Loaded;
-            m_mainWindow.Closed += mainWindow_Closed;
+            MainWindow.Loading += mainWindow_Loaded;
+            MainWindow.Closed += mainWindow_Closed;
 
             string settingsDirectory = Path.GetDirectoryName(m_settingsPath);
             if (!Directory.Exists(settingsDirectory))
@@ -273,7 +273,7 @@ namespace Sce.Atf.Applications
             using (SettingsDialog settingsDialog = new SettingsDialog(this, GetDialogOwner(), pathName))
             {
                 settingsDialog.Settings = m_propertyViewState;
-                settingsDialog.Text = "Preferences".Localize();
+                settingsDialog.Text = UserSettingsTitle;
                 if (NavigationBehavior == TreeControl.KeyboardShortcuts.WindowsExplorer)
                 {
                     settingsDialog.TreeControl.NavigationKeyBehavior = TreeControl.KeyboardShortcuts.WindowsExplorer;
@@ -281,7 +281,7 @@ namespace Sce.Atf.Applications
                     settingsDialog.TreeControl.ToggleOnDoubleClick = false;
 
                 }
-                if (settingsDialog.ShowDialog(m_mainWindow.DialogOwner) == DialogResult.OK)
+                if (settingsDialog.ShowDialog(MainWindow.DialogOwner) == DialogResult.OK)
                 {
                     SaveSettings();
                 }
@@ -309,7 +309,7 @@ namespace Sce.Atf.Applications
         /// Checks if the client can do the command</summary>
         /// <param name="tag">Command</param>
         /// <returns>True if client can do the command</returns>
-        public bool CanDoCommand(object tag)
+        public virtual bool CanDoCommand(object tag)
         {
             bool enabled = false;
             if (tag is CommandId)
@@ -328,7 +328,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Does a command</summary>
         /// <param name="tag">Command</param>
-        public void DoCommand(object tag)
+        public virtual void DoCommand(object tag)
         {
             if (tag is CommandId)
             {
@@ -340,7 +340,7 @@ namespace Sce.Atf.Applications
 
                     case CommandId.EditImportExportSettings:
                         SettingsLoadSaveDialog settingsLoadSaveDialog = new SettingsLoadSaveDialog(this);
-                        settingsLoadSaveDialog.ShowDialog(m_mainWindow.DialogOwner);
+                        settingsLoadSaveDialog.ShowDialog(MainWindow.DialogOwner);
                         break;
                 }
             }
@@ -350,7 +350,7 @@ namespace Sce.Atf.Applications
         /// Updates command state for given command</summary>
         /// <param name="commandTag">Command</param>
         /// <param name="state">Command state to update</param>
-        public void UpdateCommand(object commandTag, CommandState state)
+        public virtual void UpdateCommand(object commandTag, CommandState state)
         {
         }
 
@@ -449,6 +449,35 @@ namespace Sce.Atf.Applications
                 SettingsInfo.CanMakeChanges = true;
             }
         }
+
+        /// <summary>
+        /// Gets whether menu commands should be registered. The default is 'true'. A derived class
+        /// can return 'false' to prevent all menu commands from being registered.</summary>
+        protected virtual bool RegisterMenuCommands { get { return true; } }
+
+        /// <summary>
+        /// Gets the title of the user settings dialog box (the SettingsDialog class).</summary>
+        protected virtual string UserSettingsTitle
+        {
+            get { return "Preferences".Localize(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the command service used to register commands. May be null.</summary>
+        [Import(AllowDefault = true)]
+        protected ICommandService CommandService;
+
+        /// <summary>
+        /// Gets or sets the IMainWindow that is used to know when the application has launched
+        /// or is shutting down. Either MainWindow or MainForm must not be null.</summary>
+        [Import(AllowDefault = true)]
+        protected IMainWindow MainWindow;
+
+        /// <summary>
+        /// Gets or sets the Form that is used to know when the application has launched
+        /// or is shutting down. Either MainWindow or MainForm must not be null.</summary>
+        [Import(AllowDefault = true)]
+        protected Form MainForm;
 
         // for use by SettingsLoadSaveDialog only
         internal void Serialize(Stream stream)
@@ -642,14 +671,17 @@ namespace Sce.Atf.Applications
             SaveSettings();
         }
 
-        private void Initialize()
+        /// <summary>
+        /// Finishes initializing this instance. Is called once, after the app's main window has loaded.
+        /// Registers commands and calls LoadSettings().</summary>
+        protected virtual void Initialize()
         {
             // register our menu commands
-            if (m_commandService != null)
+            if (CommandService != null && RegisterMenuCommands)
             {
                 if (m_allowUserEdits)
                 {
-                    m_commandService.RegisterCommand(
+                    CommandService.RegisterCommand(
                         CommandId.EditPreferences,
                         StandardMenu.Edit,
                         StandardCommandGroup.EditPreferences,
@@ -660,7 +692,7 @@ namespace Sce.Atf.Applications
 
                 if (m_allowUserLoadSave)
                 {
-                    m_commandService.RegisterCommand(
+                    CommandService.RegisterCommand(
                         CommandId.EditImportExportSettings,
                         StandardMenu.Edit,
                         StandardCommandGroup.EditPreferences,
@@ -855,10 +887,10 @@ namespace Sce.Atf.Applications
 
         private IWin32Window GetDialogOwner()
         {
-            if (m_mainWindow != null)
-                return m_mainWindow.DialogOwner;
-            else if (m_mainForm != null)
-                return m_mainForm;
+            if (MainWindow != null)
+                return MainWindow.DialogOwner;
+            else if (MainForm != null)
+                return MainForm;
 
             return null;
         }
@@ -1031,15 +1063,6 @@ namespace Sce.Atf.Applications
 
             #endregion
         }
-
-        [Import(AllowDefault = true)]
-        private ICommandService m_commandService;
-
-        [Import(AllowDefault = true)]
-        private IMainWindow m_mainWindow;
-
-        [Import(AllowDefault = true)]
-        private Form m_mainForm;
 
         private readonly string m_applicationName;
         private readonly string m_versionString;

@@ -1,6 +1,5 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
-using System;
 using Sce.Atf.Controls.Adaptable.Graphs;
 using Sce.Atf.Dom;
 
@@ -12,7 +11,6 @@ namespace CircuitEditorSample
     /// circuit rendering during editing operations, like dragging modules and wires.</summary>
     public class Module : Element
     {
-
         /// <summary>
         /// Gets name attribute for module</summary>
         protected override AttributeInfo NameAttribute
@@ -62,6 +60,11 @@ namespace CircuitEditorSample
         protected override AttributeInfo ShowUnconnectedPinsAttribute
         {
             get { return Schema.moduleType.showUnconnectedPinsAttribute; }
+        }
+
+        protected override CircuitElementInfo CreateElementInfo()
+        {
+            return new ModuleElementInfo();
         }
     }
 }

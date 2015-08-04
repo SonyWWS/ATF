@@ -49,6 +49,17 @@
         <xs:attribute name="attr4" type="xs:string"/>
     </xs:complexType>
 
+  <xs:simpleType name="ListOfUInts">
+    <xs:list itemType="xs:integer"/>
+  </xs:simpleType>
+
+  <xs:complexType name="TestAttrArrayType">
+    <xs:sequence>
+      <xs:element name="TestBoolArray" type="xs:boolean" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="TestList" type="ListOfUInts"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="importedRoot" type="i:importedComplexType"/>
 
   <!--END Format Schema -->

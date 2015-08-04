@@ -898,17 +898,14 @@ namespace Sce.Atf.Controls.PropertyEditing
                 if (m_processingPendingChanges || !Visible)
                     return;
 
-                int top = m_toolStrip.Visible ? m_toolStrip.Height : 0;                
+                int top = m_toolStrip.Visible ? m_toolStrip.Height : 0;
                 var sortedControls = new List<ItemControl>(m_itemControls.Values);
                 sortedControls.Sort((a, b) => a.Index.CompareTo(b.Index));
-
-                bool vi = Visible;
                 foreach (var item in sortedControls)
                 {
                     item.Top = top;
                     top += item.Height;
                 }
-
                 Height = top;
             }
 
@@ -1132,15 +1129,18 @@ namespace Sce.Atf.Controls.PropertyEditing
                     m_editControl.MouseUp += editControl_MouseUp;
                     Controls.Add(m_editControl);
 
+                    m_editControl.EditingContextUpdated += (sender, e) => UpdateHeight();
+                    m_editControl.Invalidated += (sender, e) => UpdateHeight();
+                    
                     Init(index, item, singletonMode, indexColumnWidth, context);
 
                     GotFocus += (sender, e) => m_editControl.Focus();
                     m_editControl.GotFocus += (sender, e) => UpdateSelection();
+                }
 
-                    m_editControl.EditingContextUpdated += (sender, e) =>
-                    {
-                        Height = m_editControl.GetPreferredHeight();
-                    };
+                private void UpdateHeight()
+                {
+                    Height = m_editControl.GetPreferredHeight();
                 }
 
                 private void ParentSelectedPropertyChanged(object sender, EventArgs eventArgs)

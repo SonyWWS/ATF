@@ -44,13 +44,19 @@ namespace Sce.Atf.Applications
             {
                 string directory = Path.GetDirectoryName(filePath);
                 string filter = Path.GetFileName(filePath);
-                FileSystemWatcher watcher = new FileSystemWatcher(directory, filter);
+                DateTime lastWriteTime = File.GetLastWriteTimeUtc(filePath);
+                var watcher = new FileSystemWatcher(directory, filter);
                 watcher.SynchronizingObject = m_syncObject;
 
                 watcher.Changed += watcher_Changed;
                 watcher.Renamed += OnRenamed;
 
-                m_watchers.Add(filePath, watcher);
+                var watcherInfo = new FileWatcherInfo
+                {
+                    Watcher = watcher,
+                    LastWriteTime = lastWriteTime
+                };
+                m_watchers.Add(filePath, watcherInfo);
 
                 watcher.EnableRaisingEvents = true;
             }
@@ -61,11 +67,11 @@ namespace Sce.Atf.Applications
         /// <param name="filePath">Path of file no longer watched</param>
         public void Unregister(string filePath)
         {
-            FileSystemWatcher watcher;
-            if (m_watchers.TryGetValue(filePath, out watcher))
+            FileWatcherInfo watcherInfo;
+            if (m_watchers.TryGetValue(filePath, out watcherInfo))
             {
-                watcher.EnableRaisingEvents = false;
-                watcher.Dispose();
+                watcherInfo.Watcher.EnableRaisingEvents = false;
+                watcherInfo.Watcher.Dispose();
                 m_watchers.Remove(filePath);
             }
         }
@@ -106,11 +112,12 @@ namespace Sce.Atf.Applications
             // Just in case it matters, get the watcher actually associated with FullPath,
             //  which might be different than 'sender', because we don't know if 'sender' is
             //  watching e.OldFullPath or e.FullPath.
-            FileSystemWatcher watcher;
-            if (m_watchers.TryGetValue(e.FullPath, out watcher))
+            FileWatcherInfo watcherInfo;
+            if (m_watchers.TryGetValue(e.FullPath, out watcherInfo))
             {
-                watcher_Changed(watcher,
-                    new FileSystemEventArgs(WatcherChangeTypes.Changed, watcher.Path, watcher.Filter));
+                watcher_Changed(watcherInfo.Watcher,
+                    new FileSystemEventArgs(WatcherChangeTypes.Changed, //our FileChanged event is not for renaming
+                        watcherInfo.Watcher.Path, watcherInfo.Watcher.Filter));
             }
         }
 
@@ -129,7 +136,20 @@ namespace Sce.Atf.Applications
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            // Make sure the user isn't alerted twice to the same file being changed.
+            // Make sure the listener hasn't already seen the change. DateTime has a resolution
+            //  of 100 nanoseconds. Should be good enough!
+            FileWatcherInfo watcherInfo;
+            if (m_watchers.TryGetValue(e.FullPath, out watcherInfo))
+            {
+                DateTime lastWriteTime = File.GetLastWriteTimeUtc(e.FullPath);
+                if (lastWriteTime == watcherInfo.LastWriteTime)
+                    return;
+                watcherInfo.LastWriteTime = lastWriteTime;
+            }
+
+            // Although this method is called on one thread (because of SynchronizingObject)
+            //  the listener may have a dialog box open which allows for reentrancy. In that
+            //  situation, we want to avoid queuing multiple change events for the same file.
             foreach(Pair<object, FileSystemEventArgs> eventInfo in m_queue)
                 if (eventInfo.Second.FullPath == e.FullPath)
                     return;
@@ -149,13 +169,19 @@ namespace Sce.Atf.Applications
             }
         }
 
+        private class FileWatcherInfo
+        {
+            public FileSystemWatcher Watcher;
+            public DateTime LastWriteTime;
+        }
+
         // This is used as a synchronizing object for Register() calls, so that FileChanged events
         //  are raised on the main UI thread.
         [Import(AllowDefault = true)]
         private ISynchronizeInvoke m_syncObject;
 
-        private readonly Dictionary<string, FileSystemWatcher> m_watchers =
-            new Dictionary<string, FileSystemWatcher>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, FileWatcherInfo> m_watchers =
+            new Dictionary<string, FileWatcherInfo>(StringComparer.InvariantCultureIgnoreCase);
         
         // Queue of file change event information, as pairs of 'sender' and 'e', so as to not lose
         //  file change events for when multiple watched files change while the user is responding

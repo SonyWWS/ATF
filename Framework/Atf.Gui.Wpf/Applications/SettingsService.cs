@@ -9,6 +9,7 @@ using System.IO;
 using Sce.Atf.Applications;
 using Sce.Atf.Wpf.Controls;
 using Sce.Atf.Wpf.Models;
+using SettingsLoadSaveDialog = Sce.Atf.Wpf.Controls.SettingsLoadSaveDialog;
 
 namespace Sce.Atf.Wpf.Applications
 {

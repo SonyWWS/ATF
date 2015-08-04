@@ -6,6 +6,7 @@ namespace Sce.Atf.Input
 {
     /// <summary>
     /// Enum for key codes</summary>
+    /// <remarks>Copied from System.Windows.Forms.Keys</remarks>
     [Flags]
     public enum Keys
     {
@@ -169,9 +170,9 @@ namespace Sce.Atf.Input
         LaunchApplication2 = LaunchApplication1 | SelectMedia,
         Oem1 = MediaStop | BrowserSearch,
         OemSemicolon = Oem1,
-        Oemplus = OemSemicolon | MediaPlayPause,
+        Oemplus = OemSemicolon | MediaPlayPause, // is also the equals key
         Oemcomma = LaunchMail | BrowserHome,
-        OemMinus = Oemcomma | SelectMedia,
+        OemMinus = Oemcomma | SelectMedia, // is also the underscore key
         OemPeriod = Oemcomma | OemSemicolon,
         Oem2 = OemPeriod | OemMinus,
         OemQuestion = Oem2,

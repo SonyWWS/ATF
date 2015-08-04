@@ -78,8 +78,7 @@ namespace Sce.Atf.Controls
             ColumnHeaderSeparatorColor = Color.FromArgb(228, 229, 230);
 
             m_boldFont = new Font(Font, FontStyle.Bold);
-            ShowGroups = false; 
-
+            ShowGroups = false; // Must be false currently, or OnDrawItem will crash.
         }
         /// <summary>
         /// Gets or sets whether list is under sorting operation</summary>
@@ -406,7 +405,7 @@ namespace Sce.Atf.Controls
             else
                 Height = 0;
         
-            var header = (IntPtr)User32.SendMessage(Handle, User32.LVM_GETHEADER, 0, 0);
+            IntPtr header = User32.SendMessage(Handle, User32.LVM_GETHEADER, IntPtr.Zero, IntPtr.Zero);
             Rectangle hdrBounds = new Rectangle();
             User32.GetClientRect(header, ref hdrBounds);
             Height += hdrBounds.Height + Margin.Top + Margin.Bottom + SystemInformation.HorizontalScrollBarHeight;
@@ -440,7 +439,7 @@ namespace Sce.Atf.Controls
  
             if (m_currencyManager != currencyManager)
             {
-                RemeberSelections();
+                RememberSelections();
                 if (m_currencyManager != null)
                 {
                     m_currencyManager.ListChanged -= currencyManager_ListChanged;
@@ -524,7 +523,16 @@ namespace Sce.Atf.Controls
 
             foreach (ColumnHeader column in Columns)
             {
-                PropertyDescriptor pd = pds.Find(column.Text, false);
+                //PropertyDescriptor pd = pds.Find(column.Text, false);
+                PropertyDescriptor pd = null;
+                foreach (PropertyDescriptor member in pds)
+                {
+                    if (member.DisplayName == column.Text)
+                    {
+                        pd = member;
+                        break;
+                    }
+                }
                 if (pd != null)
                 {
                     items.Add(pd.GetValue(dataItem).ToString());
@@ -1029,7 +1037,7 @@ namespace Sce.Atf.Controls
 
                 if (m_headerHeight == 0)
                 {
-                    var header = (IntPtr)User32.SendMessage(Handle, User32.LVM_GETHEADER, 0, 0);
+                    IntPtr header = User32.SendMessage(Handle, User32.LVM_GETHEADER, IntPtr.Zero, IntPtr.Zero);
                     Rectangle hdrBounds = new Rectangle();
                     User32.GetClientRect(header, ref hdrBounds);
                     m_headerHeight = hdrBounds.Height;
@@ -1092,14 +1100,14 @@ namespace Sce.Atf.Controls
                 SortingItems = true;
                 DisableEditingControl(true);
 
-                RemeberSelections();
+                RememberSelections();
                 bindingList.ApplySort(ItemProperties[e.Column], m_sortDirection);
                 RestoreSelections();
                 SortingItems = false;
             }
         }
 
-        private void RemeberSelections()
+        private void RememberSelections()
         {
             m_selectedObjects.Clear();
             m_checkeObjects.Clear();
@@ -1776,14 +1784,20 @@ namespace Sce.Atf.Controls
                     {
                         string[] pdNames = groupAttribute.ReadOnlyProperties.Split(',');
                         foreach (var pdName in pdNames)
-                            m_groupReadOnlyColumns.Add(groupAttribute.GroupName, pdName);
+                        {
+                            string propertyName = pdName.Localize(); // the string literals use Localize() elsewhere
+                            m_groupReadOnlyColumns.Add(groupAttribute.GroupName, propertyName);
+                        }
                     }
 
                     if (groupAttribute.ExternalEditorProperties != null)
                     {
                         string[] pdNames = groupAttribute.ExternalEditorProperties.Split(',');
                         foreach (var pdName in pdNames)
-                            m_groupExternalEditorColumns.Add(groupAttribute.GroupName, pdName);
+                        {
+                            string propertyName = pdName.Localize(); // the string literals use Localize() elsewhere
+                            m_groupExternalEditorColumns.Add(groupAttribute.GroupName, propertyName);
+                        }
                     }
                     break;
                 }

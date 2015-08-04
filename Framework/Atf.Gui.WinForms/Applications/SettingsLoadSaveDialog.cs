@@ -9,7 +9,7 @@ namespace Sce.Atf.Applications
     /// <summary>
     /// Form for presenting the load and save settings operations to the user. Used only
     /// by SettingsService.</summary>
-    internal partial class SettingsLoadSaveDialog : Form
+    public partial class SettingsLoadSaveDialog : Form
     {
         private readonly SettingsService m_settingsService;
 

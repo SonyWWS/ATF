@@ -73,7 +73,7 @@ namespace CircuitEditorSample
             string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\..\\components\\wws_atf\\Samples\\CircuitEditor\\data");
             EditorInfo.InitialDirectory = initialDirectory;
             m_theme = new D2dDiagramTheme();
-            m_circuitRenderer = new D2dCircuitRenderer<Module, Connection, ICircuitPin>(m_theme, documentRegistry);
+            m_circuitRenderer = new CircuitRenderer(m_theme, documentRegistry);
             m_subGraphRenderer = new D2dSubCircuitRenderer<Module, Connection, ICircuitPin>(m_theme);
 
             //// Note: Santa Monica uses following render settings: 
@@ -325,6 +325,10 @@ namespace CircuitEditorSample
             if (circuitNode.Is<Circuit>())
             {
                 var circuitAdapter = new D2dGraphAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, transformAdapter);
+
+                // The "AllFirst" policy will try to draw edges (wires) before nodes, as much as possible.
+                //circuitAdapter.EdgeRenderPolicy = D2dGraphAdapter<Module, Connection, ICircuitPin>.DrawEdgePolicy.AllFirst;
+                
                 var circuitModuleEditAdapter = new D2dGraphNodeEditAdapter<Module, Connection, ICircuitPin>(
                     m_circuitRenderer, circuitAdapter, transformAdapter);
                 circuitModuleEditAdapter.DraggingSubNodes = false;

@@ -169,7 +169,7 @@ namespace SimpleDomEditorWpfSample
                                 null,
                                 "Whether or not animation is compressed".Localize(),
                                 false,
-                                new BoolEditor()),
+                                null),
                     }));
 
                 var primitiveKinds = new string[]

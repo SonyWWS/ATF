@@ -883,7 +883,7 @@ namespace Sce.Atf.Controls
             //[DllImport("user32.dll")]
             //private static extern IntPtr ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
-            //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+            //[DllImport("user32.dll", CharSet = CharSet.Unicode)]
             //private static extern IntPtr SendMessage(IntPtr handle, int msg, int wparam, int lparam);
 
             //private static IntPtr GetHeaderControl(ListView list)

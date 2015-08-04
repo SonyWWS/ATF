@@ -223,7 +223,9 @@ namespace Sce.Atf.Controls
 
             if (e.Button == MouseButtons.Left)
             {
-                if (m_editData != null && m_editData.EditingMode == DataEditor.EditMode.BySlider)
+                if (m_editData != null && 
+                    (m_editData.EditingMode == DataEditor.EditMode.BySlider ||
+                    m_editData.EditingMode == DataEditor.EditMode.ByClick))
                 {
                     EndDataEdit();
                     return;
@@ -251,7 +253,7 @@ namespace Sce.Atf.Controls
         {
             get
             {
-                return ItemRenderer as TreeListItemRenderer;
+                return (TreeListItemRenderer)ItemRenderer;
             }
         }
 
@@ -289,6 +291,8 @@ namespace Sce.Atf.Controls
                             TreeListItemRenderer.TrackingEditor = dataEditor;
                             // mouse down will change slider value, i.e. edit
                             if (dataEditor.EditingMode == DataEditor.EditMode.BySlider )
+                                BeginDataEdit(hitRecord.Node, dataEditor);
+                            else if (dataEditor.EditingMode == DataEditor.EditMode.ByClick)
                                 BeginDataEdit(hitRecord.Node, dataEditor);
                             else if (dataEditor.EditingMode == DataEditor.EditMode.ByExternalControl)
                             {

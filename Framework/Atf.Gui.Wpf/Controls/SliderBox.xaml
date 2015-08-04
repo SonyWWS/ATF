@@ -13,10 +13,10 @@
         </Grid.ColumnDefinitions>
             <Slider HorizontalAlignment="Stretch" 
                     x:Name="PositionSlider"
-                  Minimum="0" Maximum="1"
+                    Minimum="{Binding Minimum, Mode=OneTime, RelativeSource={RelativeSource AncestorType=c:SliderBox}}" 
+                    Maximum="{Binding Maximum, Mode=OneTime, RelativeSource={RelativeSource AncestorType=c:SliderBox}}" 
                     Focusable="True" Margin="0 0 4 0"
-                    Value="{Binding Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=c:SliderBox},
-                            UpdateSourceTrigger=Explicit}">
+                    Value="{Binding Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=c:SliderBox},UpdateSourceTrigger=Explicit}">
             </Slider>
         <c:FormattingTextBox
                 x:Name="TextBox"

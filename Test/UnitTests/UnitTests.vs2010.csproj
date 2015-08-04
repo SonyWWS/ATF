@@ -29,29 +29,30 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug.vs2010\tests\</OutputPath>
-    <IntermediateOutputPath>obj\Debug.vs2010\</IntermediateOutputPath>
     <DefineConstants>TRACE;DEBUG;CS_3;CS_4</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\..\bin\Release.vs2010\tests\</OutputPath>
-    <IntermediateOutputPath>obj\Release.vs2010\</IntermediateOutputPath>
     <DefineConstants>TRACE;CS_3;CS_4</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\ThirdParty\nUnit\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.core, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -60,10 +61,6 @@
     <Reference Include="nunit.core.interfaces, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\nUnit\nunit.core.interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.fixtures, Version=2.5.7.10213, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\nUnit\nunit.fixtures.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,7 +87,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DllImports\TestCalls.cs" />
+    <Compile Include="DllImports\TestDllImports.cs" />
     <Compile Include="DomGen\TestSchemaGen.cs" />
+    <None Include="LocalizableStringExtractor\Cases\AboutDialog.cs">
+      <SubType>Form</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Include="LocalizableStringExtractor\TestExtractor.cs" />
+    <Compile Include="LocalizableStringExtractor\TestLocalizableString.cs" />
+    <None Include="MsBuildUtils\Cases\Properties\AssemblyInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MsBuildUtils\Cases\Properties\Resources.Designer.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MsBuildUtils\Cases\Properties\Settings.Designer.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MsBuildUtils\Cases\UserControl1.xaml.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Include="MsBuildUtils\TestMsBuildUtils.cs" />
     <Compile Include="Sce.Atf\Adaptation\TestAdaptableActiveCollection.cs" />
     <Compile Include="Sce.Atf\Adaptation\TestAdapterCreator.cs" />
     <Compile Include="Sce.Atf\Adaptation\ISimpleInterface.cs" />
@@ -218,6 +236,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="MsBuildUtils\Cases\Properties\Resources.resx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Resources\test.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -247,6 +268,22 @@
       <Project>{FE3CA2EA-2F56-49A5-AD02-E5DEC8694457}</Project>
       <Name>DomGen</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DevTools\Localization\LocalizableStringExtractor\LocalizableStringExtractor.csproj">
+      <Project>{de007657-9550-426e-b276-3de94d956ef9}</Project>
+      <Name>LocalizableStringExtractor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DevTools\MsBuildUtils\MsBuildUtils.csproj">
+      <Project>{d0fc856e-5d1b-4af5-aa3c-e3218f36a99f}</Project>
+      <Name>MsBuildUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Atgi\Atf.Atgi.vs2010.csproj">
+      <Project>{d1fa9a85-9359-4725-a50f-8a67a77d700c}</Project>
+      <Name>Atf.Atgi.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Collada\Atf.Collada.vs2010.csproj">
+      <Project>{6f80048b-e81f-4e06-9438-26c23487777c}</Project>
+      <Name>Atf.Collada.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Atf.Core\Atf.Core.vs2010.csproj">
       <Project>{9D1835B6-D1C2-44BA-BAE1-05C6EC442D2F}</Project>
       <Name>Atf.Core</Name>
@@ -263,11 +300,35 @@
       <Project>{4765C2A7-F989-40DB-BC12-FCD67025B93F}</Project>
       <Name>Atf.Gui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Perforce\Atf.Perforce.vs2010.csproj">
+      <Project>{c7a306e0-32ae-4053-8882-e1a1e702c139}</Project>
+      <Name>Atf.Perforce.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Atf.Subversion\Atf.Subversion.vs2010.csproj">
+      <Project>{ad8b5500-d8e2-4609-beca-c405ea22b1ae}</Project>
+      <Name>Atf.Subversion.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NativeTestHelpers\NativeTestHelpers.vcxproj">
+      <Project>{fa4aab2f-8d6b-40f1-ae2d-e4793ae1b2df}</Project>
+      <Name>NativeTestHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="MsBuildUtils\Cases\Properties\Settings.settings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\testImportSchemas.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="LocalizableStringExtractor\Cases\Localization.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MsBuildUtils\Cases\Test.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MsBuildUtils\Cases\Test.sln">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Resources\TestSkin.xml">
@@ -277,7 +338,28 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="MsBuildUtils\Cases\UserControl1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LocalizableStringExtractor\Cases\FindTargetsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="LocalizableStringExtractor\Cases\Standard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -430,7 +430,7 @@ namespace Sce.Atf.Rendering.Dom
 
         /// <summary>
         /// Function called before OnMouseMove() is called. If base.WndProc() is not called,
-        /// then OnMouseMove() is not called. Thus, we can consume messags that we don't want
+        /// then OnMouseMove() is not called. Thus, we can consume messages that we don't want
         /// to pass on to OnMouseMove(), etc. In order to improve performance when the user
         /// is dragging around an object and is snapping that object to other objects in a
         /// large level, we want to ignore the current mouse movement message if there is another

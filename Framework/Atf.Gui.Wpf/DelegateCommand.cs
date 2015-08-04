@@ -96,7 +96,7 @@ namespace Sce.Atf.Wpf
         }
 
         /// <summary>
-        /// Raises the CanExecuteChaged event</summary>
+        /// Raises the CanExecuteChanged event</summary>
         public void RaiseCanExecuteChanged()
         {
             OnCanExecuteChanged();

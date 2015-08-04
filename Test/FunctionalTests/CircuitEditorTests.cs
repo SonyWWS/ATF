@@ -70,5 +70,11 @@ namespace FunctionalTests
         {
             ExecuteFullTest(ConstructScriptPath());
         }
+
+        [Test]
+        public void TestVersionMigrator()
+        {
+            ExecuteFullTest(ConstructScriptPath());
+        }
     }
 }

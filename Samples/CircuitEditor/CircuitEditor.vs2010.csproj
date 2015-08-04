@@ -46,6 +46,7 @@
     <Reference Include="IronPython.Modules">
       <HintPath>..\..\ThirdParty\IronPython\IronPython.Modules.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\IronPython\Microsoft.Dynamic.dll</HintPath>
@@ -70,13 +71,19 @@
     <Compile Include="Annotation.cs" />
     <Compile Include="CategoryUniqueIdValidator.cs" />
     <Compile Include="CircuitReader.cs" />
+    <Compile Include="CircuitRenderer.cs" />
     <Compile Include="CircuitWriter.cs" />
+    <Compile Include="DocVersionTransforms\Migrator.cs" />
+    <Compile Include="DocVersionTransforms\upgrades\CircuitEditor1to2.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="GroupingCommands.cs" />
     <Compile Include="GroupReference.cs" />
     <Compile Include="HelpAboutCommand.cs" />
     <Compile Include="LayerFolder.cs" />
     <Compile Include="LayeringCommands.cs" />
     <Compile Include="MissingModule.cs" />
+    <Compile Include="ModuleElementInfo.cs" />
     <Compile Include="ModuleReference.cs" />
     <Compile Include="Prototype.cs" />
     <Compile Include="PrototypeFolder.cs" />
@@ -91,8 +98,6 @@
     <Compile Include="GroupPin.cs" />
     <Compile Include="LayeringContext.cs" />
     <Compile Include="Pin.cs" />
-    <Compile Include="SubCircuit.cs" />
-    <Compile Include="SubCircuitInstance.cs" />
     <Compile Include="CircuitValidator.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="TemplateFolder.cs" />
@@ -176,6 +181,9 @@
     <EmbeddedResource Include="Resources\ja\Localization.xml" />
     <EmbeddedResource Include="Resources\ja\About.rtf" />
     <None Include="schemas\GenSchemaDef.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DocVersionTransforms\downgrades\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

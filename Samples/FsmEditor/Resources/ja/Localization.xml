@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StringLocalizationTable>
+  <StringItem id="Action" context="" translation="アクション" />
+  <StringItem id="Action on trigger" context="" translation="トリガーが引き起こすアクション" />
+  <StringItem id="Action performed when entering state" context="" translation="ステートに遷移時の最初のアクション。" />
+  <StringItem id="Action performed when exiting state" context="" translation="ステートから遷移する前の最後のアクション。" />
+  <StringItem id="Action performed when making transition" context="" translation="遷移中のアクション。" />
+  <StringItem id="Action performed while in state" context="" translation="ステートでのアクション。" />
+  <StringItem id="Comment" context="" translation="コメント" />
+  <StringItem id="Comment on state machine" context="" translation="ステートマシンのコメント" />
+  <StringItem id="Comment text" context="" translation="コメントのテキスト。" />
+  <StringItem id="Entry Action" context="" translation="entry アクション" />
+  <StringItem id="Exit Action" context="" translation="exit アクション" />
+  <StringItem id="Finite State Machine" context="" translation="有限ステートマシン" />
+  <StringItem id="FSM" context="" translation="FSM" />
+  <StringItem id="Hidden" context="" translation="非表示" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-FSM-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF-FSM-Editor-Sample_j" />
+  <StringItem id="ID" context="" translation="ID" />
+  <StringItem id="Label" context="" translation="ラベル" />
+  <StringItem id="Label displayed on transition" context="" translation="遷移のラベル。" />
+  <StringItem id="Label displayed on trigger" context="" translation="トリガーのラベル。" />
+  <StringItem id="List of triggers" context="" translation="トリガーのリスト。" />
+  <StringItem id="Name" context="" translation="名前" />
+  <StringItem id="Prototype" context="FSM prototype" translation="プロトタイプ" />
+  <StringItem id="Prototype folder name" context="" translation="プロトタイプフォルダー名" />
+  <StringItem id="Size" context="" translation="サイズ" />
+  <StringItem id="Start" context="" translation="開始" />
+  <StringItem id="State" context="" translation="ステート" />
+  <StringItem id="State in a finite state machine" context="" translation="有限ステートマシンのステート" />
+  <StringItem id="State name" context="" translation="ステートの名前。" />
+  <StringItem id="State size" context="" translation="ステートのサイズ。" />
+  <StringItem id="Text" context="" translation="テキスト" />
+  <StringItem id="Trigger ID" context="" translation="トリガー ID" />
+  <StringItem id="Triggers" context="" translation="トリガー" />
+  <StringItem id="Whether or not state is hidden" context="" translation="ステートを非表示にするにはオンにします。" />
+  <StringItem id="Whether or not state is the start state" context="" translation="ステートが開始ステートの場合はオンにします。" />
+</StringLocalizationTable>

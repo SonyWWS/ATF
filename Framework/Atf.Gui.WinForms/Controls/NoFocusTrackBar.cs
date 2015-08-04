@@ -16,7 +16,7 @@ namespace Sce.Atf.Controls
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
-            User32.SendMessage(Handle, User32.WM_UPDATEUISTATE, MakeParam(1, 0x1), 0);
+            User32.SendMessage(Handle, User32.WM_UPDATEUISTATE, (IntPtr)MakeParam(1, 0x1), (IntPtr)0);
         }
 
         private static int MakeParam(int loWord, int hiWord)

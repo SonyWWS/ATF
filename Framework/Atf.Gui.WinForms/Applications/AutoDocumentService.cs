@@ -30,8 +30,8 @@ namespace Sce.Atf.Applications
             IDocumentRegistry documentRegistry,
             IDocumentService documentService)
         {
-            m_documentRegistry = documentRegistry;
-            m_documentService = documentService;
+            DocumentRegistry = documentRegistry;
+            DocumentService = documentService;
         }
 
         #region IPartImportsSatisfiedNotification Members
@@ -49,7 +49,7 @@ namespace Sce.Atf.Applications
             if (m_mainWindow == null)
                 throw new InvalidOperationException("Can't get main window");
 
-            m_mainWindow.Loading += mainWindow_Loaded;
+            m_mainWindow.Loaded += mainWindow_Loaded;
             m_mainWindow.Closing += mainWindow_Closing;
         }
 
@@ -106,12 +106,51 @@ namespace Sce.Atf.Applications
             set { m_openDocuments = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the document clients</summary>
+        [ImportMany]
+        protected IEnumerable<Lazy<IDocumentClient>> DocumentClients;
+
+        /// <summary>
+        /// Gets the document service that was passed into the constructor</summary>
+        protected readonly IDocumentService DocumentService;
+
+        /// <summary>
+        /// The document registry that was passed into the constructor</summary>
+        protected readonly IDocumentRegistry DocumentRegistry;
+
+        /// <summary>
+        /// Is called once, when the application starts and if AutoNewDocument is true, to
+        /// automatically create new documents.</summary>
+        /// <remarks>By default, only one new document will be used and only if there are no
+        /// documents open already. If there are multiple document clients available, the first
+        /// single-document client will be used.</remarks>
+        protected virtual void CreateNewDocuments()
+        {
+            // Automatically create a new document only if there are none open yet.
+            if (DocumentRegistry.ActiveDocument == null)
+            {
+                IDocumentClient autoDocumentClient = null;
+                foreach (IDocumentClient client in DocumentClients.GetValues())
+                {
+                    if (!client.Info.MultiDocument)
+                    {
+                        autoDocumentClient = client;
+                        break;
+                    }
+                    if (autoDocumentClient == null)
+                        autoDocumentClient = client;
+                }
+
+                if (autoDocumentClient != null)
+                    DocumentService.OpenNewDocument(autoDocumentClient);
+            }
+        }
+
         private void mainWindow_Loaded(object sender, EventArgs e)
         {
-            bool documentsOpen = m_documentRegistry.ActiveDocument != null;
-
-            // auto-load documents only if there are none open yet
-            if (m_autoLoadDocuments && !documentsOpen)
+            // Automatically load documents only if there are none open yet.
+            if (m_autoLoadDocuments && DocumentRegistry.ActiveDocument == null)
             {
                 bool autoLoadDocs = true;
                 if (m_commandLineArgsService != null)
@@ -128,7 +167,7 @@ namespace Sce.Atf.Applications
                         Uri uri;
                         if (Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out uri))
                         {
-                            foreach (IDocumentClient client in m_documentClients.GetValues())
+                            foreach (IDocumentClient client in DocumentClients.GetValues())
                             {
                                 try
                                 {
@@ -137,8 +176,7 @@ namespace Sce.Atf.Applications
                                     if ((!uri.IsAbsoluteUri || File.Exists(uri.LocalPath)) &&
                                         client.CanOpen(uri))
                                     {
-                                        m_documentService.OpenExistingDocument(client, uri);
-                                        documentsOpen = true;
+                                        DocumentService.OpenExistingDocument(client, uri);
                                         break;
                                     }
                                 }
@@ -154,31 +192,15 @@ namespace Sce.Atf.Applications
                 }
             }
 
-            // auto-new document only if there are none open yet
-            if (m_autoNewDocument && !documentsOpen)
-            {
-                IDocumentClient autoDocumentClient = null;
-                foreach (IDocumentClient client in m_documentClients.GetValues())
-                {
-                    if (m_masterClient == null && !client.Info.MultiDocument)
-                    {
-                        m_masterClient = client;
-                        autoDocumentClient = client;
-                    }
-                    if (autoDocumentClient == null)
-                        autoDocumentClient = client;
-                }
-
-                if (autoDocumentClient != null)
-                    m_documentService.OpenNewDocument(autoDocumentClient);
-            }
+            if (AutoNewDocument)
+                CreateNewDocuments();
         }
 
         private void mainWindow_Closing(object sender, CancelEventArgs e)
         {
             StringBuilder sb = new StringBuilder();
             char separator = Path.PathSeparator;
-            foreach (IDocument document in m_documentRegistry.Documents)
+            foreach (IDocument document in DocumentRegistry.Documents)
             {
                 sb.Append(document.Uri);
                 sb.Append(separator);
@@ -186,9 +208,6 @@ namespace Sce.Atf.Applications
 
             m_openDocuments = sb.ToString();
         }
-
-        private readonly IDocumentRegistry m_documentRegistry;
-        private readonly IDocumentService m_documentService;
 
         [Import(AllowDefault = true)]
         private IMainWindow m_mainWindow;
@@ -201,11 +220,6 @@ namespace Sce.Atf.Applications
 
         [Import(AllowDefault = true)]
         private CommandLineArgsService m_commandLineArgsService;
-
-        [ImportMany]
-        private IEnumerable<Lazy<IDocumentClient>> m_documentClients;
-
-        private IDocumentClient m_masterClient;
 
         private string m_openDocuments = string.Empty;
         private bool m_autoLoadDocuments = true;

@@ -855,7 +855,7 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                     PickSubTimeline(path, pickRect, c, layout, result);
             }
 
-            PrioritizeHits(result);
+            PrioritizeHits(result, layout, pickRect);
 
             return result;
         }
@@ -1030,14 +1030,45 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         }
 
         /// <summary>
-        /// Sorts multiple picked items by priority, with the most important being first</summary>
-        /// <param name="hits">Zero or more unsorted and unfiltered hit records to be sorted/filtered</param>
-        protected virtual void PrioritizeHits(List<HitRecord> hits)
+        /// Prioritizes the hits, using layout and picking rectangle information. This is called after
+        /// PrioritizeHits().</summary>
+        /// <param name="hits">The timeline objects to sort, that intersect the given rectangle</param>
+        /// <param name="layout">The layout</param>
+        /// <param name="pickRect">The picking rectangle</param>
+        protected virtual void PrioritizeHits(List<HitRecord> hits, TimelineLayout layout, RectangleF pickRect)
         {
             if (hits.Count <= 1)
                 return;
 
-            hits.Sort(CompareHits);
+            float pickCenterX = pickRect.X + pickRect.Width*0.5f;
+            float pickCenterY = pickRect.Y + pickRect.Height*0.5f;
+
+            hits.Sort((a, b) =>
+            {
+                if (a.Type < b.Type)
+                    return -1;
+                if (a.Type > b.Type)
+                    return 1;
+                
+                // The HeaderResize type doesn't have a HitPath.
+                if (a.HitPath == null || b.HitPath == null)
+                    return 0;
+                
+                // They're the same type, so now sort by distance from center of picking rectangle.
+                RectangleF aRect = layout.GetBounds(a.HitPath);
+                RectangleF bRect = layout.GetBounds(b.HitPath);
+                float aDist = Math.Min(
+                    Math.Abs(aRect.X + aRect.Width*0.5f - pickCenterX),
+                    Math.Abs(aRect.Y + aRect.Height*0.5f - pickCenterY));
+                float bDist = Math.Min(
+                    Math.Abs(bRect.X + bRect.Width * 0.5f - pickCenterX),
+                    Math.Abs(bRect.Y + bRect.Height * 0.5f - pickCenterY));
+                if (aDist < bDist)
+                    return -1;
+                if (aDist > bDist)
+                    return 1;
+                return 0;
+            });
         }
 
         /// <summary>

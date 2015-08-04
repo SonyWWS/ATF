@@ -3,6 +3,9 @@
 // Command Line:  DomGen "atgi.xsd" "Schema.cs" "http://www.atg.development.scee.net/atgi/1_29_0/atgi" "Sce.Atf.Atgi"
 // -------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 using Sce.Atf.Dom;
 
 namespace Sce.Atf.Atgi
@@ -13,7 +16,19 @@ namespace Sce.Atf.Atgi
 
         public static void Initialize(XmlSchemaTypeCollection typeCollection)
         {
-            worldType.Type = typeCollection.GetNodeType("worldType");
+            Initialize((ns,name)=>typeCollection.GetNodeType(ns,name),
+                (ns,name)=>typeCollection.GetRootElement(ns,name));
+        }
+
+        public static void Initialize(IDictionary<string, XmlSchemaTypeCollection> typeCollections)
+        {
+            Initialize((ns,name)=>typeCollections[ns].GetNodeType(name),
+                (ns,name)=>typeCollections[ns].GetRootElement(name));
+        }
+
+        private static void Initialize(Func<string, string, DomNodeType> getNodeType, Func<string, string, ChildInfo> getRootElement)
+        {
+            worldType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "worldType");
             worldType.nameAttribute = worldType.Type.GetAttributeInfo("name");
             worldType.filenameformAttribute = worldType.Type.GetAttributeInfo("filenameform");
             worldType.upaxisAttribute = worldType.Type.GetAttributeInfo("upaxis");
@@ -65,26 +80,26 @@ namespace Sce.Atf.Atgi
             worldType.skinChild = worldType.Type.GetChildInfo("skin");
             worldType.customDataChild = worldType.Type.GetChildInfo("customData");
 
-            objType.Type = typeCollection.GetNodeType("objType");
+            objType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "objType");
             objType.nameAttribute = objType.Type.GetAttributeInfo("name");
 
-            parseaccelerationType.Type = typeCollection.GetNodeType("parseaccelerationType");
+            parseaccelerationType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "parseaccelerationType");
             parseaccelerationType.filereferencesChild = parseaccelerationType.Type.GetChildInfo("filereferences");
 
-            filereferencesType.Type = typeCollection.GetNodeType("filereferencesType");
+            filereferencesType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "filereferencesType");
             filereferencesType.fileChild = filereferencesType.Type.GetChildInfo("file");
 
-            fileType.Type = typeCollection.GetNodeType("fileType");
+            fileType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "fileType");
             fileType.uriAttribute = fileType.Type.GetAttributeInfo("uri");
 
-            animChannelType.Type = typeCollection.GetNodeType("animChannelType");
+            animChannelType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animChannelType");
             animChannelType.nameAttribute = animChannelType.Type.GetAttributeInfo("name");
             animChannelType.channelAttribute = animChannelType.Type.GetAttributeInfo("channel");
             animChannelType.inputObjectAttribute = animChannelType.Type.GetAttributeInfo("inputObject");
             animChannelType.inputChannelAttribute = animChannelType.Type.GetAttributeInfo("inputChannel");
             animChannelType.animDataChild = animChannelType.Type.GetChildInfo("animData");
 
-            animChannelType_animData.Type = typeCollection.GetNodeType("animChannelType_animData");
+            animChannelType_animData.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animChannelType_animData");
             animChannelType_animData.keyValuesAttribute = animChannelType_animData.Type.GetAttributeInfo("keyValues");
             animChannelType_animData.keyTimesAttribute = animChannelType_animData.Type.GetAttributeInfo("keyTimes");
             animChannelType_animData.tangentsAttribute = animChannelType_animData.Type.GetAttributeInfo("tangents");
@@ -94,21 +109,21 @@ namespace Sce.Atf.Atgi
             animChannelType_animData.timeOffsetAttribute = animChannelType_animData.Type.GetAttributeInfo("timeOffset");
             animChannelType_animData.durationAttribute = animChannelType_animData.Type.GetAttributeInfo("duration");
 
-            animDiscontinuitiesType.Type = typeCollection.GetNodeType("animDiscontinuitiesType");
+            animDiscontinuitiesType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animDiscontinuitiesType");
             animDiscontinuitiesType.nameAttribute = animDiscontinuitiesType.Type.GetAttributeInfo("name");
             animDiscontinuitiesType.keyStrideAttribute = animDiscontinuitiesType.Type.GetAttributeInfo("keyStride");
             animDiscontinuitiesType.cornerChild = animDiscontinuitiesType.Type.GetChildInfo("corner");
             animDiscontinuitiesType.stepChild = animDiscontinuitiesType.Type.GetChildInfo("step");
 
-            animDiscontinuitiesType_corner.Type = typeCollection.GetNodeType("animDiscontinuitiesType_corner");
+            animDiscontinuitiesType_corner.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animDiscontinuitiesType_corner");
             animDiscontinuitiesType_corner.timeAttribute = animDiscontinuitiesType_corner.Type.GetAttributeInfo("time");
 
-            animDiscontinuitiesType_step.Type = typeCollection.GetNodeType("animDiscontinuitiesType_step");
+            animDiscontinuitiesType_step.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animDiscontinuitiesType_step");
             animDiscontinuitiesType_step.beforeAttribute = animDiscontinuitiesType_step.Type.GetAttributeInfo("before");
             animDiscontinuitiesType_step.afterAttribute = animDiscontinuitiesType_step.Type.GetAttributeInfo("after");
             animDiscontinuitiesType_step.timeAttribute = animDiscontinuitiesType_step.Type.GetAttributeInfo("time");
 
-            animType.Type = typeCollection.GetNodeType("animType");
+            animType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animType");
             animType.nameAttribute = animType.Type.GetAttributeInfo("name");
             animType.targetAttribute = animType.Type.GetAttributeInfo("target");
             animType.animChannelChild = animType.Type.GetChildInfo("animChannel");
@@ -158,7 +173,7 @@ namespace Sce.Atf.Atgi
             animType.skinChild = animType.Type.GetChildInfo("skin");
             animType.customDataChild = animType.Type.GetChildInfo("customData");
 
-            aimConstraintType.Type = typeCollection.GetNodeType("aimConstraintType");
+            aimConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "aimConstraintType");
             aimConstraintType.nameAttribute = aimConstraintType.Type.GetAttributeInfo("name");
             aimConstraintType.aimAttribute = aimConstraintType.Type.GetAttributeInfo("aim");
             aimConstraintType.upAttribute = aimConstraintType.Type.GetAttributeInfo("up");
@@ -214,19 +229,19 @@ namespace Sce.Atf.Atgi
             aimConstraintType.skinChild = aimConstraintType.Type.GetChildInfo("skin");
             aimConstraintType.customDataChild = aimConstraintType.Type.GetChildInfo("customData");
 
-            rotationType.Type = typeCollection.GetNodeType("rotationType");
+            rotationType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "rotationType");
             rotationType.Attribute = rotationType.Type.GetAttributeInfo("");
             rotationType.rotOrdAttribute = rotationType.Type.GetAttributeInfo("rotOrd");
 
-            aimConstraintType_upobject.Type = typeCollection.GetNodeType("aimConstraintType_upobject");
+            aimConstraintType_upobject.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "aimConstraintType_upobject");
             aimConstraintType_upobject.nameAttribute = aimConstraintType_upobject.Type.GetAttributeInfo("name");
             aimConstraintType_upobject.transformAttribute = aimConstraintType_upobject.Type.GetAttributeInfo("transform");
 
-            constraintTargetType.Type = typeCollection.GetNodeType("constraintTargetType");
+            constraintTargetType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "constraintTargetType");
             constraintTargetType.nameAttribute = constraintTargetType.Type.GetAttributeInfo("name");
             constraintTargetType.weightAttribute = constraintTargetType.Type.GetAttributeInfo("weight");
 
-            atgiLocatorType.Type = typeCollection.GetNodeType("atgiLocatorType");
+            atgiLocatorType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "atgiLocatorType");
             atgiLocatorType.nameAttribute = atgiLocatorType.Type.GetAttributeInfo("name");
             atgiLocatorType.localPositionAttribute = atgiLocatorType.Type.GetAttributeInfo("localPosition");
             atgiLocatorType.fileChild = atgiLocatorType.Type.GetChildInfo("file");
@@ -277,27 +292,27 @@ namespace Sce.Atf.Atgi
             atgiLocatorType.skinChild = atgiLocatorType.Type.GetChildInfo("skin");
             atgiLocatorType.customDataChild = atgiLocatorType.Type.GetChildInfo("customData");
 
-            atgiLocatorType_file.Type = typeCollection.GetNodeType("atgiLocatorType_file");
+            atgiLocatorType_file.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "atgiLocatorType_file");
             atgiLocatorType_file.uriAttribute = atgiLocatorType_file.Type.GetAttributeInfo("uri");
 
-            blendtargetType.Type = typeCollection.GetNodeType("blendtargetType");
+            blendtargetType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendtargetType");
             blendtargetType.nameAttribute = blendtargetType.Type.GetAttributeInfo("name");
             blendtargetType.diffChild = blendtargetType.Type.GetChildInfo("diff");
 
-            blendtargetType_diff.Type = typeCollection.GetNodeType("blendtargetType_diff");
+            blendtargetType_diff.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendtargetType_diff");
             blendtargetType_diff.nameAttribute = blendtargetType_diff.Type.GetAttributeInfo("name");
             blendtargetType_diff.indicesChild = blendtargetType_diff.Type.GetChildInfo("indices");
             blendtargetType_diff.deltasChild = blendtargetType_diff.Type.GetChildInfo("deltas");
 
-            diff_indices.Type = typeCollection.GetNodeType("diff_indices");
+            diff_indices.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "diff_indices");
             diff_indices.Attribute = diff_indices.Type.GetAttributeInfo("");
             diff_indices.countAttribute = diff_indices.Type.GetAttributeInfo("count");
 
-            diff_deltas.Type = typeCollection.GetNodeType("diff_deltas");
+            diff_deltas.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "diff_deltas");
             diff_deltas.Attribute = diff_deltas.Type.GetAttributeInfo("");
             diff_deltas.countAttribute = diff_deltas.Type.GetAttributeInfo("count");
 
-            cameraType.Type = typeCollection.GetNodeType("cameraType");
+            cameraType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "cameraType");
             cameraType.nameAttribute = cameraType.Type.GetAttributeInfo("name");
             cameraType.nearClipPlaneAttribute = cameraType.Type.GetAttributeInfo("nearClipPlane");
             cameraType.farClipPlaneAttribute = cameraType.Type.GetAttributeInfo("farClipPlane");
@@ -353,7 +368,7 @@ namespace Sce.Atf.Atgi
             cameraType.skinChild = cameraType.Type.GetChildInfo("skin");
             cameraType.customDataChild = cameraType.Type.GetChildInfo("customData");
 
-            constraintType.Type = typeCollection.GetNodeType("constraintType");
+            constraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "constraintType");
             constraintType.nameAttribute = constraintType.Type.GetAttributeInfo("name");
             constraintType.constrainAttribute = constraintType.Type.GetAttributeInfo("constrain");
             constraintType.targetChild = constraintType.Type.GetChildInfo("target");
@@ -404,7 +419,7 @@ namespace Sce.Atf.Atgi
             constraintType.skinChild = constraintType.Type.GetChildInfo("skin");
             constraintType.customDataChild = constraintType.Type.GetChildInfo("customData");
 
-            clusterType.Type = typeCollection.GetNodeType("clusterType");
+            clusterType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "clusterType");
             clusterType.nameAttribute = clusterType.Type.GetAttributeInfo("name");
             clusterType.animChannelChild = clusterType.Type.GetChildInfo("animChannel");
             clusterType.animDiscontinuitiesChild = clusterType.Type.GetChildInfo("animDiscontinuities");
@@ -453,9 +468,9 @@ namespace Sce.Atf.Atgi
             clusterType.skinChild = clusterType.Type.GetChildInfo("skin");
             clusterType.customDataChild = clusterType.Type.GetChildInfo("customData");
 
-            dynamicTypeType.Type = typeCollection.GetNodeType("dynamicTypeType");
+            dynamicTypeType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "dynamicTypeType");
 
-            instanceType.Type = typeCollection.GetNodeType("instanceType");
+            instanceType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "instanceType");
             instanceType.nameAttribute = instanceType.Type.GetAttributeInfo("name");
             instanceType.targetAttribute = instanceType.Type.GetAttributeInfo("target");
             instanceType.animChannelChild = instanceType.Type.GetChildInfo("animChannel");
@@ -505,7 +520,7 @@ namespace Sce.Atf.Atgi
             instanceType.skinChild = instanceType.Type.GetChildInfo("skin");
             instanceType.customDataChild = instanceType.Type.GetChildInfo("customData");
 
-            jointType.Type = typeCollection.GetNodeType("jointType");
+            jointType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "jointType");
             jointType.nameAttribute = jointType.Type.GetAttributeInfo("name");
             jointType.translateAttribute = jointType.Type.GetAttributeInfo("translate");
             jointType.scaleAttribute = jointType.Type.GetAttributeInfo("scale");
@@ -572,7 +587,7 @@ namespace Sce.Atf.Atgi
             jointType.maxrotationChild = jointType.Type.GetChildInfo("maxrotation");
             jointType.jointOrientEulChild = jointType.Type.GetChildInfo("jointOrientEul");
 
-            nodeType.Type = typeCollection.GetNodeType("nodeType");
+            nodeType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nodeType");
             nodeType.nameAttribute = nodeType.Type.GetAttributeInfo("name");
             nodeType.translateAttribute = nodeType.Type.GetAttributeInfo("translate");
             nodeType.scaleAttribute = nodeType.Type.GetAttributeInfo("scale");
@@ -634,7 +649,7 @@ namespace Sce.Atf.Atgi
             nodeType.skinChild = nodeType.Type.GetChildInfo("skin");
             nodeType.customDataChild = nodeType.Type.GetChildInfo("customData");
 
-            lightType.Type = typeCollection.GetNodeType("lightType");
+            lightType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "lightType");
             lightType.nameAttribute = lightType.Type.GetAttributeInfo("name");
             lightType.intensityAttribute = lightType.Type.GetAttributeInfo("intensity");
             lightType.colourAttribute = lightType.Type.GetAttributeInfo("colour");
@@ -697,12 +712,12 @@ namespace Sce.Atf.Atgi
             lightType.skinChild = lightType.Type.GetChildInfo("skin");
             lightType.customDataChild = lightType.Type.GetChildInfo("customData");
 
-            lightType_colourRamp.Type = typeCollection.GetNodeType("lightType_colourRamp");
+            lightType_colourRamp.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "lightType_colourRamp");
             lightType_colourRamp.positionsAttribute = lightType_colourRamp.Type.GetAttributeInfo("positions");
             lightType_colourRamp.coloursAttribute = lightType_colourRamp.Type.GetAttributeInfo("colours");
             lightType_colourRamp.interpolationTypesAttribute = lightType_colourRamp.Type.GetAttributeInfo("interpolationTypes");
 
-            locatorType.Type = typeCollection.GetNodeType("locatorType");
+            locatorType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "locatorType");
             locatorType.nameAttribute = locatorType.Type.GetAttributeInfo("name");
             locatorType.localPositionAttribute = locatorType.Type.GetAttributeInfo("localPosition");
             locatorType.animChannelChild = locatorType.Type.GetChildInfo("animChannel");
@@ -752,7 +767,7 @@ namespace Sce.Atf.Atgi
             locatorType.skinChild = locatorType.Type.GetChildInfo("skin");
             locatorType.customDataChild = locatorType.Type.GetChildInfo("customData");
 
-            lodgroupType.Type = typeCollection.GetNodeType("lodgroupType");
+            lodgroupType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "lodgroupType");
             lodgroupType.nameAttribute = lodgroupType.Type.GetAttributeInfo("name");
             lodgroupType.translateAttribute = lodgroupType.Type.GetAttributeInfo("translate");
             lodgroupType.scaleAttribute = lodgroupType.Type.GetAttributeInfo("scale");
@@ -811,11 +826,11 @@ namespace Sce.Atf.Atgi
             lodgroupType.skinChild = lodgroupType.Type.GetChildInfo("skin");
             lodgroupType.customDataChild = lodgroupType.Type.GetChildInfo("customData");
 
-            lodgroupType_thresholds.Type = typeCollection.GetNodeType("lodgroupType_thresholds");
+            lodgroupType_thresholds.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "lodgroupType_thresholds");
             lodgroupType_thresholds.Attribute = lodgroupType_thresholds.Type.GetAttributeInfo("");
             lodgroupType_thresholds.countAttribute = lodgroupType_thresholds.Type.GetAttributeInfo("count");
 
-            meshType.Type = typeCollection.GetNodeType("meshType");
+            meshType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "meshType");
             meshType.nameAttribute = meshType.Type.GetAttributeInfo("name");
             meshType.boundingBoxAttribute = meshType.Type.GetAttributeInfo("boundingBox");
             meshType.vertexArrayChild = meshType.Type.GetChildInfo("vertexArray");
@@ -866,12 +881,12 @@ namespace Sce.Atf.Atgi
             meshType.skinChild = meshType.Type.GetChildInfo("skin");
             meshType.customDataChild = meshType.Type.GetChildInfo("customData");
 
-            meshType_vertexArray.Type = typeCollection.GetNodeType("meshType_vertexArray");
+            meshType_vertexArray.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "meshType_vertexArray");
             meshType_vertexArray.primitivesChild = meshType_vertexArray.Type.GetChildInfo("primitives");
             meshType_vertexArray.arrayChild = meshType_vertexArray.Type.GetChildInfo("array");
             meshType_vertexArray.blindDataChild = meshType_vertexArray.Type.GetChildInfo("blindData");
 
-            vertexArray_primitives.Type = typeCollection.GetNodeType("vertexArray_primitives");
+            vertexArray_primitives.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "vertexArray_primitives");
             vertexArray_primitives.sizesAttribute = vertexArray_primitives.Type.GetAttributeInfo("sizes");
             vertexArray_primitives.indicesAttribute = vertexArray_primitives.Type.GetAttributeInfo("indices");
             vertexArray_primitives.nameAttribute = vertexArray_primitives.Type.GetAttributeInfo("name");
@@ -880,28 +895,28 @@ namespace Sce.Atf.Atgi
             vertexArray_primitives.countAttribute = vertexArray_primitives.Type.GetAttributeInfo("count");
             vertexArray_primitives.bindingChild = vertexArray_primitives.Type.GetChildInfo("binding");
 
-            primitives_binding.Type = typeCollection.GetNodeType("primitives_binding");
+            primitives_binding.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "primitives_binding");
             primitives_binding.sourceAttribute = primitives_binding.Type.GetAttributeInfo("source");
 
-            vertexArray_array.Type = typeCollection.GetNodeType("vertexArray_array");
+            vertexArray_array.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "vertexArray_array");
             vertexArray_array.Attribute = vertexArray_array.Type.GetAttributeInfo("");
             vertexArray_array.nameAttribute = vertexArray_array.Type.GetAttributeInfo("name");
             vertexArray_array.countAttribute = vertexArray_array.Type.GetAttributeInfo("count");
             vertexArray_array.strideAttribute = vertexArray_array.Type.GetAttributeInfo("stride");
 
-            blindDataType.Type = typeCollection.GetNodeType("blindDataType");
+            blindDataType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blindDataType");
             blindDataType.nameAttribute = blindDataType.Type.GetAttributeInfo("name");
             blindDataType.componentsAttribute = blindDataType.Type.GetAttributeInfo("components");
             blindDataType.componentAttribute = blindDataType.Type.GetAttributeInfo("component");
             blindDataType.numComponentsAttribute = blindDataType.Type.GetAttributeInfo("numComponents");
             blindDataType.attributeChild = blindDataType.Type.GetChildInfo("attribute");
 
-            blindDataType_attribute.Type = typeCollection.GetNodeType("blindDataType_attribute");
+            blindDataType_attribute.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blindDataType_attribute");
             blindDataType_attribute.Attribute = blindDataType_attribute.Type.GetAttributeInfo("");
             blindDataType_attribute.nameAttribute = blindDataType_attribute.Type.GetAttributeInfo("name");
             blindDataType_attribute.typeAttribute = blindDataType_attribute.Type.GetAttributeInfo("type");
 
-            multiBlendTargetType.Type = typeCollection.GetNodeType("multiBlendTargetType");
+            multiBlendTargetType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "multiBlendTargetType");
             multiBlendTargetType.nameAttribute = multiBlendTargetType.Type.GetAttributeInfo("name");
             multiBlendTargetType.blendStageChild = multiBlendTargetType.Type.GetChildInfo("blendStage");
             multiBlendTargetType.animChannelChild = multiBlendTargetType.Type.GetChildInfo("animChannel");
@@ -951,7 +966,7 @@ namespace Sce.Atf.Atgi
             multiBlendTargetType.skinChild = multiBlendTargetType.Type.GetChildInfo("skin");
             multiBlendTargetType.customDataChild = multiBlendTargetType.Type.GetChildInfo("customData");
 
-            multiBlendTargetType_blendStage.Type = typeCollection.GetNodeType("multiBlendTargetType_blendStage");
+            multiBlendTargetType_blendStage.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "multiBlendTargetType_blendStage");
             multiBlendTargetType_blendStage.interpolantAttribute = multiBlendTargetType_blendStage.Type.GetAttributeInfo("interpolant");
             multiBlendTargetType_blendStage.animChannelChild = multiBlendTargetType_blendStage.Type.GetChildInfo("animChannel");
             multiBlendTargetType_blendStage.animDiscontinuitiesChild = multiBlendTargetType_blendStage.Type.GetChildInfo("animDiscontinuities");
@@ -1000,7 +1015,7 @@ namespace Sce.Atf.Atgi
             multiBlendTargetType_blendStage.skinChild = multiBlendTargetType_blendStage.Type.GetChildInfo("skin");
             multiBlendTargetType_blendStage.customDataChild = multiBlendTargetType_blendStage.Type.GetChildInfo("customData");
 
-            nurbsCurveType.Type = typeCollection.GetNodeType("nurbsCurveType");
+            nurbsCurveType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nurbsCurveType");
             nurbsCurveType.nameAttribute = nurbsCurveType.Type.GetAttributeInfo("name");
             nurbsCurveType.degreeAttribute = nurbsCurveType.Type.GetAttributeInfo("degree");
             nurbsCurveType.formAttribute = nurbsCurveType.Type.GetAttributeInfo("form");
@@ -1053,15 +1068,15 @@ namespace Sce.Atf.Atgi
             nurbsCurveType.skinChild = nurbsCurveType.Type.GetChildInfo("skin");
             nurbsCurveType.customDataChild = nurbsCurveType.Type.GetChildInfo("customData");
 
-            nurbsCurveType_points.Type = typeCollection.GetNodeType("nurbsCurveType_points");
+            nurbsCurveType_points.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nurbsCurveType_points");
             nurbsCurveType_points.Attribute = nurbsCurveType_points.Type.GetAttributeInfo("");
             nurbsCurveType_points.countAttribute = nurbsCurveType_points.Type.GetAttributeInfo("count");
 
-            nurbsCurveType_knots.Type = typeCollection.GetNodeType("nurbsCurveType_knots");
+            nurbsCurveType_knots.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nurbsCurveType_knots");
             nurbsCurveType_knots.Attribute = nurbsCurveType_knots.Type.GetAttributeInfo("");
             nurbsCurveType_knots.countAttribute = nurbsCurveType_knots.Type.GetAttributeInfo("count");
 
-            nurbsSurfaceType.Type = typeCollection.GetNodeType("nurbsSurfaceType");
+            nurbsSurfaceType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nurbsSurfaceType");
             nurbsSurfaceType.nameAttribute = nurbsSurfaceType.Type.GetAttributeInfo("name");
             nurbsSurfaceType.surfaceChild = nurbsSurfaceType.Type.GetChildInfo("surface");
             nurbsSurfaceType.animChannelChild = nurbsSurfaceType.Type.GetChildInfo("animChannel");
@@ -1111,7 +1126,7 @@ namespace Sce.Atf.Atgi
             nurbsSurfaceType.skinChild = nurbsSurfaceType.Type.GetChildInfo("skin");
             nurbsSurfaceType.customDataChild = nurbsSurfaceType.Type.GetChildInfo("customData");
 
-            nurbsSurfaceType_surface.Type = typeCollection.GetNodeType("nurbsSurfaceType_surface");
+            nurbsSurfaceType_surface.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "nurbsSurfaceType_surface");
             nurbsSurfaceType_surface.uOrderAttribute = nurbsSurfaceType_surface.Type.GetAttributeInfo("uOrder");
             nurbsSurfaceType_surface.vOrderAttribute = nurbsSurfaceType_surface.Type.GetAttributeInfo("vOrder");
             nurbsSurfaceType_surface.uMinAttribute = nurbsSurfaceType_surface.Type.GetAttributeInfo("uMin");
@@ -1122,20 +1137,20 @@ namespace Sce.Atf.Atgi
             nurbsSurfaceType_surface.knotsInUChild = nurbsSurfaceType_surface.Type.GetChildInfo("knotsInU");
             nurbsSurfaceType_surface.knotsInVChild = nurbsSurfaceType_surface.Type.GetChildInfo("knotsInV");
 
-            surface_controlVertices.Type = typeCollection.GetNodeType("surface_controlVertices");
+            surface_controlVertices.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "surface_controlVertices");
             surface_controlVertices.Attribute = surface_controlVertices.Type.GetAttributeInfo("");
             surface_controlVertices.numCVinUAttribute = surface_controlVertices.Type.GetAttributeInfo("numCVinU");
             surface_controlVertices.numCVinVAttribute = surface_controlVertices.Type.GetAttributeInfo("numCVinV");
 
-            surface_knotsInU.Type = typeCollection.GetNodeType("surface_knotsInU");
+            surface_knotsInU.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "surface_knotsInU");
             surface_knotsInU.Attribute = surface_knotsInU.Type.GetAttributeInfo("");
             surface_knotsInU.numKnotsInUAttribute = surface_knotsInU.Type.GetAttributeInfo("numKnotsInU");
 
-            surface_knotsInV.Type = typeCollection.GetNodeType("surface_knotsInV");
+            surface_knotsInV.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "surface_knotsInV");
             surface_knotsInV.Attribute = surface_knotsInV.Type.GetAttributeInfo("");
             surface_knotsInV.numKnotsInVAttribute = surface_knotsInV.Type.GetAttributeInfo("numKnotsInV");
 
-            orientConstraintType.Type = typeCollection.GetNodeType("orientConstraintType");
+            orientConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "orientConstraintType");
             orientConstraintType.nameAttribute = orientConstraintType.Type.GetAttributeInfo("name");
             orientConstraintType.constrainAttribute = orientConstraintType.Type.GetAttributeInfo("constrain");
             orientConstraintType.orientInterpolationAttribute = orientConstraintType.Type.GetAttributeInfo("orientInterpolation");
@@ -1188,7 +1203,7 @@ namespace Sce.Atf.Atgi
             orientConstraintType.customDataChild = orientConstraintType.Type.GetChildInfo("customData");
             orientConstraintType.rotEulChild = orientConstraintType.Type.GetChildInfo("rotEul");
 
-            parentConstraintType.Type = typeCollection.GetNodeType("parentConstraintType");
+            parentConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "parentConstraintType");
             parentConstraintType.nameAttribute = parentConstraintType.Type.GetAttributeInfo("name");
             parentConstraintType.constrainAttribute = parentConstraintType.Type.GetAttributeInfo("constrain");
             parentConstraintType.offsetChild = parentConstraintType.Type.GetChildInfo("offset");
@@ -1240,11 +1255,11 @@ namespace Sce.Atf.Atgi
             parentConstraintType.skinChild = parentConstraintType.Type.GetChildInfo("skin");
             parentConstraintType.customDataChild = parentConstraintType.Type.GetChildInfo("customData");
 
-            parentConstraintType_offset.Type = typeCollection.GetNodeType("parentConstraintType_offset");
+            parentConstraintType_offset.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "parentConstraintType_offset");
             parentConstraintType_offset.translationAttribute = parentConstraintType_offset.Type.GetAttributeInfo("translation");
             parentConstraintType_offset.rotEulChild = parentConstraintType_offset.Type.GetChildInfo("rotEul");
 
-            primitiveShapeType.Type = typeCollection.GetNodeType("primitiveShapeType");
+            primitiveShapeType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "primitiveShapeType");
             primitiveShapeType.nameAttribute = primitiveShapeType.Type.GetAttributeInfo("name");
             primitiveShapeType.shaderAttribute = primitiveShapeType.Type.GetAttributeInfo("shader");
             primitiveShapeType.cubeChild = primitiveShapeType.Type.GetChildInfo("cube");
@@ -1297,19 +1312,19 @@ namespace Sce.Atf.Atgi
             primitiveShapeType.skinChild = primitiveShapeType.Type.GetChildInfo("skin");
             primitiveShapeType.customDataChild = primitiveShapeType.Type.GetChildInfo("customData");
 
-            primitiveShapeType_cube.Type = typeCollection.GetNodeType("primitiveShapeType_cube");
+            primitiveShapeType_cube.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "primitiveShapeType_cube");
             primitiveShapeType_cube.widthAttribute = primitiveShapeType_cube.Type.GetAttributeInfo("width");
             primitiveShapeType_cube.heightAttribute = primitiveShapeType_cube.Type.GetAttributeInfo("height");
             primitiveShapeType_cube.depthAttribute = primitiveShapeType_cube.Type.GetAttributeInfo("depth");
 
-            primitiveShapeType_cylinder.Type = typeCollection.GetNodeType("primitiveShapeType_cylinder");
+            primitiveShapeType_cylinder.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "primitiveShapeType_cylinder");
             primitiveShapeType_cylinder.radiusAttribute = primitiveShapeType_cylinder.Type.GetAttributeInfo("radius");
             primitiveShapeType_cylinder.heightAttribute = primitiveShapeType_cylinder.Type.GetAttributeInfo("height");
 
-            primitiveShapeType_sphere.Type = typeCollection.GetNodeType("primitiveShapeType_sphere");
+            primitiveShapeType_sphere.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "primitiveShapeType_sphere");
             primitiveShapeType_sphere.radiusAttribute = primitiveShapeType_sphere.Type.GetAttributeInfo("radius");
 
-            referenceType.Type = typeCollection.GetNodeType("referenceType");
+            referenceType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "referenceType");
             referenceType.nameAttribute = referenceType.Type.GetAttributeInfo("name");
             referenceType.uriAttribute = referenceType.Type.GetAttributeInfo("uri");
             referenceType.namespaceAttribute = referenceType.Type.GetAttributeInfo("namespace");
@@ -1360,7 +1375,7 @@ namespace Sce.Atf.Atgi
             referenceType.skinChild = referenceType.Type.GetChildInfo("skin");
             referenceType.customDataChild = referenceType.Type.GetChildInfo("customData");
 
-            rigidBodyType.Type = typeCollection.GetNodeType("rigidBodyType");
+            rigidBodyType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "rigidBodyType");
             rigidBodyType.nameAttribute = rigidBodyType.Type.GetAttributeInfo("name");
             rigidBodyType.massAttribute = rigidBodyType.Type.GetAttributeInfo("mass");
             rigidBodyType.geometryAttribute = rigidBodyType.Type.GetAttributeInfo("geometry");
@@ -1411,7 +1426,7 @@ namespace Sce.Atf.Atgi
             rigidBodyType.skinChild = rigidBodyType.Type.GetChildInfo("skin");
             rigidBodyType.customDataChild = rigidBodyType.Type.GetChildInfo("customData");
 
-            scaleConstraintType.Type = typeCollection.GetNodeType("scaleConstraintType");
+            scaleConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "scaleConstraintType");
             scaleConstraintType.nameAttribute = scaleConstraintType.Type.GetAttributeInfo("name");
             scaleConstraintType.offsetAttribute = scaleConstraintType.Type.GetAttributeInfo("offset");
             scaleConstraintType.constrainAttribute = scaleConstraintType.Type.GetAttributeInfo("constrain");
@@ -1463,7 +1478,7 @@ namespace Sce.Atf.Atgi
             scaleConstraintType.skinChild = scaleConstraintType.Type.GetChildInfo("skin");
             scaleConstraintType.customDataChild = scaleConstraintType.Type.GetChildInfo("customData");
 
-            springConstraintType.Type = typeCollection.GetNodeType("springConstraintType");
+            springConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "springConstraintType");
             springConstraintType.nameAttribute = springConstraintType.Type.GetAttributeInfo("name");
             springConstraintType.stiffnessAttribute = springConstraintType.Type.GetAttributeInfo("stiffness");
             springConstraintType.restLengthAttribute = springConstraintType.Type.GetAttributeInfo("restLength");
@@ -1517,7 +1532,7 @@ namespace Sce.Atf.Atgi
             springConstraintType.skinChild = springConstraintType.Type.GetChildInfo("skin");
             springConstraintType.customDataChild = springConstraintType.Type.GetChildInfo("customData");
 
-            translationConstraintType.Type = typeCollection.GetNodeType("translationConstraintType");
+            translationConstraintType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "translationConstraintType");
             translationConstraintType.nameAttribute = translationConstraintType.Type.GetAttributeInfo("name");
             translationConstraintType.offsetAttribute = translationConstraintType.Type.GetAttributeInfo("offset");
             translationConstraintType.constrainAttribute = translationConstraintType.Type.GetAttributeInfo("constrain");
@@ -1569,7 +1584,7 @@ namespace Sce.Atf.Atgi
             translationConstraintType.skinChild = translationConstraintType.Type.GetChildInfo("skin");
             translationConstraintType.customDataChild = translationConstraintType.Type.GetChildInfo("customData");
 
-            animclipType.Type = typeCollection.GetNodeType("animclipType");
+            animclipType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "animclipType");
             animclipType.nameAttribute = animclipType.Type.GetAttributeInfo("name");
             animclipType.animChannelChild = animclipType.Type.GetChildInfo("animChannel");
             animclipType.animDiscontinuitiesChild = animclipType.Type.GetChildInfo("animDiscontinuities");
@@ -1618,7 +1633,7 @@ namespace Sce.Atf.Atgi
             animclipType.skinChild = animclipType.Type.GetChildInfo("skin");
             animclipType.customDataChild = animclipType.Type.GetChildInfo("customData");
 
-            blendType.Type = typeCollection.GetNodeType("blendType");
+            blendType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendType");
             blendType.nameAttribute = blendType.Type.GetAttributeInfo("name");
             blendType.targetAttribute = blendType.Type.GetAttributeInfo("target");
             blendType.channelAttribute = blendType.Type.GetAttributeInfo("channel");
@@ -1670,11 +1685,11 @@ namespace Sce.Atf.Atgi
             blendType.skinChild = blendType.Type.GetChildInfo("skin");
             blendType.customDataChild = blendType.Type.GetChildInfo("customData");
 
-            blendType_input.Type = typeCollection.GetNodeType("blendType_input");
+            blendType_input.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendType_input");
             blendType_input.valueAttribute = blendType_input.Type.GetAttributeInfo("value");
             blendType_input.weightAttribute = blendType_input.Type.GetAttributeInfo("weight");
 
-            blendshapeControllerType.Type = typeCollection.GetNodeType("blendshapeControllerType");
+            blendshapeControllerType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendshapeControllerType");
             blendshapeControllerType.nameAttribute = blendshapeControllerType.Type.GetAttributeInfo("name");
             blendshapeControllerType.weightChild = blendshapeControllerType.Type.GetChildInfo("weight");
             blendshapeControllerType.animChannelChild = blendshapeControllerType.Type.GetChildInfo("animChannel");
@@ -1724,10 +1739,10 @@ namespace Sce.Atf.Atgi
             blendshapeControllerType.skinChild = blendshapeControllerType.Type.GetChildInfo("skin");
             blendshapeControllerType.customDataChild = blendshapeControllerType.Type.GetChildInfo("customData");
 
-            blendshapeControllerType_weight.Type = typeCollection.GetNodeType("blendshapeControllerType_weight");
+            blendshapeControllerType_weight.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendshapeControllerType_weight");
             blendshapeControllerType_weight.weightNameAttribute = blendshapeControllerType_weight.Type.GetAttributeInfo("weightName");
 
-            cgshaderType.Type = typeCollection.GetNodeType("cgshaderType");
+            cgshaderType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "cgshaderType");
             cgshaderType.nameAttribute = cgshaderType.Type.GetAttributeInfo("name");
             cgshaderType.urlAttribute = cgshaderType.Type.GetAttributeInfo("url");
             cgshaderType.bindingChild = cgshaderType.Type.GetChildInfo("binding");
@@ -1778,7 +1793,7 @@ namespace Sce.Atf.Atgi
             cgshaderType.skinChild = cgshaderType.Type.GetChildInfo("skin");
             cgshaderType.customDataChild = cgshaderType.Type.GetChildInfo("customData");
 
-            cgshaderType_binding.Type = typeCollection.GetNodeType("cgshaderType_binding");
+            cgshaderType_binding.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "cgshaderType_binding");
             cgshaderType_binding.Attribute = cgshaderType_binding.Type.GetAttributeInfo("");
             cgshaderType_binding.tagAttribute = cgshaderType_binding.Type.GetAttributeInfo("tag");
             cgshaderType_binding.typeAttribute = cgshaderType_binding.Type.GetAttributeInfo("type");
@@ -1786,7 +1801,7 @@ namespace Sce.Atf.Atgi
             cgshaderType_binding.datasetAttribute = cgshaderType_binding.Type.GetAttributeInfo("dataset");
             cgshaderType_binding.countAttribute = cgshaderType_binding.Type.GetAttributeInfo("count");
 
-            deformerType.Type = typeCollection.GetNodeType("deformerType");
+            deformerType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "deformerType");
             deformerType.nameAttribute = deformerType.Type.GetAttributeInfo("name");
             deformerType.targetAttribute = deformerType.Type.GetAttributeInfo("target");
             deformerType.animChannelChild = deformerType.Type.GetChildInfo("animChannel");
@@ -1836,7 +1851,7 @@ namespace Sce.Atf.Atgi
             deformerType.skinChild = deformerType.Type.GetChildInfo("skin");
             deformerType.customDataChild = deformerType.Type.GetChildInfo("customData");
 
-            expressionType.Type = typeCollection.GetNodeType("expressionType");
+            expressionType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "expressionType");
             expressionType.nameAttribute = expressionType.Type.GetAttributeInfo("name");
             expressionType.codeAttribute = expressionType.Type.GetAttributeInfo("code");
             expressionType.inputChild = expressionType.Type.GetChildInfo("input");
@@ -1888,36 +1903,36 @@ namespace Sce.Atf.Atgi
             expressionType.skinChild = expressionType.Type.GetChildInfo("skin");
             expressionType.customDataChild = expressionType.Type.GetChildInfo("customData");
 
-            expressionType_input.Type = typeCollection.GetNodeType("expressionType_input");
+            expressionType_input.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "expressionType_input");
             expressionType_input.objectAttribute = expressionType_input.Type.GetAttributeInfo("object");
             expressionType_input.channelAttribute = expressionType_input.Type.GetAttributeInfo("channel");
 
-            expressionType_output.Type = typeCollection.GetNodeType("expressionType_output");
+            expressionType_output.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "expressionType_output");
             expressionType_output.objectAttribute = expressionType_output.Type.GetAttributeInfo("object");
             expressionType_output.channelAttribute = expressionType_output.Type.GetAttributeInfo("channel");
 
-            imageType.Type = typeCollection.GetNodeType("imageType");
+            imageType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "imageType");
             imageType.nameAttribute = imageType.Type.GetAttributeInfo("name");
             imageType.widthAttribute = imageType.Type.GetAttributeInfo("width");
             imageType.heightAttribute = imageType.Type.GetAttributeInfo("height");
             imageType.dataChild = imageType.Type.GetChildInfo("data");
             imageType.image_channelChild = imageType.Type.GetChildInfo("image_channel");
 
-            imageType_data.Type = typeCollection.GetNodeType("imageType_data");
+            imageType_data.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "imageType_data");
             imageType_data.widthAttribute = imageType_data.Type.GetAttributeInfo("width");
             imageType_data.heightAttribute = imageType_data.Type.GetAttributeInfo("height");
 
-            image_channelType.Type = typeCollection.GetNodeType("image_channelType");
+            image_channelType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "image_channelType");
             image_channelType.nameAttribute = image_channelType.Type.GetAttributeInfo("name");
             image_channelType.dataChild = image_channelType.Type.GetChildInfo("data");
 
-            image_channelType_data.Type = typeCollection.GetNodeType("image_channelType_data");
+            image_channelType_data.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "image_channelType_data");
             image_channelType_data.Attribute = image_channelType_data.Type.GetAttributeInfo("");
             image_channelType_data.componentCountAttribute = image_channelType_data.Type.GetAttributeInfo("componentCount");
             image_channelType_data.widthAttribute = image_channelType_data.Type.GetAttributeInfo("width");
             image_channelType_data.heightAttribute = image_channelType_data.Type.GetAttributeInfo("height");
 
-            materialType.Type = typeCollection.GetNodeType("materialType");
+            materialType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "materialType");
             materialType.nameAttribute = materialType.Type.GetAttributeInfo("name");
             materialType.urlAttribute = materialType.Type.GetAttributeInfo("url");
             materialType.matAttribute = materialType.Type.GetAttributeInfo("mat");
@@ -1973,7 +1988,7 @@ namespace Sce.Atf.Atgi
             materialType.skinChild = materialType.Type.GetChildInfo("skin");
             materialType.customDataChild = materialType.Type.GetChildInfo("customData");
 
-            materialType_renderstate.Type = typeCollection.GetNodeType("materialType_renderstate");
+            materialType_renderstate.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "materialType_renderstate");
             materialType_renderstate.overridenAttribute = materialType_renderstate.Type.GetAttributeInfo("overriden");
             materialType_renderstate.alphablendChild = materialType_renderstate.Type.GetChildInfo("alphablend");
             materialType_renderstate.alphatestChild = materialType_renderstate.Type.GetChildInfo("alphatest");
@@ -1981,27 +1996,27 @@ namespace Sce.Atf.Atgi
             materialType_renderstate.ztestChild = materialType_renderstate.Type.GetChildInfo("ztest");
             materialType_renderstate.backfacecullingChild = materialType_renderstate.Type.GetChildInfo("backfaceculling");
 
-            renderstate_alphablend.Type = typeCollection.GetNodeType("renderstate_alphablend");
+            renderstate_alphablend.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "renderstate_alphablend");
             renderstate_alphablend.enabledAttribute = renderstate_alphablend.Type.GetAttributeInfo("enabled");
             renderstate_alphablend.sourceblendAttribute = renderstate_alphablend.Type.GetAttributeInfo("sourceblend");
             renderstate_alphablend.destblendAttribute = renderstate_alphablend.Type.GetAttributeInfo("destblend");
 
-            renderstate_alphatest.Type = typeCollection.GetNodeType("renderstate_alphatest");
+            renderstate_alphatest.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "renderstate_alphatest");
             renderstate_alphatest.enabledAttribute = renderstate_alphatest.Type.GetAttributeInfo("enabled");
             renderstate_alphatest.alphafuncAttribute = renderstate_alphatest.Type.GetAttributeInfo("alphafunc");
             renderstate_alphatest.alpharefAttribute = renderstate_alphatest.Type.GetAttributeInfo("alpharef");
 
-            renderstate_zwrite.Type = typeCollection.GetNodeType("renderstate_zwrite");
+            renderstate_zwrite.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "renderstate_zwrite");
             renderstate_zwrite.enabledAttribute = renderstate_zwrite.Type.GetAttributeInfo("enabled");
 
-            renderstate_ztest.Type = typeCollection.GetNodeType("renderstate_ztest");
+            renderstate_ztest.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "renderstate_ztest");
             renderstate_ztest.enabledAttribute = renderstate_ztest.Type.GetAttributeInfo("enabled");
             renderstate_ztest.ztestfuncAttribute = renderstate_ztest.Type.GetAttributeInfo("ztestfunc");
 
-            renderstate_backfaceculling.Type = typeCollection.GetNodeType("renderstate_backfaceculling");
+            renderstate_backfaceculling.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "renderstate_backfaceculling");
             renderstate_backfaceculling.enabledAttribute = renderstate_backfaceculling.Type.GetAttributeInfo("enabled");
 
-            materialType_binding.Type = typeCollection.GetNodeType("materialType_binding");
+            materialType_binding.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "materialType_binding");
             materialType_binding.Attribute = materialType_binding.Type.GetAttributeInfo("");
             materialType_binding.tagAttribute = materialType_binding.Type.GetAttributeInfo("tag");
             materialType_binding.typeAttribute = materialType_binding.Type.GetAttributeInfo("type");
@@ -2009,7 +2024,7 @@ namespace Sce.Atf.Atgi
             materialType_binding.countAttribute = materialType_binding.Type.GetAttributeInfo("count");
             materialType_binding.sourceAttribute = materialType_binding.Type.GetAttributeInfo("source");
 
-            motionPathType.Type = typeCollection.GetNodeType("motionPathType");
+            motionPathType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "motionPathType");
             motionPathType.nameAttribute = motionPathType.Type.GetAttributeInfo("name");
             motionPathType.aimAttribute = motionPathType.Type.GetAttributeInfo("aim");
             motionPathType.upAttribute = motionPathType.Type.GetAttributeInfo("up");
@@ -2068,11 +2083,11 @@ namespace Sce.Atf.Atgi
             motionPathType.skinChild = motionPathType.Type.GetChildInfo("skin");
             motionPathType.customDataChild = motionPathType.Type.GetChildInfo("customData");
 
-            motionPathType_upobject.Type = typeCollection.GetNodeType("motionPathType_upobject");
+            motionPathType_upobject.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "motionPathType_upobject");
             motionPathType_upobject.nameAttribute = motionPathType_upobject.Type.GetAttributeInfo("name");
             motionPathType_upobject.transformAttribute = motionPathType_upobject.Type.GetAttributeInfo("transform");
 
-            objSetType.Type = typeCollection.GetNodeType("objSetType");
+            objSetType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "objSetType");
             objSetType.nameAttribute = objSetType.Type.GetAttributeInfo("name");
             objSetType.typeAttribute = objSetType.Type.GetAttributeInfo("type");
             objSetType.memberChild = objSetType.Type.GetChildInfo("member");
@@ -2123,11 +2138,11 @@ namespace Sce.Atf.Atgi
             objSetType.skinChild = objSetType.Type.GetChildInfo("skin");
             objSetType.customDataChild = objSetType.Type.GetChildInfo("customData");
 
-            objSetType_member.Type = typeCollection.GetNodeType("objSetType_member");
+            objSetType_member.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "objSetType_member");
             objSetType_member.pathAttribute = objSetType_member.Type.GetAttributeInfo("path");
             objSetType_member.membershipAttribute = objSetType_member.Type.GetAttributeInfo("membership");
 
-            pmdataATGType.Type = typeCollection.GetNodeType("pmdataATGType");
+            pmdataATGType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "pmdataATGType");
             pmdataATGType.nameAttribute = pmdataATGType.Type.GetAttributeInfo("name");
             pmdataATGType.vsAttribute = pmdataATGType.Type.GetAttributeInfo("vs");
             pmdataATGType.vtAttribute = pmdataATGType.Type.GetAttributeInfo("vt");
@@ -2183,7 +2198,7 @@ namespace Sce.Atf.Atgi
             pmdataATGType.skinChild = pmdataATGType.Type.GetChildInfo("skin");
             pmdataATGType.customDataChild = pmdataATGType.Type.GetChildInfo("customData");
 
-            poseType.Type = typeCollection.GetNodeType("poseType");
+            poseType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "poseType");
             poseType.nameAttribute = poseType.Type.GetAttributeInfo("name");
             poseType.bindPoseAttribute = poseType.Type.GetAttributeInfo("bindPose");
             poseType.elementChild = poseType.Type.GetChildInfo("element");
@@ -2234,17 +2249,17 @@ namespace Sce.Atf.Atgi
             poseType.skinChild = poseType.Type.GetChildInfo("skin");
             poseType.customDataChild = poseType.Type.GetChildInfo("customData");
 
-            poseType_element.Type = typeCollection.GetNodeType("poseType_element");
+            poseType_element.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "poseType_element");
             poseType_element.translateAttribute = poseType_element.Type.GetAttributeInfo("translate");
             poseType_element.scaleAttribute = poseType_element.Type.GetAttributeInfo("scale");
             poseType_element.targetAttribute = poseType_element.Type.GetAttributeInfo("target");
             poseType_element.rotEulChild = poseType_element.Type.GetChildInfo("rotEul");
 
-            element_rotEul.Type = typeCollection.GetNodeType("element_rotEul");
+            element_rotEul.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "element_rotEul");
             element_rotEul.Attribute = element_rotEul.Type.GetAttributeInfo("");
             element_rotEul.rotOrdAttribute = element_rotEul.Type.GetAttributeInfo("rotOrd");
 
-            sceneType.Type = typeCollection.GetNodeType("sceneType");
+            sceneType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "sceneType");
             sceneType.nameAttribute = sceneType.Type.GetAttributeInfo("name");
             sceneType.animChannelChild = sceneType.Type.GetChildInfo("animChannel");
             sceneType.animDiscontinuitiesChild = sceneType.Type.GetChildInfo("animDiscontinuities");
@@ -2293,7 +2308,7 @@ namespace Sce.Atf.Atgi
             sceneType.skinChild = sceneType.Type.GetChildInfo("skin");
             sceneType.customDataChild = sceneType.Type.GetChildInfo("customData");
 
-            shaderType.Type = typeCollection.GetNodeType("shaderType");
+            shaderType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "shaderType");
             shaderType.nameAttribute = shaderType.Type.GetAttributeInfo("name");
             shaderType.bindingChild = shaderType.Type.GetChildInfo("binding");
             shaderType.animChannelChild = shaderType.Type.GetChildInfo("animChannel");
@@ -2343,7 +2358,7 @@ namespace Sce.Atf.Atgi
             shaderType.skinChild = shaderType.Type.GetChildInfo("skin");
             shaderType.customDataChild = shaderType.Type.GetChildInfo("customData");
 
-            shaderType_binding.Type = typeCollection.GetNodeType("shaderType_binding");
+            shaderType_binding.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "shaderType_binding");
             shaderType_binding.Attribute = shaderType_binding.Type.GetAttributeInfo("");
             shaderType_binding.tagAttribute = shaderType_binding.Type.GetAttributeInfo("tag");
             shaderType_binding.typeAttribute = shaderType_binding.Type.GetAttributeInfo("type");
@@ -2351,7 +2366,7 @@ namespace Sce.Atf.Atgi
             shaderType_binding.datasetAttribute = shaderType_binding.Type.GetAttributeInfo("dataset");
             shaderType_binding.countAttribute = shaderType_binding.Type.GetAttributeInfo("count");
 
-            textureType.Type = typeCollection.GetNodeType("textureType");
+            textureType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "textureType");
             textureType.nameAttribute = textureType.Type.GetAttributeInfo("name");
             textureType.uriAttribute = textureType.Type.GetAttributeInfo("uri");
             textureType.animChannelChild = textureType.Type.GetChildInfo("animChannel");
@@ -2401,7 +2416,7 @@ namespace Sce.Atf.Atgi
             textureType.skinChild = textureType.Type.GetChildInfo("skin");
             textureType.customDataChild = textureType.Type.GetChildInfo("customData");
 
-            blendshapeType.Type = typeCollection.GetNodeType("blendshapeType");
+            blendshapeType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendshapeType");
             blendshapeType.nameAttribute = blendshapeType.Type.GetAttributeInfo("name");
             blendshapeType.controllerAttribute = blendshapeType.Type.GetAttributeInfo("controller");
             blendshapeType.targetChild = blendshapeType.Type.GetChildInfo("target");
@@ -2452,7 +2467,7 @@ namespace Sce.Atf.Atgi
             blendshapeType.skinChild = blendshapeType.Type.GetChildInfo("skin");
             blendshapeType.customDataChild = blendshapeType.Type.GetChildInfo("customData");
 
-            blendshapeType_target.Type = typeCollection.GetNodeType("blendshapeType_target");
+            blendshapeType_target.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "blendshapeType_target");
             blendshapeType_target.weightIndexAttribute = blendshapeType_target.Type.GetAttributeInfo("weightIndex");
             blendshapeType_target.animChannelChild = blendshapeType_target.Type.GetChildInfo("animChannel");
             blendshapeType_target.animDiscontinuitiesChild = blendshapeType_target.Type.GetChildInfo("animDiscontinuities");
@@ -2501,7 +2516,7 @@ namespace Sce.Atf.Atgi
             blendshapeType_target.skinChild = blendshapeType_target.Type.GetChildInfo("skin");
             blendshapeType_target.customDataChild = blendshapeType_target.Type.GetChildInfo("customData");
 
-            skinType.Type = typeCollection.GetNodeType("skinType");
+            skinType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "skinType");
             skinType.nameAttribute = skinType.Type.GetAttributeInfo("name");
             skinType.typeAttribute = skinType.Type.GetAttributeInfo("type");
             skinType.influenceChild = skinType.Type.GetChildInfo("influence");
@@ -2554,23 +2569,22 @@ namespace Sce.Atf.Atgi
             skinType.skinChild = skinType.Type.GetChildInfo("skin");
             skinType.customDataChild = skinType.Type.GetChildInfo("customData");
 
-            skinType_influence.Type = typeCollection.GetNodeType("skinType_influence");
+            skinType_influence.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "skinType_influence");
             skinType_influence.bindInverseAttribute = skinType_influence.Type.GetAttributeInfo("bindInverse");
             skinType_influence.targetAttribute = skinType_influence.Type.GetAttributeInfo("target");
 
-            skinType_weights.Type = typeCollection.GetNodeType("skinType_weights");
+            skinType_weights.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "skinType_weights");
             skinType_weights.Attribute = skinType_weights.Type.GetAttributeInfo("");
             skinType_weights.countAttribute = skinType_weights.Type.GetAttributeInfo("count");
 
-            skinType_components.Type = typeCollection.GetNodeType("skinType_components");
+            skinType_components.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "skinType_components");
             skinType_components.Attribute = skinType_components.Type.GetAttributeInfo("");
             skinType_components.countAttribute = skinType_components.Type.GetAttributeInfo("count");
 
-            customDataType.Type = typeCollection.GetNodeType("customDataType");
+            customDataType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "customDataType");
             customDataType.attributeChild = customDataType.Type.GetChildInfo("attribute");
 
-            customDataAttributeType.Type = typeCollection.GetNodeType("customDataAttributeType");
-            customDataAttributeType.fieldAttribute = customDataAttributeType.Type.GetAttributeInfo("field");
+            customDataAttributeType.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "customDataAttributeType");
             customDataAttributeType.Attribute = customDataAttributeType.Type.GetAttributeInfo("");
             customDataAttributeType.nameAttribute = customDataAttributeType.Type.GetAttributeInfo("name");
             customDataAttributeType.typeAttribute = customDataAttributeType.Type.GetAttributeInfo("type");
@@ -2581,24 +2595,25 @@ namespace Sce.Atf.Atgi
             customDataAttributeType.countAttribute = customDataAttributeType.Type.GetAttributeInfo("count");
             customDataAttributeType.indexAttribute = customDataAttributeType.Type.GetAttributeInfo("index");
             customDataAttributeType.isArrayAttribute = customDataAttributeType.Type.GetAttributeInfo("isArray");
+            customDataAttributeType.fieldChild = customDataAttributeType.Type.GetChildInfo("field");
             customDataAttributeType.valueChild = customDataAttributeType.Type.GetChildInfo("value");
 
-            jointType_freedoms.Type = typeCollection.GetNodeType("jointType_freedoms");
+            jointType_freedoms.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "jointType_freedoms");
             jointType_freedoms.channelsAttribute = jointType_freedoms.Type.GetAttributeInfo("channels");
 
-            jointType_minrotation.Type = typeCollection.GetNodeType("jointType_minrotation");
+            jointType_minrotation.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "jointType_minrotation");
             jointType_minrotation.Attribute = jointType_minrotation.Type.GetAttributeInfo("");
             jointType_minrotation.channelsAttribute = jointType_minrotation.Type.GetAttributeInfo("channels");
 
-            jointType_maxrotation.Type = typeCollection.GetNodeType("jointType_maxrotation");
+            jointType_maxrotation.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "jointType_maxrotation");
             jointType_maxrotation.Attribute = jointType_maxrotation.Type.GetAttributeInfo("");
             jointType_maxrotation.channelsAttribute = jointType_maxrotation.Type.GetAttributeInfo("channels");
 
-            jointType_jointOrientEul.Type = typeCollection.GetNodeType("jointType_jointOrientEul");
+            jointType_jointOrientEul.Type = getNodeType("http://www.atg.development.scee.net/atgi/1_29_0/atgi", "jointType_jointOrientEul");
             jointType_jointOrientEul.Attribute = jointType_jointOrientEul.Type.GetAttributeInfo("");
             jointType_jointOrientEul.rotOrdAttribute = jointType_jointOrientEul.Type.GetAttributeInfo("rotOrd");
 
-            ATGRootElement = typeCollection.GetRootElement("ATG");
+            ATGRootElement = getRootElement(NS, "ATG");
         }
 
         public static class worldType
@@ -5472,7 +5487,6 @@ namespace Sce.Atf.Atgi
         public static class customDataAttributeType
         {
             public static DomNodeType Type;
-            public static AttributeInfo fieldAttribute;
             public static AttributeInfo Attribute;
             public static AttributeInfo nameAttribute;
             public static AttributeInfo typeAttribute;
@@ -5483,6 +5497,7 @@ namespace Sce.Atf.Atgi
             public static AttributeInfo countAttribute;
             public static AttributeInfo indexAttribute;
             public static AttributeInfo isArrayAttribute;
+            public static ChildInfo fieldChild;
             public static ChildInfo valueChild;
         }
 

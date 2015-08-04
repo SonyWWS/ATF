@@ -365,7 +365,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             m_userControl.AutoSize = true;
 
             m_addTargetButton = new SplitButton();
-            m_addTargetButton.Text = AddString.Localize();
+            m_addTargetButton.Text = "Add Target".Localize();
             m_addTargetButton.Location = new Point(m_userControl.Margin.Left,
                 m_userControl.Height - m_userControl.Margin.Bottom - m_addTargetButton.Height - m_addTargetButton.Margin.Size.Height);
 
@@ -412,7 +412,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             foreach (var targetProvider in TargetProviders)
             {
                 if (targetProvider.CanCreateNew)
-                    m_addTargetButton.ContextMenuStrip.Items.Add(AddNewString + targetProvider.Name);
+                    m_addTargetButton.ContextMenuStrip.Items.Add(GetAddNewTargetString(targetProvider.Name));
             }
             m_addTargetButton.ContextMenuStrip.ItemClicked += ContextMenuStrip_ItemClicked;
             if (m_addTargetButton.ContextMenuStrip.Items.Count ==1)
@@ -421,21 +421,21 @@ namespace Sce.Atf.Applications.NetworkTargetServices
                 ToolStripItem onlyItem = m_addTargetButton.ContextMenuStrip.Items[0];
                 m_addTargetButton.Text = onlyItem.Text;
                 m_addTargetButton.Click += delegate
-                                               {
-                                                   foreach (var targetProvider in TargetProviders)
-                                                   {
-                                                       if (AddNewString + targetProvider.Name == m_addTargetButton.Text)
-                                                       {
-                                                           targetProvider.AddTarget(targetProvider.CreateNew());
-                                                           break;
-                                                       }
-                                                   }
-                                               };
+                {
+                    foreach (var targetProvider in TargetProviders)
+                    {
+                        if (GetAddNewTargetString(targetProvider.Name) == m_addTargetButton.Text)
+                        {
+                            targetProvider.AddTarget(targetProvider.CreateNew());
+                            break;
+                        }
+                    }
+                };
             }
 
             m_userControl.Name = "Targets".Localize();
 
-              return m_userControl;
+            return m_userControl;
         }
 
      
@@ -447,7 +447,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         {
             foreach (var targetProvider in TargetProviders)
             {
-                if (AddNewString+ targetProvider.Name == e.ClickedItem.Text)
+                if (GetAddNewTargetString(targetProvider.Name) == e.ClickedItem.Text)
                 {
                     targetProvider.AddTarget(targetProvider.CreateNew());
                     break;
@@ -682,9 +682,10 @@ namespace Sce.Atf.Applications.NetworkTargetServices
             }
         }
 
-        private const string AddString = "Add Target";
-        private const string AddNewString = "Add New ";
-       
+        private string GetAddNewTargetString(string targetName)
+        {
+            return string.Format("Add New {0}".Localize(), targetName);
+        }
 
         private IControlHostService m_controlHostService;
         private SortableBindingList<TargetInfo> m_targets = new SortableBindingList<TargetInfo>();

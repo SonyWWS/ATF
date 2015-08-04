@@ -344,6 +344,7 @@
     <Compile Include="Controls\DataBoundListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\DataEditing\BoolDataEditor.cs" />
     <Compile Include="Controls\DataEditing\ColorDataEditor.cs" />
     <Compile Include="Controls\DataEditing\DataEditor.cs" />
     <Compile Include="Controls\DataEditing\DataEditorTheme.cs" />

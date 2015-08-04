@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Xml.Schema;
@@ -24,7 +25,10 @@ namespace CircuitEditorSample
         {
             // set resolver to locate embedded .xsd file
             SchemaResolver = new ResourceStreamResolver(System.Reflection.Assembly.GetExecutingAssembly(), "CircuitEditorSample/schemas");
-            Load("Circuit.xsd");
+            var schema = Load("Circuit.xsd");
+            var version = schema.Version; // Version will be null if the xsd has no version attribute
+            m_version = string.IsNullOrEmpty(version) ? new Version("1.0") : new Version(version);
+
         }
 
         /// <summary>
@@ -34,6 +38,14 @@ namespace CircuitEditorSample
             get { return m_namespace; }
         }
         private string m_namespace;
+
+        /// <summary>
+        /// Gets the schema version</summary>
+        public Version Version
+        {
+            get { return m_version; }
+        }
+        private Version m_version;
 
         /// <summary>
         /// Gets the schema type collection</summary>
@@ -82,11 +94,6 @@ namespace CircuitEditorSample
                 Schema.groupType.Type.Define(new ExtensionInfo<CircuitEditingContext>());                    // main editable circuit adapter
                 Schema.groupType.Type.Define(new ExtensionInfo<Group>());
                 Schema.groupType.Type.Define(new ExtensionInfo<ViewingContext>());
-
-                #pragma warning disable 618 //mastered sub-circuits are obsolete
-                Schema.subCircuitType.Type.Define(new ExtensionInfo<SubCircuit>());
-                Schema.subCircuitInstanceType.Type.Define(new ExtensionInfo<SubCircuitInstance>());
-                #pragma warning restore 618
 
                 Schema.connectionType.Type.Define(new ExtensionInfo<WireStyleProvider<Module, Connection, ICircuitPin>>());
                                   
