@@ -21,7 +21,8 @@ namespace FsmEditorSample
         }
 
         /// <summary>
-        /// Gets or sets whether State is hidden</summary>
+        /// Gets or sets whether State is hidden. This property is just an example and is not
+        /// actually used to control the visibility of the State.</summary>
         public bool Hidden
         {
             get { return GetAttribute<bool>(Schema.stateType.hiddenAttribute); }

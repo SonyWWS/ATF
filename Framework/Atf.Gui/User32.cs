@@ -888,7 +888,7 @@ namespace Sce.Atf
             public IntPtr hinst;
             public int uFlags;
             public IntPtr lParam;
-            //public int hbmp; This is documented but doesn't work
+            //public int hbmp; This is documented but doesn't work. Also, it's not in the native version in CommCtrl.h.
         }
 
         private const string DllName = "user32.dll";

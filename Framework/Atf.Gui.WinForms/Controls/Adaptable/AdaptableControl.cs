@@ -25,7 +25,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// in the order that they are given here and their BindReverse methods in the
         /// reverse order that they are given here</summary>
         /// <param name="adapters">Adapters to adapt the control</param>
-        /// <remarks>By convention, the bottom-most IControlAdapter should appear as the
+        /// <remarks>By convention, the visually bottom-most IControlAdapter should appear as the
         /// first parameter and subscribe to the Paint event in its Bind() method and subscribe
         /// to mouse events in its BindReverse() method. Likewise, the top-most IControlAdapter
         /// should be the last parameter.</remarks>

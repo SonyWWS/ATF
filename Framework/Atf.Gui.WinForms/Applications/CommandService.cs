@@ -339,7 +339,7 @@ namespace Sce.Atf.Applications
             for (int i = m_menus.Count - 1; i >= 0; i--)
             {
                 MenuInfo menuInfo = m_menus[i];
-                var toolStrip = menuInfo.GetToolStrip();
+                ToolStrip toolStrip = menuInfo.GetToolStrip();
                 toolStrips.Add(toolStrip);
 
                 foreach (CommandInfo commandInfo in m_commands)
@@ -349,7 +349,7 @@ namespace Sce.Atf.Applications
                         if ((commandInfo.Visibility & CommandVisibility.Toolbar) != 0 &&
                             GetClient(commandInfo.CommandTag) != null)
                         {
-                            var btn = commandInfo.GetButton();
+                            ToolStripButton btn = commandInfo.GetButton();
                             if (commandInfo.CheckOnClick)
                             {
                                 btn.CheckOnClick = true;

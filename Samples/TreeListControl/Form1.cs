@@ -78,9 +78,9 @@ namespace TreeListControlDemo
 
         void PrintData(TreeListControl.NodeEditEventArgs e)
         {
-            var editedXMLNode = e.Node.Tag as XElement;
-            System.Diagnostics.Trace.TraceInformation(" {0}: {1} changed {2}", editedXMLNode.Attribute("name"), 
-                e.EditedData.Name,e.EditedData.ToString());
+            //var editedXMLNode = e.Node.Tag as XElement;
+            //System.Diagnostics.Trace.TraceInformation(" {0}: {1} changed {2}", editedXMLNode.Attribute("name"), 
+            //    e.EditedData.Name,e.EditedData.ToString());
 
         }
     }

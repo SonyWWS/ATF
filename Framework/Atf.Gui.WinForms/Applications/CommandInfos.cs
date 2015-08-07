@@ -39,7 +39,7 @@ namespace Sce.Atf.Applications
         /// <param name="button">ToolStripButton associated with given CommandInfo</param>
         public static void GetMenuItemAndButton(this CommandInfo commandInfo, out ToolStripMenuItem menuItem, out ToolStripButton button)
         {
-            var controls = GetCommandControls(commandInfo);
+            CommandService.CommandControls controls = GetCommandControls(commandInfo);
             menuItem = controls.MenuItem;
             button = controls.Button;
         }
