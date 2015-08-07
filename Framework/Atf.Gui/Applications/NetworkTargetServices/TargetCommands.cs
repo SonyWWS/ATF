@@ -196,7 +196,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <param name="commandState">Command state</param>
         void ICommandClient.UpdateCommand(object commandTag, CommandState commandState)
         {
-            if (m_removeTargetsCmdTags.Contains(commandTag))
+            if (m_removeTargetsCmdTags.Contains(commandTag) && m_selectedTargets != null && m_selectedTargets.Any())
             {
                 commandState.Text = GetRemoveCommandName(m_selectedTargets.First().Name);
             }
