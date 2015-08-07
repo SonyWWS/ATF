@@ -181,12 +181,42 @@ namespace UnitTests.Atf
             test.ActiveItemChanged += test_ActiveItemChanged;
             object a = new object();
             test.Add(a);
+            Assert.True(m_changingEvents == 1);
             Assert.True(m_changedEvents == 1);
             test.Add(a);
+            Assert.True(m_changingEvents == 1); // no change!
             Assert.True(m_changedEvents == 1); // no change!
             object b = new object();
             test.Add(b);
+            Assert.True(m_changingEvents == 2);
             Assert.True(m_changedEvents == 2);
+            test.Remove(a);
+            Assert.True(m_changingEvents == 2); // no change!
+            Assert.True(m_changedEvents == 2); // no change!
+            test.Remove(b);
+            Assert.True(m_changingEvents == 3);
+            Assert.True(m_changedEvents == 3);
+            test.ActiveItem = a;
+            Assert.True(m_changingEvents == 4);
+            Assert.True(m_changedEvents == 4);
+            test.Clear();
+            Assert.True(m_changingEvents == 5);
+            Assert.True(m_changedEvents == 5);
+            test.Clear();
+            Assert.True(m_changingEvents == 5); // no change!
+            Assert.True(m_changedEvents == 5); // no change!
+            test.Add(b);
+            Assert.True(m_changingEvents == 6);
+            Assert.True(m_changedEvents == 6);
+            test.Set(new[] { a, b }); //'b' becomes ActiveItem, so no change
+            Assert.True(m_changingEvents == 6); // no change!
+            Assert.True(m_changedEvents == 6); // no change!
+            test.Set(new[] { b, a }); //'a' becomes ActiveItem, so we have a change
+            Assert.True(m_changingEvents == 7);
+            Assert.True(m_changedEvents == 7);
+            test.Set(new object[] { });
+            Assert.True(m_changingEvents == 8);
+            Assert.True(m_changedEvents == 8);
         }
 
         private void test_ActiveItemChanging(object sender, EventArgs e)

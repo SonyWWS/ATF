@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sce.Atf
 {
@@ -212,17 +213,23 @@ namespace Sce.Atf
         /// <param name="items">Active items, ordered from least to most recently active</param>
         public void Set(IEnumerable<T> items)
         {
+            List<T> newItems = items.ToList();
+            
             object oldActive = ActiveItem;
+            object newActive = newItems.Count > 0 ? newItems[newItems.Count - 1] : null;
+
+            if (oldActive != newActive)
+                OnActiveItemChanging(EventArgs.Empty);
 
             ClearInternal();
             int i = 0;
-            foreach (T item in items)
+            foreach (T item in newItems)
             {
                 m_list.Add(item);
                 OnItemAdded(new ItemInsertedEventArgs<T>(i++, item));
             }
 
-            if (oldActive != ActiveItem)
+            if (oldActive != newActive)
                 OnActiveItemChanged(EventArgs.Empty);
         }
 
@@ -236,10 +243,13 @@ namespace Sce.Atf
             int index = m_list.IndexOf(item);
             if (index >= 0)
             {
+                if (item == oldActive)
+                    OnActiveItemChanging(EventArgs.Empty);
+
                 m_list.RemoveAt(index);
                 OnItemRemoved(new ItemRemovedEventArgs<T>(index, item));
 
-                if (oldActive != ActiveItem)
+                if (item == oldActive)
                     OnActiveItemChanged(EventArgs.Empty);
 
                 return true;
@@ -266,9 +276,12 @@ namespace Sce.Atf
         {
             object oldActive = ActiveItem;
 
+            if (oldActive != null)
+                OnActiveItemChanging(EventArgs.Empty);
+
             ClearInternal();
 
-            if (oldActive != ActiveItem)
+            if (oldActive != null)
                 OnActiveItemChanged(EventArgs.Empty);
         }
 
