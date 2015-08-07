@@ -11,26 +11,20 @@ namespace DomTreeEditorSample
     public class Document : DomDocument
     {
         /// <summary>
+        /// Performs one-time initialization when this adapter's DomNode property is set.
+        /// The DomNode property is only ever set once for the lifetime of this adapter.</summary>
+        protected override void OnNodeSet()
+        {
+            base.OnNodeSet();
+            var editingContext = DomNode.Cast<EditingContext>();
+            editingContext.DirtyChanged += (sender, args) => Dirty = editingContext.Dirty;
+        }
+
+        /// <summary>
         /// Gets the document client's file type name</summary>
         public override string Type
         {
             get { return "UI".Localize(); }
-        }
-
-        /// <summary>
-        /// Gets or sets whether the document is dirty (does it differ from its file)</summary>
-        public override bool Dirty
-        {
-            get
-            {
-                EditingContext editingContext = DomNode.Cast<EditingContext>();
-                return editingContext.History.Dirty;
-            }
-            set
-            {
-                EditingContext editingContext = DomNode.Cast<EditingContext>();
-                editingContext.History.Dirty = value;
-            }
         }
     }
 }

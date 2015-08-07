@@ -18,7 +18,8 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Gets or sets whether the document is dirty (does it differ from its file)</summary>
+        /// Gets or sets whether the document is dirty (does it differ from its file).
+        /// Derived classes must also call OnDirtyChanged() if this property changes.</summary>
         public virtual bool Dirty
         {
             get
