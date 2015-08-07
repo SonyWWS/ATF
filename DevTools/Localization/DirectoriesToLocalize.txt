@@ -36,3 +36,4 @@
 "..\..\..\components\wws_atf\Samples\TimelineEditor" "..\..\..\components\wws_atf\Samples\TimelineEditor\Resources\Localization.xml"
 "..\..\..\components\wws_atf\Samples\SimpleDomEditorWpf" "..\..\..\components\wws_atf\Samples\SimpleDomEditorWpf\Resources\Localization.xml"
 "..\..\..\components\wws_atf\Samples\FsmEditor" "..\..\..\components\wws_atf\Samples\FsmEditor\Resources\Localization.xml"
+"..\..\..\components\wws_atf\Samples\TargetManager" "..\..\..\components\wws_atf\Samples\TargetManager\Resources\Localization.xml"

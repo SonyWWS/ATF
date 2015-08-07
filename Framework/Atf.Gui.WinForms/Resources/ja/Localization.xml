@@ -35,7 +35,7 @@
   <StringItem id="An application built using the Authoring Tools Framework" context="" translation="Authoring Tools Framework (ATF) を使用して構築されたアプリケーション" />
   <StringItem id="Analysis" context="" translation="解析" />
   <StringItem id="Application" context="" translation="アプリケーション" />
-  <StringItem id="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" context="{0} is the version number" translation="このプロパティをリセット" />
+  <StringItem id="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" context="{0} is the version number" translation="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" />
   <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="新しいドキュメントを自動作成" />
   <StringItem id="Auto-load Documents" context="" translation="ドキュメントの自動読み込み" />
   <StringItem id="Basic" context="" translation="基本" />
@@ -164,8 +164,8 @@
   <StringItem id="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" context="" translation="https://github.com/SonyWWS/ATF/wiki/Scripting-Applications-with-Python" />
   <StringItem id="Hue must be a number between 0 and 360" context="" translation="色合いは 0 ～ 360 の間の数である必要があります。" />
   <StringItem id="Import settings" context="" translation="設定をインポート" />
-  <StringItem id="Import Templates from Document" context="" translation="" />
-  <StringItem id="Import Templates from Document..." context="" translation="" />
+  <StringItem id="Import Templates from Document" context="" translation="ドキュメントからテンプレートをインポート" />
+  <StringItem id="Import Templates from Document..." context="" translation="ドキュメントからテンプレートをインポート…" />
   <StringItem id="In Tangent" context="" translation="イン接線" />
   <StringItem id="Info" context="" translation="情報" />
   <StringItem id="Info" context="Label for informative message" translation="情報" />
@@ -257,7 +257,7 @@
   <StringItem id="Rename selected objects" context="" translation="選択したオブジェクトの名前を変更します。" />
   <StringItem id="Rename..." context="Rename selected objects" translation="名前を変更..." />
   <StringItem id="Report bug or request feature" context="" translation="バグ報告または機能要望" />
-  <StringItem id="Rescan Template Documents" context="" translation="" />
+  <StringItem id="Rescan Template Documents" context="" translation="テンプレートドキュメントを再スキャン" />
   <StringItem id="Reset active skin to the default skin." context="" translation="アクティブなスキンをデフォルトスキンにリセットします。" />
   <StringItem id="Reset All" context="Reset all properties to their default values" translation="すべてのプロパティをリセット" />
   <StringItem id="Reset all commands to the default shortcuts?" context="" translation="ショートカットをリセット" />
@@ -322,7 +322,7 @@
   <StringItem id="Targets" context="" translation="ターゲット" />
   <StringItem id="Templates" context="" translation="テンプレート" />
   <StringItem id="The destination port number or IP address are not correctly formatted." context="" translation="送信先ポート番号または IP アドレスが正しくフォーマットされていません。" />
-  <StringItem id="The most recent version is {0}" context="" translation="最新のバージョンは、{0} です。" />
+  <StringItem id="The most recent version is {0}." context="" translation="最新のバージョンは、{0} です。" />
   <StringItem id="The performance report is in the clipboard" context="" translation="パフォーマンスレポートはクリップボードにあります" />
   <StringItem id="The receiving port number or IP address are not correctly formatted." context="" translation="受信ポート番号または IP アドレスが正しくフォーマットされていません。" />
   <StringItem id="There is a newer version of this program available." context="" translation="このプログラムは、新しいバージョンが利用可能です。" />
@@ -357,5 +357,5 @@
   <StringItem id="Would you like to save the changes?" context="" translation="変更を保存しますか?" />
   <StringItem id="Yellow" context="" translation="黄" />
   <StringItem id="Yellow must be a number between 0 and 100" context="" translation="黄色は 0 ～ 100 の間の数である必要があります。" />
-  <StringItem id="Your version is {0}" context="" translation="使用中のバージョンは、{0} です。" />
+  <StringItem id="Your version is {0}." context="" translation="使用中のバージョンは、{0} です。" />
 </StringLocalizationTable>

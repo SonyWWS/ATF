@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<document version="1.6.28" date="20150724140822" scan="315" scanned="20150724140540">
+<document version="1.6.28" date="20150806172839" scan="318" scanned="20150806172449">
   <lang id="ja" ime="imOff" fontname="Arial Unicode MS" fontsize="10"/>
   <excludedoriginals>
     <item>123456789_12345678901234567890123456789</item>
@@ -27,7 +27,7 @@
     <excel contextposition="cpFirst" commentcolumns="[ccTranslation]"/>
     <text contextposition="cpFirst" commentcolumns="[ccTranslation]" format="tffUtf16Le"/>
   </export>
-  <source class="TNetAssemblySource" name="..\..\..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.WinForms.dll" original="en-US" date="20150724204958" netversion="netCf">
+  <source class="TNetAssemblySource" name="..\..\..\..\bin\wws_atf\Debug.vs2010\Atf.Gui.WinForms.dll" original="en-US" date="20150807001412" netversion="netCf">
     <outputfile dir="..\..\..\components\wws_atf\Framework\Atf.Gui.WinForms\Resources"/>
     <mappings>
       <component name="System.Windows.Forms.Button" class="TVisPictureButton"/>
@@ -3396,8 +3396,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem">
         <attribute name="id" value="Add Layer">
@@ -4220,7 +4218,7 @@
         </attribute>
         <attribute name="context">
         </attribute>
-        <attribute name="translation" state="0">
+        <attribute name="translation">
           <row id="Value">
             <native>Create Prefab ...</native>
             <lang id="ja" status="3">プレハブを作成...</lang>
@@ -4232,7 +4230,7 @@
         </attribute>
         <attribute name="context">
         </attribute>
-        <attribute name="translation" state="0">
+        <attribute name="translation">
           <row id="Value">
             <native>Create prefab from selected GameObjects</native>
             <lang id="ja" comment="Is GameObjects translatable?" status="3">選択した GameObjects からプレハブを作成します。</lang>
@@ -4244,7 +4242,7 @@
         </attribute>
         <attribute name="context">
         </attribute>
-        <attribute name="translation" state="0">
+        <attribute name="translation">
           <row id="Value">
             <native>Create Prototype ...</native>
             <lang id="ja" status="3">プロトタイプを作成...</lang>
@@ -4256,7 +4254,7 @@
         </attribute>
         <attribute name="context">
         </attribute>
-        <attribute name="translation" state="0">
+        <attribute name="translation">
           <row id="Value">
             <native>Create prototype from selected GameObjects</native>
             <lang id="ja" status="3">選択した GameObjects からプロトタイプを作成します。</lang>
@@ -4299,10 +4297,10 @@
           </row>
         </attribute>
       </tag>
-      <tag name="StringItem" state="0">
-        <attribute name="id" state="0" value="Noise">
+      <tag name="StringItem">
+        <attribute name="id" value="Noise">
         </attribute>
-        <attribute name="context" state="0">
+        <attribute name="context">
         </attribute>
         <attribute name="translation">
           <row id="Value">
@@ -4311,10 +4309,10 @@
           </row>
         </attribute>
       </tag>
-      <tag name="StringItem" state="0">
-        <attribute name="id" state="0" value="Paint/Erase">
+      <tag name="StringItem">
+        <attribute name="id" value="Paint/Erase">
         </attribute>
-        <attribute name="context" state="0">
+        <attribute name="context">
         </attribute>
         <attribute name="translation">
           <row id="Value">
@@ -4323,10 +4321,10 @@
           </row>
         </attribute>
       </tag>
-      <tag name="StringItem" state="0">
-        <attribute name="id" state="0" value="Terrain">
+      <tag name="StringItem">
+        <attribute name="id" value="Terrain">
         </attribute>
-        <attribute name="context" state="0">
+        <attribute name="context">
         </attribute>
         <attribute name="translation">
           <row id="Value">
@@ -4335,10 +4333,10 @@
           </row>
         </attribute>
       </tag>
-      <tag name="StringItem" state="0">
-        <attribute name="id" state="0" value="Activate Terrain editing">
+      <tag name="StringItem">
+        <attribute name="id" value="Activate Terrain editing">
         </attribute>
-        <attribute name="context" state="0">
+        <attribute name="context">
         </attribute>
         <attribute name="translation">
           <row id="Value">
@@ -4349,7 +4347,7 @@
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Core\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Core\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -4357,8 +4355,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Error.">
         <attribute name="id" value="Error">
@@ -4482,7 +4478,7 @@
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.OpenGL\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.OpenGL\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -4490,8 +4486,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Error.title of a dialog box that displays information about an error that has occurred">
         <attribute name="id" value="Error">
@@ -4519,7 +4513,7 @@
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.WinForms\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.WinForms\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -4527,8 +4521,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Auto-load Documents.">
         <attribute name="id" value="Auto-load Documents">
@@ -4944,10 +4936,7 @@
         <attribute name="context" value="{0} is the version number">
         </attribute>
         <attribute name="translation">
-          <row id="Value">
-            <native>Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC</native>
-            <lang id="ja" savedtotm="1" status="2">このプロパティをリセット</lang>
-          </row>
+          <row id="Value">Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC</row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Edits document layers.">
@@ -6164,11 +6153,10 @@
         </attribute>
         <attribute name="context">
         </attribute>
-        <attribute name="translation" state="3">
-          <row id="Value" state="3">
-            <prev>Enable Source Control</prev>
+        <attribute name="translation">
+          <row id="Value">
             <native>Enable source control</native>
-            <lang id="ja" invalidated="1" status="2">ソース管理を有効にする</lang>
+            <lang id="ja" status="3">ソース管理可能</lang>
           </row>
         </attribute>
       </tag>
@@ -6589,30 +6577,6 @@
           <row id="Value">
             <native>There is a newer version of this program available.</native>
             <lang id="ja" comment="not used in CircuitEditor?" savedtotm="1" status="3">このプログラムは、新しいバージョンが利用可能です。</lang>
-          </row>
-        </attribute>
-      </tag>
-      <tag name="StringItem" context="Your version is {0}.">
-        <attribute name="id" value="Your version is {0}">
-        </attribute>
-        <attribute name="context">
-        </attribute>
-        <attribute name="translation">
-          <row id="Value">
-            <native>Your version is {0}</native>
-            <lang id="ja" comment="not used in CircuitEditor?" savedtotm="1" status="3">使用中のバージョンは、{0} です。</lang>
-          </row>
-        </attribute>
-      </tag>
-      <tag name="StringItem" context="The most recent version is {0}.">
-        <attribute name="id" value="The most recent version is {0}">
-        </attribute>
-        <attribute name="context">
-        </attribute>
-        <attribute name="translation">
-          <row id="Value">
-            <native>The most recent version is {0}</native>
-            <lang id="ja" comment="not used in CircuitEditor?" savedtotm="1" status="3">最新のバージョンは、{0} です。</lang>
           </row>
         </attribute>
       </tag>
@@ -8392,6 +8356,19 @@
           </row>
         </attribute>
       </tag>
+      <tag name="StringItem" context="The most recent version is {0}..">
+        <attribute name="id" value="The most recent version is {0}.">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value" state="3">
+            <prev>The most recent version is {0}</prev>
+            <native>The most recent version is {0}.</native>
+            <lang id="ja" comment="not used in CircuitEditor?" invalidated="1" status="3">最新のバージョンは、{0} です。</lang>
+          </row>
+        </attribute>
+      </tag>
       <tag name="StringItem" context="Resize Events.scale manipulator&apos;s undo / redo description for resizing timeline events">
         <attribute name="id" value="Resize Events">
         </attribute>
@@ -8736,7 +8713,7 @@
         <attribute name="translation">
           <row id="Value">
             <native>Import Templates from Document...</native>
-            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" invalidated="1" status="3"></lang>
+            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" date="20150728172733" status="3">ドキュメントからテンプレートをインポート…</lang>
           </row>
         </attribute>
       </tag>
@@ -8748,7 +8725,7 @@
         <attribute name="translation">
           <row id="Value">
             <native>Import Templates from Document</native>
-            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" invalidated="1" status="3"></lang>
+            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" date="20150728172801" status="3">ドキュメントからテンプレートをインポート</lang>
           </row>
         </attribute>
       </tag>
@@ -8760,7 +8737,7 @@
         <attribute name="translation">
           <row id="Value">
             <native>Rescan Template Documents</native>
-            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" invalidated="1" status="3"></lang>
+            <lang id="ja" comment="Button text in &quot;Edit or Copy template?&quot;" date="20150728172834" status="3">テンプレートドキュメントを再スキャン</lang>
           </row>
         </attribute>
       </tag>
@@ -8776,9 +8753,22 @@
           </row>
         </attribute>
       </tag>
+      <tag name="StringItem" context="Your version is {0}..">
+        <attribute name="id" value="Your version is {0}.">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value" state="3">
+            <prev>Your version is {0}</prev>
+            <native>Your version is {0}.</native>
+            <lang id="ja" comment="not used in CircuitEditor?" invalidated="1" status="3">使用中のバージョンは、{0} です。</lang>
+          </row>
+        </attribute>
+      </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.Wpf\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Gui.Wpf\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -8786,8 +8776,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Skins.">
         <attribute name="id" value="Skins">
@@ -9253,7 +9241,7 @@
         <attribute name="translation">
           <row id="Value">
             <native>Copy Info</native>
-            <lang id="ja" status="3">コピー先</lang>
+            <lang id="ja" date="20150728172854" status="3">情報をコピー</lang>
           </row>
         </attribute>
       </tag>
@@ -10181,30 +10169,6 @@
           </row>
         </attribute>
       </tag>
-      <tag name="StringItem" context="Your version is {0}.">
-        <attribute name="id" value="Your version is {0}">
-        </attribute>
-        <attribute name="context">
-        </attribute>
-        <attribute name="translation">
-          <row id="Value">
-            <native>Your version is {0}</native>
-            <lang id="ja" status="2">使用中のバージョンは、{0} です。</lang>
-          </row>
-        </attribute>
-      </tag>
-      <tag name="StringItem" context="The most recent version is {0}.">
-        <attribute name="id" value="The most recent version is {0}">
-        </attribute>
-        <attribute name="context">
-        </attribute>
-        <attribute name="translation">
-          <row id="Value">
-            <native>The most recent version is {0}</native>
-            <lang id="ja" status="2">最新のバージョンは、{0} です。</lang>
-          </row>
-        </attribute>
-      </tag>
       <tag name="StringItem" context="Would you like to download the latest version?.">
         <attribute name="id" value="Would you like to download the latest version?">
         </attribute>
@@ -10394,6 +10358,19 @@
           <row id="Value">
             <native>Yes</native>
             <lang id="ja" savedtotm="1" status="3">はい</lang>
+          </row>
+        </attribute>
+      </tag>
+      <tag name="StringItem" context="The most recent version is {0}..">
+        <attribute name="id" value="The most recent version is {0}.">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value" state="3">
+            <prev>The most recent version is {0}</prev>
+            <native>The most recent version is {0}.</native>
+            <lang id="ja" invalidated="1" status="2">最新のバージョンは、{0} です。</lang>
           </row>
         </attribute>
       </tag>
@@ -10601,6 +10578,19 @@
           </row>
         </attribute>
       </tag>
+      <tag name="StringItem" context="Your version is {0}..">
+        <attribute name="id" value="Your version is {0}.">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value" state="3">
+            <prev>Your version is {0}</prev>
+            <native>Your version is {0}.</native>
+            <lang id="ja" date="20150730172922" invalidated="1" status="3">使用中のバージョンは、{0} です。</lang>
+          </row>
+        </attribute>
+      </tag>
       <tag name="StringItem" context="An error has occurred.">
         <attribute name="id" value="An error has occurred">
         </attribute>
@@ -10627,7 +10617,7 @@
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Gui\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Gui\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -10635,8 +10625,6 @@
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Keyboard Shortcuts.">
         <attribute name="id" value="Keyboard Shortcuts">
@@ -10680,7 +10668,10 @@
         <attribute name="context" value="The &apos;&lt;&apos; and &apos;&gt;&apos; indicate that this is not a real name.">
         </attribute>
         <attribute name="translation">
-          <row id="Value">&lt;undefined&gt;</row>
+          <row id="Value">
+            <native>&lt;undefined&gt;</native>
+            <lang id="ja" date="20150728173359" status="3">&lt;未定義&gt;</lang>
+          </row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Application.">
@@ -11280,7 +11271,7 @@
           <row id="Value" state="3">
             <prev>Enable Source Control</prev>
             <native>Enable source control</native>
-            <lang id="ja" status="2">ソース管理を有効にする</lang>
+            <lang id="ja" date="20150728173110" status="3">ソース管理可能</lang>
           </row>
         </attribute>
       </tag>
@@ -11374,7 +11365,10 @@
         <attribute name="context">
         </attribute>
         <attribute name="translation">
-          <row id="Value">Endpoint</row>
+          <row id="Value">
+            <native>Endpoint</native>
+            <lang id="ja" date="20150728173248" status="3">エンドポイント</lang>
+          </row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Check out from source control.">
@@ -11747,7 +11741,10 @@ to be able to save the changes?.">
         <attribute name="context" value="The English version should have had a space between the words, but it&apos;...e to chang">
         </attribute>
         <attribute name="translation">
-          <row id="Value">LocalHost</row>
+          <row id="Value">
+            <native>LocalHost</native>
+            <lang id="ja" date="20150728173347" status="3">LocalHost</lang>
+          </row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Unknown error code.">
@@ -12141,7 +12138,10 @@ to be able to save the changes?.">
         <attribute name="context">
         </attribute>
         <attribute name="translation">
-          <row id="Value">Platform</row>
+          <row id="Value">
+            <native>Platform</native>
+            <lang id="ja" date="20150728173306" status="3">プラットフォーム</lang>
+          </row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Undo.Undo the last change">
@@ -12522,7 +12522,10 @@ to be able to save the changes?.">
         <attribute name="context">
         </attribute>
         <attribute name="translation">
-          <row id="Value">Scope</row>
+          <row id="Value">
+            <native>Scope</native>
+            <lang id="ja" date="20150728173328" status="3">スコープ</lang>
+          </row>
         </attribute>
       </tag>
       <tag name="StringItem" context="Hide all selected objects.">
@@ -13403,7 +13406,7 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Framework\Atf.Perforce\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Framework\Atf.Perforce\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -13411,8 +13414,6 @@ to be able to save the changes?.">
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="For user {0} with workspace {1} on server {2}..">
         <attribute name="id" value="For user {0} with workspace {1} on server {2}.">
@@ -13488,7 +13489,7 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Samples\CircuitEditor\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Samples\CircuitEditor\Resources\Localization.xml" original="en-US" date="20150807002246" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -13496,8 +13497,6 @@ to be able to save the changes?.">
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="16-to-1 Multiplexer.">
         <attribute name="id" value="16-to-1 Multiplexer">
@@ -13606,7 +13605,7 @@ to be able to save the changes?.">
           <row id="Value" state="3">
             <prev>Comment foreground color</prev>
             <native>Comment's foreground color</native>
-            <lang id="ja" status="3">コメントの前景色</lang>
+            <lang id="ja" date="20150728172943" status="3">コメントの前景色です。</lang>
           </row>
         </attribute>
       </tag>
@@ -14545,7 +14544,7 @@ to be able to save the changes?.">
         <attribute name="translation">
           <row id="Value">
             <native>The initial directory for documents</native>
-            <lang id="ja" status="3">ドキュメントントの初期ディレクトリ</lang>
+            <lang id="ja" date="20150728172914" status="3">ドキュメントントの初期ディレクトリ 。</lang>
           </row>
         </attribute>
       </tag>
@@ -14707,15 +14706,13 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Samples\CodeEditor\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Samples\CodeEditor\Resources\Localization.xml" original="en-US" date="20150807002248" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="context" kind="akContext"/>
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem">
         <attribute name="id" value="C##">
@@ -14826,7 +14823,7 @@ to be able to save the changes?.">
         <attribute name="translation">
           <row id="Value">
             <native>Go to...</native>
-            <lang id="ja" date="20140928032836" status="3">Python</lang>
+            <lang id="ja" date="20150803105739" status="3">移動先…</lang>
           </row>
         </attribute>
       </tag>
@@ -14838,7 +14835,7 @@ to be able to save the changes?.">
         <attribute name="translation">
           <row id="Value">
             <native>https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample</native>
-            <lang id="ja" date="20150721152839" status="3">Python</lang>
+            <lang id="ja" date="20150730170316" status="3">https://github.com/SonyWWS/ATF/wiki/ATF%20Code%20Editor%20Sample_j</lang>
           </row>
         </attribute>
       </tag>
@@ -14904,15 +14901,13 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Samples\FsmEditor\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Samples\FsmEditor\Resources\Localization.xml" original="en-US" date="20150807002248" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="context" kind="akContext"/>
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem">
         <attribute name="id" value="Action">
@@ -15282,7 +15277,7 @@ to be able to save the changes?.">
         <attribute name="translation">
           <row id="Value">
             <native>Trigger ID</native>
-            <lang id="ja" status="3">トリガー ID</lang>
+            <lang id="ja" date="20150730172715" status="3">トリガー ID。</lang>
           </row>
         </attribute>
       </tag>
@@ -15324,15 +15319,13 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Samples\SimpleDomEditorWpf\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Samples\SimpleDomEditorWpf\Resources\Localization.xml" original="en-US" date="20150807002248" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="context" kind="akContext"/>
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem">
         <attribute name="id" value="## Bones">
@@ -15720,7 +15713,38 @@ to be able to save the changes?.">
       </tag>
     </tag>
   </source>
-  <source class="TXmlSource" name="..\..\Samples\TimelineEditor\Resources\Localization.xml" original="en-US" date="20150724205936" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+  <source class="TXmlSource" name="..\..\Samples\TargetManager\Resources\Localization.xml" original="en-US" date="20150807002248" originalbom="1" entities="[xfPredefined,xfEmbedded]">
+    <key name="StringLocalizationTable">
+      <key name="StringItem" checked="0">
+        <attribute name="context" kind="akContext"/>
+        <attribute name="translation"/>
+      </key>
+    </key>
+    <tag name="StringLocalizationTable">
+      <tag name="StringItem">
+        <attribute name="id" value="ATF TargetManager Sample">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value">ATF TargetManager Sample</row>
+        </attribute>
+      </tag>
+      <tag name="StringItem">
+        <attribute name="id" value="https://github.com/SonyWWS/ATF/wiki/ATF-Target-Manager-Sample">
+        </attribute>
+        <attribute name="context">
+        </attribute>
+        <attribute name="translation">
+          <row id="Value">
+            <native>https://github.com/SonyWWS/ATF/wiki/ATF-Target-Manager-Sample</native>
+            <lang id="ja" date="20150806172623" status="3">https://github.com/SonyWWS/ATF/wiki/ATF%20Target%20Manager%20Sample_j</lang>
+          </row>
+        </attribute>
+      </tag>
+    </tag>
+  </source>
+  <source class="TXmlSource" name="..\..\Samples\TimelineEditor\Resources\Localization.xml" original="en-US" date="20150807002248" originalbom="1" entities="[xfPredefined,xfEmbedded]">
     <key name="StringLocalizationTable">
       <key name="StringItem" checked="0">
         <attribute name="id" kind="akContext"/>
@@ -15728,8 +15752,6 @@ to be able to save the changes?.">
         <attribute name="translation"/>
       </key>
     </key>
-    <segmentation>
-</segmentation>
     <tag name="StringLocalizationTable">
       <tag name="StringItem" context="Timeline Editor Sample.">
         <attribute name="id" value="Timeline Editor Sample">

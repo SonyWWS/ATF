@@ -3,7 +3,7 @@
   <StringItem id="&amp;About" context="Get information about application" translation="バージョン情報(&amp;A)" />
   <StringItem id="(none)" context="No flags" translation="(なし)" />
   <StringItem id="{0} files" context="For example, 'Circuit files' or 'All files'" translation="{0}ファイル" />
-  <StringItem id="&lt;undefined&gt;" context="The '&lt;' and '&gt;' indicate that this is not a real name." translation="&lt;undefined&gt;" />
+  <StringItem id="&lt;undefined&gt;" context="The '&lt;' and '&gt;' indicate that this is not a real name." translation="&lt;未定義&gt;" />
   <StringItem id="A file with that name is already open" context="" translation="同名のファイルがすでに開いています。" />
   <StringItem id="Add document {0} to version control?" context="" translation="ドキュメント {0} をバージョン管理に追加しますか?" />
   <StringItem id="Add Document to Version Control" context="this is the title of a dialog box that is asking a question" translation="ドキュメントをバージョン管理に追加" />
@@ -69,7 +69,7 @@ to be able to save the changes?" context="" translation="ファイル
   <StringItem id="empty" context="" translation="なし" />
   <StringItem id="Enable Source Control" context="" translation="Enable Source Control" />
   <StringItem id="Enable source control" context="" translation="Enable source control" />
-  <StringItem id="Endpoint" context="" translation="Endpoint" />
+  <StringItem id="Endpoint" context="" translation="エンドポイント" />
   <StringItem id="Error" context="" translation="エラー" />
   <StringItem id="Exit" context="Exit the application" translation="終了" />
   <StringItem id="Exit Application" context="" translation="アプリケーションを終了します。" />
@@ -133,7 +133,7 @@ to be able to save the changes?" context="" translation="ファイル
   <StringItem id="Pin active document" context="" translation="アクティブなドキュメントをピン留め" />
   <StringItem id="Pin active file to the recent files list" context="" translation="アクティブなファイルを最近使用したファイルのリストに常に含めます。" />
   <StringItem id="Pin file" context="Pin active file to the recent files list" translation="ファイルをピン留め" />
-  <StringItem id="Platform" context="" translation="Platform" />
+  <StringItem id="Platform" context="" translation="プラットフォーム" />
   <StringItem id="Preferences..." context="Edit user preferences" translation="基本設定..." />
   <StringItem id="Preferred Receiving IP Address" context="" translation="優先される受信 IP アドレス" />
   <StringItem id="Primary Destination IP Endpoint" context="" translation="プライマリの接続先の IP エンドポイント" />
@@ -165,7 +165,7 @@ to be able to save the changes?" context="" translation="ファイル
   <StringItem id="Save Layout As..." context="" translation="レイアウトに名前を付けて保存..." />
   <StringItem id="Save the active file" context="" translation="アクティブなファイルを保存します。" />
   <StringItem id="Save the active file under a new name" context="" translation="アクティブなファイルに名前を付けて保存します。" />
-  <StringItem id="Scope" context="" translation="Scope" />
+  <StringItem id="Scope" context="" translation="スコープ" />
   <StringItem id="Select All" context="Select all items" translation="すべて選択" />
   <StringItem id="Select all items" context="" translation="すべてのアイテムを選択します。" />
   <StringItem id="Select unselected items and deselect selected items" context="" translation="選択されていないアイテムを選択し、選択されているアイテムの選択を解除します。" />

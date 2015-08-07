@@ -134,7 +134,7 @@
   <StringItem id="Targets" context="" translation="Targets" />
   <StringItem id="The file was found here:" context="" translation="The file was found here:" />
   <StringItem id="The following file could not be found at the specified location:" context="" translation="The following file could not be found at the specified location:" />
-  <StringItem id="The most recent version is {0}" context="" translation="The most recent version is {0}" />
+  <StringItem id="The most recent version is {0}." context="" translation="The most recent version is {0}." />
   <StringItem id="Theme" context="" translation="Theme" />
   <StringItem id="This software is up to date." context="" translation="This software is up to date." />
   <StringItem id="Time" context="" translation="Time" />
@@ -152,5 +152,5 @@
   <StringItem id="Would you like to continue the application so that you can save your work?" context="" translation="Would you like to continue the application so that you can save your work?" />
   <StringItem id="Would you like to download the latest version?" context="" translation="Would you like to download the latest version?" />
   <StringItem id="Yes" context="" translation="Yes" />
-  <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
+  <StringItem id="Your version is {0}." context="" translation="Your version is {0}." />
 </StringLocalizationTable>

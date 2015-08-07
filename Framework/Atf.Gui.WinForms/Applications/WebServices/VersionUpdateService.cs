@@ -168,8 +168,8 @@ namespace Sce.Atf.Applications.WebServices
                 DialogResult result = MessageBox.Show(
                     m_dialogOwner,
                     "There is a newer version of this program available.".Localize() + cr +
-                     string.Format("Your version is {0}".Localize(), m_updateCheck.AppVersion) + "." + cr +
-                     string.Format("The most recent version is {0}".Localize(), m_updateCheck.ServerVersion) + "." + cr + cr +
+                     string.Format("Your version is {0}.".Localize(), m_updateCheck.AppVersion) + cr +
+                     string.Format("The most recent version is {0}.".Localize(), m_updateCheck.ServerVersion) + cr + cr +
                      "Would you like to download the latest version?".Localize(),
                     "Update".Localize("this is the title of a dialog box"),
                     MessageBoxButtons.YesNo,

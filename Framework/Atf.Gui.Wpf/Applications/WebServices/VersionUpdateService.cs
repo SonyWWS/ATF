@@ -150,10 +150,10 @@ namespace Sce.Atf.Wpf.Applications.WebServices
             if (!error && !string.IsNullOrEmpty(val))
             {
                 string message = "There is a newer version of this program available." + Environment.NewLine +
-                                 string.Format("Your version is {0}".Localize(), m_updateCheck.AppVersion) + "." +
+                                 string.Format("Your version is {0}.".Localize(), m_updateCheck.AppVersion) +
                                  Environment.NewLine +
-                                 string.Format("The most recent version is {0}".Localize(), m_updateCheck.ServerVersion) +
-                                 "." + Environment.NewLine +
+                                 string.Format("The most recent version is {0}.".Localize(), m_updateCheck.ServerVersion) +
+                                 Environment.NewLine +
                                  Environment.NewLine +
                                  "Would you like to download the latest version?".Localize();
 

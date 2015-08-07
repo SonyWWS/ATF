@@ -322,7 +322,7 @@
   <StringItem id="Targets" context="" translation="Targets" />
   <StringItem id="Templates" context="" translation="Templates" />
   <StringItem id="The destination port number or IP address are not correctly formatted." context="" translation="The destination port number or IP address are not correctly formatted." />
-  <StringItem id="The most recent version is {0}" context="" translation="The most recent version is {0}" />
+  <StringItem id="The most recent version is {0}." context="" translation="The most recent version is {0}." />
   <StringItem id="The performance report is in the clipboard" context="" translation="The performance report is in the clipboard" />
   <StringItem id="The receiving port number or IP address are not correctly formatted." context="" translation="The receiving port number or IP address are not correctly formatted." />
   <StringItem id="There is a newer version of this program available." context="" translation="There is a newer version of this program available." />
@@ -357,5 +357,5 @@
   <StringItem id="Would you like to save the changes?" context="" translation="Would you like to save the changes?" />
   <StringItem id="Yellow" context="" translation="Yellow" />
   <StringItem id="Yellow must be a number between 0 and 100" context="" translation="Yellow must be a number between 0 and 100" />
-  <StringItem id="Your version is {0}" context="" translation="Your version is {0}" />
+  <StringItem id="Your version is {0}." context="" translation="Your version is {0}." />
 </StringLocalizationTable>

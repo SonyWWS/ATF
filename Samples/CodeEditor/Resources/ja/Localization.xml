@@ -8,8 +8,8 @@
   <StringItem id="Find and replace text" context="" translation="テキストを検索および置換します。" />
   <StringItem id="Find and Replace..." context="" translation="検索と置換..." />
   <StringItem id="Go to line" context="" translation="指定行に移動します。" />
-  <StringItem id="Go to..." context="" translation="Python" />
-  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample" context="" translation="Python" />
+  <StringItem id="Go to..." context="" translation="移動先…" />
+  <StringItem id="https://github.com/SonyWWS/ATF/wiki/ATF-Code-Editor-Sample" context="" translation="https://github.com/SonyWWS/ATF/wiki/ATF%20Code%20Editor%20Sample_j" />
   <StringItem id="Lua" context="" translation="Lua" />
   <StringItem id="Python" context="" translation="Python" />
   <StringItem id="Squirrel" context="" translation="Squirrel" />

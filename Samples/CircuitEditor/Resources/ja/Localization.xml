@@ -14,7 +14,7 @@
   <StringItem id="Comment" context="" translation="コメント" />
   <StringItem id="Comment Text" context="" translation="コメントのテキストです。" />
   <StringItem id="Comment's background color" context="" translation="コメントの背景色です。" />
-  <StringItem id="Comment's foreground color" context="" translation="コメントの前景色" />
+  <StringItem id="Comment's foreground color" context="" translation="コメントの前景色です。" />
   <StringItem id="Create a moveable resizable comment on the circuit canvas" context="" translation="回路キャンバス上に、移動およびサイズ変更が可能なコメントを作成します。" />
   <StringItem id="Create Circuit Programmatically" context="" translation="回路をプログラムで作成" />
   <StringItem id="Data" context="" translation="データ" />
@@ -98,7 +98,7 @@
   <StringItem id="sub-stream 0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
   <StringItem id="subStream0" context="this is the name of a group of circuit elements; the name is arbitrary" translation="サブストリーム 0" />
   <StringItem id="Text" context="" translation="テキスト" />
-  <StringItem id="The initial directory for documents" context="" translation="ドキュメントントの初期ディレクトリ" />
+  <StringItem id="The initial directory for documents" context="" translation="ドキュメントントの初期ディレクトリ 。" />
   <StringItem id="Unique ID" context="" translation="一意の ID" />
   <StringItem id="Wire Style" context="" translation="ワイヤーの種類" />
 </StringLocalizationTable>

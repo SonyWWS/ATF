@@ -30,7 +30,7 @@
   <StringItem id="State name" context="" translation="ステートの名前。" />
   <StringItem id="State size" context="" translation="ステートのサイズ。" />
   <StringItem id="Text" context="" translation="テキスト" />
-  <StringItem id="Trigger ID" context="" translation="トリガー ID" />
+  <StringItem id="Trigger ID" context="" translation="トリガー ID。" />
   <StringItem id="Triggers" context="" translation="トリガー" />
   <StringItem id="Whether or not state is hidden" context="" translation="ステートを非表示にするにはオンにします。" />
   <StringItem id="Whether or not state is the start state" context="" translation="ステートが開始ステートの場合はオンにします。" />

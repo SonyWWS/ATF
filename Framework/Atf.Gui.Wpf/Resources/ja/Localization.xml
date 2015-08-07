@@ -38,7 +38,7 @@
   <StringItem id="Close" context="Close file" translation="閉じる" />
   <StringItem id="Continue" context="" translation="続行" />
   <StringItem id="Copy" context="Copy the selection and place it on the clipboard" translation="コピー" />
-  <StringItem id="Copy Info" context="" translation="コピー先" />
+  <StringItem id="Copy Info" context="" translation="情報をコピー" />
   <StringItem id="Copy the selection and place it on the clipboard" context="" translation="選択部分をクリップボードにコピーします。" />
   <StringItem id="Copy to Clipboard" context="" translation="クリップボードにコピー" />
   <StringItem id="Could not load window layout" context="" translation="ウィンドウレイアウトを読み込めません。" />
@@ -134,7 +134,7 @@
   <StringItem id="Targets" context="" translation="ターゲット" />
   <StringItem id="The file was found here:" context="" translation="ファイルが検出された場所:" />
   <StringItem id="The following file could not be found at the specified location:" context="" translation="指定された場所に見つからないファイル:" />
-  <StringItem id="The most recent version is {0}" context="" translation="最新のバージョンは、{0} です。" />
+  <StringItem id="The most recent version is {0}." context="" translation="最新のバージョンは、{0} です。" />
   <StringItem id="Theme" context="" translation="テーマ" />
   <StringItem id="This software is up to date." context="" translation="このソフトウェアは最新版です。" />
   <StringItem id="Time" context="" translation="時間" />
@@ -152,5 +152,5 @@
   <StringItem id="Would you like to continue the application so that you can save your work?" context="" translation="作業を保存するために、アプリケーションを継続しますか?" />
   <StringItem id="Would you like to download the latest version?" context="" translation="最新バージョンをダウンロードしますか?" />
   <StringItem id="Yes" context="" translation="はい" />
-  <StringItem id="Your version is {0}" context="" translation="使用中のバージョンは、{0} です。" />
+  <StringItem id="Your version is {0}." context="" translation="使用中のバージョンは、{0} です。" />
 </StringLocalizationTable>
