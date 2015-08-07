@@ -93,7 +93,11 @@ namespace Sce.Atf
 
             // Get the folder icon
             Shell32.SHFILEINFO shfi = new Shell32.SHFILEINFO();
-            Shell32.SHGetFileInfo(null,
+
+            // Flag SHGFI_USEFILEATTRIBUTES prevents SHGetFileInfo() from attempting
+            // to access the path specified by the first argument.  However, passing 
+            // some sort of non-null string is still required, or the call will fail.
+            Shell32.SHGetFileInfo("C:\\Windows",
                 Shell32.FILE_ATTRIBUTE_DIRECTORY,
                 ref shfi,
                 (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
