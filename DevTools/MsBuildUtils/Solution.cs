@@ -1,3 +1,7 @@
+// The Solution class below was written by StackOverflow user John Leidegren and is licensed
+//  under CC BY-SA 3.0 ( http://creativecommons.org/licenses/by-sa/3.0/ ).
+// http://stackoverflow.com/a/4634505/386091
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
