@@ -540,8 +540,8 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             Context c)
         {
             // Include the reference's offset into the Transform and InverseTransform properties.
-            Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path);
-            c.PushTransform(localToWorld, MatrixOrder.Prepend);
+            using(Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path))
+                c.PushTransform(localToWorld, MatrixOrder.Prepend);
 
             // draw the row that has this timeline reference's name
             ITimelineReference reference = (ITimelineReference)path.Last;
@@ -1437,8 +1437,8 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             IHierarchicalTimeline resolved = reference.Target;
             if (resolved != null)
             {
-                Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path);
-                c.PushTransform(localToWorld, MatrixOrder.Prepend);
+                using(Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path))
+                    c.PushTransform(localToWorld, MatrixOrder.Prepend);
 
                 LayoutSubTimeline(path, resolved, ref documentTop, options.Expanded, c, result);
 

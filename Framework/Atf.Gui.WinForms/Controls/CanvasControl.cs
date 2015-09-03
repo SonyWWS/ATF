@@ -60,8 +60,15 @@ namespace Sce.Atf.Controls
         /// client coordinates</summary>
         public virtual Matrix Transform
         {
-            get { return Sce.Atf.GdiUtil.GetTransform(m_scroll, m_xZoom, m_yZoom); }
+            get
+            {
+                m_transform.Reset();
+                m_transform.Translate(m_scroll.X, m_scroll.Y);
+                m_transform.Scale(m_xZoom, m_yZoom);
+                return m_transform;
+            }
         }
+        private readonly Matrix m_transform = new Matrix();
 
         /// <summary>
         /// Gets whether interactive zooming is uniform on x and y axes</summary>

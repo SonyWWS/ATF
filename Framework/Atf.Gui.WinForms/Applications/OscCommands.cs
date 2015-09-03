@@ -105,8 +105,10 @@ namespace Sce.Atf.Applications
             switch (command)
             {
                 case Command.OscInfo:
-                    var dialog = new OscDialog(OscService, m_commandReceiver);
-                    dialog.ShowDialog(m_mainWindow);
+                    using (var dialog = new OscDialog(OscService, m_commandReceiver))
+                    {
+                        dialog.ShowDialog(m_mainWindow);
+                    }
                     break;
                 case Command.CopyOscAddressOfPropertyDescriptor:
                     Clipboard.SetText(m_oscAddressOfPropertyDescriptor);

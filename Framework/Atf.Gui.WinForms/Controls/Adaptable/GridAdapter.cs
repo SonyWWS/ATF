@@ -190,10 +190,18 @@ namespace Sce.Atf.Controls.Adaptable
         {
             if (m_visible)
             {
-                Matrix transform = new Matrix();
+                bool disposeOfTransform = false;
+                Matrix transform;
                 if (m_transformAdapter != null)
+                {
                     transform = m_transformAdapter.Transform;
-               
+                }
+                else
+                {
+                    transform = new Matrix();
+                    disposeOfTransform = true;
+                }
+
                 RectangleF clientRect = AdaptedControl.ClientRectangle;
                 RectangleF canvasRect = GdiUtil.InverseTransform(transform, clientRect);
 
@@ -202,6 +210,9 @@ namespace Sce.Atf.Controls.Adaptable
 
                 // draw vertical lines
                 ChartUtil.DrawVerticalGrid(transform, canvasRect, m_horizontalGridSpacing, m_gridColor, e.Graphics);
+
+                if (disposeOfTransform)
+                    transform.Dispose();
             }
         }
 
@@ -210,26 +221,12 @@ namespace Sce.Atf.Controls.Adaptable
         {
             if (m_visible)
             {
-               // Matrix transform = new Matrix();
-               // if (m_transformAdapter != null)
-               //     transform = m_transformAdapter.Transform;
-
                 var d2dControl = AdaptedControl as D2dAdaptableControl;
 
                 Matrix3x2F xform = d2dControl.D2dGraphics.Transform;
                 d2dControl.D2dGraphics.Transform = Matrix3x2F.Identity;
 
-                Matrix transform = m_transformAdapter.Transform;
-                RectangleF clientRect = AdaptedControl.ClientRectangle;
-                
-                // draw horizontal lines
-               // ChartUtil.DrawHorizontalGrid(transform, canvasRect, m_verticalGridSpacing, d2dControl.Theme.GridPen, d2dControl.D2dGraphics);
-
-                // draw vertical lines
-               // ChartUtil.DrawVerticalGrid(transform, canvasRect, m_horizontalGridSpacing, d2dControl.Theme.GridPen, d2dControl.D2dGraphics);
-
                 d2dControl.D2dGraphics.Transform = xform;
-               
             }
         }
 

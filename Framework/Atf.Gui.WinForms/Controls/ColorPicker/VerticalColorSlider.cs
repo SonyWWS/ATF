@@ -286,6 +286,7 @@ namespace Sce.Atf.Controls.ColorEditing
             Brush brush = System.Drawing.SystemBrushes.Control;
             g.FillRectangle(brush, 0, 0, 8, Height);            //    clear left hand slider
             g.FillRectangle(brush, Width - 8, 0, 8, Height);    //    clear right hand slider
+            g.Dispose();
         }
 
 
@@ -294,7 +295,7 @@ namespace Sce.Atf.Controls.ColorEditing
         /// <param name="position">Position value of the slider, lowest being at the bottom. The range
         /// is between 0 and the control's height-9. The values are adjusted if too large/small.</param>
         /// <param name="Unconditional">If Unconditional is true, the slider is drawn, otherwise some logic 
-        /// is performed to determine is drawing is really neccessary</param>
+        /// is performed to determine is drawing is really necessary</param>
         private void DrawSlider(int position, bool Unconditional)
         {
             if ( position < 0 ) position = 0;
@@ -339,6 +340,7 @@ namespace Sce.Atf.Controls.ColorEditing
             g.FillPolygon(brush, arrow);    //    Fill right arrow with white
             g.DrawPolygon(pencil, arrow);   //    Draw right arrow border with gray
 
+            g.Dispose();
         }
 
 
@@ -361,10 +363,12 @@ namespace Sce.Atf.Controls.ColorEditing
 
             pencil = new Pen(Color.White);
             g.DrawLine(pencil, Width - 9, 2, Width - 9,Height - 3);    //    Draw right hand line
-            g.DrawLine(pencil, Width - 9,Height - 3, 9,Height - 3);    //    Draw bottome line
+            g.DrawLine(pencil, Width - 9,Height - 3, 9,Height - 3);    //    Draw bottom line
 
             pencil = new Pen(Color.Black);
             g.DrawRectangle(pencil, 10, 3, Width - 20, Height - 7);    //    Draw inner black rectangle
+
+            g.Dispose();
         }
 
 
@@ -419,6 +423,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);    //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
@@ -440,6 +446,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);    //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
@@ -461,6 +469,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);    //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
@@ -478,6 +488,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);             //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
@@ -495,6 +507,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);            //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
@@ -512,13 +526,15 @@ namespace Sce.Atf.Controls.ColorEditing
 
                 g.DrawLine(pen, 11, i + 4, Width - 11, i + 4);            //    Draw the line and loop back for next line
             }
+
+            g.Dispose();
         }
 
 
         #endregion
 
         /// <summary>
-        /// Calls all the functions neccessary to redraw the entire control</summary>
+        /// Calls all the functions necessary to redraw the entire control</summary>
         private void Redraw_Control()
         {
             DrawSlider(m_iMarker_Start_Y, true);

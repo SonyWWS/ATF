@@ -1036,8 +1036,8 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         }
 
         /// <summary>
-        /// Calculates the matrix for transforming objects in the last timeline of a given path to
-        /// the world coordinate system</summary>
+        /// Creates the matrix for transforming objects in the last timeline of a given path to
+        /// the world coordinate system. The caller must dispose of this matrix.</summary>
         /// <param name="path">The path of timeline references, from top-most parent to leaf</param>
         /// <returns>Matrix for transforming objects in the last timeline of the given path
         /// to the world coordinate system</returns>
@@ -1067,9 +1067,11 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
             out float worldEnd)
         {
             IEvent curr = (IEvent)path.Last;
-            Matrix localToWorld = CalculateLocalToWorld(path);
-            worldStart = GdiUtil.Transform(localToWorld, curr.Start);
-            worldEnd = GdiUtil.Transform(localToWorld, curr.Start + curr.Length);
+            using (Matrix localToWorld = CalculateLocalToWorld(path))
+            {
+                worldStart = GdiUtil.Transform(localToWorld, curr.Start);
+                worldEnd = GdiUtil.Transform(localToWorld, curr.Start + curr.Length);
+            }
         }
 
         /// <summary>

@@ -74,17 +74,18 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                     worldX += delta;
                     worldX = m_owner.ConstrainFrameOffset(worldX);
 
-                    Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(hitPath);
-
-                    if (worldX <= GdiUtil.Transform(localToWorld, hitObject.Start) ||
-                        worldX >= GdiUtil.Transform(localToWorld, hitObject.Start + hitObject.Length))
+                    using (Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(hitPath))
                     {
-                        // Clear the results since a split is impossible.
-                        m_owner.GetSnapOffset(new float[] { }, s_snapOptions);
-                    }
-                    else
-                    {
-                        toolTipText = worldX.ToString();
+                        if (worldX <= GdiUtil.Transform(localToWorld, hitObject.Start) ||
+                            worldX >= GdiUtil.Transform(localToWorld, hitObject.Start + hitObject.Length))
+                        {
+                            // Clear the results since a split is impossible.
+                            m_owner.GetSnapOffset(new float[] {}, s_snapOptions);
+                        }
+                        else
+                        {
+                            toolTipText = worldX.ToString();
+                        }
                     }
                 }
             }
@@ -120,11 +121,13 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
 
                     worldX += m_owner.GetSnapOffset(new[] { worldX }, s_snapOptions);
 
-                    Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(hitPath);
-
-                    float fraction =
-                        (worldX - GdiUtil.Transform(localToWorld, hitInterval.Start)) /
-                        GdiUtil.TransformVector(localToWorld, hitInterval.Length);
+                    float fraction;
+                    using (Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(hitPath))
+                    {
+                        fraction =
+                            (worldX - GdiUtil.Transform(localToWorld, hitInterval.Start))/
+                            GdiUtil.TransformVector(localToWorld, hitInterval.Length);
+                    }
 
                     if (m_owner.Selection.SelectionContains(hitInterval))
                         SplitSelectedIntervals(fraction);

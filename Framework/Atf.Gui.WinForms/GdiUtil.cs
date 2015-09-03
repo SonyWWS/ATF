@@ -23,11 +23,13 @@ namespace Sce.Atf
             {
                 if (s_dpiYFactor == 0.0f)
                 {
-                    Form frm = new Form();
-                    Graphics gr = frm.CreateGraphics();
-                    float tem = gr.DpiY;
-                    s_dpiYFactor = gr.DpiY / 96.0f;
-                    gr.Dispose();
+                    using (var frm = new Form())
+                    {
+                        using (Graphics gr = frm.CreateGraphics())
+                        {
+                            s_dpiYFactor = gr.DpiY / 96.0f;
+                        }
+                    }
                 }
                 return s_dpiYFactor;
             }
@@ -129,10 +131,12 @@ namespace Sce.Atf
         /// <returns>Inverse transformed point</returns>
         public static Point InverseTransform(Matrix matrix, Point p)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPts[0] = p;
-            inverse.TransformPoints(s_tempPts);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPts[0] = p;
+                inverse.TransformPoints(s_tempPts);
+            }
             return s_tempPts[0];
         }
 
@@ -143,10 +147,12 @@ namespace Sce.Atf
         /// <returns>Inverse transformed point</returns>
         public static PointF InverseTransform(Matrix matrix, PointF p)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPtF[0] = p;
-            inverse.TransformPoints(s_tempPtF);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPtF[0] = p;
+                inverse.TransformPoints(s_tempPtF);
+            }
             return s_tempPtF[0];
         }
 
@@ -157,10 +163,12 @@ namespace Sce.Atf
         /// <returns>Inverse transformed vector</returns>
         public static PointF InverseTransformVector(Matrix matrix, PointF v)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPtF[0] = v;
-            inverse.TransformVectors(s_tempPtF);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPtF[0] = v;
+                inverse.TransformVectors(s_tempPtF);
+            }
             return s_tempPtF[0];
         }
 
@@ -171,11 +179,13 @@ namespace Sce.Atf
         /// <returns>X-coordinate of a point in coordinate system A</returns>
         public static float InverseTransform(Matrix matrix, float x)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPtF[0].X = x;
-            s_tempPtF[0].Y = 0.0f;
-            inverse.TransformPoints(s_tempPtF);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPtF[0].X = x;
+                s_tempPtF[0].Y = 0.0f;
+                inverse.TransformPoints(s_tempPtF);
+            }
             return s_tempPtF[0].X;
         }
 
@@ -186,11 +196,13 @@ namespace Sce.Atf
         /// <returns>X-coordinate of a vector in coordinate system A</returns>
         public static float InverseTransformVector(Matrix matrix, float x)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPtF[0].X = x;
-            s_tempPtF[0].Y = 0.0f;
-            inverse.TransformVectors(s_tempPtF);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPtF[0].X = x;
+                s_tempPtF[0].Y = 0.0f;
+                inverse.TransformVectors(s_tempPtF);
+            }
             return s_tempPtF[0].X;
         }
 
@@ -227,11 +239,13 @@ namespace Sce.Atf
         /// <returns>Inverse transformed rectangle</returns>
         public static Rectangle InverseTransform(Matrix matrix, Rectangle r)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPts[0] = new Point(r.Left, r.Top);
-            s_tempPts[1] = new Point(r.Right, r.Bottom);
-            inverse.TransformPoints(s_tempPts);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPts[0] = new Point(r.Left, r.Top);
+                s_tempPts[1] = new Point(r.Right, r.Bottom);
+                inverse.TransformPoints(s_tempPts);
+            }
             return new Rectangle(s_tempPts[0].X, s_tempPts[0].Y, s_tempPts[1].X - s_tempPts[0].X, s_tempPts[1].Y - s_tempPts[0].Y);
         }
 
@@ -242,11 +256,13 @@ namespace Sce.Atf
         /// <returns>Inverse transformed rectangle</returns>
         public static RectangleF InverseTransform(Matrix matrix, RectangleF r)
         {
-            Matrix inverse = matrix.Clone();
-            inverse.Invert();
-            s_tempPtsF[0] = new PointF(r.Left, r.Top);
-            s_tempPtsF[1] = new PointF(r.Right, r.Bottom);
-            inverse.TransformPoints(s_tempPtsF);
+            using (Matrix inverse = matrix.Clone())
+            {
+                inverse.Invert();
+                s_tempPtsF[0] = new PointF(r.Left, r.Top);
+                s_tempPtsF[1] = new PointF(r.Right, r.Bottom);
+                inverse.TransformPoints(s_tempPtsF);
+            }
             return MakeRectangle(s_tempPtsF[0], s_tempPtsF[1]);
         }
 
@@ -539,28 +555,27 @@ namespace Sce.Atf
         {
             const int width = 32;
 
-            Bitmap bitmap = new Bitmap(width, 1, graphics);
-            SizeF size = graphics.MeasureString(text, font);
-            Graphics anagra = Graphics.FromImage(bitmap);
-
-            int measured_width = (int)size.Width;
-
-            if (anagra != null)
+            using (var bitmap = new Bitmap(width, 1, graphics))
             {
-                anagra.Clear(Color.White);
-                anagra.DrawString(text + "|", font, Brushes.Black, width - measured_width, -font.Height / 2);
-
-                for (int i = width - 1; i >= 0; i--)
+                SizeF size = graphics.MeasureString(text, font);
+                using (Graphics anagra = Graphics.FromImage(bitmap))
                 {
-                    measured_width--;
-                    if (bitmap.GetPixel(i, 0).R == 0)
+                    int measured_width = (int)size.Width;
+
+                    anagra.Clear(Color.White);
+                    anagra.DrawString(text + "|", font, Brushes.Black, width - measured_width, -font.Height / 2);
+
+                    for (int i = width - 1; i >= 0; i--)
                     {
-                        break;
+                        measured_width--;
+                        if (bitmap.GetPixel(i, 0).R == 0)
+                        {
+                            break;
+                        }
                     }
+                    return new SizeF(measured_width, size.Height);
                 }
             }
-
-            return new SizeF(measured_width, size.Height);
         }
 
         /// <summary>

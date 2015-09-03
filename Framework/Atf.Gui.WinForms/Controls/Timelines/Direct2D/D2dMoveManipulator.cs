@@ -514,11 +514,14 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
 
             if (snapperEvent != null)
             {
-                Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(snapperPath);
-                float worldStart = GdiUtil.Transform(localToWorld, snapperEvent.Start + dragOffset.X);
-                movingPoints.Add(worldStart);
-                if (snapperEvent.Length > 0.0f)
-                    movingPoints.Add(GdiUtil.Transform(localToWorld, snapperEvent.Start + dragOffset.X + snapperEvent.Length));
+                using (Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(snapperPath))
+                {
+                    float worldStart = GdiUtil.Transform(localToWorld, snapperEvent.Start + dragOffset.X);
+                    movingPoints.Add(worldStart);
+                    if (snapperEvent.Length > 0.0f)
+                        movingPoints.Add(GdiUtil.Transform(localToWorld,
+                            snapperEvent.Start + dragOffset.X + snapperEvent.Length));
+                }
             }
 
             // Get the offset from one of the world snap points to the closest non-selected object.

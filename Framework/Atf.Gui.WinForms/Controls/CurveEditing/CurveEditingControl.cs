@@ -885,13 +885,17 @@ namespace Sce.Atf.Controls.CurveEditing
             {
                 if (m_curvesListView.SelectedItems.Count == 0)
                     return;
-                var dlg = new AddPointDialog();
-                dlg.Location = new Point(MousePosition.X, MousePosition.Y);
-                dlg.ShowDialog(this);
-                if (dlg.DialogResult != DialogResult.OK)
-                    return;
+                
+                PointF pt;
+                using (var dlg = new AddPointDialog())
+                {
+                    dlg.Location = new Point(MousePosition.X, MousePosition.Y);
+                    dlg.ShowDialog(this);
+                    if (dlg.DialogResult != DialogResult.OK)
+                        return;
+                    pt = dlg.PointPosition;
+                }
 
-                PointF pt = dlg.PointPosition;
                 m_curveControl.TransactionContext.DoTransaction(delegate
                 {
                     foreach (ListViewItem item in m_curvesListView.SelectedItems)

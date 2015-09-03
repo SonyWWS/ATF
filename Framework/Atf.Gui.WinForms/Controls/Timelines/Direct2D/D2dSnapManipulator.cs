@@ -199,9 +199,9 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
                     if (options.Filter == null ||
                         options.Filter(snapToEvent, options))
                     {
-                        Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path);
                         float start, length;
-                        GetEventDimensions(snapToEvent, localToWorld, out start, out length);
+                        using (Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path))
+                            GetEventDimensions(snapToEvent, localToWorld, out start, out length);
 
                         foreach (SnapOffsetInfo info in m_snapInfo)
                         {

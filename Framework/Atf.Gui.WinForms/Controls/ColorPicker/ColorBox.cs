@@ -443,6 +443,8 @@ namespace Sce.Atf.Controls.ColorEditing
 
                     break;
             }
+
+            g.Dispose();
         }
 
 
@@ -484,6 +486,8 @@ namespace Sce.Atf.Controls.ColorEditing
             g.DrawEllipse(pen, x - 3, y - 3, 10, 10);                        //    Draw the marker : 11 x 11 circle
 
             DrawBorder();        //    Force the border to be redrawn, just in case the marker has been drawn over it.
+
+            g.Dispose();
         }
 
 
@@ -509,36 +513,38 @@ namespace Sce.Atf.Controls.ColorEditing
 
             pencil = new Pen(Color.Black);
             g.DrawRectangle(pencil, 1, 1, Width - 3, Height - 3);    //    Draw inner black rectangle
+
+            g.Dispose();
         }
 
 
-        /// <summary>
-        /// Evaluates the drawing style of the control and calls the appropriate
-        /// drawing function for content</summary>
-        private void DrawContent()
-        {
-            switch (m_eDrawStyle)
-            {
-                case eDrawStyle.Hue :
-                    Draw_Style_Hue();
-                    break;
-                case eDrawStyle.Saturation :
-                    Draw_Style_Saturation();
-                    break;
-                case eDrawStyle.Brightness :
-                    Draw_Style_Luminance();
-                    break;
-                case eDrawStyle.Red :
-                    Draw_Style_Red();
-                    break;
-                case eDrawStyle.Green :
-                    Draw_Style_Green();
-                    break;
-                case eDrawStyle.Blue :
-                    Draw_Style_Blue();
-                    break;
-            }
-        }
+        ///// <summary>
+        ///// Evaluates the drawing style of the control and calls the appropriate
+        ///// drawing function for content</summary>
+        //private void DrawContent()
+        //{
+        //    switch (m_eDrawStyle)
+        //    {
+        //        case eDrawStyle.Hue :
+        //            Draw_Style_Hue();
+        //            break;
+        //        case eDrawStyle.Saturation :
+        //            Draw_Style_Saturation();
+        //            break;
+        //        case eDrawStyle.Brightness :
+        //            Draw_Style_Luminance();
+        //            break;
+        //        case eDrawStyle.Red :
+        //            Draw_Style_Red();
+        //            break;
+        //        case eDrawStyle.Green :
+        //            Draw_Style_Green();
+        //            break;
+        //        case eDrawStyle.Blue :
+        //            Draw_Style_Blue();
+        //            break;
+        //    }
+        //}
 
 
         /// <summary>
@@ -562,6 +568,8 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, Width - 4, 1), AdobeColors.HSL_to_RGB(hsl_start), AdobeColors.HSL_to_RGB(hsl_end), 0, false); 
                 g.FillRectangle(br,new Rectangle(2,i + 2, Width - 4, 1)); 
             }
+
+            g.Dispose();
         }
 
 
@@ -586,6 +594,8 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, 1, Height - 4), AdobeColors.HSL_to_RGB(hsl_start), AdobeColors.HSL_to_RGB(hsl_end), 90, false); 
                 g.FillRectangle(br,new Rectangle(i + 2, 2, 1, Height - 4)); 
             }
+
+            g.Dispose();
         }
 
 
@@ -610,6 +620,8 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, 1, Height - 4), AdobeColors.HSL_to_RGB(hsl_start), AdobeColors.HSL_to_RGB(hsl_end), 90, false); 
                 g.FillRectangle(br,new Rectangle(i + 2, 2, 1, Height - 4)); 
             }
+
+            g.Dispose();
         }
 
 
@@ -629,6 +641,8 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, Width - 4, 1), Color.FromArgb(red, green, 0), Color.FromArgb(red, green, 255), 0, false); 
                 g.FillRectangle(br,new Rectangle(2,i + 2, Width - 4, 1)); 
             }
+
+            g.Dispose();
         }
 
 
@@ -648,6 +662,8 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, Width - 4, 1), Color.FromArgb(red, green, 0), Color.FromArgb(red, green, 255), 0, false); 
                 g.FillRectangle(br,new Rectangle(2,i + 2, Width - 4, 1)); 
             }
+
+            g.Dispose();
         }
 
 
@@ -667,11 +683,13 @@ namespace Sce.Atf.Controls.ColorEditing
                 LinearGradientBrush br = new LinearGradientBrush(new Rectangle(2,2, Width - 4, 1), Color.FromArgb(0, green, blue), Color.FromArgb(255, green, blue), 0, false); 
                 g.FillRectangle(br,new Rectangle(2,i + 2, Width - 4, 1)); 
             }
+
+            g.Dispose();
         }
 
 
         /// <summary>
-        /// Redraws the entire control, calling all the functions neccessary</summary>
+        /// Redraws the entire control, calling all the functions necessary</summary>
         private void Redraw_Control()
         {
             DrawBorder();

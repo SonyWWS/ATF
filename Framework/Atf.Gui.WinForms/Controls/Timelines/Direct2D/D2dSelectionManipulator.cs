@@ -440,9 +440,12 @@ namespace Sce.Atf.Controls.Timelines.Direct2D
         {
             IEvent e = (IEvent)path.Last;
 
-            Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path);
-            float start = GdiUtil.Transform(localToWorld, e.Start);
-            float length = GdiUtil.TransformVector(localToWorld, e.Length);
+            float start, length;
+            using (Matrix localToWorld = D2dTimelineControl.CalculateLocalToWorld(path))
+            {
+                start = GdiUtil.Transform(localToWorld, e.Start);
+                length = GdiUtil.TransformVector(localToWorld, e.Length);
+            }
 
             // If the length is zero, then count an exact match with beginTime or endTime as
             //  being an overlap.

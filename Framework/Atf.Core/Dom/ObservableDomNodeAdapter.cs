@@ -47,11 +47,12 @@ namespace Sce.Atf.Dom
         {
             IObservableCollection list;
 
-            if (m_childListsCache == null)
-                m_childListsCache = new Dictionary<ChildInfo, Dictionary<Type, IObservableCollection>>();
-
-            lock (m_childListsCache)
+            // The data-binding might be done on a separate thread than the main UI thread.
+            lock (m_lock)
             {
+                if (m_childListsCache == null)
+                    m_childListsCache = new Dictionary<ChildInfo, Dictionary<Type, IObservableCollection>>();
+
                 Dictionary<Type, IObservableCollection> typeLookup;
                 if (!m_childListsCache.TryGetValue(childInfo, out typeLookup))
                 {
@@ -269,6 +270,7 @@ namespace Sce.Atf.Dom
         }
 
         private static readonly Multimap<Type, DomNodeType> s_registeredTypes = new Multimap<Type, DomNodeType>();
+        private readonly object m_lock = new object(); //for accessing m_childListCache
         private Dictionary<ChildInfo, Dictionary<Type, IObservableCollection>> m_childListsCache;
         private bool m_hasTags;
         private event PropertyChangedEventHandler m_propertyChanged;

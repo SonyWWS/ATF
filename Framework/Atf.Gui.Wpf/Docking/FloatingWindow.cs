@@ -446,7 +446,10 @@ namespace Sce.Atf.Wpf.Docking
                 reader.ReadStartElement(this.GetType().Name);
                 if (reader.LocalName == typeof(TabLayout).Name || reader.LocalName == "MultiContent") // MultiContent is old name and is used here for compatibility with old saved layouts
                 {
-                    DockedContent = new TabLayout(Root, reader.ReadSubtree());
+                    using (XmlReader subtree = reader.ReadSubtree())
+                    {
+                        DockedContent = new TabLayout(Root, subtree);
+                    }
                     if (DockedContent.Children.Count > 0)
                     {
                         ContentSettings contentSettings = DockedContent.Children[0].Settings;

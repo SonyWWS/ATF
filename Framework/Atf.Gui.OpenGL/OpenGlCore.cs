@@ -92,7 +92,10 @@ namespace Sce.Atf.Rendering.OpenGL
             }
 
             // Init fonts
-            Gdi.SelectObject(hdc, SystemFonts.DefaultFont.ToHfont());
+            using (Font defaultFont = SystemFonts.DefaultFont)
+            {
+                Gdi.SelectObject(hdc, defaultFont.ToHfont());
+            }
             foreach (IntSet.Range range in s_fontMap.Ranges)
             {
                 int baseDisplayListId = range.PreviousItemsCount + TEXT_DISPLAY_LIST_BASE;

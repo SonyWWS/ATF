@@ -206,11 +206,13 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void UpdateBounds()
         {
-            Matrix transform = GetTransform();
-            for (int i = 0; i < m_draggingItems.Length; i++)
+            using (Matrix transform = GetTransform())
             {
-                Rectangle bounds = GdiUtil.Transform(transform, m_originalBounds[i]);//all in world coordinates
-                m_layoutContext.SetBounds(m_draggingItems[i], bounds, BoundsSpecified.All);
+                for (int i = 0; i < m_draggingItems.Length; i++)
+                {
+                    Rectangle bounds = GdiUtil.Transform(transform, m_originalBounds[i]); //all in world coordinates
+                    m_layoutContext.SetBounds(m_draggingItems[i], bounds, BoundsSpecified.All);
+                }
             }
         }
 
@@ -269,7 +271,7 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         // Create a transform matrix from m_startingBounds to a new boundary rectangle,
-        //  based on the current mouse drag.
+        //  based on the current mouse drag. Caller must dispose of the resulting matrix.
         private Matrix GetTransform()
         {
             Matrix transform = m_transformAdapter.Transform;

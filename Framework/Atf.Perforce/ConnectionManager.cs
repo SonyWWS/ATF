@@ -431,52 +431,60 @@ namespace Sce.Atf.Perforce
                 if (cmd != null)
                     cmd.Dispose();
             }
-
+            
             LoginDialog loginDialog = null;
-
-            while (requireLogin)
+            try
             {
-                if (loginDialog == null)
+                while (requireLogin)
                 {
-                    loginDialog = new LoginDialog();
-                    string message = string.Format("For user {0} with workspace {1} on server {2}.".Localize(),
-                        connection.UserName, connection.Client.Name, connection.Server.Address.Uri);
-
-                    loginDialog.SetConnectionLabel(message);
-                    if ((MainForm != null) && (MainForm.Icon != null))
-                        loginDialog.Icon = MainForm.Icon;
-                }
-
-                DialogResult dr = loginDialog.ShowDialog(MainForm);
-                if (dr == DialogResult.OK)
-                {
-                    try
+                    if (loginDialog == null)
                     {
-                        if (connection.Server.State != ServerState.Online)
+                        loginDialog = new LoginDialog();
+                        string message = string.Format("For user {0} with workspace {1} on server {2}.".Localize(),
+                            connection.UserName, connection.Client.Name, connection.Server.Address.Uri);
+
+                        loginDialog.SetConnectionLabel(message);
+                        if ((MainForm != null) && (MainForm.Icon != null))
+                            loginDialog.Icon = MainForm.Icon;
+                    }
+
+                    DialogResult dr = loginDialog.ShowDialog(MainForm);
+                    if (dr == DialogResult.OK)
+                    {
+                        try
                         {
-                            ConnectionOptions["Password"] = loginDialog.Password;
-                            connection.Connect(ConnectionOptions);
-                            requireLogin = connection.Server.State != ServerState.Online;
+                            if (connection.Server.State != ServerState.Online)
+                            {
+                                ConnectionOptions["Password"] = loginDialog.Password;
+                                connection.Connect(ConnectionOptions);
+                                requireLogin = connection.Server.State != ServerState.Online;
+                            }
+                            else
+                            {
+                                var credential = connection.Login(loginDialog.Password);
+                                requireLogin = credential == null;
+                            }
                         }
-                        else
+                        catch (P4Exception e)
                         {
-                            var credential = connection.Login(loginDialog.Password);
-                            requireLogin = credential == null;
+                            ShowErrorMessage(e.Message);
+                            if (ThrowExceptions)
+                                throw;
                         }
                     }
-                    catch (P4Exception e)
+                    else
                     {
-                        ShowErrorMessage(e.Message);
-                        if (ThrowExceptions)
-                            throw;
+                        result = false;
+                        break;
                     }
-                }
-                else
-                {
-                    result = false;
-                    break;
                 }
             }
+            finally
+            {
+                if (loginDialog != null)
+                    loginDialog.Dispose();
+            }
+
             return result;
         }
 

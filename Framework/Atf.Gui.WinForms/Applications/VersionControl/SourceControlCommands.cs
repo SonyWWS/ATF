@@ -39,7 +39,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Flag bit maps that determine which commands should appear in the "File/Source Conntrol" menu</summary>
+        /// Flag bit maps that determine which commands should appear in the "File/Source Control" menu</summary>
         [Flags]
         public enum CommandRegister
         {
@@ -95,7 +95,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Whether to refresh the status after saving a  document</summary>
-        /// <remarks>Subversion usualy does not require check-out to edit a checked-in doc, 
+        /// <remarks>Subversion usually does not require check-out to edit a checked-in doc, 
         /// need to refresh doc status after saving </remarks>
         public bool RefreshStatusOnSave { get; set; }
   
@@ -500,7 +500,7 @@ namespace Sce.Atf.Applications
                 return false;
             }
 
-            List<Uri> uris = new List<Uri>();
+            var uris = new List<Uri>();
             foreach (IResource resource in SourceControlContext.Resources)
                 GetSourceControlledUri(resource, uris);
             SourceControlService.RefreshStatus(uris);
@@ -525,12 +525,12 @@ namespace Sce.Atf.Applications
                 return false;
             }
 
-            List<Uri> uris = new List<Uri>();
+            var uris = new List<Uri>();
             foreach (IResource resource in SourceControlContext.Resources)
                 uris.Add(resource.Uri);
 
-            List<Uri> modifiled = new List<Uri>();
-            List<Uri> localNotInDepot = new List<Uri>();
+            var modifiled = new List<Uri>();
+            var localNotInDepot = new List<Uri>();
 
             using (new WaitCursor())
             {
@@ -548,10 +548,12 @@ namespace Sce.Atf.Applications
                 }
             }
 
-            ReconcileForm form = new ReconcileForm(SourceControlService, modifiled, localNotInDepot);
-            if (m_mainForm != null)
-                form.Icon = m_mainForm.Icon;
-            form.ShowDialog();
+            using (var form = new ReconcileForm(SourceControlService, modifiled, localNotInDepot))
+            {
+                if (m_mainForm != null)
+                    form.Icon = m_mainForm.Icon;
+                form.ShowDialog();
+            }
 
             return true;
         }
@@ -665,10 +667,12 @@ namespace Sce.Atf.Applications
                     }
                 }
 
-                CheckInForm form = new CheckInForm(SourceControlService, toCheckIns);
-                if (m_mainForm != null)
-                    form.Icon = m_mainForm.Icon;
-                form.ShowDialog(GetDialogOwner());
+                using (var form = new CheckInForm(SourceControlService, toCheckIns))
+                {
+                    if (m_mainForm != null)
+                        form.Icon = m_mainForm.Icon;
+                    form.ShowDialog(GetDialogOwner());
+                }
             }
 
             return result;
@@ -824,7 +828,7 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
-        /// Gets current cource control command</summary>
+        /// Gets current source control command</summary>
         protected Command CurrentCommand
         {
             get { return m_currentCommnd; }

@@ -97,9 +97,8 @@ namespace Sce.Atf.Wpf.Interop
         /// <returns>Converted WpfModifierKeys enum</returns>
         public static WpfModifierKeys ToWpfModifiers(AtfKeys atfKeys)
         {
-            // TODO: need to verify this all works correctly
-            var modifiers = atfKeys &= AtfKeys.Modifiers;
-            WpfModifierKeys result = WpfModifierKeys.None;
+            var modifiers = atfKeys & AtfKeys.Modifiers;
+            var result = WpfModifierKeys.None;
 
             if ((modifiers & AtfKeys.Alt) > 0)
                 result |= WpfModifierKeys.Alt;
@@ -107,9 +106,6 @@ namespace Sce.Atf.Wpf.Interop
                 result |= WpfModifierKeys.Shift;
             if ((modifiers & AtfKeys.Control) > 0)
                 result |= WpfModifierKeys.Control;
-
-            if ((atfKeys & AtfKeys.RWin) > 0 || (atfKeys & AtfKeys.RWin) > 0)
-                result |= WpfModifierKeys.Windows;
 
             return result;
         }
