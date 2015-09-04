@@ -131,16 +131,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             {
                 if (m_theme != value)
                 {
-                    if (m_theme != null)
-                        m_theme.Redraw -= theme_Redraw;
-                    SetPinSpacing();
+                    if (value==null)
+                        throw new ArgumentNullException("value");
+                    m_theme.Redraw -= theme_Redraw;
+                    SetPinSpacing(); //requires that m_theme not be null
                     m_theme = value;
-                    if (m_theme != null)
-                        m_theme.Redraw += theme_Redraw;
+                    m_theme.Redraw += theme_Redraw;
                 }
             }
         }
-
 
         /// <summary>
         /// Disposes of resources</summary>
@@ -987,8 +986,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         edgesConnectingExpandedGroups.Add(subEdge);
                     else
                     {
-                        var style = GetStyle(subEdge);
-                        Draw(subEdge, style, g);
+                        if (GetStyle != null)
+                            Draw(subEdge, GetStyle(subEdge), g);
+                        else
+                            Draw(subEdge, DiagramDrawingStyle.Normal, g);
                     }
                 }
             }
@@ -1023,8 +1024,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             // draw sub-edges that connect to expanded sub-groups
             foreach (TWire subEdge in edgesConnectingExpandedGroups)
             {
-                var style = GetStyle(subEdge);
-                Draw(subEdge, style, g);
+                if (GetStyle != null)
+                    Draw(subEdge, GetStyle(subEdge), g);
+                else
+                    Draw(subEdge, DiagramDrawingStyle.Normal, g);
             }
 
             m_graphPath.Pop();

@@ -267,15 +267,15 @@ namespace Sce.Atf.Adaptation
             {
                 var node = Adaptee.Cast<DomNode>();
 
-                // Performance can be improved here by assuming that all DomNodes
-                // of a given DomNodeType will always return the same set of adapter types
-                // we can then create a static lookup
-                if (!s_cachedPropertyDescriptors.TryGetValue(node.Type, out result))
+                lock (s_cachedPropertyDescriptors)
                 {
-                    result = base.GenerateDescriptors();
-
-                    lock (s_cachedPropertyDescriptors)
+                    // Performance can be improved here by assuming that all DomNodes
+                    // of a given DomNodeType will always return the same set of adapter types
+                    // we can then create a static lookup
+                    if (!s_cachedPropertyDescriptors.TryGetValue(node.Type, out result))
                     {
+                        result = base.GenerateDescriptors();
+
                         if (!s_cachedPropertyDescriptors.ContainsKey(node.Type))
                         {
                             s_cachedPropertyDescriptors.Add(node.Type, result);

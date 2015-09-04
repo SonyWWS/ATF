@@ -180,9 +180,9 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void control_DragDrop(object sender, DragEventArgs e)
         {
-            if (m_selectionContext != null || !m_selectionContext.Selection.Any())
+            if (m_selectionContext != null)
             {
-                // items may be selected  programmatically after the drag & drop, 
+                // Items may be selected programmatically after the drag & drop, 
                 // raise SelectedItemHit to enable label editor start editing with F2 without mouse click over the selected item first 
 
                 // items may be placed using mouse position as upper-left corner; 

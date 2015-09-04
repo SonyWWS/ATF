@@ -116,7 +116,7 @@ namespace CircuitEditorSample
                 //typeof(TemplatingSupervisor),         // templated instances copy-on-edit support(optionally)
 
                 typeof(AnnotatingCommands),             // annotating commands
-                typeof(DynamicPropertyCommands),           // context commands for user-defined properties in the property editors
+                typeof(DynamicPropertyCommands),        // context commands for user-defined properties in the property editors
                 typeof(CircuitTestCommands),            // circuit tester commands
 
                 typeof(PythonService),                  // scripting service for automated tests

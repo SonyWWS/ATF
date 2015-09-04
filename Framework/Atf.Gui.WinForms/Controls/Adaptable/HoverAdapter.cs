@@ -131,11 +131,13 @@ namespace Sce.Atf.Controls.Adaptable
                     }
                 }
 
-                if (hitRecord.Item != m_hoverItem || hitRecord.Part != m_hoverPart ||
-                    hitRecord.SubItem != m_hoverSubItem || hitRecord.SubPart != m_hoverSubPart)
+                if (hitRecord != null &&
+                    (hitRecord.Item != m_hoverItem || hitRecord.Part != m_hoverPart ||
+                    hitRecord.SubItem != m_hoverSubItem || hitRecord.SubPart != m_hoverSubPart))
                     StartHover(hitRecord);
             }
-        }        
+        }
+
         private void control_MouseDown(object sender, MouseEventArgs e)
         {
             StopHover();
@@ -152,7 +154,7 @@ namespace Sce.Atf.Controls.Adaptable
             if (m_hoverItem != null)
             {
                 m_hovering = true;
-                HoverEventArgs<object, object> hoverArgs = new HoverEventArgs<object, object>(m_hoverItem, m_hoverPart, m_hoverSubItem, m_hoverSubPart, AdaptedControl);
+                var hoverArgs = new HoverEventArgs<object, object>(m_hoverItem, m_hoverPart, m_hoverSubItem, m_hoverSubPart, AdaptedControl);
                 OnHoverStarted(hoverArgs);
                 HoverStarted.Raise(this, hoverArgs);
             }

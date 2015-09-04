@@ -133,7 +133,7 @@ namespace Sce.Atf.Wpf.Models
             {
                 // If this fails then use reflection to get all base types and interfaces
                 // from this adapter type.  
-                // Dont want to lock during this opertation as it is slow
+                // Don't want to lock during this operation as it is slow.
 
                 List<Type> baseTypes = new List<Type>(adapterType.GetInterfaces());
 
