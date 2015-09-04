@@ -52,6 +52,20 @@ namespace CircuitEditorSample
             moduleType.showUnconnectedPinsAttribute = moduleType.Type.GetAttributeInfo("showUnconnectedPins");
             moduleType.sourceGuidAttribute = moduleType.Type.GetAttributeInfo("sourceGuid");
             moduleType.validatedAttribute = moduleType.Type.GetAttributeInfo("validated");
+            moduleType.dynamicPropertyChild = moduleType.Type.GetChildInfo("dynamicProperty");
+
+            dynamicPropertyType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "dynamicPropertyType");
+            dynamicPropertyType.nameAttribute = dynamicPropertyType.Type.GetAttributeInfo("name");
+            dynamicPropertyType.categoryAttribute = dynamicPropertyType.Type.GetAttributeInfo("category");
+            dynamicPropertyType.descriptionAttribute = dynamicPropertyType.Type.GetAttributeInfo("description");
+            dynamicPropertyType.converterAttribute = dynamicPropertyType.Type.GetAttributeInfo("converter");
+            dynamicPropertyType.editorAttribute = dynamicPropertyType.Type.GetAttributeInfo("editor");
+            dynamicPropertyType.valueTypeAttribute = dynamicPropertyType.Type.GetAttributeInfo("valueType");
+            dynamicPropertyType.stringValueAttribute = dynamicPropertyType.Type.GetAttributeInfo("stringValue");
+            dynamicPropertyType.floatValueAttribute = dynamicPropertyType.Type.GetAttributeInfo("floatValue");
+            dynamicPropertyType.vector3ValueAttribute = dynamicPropertyType.Type.GetAttributeInfo("vector3Value");
+            dynamicPropertyType.boolValueAttribute = dynamicPropertyType.Type.GetAttributeInfo("boolValue");
+            dynamicPropertyType.intValueAttribute = dynamicPropertyType.Type.GetAttributeInfo("intValue");
 
             connectionType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "connectionType");
             connectionType.labelAttribute = connectionType.Type.GetAttributeInfo("label");
@@ -128,6 +142,7 @@ namespace CircuitEditorSample
             groupType.heightAttribute = groupType.Type.GetAttributeInfo("height");
             groupType.minwidthAttribute = groupType.Type.GetAttributeInfo("minwidth");
             groupType.minheightAttribute = groupType.Type.GetAttributeInfo("minheight");
+            groupType.dynamicPropertyChild = groupType.Type.GetChildInfo("dynamicProperty");
             groupType.inputChild = groupType.Type.GetChildInfo("input");
             groupType.outputChild = groupType.Type.GetChildInfo("output");
             groupType.moduleChild = groupType.Type.GetChildInfo("module");
@@ -148,6 +163,7 @@ namespace CircuitEditorSample
             missingModuleType.showUnconnectedPinsAttribute = missingModuleType.Type.GetAttributeInfo("showUnconnectedPins");
             missingModuleType.sourceGuidAttribute = missingModuleType.Type.GetAttributeInfo("sourceGuid");
             missingModuleType.validatedAttribute = missingModuleType.Type.GetAttributeInfo("validated");
+            missingModuleType.dynamicPropertyChild = missingModuleType.Type.GetChildInfo("dynamicProperty");
 
             moduleTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "moduleTemplateRefType");
             moduleTemplateRefType.nameAttribute = moduleTemplateRefType.Type.GetAttributeInfo("name");
@@ -159,6 +175,7 @@ namespace CircuitEditorSample
             moduleTemplateRefType.sourceGuidAttribute = moduleTemplateRefType.Type.GetAttributeInfo("sourceGuid");
             moduleTemplateRefType.validatedAttribute = moduleTemplateRefType.Type.GetAttributeInfo("validated");
             moduleTemplateRefType.guidRefAttribute = moduleTemplateRefType.Type.GetAttributeInfo("guidRef");
+            moduleTemplateRefType.dynamicPropertyChild = moduleTemplateRefType.Type.GetChildInfo("dynamicProperty");
 
             groupTemplateRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "groupTemplateRefType");
             groupTemplateRefType.nameAttribute = groupTemplateRefType.Type.GetAttributeInfo("name");
@@ -179,6 +196,7 @@ namespace CircuitEditorSample
             groupTemplateRefType.guidRefAttribute = groupTemplateRefType.Type.GetAttributeInfo("guidRef");
             groupTemplateRefType.refExpandedAttribute = groupTemplateRefType.Type.GetAttributeInfo("refExpanded");
             groupTemplateRefType.refShowExpandedGroupPinsAttribute = groupTemplateRefType.Type.GetAttributeInfo("refShowExpandedGroupPins");
+            groupTemplateRefType.dynamicPropertyChild = groupTemplateRefType.Type.GetChildInfo("dynamicProperty");
             groupTemplateRefType.inputChild = groupTemplateRefType.Type.GetChildInfo("input");
             groupTemplateRefType.outputChild = groupTemplateRefType.Type.GetChildInfo("output");
             groupTemplateRefType.moduleChild = groupTemplateRefType.Type.GetChildInfo("module");
@@ -220,6 +238,23 @@ namespace CircuitEditorSample
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
             public static AttributeInfo validatedAttribute;
+            public static ChildInfo dynamicPropertyChild;
+        }
+
+        public static class dynamicPropertyType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo nameAttribute;
+            public static AttributeInfo categoryAttribute;
+            public static AttributeInfo descriptionAttribute;
+            public static AttributeInfo converterAttribute;
+            public static AttributeInfo editorAttribute;
+            public static AttributeInfo valueTypeAttribute;
+            public static AttributeInfo stringValueAttribute;
+            public static AttributeInfo floatValueAttribute;
+            public static AttributeInfo vector3ValueAttribute;
+            public static AttributeInfo boolValueAttribute;
+            public static AttributeInfo intValueAttribute;
         }
 
         public static class connectionType
@@ -329,6 +364,7 @@ namespace CircuitEditorSample
             public static AttributeInfo heightAttribute;
             public static AttributeInfo minwidthAttribute;
             public static AttributeInfo minheightAttribute;
+            public static ChildInfo dynamicPropertyChild;
             public static ChildInfo inputChild;
             public static ChildInfo outputChild;
             public static ChildInfo moduleChild;
@@ -355,6 +391,7 @@ namespace CircuitEditorSample
             public static AttributeInfo showUnconnectedPinsAttribute;
             public static AttributeInfo sourceGuidAttribute;
             public static AttributeInfo validatedAttribute;
+            public static ChildInfo dynamicPropertyChild;
         }
 
         public static class moduleTemplateRefType
@@ -369,6 +406,7 @@ namespace CircuitEditorSample
             public static AttributeInfo sourceGuidAttribute;
             public static AttributeInfo validatedAttribute;
             public static AttributeInfo guidRefAttribute;
+            public static ChildInfo dynamicPropertyChild;
         }
 
         public static class groupTemplateRefType
@@ -392,6 +430,7 @@ namespace CircuitEditorSample
             public static AttributeInfo guidRefAttribute;
             public static AttributeInfo refExpandedAttribute;
             public static AttributeInfo refShowExpandedGroupPinsAttribute;
+            public static ChildInfo dynamicPropertyChild;
             public static ChildInfo inputChild;
             public static ChildInfo outputChild;
             public static ChildInfo moduleChild;

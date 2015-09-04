@@ -149,6 +149,7 @@ namespace CircuitEditorSample
         {         
             // adapts the default implementation  of circuit types
             Schema.moduleType.Type.Define(new ExtensionInfo<Module>());
+            Schema.moduleType.Type.Define(new ExtensionInfo<ModuleProperties>());
             Schema.connectionType.Type.Define(new ExtensionInfo<Connection>());
             Schema.pinType.Type.Define(new ExtensionInfo<Pin>());
             Schema.groupPinType.Type.Define(new ExtensionInfo<GroupPin>());

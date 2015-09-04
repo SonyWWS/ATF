@@ -586,8 +586,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 parent = parent.Parent;
             }
 
+            // Dynamic properties, a feature in the circuit editor sample app, have a parent that is an Element.
             return
-               child.Is<Group>() || parent.Is<Circuit>() || parent.Is<Group>();
+               child.Is<Group>() || parent.Is<Circuit>() || parent.Is<Group>() || parent.Is<Element>();
         }
 
 

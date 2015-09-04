@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Sce.Atf.Adaptation;
+using Sce.Atf.Controls.PropertyEditing;
 
 namespace Sce.Atf.Dom
 {
@@ -216,9 +217,16 @@ namespace Sce.Atf.Dom
         public override bool Equals(object obj)
         {
             var other = obj as ChildAttributePropertyDescriptor;
+
+            // Make sure that the AttributeInfos match.
             if (other == null || !base.Equals(other))
                 return false;
 
+            // Make sure that the property name, category, and type match.
+            if (!PropertyUtils.PropertyDescriptorsEqual(this, other))
+                return false;
+
+            // Make sure that the path of child types is identical.
             IEnumerator<ChildInfo> myEnumerator = m_childPath.GetEnumerator();
             IEnumerator<ChildInfo> otherEnumerator = other.m_childPath.GetEnumerator();
             do
@@ -240,10 +248,10 @@ namespace Sce.Atf.Dom
         /// <remarks>Implements GetHashCode() for organizing descriptors in grid controls</remarks>
         public override int GetHashCode()
         {
-            int result = base.GetHashCode();
-            foreach (ChildInfo childInfo in m_childPath)
-                result ^= childInfo.GetEquivalentHashCode();
-            return result;
+            // We don't really want to use the base method because it assumes that this
+            //  property descriptor is modifying a DomNode attribute on our root DomNode
+            //  and so it does not take into account the name or category of the property.
+            return PropertyUtils.GetPropertyDescriptorHash(this);
         }
 
         private readonly IEnumerable<ChildInfo> m_childPath;

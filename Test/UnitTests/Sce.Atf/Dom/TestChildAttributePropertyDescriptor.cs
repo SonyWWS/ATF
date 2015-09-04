@@ -28,12 +28,14 @@ namespace UnitTests.Atf.Dom
             Assert.AreEqual(desc1.GetHashCode(), desc2.GetHashCode());
 
             // test category being different; oddly, although I think they should not be considered equal,
-            //  the .Net PropertyDescriptor ignores the difference in category name. So, I'm guessing that
-            //  the AttributePropertyDescriptor should behave the same as PropertyDescriptor.
+            //  the .NET PropertyDescriptor ignores the difference in category name. For our purposes, we
+            //  want to allow for two different property editors to appear with the same name but different
+            //  categories. This is how our PropertyUtils.PropertyDescriptorsEqual() and GetPropertyDescriptorHash()
+            //  work.
             var desc3 = new ChildAttributePropertyDescriptor(
                 "xkcd", attrInfo1, childInfo1, "Category 2", "A commonly used word or phrase in the xkcd comic", true);
-            Assert.AreEqual(desc1, desc3);
-            Assert.AreEqual(desc1.GetHashCode(), desc3.GetHashCode());
+            Assert.AreNotEqual(desc1, desc3);
+            Assert.AreNotEqual(desc1.GetHashCode(), desc3.GetHashCode());
 
             // test description being different; similarly here, the .Net PropertyDescriptor doesn't care.
             var desc4 = new ChildAttributePropertyDescriptor(
@@ -64,6 +66,12 @@ namespace UnitTests.Atf.Dom
                 "xkcd", derivedAttrInfo, derivedChildInfo, "Category 1", "A commonly used word or phrase in the xkcd comic", true);
             Assert.AreEqual(desc1, desc6);
             Assert.AreEqual(desc1.GetHashCode(), desc6.GetHashCode());
+
+            // test that a different name counts as a different property descriptor
+            var desc7 = new ChildAttributePropertyDescriptor(
+                "xkcd2", attrInfo1, childInfo1, "Category 1", "different name", true);
+            Assert.AreNotEqual(desc1, desc7);
+            Assert.AreNotEqual(desc1.GetHashCode(), desc7.GetHashCode());
         }
     }
 }

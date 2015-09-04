@@ -73,6 +73,13 @@
     <Compile Include="CircuitReader.cs" />
     <Compile Include="CircuitRenderer.cs" />
     <Compile Include="CircuitWriter.cs" />
+    <Compile Include="Resources\DynamicPropertyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Resources\DynamicPropertyForm.Designer.cs">
+      <DependentUpon>DynamicPropertyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicPropertyCommands.cs" />
     <Compile Include="DocVersionTransforms\Migrator.cs" />
     <Compile Include="DocVersionTransforms\upgrades\CircuitEditor1to2.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -84,6 +91,7 @@
     <Compile Include="LayeringCommands.cs" />
     <Compile Include="MissingModule.cs" />
     <Compile Include="ModuleElementInfo.cs" />
+    <Compile Include="ModuleProperties.cs" />
     <Compile Include="ModuleReference.cs" />
     <Compile Include="Prototype.cs" />
     <Compile Include="PrototypeFolder.cs" />
@@ -154,6 +162,9 @@
     <EmbeddedResource Include="Resources\speaker_32.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\DynamicPropertyForm.resx">
+      <DependentUpon>DynamicPropertyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="schemas\Circuit.xsd" />
   </ItemGroup>
   <ItemGroup>

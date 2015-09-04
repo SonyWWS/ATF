@@ -6,11 +6,57 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   version="2.0">
 
+  <!-- Space-separated list of floats -->
+  <xs:simpleType name="floatListType">
+    <xs:list itemType="xs:float"></xs:list>
+  </xs:simpleType>
+
+  <!-- 3 float vector -->
+  <xs:simpleType name="vector3Type">
+    <xs:restriction base="floatListType">
+      <xs:length value="3"></xs:length>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+  This represents a property on an object that can be specified dynamically at run-time,
+  either programmatically or by the user, using context menu commands in the property
+  editor. This data is used to create a PropertyDescriptor at run-time when its parent
+  object is selected.
+  -->
+  <xs:complexType name="dynamicPropertyType">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="category" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+
+    <!--The 'converter' is a C# type name plus optional parameter list, like:
+    "Sce.Atf.Controls.PropertyEditing.FloatArrayConverter, Atf.Gui".-->
+    <xs:attribute name="converter" type="xs:string" />
+
+    <!--The 'editor' is a C# type name plus optional parameter list, like:
+    "Sce.Atf.Controls.PropertyEditing.NumericTupleEditor, Atf.Gui.WinForms:System.Single,x,y,z"-->
+    <xs:attribute name="editor" type="xs:string" />
+
+    <!--The name of the schema attribute to use as a value, e.g., "vector3Value"-->
+    <xs:attribute name="valueType" type="xs:string" />
+
+    <!--The user's data will be stored in one of the following attributes, according to
+    'valueType'.-->
+    <xs:attribute name="stringValue" type="xs:string" />
+    <xs:attribute name="floatValue" type="xs:float" />
+    <xs:attribute name="vector3Value" type="vector3Type" />
+    <xs:attribute name="boolValue" type="xs:boolean" />
+    <xs:attribute name="intValue" type="xs:int" />
+  </xs:complexType>
+
   <!--
   A module has a name (id), label, and position, and can be referenced by
   connections.
   -->
   <xs:complexType name="moduleType" abstract="true">
+    <xs:sequence>
+      <xs:element name="dynamicProperty" type="dynamicPropertyType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:attribute name="name" type="xs:ID" use="required" />
     <xs:attribute name="label" type="xs:string" />
     <xs:attribute name="x" type="xs:int" use="required" />
@@ -55,7 +101,7 @@
         <!--associated internal(sub) pin-->
         <xs:attribute name="pin" type="xs:integer" use="required" />
         <!--visibility: hide or show this group pin-->
-        <xs:attribute name="visible" type="xs:boolean" default="true"/>      
+        <xs:attribute name="visible" type="xs:boolean" default="true"/>
         <!-- pin index(order) in its sub-graph owner  -->
         <xs:attribute name="index" type="xs:integer" use="required" />
         <xs:attribute name="pinned" type="xs:boolean" default="false"/>
@@ -84,7 +130,7 @@
 
         <xs:attribute name="expanded" type="xs:boolean" default="false"/>
         <xs:attribute name="showExpandedGroupPins" type="xs:boolean" default="false"/>
- 
+
         <!--container size when the group is expanded; when autosize is true, container size is computed-->
         <xs:attribute name="autosize" type="xs:boolean" default="true"/>
         <xs:attribute name="width" type="xs:int"/>
@@ -119,9 +165,9 @@
   <!--
   An annotation is a comment on the circuit canvas.
   -->
-  <xs:complexType name="annotationType"> 
+  <xs:complexType name="annotationType">
     <xs:attribute name="text" type="xs:string" use="required" />
-    <!--position--> 
+    <!--position-->
     <xs:attribute name="x" type="xs:int" use="required" />
     <xs:attribute name="y" type="xs:int" use="required" />
     <!--size-->
@@ -144,7 +190,6 @@
     </xs:sequence>
   </xs:complexType>
 
- 
   <!--
   A prototype is a set of modules and connections among them that can be copied and
   pasted into a circuit.
@@ -172,7 +217,7 @@
   A template is a module that can be referenced into a circuit.
   -->
   <xs:complexType name ="templateType" >
-   <xs:sequence>
+    <xs:sequence>
       <xs:element name="module" type="moduleType"/>
     </xs:sequence>
     <!--template name default to module name,  can be different-->

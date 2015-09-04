@@ -39,7 +39,7 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Gets the current selection.
+        /// Sets the current selection.
         /// PropertyEditorControlContext should own the descriptor</summary>
         public Func<IEnumerable<object>> GetSelectionFunc { private get; set; }
 
@@ -127,12 +127,20 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
+        /// Gets all of the property descriptors contained within</summary>
+        /// <returns></returns>
+        public IEnumerable<SysPropertyDescriptor> GetDescriptors()
+        {
+            return m_descriptorMap.Values;
+        }
+
+        /// <summary>
         /// Returns a property descriptor of the specified component 
         /// that matches the m_key member, or null if none found</summary>
         /// <param name="component">Component for which to find a matching descriptor</param>
         /// <returns>A property descriptor of the specified component 
         /// that matches the key member, or null if none found</returns>
-        private SysPropertyDescriptor FindDescriptor(object component)
+        public SysPropertyDescriptor FindDescriptor(object component)
         {
             if (component == null)
                 return null;
