@@ -202,47 +202,47 @@ namespace Sce.Atf
         {
             EnumData result;
 
-            if (!s_cache.TryGetValue(enumType, out result))
+            lock (s_cache)
             {
-                // Generate data
-                result = new EnumData(enumType);
-
-                var fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-                foreach (var field in fields)
+                if (!s_cache.TryGetValue(enumType, out result))
                 {
-                    // TODO: localization support
-                    string displayString = null;
-                    object enumValue = field.GetValue(null);
+                    // Generate data
+                    result = new EnumData(enumType);
 
-                    var a = field.GetCustomAttributes(typeof(DisplayStringAttribute), false);
-
-                    if (a != null && a.Length > 0)
+                    var fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                    foreach (var field in fields)
                     {
-                        displayString = ((DisplayStringAttribute)a[0]).Value;
+                        // TODO: localization support
+                        string displayString = null;
+                        object enumValue = field.GetValue(null);
+
+                        var a = field.GetCustomAttributes(typeof (DisplayStringAttribute), false);
+
+                        if (a != null && a.Length > 0)
+                        {
+                            displayString = ((DisplayStringAttribute) a[0]).Value;
+                        }
+
+                        if (displayString == null)
+                        {
+                            displayString = field.Name;
+                        }
+
+                        // Type Dictionary<> asserts on redundant key adds.
+                        // So ignore enum entries having the same value
+                        // as a previous entry.
+                        //
+                        // If this is problematic, remove line below, and
+                        // re-type DisplayStrings as a multimap.  However, 
+                        // doing so might constitute a breaking change.
+
+                        if (result.DisplayStrings.ContainsKey(enumValue))
+                            continue;
+
+                        result.DisplayStrings.Add(enumValue, displayString);
                     }
 
-                    if (displayString == null)
-                    {
-                        displayString = field.Name;
-                    }
-
-                    // Type Dictionary<> asserts on redundant key adds.
-                    // So ignore enum entries having the same value
-                    // as a previous entry.
-                    //
-                    // If this is problematic, remove line below, and
-                    // re-type DisplayStrings as a multimap.  However, 
-                    // doing so might constitute a breaking change.
-                    
-                    if (result.DisplayStrings.ContainsKey(enumValue))
-                        continue;
-
-                    result.DisplayStrings.Add(enumValue, displayString);
-                }
-
-                // Add data to cache
-                lock (s_cache)
-                {
+                    // Add data to cache
                     if (!s_cache.ContainsKey(enumType))
                     {
                         s_cache.Add(enumType, result);
