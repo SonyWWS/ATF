@@ -69,10 +69,6 @@ namespace Sce.Atf.Dom
     public class QueryStringPropertyInput : QueryStringInput
     {
         /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        private QueryStringPropertyInput() : base(null, StringQuery.All) { m_isReplacePattern = false; }
-
-        /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Node to receive child</param>
         /// <param name="stringQueryOptions">Bitfield defining which string search types can be selected</param>
@@ -113,11 +109,6 @@ namespace Sce.Atf.Dom
     public class QueryPropertyNameInput : QueryStringPropertyInput
     {
         /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        /// <param name="isReplacePattern">Whether or not this match should be used in a subsequent replace operation</param>
-        private QueryPropertyNameInput(bool isReplacePattern) : base(null, StringQuery.All, isReplacePattern) { }
-
-        /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Parent node to receive child</param>
         /// <param name="stringQueryOptions">Bitfield defining which string search types can be selected</param>
@@ -144,10 +135,6 @@ namespace Sce.Atf.Dom
     public class QueryPropertyValueAsStringInput : QueryStringPropertyInput
     {
         /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        private QueryPropertyValueAsStringInput() : base(null, StringQuery.All, false) { }
-
-        /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Node to receive child</param>
         /// <param name="stringQueryOptions">Bitfield defining which string search types can be selected</param>
@@ -173,10 +160,6 @@ namespace Sce.Atf.Dom
     /// QueryStringInput tree specifically for searching DomNode property values as numbers</summary>
     public class QueryPropertyValueAsNumberInput : QueryNumericalInput
     {
-        /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        private QueryPropertyValueAsNumberInput() : base(null, NumericalQuery.All) { }
-
         /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Parent node to receive child</param>
@@ -245,10 +228,6 @@ namespace Sce.Atf.Dom
     public class QueryDomNodeName : QueryPropertyValueAsStringInput
     {
         /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        private QueryDomNodeName() : base(null, StringQuery.All, false) { }
-
-        /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Parent node to receive child</param>
         /// <param name="stringQueryOptions">Bitfield defining which string search types can be selected</param>
@@ -275,10 +254,6 @@ namespace Sce.Atf.Dom
     /// QueryStringInput tree specifically for searching DomNode properties, using search patterns for property name and value</summary>
     public class QueryDomNodeProperty : QueryNode
     {
-        /// <summary>
-        /// Constructor (private to prevent default construction)</summary>
-        private QueryDomNodeProperty() { }
-
         /// <summary>
         /// Constructor</summary>
         /// <param name="parentNode">Node to receive child</param>
