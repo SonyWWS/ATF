@@ -154,7 +154,7 @@ namespace Sce.Atf.Wpf.Applications
 
             IDockContent dockContent = m_dockPanel.RegisterContent(control, def.Id, ControlGroupToDockTo(def.Group));
             dockContent.IsFocusedChanged += DockContent_IsFocusedChanged;
-
+            dockContent.Closing += DockContentOnClosing; 
             ControlInfo contentInfo = new ControlInfo(def.Name, def.Description, def.Id, def.Group, def.ImageSourceKey, dockContent, client);
 
             m_registeredContents.Add(contentInfo);
@@ -176,6 +176,13 @@ namespace Sce.Atf.Wpf.Applications
             return contentInfo;
         }
 
+        private void DockContentOnClosing(object sender, ContentClosedEventArgs e)
+        {
+            DockContent dockContent = (DockContent)sender;
+            var controlInfo = FindControlInfo(dockContent.Content);
+            controlInfo.Client.Close(dockContent.Content, false);
+        }
+  
         /// <summary>
         /// Unregisters content in control</summary>
         /// <param name="content">Content associated with control</param>
