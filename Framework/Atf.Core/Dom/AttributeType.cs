@@ -177,7 +177,7 @@ namespace Sce.Atf.Dom
         /// Validates a value for assignment to attribute of this type</summary>
         /// <param name="value">Value, to be assigned</param>
         /// <param name="info">Info for particular attribute instance, or null</param>
-        /// <returns>True, iff value can be assigned to attribute</returns>
+        /// <returns>True, if value can be assigned to attribute</returns>
         public virtual bool Validate(object value, AttributeInfo info)
         {
             if (value != null &&
@@ -326,7 +326,7 @@ namespace Sce.Atf.Dom
         /// Tests two simple type values for equality</summary>
         /// <param name="val1">First value, must be of this type</param>
         /// <param name="val2">Second value, must be of this type</param>
-        /// <returns>True, iff first value equals second value</returns>
+        /// <returns>True, if first value equals second value</returns>
         public bool AreEqual(object val1, object val2)
         {
             if (val1 == null)

@@ -35,7 +35,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Perform the Reconcile command</summary>
         /// <param name="doing">True to perform the Reconcile; false to test whether Reconcile can be done</param>
-        /// <returns>True iff Reconcile can be done or was done</returns>
+        /// <returns><c>True</c> if Reconcile can be done or was done</returns>
         protected override bool DoReconcile(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)

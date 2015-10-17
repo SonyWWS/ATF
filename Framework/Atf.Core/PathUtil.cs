@@ -85,7 +85,7 @@ namespace Sce.Atf
         /// <summary>
         /// Returns a value indicating if the given path is valid in Windows</summary>
         /// <param name="filePath">File path</param>
-        /// <returns>True if the given path is valid in Windows</returns>
+        /// <returns><c>True</c> if the given path is valid in Windows</returns>
         public static bool IsValidPath(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -124,7 +124,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests if path is relative</summary>
         /// <param name="path">Path tested</param>
-        /// <returns>True iff path is relative</returns>
+        /// <returns><c>True</c> if path is relative</returns>
         public static bool IsRelative(string path)
         {
             return PathIsRelative(path);
@@ -133,7 +133,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests whether path is absolute</summary>
         /// <param name="path">Path tested</param>
-        /// <returns>True iff path is absolute</returns>
+        /// <returns><c>True</c> if path is absolute</returns>
         public static bool IsAbsolute(string path)
         {
             return !PathIsRelative(path);

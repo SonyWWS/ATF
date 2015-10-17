@@ -12,7 +12,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
 
         /// <summary>
         /// Cleans up any resources being used</summary>
-        /// <param name="disposing">Ttrue iff managed resources should be disposed</param>
+        /// <param name="disposing">T<c>True</c> if managed resources should be disposed</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

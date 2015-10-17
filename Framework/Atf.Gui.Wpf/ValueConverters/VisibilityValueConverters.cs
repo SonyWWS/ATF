@@ -66,7 +66,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>true iff value == Visibility.Visible</returns>
+        /// <returns><c>True</c> if value == Visibility.Visible</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (Visibility)value == Visibility.Visible;
@@ -95,7 +95,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>true iff value == Visibility.Visible</returns>
+        /// <returns><c>True</c> if value == Visibility.Visible</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (Visibility)value == Visibility.Visible;

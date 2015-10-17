@@ -13,7 +13,7 @@ namespace Sce.Atf.Wpf.Models
     {
         /// <summary>
         /// Constructor</summary>
-        /// <param name="result">True if dialog closed, false if dialog not closed, null if not known</param>
+        /// <param name="result"><c>True</c> if dialog closed, false if dialog not closed, null if not known</param>
         public CloseDialogEventArgs(bool? result)
         {
             DialogResult = result;
@@ -21,7 +21,7 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Gets or sets result of closing dialog. 
-        /// True if dialog closed, false if dialog not closed, null if not known.</summary>
+        /// <c>True</c> if dialog closed, false if dialog not closed, null if not known.</summary>
         public bool? DialogResult { get; set; }
     }
 
@@ -84,7 +84,7 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Indicates whether dialog can be closed</summary>
-        /// <returns>True iff dialog can be closed</returns>
+        /// <returns><c>True</c> if dialog can be closed</returns>
         protected virtual bool CanExecuteOk()
         {
             return true;
@@ -92,7 +92,7 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Indicates whether dialog can be cancelled</summary>
-        /// <returns>True iff dialog can be cancelled</returns>
+        /// <returns><c>True</c> if dialog can be cancelled</returns>
         protected virtual bool CanCancel()
         {
             return true;
@@ -124,7 +124,7 @@ namespace Sce.Atf.Wpf.Models
 
         /// <summary>
         /// Gets result of closing dialog. 
-        /// True if dialog closed, false if dialog not closed, null if not known.</summary>
+        /// <c>True</c> if dialog closed, false if dialog not closed, null if not known.</summary>
         public bool? DialogResult { get; protected set; }
 
         /// <summary>

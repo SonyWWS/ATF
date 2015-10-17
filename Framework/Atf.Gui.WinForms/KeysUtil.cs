@@ -107,7 +107,7 @@ namespace Sce.Atf
         /// Returns whether or not the given AtfKeys represents a human-readable character that could
         /// be inserted into a text box, for example</summary>
         /// <param name="k">AtfKeys value</param>
-        /// <returns>True iff the given AtfKeys value represents a human-readable character</returns>
+        /// <returns><c>True</c> if the given AtfKeys value represents a human-readable character</returns>
         public static bool IsPrintable(AtfKeys k)
         {
             return Input.KeysUtil.IsPrintable(k);

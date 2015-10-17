@@ -33,7 +33,7 @@ namespace DomTreeEditorSample
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         public bool CanSetName(object item)
         {
             return item.Is<UIObject>();
@@ -56,7 +56,7 @@ namespace DomTreeEditorSample
 
         /// <summary>
         /// Returns whether the context can copy the selection</summary>
-        /// <returns>True iff the context can copy</returns>
+        /// <returns><c>True</c> if the context can copy</returns>
         public bool CanCopy()
         {
             return Selection.Any<UIObject>()
@@ -83,7 +83,7 @@ namespace DomTreeEditorSample
         /// <summary>
         /// Returns whether the context can insert the data object</summary>
         /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
-        /// <returns>True iff the context can insert the data object</returns>
+        /// <returns><c>True</c> if the context can insert the data object</returns>
         public bool CanInsert(object insertingObject)
         {
             IDataObject dataObject = (IDataObject)insertingObject;
@@ -261,7 +261,7 @@ namespace DomTreeEditorSample
 
         /// <summary>
         /// Tests if can delete selected items</summary>
-        /// <returns>True iff can delete selected items</returns>
+        /// <returns><c>True</c> if can delete selected items</returns>
         public bool CanDelete()
         {
             return Selection.Any<DomNode>(); // 

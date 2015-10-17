@@ -50,7 +50,7 @@ namespace Sce.Atf.Input
         /// <summary>
         /// Tests equality of the instance with an object</summary>
         /// <param name="o">Object to compare</param>
-        /// <returns>True iff the messages are identical</returns>
+        /// <returns><c>True</c> if the messages are identical</returns>
         public override bool Equals(object o) {
             if (!(o is Message)) { 
                 return false; 
@@ -68,7 +68,7 @@ namespace Sce.Atf.Input
         /// Operator that tests inequality of the Message instance with another Message</summary>
         /// <param name="a">Message 1 to compare</param>
         /// <param name="b">Message 2 to compare</param>
-        /// <returns>True iff the messages are not identical</returns>
+        /// <returns><c>True</c> if the messages are not identical</returns>
         public static bool operator !=(Message a, Message b) { 
             return !a.Equals(b);
         }
@@ -77,7 +77,7 @@ namespace Sce.Atf.Input
         /// Operator that tests equality of the Message instance with another Message</summary>
         /// <param name="a">Message 1 to compare</param>
         /// <param name="b">Message 2 to compare</param>
-        /// <returns>True iff the messages are identical</returns>
+        /// <returns><c>True</c> if the messages are identical</returns>
         public static bool operator ==(Message a, Message b) { 
             return a.Equals(b);
         } 

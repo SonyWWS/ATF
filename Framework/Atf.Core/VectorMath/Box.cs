@@ -242,7 +242,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests if specified ray intersects the box</summary>
         /// <param name="ray">The ray</param>
-        /// <returns>True iff ray intersects box</returns>
+        /// <returns><c>True</c> if ray intersects box</returns>
         public bool Intersects(Ray3F ray)
         {
             // http://www.gametutorials.com/gtstore/pc-429-9-ray-and-aabb-collision.aspx

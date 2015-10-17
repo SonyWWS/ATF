@@ -55,9 +55,9 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="file">Either the string to a path of a Cg program, or the string that stores the whole Cg program</param>
         /// <param name="profile">String for the profile used by the Cg program</param>
         /// <param name="entry">String for the entry function name of the Cg program</param>
-        /// <param name="fromfile">True if argument "file" is a string to a path of a file, 
+        /// <param name="fromfile"><c>True</c> if argument "file" is a string to a path of a file, 
         /// false if argument "file" is a string that store the whole Cg program</param>
-        /// <returns>True if the CgfxCore creates program successfully</returns>
+        /// <returns><c>True</c> if the CgfxCore creates program successfully</returns>
         public static bool CreateProgram(string id, int type, string file, string profile, string entry, bool fromfile)
         {
            try
@@ -139,7 +139,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// Enables or binds a texture with a parameter and a texture ID</summary>
         /// <param name="parameter">Name of parameter used in the Cg program, usually a Simpler2D</param>
         /// <param name="texture_id">Texture ID from glTexGen()</param>
-        /// <returns>True if texture enabled successfully</returns>
+        /// <returns><c>True</c> if texture enabled successfully</returns>
         public static bool EnableTexture(string parameter, int texture_id)
         {
             IntPtr param;
@@ -156,7 +156,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <summary>
         /// Disables or unbinds a specific parameter</summary>
         /// <param name="parameter">Name of parameter used in the Cg program, usually a Simpler2D</param>
-        /// <returns>True if texture disabled successfully</returns>
+        /// <returns><c>True</c> if texture disabled successfully</returns>
         public static bool DisableTexture(string parameter)
         {
             IntPtr param;
@@ -174,7 +174,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// Sets parameter used in a Cg program</summary>
         /// <param name="parameter">Name of parameter that we want to set</param>
         /// <param name="array">Float array as values that we want to set parameter with</param>
-        /// <returns>True if parameter set successfully</returns>
+        /// <returns><c>True</c> if parameter set successfully</returns>
         public static bool SetParameter(string parameter, float[] array)
         {
             if (array == null) return false;
@@ -212,7 +212,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// Sets a matrix parameter on a special semantic in a Cg program</summary>
         /// <param name="parameter">Name of parameter that we want to set</param>
         /// <param name="semantic">The semantic that is needed to set a parameter in a special way</param>
-        /// <returns>True if parameter set successfully</returns>
+        /// <returns><c>True</c> if parameter set successfully</returns>
         public static bool SetMatrixParameter(string parameter, string semantic)
         {
             IntPtr param;

@@ -56,7 +56,7 @@ namespace Sce.Atf
         /// <summary>
         /// Checks if the desired name is already taken</summary>
         /// <param name="desired">Desired name</param>
-        /// <returns>True iff the name is taken</returns>
+        /// <returns><c>True</c> if the name is taken</returns>
         public bool IsTaken(string desired)
         {
             return m_names.Contains(desired);

@@ -96,7 +96,7 @@ namespace Sce.Atf.Collections
         /// Returns whether the item is present in the collection</summary>
         /// <remarks>Accessors work directly against adapted collection</remarks>
         /// <param name="item">Item to look for</param>
-        /// <returns>True if the item is in the collection</returns>
+        /// <returns><c>True</c> if the item is in the collection</returns>
         public bool Contains(Lazy<T, M> item)
         {
             return AdaptedItems.Contains(item);
@@ -168,7 +168,7 @@ namespace Sce.Atf.Collections
         /// <remarks>Mutation methods work against complete collection and then force
         /// a reset of the adapted collection</remarks>
         /// <param name="item">The item to remove</param>
-        /// <returns>True if the item was found, otherwise false</returns>
+        /// <returns><c>True</c> if the item was found, otherwise false</returns>
         public bool Remove(Lazy<T, M> item)
         {
             bool removed = m_allItems.Remove(item);

@@ -255,7 +255,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests if frustum contains the given sphere</summary>
         /// <param name="sphere">Sphere</param>
-        /// <returns>True iff frustum contains the given sphere</returns>
+        /// <returns><c>True</c> if frustum contains the given sphere</returns>
         public bool Contains(Sphere3F sphere)
         {
             for (int i = 0; i < 6; i++)
@@ -274,7 +274,7 @@ namespace Sce.Atf.VectorMath
         /// the same space. The frustum does not have to be symmetrical and could have been transformed
         /// into object space using Frustum.Transform().</summary>
         /// <param name="box">The box</param>
-        /// <returns>True iff frustum contains the given box</returns>
+        /// <returns><c>True</c> if frustum contains the given box</returns>
         public bool Contains(Box box)
         {
             Vec3F center = (box.Min + box.Max) * 0.5f;
@@ -317,7 +317,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="eye">The camera's eye associated with this frustum. Is only used if 'backfaceCull'
         /// is 'true'.</param>
         /// <param name="backfaceCull">Should back-facing polygons always be excluded?</param>
-        /// <returns>True iff any part of the polygon is inside this frustum</returns>
+        /// <returns><c>True</c> if any part of the polygon is inside this frustum</returns>
         public bool ContainsPolygon(Vec3F[] vertices, Vec3F eye, bool backfaceCull)
         {
             // If all of the points are outside any one plane, then the polygon is not contained.

@@ -90,7 +90,7 @@ namespace TimelineEditorSample
         /// <summary>
         /// Can the client do the command?</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             return DoCommand(commandTag, false);

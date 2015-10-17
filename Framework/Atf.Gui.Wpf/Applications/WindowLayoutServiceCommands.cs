@@ -70,7 +70,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Check if a command can be performed</summary>
         /// <param name="tag">Command</param>
-        /// <returns>True if command can be performed otherwise false</returns>
+        /// <returns><c>True</c> if command can be performed otherwise false</returns>
         public override bool CanDoCommand(object tag)
         {
             return tag != null && (base.CanDoCommand(tag) || (tag is WindowLayoutServiceCommand));

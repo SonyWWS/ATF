@@ -11,7 +11,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Inserts the specified child into the specified parent if possible and returns true
-        /// iff successful</summary>
+        /// if successful</summary>
         /// <param name="context">Should be ITransactionContext to support undo/redo. Must be
         /// IHierarchicalInsertionContext and/or IInstancingContext to succeed.</param>
         /// <param name="parent">Optional. Parent object to which the new child is added. Can be
@@ -21,7 +21,7 @@ namespace Sce.Atf.Applications
         /// and to update the status if successful. Can be the empty string, but must not be null.</param>
         /// <param name="statusService">Optional. Status service that is updated if the operation
         /// was successful. Can be null.</param>
-        /// <returns>True iff the insertion was successful</returns>
+        /// <returns><c>True</c> if the insertion was successful</returns>
         /// <remarks>The context must implement IHierarchicalInsertionContext and/or IInstancingContext
         /// to allow insertion. If the context implements both, IHierarchicalInsertionContext is preferred and
         /// any insertion logic in the IInstancingContext implementation is ignored!</remarks>
@@ -64,7 +64,7 @@ namespace Sce.Atf.Applications
         /// <param name="parent">Optional. Parent object we want to insert into. Can be null if the
         /// context supports it.</param>
         /// <param name="child">Child object to be inserted into the specified parent</param>
-        /// <returns>True iff the child can be inserted into the parent (or the context supports
+        /// <returns><c>True</c> if the child can be inserted into the parent (or the context supports
         /// parent-less insertion)</returns>
         /// <remarks>The context must implement IHierarchicalInsertionContext and/or IInstancingContext
         /// to allow insertion. If the context implements both, IHierarchicalInsertionContext is preferred and

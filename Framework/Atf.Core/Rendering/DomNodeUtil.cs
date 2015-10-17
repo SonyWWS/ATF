@@ -25,7 +25,7 @@ namespace Sce.Atf.Rendering
         /// <param name="domNode">DomNode holding the attribute</param>
         /// <param name="attribute">Attribute of the DomNode that contains the data</param>
         /// <param name="result">The resulting Vec3F. Is (0,0,0) if the attribute couldn't be found</param>
-        /// <returns>True iff the attribute was found and was converted to a Vec3F</returns>
+        /// <returns><c>True</c> if the attribute was found and was converted to a Vec3F</returns>
         public static bool GetVector(DomNode domNode, AttributeInfo attribute, out Vec3F result)
         {
             float[] floats = domNode.GetAttribute(attribute) as float[];

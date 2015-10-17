@@ -106,7 +106,7 @@ namespace Sce.Atf
             /// <summary>
             /// Returns whether or not this message's ID matches the given 'id' parameter</summary>
             /// <param name="id">ID</param>
-            /// <returns>True iff message's ID matches the given 'id' parameter</returns>
+            /// <returns><c>True</c> if message's ID matches the given 'id' parameter</returns>
             /// <remarks>This may be useful when receiving messages from non-ATF apps that are using
             /// the WWS SDK's LiveConnect directly</remarks>
             public bool CheckMessageId(string id)

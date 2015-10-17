@@ -188,7 +188,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Tests for equality with another object</summary>
         /// <param name="obj">Other object</param>
-        /// <returns>True iff the DomNodeAdapter equals the other object; equality means that
+        /// <returns><c>True</c> if the DomNodeAdapter equals the other object; equality means that
         /// the other object is equal to the underlying DomNode</returns>
         public override bool Equals(object obj)
         {

@@ -123,7 +123,7 @@ namespace Sce.Atf.Collections
         /// <summary>
         /// Determine whether the collection contains a specific value</summary>
         /// <param name="value">The object to locate in the collection</param>
-        /// <returns>True iff the item is found</returns>
+        /// <returns><c>True</c> if the item is found</returns>
         public bool Contains(object value)
         {
             return base.Contains(value as U);
@@ -157,7 +157,7 @@ namespace Sce.Atf.Collections
         /// <summary>
         /// Remove the first occurrence of a specific object from the collection</summary>
         /// <param name="value">The object to remove from the collection</param>
-        /// <returns>True iff item was successfully removed from the collection</returns>
+        /// <returns><c>True</c> if item was successfully removed from the collection</returns>
         public void Remove(object value)
         {
             base.Remove(value as U);

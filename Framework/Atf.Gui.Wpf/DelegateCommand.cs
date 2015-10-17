@@ -50,7 +50,7 @@ namespace Sce.Atf.Wpf
 
         /// <summary>
         /// Determines if the command can be executed</summary>
-        /// <returns>True iff can execute command</returns>
+        /// <returns><c>True</c> if can execute command</returns>
         public bool CanExecute()
         {
             if (_canExecuteMethod != null)
@@ -139,7 +139,7 @@ namespace Sce.Atf.Wpf
         /// Indicates whether the command can execute in its current state</summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, 
         /// this object can be set to null.</param>
-        /// <returns>True iff this command can be executed</returns>
+        /// <returns><c>True</c> if this command can be executed</returns>
         bool ICommand.CanExecute(object parameter)
         {
             return CanExecute();
@@ -212,7 +212,7 @@ namespace Sce.Atf.Wpf
         /// <summary>
         /// Determines if the command can be executed</summary>
         /// <param name="parameter">Type of the parameter passed to delegates</param>
-        /// <returns>True iff can execute command</returns>
+        /// <returns><c>True</c> if can execute command</returns>
         public bool CanExecute(T parameter)
         {
             if (m_canExecuteMethod != null)
@@ -302,7 +302,7 @@ namespace Sce.Atf.Wpf
         /// Indicates whether the command can execute in its current state</summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, 
         /// this object can be set to null.</param>
-        /// <returns>True iff this command can be executed</returns>
+        /// <returns><c>True</c> if this command can be executed</returns>
         bool ICommand.CanExecute(object parameter)
         {
             // if T is of value type and the parameter is not
@@ -383,7 +383,7 @@ namespace Sce.Atf.Wpf
         /// <summary>
         /// Method to determine if the command can be executed</summary>
         /// <param name="parameter">Method's parameter</param>
-        /// <returns>True iff this command can be executed</returns>
+        /// <returns><c>True</c> if this command can be executed</returns>
         public bool CanExecute(T1 parameter)
         {
             if (m_canExecuteMethod != null)

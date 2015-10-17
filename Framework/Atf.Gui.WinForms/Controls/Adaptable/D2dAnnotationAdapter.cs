@@ -1442,7 +1442,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Indicates when the annotation is selected and the adapted control has keyboard focus</summary>
         /// <param name="annotation">IAnnotation to test</param>
-        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
+        /// <returns><c>True</c> if the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanDeleteTextSelection(IAnnotation annotation)
         {           
             return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
@@ -1453,7 +1453,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Tests when the annotation is selected and the adapted control has keyboard focus</summary>
         /// <param name="annotation">IAnnotation to test</param>
-        /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
+        /// <returns><c>True</c> if the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanInsertText(IAnnotation annotation)
         {
             return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
@@ -1464,7 +1464,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Tests when the annotation is selected and the adapted control has keyboard focus</summary>
         /// <param name="annotation">IAnnotation to test</param>
-        /// <returns>True iff the adapted control has input focus,  the annotation node is selected, 
+        /// <returns><c>True</c> if the adapted control has input focus,  the annotation node is selected, 
         /// and text selected for the annotation node</returns>
         public bool CanCopyText(IAnnotation annotation)
         {

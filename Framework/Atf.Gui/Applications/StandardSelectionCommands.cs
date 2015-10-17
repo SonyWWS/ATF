@@ -46,7 +46,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Selects all enumerable objects of the current context</summary>
-        /// <returns>True iff all objects were selected</returns>
+        /// <returns><c>True</c> if all objects were selected</returns>
         public bool SelectAll()
         {
             object activeContext = m_contextRegistry.ActiveContext;
@@ -60,7 +60,7 @@ namespace Sce.Atf.Applications
         /// Selects all enumerable objects in the given context</summary>
         /// <param name="selectionContext">Context holding selection</param>
         /// <param name="enumerableContext">Context holding enumeration of selectable objects</param>
-        /// <returns>True iff all objects were selected</returns>
+        /// <returns><c>True</c> if all objects were selected</returns>
         public bool SelectAll(ISelectionContext selectionContext, IEnumerableContext enumerableContext)
         {
             if (selectionContext != null &&
@@ -75,7 +75,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Deselects all objects in the current context</summary>
-        /// <returns>True iff all objects were deselected</returns>
+        /// <returns><c>True</c> if all objects were deselected</returns>
         public bool DeselectAll()
         {
             return
@@ -85,7 +85,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Deselects all objects in the given context</summary>
         /// <param name="selectionContext">Context holding selection</param>
-        /// <returns>True iff all objects were deselected</returns>
+        /// <returns><c>True</c> if all objects were deselected</returns>
         public bool DeselectAll(ISelectionContext selectionContext)
         {
             if (selectionContext != null)
@@ -99,7 +99,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Inverts the selection (deselect all selected, and select all deselected objects)</summary>
-        /// <returns>True iff selection was inverted</returns>
+        /// <returns><c>True</c> if selection was inverted</returns>
         public bool InvertSelection()
         {
             return
@@ -112,7 +112,7 @@ namespace Sce.Atf.Applications
         /// Inverts the selection in the given context (deselect all selected, and select all deselected objects)</summary>
         /// <param name="selectionContext">Context holding selection</param>
         /// <param name="enumerableContext">Context holding enumeration of selectable objects</param>
-        /// <returns>True iff selection was inverted</returns>
+        /// <returns><c>True</c> if selection was inverted</returns>
         public bool InvertSelection(ISelectionContext selectionContext, IEnumerableContext enumerableContext)
         {
             if (selectionContext != null &&
@@ -139,7 +139,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks if the client can do the command</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         bool ICommandClient.CanDoCommand(object commandTag)
         {
             bool canDo = false;

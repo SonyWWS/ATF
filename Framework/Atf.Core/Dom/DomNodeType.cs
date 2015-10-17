@@ -283,7 +283,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Tests if this node type is a base class of the given node type</summary>
         /// <param name="type">Other node type</param>
-        /// <returns>True iff this node type is a base class of the given node type</returns>
+        /// <returns><c>True</c> if this node type is a base class of the given node type</returns>
         public bool IsAssignableFrom(DomNodeType type)
         {
             for (DomNodeType descendant = type; descendant != null; descendant = descendant.BaseType)
@@ -366,7 +366,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if the attribute is defined on this type</summary>
         /// <param name="attributeInfo">Information about attribute</param>
-        /// <returns>True iff the attribute is defined on this type</returns>
+        /// <returns><c>True</c> if the attribute is defined on this type</returns>
         public bool IsValid(AttributeInfo attributeInfo)
         {
             if (m_attributes == null)
@@ -404,7 +404,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if the child is defined on this type</summary>
         /// <param name="childInfo">Information about child</param>
-        /// <returns>True iff the child is defined on this type</returns>
+        /// <returns><c>True</c> if the child is defined on this type</returns>
         public bool IsValid(ChildInfo childInfo)
         {
             if (m_children == null)
@@ -441,7 +441,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if the extension is defined on this type</summary>
         /// <param name="extensionInfo">Information about extension</param>
-        /// <returns>True iff the extension is defined on this type</returns>
+        /// <returns><c>True</c> if the extension is defined on this type</returns>
         public bool IsValid(ExtensionInfo extensionInfo)
         {
             if (m_extensions == null)

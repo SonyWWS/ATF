@@ -68,7 +68,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Returns whether the context can delete the selection</summary>
-        /// <returns>True if there is at least one selected item</returns>
+        /// <returns><c>True</c> if there is at least one selected item</returns>
         public virtual bool CanDelete()
         {
             return Selection != null && Selection.Count > 0;

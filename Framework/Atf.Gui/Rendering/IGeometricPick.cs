@@ -35,7 +35,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="userData">Is optional and may be null. If there is an intersection, the list
         /// is filled in with data about the intersection (e.g., primitive #, polygon #, etc.).
         /// The caller places the user data into the hit record's RenderObjectData property.</param>
-        /// <returns>True if there was an intersection</returns>
+        /// <returns><c>True</c> if there was an intersection</returns>
         bool IntersectRay(
             Ray3F ray,
             Camera camera,
@@ -57,7 +57,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="userData">Is optional and may be null. If there is an intersection, the list
         /// is filled in with data about the intersection (e.g., primitive #, polygon #, etc.).
         /// The caller places the user data into the hit record's RenderObjectData property.</param>
-        /// <returns>True if there was an intersection</returns>
+        /// <returns><c>True</c> if there was an intersection</returns>
         bool IntersectFrustum(
             Frustum frustum,
             Vec3F eye,

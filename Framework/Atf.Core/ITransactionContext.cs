@@ -42,7 +42,7 @@ namespace Sce.Atf
         /// <param name="context">Transaction context or null</param>
         /// <param name="transaction">Transaction action</param>
         /// <param name="transactionName">Transaction name</param>
-        /// <returns>True if the transaction succeeded and false if it was cancelled (i.e.,
+        /// <returns><c>True</c> if the transaction succeeded and false if it was cancelled (i.e.,
         /// InvalidTransactionException was thrown)</returns>
         /// <remarks>In the implementation of 'transaction', throw InvalidTransactionException
         /// to cancel the transaction and log a warning message to the user (unless the

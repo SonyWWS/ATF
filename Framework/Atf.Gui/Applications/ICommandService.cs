@@ -56,7 +56,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Attempts to process the key as a command shortcut</summary>
         /// <param name="key">Key to process</param>
-        /// <returns>True iff the key was processed as a command shortcut</returns>
+        /// <returns><c>True</c> if the key was processed as a command shortcut</returns>
         bool ProcessKey(Keys key);
 
         /// <summary>

@@ -743,7 +743,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Raises the NodeExpandedChanging event</summary>
         /// <param name="e">Event args</param>
-        /// <returns>True iff the event was cancelled</returns>
+        /// <returns><c>True</c> if the event was cancelled</returns>
         protected virtual bool OnNodeExpandedChanging(CancelNodeEventArgs e)
         {
             return NodeExpandedChanging.RaiseCancellable(this, e);
@@ -788,7 +788,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Virtual function to limit selection of node based on derived class's logic</summary>
         /// <param name="node">Node to test</param>
-        /// <returns>True if this node can be added to the current selection set of nodes, or false otherwise.</returns>
+        /// <returns><c>True</c> if this node can be added to the current selection set of nodes, or false otherwise.</returns>
         protected virtual bool IsNodeMultiSelectable(Node node)
         {
             return true;
@@ -1102,7 +1102,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             Node nextNode = null;
@@ -2366,7 +2366,7 @@ namespace Sce.Atf.Controls
             /// <summary>
             /// Removes the node with the given object tag from the node's children</summary>
             /// <param name="tag">Tag object</param>
-            /// <returns>True iff the child node was removed</returns>
+            /// <returns><c>True</c> if the child node was removed</returns>
             public bool Remove(object tag)
             {
                 if (m_children != null)

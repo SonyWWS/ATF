@@ -51,7 +51,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Unregisters the Control from the context registry and closes and disposes it.</summary>
         /// <param name="control">Control</param>
-        /// <returns>True if the Control was previously passed in to RegisterControl. False if
+        /// <returns><c>True</c> if the Control was previously passed in to RegisterControl. False if
         /// the Control was unrecognized in which case no change was made.</returns>
         public virtual bool UnregisterControl(Control control)
         {

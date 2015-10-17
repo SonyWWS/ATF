@@ -66,7 +66,7 @@ namespace Sce.Atf.Dom
         /// Tries to match string in DomNode name</summary>
         /// <param name="item">DomNode object</param>
         /// <param name="matchList">DomNodePropertyMatch list</param>
-        /// <returns>True iff string match</returns>
+        /// <returns><c>True</c> if string match</returns>
         public bool Test(object item, out IList<IQueryMatch> matchList)
         {
             DomNode domNode = item as DomNode;

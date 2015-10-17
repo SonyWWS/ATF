@@ -366,7 +366,7 @@ namespace LocalizableStringExtractor
         /// <param name="s">The string to search</param>
         /// <param name="iLastChar">The zero-based index of the closing ".</param>
         /// <param name="literal">The resulting string literal, if successful.</param>
-        /// <returns>True iff a string literal was found.</returns>
+        /// <returns><c>True</c> if a string literal was found.</returns>
         public static bool TryParseStringLiteralFromEnd(string s, int iLastChar, out string literal)
         {
             literal = string.Empty;
@@ -411,7 +411,7 @@ namespace LocalizableStringExtractor
         /// <param name="stopIndex">Index at which parsing should stop, presumably the end of the method call</param>
         /// <param name="outLiteral">The string literal parsed from the next method parameter. An empty string is returned if parameter was not a string literal</param>
         /// <param name="outAfterEnd">The index one character after the end of the parsed parameter</param>
-        /// <returns>True if a method parameter was parsed (regardless of whether it was a string literal or not), otherwise false</returns>
+        /// <returns><c>True</c> if a method parameter was parsed (regardless of whether it was a string literal or not), otherwise false</returns>
         public static bool TryParseMethodParams(string s, int iFirstChar, int stopIndex, out string outLiteral, out int outAfterEnd)
         {
             outLiteral = "";
@@ -506,7 +506,7 @@ namespace LocalizableStringExtractor
         /// <param name="iStopChar">Index into the string before which parsing should stop</param>
         /// <param name="literal">The resulting string literal, if successful.</param>
         /// <param name="afterEnd">The index after the last closing double-quote.</param>
-        /// <returns>True iff a string literal was found.</returns>
+        /// <returns><c>True</c> if a string literal was found.</returns>
         public static bool TryParseForStringLiteral(string s, int iFirstChar, int iStopChar, out string literal, out int afterEnd)
         {
             literal = "";

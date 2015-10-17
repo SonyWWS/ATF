@@ -32,7 +32,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether x-axis angle flag is set</summary>
         /// <param name="EulerAngleChannels">EulerAngleChannels value</param>
-        /// <returns>True iff x-axis angle flag is set</returns>
+        /// <returns><c>True</c> if x-axis angle flag is set</returns>
         public static bool FreedomInX(this EulerAngleChannels EulerAngleChannels)
         {
             return (EulerAngleChannels & EulerAngleChannels.X) != 0;
@@ -41,7 +41,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether y-axis angle flag is set</summary>
         /// <param name="EulerAngleChannels">EulerAngleChannels value</param>
-        /// <returns>True iff y-axis angle flag is set</returns>
+        /// <returns><c>True</c> if y-axis angle flag is set</returns>
         public static bool FreedomInY(this EulerAngleChannels EulerAngleChannels)
         {
             return (EulerAngleChannels & EulerAngleChannels.Y) != 0;
@@ -50,7 +50,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether z-axis angle flag is set</summary>
         /// <param name="EulerAngleChannels">EulerAngleChannels value</param>
-        /// <returns>True iff z-axis angle flag is set</returns>
+        /// <returns><c>True</c> if z-axis angle flag is set</returns>
         public static bool FreedomInZ(this EulerAngleChannels EulerAngleChannels)
         {
             return (EulerAngleChannels & EulerAngleChannels.Z) != 0;

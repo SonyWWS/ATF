@@ -647,7 +647,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Processes dialog key</summary>
         /// <param name="keyData">Key to process</param>
-        /// <returns>True iff dialog key processed</returns>
+        /// <returns><c>True</c> if dialog key processed</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {            
             if (keyData == ( Keys.Menu | Keys.Alt ))

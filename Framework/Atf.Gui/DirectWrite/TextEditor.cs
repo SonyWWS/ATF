@@ -156,7 +156,7 @@ namespace Sce.Atf.DirectWrite
         /// <param name="advance">Number of characters to advance or start selection</param>
         /// <param name="extendSelection">Whether to extend current selection to additional selection</param>
         /// <param name="updateCaretFormat">Whether to update caret format based on selection</param>
-        /// <returns>True iff caret changed position as result of selection</returns>
+        /// <returns><c>True</c> if caret changed position as result of selection</returns>
         public bool SetSelection(SelectionMode moveMode, int advance, bool extendSelection, bool updateCaretFormat)
         {
 

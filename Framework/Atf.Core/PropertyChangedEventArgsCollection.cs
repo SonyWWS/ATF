@@ -34,7 +34,7 @@ namespace Sce.Atf
         /// <summary>
         /// Determine whether collection contains specified element using PropertyChangedEventArgsComparer</summary>
         /// <param name="item">Item to check</param>
-        /// <returns>True iff collection contains item</returns>
+        /// <returns><c>True</c> if collection contains item</returns>
         public bool Contains(PropertyChangedEventArgs item)
         {
             return m_innerList.Contains<PropertyChangedEventArgs>(item, s_comparer);
@@ -67,7 +67,7 @@ namespace Sce.Atf
         /// <summary>
         /// Remove first occurrence of item from collection</summary>
         /// <param name="item">Item to remove</param>
-        /// <returns>True iff item successfully removed</returns>
+        /// <returns><c>True</c> if item successfully removed</returns>
         public bool Remove(PropertyChangedEventArgs item)
         {
             return m_innerList.Remove(item);

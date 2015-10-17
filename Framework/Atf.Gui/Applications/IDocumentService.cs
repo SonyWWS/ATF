@@ -27,14 +27,14 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Saves the document under its current name</summary>
         /// <param name="document">Document to save</param>
-        /// <returns>True if document was successfully saved and false if the user cancelled
+        /// <returns><c>True</c> if document was successfully saved and false if the user cancelled
         /// or there was some kind of problem</returns>
         bool Save(IDocument document);
 
         /// <summary>
         /// Saves the document under a new name, chosen by the user</summary>
         /// <param name="document">Document to save</param>
-        /// <returns>True if document was successfully saved and false if the user cancelled
+        /// <returns><c>True</c> if document was successfully saved and false if the user cancelled
         /// or there was some kind of problem</returns>
         bool SaveAs(IDocument document);
 
@@ -42,28 +42,28 @@ namespace Sce.Atf.Applications
         /// Saves all documents</summary>
         /// <param name="cancelOnFail">Value indicating if remaining saves should be cancelled
         /// if one fails</param>
-        /// <returns>True if all the documents were saved and false if the user cancelled
+        /// <returns><c>True</c> if all the documents were saved and false if the user cancelled
         /// or there was some kind of problem with one or more of the documents</returns>
         bool SaveAll(bool cancelOnFail);
 
         /// <summary>
         /// Closes the document</summary>
         /// <param name="document">Document to close</param>
-        /// <returns>True iff close was not cancelled by user</returns>
+        /// <returns><c>True</c> if close was not cancelled by user</returns>
         bool Close(IDocument document);
 
         /// <summary>
         /// Closes all documents</summary>
         /// <param name="masterDocument">Master document, or null if none. The master
         /// document is closed last.</param>
-        /// <returns>True iff no close was cancelled by user</returns>
+        /// <returns><c>True</c> if no close was cancelled by user</returns>
         bool CloseAll(IDocument masterDocument);
 
         /// <summary>
         /// Determines if the given document is untitled; i.e., the document has
         /// not been named by the user</summary>
         /// <param name="document">Document to check</param>
-        /// <returns>True iff the document is untitled</returns>
+        /// <returns><c>True</c> if the document is untitled</returns>
         bool IsUntitled(IDocument document);
 
         /// <summary>

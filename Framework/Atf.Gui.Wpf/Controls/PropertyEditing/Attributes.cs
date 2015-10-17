@@ -44,7 +44,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Tests equality to an object</summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns>True iff objects are equal</returns>
+        /// <returns><c>True</c> if objects are equal</returns>
         public override bool Equals(object obj)
         {
             if (obj == this)
@@ -161,7 +161,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Test if object is equal to instance</summary>
         /// <param name="obj">Object to compare</param>
-        /// <returns>True iff object equals instance</returns>
+        /// <returns><c>True</c> if object equals instance</returns>
         public override bool Equals(object obj)
         {
             if (obj == this)
@@ -284,7 +284,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Test if object is equal to instance</summary>
         /// <param name="obj">Object to compare</param>
-        /// <returns>True iff object equals instance</returns>
+        /// <returns><c>True</c> if object equals instance</returns>
         public override bool Equals(object obj)
         {
             if (obj == this)

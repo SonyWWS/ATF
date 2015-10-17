@@ -23,13 +23,13 @@ namespace Sce.Atf.Applications
         /// Rename a layout</summary>
         /// <param name="oldLayoutName">Old layout name</param>
         /// <param name="newLayoutName">New layout name</param>
-        /// <returns>True if layout renamed, or false if layout not removed or doesn't exist or new name is invalid</returns>
+        /// <returns><c>True</c> if layout renamed, or false if layout not removed or doesn't exist or new name is invalid</returns>
         bool RenameLayout(string oldLayoutName, string newLayoutName);
 
         /// <summary>
         /// Remove (i.e. delete) a layout</summary>
         /// <param name="layoutName">Layout name</param>
-        /// <returns>True if layout removed, or false if layout not removed or doesn't exist</returns>
+        /// <returns><c>True</c> if layout removed, or false if layout not removed or doesn't exist</returns>
         bool RemoveLayout(string layoutName);
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Sce.Atf.Applications
         /// Check if the layout name is the current layout</summary>
         /// <param name="windowLayoutService">Window layout service</param>
         /// <param name="layoutName">Layout name to check</param>
-        /// <returns>True iff layout name to check is current</returns>
+        /// <returns><c>True</c> if layout name to check is current</returns>
         public static bool IsCurrent(this IWindowLayoutService windowLayoutService, string layoutName)
         {
             if (windowLayoutService == null)

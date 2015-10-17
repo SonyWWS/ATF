@@ -16,21 +16,21 @@ namespace Sce.Atf.Rendering
         /// Should the camera rotate around the look-at point?</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to rotate the camera</returns>
+        /// <returns><c>True</c> if the user wants to rotate the camera</returns>
         public abstract bool IsRotating(Keys modifierKeys, MouseEventArgs e);
 
         /// <summary>
         /// Should the camera zoom in some way?</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to zoom the camera</returns>
+        /// <returns><c>True</c> if the user wants to zoom the camera</returns>
         public abstract bool IsZooming(Keys modifierKeys, MouseEventArgs e);
 
         /// <summary>
         /// Should the camera do a panning (strafing) motion?</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to pan the camera</returns>
+        /// <returns><c>True</c> if the user wants to pan the camera</returns>
         /// <remarks>This is used by the arcball and trackball camera controllers.</remarks>
         public abstract bool IsPanning(Keys modifierKeys, MouseEventArgs e);
 
@@ -39,7 +39,7 @@ namespace Sce.Atf.Rendering
         /// changes, but the eye point remains stationary.</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to turn the camera around in place</returns>
+        /// <returns><c>True</c> if the user wants to turn the camera around in place</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public abstract bool IsTurning(Keys modifierKeys, MouseEventArgs e);
 
@@ -47,7 +47,7 @@ namespace Sce.Atf.Rendering
         /// Should the camera move up or down?</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to move the camera up or down</returns>
+        /// <returns><c>True</c> if the user wants to move the camera up or down</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public abstract bool IsElevating(Keys modifierKeys, MouseEventArgs e);
 
@@ -56,7 +56,7 @@ namespace Sce.Atf.Rendering
         /// (As opposed to selecting something in the Design View, for example.)</summary>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's MouseEventArgs</param>
-        /// <returns>True if the user wants to adjust the camera</returns>
+        /// <returns><c>True</c> if the user wants to adjust the camera</returns>
         public virtual bool IsControllingCamera(Keys modifierKeys, MouseEventArgs e)
         {
             return
@@ -94,7 +94,7 @@ namespace Sce.Atf.Rendering
         /// the user is intending to move the camera.</summary>
         /// <param name="modifierKeys">The control's ModifierKeys property</param>
         /// <param name="e">The key event from the KeyDown event handler, for example</param>
-        /// <returns>True if the user is trying to move the camera using the keyboard</returns>
+        /// <returns><c>True</c> if the user is trying to move the camera using the keyboard</returns>
         public virtual bool IsControllingCamera(Keys modifierKeys, KeyEventArgs e)
         {
             return IsInputKey(e.KeyCode);
@@ -103,7 +103,7 @@ namespace Sce.Atf.Rendering
         /// <summary>
         /// Is key an input key for camera motion?</summary>
         /// <param name="key">Key to test</param>
-        /// <returns>True iff key is input key for camera motion</returns>
+        /// <returns><c>True</c> if key is input key for camera motion</returns>
         public virtual bool IsInputKey(Keys key)
         {
             return

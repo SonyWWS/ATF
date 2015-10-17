@@ -306,7 +306,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests for equality to given quaternion</summary>
         /// <param name="q">Other quaternion</param>
-        /// <returns>True iff quaternions are exactly equal</returns>
+        /// <returns><c>True</c> if quaternions are exactly equal</returns>
         public bool Equals(QuatF q)
         {
             return
@@ -320,7 +320,7 @@ namespace Sce.Atf.VectorMath
         /// Tests for equality to another quaternion, within a given epsilon</summary>
         /// <param name="q">Other quaternion</param>
         /// <param name="eps">Epsilon, or margin for error</param>
-        /// <returns>True iff all components are within epsilon</returns>
+        /// <returns><c>True</c> if all components are within epsilon</returns>
         public bool Equals(QuatF q, double eps)
         {
             return
@@ -356,7 +356,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether this instance and a specified object are equal</summary>
         /// <param name="obj">Another object to compare to</param>
-        /// <returns>True iff obj and this instance are the same type and represent the same value</returns>
+        /// <returns><c>True</c> if obj and this instance are the same type and represent the same value</returns>
         public override bool Equals(Object obj)
         {
             if (obj is QuatF)

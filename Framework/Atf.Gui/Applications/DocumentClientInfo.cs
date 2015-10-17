@@ -191,7 +191,7 @@ namespace Sce.Atf.Applications
         /// Convenience method to check if file path is compatible with the extensions
         /// supported by the document client</summary>
         /// <param name="filePath">File path</param>
-        /// <returns>True iff file path is compatible with the extensions supported by
+        /// <returns><c>True</c> if file path is compatible with the extensions supported by
         /// the document client</returns>
         public bool IsCompatiblePath(string filePath)
         {
@@ -207,7 +207,7 @@ namespace Sce.Atf.Applications
         /// Convenience method to check if file URI is compatible with the extensions
         /// supported by the document client</summary>
         /// <param name="uri">File URI</param>
-        /// <returns>True iff file URI is compatible with the extensions supported by
+        /// <returns><c>True</c> if file URI is compatible with the extensions supported by
         /// the document client</returns>
         public bool IsCompatibleUri(Uri uri)
         {

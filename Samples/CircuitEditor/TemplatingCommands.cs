@@ -43,7 +43,7 @@ namespace CircuitEditorSample
         /// Gets whether the target can be promoted to template library.
         /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
         /// <param name="items">Items to promote</param>
-        /// <returns>True iff the target can be promoted to template library</returns>
+        /// <returns><c>True</c> if the target can be promoted to template library</returns>
         public override bool CanPromoteToTemplateLibrary(IEnumerable<object> items)
         {
             var circuitEditingContext = ContextRegistry.GetActiveContext<CircuitEditingContext>();
@@ -174,7 +174,7 @@ namespace CircuitEditorSample
         /// Items can be demoted when the active context is CircuitEditingContext and
         /// all the items are selected references.</summary>
         /// <param name="items">Items to demote</param>
-        /// <returns>True iff the target can be demoted</returns>
+        /// <returns><c>True</c> if the target can be demoted</returns>
         public override bool CanDemoteToCopyInstance(IEnumerable<object> items)
         {
             var circuitEditingContext = ContextRegistry.GetActiveContext<CircuitEditingContext>();

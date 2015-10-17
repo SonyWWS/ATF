@@ -96,7 +96,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Gets the default group pin name</summary>
-        /// <param name="inputSide">True iff pin is on input side</param>
+        /// <param name="inputSide"><c>True</c> if pin is on input side</param>
         /// <returns>Default group pin name</returns>
         /// <remarks>The group pin default naming convention: "{internal-element-name}:{internal-pin-name}"</remarks>
         public virtual string DefaultName(bool inputSide)
@@ -196,7 +196,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Updates LeafDomNode and LeafPinIndex from the ultimate DomNode this group pin binds to
         /// by recursively going down the nested group hierarchy</summary>
-        /// <param name="inputSide">True if this is an input-side group pin, false if output-side</param>
+        /// <param name="inputSide"><c>True</c> if this is an input-side group pin, false if output-side</param>
         public void SetPinTarget(bool inputSide)
         {
             m_inputSide = inputSide;
@@ -221,7 +221,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
         /// <summary>
         /// Returns the pins down the chain before the leaf level</summary>
-        /// <param name="inputSide">True if this is an input-side group pin</param>
+        /// <param name="inputSide"><c>True</c> if this is an input-side group pin</param>
         /// <returns>Enumeration of pins down the chain before the leaf level</returns>
         public IEnumerable<GroupPin> SinkChain(bool inputSide)
         {
@@ -279,7 +279,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Gets the ancestry of this group pin, starting with the parent group pin, and ending with
         /// the top-level group pin</summary>
-        /// <param name="inputSide">True iff pin is on input side</param>
+        /// <param name="inputSide"><c>True</c> if pin is on input side</param>
         /// <returns>Enumeration of group pin's ancestry pins</returns>
         public IEnumerable<GroupPin> GetAncestry(bool inputSide)
         {
@@ -372,7 +372,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Returns the ultimate DomNode this group pin binds by recursively going down the nested group hierarchy</summary>
-        /// <param name="inputSide">True if this is an input-side group pin</param>
+        /// <param name="inputSide"><c>True</c> if this is an input-side group pin</param>
         /// <param name="instancingNode">For template reference instances, the owner node</param>
         private DomNode GetLeafDomNode(bool inputSide, out DomNode instancingNode)
         {
@@ -404,7 +404,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns the ultimate pin index (in the binding module) this group pin binds by recursively
         /// going down the nested group hierarchy</summary>
-        /// <param name="inputSide">True if this is an input-side group pin</param>
+        /// <param name="inputSide"><c>True</c> if this is an input-side group pin</param>
         private int GetLeafPinIndex(bool inputSide)
         {
             var current = this;

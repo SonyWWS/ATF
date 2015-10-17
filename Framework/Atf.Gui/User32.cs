@@ -422,7 +422,7 @@ namespace Sce.Atf
         /// Provides access to function required to delete handle. This method is used internally
         /// and is not required to be called separately.</summary>
         /// <param name="hIcon">Pointer to icon handle</param>
-        /// <returns>Zero iff error occurred</returns>
+        /// <returns>Zero if error occurred</returns>
         [DllImport(DllName)]
         public static extern int DestroyIcon(IntPtr hIcon);
 
@@ -500,21 +500,21 @@ namespace Sce.Atf
         /// Sets window's show state</summary>
         /// <param name="hWnd">Window HWND</param>
         /// <param name="nCmdShow">Constant indicating how window is to be shown</param>
-        /// <returns>Zero iff window was previously hidden; non-zero otherwise</returns>
+        /// <returns>Zero if window was previously hidden; non-zero otherwise</returns>
         [DllImport(DllName)]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         /// <summary>
         /// Brings window to foreground</summary>
         /// <param name="hWnd">Handle to window</param>
-        /// <returns>Zero iff window was not brought to foreground</returns>
+        /// <returns>Zero if window was not brought to foreground</returns>
         [DllImport(DllName)]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         /// <summary>
         /// Tests if a window is minimized (iconic)</summary>
         /// <param name="hWnd">Handle to window</param>
-        /// <returns>Zero iff window not iconic</returns>
+        /// <returns>Zero if window not iconic</returns>
         [DllImport(DllName)]
         public static extern bool IsIconic(IntPtr hWnd);
 
@@ -550,7 +550,7 @@ namespace Sce.Atf
         /// Gets window's rectangle</summary>
         /// <param name="hWnd">Window handle</param>
         /// <param name="rect">Rectangle obtained by function</param>
-        /// <returns>Zero iff failed to get rectangle</returns>
+        /// <returns>Zero if failed to get rectangle</returns>
         [DllImport(DllName)]
         public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
 
@@ -558,7 +558,7 @@ namespace Sce.Atf
         /// Gets window's client area rectangle</summary>
         /// <param name="hWnd">Window handle</param>
         /// <param name="r">Rectangle obtained by function</param>
-        /// <returns>Zero iff failed to get rectangle</returns>
+        /// <returns>Zero if failed to get rectangle</returns>
         [DllImport(DllName, CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern bool GetClientRect(IntPtr hWnd, ref Rectangle r);
 
@@ -567,7 +567,7 @@ namespace Sce.Atf
         /// <param name="hWnd">A handle to the window that will be copied</param>
         /// <param name="hdcBlt">A handle to the device context</param>
         /// <param name="nFlags">The drawing options. PW_CLIENTONLY to copy client area only; otherwise copy entire window.</param>
-        /// <returns>Zero iff not successful</returns>
+        /// <returns>Zero if not successful</returns>
         [DllImport(DllName)]
         public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
 
@@ -607,7 +607,7 @@ namespace Sce.Atf
         /// <param name="messageFilterMax">Value to indicate last message to receive.
         /// Set to WM_KEYLAST for the last keyboard message or WM_MOUSELAST for the last mouse message.</param>
         /// <param name="flags">Flags indicating how messages are handled. </param>
-        /// <returns>Zero iff no messages are available</returns>
+        /// <returns>Zero if no messages are available</returns>
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         public static extern bool PeekMessage(out MSG msg, Int32 hWnd,
                 uint messageFilterMin, uint messageFilterMax, uint flags);
@@ -615,7 +615,7 @@ namespace Sce.Atf
         /// <summary>
         /// Posts messages when mouse leaves or hovers over a window</summary>
         /// <param name="lpEventTrack">Pointer to TRACKMOUSEEVENT structure</param>
-        /// <returns>Zero iff function fails</returns>
+        /// <returns>Zero if function fails</returns>
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         public static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT lpEventTrack);
 
@@ -627,7 +627,7 @@ namespace Sce.Atf
         /// in this case, the return value indicated which object was signaled</param>
         /// <param name="dwMilliseconds">Time out period in milliseconds</param>
         /// <param name="dwWakeMask">Mask values that indicate what signals the function waits for</param>
-        /// <returns>WAIT_FAILED iff function timed out. Otherwise, returns a value indicating what event caused the function to return, 
+        /// <returns>WAIT_FAILED if function timed out. Otherwise, returns a value indicating what event caused the function to return, 
         /// such as an object being signaled.</returns>
         [DllImport(DllName)]
         public static extern int MsgWaitForMultipleObjects(
@@ -788,7 +788,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes a hook procedure installed in a hook chain by the SetWindowsHookEx()</summary>
         /// <param name="hhk">Handle to the hook to be removed</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644993%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -799,7 +799,7 @@ namespace Sce.Atf
         /// <param name="hWnd">Handle to window</param>
         /// <param name="lpRect">Pointer to a RECT structure for rectangle added to the update region</param>
         /// <param name="bErase">Specifies whether background within update region is erased</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/dd145002%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
@@ -810,28 +810,28 @@ namespace Sce.Atf
         /// <param name="hBitmap">Handle to bitmap that defines caret shape</param>
         /// <param name="nWidth">Width of caret</param>
         /// <param name="nHeight">Height of caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648399%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
         /// <summary>
         /// Makes caret visible on screen at caret's current position</summary>
         /// <param name="hWnd">Handle to window that owns caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648406%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool ShowCaret(IntPtr hWnd);
         /// <summary>
         /// Copies caret's position to specified POINT structure</summary>
         /// <param name="lpPoint">Pointer to POINT structure to receive client coordinates of caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648402%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool GetCaretPos(out Point lpPoint);
         /// <summary>
         /// Removes caret from screen</summary>
         /// <param name="hWnd">Handle to window that owns caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648403%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool HideCaret(IntPtr hWnd);
@@ -839,13 +839,13 @@ namespace Sce.Atf
         /// Moves caret to specified coordinates</summary>
         /// <param name="x">New x-coordinate of the caret</param>
         /// <param name="y">New y-coordinate of the caret</param>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648405%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool SetCaretPos(int x, int y);
         /// <summary>
         /// caret's current shape, frees caret from window, and caret from screen</summary>
-        /// <returns>Nonzero iff function succeeds</returns>
+        /// <returns>Nonzero if function succeeds</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms648400%28v=vs.85%29.aspx </remarks>
         [DllImport(DllName)]
         public static extern bool DestroyCaret();

@@ -54,7 +54,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Determines if point is inside circle</summary>
         /// <param name="p">Point</param>
-        /// <returns>True iff point is inside circle</returns>
+        /// <returns><c>True</c> if point is inside circle</returns>
         public bool Contains(Vec2F p)
         {
             Vec2F d = Vec2F.Sub(p, Center);
@@ -66,7 +66,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="p">Point to project</param>
         /// <param name="c">Circle to project onto</param>
         /// <param name="projection">Projected point</param>
-        /// <returns>True iff projection is well defined</returns>
+        /// <returns><c>True</c> if projection is well defined</returns>
         public static bool Project(Vec2F p, CircleF c, ref Vec2F projection)
         {
             Vec2F d = Vec2F.Sub(p, c.Center);
@@ -87,7 +87,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="c2">Second CircleF</param>
         /// <param name="p1">First intersection point</param>
         /// <param name="p2">Second intersection point</param>
-        /// <returns>True iff there are 1 or 2 intersection points; false if there are none or an infinite number</returns>
+        /// <returns><c>True</c> if there are 1 or 2 intersection points; false if there are none or an infinite number</returns>
         public static bool Intersect(CircleF c1, CircleF c2, ref Vec2F p1, ref Vec2F p2)
         {
             Vec2F v1 = c2.Center - c1.Center;

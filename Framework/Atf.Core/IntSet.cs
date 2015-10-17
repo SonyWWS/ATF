@@ -58,7 +58,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes the integer from the set</summary>
         /// <param name="item">Integer to remove from the set</param>
-        /// <returns>True if integer was in the set</returns>
+        /// <returns><c>True</c> if integer was in the set</returns>
         /// <exception cref="T:System.NotSupportedException">The set is read-only</exception>
         public bool Remove(int item)
         {
@@ -142,7 +142,7 @@ namespace Sce.Atf
         /// <summary>
         /// Determines whether the set contains a specific integer</summary>
         /// <param name="item">The integer to locate in the set</param>
-        /// <returns>True iff the integer is found</returns>
+        /// <returns><c>True</c> if the integer is found</returns>
         public bool Contains(int item)
         {
             return FindRange(item) >= 0;
@@ -153,7 +153,7 @@ namespace Sce.Atf
         /// of the integer within this sorted set</summary>
         /// <param name="item">Integer to look for</param>
         /// <param name="index">Zero-based index of the given integer within the sorted set or -1 if not found</param>
-        /// <returns>True iff the integer is found</returns>
+        /// <returns><c>True</c> if the integer is found</returns>
         public bool Contains(int item, out int index)
         {
             int rangeIndex = FindRange(item);
@@ -439,7 +439,7 @@ namespace Sce.Atf
             /// <summary>
             /// Checks if the given integer is within this range</summary>
             /// <param name="value">The integer to test for</param>
-            /// <returns>True iff the integer is contained within this range</returns>
+            /// <returns><c>True</c> if the integer is contained within this range</returns>
             public bool Contains(int value)
             {
                 return

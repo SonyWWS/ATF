@@ -134,7 +134,7 @@ namespace Sce.Atf.Rendering.OpenGL
 
         /// <summary>
         /// Begins drawing the canvas contents to perform picking</summary>
-        /// <param name="picking">True iff perform picking</param>
+        /// <param name="picking"><c>True</c> if perform picking</param>
         protected virtual void BeginPaint(bool picking)
         {
             base.BeginPaint();
@@ -181,7 +181,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// Tests if key is an input key. Catching the arrow keys is important here. If we didn't return true, OnKeyDown and OnKeyUp would not get
         /// called for the arrow keys.</summary>
         /// <param name="keyData">Key</param>
-        /// <returns>True iff key is input key for camera motion</returns>
+        /// <returns><c>True</c> if key is input key for camera motion</returns>
         protected override bool IsInputKey(Keys keyData)
         {
             if (keyData == KeysInterop.ToWf(s_controlScheme.Left1) ||

@@ -99,7 +99,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Tests if client can perform command</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>True iff client can perform command</returns>
+        /// <returns><c>True</c> if client can perform command</returns>
         bool ICommandClient.CanDoCommand(object commandTag)
         {
             if (m_targetProviders == null)

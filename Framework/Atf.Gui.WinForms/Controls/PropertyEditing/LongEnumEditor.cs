@@ -175,7 +175,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// <summary>
             /// Checks if input key</summary>
             /// <param name="keyData">Key</param>
-            /// <returns>True iff key is input key</returns>
+            /// <returns><c>True</c> if key is input key</returns>
             /// <remarks>Up and down keys need to be seen by our containing Control (PropertyView or one of the
             /// derived classes, PropertyGridView or GridView) to allow for navigation to
             /// other properties.</remarks>

@@ -16,7 +16,7 @@ namespace Sce.Atf
         /// <param name="value">String to parse</param>
         /// <param name="result">If successful, result is set to the matching enum. Otherwise, 
         /// result is set to the default value of type T.</param>
-        /// <returns>True iff the string was successfully matched to a member of the enum</returns>
+        /// <returns><c>True</c> if the string was successfully matched to a member of the enum</returns>
         /// <exception cref="InvalidOperationException"> if T is not actually an enum type</exception>
         public static bool TryParse<T>(string value, out T result)
         {

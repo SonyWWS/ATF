@@ -298,7 +298,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets group pin position in group local space</summary>
         /// <param name="groupPin">Group pin</param>
         /// <param name="group">Owner</param>
-        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <param name="inputSide"><c>True</c> if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
         /// <returns>Group pin position</returns>
         public Point GetGroupPinPosition(ICircuitGroupType<TElement, TWire, TPin> group, ICircuitGroupPin<TElement> groupPin, bool inputSide, D2dGraphics g)
@@ -325,7 +325,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets pin position in element local space</summary>
         /// <param name="element">Element</param>
         /// <param name="pinIndex">Pin index</param>
-        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <param name="inputSide"><c>True</c> if pin side is input, false for output side</param>
         /// <param name="g">Graphics object</param>
         /// <returns>Pin position</returns>
         public Point GetPinPosition(TElement element, int pinIndex, bool inputSide, D2dGraphics g)
@@ -683,7 +683,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="g">D2dGraphics object</param>
         /// <param name="xOffset">optional x offset added to edge</param>
         /// <param name="yOffset">optional y offset added to edge</param>
-        /// <returns>True iff edge hits point</returns>
+        /// <returns><c>True</c> if edge hits point</returns>
         protected virtual bool PickEdge(TWire edge, PointF p, D2dGraphics g, float xOffset = 0, float yOffset = 0)
         {
             ElementTypeInfo fromInfo = GetElementTypeInfo(edge.FromNode, g);
@@ -1062,7 +1062,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="element">Element to test</param>
         /// <param name="g">D2dGraphics object</param>
         /// <param name="p">Point to test in graph space</param>
-        /// <returns>True iff given element is picked by given point</returns>
+        /// <returns><c>True</c> if given element is picked by given point</returns>
         protected virtual bool Pick(TElement element, D2dGraphics g, PointF p)
         {
             RectangleF bounds = GetBounds(element, g);
@@ -2121,7 +2121,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Gets pin offset</summary>
         /// <param name="element">Element containing pin</param>
         /// <param name="pinIndex">Pin index</param>
-        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <param name="inputSide"><c>True</c> if pin side is input, false for output side</param>
         /// <returns>Pin offset</returns>
         public virtual int GetPinOffset(ICircuitElement element, int pinIndex, bool inputSide)
         {

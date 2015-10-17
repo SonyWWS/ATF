@@ -44,7 +44,7 @@ namespace Sce.Atf.Applications.WebServices
         /// <summary>
         /// Constructor.
         /// Mapping to SourceForge project is determined from the assembly attributes.</summary>
-        /// <param name="anon">True if anonymous login</param>
+        /// <param name="anon"><c>True</c> if anonymous login</param>
         public FeedbackForm(bool anon)
         {
             Assembly assembly = Assembly.GetEntryAssembly();
@@ -212,7 +212,7 @@ namespace Sce.Atf.Applications.WebServices
 
         /// <summary>
         /// Cleans up any resources being used</summary>
-        /// <param name="disposing">True iff managed resources should be disposed</param>
+        /// <param name="disposing"><c>True</c> if managed resources should be disposed</param>
         protected override void Dispose( bool disposing )
         {
             if( disposing )

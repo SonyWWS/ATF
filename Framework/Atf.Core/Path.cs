@@ -111,7 +111,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests path for equality</summary>
         /// <param name="other">Other path</param>
-        /// <returns>True iff this path is equivalent to other</returns>
+        /// <returns><c>True</c> if this path is equivalent to other</returns>
         public bool Equals(Path<T> other)
         {
             if (object.Equals(other, null))
@@ -130,7 +130,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests object for equality</summary>
         /// <param name="obj">Other object</param>
-        /// <returns>True iff this path is equivalent to other object</returns>
+        /// <returns><c>True</c> if this path is equivalent to other object</returns>
         public override bool Equals(object obj)
         {
             Path<T> path = obj as Path<T>;
@@ -156,7 +156,7 @@ namespace Sce.Atf
         /// Tests paths for equality</summary>
         /// <param name="o1">First path</param>
         /// <param name="o2">Second path</param>
-        /// <returns>True iff paths are equivalent</returns>
+        /// <returns><c>True</c> if paths are equivalent</returns>
         public static bool operator ==(Path<T> o1, Path<T> o2)
         {
             if (object.Equals(o1, null))
@@ -169,7 +169,7 @@ namespace Sce.Atf
         /// Tests paths for inequality</summary>
         /// <param name="o1">First path</param>
         /// <param name="o2">Second path</param>
-        /// <returns>True iff paths are not equivalent</returns>
+        /// <returns><c>True</c> if paths are not equivalent</returns>
         public static bool operator !=(Path<T> o1, Path<T> o2)
         {
             if (object.Equals(o1, null))
@@ -309,7 +309,7 @@ namespace Sce.Atf
         /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> contains a specific value</summary>
         /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"></see></param>
         /// <returns>
-        /// True iff item is found in the <see cref="T:System.Collections.Generic.ICollection`1"></see>
+        /// <c>True</c> if item is found in the <see cref="T:System.Collections.Generic.ICollection`1"></see>
         /// </returns>
         public bool Contains(T item)
         {
@@ -357,7 +357,7 @@ namespace Sce.Atf
         /// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"></see></summary>
         /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"></see></param>
         /// <returns>
-        /// True iff item was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"></see>. 
+        /// <c>True</c> if item was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"></see>. 
         /// This method also returns false if item is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </returns>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only</exception>

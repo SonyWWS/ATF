@@ -12,7 +12,7 @@ namespace Sce.Atf.Controls
 
         /// <summary>
         /// Clean up any resources being used</summary>
-        /// <param name="disposing">True if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing"><c>True</c> if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

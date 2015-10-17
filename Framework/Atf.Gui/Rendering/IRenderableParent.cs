@@ -13,7 +13,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <summary>
         /// Gets whether or not the given referenced or child object is renderable</summary>
         /// <param name="child">The child object</param>
-        /// <returns>True iff the object is renderable</returns>
+        /// <returns><c>True</c> if the object is renderable</returns>
         bool IsRenderableChild(object child);
     }
 }

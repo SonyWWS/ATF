@@ -73,7 +73,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         public bool CanSetName(object item)
         {
             return item.Is<TemplateFolder>() || item.Is<Template>();
@@ -132,9 +132,9 @@ namespace Sce.Atf.Dom
         }
 
         /// <summary>
-        /// Returns true iff the reference can reference the specified target item</summary>
+        /// Returns <c>True</c> if the reference can reference the specified target item</summary>
         /// <param name="item">Template item to be referenced</param>
-        /// <returns>True iff the reference can reference the specified target item</returns>
+        /// <returns><c>True</c> if the reference can reference the specified target item</returns>
         public abstract bool CanReference(object item);
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Returns whether the context can copy the selection</summary>
-        /// <returns>True iff the context can copy</returns>
+        /// <returns><c>True</c> if the context can copy</returns>
         public bool CanCopy()
         {
             return Selection.Count > 0 && Selection.All(x => x.Is<Template>());
@@ -167,7 +167,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns whether the context can insert the data object</summary>
         /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
-        /// <returns>True iff the context can insert the data object</returns>
+        /// <returns><c>True</c> if the context can insert the data object</returns>
         /// <remarks>Because non-template objects are promoted into the template library via command explicitly,
         /// CanInsert() here only needs to deal moving items around inside the template lister; 
         /// currently we do not allow drag items from outside then drop onto the template lister
@@ -249,7 +249,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Returns whether the context can delete the selection</summary>
-        /// <returns>True iff the context can delete</returns>
+        /// <returns><c>True</c> if the context can delete</returns>
         public bool CanDelete()
         {
             return Selection.Count > 0;
@@ -388,7 +388,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns whether an item is a global template</summary>
         /// <param name="item">Item to test</param>
-        /// <returns>True iff item is a global template</returns>
+        /// <returns><c>True</c> if item is a global template</returns>
         public bool IsExternalTemplate(object item)
         {
             var domNode = item.As<DomNode>();
@@ -443,7 +443,7 @@ namespace Sce.Atf.Dom
         /// Validate template folder URI.
         /// Folder invalid if the specified file URI is already used in one of the template folders</summary>
         /// <param name="uri">Template folder URI</param>
-        /// <returns>True iff folder is valid</returns>
+        /// <returns><c>True</c> if folder is valid</returns>
         public bool ValidateNewFolderUri(Uri uri)
         {
             return ValidateNewFolderUri(RootFolder, uri);

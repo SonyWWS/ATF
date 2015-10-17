@@ -40,7 +40,7 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// Selects the given item</summary>
         /// <param name="item">Item to be selected</param>
-        /// <returns>True iff item was selected</returns>
+        /// <returns><c>True</c> if item was selected</returns>
         public bool SetSelectedItem(object item)
         {
             if (item == null) return false;
@@ -66,7 +66,7 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// Determines whether an item can serve as an item container in a TreeListView</summary>
         /// <param name="item">Item to test if can be container</param>
-        /// <returns>True iff item can serve as an item container in a TreeListView</returns>
+        /// <returns><c>True</c> if item can serve as an item container in a TreeListView</returns>
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
             return item is TreeListViewItem;
@@ -146,7 +146,7 @@ namespace Sce.Atf.Wpf.Controls
         /// <summary>
         /// Determines whether an item can serve as an item container in a TreeListView</summary>
         /// <param name="item">Item to test if can be container</param>
-        /// <returns>True iff item can serve as an item container in a TreeListView</returns>
+        /// <returns><c>True</c> if item can serve as an item container in a TreeListView</returns>
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
             return item is TreeListViewItem;

@@ -76,7 +76,7 @@ namespace Sce.Atf.Dom
         /// Gets whether the target can be promoted to template library.
         /// Items can be promoted when the active context is CircuitEditingContext and all the items are selected modules.</summary>
         /// <param name="items">Items to promote</param>
-        /// <returns>True iff the target can be promoted to template library</returns>
+        /// <returns><c>True</c> if the target can be promoted to template library</returns>
         public abstract bool CanPromoteToTemplateLibrary(IEnumerable<object> items);
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Sce.Atf.Dom
         /// Items can be demoted when the active context is CircuitEditingContext and
         /// all the items are selected references.</summary>
         /// <param name="items">Items to demote</param>
-        /// <returns>True iff the target can be demoted</returns>
+        /// <returns><c>True</c> if the target can be demoted</returns>
         public abstract bool CanDemoteToCopyInstance(IEnumerable<object> items);
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Can the client do the command?</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         bool ICommandClient.CanDoCommand(object commandTag)
         {
             if (commandTag is CommandTag)

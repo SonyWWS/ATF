@@ -55,7 +55,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
         /// <param name="tag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object tag)
         {
             if (tag is Commands)

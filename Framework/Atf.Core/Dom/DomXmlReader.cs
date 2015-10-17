@@ -317,7 +317,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Determines if attribute is a reference</summary>
         /// <param name="attributeInfo">Attribute</param>
-        /// <returns>True iff attribute is reference</returns>
+        /// <returns><c>True</c> if attribute is reference</returns>
         protected virtual bool IsReferenceAttribute(AttributeInfo attributeInfo)
         {
             return (attributeInfo.Type.Type == AttributeTypes.Reference);

@@ -271,7 +271,7 @@ namespace Sce.Atf
         /// <param name="seg">The segment</param>
         /// <param name="rect">Rectangle, in Windows coordinates, such that the top y has
         /// a lower value than the bottom Y</param>
-        /// <returns>True iff the segment intersects the rectangle</returns>
+        /// <returns><c>True</c> if the segment intersects the rectangle</returns>
         public static bool Intersects(Seg2F seg, RectangleF rect)
         {
             // Quick acceptance
@@ -325,7 +325,7 @@ namespace Sce.Atf
         /// <param name="rect">Rectangle, in Windows coordinates, such that the top y has
         /// a lower value than the bottom y</param>
         /// <param name="tolerance">The picking tolerance</param>
-        /// <returns>True iff the rectangle intersects the Bezier curve</returns>
+        /// <returns><c>True</c> if the rectangle intersects the Bezier curve</returns>
         public static bool Intersects(BezierCurve2F curve, RectangleF rect, float tolerance)
         {
             //Note that the convex hull around the 4 control points always contains the curve.
@@ -948,7 +948,7 @@ namespace Sce.Atf
         /// Draws a sort direction indicator, used to show sort order in lists</summary>
         /// <param name="x">Horizontal position</param>
         /// <param name="y">Vertical position</param>
-        /// <param name="up">True if indicator points up, false for down</param>
+        /// <param name="up"><c>True</c> if indicator points up, false for down</param>
         /// <param name="g">Graphics GDI+ drawing surface</param>
         public static void DrawSortDirectionIndicator(int x, int y, bool up, Graphics g)
         {
@@ -968,7 +968,7 @@ namespace Sce.Atf
         /// <param name="y">Vertical position</param>
         /// <param name="width">Indicator width</param>
         /// <param name="height">Indicator height</param>
-        /// <param name="up">True if indicator points up, false for down</param>
+        /// <param name="up"><c>True</c> if indicator points up, false for down</param>
         /// <param name="brush">Brush to fill interior of indicator</param>
         /// <param name="g">Graphics GDI+ drawing surface</param>
         public static void DrawSortDirectionIndicator(int x, int y, int width, int height, bool up, Brush brush, Graphics g)

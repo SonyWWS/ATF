@@ -45,7 +45,7 @@ namespace Sce.Atf.Applications
         /// <typeparam name="T">Type of the variable</typeparam>
         /// <param name="name">Variable name</param>
         /// <param name="var">Variable </param>
-        /// <returns>True iff the variable found</returns>
+        /// <returns><c>True</c> if the variable found</returns>
         public bool TryGetVariable<T>(string name, out T var)
         {
             return m_scope.TryGetVariable<T>(name, out var);

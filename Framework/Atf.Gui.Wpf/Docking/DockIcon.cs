@@ -51,7 +51,7 @@ namespace Sce.Atf.Wpf.Docking
         /// <summary>
         /// Hit test the input point whether it is inside of the bounds of this Icon.</summary>
         /// <param name="p">Point to test</param>
-        /// <returns>True if the point is within the icon bounds, otherwise false</returns>
+        /// <returns><c>True</c> if the point is within the icon bounds, otherwise false</returns>
         public bool HitTest(Point p)
         {
             Rect rect = new Rect(m_offset, m_size);

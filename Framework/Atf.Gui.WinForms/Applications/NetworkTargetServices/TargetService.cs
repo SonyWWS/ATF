@@ -245,7 +245,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             return Commands.EditTarget.Equals(commandTag);            

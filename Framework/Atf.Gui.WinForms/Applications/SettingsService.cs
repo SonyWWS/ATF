@@ -308,7 +308,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks if the client can do the command</summary>
         /// <param name="tag">Command</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object tag)
         {
             bool enabled = false;
@@ -531,7 +531,7 @@ namespace Sce.Atf.Applications
         /// Deserializes persisted settings and set property descriptor values</summary>
         /// <remarks>This is marked 'internal' for use by SettingsLoadSaveDialog only.</remarks>
         /// <param name="stream">Persisted settings</param>
-        /// <returns>True iff successful</returns>
+        /// <returns><c>True</c> if successful</returns>
         internal bool Deserialize(Stream stream)
         {
             // create XML DOM from stream

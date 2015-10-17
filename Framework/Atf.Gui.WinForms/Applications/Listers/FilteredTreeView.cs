@@ -35,7 +35,7 @@ namespace Sce.Atf.Applications
         /// Indicates whether two ITreeView instances are equal</summary>
         /// <param name="first">First ITreeView to compare</param>
         /// <param name="second">Second ITreeView to compare</param>
-        /// <returns>True iff ITreeView instances are equal</returns>
+        /// <returns><c>True</c> if ITreeView instances are equal</returns>
         public static bool Equals(ITreeView first, ITreeView second)
         {
             FilteredTreeView f1 = first.As<FilteredTreeView>();

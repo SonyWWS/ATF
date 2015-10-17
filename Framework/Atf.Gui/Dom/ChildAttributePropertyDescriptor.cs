@@ -212,7 +212,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Tests equality of property descriptor with object</summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns>True iff property descriptors are identical</returns>
+        /// <returns><c>True</c> if property descriptors are identical</returns>
         /// <remarks>Implements Equals() for organizing descriptors in grid controls</remarks>
         public override bool Equals(object obj)
         {

@@ -9,13 +9,13 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the item is visible</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item is visible</returns>
+        /// <returns><c>True</c> if the item is visible</returns>
         bool IsVisible(object item);
 
         /// <summary>
         /// Returns whether the item can be made visible and invisible</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item can be made visible and invisible</returns>
+        /// <returns><c>True</c> if the item can be made visible and invisible</returns>
         bool CanSetVisible(object item);
 
         /// <summary>

@@ -184,7 +184,7 @@ namespace Sce.Atf.Wpf.Dom
         /// Requests permission to close the client's Control</summary>
         /// <param name="control">Client control to be closed</param>
         /// <param name="mainWindowClosing"></param>
-        /// <returns>True if the control can close, or false to cancel</returns>
+        /// <returns><c>True</c> if the control can close, or false to cancel</returns>
         bool Sce.Atf.Wpf.Applications.IControlHostClient.Close(object control, bool mainWindowClosing)
         {
             return true;

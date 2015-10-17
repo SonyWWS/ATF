@@ -49,7 +49,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Determines if user can sort columns</summary>
         /// <param name="element">ListView control</param>
-        /// <returns>True iff user can sort columns</returns>
+        /// <returns><c>True</c> if user can sort columns</returns>
         [AttachedPropertyBrowsableForType(typeof(ListView))]
         public static bool GetCanUserSortColumns(ListView element)
         {
@@ -69,7 +69,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether whether can sort GridViewColumn</summary>
         /// <param name="element">GridViewColumn to obtain property for</param>
-        /// <returns>True iff can sort GridViewColumn</returns>
+        /// <returns><c>True</c> if can sort GridViewColumn</returns>
         [AttachedPropertyBrowsableForType(typeof(GridViewColumn))]
         public static bool GetCanUseSort(GridViewColumn element)
         {

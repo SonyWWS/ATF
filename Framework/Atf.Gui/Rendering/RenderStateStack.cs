@@ -56,7 +56,7 @@ namespace Sce.Atf.Rendering
         /// <summary>
         /// Determines whether stack contains the specified RenderState</summary>
         /// <param name="renderState">Render state</param>
-        /// <returns><c>True</c> iff stack contains the specified RenderState</returns>
+        /// <returns><c>True</c> if stack contains the specified RenderState</returns>
         public bool Contains(RenderState renderState)
         {
             return m_contents.Contains(renderState);

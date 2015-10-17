@@ -35,7 +35,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if other extension metadata is equivalent to this</summary>
         /// <param name="other">Other extension metadata</param>
-        /// <returns>True iff other extension metadata is equivalent to this</returns>
+        /// <returns><c>True</c> if other extension metadata is equivalent to this</returns>
         public bool IsEquivalent(ExtensionInfo other)
         {
             return

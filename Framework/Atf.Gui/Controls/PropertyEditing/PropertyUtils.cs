@@ -210,7 +210,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// property editing. The default .NET Equals() method doesn't take into account the Category.</summary>
         /// <param name="a">First PropertyDescriptor to compare</param>
         /// <param name="b">Second PropertyDescriptor to compare</param>
-        /// <returns>True iff PropertyDescriptors equal, i.e., the name, category and type are the same</returns>
+        /// <returns><c>True</c> if PropertyDescriptors equal, i.e., the name, category and type are the same</returns>
         public static bool PropertyDescriptorsEqual(PropertyDescriptor a, PropertyDescriptor b)
         {
             return
@@ -288,7 +288,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Tests if a key modifies the text in the edit box</summary>
         /// <param name="keyData">A key, such as from ProcessDialogKey</param>
-        /// <returns>True iff the key modifies text</returns>
+        /// <returns><c>True</c> if the key modifies text</returns>
         public static bool IsEditKey(Keys keyData)
         {
             if (KeysUtil.IsPrintable(keyData))
@@ -355,7 +355,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Returns whether or not the property can be reset</summary>
         /// <param name="owners">Objects whose property is tested</param>
         /// <param name="descriptor">Property to reset</param>
-        /// <returns>True iff the property can be reset on the object</returns>
+        /// <returns><c>True</c> if the property can be reset on the object</returns>
         public static bool CanResetProperty(IEnumerable<object> owners, PropertyDescriptor descriptor)
         {
             foreach (object owner in owners)
@@ -379,7 +379,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Returns whether the given values are equal</summary>
         /// <param name="value1">First value</param>
         /// <param name="value2">Second value</param>
-        /// <returns>True iff the given values are equal</returns>
+        /// <returns><c>True</c> if the given values are equal</returns>
         /// <remarks>Does a limited descent into the values, testing array equality</remarks>
         public static bool AreEqual(object value1, object value2)
         {

@@ -132,7 +132,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff object is null</returns>
+        /// <returns><c>True</c> if object is null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value == null;
@@ -149,7 +149,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff object is non-null</returns>
+        /// <returns><c>True</c> if object is non-null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value != null;
@@ -183,7 +183,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Type to test if assignable from type of value</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff type passed as parameter is assignable from type of value</returns>
+        /// <returns><c>True</c> if type passed as parameter is assignable from type of value</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var type = parameter as Type;
@@ -560,7 +560,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Parameter to test against value</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>Binding.DoNothing if value or parameter is null. Otherwise, true iff value or parameter convert to the same string.</returns>
+        /// <returns>Binding.DoNothing if value or parameter is null. Otherwise, <c>True</c> if value or parameter convert to the same string.</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null)
@@ -634,7 +634,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff value is null</returns>
+        /// <returns><c>True</c> if value is null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (value == null);
@@ -664,7 +664,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Converter parameter to use (unused)</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff value is not null</returns>
+        /// <returns><c>True</c> if value is not null</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value != null;
@@ -904,7 +904,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">Type of target (unused)</param>
         /// <param name="parameter">Parameter to test against value</param>
         /// <param name="culture">Culture to use in the converter (unused)</param>
-        /// <returns>True iff value equals parameter</returns>
+        /// <returns><c>True</c> if value equals parameter</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value.Equals(parameter);

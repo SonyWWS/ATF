@@ -98,7 +98,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests for equality to given angle-axis</summary>
         /// <param name="a">Other angle-axis</param>
-        /// <returns>True iff rotations are exactly equal</returns>
+        /// <returns><c>True</c> if rotations are exactly equal</returns>
         public bool Equals(AngleAxisF a)
         {
             return
@@ -110,7 +110,7 @@ namespace Sce.Atf.VectorMath
         /// Tests for equality to another angle-axis, within a given epsilon</summary>
         /// <param name="a">Other angle-axis</param>
         /// <param name="eps">Epsilon or margin for error</param>
-        /// <returns>True iff all components are within epsilon</returns>
+        /// <returns><c>True</c> if all components are within epsilon</returns>
         /// <remarks>2 axes that are in the exact opposite direction and with opposite angles
         /// of rotation also count as being equal.</remarks>
         public bool Equals(AngleAxisF a, double eps)
@@ -123,7 +123,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether this instance and a specified object are equal</summary>
         /// <param name="obj">Another object to compare to</param>
-        /// <returns>True iff obj and this instance are the same type and represent
+        /// <returns><c>True</c> if obj and this instance are the same type and represent
         /// the same value</returns>
         public override bool Equals(object obj)
         {

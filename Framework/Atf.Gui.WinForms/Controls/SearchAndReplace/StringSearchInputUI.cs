@@ -57,7 +57,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Gets whether or not the textbox contains any input</summary>
-        /// <returns>True if any sort of string is in the textbox</returns>
+        /// <returns><c>True</c> if any sort of string is in the textbox</returns>
         public bool IsNullOrEmpty()
         {
             return m_textBoxEmpty;
@@ -66,7 +66,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the specified string matches the pattern string in the text box</summary>
         /// <param name="inputString">The string to test for match</param>
-        /// <returns>True iff the text box pattern string matches with inputString</returns>
+        /// <returns><c>True</c> if the text box pattern string matches with inputString</returns>
         public bool Matches(string inputString)
         {
             return Regex.Match(inputString, m_patternTextRegex, RegexOptions.IgnoreCase).Success;

@@ -189,7 +189,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         #region ICacheablePropertyControl
 
         /// <summary>
-        /// Gets true iff this control can be used indefinitely, regardless of whether the associated
+        /// Gets <c>True</c> if this control can be used indefinitely, regardless of whether the associated
         /// PropertyEditorControlContext's SelectedObjects property changes, i.e., the selection changes. 
         /// This property must be constant for the life of this control.</summary>
         public virtual bool Cacheable
@@ -473,7 +473,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Raises the <see cref="E:System.ComponentModel.Design.IComponentChangeService.ComponentChanging"></see> event</summary>
-        /// <returns>True iff this object can be changed</returns>
+        /// <returns><c>True</c> if this object can be changed</returns>
         public bool OnComponentChanging()
         {
             return true;
@@ -508,7 +508,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// then this is the place to check for it.</summary>
         /// <param name="msg">System.Windows.Forms.Message representing the window message to process</param>
         /// <param name="keyData">System.Windows.Forms.Keys value for key to process</param>
-        /// <returns>True iff character was processed by control</returns>
+        /// <returns><c>True</c> if character was processed by control</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if ((keyData == (Keys.Down | Keys.Alt) || keyData == (Keys.Down | Keys.Control))
@@ -522,7 +522,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             if (keyData == Keys.Enter)

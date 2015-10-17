@@ -38,7 +38,7 @@ namespace Sce.Atf.Controls.Timelines
         /// returns false if the path can't be found</summary>
         /// <param name="path">Path</param>
         /// <param name="bounds">Bounding rectangle in screen space</param>
-        /// <returns>True iff the bounds for this path could be found</returns>
+        /// <returns><c>True</c> if the bounds for this path could be found</returns>
         public bool TryGetBounds(TimelinePath path, out RectangleF bounds)
         {
             return m_paths.TryGetValue(path, out bounds);
@@ -47,7 +47,7 @@ namespace Sce.Atf.Controls.Timelines
         /// <summary>
         /// Returns whether or not the given path was previously added</summary>
         /// <param name="path">Path</param>
-        /// <returns>True iff the given path was previously added</returns>
+        /// <returns><c>True</c> if the given path was previously added</returns>
         public bool ContainsPath(TimelinePath path)
         {
             return m_paths.ContainsKey(path);

@@ -277,7 +277,7 @@ namespace Sce.Atf.Perforce
 
         /// <summary>
         /// Sets up server/client connection information</summary>
-        /// <returns>True iff information set up</returns>
+        /// <returns><c>True</c> if information set up</returns>
         public bool ConfigureConnection()
         {
             bool result;

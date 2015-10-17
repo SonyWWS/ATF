@@ -33,7 +33,7 @@ namespace CircuitEditorSample
         /// Can given modules be moved into a new container</summary>
         /// <param name="newParent">New module parent</param>
         /// <param name="movingObjects">Objects being moved</param>
-        /// <returns>True iff objects can be moved to new parent</returns>
+        /// <returns><c>True</c> if objects can be moved to new parent</returns>
         bool IEditableGraphContainer<Module, Connection, ICircuitPin>.CanMove(object newParent, IEnumerable<object> movingObjects)
         {
             if (newParent.Is<IReference<Module>>())
@@ -58,7 +58,7 @@ namespace CircuitEditorSample
         /// Can a container be resized</summary>
         /// <param name="container">Container to resize</param>
         /// <param name="borderPart">Part of border to resize</param>
-        /// <returns>True iff the container border can be resized</returns>
+        /// <returns><c>True</c> if the container border can be resized</returns>
         bool IEditableGraphContainer<Module, Connection, ICircuitPin>.CanResize(object container, DiagramBorder borderPart)
         {
             var editableGraphContainer =

@@ -1016,7 +1016,7 @@ namespace Sce.Atf.Controls.CurveEditing
         protected RectangleF SelectionRect;
 
         /// <summary>
-        /// Gets whether dragging over threshold. True if user dragging.</summary>
+        /// Gets whether dragging over threshold. <c>True</c> if user dragging.</summary>
         protected bool DraggingOverThreshold
         {
             get { return m_dragOverThreshold; }

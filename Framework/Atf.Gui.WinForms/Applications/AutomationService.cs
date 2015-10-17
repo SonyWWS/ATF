@@ -213,7 +213,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks if any error occurs. This can be an unhandled exception or
         /// an error dialog (checked by name and by type of known error dialogs).</summary>
-        /// <returns>True iff error occurred</returns>
+        /// <returns><c>True</c> if error occurred</returns>
         public bool CheckUnexpectedErrors()
         {
             if (s_unhandledException)
@@ -267,7 +267,7 @@ namespace Sce.Atf.Applications
         /// Called by test client to verify connection is ready. If this call throws
         /// an exception, most likely the service has not finished starting yet. Returns
         /// false if the main form has not finished loading yet.</summary>
-        /// <returns>True iff the application is done loading</returns>
+        /// <returns><c>True</c> if the application is done loading</returns>
         public bool Connect()
         {
             if (s_mainFormLoaded)
@@ -287,7 +287,7 @@ namespace Sce.Atf.Applications
         /// is clicked. If a dialog is found, a keyboard "return" message is 
         /// sent to the dialog to select the default action.</summary>
         /// <param name="formText">Text to search for</param>
-        /// <returns>True iff text found</returns>
+        /// <returns><c>True</c> if text found</returns>
         public bool ClickButton(string formText)
         {
             bool found = false;

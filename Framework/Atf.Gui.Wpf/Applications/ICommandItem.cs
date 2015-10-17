@@ -45,7 +45,7 @@ namespace Sce.Atf.Wpf.Applications
         /// Tests whether command is visible or not</summary>
         /// <param name="cmd">ICommandItem for command</param>
         /// <param name="visibility">Where command is visible, as on menus, toolbars, etc.</param>
-        /// <returns>True iff command is visible</returns>
+        /// <returns><c>True</c> if command is visible</returns>
         public static bool IsVisible(this ICommandItem cmd, CommandVisibility visibility)
         {
             return (cmd.Visibility & visibility) > 0;

@@ -15,7 +15,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         bool CanSetName(object item);
 
         /// <summary>

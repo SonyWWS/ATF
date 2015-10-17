@@ -107,13 +107,13 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Gets whether an item is in sync with the source control version</summary>
         /// <param name="uri">URI representing the path to item</param>
-        /// <returns>True iff item is in sync with the source control version</returns>
+        /// <returns><c>True</c> if item is in sync with the source control version</returns>
         bool IsSynched(Uri uri);
 
         /// <summary>
         /// Gets whether an item is locked by the client or another user</summary>
         /// <param name="uri">URI representing the path to item</param>
-        /// <returns>True iff item is locked</returns>
+        /// <returns><c>True</c> if item is locked</returns>
         bool IsLocked(Uri uri);
 
         /// <summary>

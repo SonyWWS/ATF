@@ -316,7 +316,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             NumericTextBox focusTextBox = null;

@@ -607,7 +607,7 @@ namespace Sce.Atf.Wpf.Collections
         /// <summary>
         /// Test if rectangle has nodes inside</summary>
         /// <param name="bounds">Bounding rectangle</param>
-        /// <returns>True iff items inside rectangle</returns>
+        /// <returns><c>True</c> if items inside rectangle</returns>
         public bool HasItemsInside(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -640,7 +640,7 @@ namespace Sce.Atf.Wpf.Collections
         /// <summary>
         /// Test if any items intersect rectangle</summary>
         /// <param name="bounds">Rectangle</param>
-        /// <returns>True iff items intersect rectangle</returns>
+        /// <returns><c>True</c> if items intersect rectangle</returns>
         public bool HasItemsIntersecting(Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())
@@ -673,7 +673,7 @@ namespace Sce.Atf.Wpf.Collections
         /// <summary>
         /// Remove item from tree</summary>
         /// <param name="item">Item to remove</param>
-        /// <returns>True iff item removed</returns>
+        /// <returns><c>True</c> if item removed</returns>
         public bool Remove(T item)
         {
             return Remove(item,
@@ -685,7 +685,7 @@ namespace Sce.Atf.Wpf.Collections
         /// <exception cref="ArgumentOutOfRangeException"> if bounds are invalid</exception>
         /// <param name="item">Item to remove</param>
         /// <param name="bounds">Rectangle</param>
-        /// <returns>True iff item removed</returns>
+        /// <returns><c>True</c> if item removed</returns>
         public bool Remove(T item, Rect bounds)
         {
             if (bounds.Top.IsNaN() || bounds.Left.IsNaN() || bounds.Width.IsNaN() || bounds.Height.IsNaN())

@@ -219,7 +219,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Processes the key as a command shortcut</summary>
         /// <param name="key">Key to process</param>
-        /// <returns>True iff the key was processed as a command shortcut</returns>
+        /// <returns><c>True</c> if the key was processed as a command shortcut</returns>
         public virtual bool ProcessKey(Keys key)
         {
             KeyEventArgs keyEventArgs = new KeyEventArgs(key);
@@ -262,7 +262,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag) { return false; }
 
         /// <summary>
@@ -708,7 +708,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Tests if command is unregistered</summary>
         /// <param name="info">CommandInfo for command</param>
-        /// <returns>True iff command is unregistered</returns>
+        /// <returns><c>True</c> if command is unregistered</returns>
         protected bool IsUnregistered(CommandInfo info)
         {
             return GetClient(info.CommandTag) == null;
@@ -793,7 +793,7 @@ namespace Sce.Atf.Applications
         /// Tests equality of menu tags</summary>
         /// <param name="tag1">Menu 1 tag</param>
         /// <param name="tag2">Menu 2 tag</param>
-        /// <returns>True iff tags are equal</returns>
+        /// <returns><c>True</c> if tags are equal</returns>
         protected static bool TagsEqual(object tag1, object tag2)
         {
             if (tag1 == null)

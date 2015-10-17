@@ -39,7 +39,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether multi-selection is enabled for dependency object</summary>
         /// <param name="obj">Dependency object tested</param>
-        /// <returns>True iff multi-selection is enabled</returns>
+        /// <returns><c>True</c> if multi-selection is enabled</returns>
         public static bool GetIsMultiSelected(DependencyObject obj)
         {
             return (bool)obj.GetValue(IsMultiSelectedProperty);
@@ -129,7 +129,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether ensuring path is visible is enabled for dependency object</summary>
         /// <param name="obj">Dependency object tested</param>
-        /// <returns>True iff ensuring path is visible is enabled</returns>
+        /// <returns><c>True</c> if ensuring path is visible is enabled</returns>
         public static Path<Node> GetEnsureVisiblePath(DependencyObject obj)
         {
             return (Path<Node>)obj.GetValue(EnsureVisiblePathProperty);

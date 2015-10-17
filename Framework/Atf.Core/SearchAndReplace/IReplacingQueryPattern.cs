@@ -9,7 +9,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests whether the search data of the specified candidate matches this pattern</summary>
         /// <param name="itemToMatch">Match item</param>
-        /// <returns>True iff match</returns>
+        /// <returns><c>True</c> if match</returns>
         bool Matches(IQueryMatch itemToMatch);
 
         /// <summary>

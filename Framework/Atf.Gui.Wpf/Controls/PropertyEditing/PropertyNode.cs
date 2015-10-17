@@ -45,7 +45,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// Initialize the node</summary>
         /// <param name="instance">Instance or enumerable of instances</param>
         /// <param name="descriptor">Property descriptor</param>
-        /// <param name="isEnumerable">True if instance parameter holds an IEnumerable of instances</param>
+        /// <param name="isEnumerable"><c>True</c> if instance parameter holds an IEnumerable of instances</param>
         public void Initialize(object instance, PropertyDescriptor descriptor, bool isEnumerable)
         {
             Requires.NotNull(instance, "instance");
@@ -483,7 +483,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="managerType">Event manager type</param>
         /// <param name="sender">Event originator</param>
         /// <param name="e">Event arguments</param>
-        /// <returns>True iff listener handled event</returns>
+        /// <returns><c>True</c> if listener handled event</returns>
         bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             return OnReceiveWeakEvent(managerType, sender, e);
@@ -494,7 +494,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="managerType">Event manager type</param>
         /// <param name="sender">Event originator</param>
         /// <param name="e">Event arguments</param>
-        /// <returns>True iff handled event</returns>
+        /// <returns><c>True</c> if handled event</returns>
         protected virtual bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             if (managerType == typeof(ValueChangedEventManager))
@@ -836,7 +836,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="managerType">Event manager type</param>
         /// <param name="sender">Event originator</param>
         /// <param name="e">Event arguments</param>
-        /// <returns>True iff handled event</returns>
+        /// <returns><c>True</c> if handled event</returns>
         protected override bool OnReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
             bool handled = base.OnReceiveWeakEvent(managerType, sender, e);

@@ -244,7 +244,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             if (!(commandTag is Command))
@@ -484,8 +484,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs refresh of documents' status</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents refreshed or can be refreshed</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents refreshed or can be refreshed</returns>
         protected virtual bool DoRefresh(bool doing)
         {
             if (SourceControlService == null || !SourceControlService.Enabled ||
@@ -510,8 +510,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs reconciliation of documents</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents reconciled or can be reconciled</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents reconciled or can be reconciled</returns>
         protected virtual bool DoReconcile(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -571,8 +571,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs adding documents to source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents added or can be added</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents added or can be added</returns>
         protected virtual bool DoAdd(bool doing)
         {
             if (SourceControlService == null || !SourceControlService.Enabled ||
@@ -598,8 +598,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs checking out documents from source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents checked out or can be checked out</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents checked out or can be checked out</returns>
         protected virtual bool DoCheckOut(bool doing)
         {
             if (SourceControlService == null || !SourceControlService.Enabled ||
@@ -623,8 +623,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs checking in documents to source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents checked in or can be checked in</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents checked in or can be checked in</returns>
         protected virtual bool DoCheckIn(bool doing)
         {
             if (SourceControlService == null || m_contextRegistry == null ||
@@ -680,8 +680,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs synchronizing local files with files under source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents synchronized or can be synchronized</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents synchronized or can be synchronized</returns>
         protected virtual bool DoSync(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -709,8 +709,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs reverting local files to files under source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff any documents reverted or can be reverted</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if any documents reverted or can be reverted</returns>
         protected virtual bool DoRevert(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -749,8 +749,8 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Performs connecting to source control</summary>
-        /// <param name="doing">True iff doing the command</param>
-        /// <returns>True iff successfully connected to source control or can be connected</returns>
+        /// <param name="doing"><c>True</c> if doing the command</param>
+        /// <returns><c>True</c> if successfully connected to source control or can be connected</returns>
         protected virtual bool DoConnection(bool doing)
         {
             if (SourceControlService == null)

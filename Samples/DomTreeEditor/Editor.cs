@@ -97,7 +97,7 @@ namespace DomTreeEditorSample
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
         /// <param name="uri">Document URI</param>
-        /// <returns>True iff the client can open or create a document at the given URI</returns>
+        /// <returns><c>True</c> if the client can open or create a document at the given URI</returns>
         public bool CanOpen(Uri uri)
         {
             return s_info.IsCompatibleUri(uri);

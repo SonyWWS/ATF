@@ -39,7 +39,7 @@ namespace Sce.Atf
         /// target objects will be compared. If either target has been garbage collected, then false
         /// is returned.</summary>
         /// <param name="obj">Object compared to</param>
-        /// <returns>True iff objects are equal</returns>
+        /// <returns><c>True</c> if objects are equal</returns>
         public override bool Equals(object obj)
         {
             // Seems like under all circumstances that myWeakKey.Equals(myWeakKey) should be true.

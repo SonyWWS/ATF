@@ -248,7 +248,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             #region ICacheablePropertyControl
 
             /// <summary>
-            /// Gets true iff this control can be used indefinitely, regardless of whether the associated
+            /// Gets <c>True</c> if this control can be used indefinitely, regardless of whether the associated
             /// PropertyEditorControlContext's SelectedObjects property changes, i.e., the selection changes. 
             /// This property must be constant for the life of this control.</summary>
             public bool Cacheable
@@ -281,7 +281,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             /// <summary>
             /// Processes a dialog key</summary>
             /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-            /// <returns>True iff the key was processed by the control</returns>
+            /// <returns><c>True</c> if the key was processed by the control</returns>
             protected override bool ProcessDialogKey(Keys keyData)
             {
                 // Note, this code is duplicated in ArrayEditingControl.
@@ -524,7 +524,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                         IEnumerable items = GetItemsFromContext();
                         int itemCount = items.Cast<object>().Count();
 
-                        // Enable singleton mode iff the collection will always have exactly 1 item
+                        // Enable singleton mode if the collection will always have exactly 1 item
                         // in this case we can hide toolbar and the item's index column
                         m_singletonMode =
                             (m_editor.GetItemInsertersFunc == null || !m_editor.GetItemInsertersFunc(m_context).Any()) // can't insert
@@ -1367,7 +1367,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
             private bool m_singletonMode; // special mode for degenerate collections that always have exactly 1 item
             private int m_indexColumnWidth = 30; // width of index column, will grow if there are many items in the collection
-            private bool m_showToolStripLabels = true; // true iff the toolstrips shows button labels (rather than just icons)
+            private bool m_showToolStripLabels = true; // <c>True</c> if the toolstrips shows button labels (rather than just icons)
             private int m_showToolStripLabelThreshold = 300; // threshold for showing tool strip labels: below = icons only, above = icons & labels
 
             // Controls

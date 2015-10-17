@@ -26,7 +26,7 @@ namespace Sce.Atf.Applications
         /// <param name="status">Source control status</param>
         /// <param name="headRevision">Head revision number</param>
         /// <param name="revision">Revision number</param>
-        /// <param name="isLocked">True iff locked</param>
+        /// <param name="isLocked"><c>True</c> if locked</param>
         /// <param name="otherUsers">Other file users</param>
         public SourceControlFileInfo(Uri uri, SourceControlStatus status,
             int headRevision, int revision, bool isLocked, IEnumerable<string> otherUsers)
@@ -45,7 +45,7 @@ namespace Sce.Atf.Applications
         /// <param name="status">Source control status</param>
         /// <param name="headRevision">Head revision number</param>
         /// <param name="revision">Revision number</param>
-        /// <param name="isLocked">True iff locked</param>
+        /// <param name="isLocked"><c>True</c> if locked</param>
         /// <param name="otherUsers">Other file users</param>
         /// <param name="otherLock">Another user has the file locked</param>
         public SourceControlFileInfo(Uri uri, SourceControlStatus status,

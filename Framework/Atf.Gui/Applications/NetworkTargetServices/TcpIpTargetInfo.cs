@@ -146,7 +146,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <param name="propertyName">Property name</param>
         /// <param name="formattedValue">Property value</param>
         /// <param name="errorMessage">Error message</param>
-        /// <returns>True iff target property is valid</returns>
+        /// <returns><c>True</c> if target property is valid</returns>
         public virtual bool Validate(string propertyName, object formattedValue, out string errorMessage)
         {
             bool result;

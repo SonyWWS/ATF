@@ -13,7 +13,7 @@ namespace Sce.Atf.Applications
     {
         /// <summary>
         /// Returns whether the context can copy the selection</summary>
-        /// <returns>True iff the context can copy</returns>
+        /// <returns><c>True</c> if the context can copy</returns>
         bool CanCopy();
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the context can insert the data object</summary>
         /// <param name="dataObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
-        /// <returns>True iff the context can insert the data object</returns>
+        /// <returns><c>True</c> if the context can insert the data object</returns>
         /// <remarks>ApplicationUtil calls this method in its CanInsert method, BUT
         /// if the context also implements IHierarchicalInsertionContext,
         /// IHierarchicalInsertionContext is preferred and the IInstancingContext
@@ -43,7 +43,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns whether the context can delete the selection</summary>
-        /// <returns>True iff the context can delete</returns>
+        /// <returns><c>True</c> if the context can delete</returns>
         bool CanDelete();
 
         /// <summary>

@@ -121,7 +121,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             if (keyData == Keys.Enter)
@@ -144,7 +144,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Tests if key is an input key</summary>
         /// <param name="keyData">Key data</param>
-        /// <returns>True iff key is an input key</returns>
+        /// <returns><c>True</c> if key is an input key</returns>
         protected override bool IsInputKey(Keys keyData)
         {
             // ignore arrow keys and tab so they're available for containers, like our PropertyGridView
@@ -284,7 +284,7 @@ namespace Sce.Atf.Controls
                 Text = Value.ToString();
         }
 
-        // use the type's parse function to validate the text; return true iff valid
+        // use the type's parse function to validate the text; return <c>True</c> if valid
         private bool TryValidateText(string text)
         {
             bool accept = false;

@@ -37,7 +37,7 @@ namespace Sce.Atf.Wpf
         /// Indicates whether the command can execute in its current state</summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, 
         /// this object can be set to null</param>
-        /// <returns>True iff this command can be executed</returns>
+        /// <returns><c>True</c> if this command can be executed</returns>
         public bool CanExecute(object parameter)
         {
             return Command != null && Command.CanExecute(parameter);

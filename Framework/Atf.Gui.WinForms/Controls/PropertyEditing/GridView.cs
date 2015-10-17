@@ -224,7 +224,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Sorts the data in the grid, returning true if the data was sorted</summary>
         /// <param name="propertyName">Name of property to sort by</param>
         /// <param name="direction">Direction to sort the data</param>
-        /// <returns>True iff data was sorted</returns>
+        /// <returns><c>True</c> if data was sorted</returns>
         public bool SortByProperty(string propertyName, ListSortDirection direction)
         {
             // need to persist these values because Properties are not persistent
@@ -381,7 +381,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Sets the widths of the columns</summary>
         /// <param name="columnWidths">Dictionary of column widths keyed by property name</param>
-        /// <returns>True if at least one column width was found and set</returns>
+        /// <returns><c>True</c> if at least one column width was found and set</returns>
         public bool SetColumnWidths(Dictionary<string, int> columnWidths)
         {
             // persist these values, reapply if we tear down and rebuild properties
@@ -446,9 +446,9 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Returns true iff a property is visible. Considers user show/hide state as well as property visible value.</summary>
+        /// Returns <c>True</c> if a property is visible. Considers user show/hide state as well as property visible value.</summary>
         /// <param name="p">Property to test</param>
-        /// <returns>True iff a property is visible</returns>
+        /// <returns><c>True</c> if a property is visible</returns>
         protected bool GetVisible(Property p)
         {
             return (!GetColumnInfo(p).UserHidden) && p.Visible;
@@ -484,7 +484,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Sets the user-hidden states of the columns</summary>
         /// <param name="columnUserHiddenStates">Dictionary of column user-hidden states keyed by property name</param>
-        /// <returns>True if at least one column width was found and set</returns>
+        /// <returns><c>True</c> if at least one column width was found and set</returns>
         public bool SetColumnUserHiddenStates(Dictionary<string, bool> columnUserHiddenStates)
         {
             // need to persist these values, as the Properties are not persistent
@@ -586,7 +586,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             if (SelectedObjects == null)
@@ -866,7 +866,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Applies column widths to properties. Need to do this because properties are not persistent.</summary>
-        /// <returns>True iff at least one width was applied</returns>
+        /// <returns><c>True</c> if at least one width was applied</returns>
         private bool ApplyColumnWidths()
         {
             bool result = false;
@@ -892,7 +892,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Applies column user hidden states to the properties. Need to do this because properties are not persistent.</summary>
-        /// <returns>True iff at least one state was applied</returns>
+        /// <returns><c>True</c> if at least one state was applied</returns>
         private bool ApplyColumnUserHiddenStates()
         {
             bool result = false;
@@ -915,7 +915,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Apply sort by property to the properties. Need to do this because properties are not persistent.</summary>
-        /// <returns>True iff at least one sort was applied</returns>
+        /// <returns><c>True</c> if at least one sort was applied</returns>
         private bool ApplySortByProperty()
         {
             bool result = false;

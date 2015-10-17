@@ -44,33 +44,33 @@ namespace Sce.Atf.Applications
         /// Gets file name for file "Open" operation</summary>
         /// <param name="pathName">Resulting file name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         FileDialogResult OpenFileName(ref string pathName, string filter);
 
         /// <summary>
         /// Gets multiple file names for file "Open" operation</summary>
         /// <param name="pathNames">Resulting file names</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         FileDialogResult OpenFileNames(ref string[] pathNames, string filter);
 
         /// <summary>
         /// Gets file name for file "Save" operation</summary>
         /// <param name="pathName">Suggested file name and resulting file name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         FileDialogResult SaveFileName(ref string pathName, string filter);
 
         /// <summary>
         /// Confirms that file should be closed</summary>
         /// <param name="message">Confirmation message</param>
-        /// <returns>True iff file should be closed</returns>
+        /// <returns><c>True</c> if file should be closed</returns>
         FileDialogResult ConfirmFileClose(string message);
 
         /// <summary>
         /// Returns a value indicating if the file path exists</summary>
         /// <param name="pathName">File path</param>
-        /// <returns>True if the file path exists</returns>
+        /// <returns><c>True</c> if the file path exists</returns>
         bool PathExists(string pathName);
     }
 
@@ -84,7 +84,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathName">Resulting file name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <param name="directory">Directory that the user first sees, or null for default behavior</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         public static FileDialogResult OpenFileName(this IFileDialogService service, ref string pathName, string filter, string directory)
         {
             string originalDir = service.ForcedInitialDirectory;
@@ -105,7 +105,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathNames">Resulting file names</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <param name="directory">Directory that the user first sees, or null for default behavior</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         public static FileDialogResult OpenFileNames(this IFileDialogService service, ref string[] pathNames, string filter, string directory)
         {
             string originalDir = service.ForcedInitialDirectory;
@@ -126,7 +126,7 @@ namespace Sce.Atf.Applications
         /// <param name="pathName">Suggested file name and resulting file name</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
         /// <param name="directory">Directory that the user first sees, or null for default behavior</param>
-        /// <returns>True iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         public static FileDialogResult SaveFileName(this IFileDialogService service, ref string pathName, string filter, string directory)
         {
             string originalDir = service.ForcedInitialDirectory;

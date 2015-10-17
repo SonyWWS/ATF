@@ -32,13 +32,13 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Adds the target to the provider</summary>
         /// <param name="target">Target to be added to the provider</param>
-        /// <returns>True iff the target is successfully added</returns>
+        /// <returns><c>True</c> if the target is successfully added</returns>
         bool AddTarget(TargetInfo target);
 
         /// <summary>
         /// Removes the target from the provider</summary>
         /// <param name="target">Target to be removed from the provider</param>
-        /// <returns>True iff the target is successfully removed</returns>
+        /// <returns><c>True</c> if the target is successfully removed</returns>
         bool Remove(TargetInfo target);
     }
 }

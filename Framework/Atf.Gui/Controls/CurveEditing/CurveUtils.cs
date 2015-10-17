@@ -15,7 +15,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Validates the curve</summary>
         /// <param name="curve">Curve to validate</param>
-        /// <returns>True iff curve is valid</returns>
+        /// <returns><c>True</c> if curve is valid</returns>
         public static bool IsValid(ICurve curve)
         {
             if (curve == null)
@@ -356,7 +356,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Determines if given control point's x coordinate is in sorted order</summary>
         /// <param name="cp">Control point</param>
-        /// <returns>True iff control point's x coordinate is in sorted order</returns>
+        /// <returns><c>True</c> if control point's x coordinate is in sorted order</returns>
         public static bool IsSorted(IControlPoint cp)
         {
             bool valid = true;            

@@ -168,7 +168,7 @@ namespace Sce.Atf.Dom
         /// When overridden in a derived class, returns whether the value
         /// of this property needs to be persisted</summary>
         /// <param name="component">The component with the property to be examined for persistence</param>
-        /// <returns>True iff the property should be persisted</returns>
+        /// <returns><c>True</c> if the property should be persisted</returns>
         public override bool ShouldSerializeValue(object component)
         {
             return true;           
@@ -193,7 +193,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Test equality of property descriptors</summary>
         /// <param name="obj">Property descriptor to compare to</param>
-        /// <returns>True iff property descriptors are equal</returns>
+        /// <returns><c>True</c> if property descriptors are equal</returns>
         /// <remarks>The .NET property descriptor only takes into account the Name and PropertyType.
         /// ATF needs to use Name, Category, and PropertyType. Overriding Equals() and GetHashCode()
         /// lets us use this Sce.Atf.Dom.PropertyDescriptor as a key in a Dictionary. The downside

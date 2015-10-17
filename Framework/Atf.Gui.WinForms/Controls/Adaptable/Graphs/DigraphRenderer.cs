@@ -403,7 +403,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="endPoint">Calculated ending point for edge</param>
         /// <param name="circle">Calculated embedding circle for edge</param>
         /// <param name="moreThan180">Calculated sweep angle hint</param>
-        /// <returns>True iff edge is straight line</returns>
+        /// <returns><c>True</c> if edge is straight line</returns>
         private bool GetEdgeGeometry(
             TEdge edge,
             int route,

@@ -11,13 +11,13 @@ namespace Sce.Atf
         /// <summary>
         /// Returns whether the item is locked</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item is locked</returns>
+        /// <returns><c>True</c> if the item is locked</returns>
         bool IsLocked(object item);
 
         /// <summary>
         /// Returns whether the item can be locked and unlocked</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item item can be locked and unlocked</returns>
+        /// <returns><c>True</c> if the item item can be locked and unlocked</returns>
         bool CanSetLocked(object item);
 
         /// <summary>

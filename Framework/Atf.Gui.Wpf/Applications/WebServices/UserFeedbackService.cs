@@ -29,7 +29,7 @@ namespace Sce.Atf.Wpf.Applications.WebServices
 
         /// <summary>
         /// Initializes plugin</summary>
-        /// <returns>true, iff plugin was initialized correctly</returns>
+        /// <returns>true, if plugin was initialized correctly</returns>
         void IInitializable.Initialize()
         {
             // check for assembly mapping attribute.

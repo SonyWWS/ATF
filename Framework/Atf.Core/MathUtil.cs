@@ -46,7 +46,7 @@ namespace Sce.Atf
         /// <summary>
         /// Determines if just one bit of 'bitField' is set</summary>
         /// <param name="bitField">Bit field</param>
-        /// <returns>True iff exactly one bit of 'bitField' is 1</returns>
+        /// <returns><c>True</c> if exactly one bit of 'bitField' is 1</returns>
         public static bool OnlyOneBitSet(Int32 bitField)
         {
             return
@@ -61,7 +61,7 @@ namespace Sce.Atf
         /// <param name="v2">Second vector (float array)</param>
         /// <param name="error">Error tolerance or allowable difference, expressed as a fraction
         /// of the magnitude of the largest of each component of the vectors</param>
-        /// <returns>True iff all components of the vectors are within the error tolerance of each other</returns>
+        /// <returns><c>True</c> if all components of the vectors are within the error tolerance of each other</returns>
         /// <remarks>The vector arrays must have the same length</remarks>
         public static bool AreApproxEqual(float[] v1, float[] v2, double error)
         {
@@ -82,7 +82,7 @@ namespace Sce.Atf
         /// <param name="v2">Second vector (double array)</param>
         /// <param name="error">Error tolerance or allowable difference, expressed as a fraction
         /// of the magnitude of the largest of each component of the vectors</param>
-        /// <returns>True iff all components of the vectors are within the error tolerance of each other</returns>
+        /// <returns><c>True</c> if all components of the vectors are within the error tolerance of each other</returns>
         public static bool AreApproxEqual(double[] v1, double[] v2, double error)
         {
             if (v1.Length != v2.Length)
@@ -101,7 +101,7 @@ namespace Sce.Atf
         /// <param name="y">Second number</param>
         /// <param name="error">Error tolerance or the allowable difference, expressed as a fraction
         /// of the magnitude of the largest of the numbers</param>
-        /// <returns>True iff x and y are within the error tolerance of each other</returns>
+        /// <returns><c>True</c> if x and y are within the error tolerance of each other</returns>
         public static bool AreApproxEqual(double x, double y, double error)
         {
             double difference = Math.Abs(x - y);

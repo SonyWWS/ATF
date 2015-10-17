@@ -12,7 +12,7 @@ namespace Sce.Atf.Adaptation
         /// Gets a value indicating if an adapter can be created</summary>
         /// <param name="adaptee">Object to adapt</param>
         /// <param name="type">Adapter type</param>
-        /// <returns>True iff an adapter can be created</returns>
+        /// <returns><c>True</c> if an adapter can be created</returns>
         bool CanAdapt(object adaptee, Type type);
 
         /// <summary>

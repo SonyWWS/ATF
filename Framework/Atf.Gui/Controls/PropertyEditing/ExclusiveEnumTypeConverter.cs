@@ -41,7 +41,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context that can be
         /// used to extract additional information about the environment from which this converter is invoked. This parameter or properties
         /// of this parameter can be null.</param>
-        /// <returns>True iff object supports standard set of values that can be picked from a list in specified context</returns>
+        /// <returns><c>True</c> if object supports standard set of values that can be picked from a list in specified context</returns>
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             return true;
@@ -65,7 +65,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context that can be
         /// used to extract additional information about the environment from which this converter is invoked. This parameter or properties
         /// of this parameter can be null.</param>
-        /// <returns>True iff collection of standard values returned is exclusive list of possible values in specified context</returns>
+        /// <returns><c>True</c> if collection of standard values returned is exclusive list of possible values in specified context</returns>
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             return true;

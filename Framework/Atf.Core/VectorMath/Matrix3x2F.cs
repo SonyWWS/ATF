@@ -48,7 +48,7 @@ namespace Sce.Atf.VectorMath
 
         /// <summary>
         /// Gets a value indicating whether this matrix is the identity matrix.
-        /// This property is true iff this matrix is identity.</summary>
+        /// This property is <c>True</c> if this matrix is identity.</summary>
         public bool IsIdentity
         {
             get
@@ -394,7 +394,7 @@ namespace Sce.Atf.VectorMath
         /// Test if two matrices are exactly equal</summary>
         /// <param name="value1">First matrix</param>
         /// <param name="value2">Second matrix</param>
-        /// <returns>True iff matrices are exactly equal</returns>
+        /// <returns><c>True</c> if matrices are exactly equal</returns>
         public static bool Equals(ref Matrix3x2F value1, ref Matrix3x2F value2)
         {
             return (value1.M11 == value2.M11)
@@ -408,7 +408,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Test if matrix is exactly equal to another matrix</summary>
         /// <param name="other">Matrix to compare to</param>
-        /// <returns>True iff matrices are exactly equal</returns>
+        /// <returns><c>True</c> if matrices are exactly equal</returns>
         public bool Equals(Matrix3x2F other)
         {
             return (this.M11 == other.M11)
@@ -423,7 +423,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests if matrix is exactly equal to another object</summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns>True iff object and this instance are the same type and represent exactly the same value</returns>
+        /// <returns><c>True</c> if object and this instance are the same type and represent exactly the same value</returns>
         public override bool Equals(object obj)
         {
             if (obj == null)

@@ -32,7 +32,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="r2">Ray 2</param>
         /// <param name="t1">Returned ray parameter 1</param>
         /// <param name="t2">Returned ray parameter 2</param>
-        /// <returns>True iff the rays intersect (are not parallel)</returns>
+        /// <returns><c>True</c> if the rays intersect (are not parallel)</returns>
         public static bool Intersect(Ray2F r1, Ray2F r2, ref double t1, ref double t2)
         {
             double denom = (r2.Direction.Y * r1.Direction.X - r2.Direction.X * r1.Direction.Y);
@@ -51,7 +51,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="ray">Ray</param>
         /// <param name="box">Box</param>
         /// <param name="intersection">Intersection point</param>
-        /// <returns>True iff ray hits box</returns>
+        /// <returns><c>True</c> if ray hits box</returns>
         public static bool Intersect(Ray2F ray, Box2F box, ref Vec2F intersection)
         {
             // do X slab

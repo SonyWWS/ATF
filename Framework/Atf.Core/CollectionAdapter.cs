@@ -52,7 +52,7 @@ namespace Sce.Atf
         /// <summary>
         /// Determines whether the collection contains a specific value</summary>
         /// <param name="item">The object to locate in the collection</param>
-        /// <returns>True iff the item is found</returns>
+        /// <returns><c>True</c> if the item is found</returns>
         public bool Contains(U item)
         {
             T t = Convert(item);
@@ -84,7 +84,7 @@ namespace Sce.Atf
 
         /// <summary>
         /// Gets a value indicating whether the collection is read-only</summary>
-        /// <returns>True iff the collection is read-only</returns>
+        /// <returns><c>True</c> if the collection is read-only</returns>
         public bool IsReadOnly
         {
             get { return m_collection.IsReadOnly; }
@@ -93,7 +93,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes the first occurrence of a specific object from the collection</summary>
         /// <param name="item">The object to remove from the collection</param>
-        /// <returns>True iff item was successfully removed from the collection</returns>
+        /// <returns><c>True</c> if item was successfully removed from the collection</returns>
         public bool Remove(U item)
         {
             if (m_collection.IsReadOnly)

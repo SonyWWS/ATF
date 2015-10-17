@@ -85,7 +85,7 @@ namespace Sce.Atf.Wpf.Controls
 
         /// <summary>
         /// moves the current selection with x value </summary>
-        /// <param name = "isLeft">True if you want to move to the left</param>
+        /// <param name = "isLeft"><c>True</c> if you want to move to the left</param>
         public void MoveSelection(bool isLeft)
         {
             double widthChange = m_repeatButtonMoveRatio * (RangeStop - RangeStart)

@@ -302,7 +302,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Raises the <see cref="E:System.ComponentModel.Design.IComponentChangeService.ComponentChanging"></see> event</summary>
-        /// <returns>True iff this object can be changed</returns>
+        /// <returns><c>True</c> if this object can be changed</returns>
         bool ITypeDescriptorContext.OnComponentChanging()
         {
             return true;

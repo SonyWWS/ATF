@@ -17,7 +17,7 @@ namespace Sce.Atf.Rendering
         /// Handles key-down events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool KeyDown(object sender, KeyEventArgs e)
         {
             m_keyMap[e.KeyValue] = true;
@@ -69,7 +69,7 @@ namespace Sce.Atf.Rendering
         /// and scrolling the mouse wheel towards the user zooms out.</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseWheel(object sender, MouseEventArgs e)
         {
             m_scale += (e.Delta > 0) ? 0.1f : -0.1f;
@@ -83,7 +83,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-down events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseDown(object sender, MouseEventArgs e)
         {
             if (CanvasControl3D.ControlScheme.IsControllingCamera(Control.ModifierKeys, e))
@@ -100,7 +100,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-move events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseMove(object sender, MouseEventArgs e)
         {
             if (m_dragging &&
@@ -146,7 +146,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-up events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseUp(object sender, MouseEventArgs e)
         {
             if (m_dragging)
@@ -167,7 +167,7 @@ namespace Sce.Atf.Rendering
         /// <summary>
         /// Gets whether this camera can handle the given camera</summary>
         /// <param name="camera">Camera</param>
-        /// <returns>True iff this camera can handle the given camera</returns>
+        /// <returns><c>True</c> if this camera can handle the given camera</returns>
         public override bool CanHandleCamera(Camera camera)
         {
             return camera.ProjectionType != ProjectionType.Orthographic;

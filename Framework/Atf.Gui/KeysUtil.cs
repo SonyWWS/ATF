@@ -164,7 +164,7 @@ namespace Sce.Atf.Input
         /// Returns whether or not the given Keys represents a human-readable character that could
         /// be inserted into a text box, for example</summary>
         /// <param name="k">Keys value</param>
-        /// <returns>True iff the given Keys represents a human-readable character</returns>
+        /// <returns><c>True</c> if the given Keys represents a human-readable character</returns>
         public static bool IsPrintable(Keys k)
         {
             // Assume no printable character is generated when Alt or Control are pressed.

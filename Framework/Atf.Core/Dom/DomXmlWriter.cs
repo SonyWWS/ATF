@@ -378,7 +378,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Gets whether or not the given DomNode should be considered the root node for this XML document</summary>
         /// <param name="node">DomNode to test</param>
-        /// <returns>True iff given DomNode should be considered the root node</returns>
+        /// <returns><c>True</c> if given DomNode should be considered the root node</returns>
         protected virtual bool IsRootNode(DomNode node)
         {
             return node == m_root;
@@ -388,7 +388,7 @@ namespace Sce.Atf.Dom
         /// Determines whether the attribute's value should be persisted</summary>
         /// <param name="node">Node with attribute</param>
         /// <param name="attributeInfo">AttributeInfo for attribute</param>
-        /// <returns>True iff attribute's value should be persisted</returns>
+        /// <returns><c>True</c> if attribute's value should be persisted</returns>
         protected virtual bool ShouldWriteAttribute(DomNode node, AttributeInfo attributeInfo)
         {
             return PersistDefaultAttributes || !node.IsAttributeDefault(attributeInfo);

@@ -96,7 +96,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Validates a value for assignment to this attribute</summary>
         /// <param name="value">Value, to be assigned</param>
-        /// <returns>True, iff value can be assigned to attribute</returns>
+        /// <returns>True, if value can be assigned to attribute</returns>
         public virtual bool Validate(object value)
         {
             if (!m_type.Validate(value, this))

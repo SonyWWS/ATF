@@ -94,7 +94,7 @@ namespace Sce.Atf
         /// <param name="dataObject">The IDataObject to manipulate</param>
         /// <param name="format">The format identifier to use</param>
         /// <param name="data">Actual data</param>
-        /// <returns>True iff data successfully retrieved</returns>
+        /// <returns><c>True</c> if data successfully retrieved</returns>
         public static bool TryGetData<T>(this IDataObject dataObject, string format, out T data)
             where T : struct
         {

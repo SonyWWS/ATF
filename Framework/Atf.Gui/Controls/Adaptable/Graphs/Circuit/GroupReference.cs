@@ -92,7 +92,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if group has a given input pin</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff group contains the given input pin</returns>
+        /// <returns><c>True</c> if group contains the given input pin</returns>
         public override bool HasInputPin(ICircuitPin pin)
         {
             if (m_targetGroup == null) 
@@ -105,7 +105,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if group has a given output pin.</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff group contains the given output pin</returns>
+        /// <returns><c>True</c> if group contains the given output pin</returns>
         public override bool HasOutputPin(ICircuitPin pin)
         {
             if (m_targetGroup == null) // disallow connecting to a missing type

@@ -61,7 +61,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             // Note, this code is duplicated in EmbeddedCollectionEditor.
@@ -825,7 +825,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         PropertyEditorControlContext m_context;
 
-        private bool m_showToolStripLabels = true; // true iff the toolstrips shows button labels (rather than just icons)
+        private bool m_showToolStripLabels = true; // <c>True</c> if the toolstrips shows button labels (rather than just icons)
         private int m_showToolStripLabelThreshold = 300; // threshold for showing tool strip labels: below = icons only, above = icons & labels
         private object m_activeCollectionNode; // currently selected collection object containing the items
         private int m_indexColumnWidth = 30; // width of index column, will grow if there are many items in the collection

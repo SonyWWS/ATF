@@ -188,7 +188,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Saves the document under its current name</summary>
         /// <param name="document">Document to save</param>
-        /// <returns>True if document was successfully saved and false if the user cancelled
+        /// <returns><c>True</c> if document was successfully saved and false if the user cancelled
         /// or there was some kind of problem</returns>
         /// <remarks>All exceptions are caught and reported via OnSaveException(). The
         /// IDocumentClient is responsible for the save operation and ensuring that any
@@ -208,7 +208,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Saves the document under a new name, chosen by the user</summary>
         /// <param name="document">Document to save</param>
-        /// <returns>True if document was successfully saved and false if the user cancelled
+        /// <returns><c>True</c> if document was successfully saved and false if the user cancelled
         /// or there was some kind of problem</returns>
         /// <remarks>All exceptions are caught and reported via OnSaveException().</remarks>
         public virtual bool SaveAs(IDocument document)
@@ -254,7 +254,7 @@ namespace Sce.Atf.Applications
         /// Saves the document to the specified URI</summary>
         /// <param name="document">Document to save</param>
         /// <param name="uri">New document URI</param>
-        /// <returns>True if document was successfully saved and false if the user cancelled
+        /// <returns><c>True</c> if document was successfully saved and false if the user cancelled
         /// or there was some kind of problem</returns>
         /// <remarks>All exceptions are caught and reported via OnSaveException().</remarks>
         public virtual bool SaveAs(IDocument document, Uri uri)
@@ -291,7 +291,7 @@ namespace Sce.Atf.Applications
         /// Saves all documents</summary>
         /// <param name="cancelOnFail">True means remaining saves should be cancelled
         /// if one fails</param>
-        /// <returns>True if all the documents were saved and false if the user cancelled
+        /// <returns><c>True</c> if all the documents were saved and false if the user cancelled
         /// or there was some kind of problem with one or more of the documents</returns>
         public virtual bool SaveAll(bool cancelOnFail)
         {
@@ -312,7 +312,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Closes the document</summary>
         /// <param name="document">Document to close</param>
-        /// <returns>True iff close was not cancelled by user</returns>
+        /// <returns><c>True</c> if close was not cancelled by user</returns>
         public virtual bool Close(IDocument document)
         {
             if (document == null)
@@ -345,7 +345,7 @@ namespace Sce.Atf.Applications
         /// Closes all documents</summary>
         /// <param name="masterDocument">Master document, or null if none. The master
         /// document is closed last.</param>
-        /// <returns>True iff no close was cancelled by user</returns>
+        /// <returns><c>True</c> if no close was cancelled by user</returns>
         public virtual bool CloseAll(IDocument masterDocument)
         {
             // Take a snapshot to avoid modifying the collection while enumerating
@@ -371,7 +371,7 @@ namespace Sce.Atf.Applications
         /// Determines if the given document represents an untitled document, i.e.,
         /// a new document that has not yet been saved</summary>
         /// <param name="document">Document whose URI is examined</param>
-        /// <returns>True iff the document is untitled</returns>
+        /// <returns><c>True</c> if the document is untitled</returns>
         /// <remarks>The default behavior is that a document is considered untitled if
         /// it has never been saved.</remarks>
         public virtual bool IsUntitled(IDocument document)
@@ -439,7 +439,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Performs any custom actions needed before loading a document</summary>
         /// <param name="uri">The URI of the document</param>
-        /// <returns>True iff the document can be loaded</returns>
+        /// <returns><c>True</c> if the document can be loaded</returns>
         protected virtual bool OnDocumentOpening(Uri uri)
         {
             return true;
@@ -469,7 +469,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Performs any custom actions needed before saving a document</summary>
         /// <param name="document">The document to save</param>
-        /// <returns>True iff the document can be saved</returns>
+        /// <returns><c>True</c> if the document can be saved</returns>
         protected virtual bool OnDocumentSaving(IDocument document)
         {
             return true;
@@ -478,7 +478,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Performs any custom actions needed after saving a document</summary>
         /// <param name="document">Saved document</param>
-        /// <returns>True iff custom actions completed successfully</returns>
+        /// <returns><c>True</c> if custom actions completed successfully</returns>
         protected virtual bool OnDocumentSaved(IDocument document)
         {
             return true;
@@ -781,7 +781,7 @@ namespace Sce.Atf.Applications
         /// if the save fails.</summary>
         /// <param name="document">Document to save</param>
         /// <param name="kind">Kind of document event associated with save</param>
-        /// <returns>True iff document is saved safely</returns>
+        /// <returns><c>True</c> if document is saved safely</returns>
         protected bool SafeSave(IDocument document, DocumentEventType kind)
         {
             IsSaving = true;
@@ -821,7 +821,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             bool enabled = false;
@@ -916,7 +916,7 @@ namespace Sce.Atf.Applications
         #endregion
 
         /// <summary>
-        /// True if a save operation is currently happening</summary>
+        /// <c>True</c> if a save operation is currently happening</summary>
         public bool IsSaving { get; private set; }
 
         /// <summary>

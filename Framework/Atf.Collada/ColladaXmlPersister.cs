@@ -41,7 +41,7 @@ namespace Sce.Atf.Collada
         /// <summary>
         /// Determines if attribute is a reference</summary>
         /// <param name="attributeInfo">Attribute</param>
-        /// <returns>True iff attribute is reference</returns>
+        /// <returns><c>True</c> if attribute is reference</returns>
         protected override bool IsReferenceAttribute(AttributeInfo attributeInfo)
         {
             return base.IsReferenceAttribute(attributeInfo) || attributeInfo.Type.Name.EndsWith("anyURI");

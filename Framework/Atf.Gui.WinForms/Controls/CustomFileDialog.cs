@@ -292,7 +292,7 @@ namespace Sce.Atf
         /// <param name="msg">Identifier of the message being received</param>
         /// <param name="wParam">Additional information about message</param>
         /// <param name="lParam">Additional information about message</param>
-        /// <returns>0 iff default dialog box procedure processes message</returns>
+        /// <returns>0 if default dialog box procedure processes message</returns>
         /// <remarks>For details, see http://msdn.microsoft.com/en-us/library/windows/desktop/ms646931%28v=vs.85%29.aspx. </remarks>
         public delegate int WndProcDelegate(IntPtr hWnd, uint msg, int wParam, int lParam);
 

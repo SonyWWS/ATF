@@ -138,7 +138,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// Hit test curve</summary>
         /// <param name="curve">Curve</param>
         /// <param name="pickRect">Rectangle</param>
-        /// <returns>True iff hit</returns>
+        /// <returns><c>True</c> if hit</returns>
         public bool HitTest(ICurve curve, RectangleF pickRect)
         {
             if (curve == null)

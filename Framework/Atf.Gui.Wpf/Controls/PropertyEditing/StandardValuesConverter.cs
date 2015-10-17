@@ -31,7 +31,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets whether all the values in the collection are unique.</summary>
         /// <param name="context">Not used</param>
-        /// <returns>True iff all values in the collection are exclusive</returns>
+        /// <returns><c>True</c> if all values in the collection are exclusive</returns>
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             return m_exclusive;
@@ -78,7 +78,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Gets whether all the values in the collection are unique.</summary>
         /// <param name="context">Not used</param>
-        /// <returns>True iff all values in the collection are exclusive</returns>
+        /// <returns><c>True</c> if all values in the collection are exclusive</returns>
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             var values = m_getValues(context);

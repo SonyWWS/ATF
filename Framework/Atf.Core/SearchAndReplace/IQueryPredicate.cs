@@ -13,7 +13,7 @@ namespace Sce.Atf
         /// Tests the predicate on an item</summary>
         /// <param name="item">Item queried</param>
         /// <param name="matchList">List of query matches</param>
-        /// <returns>True iff match</returns>
+        /// <returns><c>True</c> if match</returns>
         bool Test(object item, out IList<IQueryMatch> matchList);
 
         /// <summary>
