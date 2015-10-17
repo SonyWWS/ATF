@@ -47,7 +47,7 @@ namespace Sce.Atf.Rendering
         /// <summary>
         /// Gets whether this camera can handle the given camera</summary>
         /// <param name="camera">Camera</param>
-        /// <returns>True iff this camera can handle the given camera</returns>
+        /// <returns><c>True</c> if this camera can handle the given camera</returns>
         public virtual bool CanHandleCamera(Camera camera)
         {
             return true;

@@ -137,7 +137,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if this node is a descendant of the given node</summary>
         /// <param name="node">Node to test</param>
-        /// <returns>True iff this node is a descendant of the given node</returns>
+        /// <returns><c>True</c> if this node is a descendant of the given node</returns>
         public bool IsDescendantOf(DomNode node)
         {
             if (node == null)
@@ -365,7 +365,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Gets whether or not the attribute has been set, even if it was set to its default value.</summary>
         /// <param name="attributeInfo">Attribute metadata</param>
-        /// <returns>True iff the attribute has been set to anything other than null</returns>
+        /// <returns><c>True</c> if the attribute has been set to anything other than null</returns>
         /// <remarks>Setting an attribute to null is special, and makes the attribute look like it
         /// was never set.</remarks>
         public bool IsAttributeSet(AttributeInfo attributeInfo)
@@ -377,7 +377,7 @@ namespace Sce.Atf.Dom
         /// Gets whether or not the attribute's value (like by calling GetAttribute) is equal to
         /// the default value.</summary>
         /// <param name="attributeInfo">Attribute metadata</param>
-        /// <returns>True if the attribute's value is equal to the default value</returns>
+        /// <returns><c>True</c> if the attribute's value is equal to the default value</returns>
         public bool IsAttributeDefault(AttributeInfo attributeInfo)
         {
             object attribute = GetLocalAttribute(attributeInfo);
@@ -1016,7 +1016,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Tests for equality with another object</summary>
         /// <param name="obj">Other object</param>
-        /// <returns>True iff the DomNode equals the other object; equality means that
+        /// <returns><c>True</c> if the DomNode equals the other object; equality means that
         /// the other object is the same as this DomNode or an adapter attached to it</returns>
         public override bool Equals(object obj)
         {

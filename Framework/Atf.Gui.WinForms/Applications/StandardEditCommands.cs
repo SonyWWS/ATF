@@ -176,7 +176,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns whether the active context can paste from the clipboard</summary>
-        /// <returns>True iff the active context can paste from the clipboard</returns>
+        /// <returns><c>True</c> if the active context can paste from the clipboard</returns>
         public bool CanPaste()
         {
             IInstancingContext instancingContext = m_contextRegistry.GetActiveContext<IInstancingContext>();
@@ -187,7 +187,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns a value indicating if the active context can copy the selection to the clipboard</summary>
-        /// <returns>True iff the active context can copy to the clipboard</returns>
+        /// <returns><c>True</c> if the active context can copy to the clipboard</returns>
         public bool CanCopy()
         {
             IInstancingContext instancingContext = m_contextRegistry.GetActiveContext<IInstancingContext>();
@@ -198,7 +198,7 @@ namespace Sce.Atf.Applications
 
         /// <summary>
         /// Returns a value indicating if the active context can delete the selection</summary>
-        /// <returns>True iff the active context can delete the selection</returns>
+        /// <returns><c>True</c> if the active context can delete the selection</returns>
         public bool CanDelete()
         {
             IInstancingContext instancingContext = m_contextRegistry.GetActiveContext<IInstancingContext>();
@@ -265,7 +265,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command, if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         bool ICommandClient.CanDoCommand(object commandTag)
         {
             bool canDo = false;
@@ -515,7 +515,7 @@ namespace Sce.Atf.Applications
         /// <remarks>If not using the system clipboard, return value is always false.
         /// Really long function name but wanted to be explicit!</remarks>
         /// <param name="dataFormat">Data format to check</param>
-        /// <returns>True iff the system clipboard object should be copied to the local clipboard</returns>
+        /// <returns><c>True</c> if the system clipboard object should be copied to the local clipboard</returns>
         private static bool ShouldWeCopySystemClipboardObjectToLocalClipboard(string dataFormat)
         {
             // Determine whether an object should be copied from

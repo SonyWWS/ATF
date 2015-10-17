@@ -1160,7 +1160,7 @@ namespace Sce.Atf.Applications
             /// Determines whether a string can be converted to an IPEndPoint</summary>
             /// <param name="context">System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
             /// <param name="sourceType">System.Type that represents the type you want to convert from</param>
-            /// <returns>True iff this instance can convert from the specified context</returns>
+            /// <returns><c>True</c> if this instance can convert from the specified context</returns>
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
                 if (sourceType == typeof(string))

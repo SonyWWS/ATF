@@ -20,7 +20,7 @@ namespace Sce.Atf.Wpf
         /// <remarks>.NET 3.5 does not have Guid.TryParse functionality. This should be moved somewhere more suitable.</remarks>
         /// <param name="s">String to parse</param>
         /// <param name="result">Resulting GUID; is Guid.Empty if function returns false</param>
-        /// <returns>True iff parsing successful</returns>
+        /// <returns><c>True</c> if parsing successful</returns>
         public static bool GuidTryParse(string s, out Guid result)
         {
             if (s == null)

@@ -11,7 +11,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Checks whether the client can edit an item's label</summary>
         /// <param name="item">Item whose label to be edited</param>
-        /// <returns>True iff client can edit the label</returns>
+        /// <returns><c>True</c> if client can edit the label</returns>
         bool CanEditLabel(object item);
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace Sce.Atf.Controls.Timelines
         /// Tests if start value would be valid for the given event</summary>
         /// <param name="_event">Event</param>
         /// <param name="start">Prospective start; may be modified to make start valid</param>
-        /// <returns>True iff start value would be valid for the given event</returns>
+        /// <returns><c>True</c> if start value would be valid for the given event</returns>
         public override bool IsStartValid(IEvent _event, ref float start)
         {
             if (start >= 0)
@@ -27,7 +27,7 @@ namespace Sce.Atf.Controls.Timelines
         /// Tests if length would be valid for the given interval</summary>
         /// <param name="interval">Interval</param>
         /// <param name="length">Prospective length; may be modified to make length valid</param>
-        /// <returns>True iff length value would be valid for the given interval</returns>
+        /// <returns><c>True</c> if length value would be valid for the given interval</returns>
         public override bool IsLengthValid(IInterval interval, ref float length)
         {
             // 0 length intervals will crash DefaultTimelineRenderer
@@ -43,7 +43,7 @@ namespace Sce.Atf.Controls.Timelines
         /// <param name="start">Prospective interval start; may be modified to make start valid</param>
         /// <param name="length">Prospective interval length; may be modified to make length valid</param>
         /// <param name="other">Other interval</param>
-        /// <returns>True iff interval would be valid if it shared a track with the other interval</returns>
+        /// <returns><c>True</c> if interval would be valid if it shared a track with the other interval</returns>
         public override bool IsIntervalValid(IInterval interval, ref float start, ref float length, IInterval other)
         {
             // If there is no overlap or a simple trimming will fix any overlap, then

@@ -31,7 +31,7 @@ namespace Sce.Atf.Applications
         /// Returns whether the item can be colored</summary>
         /// <param name="type">Coloring type</param>
         /// <param name="item">Item to color</param>
-        /// <returns>True iff the item can be colored</returns>
+        /// <returns><c>True</c> if the item can be colored</returns>
         bool CanSetColor(ColoringTypes type, object item);
 
         /// <summary>

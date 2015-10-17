@@ -136,7 +136,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// Tests wether or not a translation operation should begin</summary>
         /// <param name="modifiers">Current modifier keys being pressed</param>
         /// <param name="e">Mouse event arg being responded to</param>
-        /// <returns>True iff a translation operation should begin</returns>
+        /// <returns><c>True</c> if a translation operation should begin</returns>
         /// <remarks>By default, this method considers the ModifierKeys and TranslationButton
         /// properties, plus allows for the middle mouse button to be used.</remarks>
         protected virtual bool TestForTranslation(Keys modifiers, MouseEventArgs e)
@@ -154,7 +154,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// Tests whether or not a scale operation should begin</summary>
         /// <param name="modifiers">Current modifier keys being pressed</param>
         /// <param name="e">Mouse event arg being responded to</param>
-        /// <returns>True iff a scale operation should begin</returns>
+        /// <returns><c>True</c> if a scale operation should begin</returns>
         /// <remarks>By default, this method considers the ModifierKeys and ScaleButton properties.</remarks>
         protected virtual bool TestForScale(Keys modifiers, MouseEventArgs e)
         {

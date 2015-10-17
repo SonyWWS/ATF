@@ -140,7 +140,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns a value indicating if the file path exists</summary>
         /// <param name="pathName">File path</param>
-        /// <returns>True if the file path exists</returns>
+        /// <returns><c>True</c> if the file path exists</returns>
         public bool PathExists(string pathName)
         {
             return File.Exists(pathName);

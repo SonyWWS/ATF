@@ -31,7 +31,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Determines whether converter can convert type to float[]</summary>
         /// <param name="context">The context</param>
         /// <param name="t">The type</param>
-        /// <returns>True iff converter can convert type to float[]</returns>
+        /// <returns><c>True</c> if converter can convert type to float[]</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type t)
         {
             if (t == typeof(string))
@@ -69,7 +69,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Determines whether converter can convert a float[] to type</summary>
         /// <param name="context">The context</param>
         /// <param name="t">The type</param>
-        /// <returns>True iff converter can convert a float[] to type</returns>
+        /// <returns><c>True</c> if converter can convert a float[] to type</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type t)
         {
             if (t == typeof(string))

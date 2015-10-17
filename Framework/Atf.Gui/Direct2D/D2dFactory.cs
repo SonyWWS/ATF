@@ -669,7 +669,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Gets whether last result code is same as input</summary>
         /// <param name="other">Other result code</param>
-        /// <returns>True iff result codes are identical</returns>
+        /// <returns><c>True</c> if result codes are identical</returns>
         public bool Equals(D2dResult other)
         {
             return (this.Code == other.Code);
@@ -678,7 +678,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Gets whether last result code is same as input object</summary>
         /// <param name="obj">Other result code object</param>
-        /// <returns>True iff result codes are identical</returns>
+        /// <returns><c>True</c> if result codes are identical</returns>
         public override bool Equals(object obj)
         {
             return ((obj is D2dResult) && this.Equals((D2dResult)obj));
@@ -696,7 +696,7 @@ namespace Sce.Atf.Direct2D
         /// Result code equality operator</summary>
         /// <param name="left">Result code 1</param>
         /// <param name="right">Result code 2</param>
-        /// <returns>True iff result codes are identical</returns>
+        /// <returns><c>True</c> if result codes are identical</returns>
         public static bool operator ==(D2dResult left, D2dResult right)
         {
             return (left.Code == right.Code);
@@ -706,7 +706,7 @@ namespace Sce.Atf.Direct2D
         /// Result code inequality operator</summary>
         /// <param name="left">Result code 1</param>
         /// <param name="right">Result code 2</param>
-        /// <returns>True iff result codes are not identical</returns>
+        /// <returns><c>True</c> if result codes are not identical</returns>
         public static bool operator !=(D2dResult left, D2dResult right)
         {
             return (left.Code != right.Code);

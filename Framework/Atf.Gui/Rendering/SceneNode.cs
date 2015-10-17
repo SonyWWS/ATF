@@ -139,7 +139,7 @@ namespace Sce.Atf.Rendering.Dom
         /// Adds a render object of the given generic type to the render object list</summary>
         /// <typeparam name="T">The type of render object to add</typeparam>
         /// <param name="addOnSubTree">Whether to add recusively on sub tree</param>
-        /// <returns>True if the render object was successfully added</returns>
+        /// <returns><c>True</c> if the render object was successfully added</returns>
         public bool AddRenderObject<T>(bool addOnSubTree)
             where T : class, IRenderObject
         {

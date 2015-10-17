@@ -198,7 +198,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         bool INamingContext.CanSetName(object item)
         {
             return
@@ -232,7 +232,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Returns whether the item is locked</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item is locked</returns>
+        /// <returns><c>True</c> if the item is locked</returns>
         bool ILockingContext.IsLocked(object item)
         {
             StateBase stateBase = item.As<StateBase>();
@@ -244,7 +244,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Returns whether the item can be locked and unlocked</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item item can be locked and unlocked</returns>
+        /// <returns><c>True</c> if the item item can be locked and unlocked</returns>
         bool ILockingContext.CanSetLocked(object item)
         {
             return item.Is<StateBase>();
@@ -267,7 +267,7 @@ namespace StatechartEditorSample
 
         /// <summary>
         /// Tests if can copy selection from the statechart</summary>
-        /// <returns>True iff there are items to copy</returns>
+        /// <returns><c>True</c> if there are items to copy</returns>
         public bool CanCopy()
         {
             return Selection.Count > 0;
@@ -329,7 +329,7 @@ namespace StatechartEditorSample
         /// <summary>
         /// Tests if can insert a given object into the statechart</summary>
         /// <param name="insertingObject">Object to insert</param>
-        /// <returns>True iff can insert object into the statechart</returns>
+        /// <returns><c>True</c> if can insert object into the statechart</returns>
         public bool CanInsert(object insertingObject)
         {
             IDataObject dataObject = (IDataObject)insertingObject;
@@ -448,7 +448,7 @@ namespace StatechartEditorSample
 
         /// <summary>
         /// Tests if can delete selected items from the statechart</summary>
-        /// <returns>True iff can delete selected items from the statechart</returns>
+        /// <returns><c>True</c> if can delete selected items from the statechart</returns>
         public bool CanDelete()
         {
             return Selection.Count > 0;

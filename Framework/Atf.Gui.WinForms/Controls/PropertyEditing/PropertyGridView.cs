@@ -369,7 +369,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Processes a dialog key</summary>
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process</param>
-        /// <returns>True iff the key was processed by the control</returns>
+        /// <returns><c>True</c> if the key was processed by the control</returns>
         protected override bool ProcessDialogKey(Keys keyData)
         {
             // Handle tab keys, too, because only properties with their own Controls have the TabIndex.
@@ -1142,7 +1142,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Selects the given property by scrolling it into view if necessary, and setting focus
         /// on the editing Control.</summary>
         /// <param name="descriptor">The property descriptor for the desired property</param>
-        /// <returns>True if the property was found and false otherwise</returns>
+        /// <returns><c>True</c> if the property was found and false otherwise</returns>
         public bool SelectProperty(PropertyDescriptor descriptor)
         {
             Refresh();

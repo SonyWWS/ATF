@@ -57,7 +57,7 @@ namespace Sce.Atf
         /// created, based on a user's decisions.</summary>
         /// <param name="uri">The URI to find, which may or may not be valid. It must not be null.</param>
         /// <param name="newUri">Is either be 'uri' or a new valid URI. It is not set to null.</param>
-        /// <returns>True if 'uri' exists or if a new URI was found. Otherwise, false.</returns>
+        /// <returns><c>True</c> if 'uri' exists or if a new URI was found. Otherwise, false.</returns>
         public static bool Find(Uri uri, out Uri newUri)
         {
             bool result = false;
@@ -222,7 +222,7 @@ namespace Sce.Atf
         /// <param name="newUri">Either 'uri' or a replacement URI</param>
         /// <param name="askUser">Asks the user for the search directory. If false, the user
         /// is only asked the first time.</param>
-        /// <returns>True iff a replacement was chosen</returns>
+        /// <returns><c>True</c> if a replacement was chosen</returns>
         private static bool SearchForFile(Uri uri, out Uri newUri, bool askUser)
         {
             // default return value

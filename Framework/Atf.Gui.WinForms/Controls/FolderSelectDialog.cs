@@ -83,7 +83,7 @@ namespace Sce.Atf.Controls.FolderSelection
         /// <summary>
         /// Shows the dialog</summary>
         /// <param name="owner">Control to be parent</param>
-        /// <returns>True if the user presses OK else false</returns>
+        /// <returns><c>True</c> if the user presses OK else false</returns>
         public DialogResult ShowDialog(IWin32Window owner)
         {
             DialogResult result;

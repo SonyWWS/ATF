@@ -21,7 +21,7 @@ namespace Sce.Atf.Rendering
         /// Handles key-down events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool KeyDown(object sender,KeyEventArgs e)
         {
             return false;
@@ -31,7 +31,7 @@ namespace Sce.Atf.Rendering
         /// Handles key-up events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool KeyUp(object sender, KeyEventArgs e)
         {
             return false;
@@ -41,7 +41,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse wheel events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool MouseWheel(object sender, MouseEventArgs e)
         {
             return false;
@@ -51,7 +51,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-down events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool MouseDown(object sender, MouseEventArgs e)
         {
             return false;
@@ -61,7 +61,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-move events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool MouseMove(object sender, MouseEventArgs e)
         {
             return false;
@@ -71,7 +71,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-up events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public virtual bool MouseUp(object sender, MouseEventArgs e)
         {
             return false;

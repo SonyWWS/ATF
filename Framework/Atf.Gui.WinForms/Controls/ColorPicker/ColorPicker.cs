@@ -113,7 +113,7 @@ namespace Sce.Atf.Controls.ColorEditing
         /// <summary>
         /// Constructor with starting color and alpha enable</summary>
         /// <param name="starting_color">The starting color</param>
-        /// <param name="enableAlpha">Enable the alpha channel iff true</param>
+        /// <param name="enableAlpha">Enable the alpha channel if true</param>
         public ColorPicker(Color starting_color, bool enableAlpha)
         {
             InitializeComponent();
@@ -123,7 +123,7 @@ namespace Sce.Atf.Controls.ColorEditing
         /// <summary>
         /// Sets starting color</summary>
         /// <param name="starting_color">The starting color</param>
-        /// <param name="enableAlpha">Enable the alpha channel iff true</param>
+        /// <param name="enableAlpha">Enable the alpha channel if true</param>
         public void SetStartColor(Color starting_color, bool enableAlpha)
         {
             m_enableAlpha = enableAlpha;

@@ -15,7 +15,7 @@ namespace Sce.Atf.Controls.SyntaxEditorControl
         
         /// <summary>
         /// Constructor with specified values</summary>
-        /// <param name="isSet">True if the breakpoint set, false otherwise</param>
+        /// <param name="isSet"><c>True</c> if the breakpoint set, false otherwise</param>
         /// <param name="lineNumber">Line number of the breakpoint</param>
         /// <param name="lineText">Line text of the breakpoint</param>
         public BreakpointEventArgs(bool isSet, int lineNumber, string lineText)

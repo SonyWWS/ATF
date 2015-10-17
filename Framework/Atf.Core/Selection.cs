@@ -202,7 +202,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes an item from the selection</summary>
         /// <param name="item">Item to remove</param>
-        /// <returns>True if the item was removed</returns>
+        /// <returns><c>True</c> if the item was removed</returns>
         public bool Remove(T item)
         {
             return RemoveRange(new[] { item });
@@ -211,7 +211,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes multiple items from the selection</summary>
         /// <param name="items">Items to remove</param>
-        /// <returns>True if at least one item was removed</returns>
+        /// <returns><c>True</c> if at least one item was removed</returns>
         public bool RemoveRange(IEnumerable<T> items)
         {
             HashSet<T> removed = new HashSet<T>();
@@ -273,7 +273,7 @@ namespace Sce.Atf
         /// <summary>
         /// Checks if this selection has the same contents in the same order as the given collection</summary>
         /// <param name="collection">Collection to compare</param>
-        /// <returns>True iff the contents are the same and in the same order</returns>
+        /// <returns><c>True</c> if the contents are the same and in the same order</returns>
         public bool Equals(ICollection<T> collection)
         {
             // Same object?
@@ -290,7 +290,7 @@ namespace Sce.Atf
         /// Checks if objects have the same contents in the same order.
         /// Comparison against ICollection or IEnumerable of type T is valid.</summary>
         /// <param name="obj">Object to compare</param>
-        /// <returns>True iff the contents are the same and in the same order</returns>
+        /// <returns><c>True</c> if the contents are the same and in the same order</returns>
         public override bool Equals(object obj)
         {
             // Note that the Linq IEnumerable test is not smart about testing if ICollection is implemented.
@@ -449,7 +449,7 @@ namespace Sce.Atf
         /// <summary>
         /// Checks if selection contains an item</summary>
         /// <param name="item">Item to search for</param>
-        /// <returns>True if item is in selection</returns>
+        /// <returns><c>True</c> if item is in selection</returns>
         public bool Contains(T item)
         {
             return m_set.Contains(item);

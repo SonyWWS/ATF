@@ -66,7 +66,7 @@ namespace WpfPropertyEditor
         /// <summary>
         /// Returns whether the selection contains the given item</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the selection contains the given item</returns>
+        /// <returns><c>True</c> if the selection contains the given item</returns>
         public bool SelectionContains(object item)
         {
             return m_selection.Contains(item);

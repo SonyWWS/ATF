@@ -1247,7 +1247,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Removes a property from the list</summary>
         /// <param name="p">The property to remove</param>
-        /// <returns>True if successful</returns>
+        /// <returns><c>True</c> if successful</returns>
         protected bool RemoveProperty(Property p)
         {
             return m_activeProperties.Remove(p);

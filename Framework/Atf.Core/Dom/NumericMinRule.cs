@@ -31,7 +31,7 @@ namespace Sce.Atf.Dom
         /// Validates the given value for assignment to the given attribute</summary>
         /// <param name="value">Value to validate</param>
         /// <param name="info">Attribute info</param>
-        /// <returns>True iff value is valid for the given attribute</returns>
+        /// <returns><c>True</c> if value is valid for the given attribute</returns>
         public override bool Validate(object value, AttributeInfo info)
         {
             if (value is Byte)

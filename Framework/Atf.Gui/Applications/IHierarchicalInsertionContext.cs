@@ -16,7 +16,7 @@ namespace Sce.Atf.Applications
         /// Returns true if context can insert the child object</summary>
         /// <param name="parent">The proposed parent of the object to insert</param>
         /// <param name="child">Child to insert</param>
-        /// <returns>True iff the context can insert the child</returns>
+        /// <returns><c>True</c> if the context can insert the child</returns>
         bool CanInsert(object parent, object child);
 
         /// <summary>

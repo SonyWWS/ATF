@@ -48,7 +48,7 @@ namespace Sce.Atf.Rendering.Dom
 
         /// <summary>
         /// Gets the HitRecord array from a given traverse list</summary>
-        /// <param name="multiPick">True if all available HitRecords are returned; false if just the closest</param>
+        /// <param name="multiPick"><c>True</c> if all available HitRecords are returned; false if just the closest</param>
         /// <returns>HitRecord array</returns>
         /// <remarks>Must be called after Init() and Dispatch()</remarks>
         HitRecord[] GetHits(bool multiPick);
@@ -63,7 +63,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <summary>
         /// Gets the HitRecord array from a given traverse list</summary>
         /// <param name="traverseList">The traverse list</param>
-        /// <param name="multiPick">True if all available HitRecords are returned; false if just the closest</param>
+        /// <param name="multiPick"><c>True</c> if all available HitRecords are returned; false if just the closest</param>
         /// <returns>HitRecord array</returns>
         /// <remarks>Must be called after Init() and Dispatch()</remarks>
         HitRecord[] GetHits(ICollection<TraverseNode> traverseList, bool multiPick);
@@ -75,7 +75,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="y">Ray y coordinate in screen space</param>
         /// <param name="scene">The given scene</param>
         /// <param name="point">The point of intersection</param>
-        /// <returns>True if the ray intersects the scene</returns>
+        /// <returns><c>True</c> if the ray intersects the scene</returns>
         bool Intersect(Camera camera, int x, int y, Scene scene, ref Vec3F point);
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="surfaceNormal">The surface normal of the target object at the intersection
         /// point, or the zero vector if the surface normal could not be found. Check against
         /// Vec3F.ZeroVector before using.</param>
-        /// <returns>True if the ray intersects the scene</returns>
+        /// <returns><c>True</c> if the ray intersects the scene</returns>
         bool Intersect(Camera camera, int x, int y, Scene scene, ref Vec3F point, out Vec3F surfaceNormal);
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="scene">The given scene</param>
         /// <param name="traverseList">Traverse list to use when performing the intersection</param>
         /// <param name="point">The point of intersection</param>
-        /// <returns>True if the ray intersects the scene</returns>
+        /// <returns><c>True</c> if the ray intersects the scene</returns>
         bool Intersect(Camera camera, int x, int y, Scene scene, ICollection<TraverseNode> traverseList, ref Vec3F point);
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="scene">The given scene</param>
         /// <param name="point">The point of intersection</param>
         /// <param name="firstHit">The HitRecord giving possible nearest vertex and surface normal</param>
-        /// <returns>True if the ray intersects the scene</returns>
+        /// <returns><c>True</c> if the ray intersects the scene</returns>
         bool Intersect(Camera camera, int x, int y, Scene scene, ref Vec3F point,
             out HitRecord firstHit);
     }

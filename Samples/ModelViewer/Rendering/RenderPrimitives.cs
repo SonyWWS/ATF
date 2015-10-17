@@ -65,7 +65,7 @@ namespace ModelViewerSample.Rendering
 
         /// <summary>
         /// Initializes the render object</summary>
-        /// <returns>true, iff initialization was successful</returns>
+        /// <returns>true, if initialization was successful</returns>
         public override bool Init(SceneNode node)
         {
             IMesh mesh = TryGetMesh();

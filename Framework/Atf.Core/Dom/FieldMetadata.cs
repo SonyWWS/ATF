@@ -37,7 +37,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Indicates if other field metadata refers to the same data as this.</summary>
         /// <param name="other">Other field metadata</param>
-        /// <returns>True iff other field metadata is equivalent to this</returns>
+        /// <returns><c>True</c> if other field metadata is equivalent to this</returns>
         public bool Equivalent(FieldMetadata other)
         {
             return

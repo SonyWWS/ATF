@@ -479,7 +479,7 @@ namespace Sce.Atf.Controls
             /// <summary>
             /// Checks if a Node is in the collection</summary>
             /// <param name="item">Node to check</param>
-            /// <returns>True iff Node in the collection</returns>
+            /// <returns><c>True</c> if Node in the collection</returns>
             public bool Contains(Node item)
             {
                 if (item == null)
@@ -507,7 +507,7 @@ namespace Sce.Atf.Controls
             /// <summary>
             /// Removes a Node from the collection</summary>
             /// <param name="item">Node</param>
-            /// <returns>True iff Node removed</returns>
+            /// <returns><c>True</c> if Node removed</returns>
             public bool Remove(Node item)
             {
                 if (item == null)

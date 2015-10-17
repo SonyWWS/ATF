@@ -450,7 +450,7 @@ namespace Sce.Atf.Wpf.Docking
         /// <summary>
         /// Check if the layout contains the content as direct child</summary>
         /// <param name="content">Content to search for</param>
-        /// <returns>True iff the content is child of this control</returns>
+        /// <returns><c>True</c> if the content is child of this control</returns>
         public bool HasChild(IDockContent content)
         {
             return m_children.Any(x => x == content);
@@ -459,7 +459,7 @@ namespace Sce.Atf.Wpf.Docking
         /// <summary>
         /// Check if the layout contains the content as child or descendant</summary>
         /// <param name="content">Content to search for</param>
-        /// <returns>True iff content is child or descendant</returns>
+        /// <returns><c>True</c> if content is child or descendant</returns>
         public bool HasDescendant(IDockContent content)
         {
             return HasChild(content);

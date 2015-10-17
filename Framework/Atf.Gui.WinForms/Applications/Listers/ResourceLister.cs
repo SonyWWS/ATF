@@ -466,7 +466,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             if (m_treeContext == null || m_treeContext.Root == null)// in case there is no currently opened document
@@ -551,7 +551,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Requests permission to close the client's Control.</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <returns>True if the Control can close, or false to cancel</returns>
+        /// <returns><c>True</c> if the Control can close, or false to cancel</returns>
         /// <remarks>
         /// * This method is only called by IControlHostService if the Control was previously
         /// registered by this IControlHostClient.

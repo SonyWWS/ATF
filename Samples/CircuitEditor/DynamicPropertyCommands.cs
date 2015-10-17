@@ -86,7 +86,7 @@ namespace CircuitEditorSample
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             if (commandTag is Command && EditingContext != null)
@@ -281,7 +281,7 @@ namespace CircuitEditorSample
         /// <param name="editor">e.g., "Sce.Atf.Controls.PropertyEditing.NumericTupleEditor, Atf.Gui.WinForms:System.Single,x,y,z"</param>
         /// <param name="valueType">e.g., Schema.customAttributeType.stringValueAttribute.Name</param>
         /// <param name="add">Whether to add a new dynamic property or to update an existing one</param>
-        /// <returns>True if successful and false if there was a problem with the input, in which case no
+        /// <returns><c>True</c> if successful and false if there was a problem with the input, in which case no
         /// changes were made to the DOM.</returns>
         protected virtual bool AddOrSetDynamicPropertyDomNode(string propertyName, string category, string description,
             string converter, string editor, string valueType, bool add)

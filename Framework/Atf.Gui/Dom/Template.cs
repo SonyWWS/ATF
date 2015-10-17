@@ -23,9 +23,9 @@ namespace Sce.Atf.Dom
         #region IReference members
 
         /// <summary>
-        /// Returns true iff the template can reference the specified target item</summary>
+        /// Returns <c>True</c> if the template can reference the specified target item</summary>
         /// <param name="item">Target item</param>
-        /// <returns>True iff template can reference specified target item</returns>
+        /// <returns><c>True</c> if template can reference specified target item</returns>
         public abstract bool CanReference(DomNode item);
 
         /// <summary>

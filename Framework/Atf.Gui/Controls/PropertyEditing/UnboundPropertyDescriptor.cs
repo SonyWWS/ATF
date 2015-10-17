@@ -97,7 +97,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Returns whether resetting an object changes its value</summary>
         /// <param name="component">The component to test for reset capability</param>
-        /// <returns>True iff resetting the component changes its value</returns>
+        /// <returns><c>True</c> if resetting the component changes its value</returns>
         public override bool CanResetValue(object component)
         {
             object defaultValue = GetDefaultValue();
@@ -137,7 +137,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Determines whether the value of this property needs to be persisted for a given component</summary>
         /// <param name="component">Component whose property may need to be persisted</param>
-        /// <returns>True iff property needs to be persisted for a given component</returns>
+        /// <returns><c>True</c> if property needs to be persisted for a given component</returns>
         public override bool ShouldSerializeValue(object component)
         {
             object val = GetValue(component);

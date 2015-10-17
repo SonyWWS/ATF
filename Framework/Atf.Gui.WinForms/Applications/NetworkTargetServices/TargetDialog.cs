@@ -15,7 +15,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <param name="targets">Dictionary for target machine name string/Target pairs</param>
         /// <param name="singleSelectionMode">Single selection mode</param>
         /// <param name="defaultPortNumber">Default port number</param>
-        /// <param name="canEditPortNumber">True iff can edit port number</param>
+        /// <param name="canEditPortNumber"><c>True</c> if can edit port number</param>
         /// <param name="protocols">List of supported protocols</param>
         public TargetDialog( Dictionary<string, Target> targets, bool singleSelectionMode, int defaultPortNumber, bool canEditPortNumber, string[] protocols )
         {

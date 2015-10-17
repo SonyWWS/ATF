@@ -17,7 +17,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Can move the given nodes into the new container</summary>    
         /// <param name="newParent">New container</param>
         /// <param name="movingObjects">Nodes to move</param>
-        /// <returns>True iff can move nodes into new container</returns>
+        /// <returns><c>True</c> if can move nodes into new container</returns>
         bool CanMove(object newParent, IEnumerable<object> movingObjects);
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Can a container be resized</summary>
         /// <param name="container">Container to resize</param>
         /// <param name="borderPart">Part of border to resize</param>
-        /// <returns>True iff the container border can be resized</returns>
+        /// <returns><c>True</c> if the container border can be resized</returns>
         bool CanResize(object container, DiagramBorder borderPart);
 
         /// <summary>

@@ -70,8 +70,8 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Requests permission to close the client's Control.</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <param name="mainWindowClosing">True if the main window is closing</param>
-        /// <returns>True if the Control can close, or false to cancel</returns>
+        /// <param name="mainWindowClosing"><c>True</c> if the main window is closing</param>
+        /// <returns><c>True</c> if the Control can close, or false to cancel</returns>
         bool IControlHostClient.Close(object control, bool mainWindowClosing)
         {
             return true;

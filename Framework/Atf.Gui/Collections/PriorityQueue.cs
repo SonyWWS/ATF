@@ -128,7 +128,7 @@ namespace Sce.Atf.Collections
         /// <param name="item">The item to look up</param>
         /// <param name="priority">The priority of the item, or the default priority if the
         /// item is not in the queue</param>
-        /// <returns>True if the item was found, otherwise false.</returns>
+        /// <returns><c>True</c> if the item was found, otherwise false.</returns>
         public bool TryGetValue(T item, out TPriority priority)
         {
             int num;

@@ -135,7 +135,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Adds the target to the provider</summary>
         /// <param name="target">Target</param>
-        /// <returns>True iff the target is successfully added</returns>
+        /// <returns><c>True</c> if the target is successfully added</returns>
         public bool AddTarget(TargetInfo target)
         {
             return false;
@@ -144,7 +144,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Removes the target from the provider</summary>
         /// <param name="target">Target</param>
-        /// <returns>True iff the target is successfully removed</returns>
+        /// <returns><c>True</c> if the target is successfully removed</returns>
         public bool Remove(TargetInfo target)
         {
             return false;

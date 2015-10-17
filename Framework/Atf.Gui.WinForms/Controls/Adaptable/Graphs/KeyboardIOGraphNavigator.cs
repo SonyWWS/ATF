@@ -66,7 +66,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Control, or Alt).</summary>
         /// <param name="a">First key</param>
         /// <param name="b">Second key</param>
-        /// <returns>True iff two keys represent opposite directions</returns>
+        /// <returns><c>True</c> if two keys represent opposite directions</returns>
         protected virtual bool OppositeNavigationKeys(Keys a, Keys b)
         {
             return

@@ -147,7 +147,7 @@ namespace Sce.Atf.Controls.Timelines
         /// A delegate for testing whether or not the given event should be included when snapping</summary>
         /// <param name="testEvent">Event to check</param>
         /// <param name="options">SnapOptions to get the FilterContext and other useful data</param>
-        /// <returns>True iff the event should be included</returns>
+        /// <returns><c>True</c> if the event should be included</returns>
         /// <remarks>Note that SnapOptions has a standard filter for testing selected items.</remarks>
         public delegate bool SnapFilter(IEvent testEvent, SnapOptions options);
 
@@ -568,7 +568,7 @@ namespace Sce.Atf.Controls.Timelines
         /// type 'T'.</summary>
         /// <typeparam name="T">The filtering type</typeparam>
         /// <param name="item">The object to set the selection set to or to be added or removed</param>
-        /// <returns>True iff at least one ITimelineObject is still selected</returns>
+        /// <returns><c>True</c> if at least one ITimelineObject is still selected</returns>
         public bool Select<T>(TimelinePath item)
             where T : class, ITimelineObject
         {

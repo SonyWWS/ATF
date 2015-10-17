@@ -39,7 +39,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Removes the selection path for the item</summary>
         /// <param name="item">Item to remove selection path on</param>
-        /// <returns>True iff selection path removed</returns>
+        /// <returns><c>True</c> if selection path removed</returns>
         public bool RemoveSelectionPath(object item)
         {
             if (m_selectionPathMap.ContainsKey(item))

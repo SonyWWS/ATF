@@ -122,7 +122,7 @@ namespace SimpleDomEditorWpfSample
 
         /// <summary>
         /// Returns whether the context can copy the selection</summary>
-        /// <returns>True iff the context can copy</returns>
+        /// <returns><c>True</c> if the context can copy</returns>
         public bool CanCopy()
         {
             return Selection.Count > 0;
@@ -142,7 +142,7 @@ namespace SimpleDomEditorWpfSample
         /// <summary>
         /// Returns whether the context can insert the data object</summary>
         /// <param name="insertingObject">Data to insert; e.g., System.Windows.Forms.IDataObject</param>
-        /// <returns>True iff the context can insert the data object</returns>
+        /// <returns><c>True</c> if the context can insert the data object</returns>
         public bool CanInsert(object insertingObject)
         {
             IDataObject dataObject = (IDataObject)insertingObject;
@@ -178,7 +178,7 @@ namespace SimpleDomEditorWpfSample
 
         /// <summary>
         /// Returns whether the context can delete the selection</summary>
-        /// <returns>True iff the context can delete</returns>
+        /// <returns><c>True</c> if the context can delete</returns>
         public bool CanDelete()
         {
             return Selection.Count > 0;

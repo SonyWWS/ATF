@@ -58,7 +58,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Removes the given context if it is open</summary>
         /// <param name="context">Context to remove</param>
-        /// <returns>True iff the context was removed</returns>
+        /// <returns><c>True</c> if the context was removed</returns>
         bool RemoveContext(object context);
     }
 

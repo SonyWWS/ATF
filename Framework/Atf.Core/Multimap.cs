@@ -38,7 +38,7 @@ namespace Sce.Atf
         /// <summary>
         /// Checks if map contains a given key</summary>
         /// <param name="key">Key</param>
-        /// <returns>True iff map contains key</returns>
+        /// <returns><c>True</c> if map contains key</returns>
         public bool ContainsKey(Key key)
         {
             return m_keyValues.ContainsKey(key);
@@ -48,7 +48,7 @@ namespace Sce.Atf
         /// Checks if map contains a given key/value pair</summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <returns>True iff map contains key/value pair</returns>
+        /// <returns><c>True</c> if map contains key/value pair</returns>
         public bool ContainsKeyValue(Key key, Value value)
         {
             List<Value> values;
@@ -100,7 +100,7 @@ namespace Sce.Atf
         /// Gets the first value associated with the given key</summary>
         /// <param name="key">Key</param>
         /// <param name="result">The first value for the key, or default if key is not in map</param>
-        /// <returns>True iff the key has an associated value</returns>
+        /// <returns><c>True</c> if the key has an associated value</returns>
         public bool TryGetFirst(Key key, out Value result)
         {
             List<Value> values;
@@ -118,7 +118,7 @@ namespace Sce.Atf
         /// Gets the last value associated with the given key</summary>
         /// <param name="key">Key</param>
         /// <param name="result">The last value for the key, or default if key is not in map</param>
-        /// <returns>True iff the key has an associated value</returns>
+        /// <returns><c>True</c> if the key has an associated value</returns>
         public bool TryGetLast(Key key, out Value result)
         {
             List<Value> values;
@@ -178,7 +178,7 @@ namespace Sce.Atf
         /// <summary>
         /// Removes all values associated with the given key from the map</summary>
         /// <param name="key">Key</param>
-        /// <returns>True iff the value was removed</returns>
+        /// <returns><c>True</c> if the value was removed</returns>
         public bool Remove(Key key)
         {
             return m_keyValues.Remove(key);
@@ -188,7 +188,7 @@ namespace Sce.Atf
         /// Removes a value from the map</summary>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <returns>True iff the value was removed</returns>
+        /// <returns><c>True</c> if the value was removed</returns>
         public bool Remove(Key key, Value value)
         {
             List<Value> values;

@@ -102,7 +102,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Indicates whether object is a group template instance</summary>
         /// <param name="node">Object</param>
-        /// <returns>True iff it is group template instance</returns>
+        /// <returns><c>True</c> if it is group template instance</returns>
         static public bool IsGroupTemplateInstance(object node)
         {
             return node.Is<IReference<Group>>();
@@ -111,7 +111,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Check if a template's target is missing</summary>
         /// <param name="node">Template node</param>
-        /// <returns>True iff target is missing</returns>
+        /// <returns><c>True</c> if target is missing</returns>
         static public bool IsTemplateTargetMissing(object node)
         {
             var reference = node.As<IReference<DomNode>>();

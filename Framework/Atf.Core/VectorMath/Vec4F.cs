@@ -390,7 +390,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests for exact equality to given vector</summary>
         /// <param name="v">Other vector</param>
-        /// <returns>True iff vectors are exactly equal</returns>
+        /// <returns><c>True</c> if vectors are exactly equal</returns>
         public bool Equals(Vec4F v)
         {
             return
@@ -404,7 +404,7 @@ namespace Sce.Atf.VectorMath
         /// Tests for equality to another vector, within a given epsilon</summary>
         /// <param name="v">Other vector</param>
         /// <param name="eps">Epsilon, or margin for error</param>
-        /// <returns>True iff all components are within epsilon</returns>
+        /// <returns><c>True</c> if all components are within epsilon</returns>
         public bool Equals(Vec4F v, double eps)
         {
             return
@@ -479,7 +479,7 @@ namespace Sce.Atf.VectorMath
         /// Equality operator</summary>
         /// <param name="v1">Left hand vector</param>
         /// <param name="v2">Right hand vector</param>
-        /// <returns>True iff vectors are exactly equal</returns>
+        /// <returns><c>True</c> if vectors are exactly equal</returns>
         public static bool operator ==(Vec4F v1, Vec4F v2)
         {
             return v1.Equals(v2);
@@ -489,7 +489,7 @@ namespace Sce.Atf.VectorMath
         /// Inequality operator</summary>
         /// <param name="v1">Left hand vector</param>
         /// <param name="v2">Right hand vector</param>
-        /// <returns>True iff vectors are not exactly equal</returns>
+        /// <returns><c>True</c> if vectors are not exactly equal</returns>
         public static bool operator !=(Vec4F v1, Vec4F v2)
         {
             return !v1.Equals(v2);
@@ -500,7 +500,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Indicates whether this instance and a specified object are exactly equal</summary>
         /// <param name="obj">Another object to compare to</param>
-        /// <returns>True iff object and this instance are the same type and represent exactly the same value</returns>
+        /// <returns><c>True</c> if object and this instance are the same type and represent exactly the same value</returns>
         public override bool Equals(object obj)
         {
             if (obj is Vec4F)

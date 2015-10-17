@@ -59,7 +59,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests equality with an object</summary>
         /// <param name="other">Object compared to</param>
-        /// <returns>True iff other object binds to the same leaf node and pin index. Instancing node is not checked.</returns>
+        /// <returns><c>True</c> if other object binds to the same leaf node and pin index. Instancing node is not checked.</returns>
         public override bool Equals(object other)
         {
             bool result = false;
@@ -75,7 +75,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Tests equality of two targets</summary>
         /// <param name="lhs">First target to compare</param>
         /// <param name="rhs">Second target to compare</param>
-        /// <returns>True iff the targets bind to the same leaf node and pin index. Instancing node is not checked.</returns>
+        /// <returns><c>True</c> if the targets bind to the same leaf node and pin index. Instancing node is not checked.</returns>
         public static bool operator ==(PinTarget lhs, PinTarget rhs)
         {
             if (object.Equals(lhs, null))
@@ -87,7 +87,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Tests inequality of two targets</summary>
         /// <param name="lhs">First target to compare</param>
         /// <param name="rhs">Second target to compare</param>
-        /// <returns>True iff the targets don't bind to the same leaf node or the same pin index. Instancing node is not checked.</returns>
+        /// <returns><c>True</c> if the targets don't bind to the same leaf node or the same pin index. Instancing node is not checked.</returns>
         public static bool operator !=(PinTarget lhs, PinTarget rhs)
         {
             return !(lhs == rhs);
@@ -96,7 +96,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests equality with a target</summary>
         /// <param name="other">Object compared to</param>
-        /// <returns>True iff other object binds to the same leaf node and pin index. Instancing node is not checked.</returns>
+        /// <returns><c>True</c> if other object binds to the same leaf node and pin index. Instancing node is not checked.</returns>
         public bool Equals(PinTarget other)
         {
             if (other == null)
@@ -107,7 +107,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Determines whether the specified pin target is equal to the current pin target, including the instancing node</summary>
         /// <param name="other">Pin target compared to</param>
-        /// <returns>True iff other pin target binds to the same leaf node, pin index, and same instancing node</returns>
+        /// <returns><c>True</c> if other pin target binds to the same leaf node, pin index, and same instancing node</returns>
         public bool FullyEquals(PinTarget other)
         {
             if (other == null)

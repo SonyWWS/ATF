@@ -46,7 +46,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Tests if the value can be reset for the specified component</summary>
         /// <param name="component">Component for which the value is to be reset</param>
-        /// <returns>True iff the value can be reset for the specified component</returns>
+        /// <returns><c>True</c> if the value can be reset for the specified component</returns>
         public override bool CanResetValue(object component)
         {
             SysPropertyDescriptor descriptor = FindDescriptor(component);
@@ -55,7 +55,7 @@ namespace Sce.Atf.Dom
 
         /// <summary>
         /// Tests if the value can be reset for ANY of the selected items</summary>
-        /// <returns>True iff the value can be reset for ANY of the selected items</returns>
+        /// <returns><c>True</c> if the value can be reset for ANY of the selected items</returns>
         public bool CanResetValues()
         {
             foreach (object component in GetSelectionFunc())

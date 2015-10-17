@@ -38,7 +38,7 @@ namespace Sce.Atf.Dom
         /// <param name="parent">Parent DOM node</param>
         /// <param name="child">Child DOM node; ignored</param>
         /// <param name="childInfo">Child relationship info</param>
-        /// <returns>True, iff 'parent' has a valid number of children of the type associated
+        /// <returns>True, if 'parent' has a valid number of children of the type associated
         /// with 'childInfo'</returns>
         public override bool Validate(DomNode parent, DomNode child, ChildInfo childInfo)
         {

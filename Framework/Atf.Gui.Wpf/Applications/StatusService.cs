@@ -82,7 +82,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <param name="argument">Worker argument</param>
         /// <param name="workHandler">Background thread delegate</param>
         /// <param name="autoIncrement">Whether to auto increment the progress meter</param>
-        /// <returns>True if the thread was cancelled</returns>
+        /// <returns><c>True</c> if the thread was cancelled</returns>
         public bool RunProgressDialog(string message, bool canCancel, object argument, DoWorkEventHandler workHandler, bool autoIncrement)
         {
             var vm = new ProgressViewModel() { 

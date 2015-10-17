@@ -44,7 +44,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <summary>
         /// Initializes the RenderObject and allocates all resources</summary>
         /// <param name="node">The SceneNode corresponding to this render object</param>
-        /// <returns>True if initialization was successful</returns>
+        /// <returns><c>True</c> if initialization was successful</returns>
         public virtual bool Init(SceneNode node)
         {
             return true;

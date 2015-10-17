@@ -10,7 +10,7 @@ namespace Sce.Atf.Applications.WebServices
     /// <summary>
     /// Callback for after version check completes</summary>
     /// <param name="val">Message</param>
-    /// <param name="error">True if error occurred</param>
+    /// <param name="error"><c>True</c> if error occurred</param>
     public delegate void CheckCompletedHandler(string val, bool error);
 
     /// <summary>
@@ -156,7 +156,7 @@ namespace Sce.Atf.Applications.WebServices
         /// Notify clients of version check results.
         /// Invokes the event on the subscriber's thread, not the publisher's thread.</summary>
         /// <param name="msg">Message for client</param>
-        /// <param name="error">True iff error occurred</param>
+        /// <param name="error"><c>True</c> if error occurred</param>
         private void NotifyClients(string msg, bool error)
         {
             if (m_dummyControl.InvokeRequired)

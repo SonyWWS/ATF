@@ -27,7 +27,7 @@ namespace Sce.Atf
         /// Checks if the IsDefault drop description flag is set for the associated DataObject.
         /// </summary>
         /// <param name="dataObject">The associated DataObject.</param>
-        /// <returns>True if the IsDefault flag is set, otherwise False.</returns>
+        /// <returns><c>True</c> if the IsDefault flag is set, otherwise False.</returns>
         public static bool IsDropDescriptionDefault(IComDataObject dataObject)
         {
             var current = GetDropDescriptionFlag(dataObject);
@@ -38,7 +38,7 @@ namespace Sce.Atf
         /// Checks if the InvalidateRequired drop description flag is set for the associated DataObject.
         /// </summary>
         /// <param name="dataObject">The associated DataObject.</param>
-        /// <returns>True if the InvalidateRequired flag is set, otherwise False.</returns>
+        /// <returns><c>True</c> if the InvalidateRequired flag is set, otherwise False.</returns>
         public static bool InvalidateRequired(IComDataObject dataObject)
         {
             var current = GetDropDescriptionFlag(dataObject);

@@ -98,7 +98,7 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Returns true iff this custom type descriptor can provide a PropertyDescriptorCollection
+        /// Returns <c>True</c> if this custom type descriptor can provide a PropertyDescriptorCollection
         /// (via GetProperties) that is the same for all instances of this type of object
         /// and that can be permanently cached</summary>
         /// <remarks>Returning 'true' greatly improves performance.</remarks>

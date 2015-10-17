@@ -154,7 +154,7 @@ namespace Sce.Atf.Wpf.Applications
         /// Returns whether two tags are equal; both must be null or the same object</summary>
         /// <param name="tag1">First object</param>
         /// <param name="tag2">Second object</param>
-        /// <returns>True iff objects are equal</returns>
+        /// <returns><c>True</c> if objects are equal</returns>
         public static bool TagsEqual(object tag1, object tag2)
         {
             if (tag1 == null)

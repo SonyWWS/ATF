@@ -89,7 +89,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Determines whether the adapted list contains a specific DomNode</summary>
         /// <param name="item">DomNode to find</param>
-        /// <returns>True iff the adapted list contains the specified DomNode</returns>
+        /// <returns><c>True</c> if the adapted list contains the specified DomNode</returns>
         public bool Contains(T item)
         {
             return m_nodes.Contains(GetNode(item));
@@ -123,7 +123,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Removes the first occurrence of the specified DomNode from the adapted list</summary>
         /// <param name="item">DomNode to remove</param>
-        /// <returns>True iff DomNode found and removed</returns>
+        /// <returns><c>True</c> if DomNode found and removed</returns>
         public bool Remove(T item)
         {
             return m_nodes.Remove(GetNode(item));

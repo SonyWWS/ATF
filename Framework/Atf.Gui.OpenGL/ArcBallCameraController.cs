@@ -25,7 +25,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-down events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseDown(object sender, MouseEventArgs e)
         {
             if (CanvasControl3D.ControlScheme.IsControllingCamera(Control.ModifierKeys, e))
@@ -50,7 +50,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-move events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseMove(object sender, MouseEventArgs e)
         {
             if (m_dragging &&
@@ -104,7 +104,7 @@ namespace Sce.Atf.Rendering
         /// Handles mouse-up events</summary>
         /// <param name="sender">Control that raised original event</param>
         /// <param name="e">Event args</param>
-        /// <returns>True if controller handled the event</returns>
+        /// <returns><c>True</c> if controller handled the event</returns>
         public override bool MouseUp(object sender, MouseEventArgs e)
         {
             if (m_dragging)

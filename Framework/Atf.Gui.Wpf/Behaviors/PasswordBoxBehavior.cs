@@ -106,7 +106,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether password data binding is enabled</summary>
         /// <param name="dp">Dependency object to query for the value</param>
-        /// <returns>True if enabled, false if disabled</returns>
+        /// <returns><c>True</c> if enabled, false if disabled</returns>
         public static bool GetBindPassword(DependencyObject dp)
         {
             return (bool) dp.GetValue(BindPassword);

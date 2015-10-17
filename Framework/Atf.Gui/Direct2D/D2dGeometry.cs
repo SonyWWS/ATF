@@ -79,7 +79,7 @@ namespace Sce.Atf.Direct2D
         /// <summary>
         /// Indicates whether the area filled by the geometry would contain the specified point given the specified flattening tolerance</summary>
         /// <param name="point">Specified point</param>
-        /// <returns>True iff area filled by the geometry contains point</returns>
+        /// <returns><c>True</c> if area filled by the geometry contains point</returns>
         public bool FillContainsPoint(PointF point)
         {
             return m_geometry.FillContainsPoint(point.ToSharpDX());
@@ -90,7 +90,7 @@ namespace Sce.Atf.Direct2D
         /// <param name="point">Specified point</param>
         /// <param name="strokeWidth">Stroke width</param>
         /// <param name="strokeStyle">D2dStrokeStyle</param>
-        /// <returns>True iff geometry's stroke contains specified point</returns>
+        /// <returns><c>True</c> if geometry's stroke contains specified point</returns>
         public bool StrokeContainsPoint(PointF point, float strokeWidth = 1.0f, D2dStrokeStyle strokeStyle = null)
         {
             return m_geometry.StrokeContainsPoint(point.ToSharpDX(), strokeWidth,

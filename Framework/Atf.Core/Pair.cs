@@ -41,7 +41,7 @@ namespace Sce.Atf
         /// <summary>
         /// Indicates whether this instance and a specified object are equal</summary>
         /// <param name="obj">Another object to compare to</param>
-        /// <returns>true iff object and this instance are the same type and represent the same value</returns>
+        /// <returns><c>True</c> if object and this instance are the same type and represent the same value</returns>
         public override bool Equals(object obj)
         {
             if (obj is Pair<T1, T2>)
@@ -56,7 +56,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests for equality to a specified pair</summary>
         /// <param name="other">The other pair</param>
-        /// <returns>True iff pairs equal</returns>
+        /// <returns><c>True</c> if pairs equal</returns>
         public bool Equals(Pair<T1, T2> other)
         {
             return
@@ -123,7 +123,7 @@ namespace Sce.Atf
         /// Tests two pairs for equality</summary>
         /// <param name="pair1">First pair</param>
         /// <param name="pair2">Second pair</param>
-        /// <returns>True iff pairs are equal</returns>
+        /// <returns><c>True</c> if pairs are equal</returns>
         public static bool operator ==(Pair<T1, T2> pair1, Pair<T1, T2> pair2)
         {
             return
@@ -135,7 +135,7 @@ namespace Sce.Atf
         /// Tests two pairs for inequality</summary>
         /// <param name="pair1">First pair</param>
         /// <param name="pair2">Second pair</param>
-        /// <returns>True iff pairs are not equal</returns>
+        /// <returns><c>True</c> if pairs are not equal</returns>
         public static bool operator !=(Pair<T1, T2> pair1, Pair<T1, T2> pair2)
         {
             return !(pair1 == pair2);

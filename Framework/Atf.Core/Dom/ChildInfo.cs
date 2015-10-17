@@ -100,7 +100,7 @@ namespace Sce.Atf.Dom
         /// <summary>
         /// Returns a value indicating if other child metadata is equivalent to this</summary>
         /// <param name="other">Other child metadata</param>
-        /// <returns>True, iff other child metadata is equivalent to this</returns>
+        /// <returns>True, if other child metadata is equivalent to this</returns>
         public bool IsEquivalent(ChildInfo other)
         {
             return

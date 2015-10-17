@@ -57,7 +57,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks if a command can be performed</summary>
         /// <param name="commandTag">Command</param>
-        /// <returns>True iff command can be performed</returns>
+        /// <returns><c>True</c> if command can be performed</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             return commandTag is Command;
@@ -103,7 +103,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Saves the current layout as a name (and creates a screenshot)</summary>
         /// <param name="layoutName">Layout name to save as</param>
-        /// <returns>True iff saved</returns>
+        /// <returns><c>True</c> if saved</returns>
         public virtual bool SaveLayoutAs(string layoutName)
         {
             if (string.IsNullOrEmpty(layoutName))

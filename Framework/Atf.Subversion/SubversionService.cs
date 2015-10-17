@@ -473,7 +473,7 @@ namespace Atf.Subversion
         /// <summary>
         /// Gets a value indicating if an item is in sync with the source control version</summary>
         /// <param name="uri">Uri, representing the path to item</param>
-        /// <returns>true, iff item is in sync with the source control version</returns>
+        /// <returns>true, if item is in sync with the source control version</returns>
         public override bool IsSynched(Uri uri)
         {
             CheckUri(uri);
@@ -501,7 +501,7 @@ namespace Atf.Subversion
         /// <summary>
         /// Gets a value indicating if an item is locked by the client or another user</summary>
         /// <param name="uri">Uri, representing the path to item</param>
-        /// <returns>true, iff item is locked</returns>
+        /// <returns>true, if item is locked</returns>
         public override bool IsLocked(Uri uri)
         {
             CheckUri(uri);
@@ -657,7 +657,7 @@ namespace Atf.Subversion
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             if (commandTag is Command)
@@ -1019,7 +1019,7 @@ namespace Atf.Subversion
 
         /// <summary>
         /// Checks if client is initialized.</summary>
-        /// <returns>True iff client is initialized</returns>
+        /// <returns><c>True</c> if client is initialized</returns>
         protected bool ClientInitialized()
         {
             if (!m_connectionInitialized)
@@ -1136,7 +1136,7 @@ namespace Atf.Subversion
         /// Runs the given command using svn command line client</summary>
         /// <param name="cmd">Command string</param>
         /// <param name="path">Path parameter for command</param>
-        /// <returns>true, iff command was run successfully</returns>
+        /// <returns>true, if command was run successfully</returns>
         protected bool RunCommand(string cmd, string path)
         {
             string arguments = cmd + " " + path;
@@ -1331,7 +1331,7 @@ namespace Atf.Subversion
         /// Attempt to get file information for file</summary>
         /// <param name="key">File path</param>
         /// <param name="value">File information retrieved</param>
-        /// <returns>True iff file path found</returns>
+        /// <returns><c>True</c> if file path found</returns>
         public bool TryGetValue(string key, out TValue value)
         {
             return m_infoCache.TryGetValue(NormalizeKey(key), out value);

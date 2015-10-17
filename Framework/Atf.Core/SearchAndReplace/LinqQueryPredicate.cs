@@ -30,7 +30,7 @@ namespace Sce.Atf
         /// Tests the predicate on an item</summary>
         /// <param name="searchItem">Item in which searchable elements should be queried</param>
         /// <param name="matchList">Resulting list of matching elements from within searchItem</param>
-        /// <returns>True iff the item matches the predicate</returns>
+        /// <returns><c>True</c> if the item matches the predicate</returns>
         public bool Test(object searchItem, out IList<IQueryMatch> matchList)
         {
             matchList = null;
@@ -379,7 +379,7 @@ namespace Sce.Atf
         /// <summary>
         /// Determines whether the specified object is convertible to a double float</summary>
         /// <param name="candidate">Object to test for double-ness</param>
-        /// <returns>True iff object is convertible to double float</returns>
+        /// <returns><c>True</c> if object is convertible to double float</returns>
         public static bool IsConvertibleToDouble(object candidate)
         {
             if (candidate is string)
@@ -468,7 +468,7 @@ namespace Sce.Atf
             /// <summary>
             /// Tests whether the specified query item matches the string replacement pattern</summary>
             /// <param name="itemToMatch">Query item to test</param>
-            /// <returns>True iff there was a match</returns>
+            /// <returns><c>True</c> if there was a match</returns>
             public bool Matches(IQueryMatch itemToMatch)
             {
                 string value = itemToMatch.GetValue().ToString();
@@ -517,7 +517,7 @@ namespace Sce.Atf
             /// <summary>
             /// Tests whether the specified query item matches the numerical replacement pattern</summary>
             /// <param name="itemToMatch">Query item to test</param>
-            /// <returns>True iff match successful</returns>
+            /// <returns><c>True</c> if match successful</returns>
             public bool Matches(IQueryMatch itemToMatch)
             {
                 return IsConvertibleToDouble(itemToMatch.GetValue());

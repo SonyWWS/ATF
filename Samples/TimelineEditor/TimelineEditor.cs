@@ -102,7 +102,7 @@ namespace TimelineEditorSample
         /// context and document</summary>
         /// <param name="item">Timeline object that changed</param>
         /// <param name="attribute">Attribute on the timeline object that changed</param>
-        /// <returns>True iff this timeline object attribute is editable for the current
+        /// <returns><c>True</c> if this timeline object attribute is editable for the current
         /// ActiveControl, ActiveContext, and ActiveDocument properties</returns>
         public virtual bool IsEditable(ITimelineObject item, AttributeInfo attribute)
         {
@@ -232,7 +232,7 @@ namespace TimelineEditorSample
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
         /// <param name="uri">Document URI</param>
-        /// <returns>True iff the client can open or create a document at the given URI</returns>
+        /// <returns><c>True</c> if the client can open or create a document at the given URI</returns>
         public bool CanOpen(Uri uri)
         {
             return s_info.IsCompatibleUri(uri);
@@ -381,7 +381,7 @@ namespace TimelineEditorSample
         /// <summary>
         /// Requests permission to close the client's Control</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <returns>True if the Control can close, or false to cancel</returns>
+        /// <returns><c>True</c> if the Control can close, or false to cancel</returns>
         /// <remarks>
         /// 1. This method is only called by IControlHostService if the Control was previously
         /// registered for this IControlHostClient.
@@ -414,7 +414,7 @@ namespace TimelineEditorSample
         /// (through TimelineDocument's Renderer property) to render and display timelines. 
         /// If isMasterDocument is true and if the file doesn't exist, a new document is created.</summary>
         /// <param name="uri">URI of document to load</param>
-        /// <param name="isMasterDocument">True iff is master document</param>
+        /// <param name="isMasterDocument"><c>True</c> if is master document</param>
         /// <returns>TimelineDocument loaded</returns>
         private TimelineDocument LoadOrCreateDocument(Uri uri, bool isMasterDocument)
         {

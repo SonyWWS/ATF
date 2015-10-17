@@ -39,12 +39,12 @@ namespace Sce.Atf
         /// <summary>
         /// Tests if Windows key is an input key by calling ATF IsInputKey with converted argument</summary>
         /// <param name="keyData">Windows key data</param>
-        /// <returns>True iff key is an input key</returns>
+        /// <returns><c>True</c> if key is an input key</returns>
         protected override bool IsInputKey(WfKeys keyData) { return IsInputKey(KeysInterop.ToAtf(keyData)); }
         /// <summary>
         /// Tests if ATF key is an input key by calling Windows IsInputKey with converted argument</summary>
         /// <param name="keyData">ATF key data</param>
-        /// <returns>True iff key is an input key</returns>
+        /// <returns><c>True</c> if key is an input key</returns>
         protected virtual bool IsInputKey(AtfKeys keyData) { return base.IsInputKey(KeysInterop.ToWf(keyData)); }
 
         /// <summary>

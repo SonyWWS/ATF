@@ -235,7 +235,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Check whether the client can do the command, if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             if (!(commandTag is Command))
@@ -463,7 +463,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Refresh command</summary>
         /// <param name="doing">True to perform the Refresh; false to test whether Refresh can be done</param>
-        /// <returns>True iff Refresh can be done or was done</returns>
+        /// <returns><c>True</c> if Refresh can be done or was done</returns>
         protected virtual bool DoRefresh(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -488,7 +488,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Reconcile command</summary>
         /// <param name="doing">True to perform the Reconcile; false to test whether Reconcile can be done</param>
-        /// <returns>True iff Reconcile can be done or was done</returns>
+        /// <returns><c>True</c> if Reconcile can be done or was done</returns>
         protected virtual bool DoReconcile(bool doing)
         {
             return false;
@@ -508,7 +508,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Add command</summary>
         /// <param name="doing">True to perform the Add; false to test whether Add can be done</param>
-        /// <returns>True iff Add can be done or was done</returns>
+        /// <returns><c>True</c> if Add can be done or was done</returns>
         protected virtual bool DoAdd(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -534,7 +534,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the CheckOut command</summary>
         /// <param name="doing">True to perform the CheckOut; false to test whether CheckOut can be done</param>
-        /// <returns>True iff CheckOut can be done or was done</returns>
+        /// <returns><c>True</c> if CheckOut can be done or was done</returns>
         protected virtual bool DoCheckOut(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -555,7 +555,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the CheckIn command</summary>
         /// <param name="doing">True to perform the CheckIn; false to test whether CheckIn can be done</param>
-        /// <returns>True iff CheckIn can be done or was done</returns>
+        /// <returns><c>True</c> if CheckIn can be done or was done</returns>
         protected virtual bool DoCheckIn(bool doing)
         {
             if (SourceControlService == null || ContextRegistry == null ||
@@ -614,7 +614,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Sync command</summary>
         /// <param name="doing">True to perform the Sync; false to test whether Sync can be done</param>
-        /// <returns>True iff Sync can be done or was done</returns>
+        /// <returns><c>True</c> if Sync can be done or was done</returns>
         protected virtual bool DoSync(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -644,7 +644,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Revert command</summary>
         /// <param name="doing">True to perform the Revert; false to test whether Revert can be done</param>
-        /// <returns>True iff Revert can be done or was done</returns>
+        /// <returns><c>True</c> if Revert can be done or was done</returns>
         protected virtual bool DoRevert(bool doing)
         {
             if (SourceControlService == null || SourceControlContext == null)
@@ -683,7 +683,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Perform the Connect command</summary>
         /// <param name="doing">True to perform the Connect; false to test whether Connect can be done</param>
-        /// <returns>True iff Connect can be done or was done</returns>
+        /// <returns><c>True</c> if Connect can be done or was done</returns>
         protected virtual bool DoConnection(bool doing)
         {
             if (SourceControlService == null)

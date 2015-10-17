@@ -215,7 +215,7 @@ namespace CircuitEditorSample
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
         /// <param name="uri">Document URI</param>
-        /// <returns>True iff the client can open or create a document at the given URI</returns>
+        /// <returns><c>True</c> if the client can open or create a document at the given URI</returns>
         public bool CanOpen(Uri uri)
         {
             return EditorInfo.IsCompatibleUri(uri);
@@ -619,7 +619,7 @@ namespace CircuitEditorSample
         /// Requests permission to close the client's Control.
         /// Allows user to save document before closing it.</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <returns>True if the Control either can close or is already closed. False to cancel.</returns>
+        /// <returns><c>True</c> if the Control either can close or is already closed. False to cancel.</returns>
         /// <remarks>
         /// 1. This method is only called by IControlHostService if the Control was previously
         /// registered for this IControlHostClient.

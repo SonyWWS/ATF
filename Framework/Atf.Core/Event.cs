@@ -38,7 +38,7 @@ namespace Sce.Atf
         /// <param name="handler">Handler or null</param>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event args</param>
-        /// <returns>True iff the event was cancelled</returns>
+        /// <returns><c>True</c> if the event was cancelled</returns>
         public static bool RaiseCancellable(this CancelEventHandler handler, object sender, CancelEventArgs e)
         {
             if (handler != null)
@@ -60,7 +60,7 @@ namespace Sce.Atf
         /// <param name="handler">Handler or null</param>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event args</param>
-        /// <returns>True iff the event was cancelled</returns>
+        /// <returns><c>True</c> if the event was cancelled</returns>
         public static bool RaiseCancellable<T>(this EventHandler<T> handler, object sender, T e)
             where T : CancelEventArgs
         {

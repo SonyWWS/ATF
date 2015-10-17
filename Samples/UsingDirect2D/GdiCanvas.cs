@@ -330,7 +330,7 @@ namespace UsingDirect2D
         /// <summary>
         /// Tests if this is input key for changing display</summary>
         /// <param name="keyData">Key code</param>
-        /// <returns>True iff input key</returns>
+        /// <returns><c>True</c> if input key</returns>
         protected override bool IsInputKey(Keys keyData)
         {
             if (keyData == Keys.Down || keyData == Keys.Up)

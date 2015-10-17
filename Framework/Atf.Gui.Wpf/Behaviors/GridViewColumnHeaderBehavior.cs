@@ -25,7 +25,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether element is resizable</summary>
         /// <param name="element">Dependency object to obtain property for</param>
-        /// <returns>True iff element is resizable</returns>
+        /// <returns><c>True</c> if element is resizable</returns>
         public static bool GetIsResizable(DependencyObject element)
         {
             return (bool)element.GetValue(IsResizableProperty);
@@ -55,7 +55,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// <summary>
         /// Gets whether element is clickable</summary>
         /// <param name="element">Dependency object to obtain property for</param>
-        /// <returns>True iff element is clickable</returns>
+        /// <returns><c>True</c> if element is clickable</returns>
         public static bool GetIsClickable(DependencyObject element)
         {
             return (bool)element.GetValue(IsClickableProperty);

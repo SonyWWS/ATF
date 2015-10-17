@@ -383,7 +383,7 @@ namespace Sce.Atf.Controls
         /// Process command keys</summary>
         /// <param name="msg">System.Windows.Forms.Message for window message to process</param>
         /// <param name="keyData">System.Windows.Forms.Keys value representing key to process</param>
-        /// <returns>True iff character was processed by control</returns>
+        /// <returns><c>True</c> if character was processed by control</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // stop the delete key bubbling up the control hierarchy. 

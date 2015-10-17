@@ -115,7 +115,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
             if (!(commandTag is SkinCommands))
@@ -233,7 +233,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns a value indicating if the client can open a skin file at the given URI</summary>
         /// <param name="uri">Document URI</param>
-        /// <returns>true, iff the client can open a skin file at the given URI</returns>
+        /// <returns>true, if the client can open a skin file at the given URI</returns>
         public bool CanOpen(Uri uri)
         {
             return s_info.IsCompatibleUri(uri);
@@ -242,7 +242,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the client can open a skin file at the given path</summary>
         /// <param name="path">Document path</param>
-        /// <returns>True iff the client can open a skin file at the given path</returns>
+        /// <returns><c>True</c> if the client can open a skin file at the given path</returns>
         public bool CanOpen(string path)
         {
             return s_info.IsCompatiblePath(path);
@@ -252,7 +252,7 @@ namespace Sce.Atf.Applications
         /// Loads the specified skin, sets it as the active skin, and applies it to the main form
         /// and all other skinnable objects</summary>
         /// <param name="skinFilePath">Path to skin file</param>
-        /// <returns>True if the skin was successfully opened, false otherwise</returns>
+        /// <returns><c>True</c> if the skin was successfully opened, false otherwise</returns>
         public bool OpenAndApplySkin(string skinFilePath)
         {
             if (String.IsNullOrEmpty(skinFilePath))
@@ -273,7 +273,7 @@ namespace Sce.Atf.Applications
         /// Loads the skin from the specified stream, sets it as the active skin, and applies it to the main form
         /// and all other skinnable objects</summary>
         /// <param name="stream">Stream containing the skin file</param>
-        /// <returns>True if the skin was successfully opened, false otherwise</returns>
+        /// <returns><c>True</c> if the skin was successfully opened, false otherwise</returns>
         public bool OpenAndApplySkin(Stream stream)
         {
             OpenSkinFile(stream, EmbeddedSkinString);

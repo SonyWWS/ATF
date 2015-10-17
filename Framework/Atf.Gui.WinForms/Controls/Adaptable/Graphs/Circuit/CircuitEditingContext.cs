@@ -173,7 +173,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         bool INamingContext.CanSetName(object item)
         {
             return
@@ -217,7 +217,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Tests if can copy selection from the circuit</summary>
-        /// <returns>True iff there are items to copy</returns>
+        /// <returns><c>True</c> if there are items to copy</returns>
         public virtual bool CanCopy()
         {
             if (m_instancingContext != null)
@@ -286,7 +286,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if can insert a given object into the circuit</summary>
         /// <param name="insertingObject">Object to insert</param>
-        /// <returns>True iff can insert object into the circuit</returns>
+        /// <returns><c>True</c> if can insert object into the circuit</returns>
         public virtual bool CanInsert(object insertingObject)
         {
             // pasted selected text in the selected annotation?
@@ -364,7 +364,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Tests if can delete selected items from the circuit</summary>
-        /// <returns>True iff can delete selected items from the circuit</returns>
+        /// <returns><c>True</c> if can delete selected items from the circuit</returns>
         public virtual bool CanDelete()
         {
             if (m_instancingContext != null)
@@ -633,7 +633,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Returns whether the item can be colored</summary>
         /// <param name="kind">Coloring type</param>
         /// <param name="item">Item to color</param>
-        /// <returns>True iff the item can be colored</returns>
+        /// <returns><c>True</c> if the item can be colored</returns>
         bool IColoringContext.CanSetColor(ColoringTypes kind, object item)
         {
             if (item.Is<Annotation>())
@@ -779,7 +779,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Can given modules be moved into a new container</summary>
         /// <param name="newParent">New module parent</param>
         /// <param name="movingObjects">Objects being moved</param>
-        /// <returns>True iff objects can be moved to new parent</returns>
+        /// <returns><c>True</c> if objects can be moved to new parent</returns>
         bool IEditableGraphContainer<Element, Wire, ICircuitPin>.CanMove(object newParent, IEnumerable<object> movingObjects)
         {
             if (newParent == null)
@@ -888,7 +888,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Can a container be resized</summary>
         /// <param name="container">Container to resize</param>
         /// <param name="borderPart">Part of border to resize</param>
-        /// <returns>True iff the container border can be resized</returns>
+        /// <returns><c>True</c> if the container border can be resized</returns>
         bool IEditableGraphContainer<Element, Wire, ICircuitPin>.CanResize(object container, DiagramBorder borderPart)
         {
             if (container.Is<Group>())

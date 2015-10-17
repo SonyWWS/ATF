@@ -185,7 +185,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public override bool CanDoCommand(object commandTag)
         {
             return CommandId.EditKeyboard.Equals(commandTag);
@@ -873,7 +873,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Processes the key as a command shortcut</summary>
         /// <param name="key">Key to process</param>
-        /// <returns>True iff the key was processed as a command shortcut</returns>
+        /// <returns><c>True</c> if the key was processed as a command shortcut</returns>
         public override bool ProcessKey(Keys key)
         {
             if (key == Keys.F1 && m_lastHoveringToolStrip != null)
@@ -1233,7 +1233,7 @@ namespace Sce.Atf.Applications
         /// Processes the key as a command shortcut</summary>
         /// <param name="commandService">Command service</param>
         /// <param name="key">Key to process</param>
-        /// <returns>True iff the key was processed as a command shortcut</returns>
+        /// <returns><c>True</c> if the key was processed as a command shortcut</returns>
         static public bool ProcessKey(this ICommandService commandService, System.Windows.Forms.Keys key)
         {
             return commandService.ProcessKey(KeysInterop.ToAtf(key));

@@ -134,7 +134,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if the element has a given input pin</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff the element has the given input pin</returns>
+        /// <returns><c>True</c> if the element has the given input pin</returns>
         public virtual bool HasInputPin(ICircuitPin pin)
         {
             if (this.Is<Group>())
@@ -145,7 +145,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if the element has a given output pin.</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff the element has the given output pin</returns>
+        /// <returns><c>True</c> if the element has the given output pin</returns>
         public virtual bool HasOutputPin(ICircuitPin pin)
         {
             if (this.Is<Group>())

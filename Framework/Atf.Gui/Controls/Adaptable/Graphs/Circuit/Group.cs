@@ -214,7 +214,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if group has a given input pin</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff group contains the given input pin</returns>
+        /// <returns><c>True</c> if group contains the given input pin</returns>
         public override bool HasInputPin(ICircuitPin pin)
         {
             return InputGroupPins.Contains(pin);
@@ -223,7 +223,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if group has a given output pin</summary>
         /// <param name="pin">Pin to test</param>
-        /// <returns>True iff group contains the given output pin</returns>
+        /// <returns><c>True</c> if group contains the given output pin</returns>
         public override bool HasOutputPin(ICircuitPin pin)
         {
             return OutputGroupPins.Contains(pin);
@@ -998,7 +998,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="pin">Pin on module</param>
         /// <param name="internalConnections">Internal connections of the owner group</param>
         /// <param name="inputSide">Whether or not the pin is located at the input side of the module</param>
-        /// <returns>True iff module pin can be legally exposed as a group pin</returns>
+        /// <returns><c>True</c> if module pin can be legally exposed as a group pin</returns>
         /// <remarks>An internal pin must be exposed if there are external edges connected to it; 
         /// an internal pin may be visible or hidden if it is legal to expose but no external connections.
         /// This default implementation exposes all legal candidates that can be exposed as group pins. 
@@ -1306,9 +1306,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
-        /// Returns true iff the specified attribute is name or label</summary>
+        /// Returns <c>True</c> if the specified attribute is name or label</summary>
         /// <param name="attributeInfo">AttributeInfo for attribute</param>
-        /// <returns>True iff the specified attribute is name or label</returns>
+        /// <returns><c>True</c> if the specified attribute is name or label</returns>
         public bool IsNameAttribute(AttributeInfo attributeInfo)
         {
             return (attributeInfo == NameAttribute || attributeInfo == LabelAttribute);

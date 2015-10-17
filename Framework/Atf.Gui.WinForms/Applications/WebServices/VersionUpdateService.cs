@@ -52,7 +52,7 @@ namespace Sce.Atf.Applications.WebServices
 
         /// <summary>
         /// Initializes component</summary>
-        /// <returns>True iff component was initialized correctly</returns>
+        /// <returns><c>True</c> if component was initialized correctly</returns>
         void IInitializable.Initialize()
         {
             // check for assembly mapping attribute.
@@ -86,7 +86,7 @@ namespace Sce.Atf.Applications.WebServices
         /// <summary>
         /// Checks if the client can do the command</summary>
         /// <param name="tag">Command</param>
-        /// <returns>True if client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object tag)
         {
             return

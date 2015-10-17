@@ -24,9 +24,9 @@ namespace Sce.Atf.Applications
         IDataObject GetInstances(IEnumerable<object> items);
 
         /// <summary>
-        /// Returns true iff the reference can reference the specified target item</summary>
+        /// Returns <c>True</c> if the reference can reference the specified target item</summary>
         /// <param name="item">Template item to be referenced</param>
-        /// <returns>True iff the reference can reference the specified target item</returns>
+        /// <returns><c>True</c> if the reference can reference the specified target item</returns>
         bool CanReference(object item);
 
         /// <summary>

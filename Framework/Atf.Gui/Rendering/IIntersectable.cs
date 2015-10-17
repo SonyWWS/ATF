@@ -38,7 +38,7 @@ namespace Sce.Atf.Rendering.Dom
         /// yet, then nearestVert should be the same as intersectionPoint.</param>
         /// <param name="normal">The unit-length normal at the intersection point, in
         /// object space, pointing out from the front of the surface</param>
-        /// <returns>True if there is an intersection</returns>
+        /// <returns><c>True</c> if there is an intersection</returns>
         bool IntersectRay(
             Ray3F ray,
             bool backfaceCull,
@@ -52,7 +52,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="ray">The ray, in object space</param>
         /// <param name="backfaceCull">Whether or not backface culling should be done</param>
         /// <param name="intersectionPoint">The point of intersection, in object space</param>
-        /// <returns>True if there is an intersection</returns>
+        /// <returns><c>True</c> if there is an intersection</returns>
         bool IntersectRay(
             Ray3F ray,
             bool backfaceCull,

@@ -77,7 +77,7 @@ namespace Sce.Atf.Controls.SyntaxEditorControl
         /// Processes a command key</summary>
         /// <param name="msg">A <see cref="T:System.Windows.Forms.Message"></see>, passed by reference, that represents the Win32 message to process</param>
         /// <param name="keyData">One of the <see cref="T:System.Windows.Forms.Keys"></see> values that represents the key to process</param>
-        /// <returns>True if the keystroke was processed and consumed by the control; otherwise, false to allow further processing</returns>
+        /// <returns><c>True</c> if the keystroke was processed and consumed by the control; otherwise, false to allow further processing</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (KeysUtil.IsTextBoxInput(this, keyData))

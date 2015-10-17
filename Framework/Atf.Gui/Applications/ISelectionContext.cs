@@ -44,7 +44,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Returns whether the selection contains the given item</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the selection contains the given item</returns>
+        /// <returns><c>True</c> if the selection contains the given item</returns>
         /// <remarks>Override to customize how items are compared for equality, e.g., for
         /// tree views, the selection might be adaptable paths, in which case the override
         /// could compare the item to the last elements of the selected paths.</remarks>

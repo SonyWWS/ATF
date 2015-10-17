@@ -82,7 +82,7 @@ namespace Sce.Atf.Wpf.Controls
         /// <param name="source">Event source</param>
         /// <param name="data">Data from which to remove entries</param>
         /// <param name="purgeAll">If true, purge all entries</param>
-        /// <returns>True iff some entries were actually removed</returns>
+        /// <returns><c>True</c> if some entries were actually removed</returns>
         protected override bool Purge(object source, object data, bool purgeAll)
         {
             bool foundDirt = false;
@@ -297,7 +297,7 @@ namespace Sce.Atf.Wpf.Controls
 
             /// <summary>
             /// Purge dead entries</summary>
-            /// <returns>True if any entries were purged, otherwise false</returns>
+            /// <returns><c>True</c> if any entries were purged, otherwise false</returns>
             public bool Purge()
             {
                 ListenerList.PrepareForWriting(ref m_listeners);

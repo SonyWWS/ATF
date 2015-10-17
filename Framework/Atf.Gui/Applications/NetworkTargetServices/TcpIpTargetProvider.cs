@@ -54,7 +54,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Adds the target to the provider</summary>
         /// <param name="target">Target to add to the provider</param>
-        /// <returns>True iff the target is successfully added</returns>
+        /// <returns><c>True</c> if the target is successfully added</returns>
         public bool AddTarget(TargetInfo target)
         {
             if (target is TcpIpTargetInfo && !m_targets.Contains(target))
@@ -70,7 +70,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Removes the target from the provider</summary>
         /// <param name="target">Target to remove from the provider</param>
-        /// <returns>True iff the target is successfully removed</returns>
+        /// <returns><c>True</c> if the target is successfully removed</returns>
         public bool Remove(TargetInfo target)
         {
             var tcpTarget = m_targets.FirstOrDefault(n =>  n == target);

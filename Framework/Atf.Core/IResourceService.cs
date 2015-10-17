@@ -27,7 +27,7 @@ namespace Sce.Atf
         /// <summary>
         /// Unloads the IResource associated with the specified URI</summary>
         /// <param name="uri">Resource URI</param>
-        /// <returns>True iff the resource was found and unloaded</returns>
+        /// <returns><c>True</c> if the resource was found and unloaded</returns>
         bool Unload(Uri uri);
 
 

@@ -75,7 +75,7 @@ namespace Sce.Atf.Wpf.Behaviors
         /// http://msdn.microsoft.com/en-us/library/windows/desktop/ms648394%28v=vs.85%29.aspx .</summary>
         /// <param name="x">X screen coordinate to move cursor to</param>
         /// <param name="y">Y screen coordinate to move cursor to</param>
-        /// <returns>Nonzero iff successful</returns>
+        /// <returns>Nonzero if successful</returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern bool SetCursorPos(int x, int y);
 

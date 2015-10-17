@@ -149,7 +149,7 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Checks whether the client can do the command if it handles it</summary>
         /// <param name="commandTag">Command to be done</param>
-        /// <returns>True iff client can do the command</returns>
+        /// <returns><c>True</c> if client can do the command</returns>
         public bool CanDoCommand(object commandTag)
         {
             if (commandTag is Command)
@@ -467,7 +467,7 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Gets whether an item is in sync with the source control version</summary>
         /// <param name="uri">URI representing the path to item</param>
-        /// <returns>True iff item is in sync with the source control version</returns>
+        /// <returns><c>True</c> if item is in sync with the source control version</returns>
         public override bool IsSynched(Uri uri)
         {
             CheckUri(uri);
@@ -531,7 +531,7 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Gets whether an item is locked by the client or another user</summary>
         /// <param name="uri">URI representing the path to item</param>
-        /// <returns>True iff item is locked</returns>
+        /// <returns><c>True</c> if item is locked</returns>
         public override bool IsLocked(Uri uri)
         {
             CheckUri(uri);
@@ -610,7 +610,7 @@ namespace Sce.Atf.Perforce
 
         /// <summary>
         /// Connects to the source control server</summary>
-        /// <returns>True iff connected to the source control server</returns>
+        /// <returns><c>True</c> if connected to the source control server</returns>
         public override bool Connect()
         {
             // We can't require Enabled to be true because the current configuration may be wrong
@@ -630,7 +630,7 @@ namespace Sce.Atf.Perforce
         /// <summary>
         /// Shows a dialog box to allow the user to configure the server and client
         /// connection information</summary>
-        /// <returns>True iff information set up</returns>
+        /// <returns><c>True</c> if information set up</returns>
         public bool ConfigureConnection()
         {
             return m_connectionManager.ConfigureConnection();
@@ -724,7 +724,7 @@ namespace Sce.Atf.Perforce
         /// Runs the given command using Perforce's unparsed interface</summary>
         /// <param name="cmd">Command string</param>
         /// <param name="path">Path parameter for command</param>
-        /// <returns>True iff command was run successfully</returns>
+        /// <returns><c>True</c> if command was run successfully</returns>
         protected bool RunCommand(string cmd, string path)
         {
             bool success = false;

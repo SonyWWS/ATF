@@ -28,7 +28,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Returns whether the items can be framed in the current view</summary>
         /// <param name="items">Items to frame</param>
-        /// <returns>True iff the items can be framed in the current view</returns>
+        /// <returns><c>True</c> if the items can be framed in the current view</returns>
         public bool CanFrame(IEnumerable<object> items)
         {
             // disallow framing if cursor is inside an annotation editing area   
@@ -53,7 +53,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// Returns whether the items can be made visible in the current view;
         /// they may not be centered as in the Frame method</summary>
         /// <param name="items">Items to show</param>
-        /// <returns>True iff the items can be made visible in the current view</returns>
+        /// <returns><c>True</c> if the items can be made visible in the current view</returns>
         public bool CanEnsureVisible(IEnumerable<object> items)
         {
             return IsBounded(items);

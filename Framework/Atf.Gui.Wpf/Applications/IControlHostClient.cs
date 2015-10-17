@@ -27,8 +27,8 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Requests permission to close the client's control</summary>
         /// <param name="control">Client control to be closed</param>
-        /// <param name="mainWindowClosing">True if the application main window is closing</param>
-        /// <returns>True if the control can close, or false to cancel.</returns>
+        /// <param name="mainWindowClosing"><c>True</c> if the application main window is closing</param>
+        /// <returns><c>True</c> if the control can close, or false to cancel.</returns>
         /// <remarks>
         /// 1. This method is only called by IControlHostService if the control was previously
         /// registered for this IControlHostClient.

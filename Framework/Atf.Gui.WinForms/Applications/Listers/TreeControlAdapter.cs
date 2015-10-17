@@ -382,7 +382,7 @@ namespace Sce.Atf.Applications
         /// Determines whether or not the first occurrence of the given item is visible in the tree.
         /// It may still be scrolled out of view.</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the given item is visible in the tree</returns>
+        /// <returns><c>True</c> if the given item is visible in the tree</returns>
         public bool IsVisible(object item)
         {
             IEnumerable<TreeControl.Node> nodes = m_itemToNodeMap[item];
@@ -396,7 +396,7 @@ namespace Sce.Atf.Applications
         /// Determines whether or not the node corresponding to the given path is visible.
         /// It may still be scrolled out of view.</summary>
         /// <param name="path">Path to the item</param>
-        /// <returns>True iff the given item is visible in the tree</returns>
+        /// <returns><c>True</c> if the given item is visible in the tree</returns>
         public bool IsVisible(Path<object> path)
         {
             return (ExpandPath(path, true) != null);
@@ -405,7 +405,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Determines whether or not the first occurrence of the given item is expanded</summary>
         /// <param name="item">Item</param>
-        /// <returns>True if the given item is expanded in the tree, or false if the
+        /// <returns><c>True</c> if the given item is expanded in the tree, or false if the
         /// item cannot be found or is not expanded</returns>
         public bool IsExpanded(object item)
         {
@@ -419,7 +419,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Determines whether or not the given item is expanded</summary>
         /// <param name="path">Path to the item</param>
-        /// <returns>True if the given item is expanded in the tree, or false if the
+        /// <returns><c>True</c> if the given item is expanded in the tree, or false if the
         /// item cannot be found or is not expanded</returns>
         public bool IsExpanded(Path<object> path)
         {

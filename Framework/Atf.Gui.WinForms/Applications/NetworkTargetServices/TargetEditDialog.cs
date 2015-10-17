@@ -15,7 +15,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// <summary>
         /// Constructor</summary>
         /// <param name="defaultPortNumber">Default port number</param>
-        /// <param name="canEditPortNumber">True iff can edit port number</param>
+        /// <param name="canEditPortNumber"><c>True</c> if can edit port number</param>
         /// <param name="protocols">List of supported protocols</param>
         public TargetEditDialog( int defaultPortNumber, bool canEditPortNumber, string[] protocols )
             : this(null, defaultPortNumber, canEditPortNumber,protocols)
@@ -26,7 +26,7 @@ namespace Sce.Atf.Applications.NetworkTargetServices
         /// Constructor</summary>
         /// <param name="target">The target.</param>
         /// <param name="defaultPortNumber">Default port number</param>
-        /// <param name="canEditPortNumber">True iff can edit port number</param>
+        /// <param name="canEditPortNumber"><c>True</c> if can edit port number</param>
         /// <param name="protocols">List of supported protocols</param>
         public TargetEditDialog( Target target, int defaultPortNumber, bool canEditPortNumber, string[] protocols )
         {

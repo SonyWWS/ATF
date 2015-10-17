@@ -121,7 +121,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="p">Picking point</param>
         /// <param name="tolerance">Pick tolerance</param>
         /// <param name="hitPoint">Hit point</param>
-        /// <returns>True if curve found; false otherwise</returns>
+        /// <returns><c>True</c> if curve found; false otherwise</returns>
         public static bool Pick(BezierCurve2F curve, Vec2F p, float tolerance, ref Vec2F hitPoint)
         {
             Queue<BezierCurve2F> curves = new Queue<BezierCurve2F>();

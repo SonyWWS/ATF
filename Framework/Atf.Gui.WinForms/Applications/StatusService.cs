@@ -139,7 +139,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Begins progress meter display where client can manually update progress.</summary>
         /// <param name="message">Message to display with progress meter</param>
-        /// <param name="canCancel">True iff the Cancel button appears and is enabled</param>
+        /// <param name="canCancel"><c>True</c> if the Cancel button appears and is enabled</param>
         public void BeginProgress(string message, bool canCancel)
         {
             BeginProgress(message, 0, canCancel);
@@ -149,7 +149,7 @@ namespace Sce.Atf.Applications
         /// Begins progress display where progress is updated automatically</summary>
         /// <param name="message">Message to display with progress meter</param>
         /// <param name="expectedDuration">Expected length of operation, in milliseconds</param>
-        /// <param name="canCancel">True iff the Cancel button appears and is enabled</param>
+        /// <param name="canCancel"><c>True</c> if the Cancel button appears and is enabled</param>
         public void BeginProgress(string message, int expectedDuration, bool canCancel)
         {
             m_autoIncrement =

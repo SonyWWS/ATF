@@ -162,7 +162,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             #region ICacheablePropertyControl
 
             /// <summary>
-            /// Gets true iff this control can be used indefinitely, regardless of whether the associated
+            /// Gets <c>True</c> if this control can be used indefinitely, regardless of whether the associated
             /// PropertyEditorControlContext's SelectedObjects property changes, i.e., the selection changes. 
             /// This property must be constant for the life of this control.</summary>
             public virtual bool Cacheable

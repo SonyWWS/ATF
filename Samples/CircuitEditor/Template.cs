@@ -46,7 +46,7 @@ namespace CircuitEditorSample
         }
 
         /// <summary>
-        /// Returns true iff the template can reference the specified target item</summary>
+        /// Returns <c>True</c> if the template can reference the specified target item</summary>
         public override bool CanReference(DomNode item)
         {
             return item.Is<Module>();

@@ -86,7 +86,7 @@ namespace SimpleDomEditorWpfSample
         /// <summary>
         /// Returns whether the client can open or create a document at the given URI</summary>
         /// <param name="uri">Document URI</param>
-        /// <returns>True iff the client can open or create a document at the given URI</returns>
+        /// <returns><c>True</c> if the client can open or create a document at the given URI</returns>
         public bool CanOpen(Uri uri)
         {
             return DocumentClientInfo.IsCompatibleUri(uri);
@@ -233,8 +233,8 @@ namespace SimpleDomEditorWpfSample
         /// <summary>
         /// Requests permission to close the client's Control. Allows user to save document before it closes.</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <param name="mainWindowClosing">True if the main window is closing</param>
-        /// <returns>True if the Control can close, or false to cancel</returns>
+        /// <param name="mainWindowClosing"><c>True</c> if the main window is closing</param>
+        /// <returns><c>True</c> if the Control can close, or false to cancel</returns>
         /// <remarks>
         /// 1. This method is only called by IControlHostService if the Control was previously
         /// registered for this IControlHostClient.

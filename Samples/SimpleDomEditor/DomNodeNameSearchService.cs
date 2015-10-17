@@ -71,7 +71,7 @@ namespace SimpleDomEditorSample
         /// <summary>
         /// Requests permission to close the client's Control</summary>
         /// <param name="control">Client Control to be closed</param>
-        /// <returns>True if the Control can close, or false to cancel</returns>
+        /// <returns><c>True</c> if the Control can close, or false to cancel</returns>
         /// <remarks>
         /// 1. This method is only called by IControlHostService if the Control was previously
         /// registered for this IControlHostClient.

@@ -67,7 +67,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests for equality</summary>
         /// <param name="obj">Other object</param>
-        /// <returns>True iff object is a tree with the same structure and values as this tree</returns>
+        /// <returns><c>True</c> if object is a tree with the same structure and values as this tree</returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -93,7 +93,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests for similarity</summary>
         /// <param name="other">Other tree</param>
-        /// <returns>True iff other has the same structure as this tree</returns>
+        /// <returns><c>True</c> if other has the same structure as this tree</returns>
         /// <remarks>Same structure means same node structure</remarks>
         public bool Similar(Tree<T> other)
         {
@@ -159,7 +159,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests if this tree is a descendant of another</summary>
         /// <param name="ancestor">Possible ancestor</param>
-        /// <returns>True iff this tree is a descendant of the other</returns>
+        /// <returns><c>True</c> if this tree is a descendant of the other</returns>
         /// <remarks>A tree is considered a descendant of itself</remarks>
         public bool IsDescendantOf(Tree<T> ancestor)
         {

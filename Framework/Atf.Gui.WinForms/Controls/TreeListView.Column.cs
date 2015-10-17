@@ -166,7 +166,7 @@ namespace Sce.Atf.Controls
             /// <summary>
             /// Returns whether the collection contains the item or not</summary>
             /// <param name="item">Column</param>
-            /// <returns>True iff item already in the collection</returns>
+            /// <returns><c>True</c> if item already in the collection</returns>
             public bool Contains(Column item)
             {
                 return m_columns.Contains(item);
@@ -184,7 +184,7 @@ namespace Sce.Atf.Controls
             /// <summary>
             /// Removes a column from the collection</summary>
             /// <param name="item">Column to remove</param>
-            /// <returns>True iff the column was removed</returns>
+            /// <returns><c>True</c> if the column was removed</returns>
             public bool Remove(Column item)
             {
                 ColumnRemoving.Raise(this, new ColumnEventArgs(item));

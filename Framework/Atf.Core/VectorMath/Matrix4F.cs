@@ -1007,7 +1007,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests exact equality with the given matrix</summary>
         /// <param name="m">Other matrix</param>
-        /// <returns>True iff matrices are exactly equal</returns>
+        /// <returns><c>True</c> if matrices are exactly equal</returns>
         public bool Equals(Matrix4F m)
         {
             return
@@ -1020,7 +1020,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Determines whether the specified object is a matrix that is equivalent to this matrix</summary>
         /// <param name="obj">The object to compare to</param>
-        /// <returns>True iff the specified object is equal to this matrix</returns>
+        /// <returns><c>True</c> if the specified object is equal to this matrix</returns>
         public override bool Equals(object obj)
         {
             if (obj is Matrix4F)
@@ -1035,7 +1035,7 @@ namespace Sce.Atf.VectorMath
         /// Tests equality to another matrix within a given epsilon</summary>
         /// <param name="m">Other matrix</param>
         /// <param name="eps">Epsilon, or margin for error</param>
-        /// <returns>True iff all components of the two matrices are within epsilon</returns>
+        /// <returns><c>True</c> if all components of the two matrices are within epsilon</returns>
         public bool EpsilonEquals(Matrix4F m, double eps)
         {
             return

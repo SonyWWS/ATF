@@ -21,13 +21,13 @@ namespace Sce.Atf.Wpf.Docking
         /// <summary>
         /// Check if the layout contains the content as direct child</summary>
         /// <param name="content">Content to search for</param>
-        /// <returns>True iff the content is child of this control</returns>
+        /// <returns><c>True</c> if the content is child of this control</returns>
         bool HasChild(IDockContent content);
         
         /// <summary>
         /// Check if the layout contains the content as child or descendant</summary>
         /// <param name="content">Content to search for</param>
-        /// <returns>True iff content is child or descendant</returns>
+        /// <returns><c>True</c> if content is child or descendant</returns>
         bool HasDescendant(IDockContent content);
         
         /// <summary>

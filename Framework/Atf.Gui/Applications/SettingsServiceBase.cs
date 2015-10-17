@@ -461,7 +461,7 @@ namespace Sce.Atf.Applications
         /// Pull out persisted settings and set property descriptor values</summary>
         /// <remarks>Marked 'internal' for use by SettingsLoadSaveDialog only</remarks>
         /// <param name="stream">Persisted settings Stream</param>
-        /// <returns>True iff successful</returns>
+        /// <returns><c>True</c> if successful</returns>
         protected bool Deserialize(Stream stream)
         {
             // create XML DOM from stream

@@ -125,7 +125,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <summary>
         /// Test equality against another ITarget</summary>
         /// <param name="other">The ITarget to compare against</param>
-        /// <returns>True if both ITargets have the same Host and HardwareId, otherwise false</returns>
+        /// <returns><c>True</c> if both ITargets have the same Host and HardwareId, otherwise false</returns>
         public bool Equals(ITarget other)
         {
             return (Host == other.Host) && (HardwareId == other.HardwareId);

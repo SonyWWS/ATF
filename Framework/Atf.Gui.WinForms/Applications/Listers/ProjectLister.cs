@@ -115,7 +115,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Requests permission to close the client's control</summary>
         /// <param name="control">Client control to be closed</param>
-        /// <returns>True if the control can close, or false to cancel closing</returns>
+        /// <returns><c>True</c> if the control can close, or false to cancel closing</returns>
         bool IControlHostClient.Close(Control control)
         {
             return true;

@@ -50,7 +50,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="plane">Must be constructed "by the rules" of Plane3F</param>
         /// <param name="intersectionPoint">The resulting intersection point or
         /// the zero-point if there was no intersection</param>
-        /// <returns>True if the ray points towards the plane and intersects it</returns>
+        /// <returns><c>True</c> if the ray points towards the plane and intersects it</returns>
         public bool IntersectPlane(Plane3F plane, out Vec3F intersectionPoint)
         {
             // both the normal and direction must be unit vectors.
@@ -87,7 +87,7 @@ namespace Sce.Atf.VectorMath
         /// Finds the intersection point of the ray with the given convex polygon</summary>
         /// <param name="vertices">Polygon vertices</param>
         /// <param name="intersectionPoint">Intersection point</param>
-        /// <returns>True iff the ray intersects the polygon</returns>
+        /// <returns><c>True</c> if the ray intersects the polygon</returns>
         public bool IntersectPolygon(Vec3F[] vertices, out Vec3F intersectionPoint)
         {
             Vec3F nearestVert, normal;
@@ -104,8 +104,8 @@ namespace Sce.Atf.VectorMath
         /// <param name="nearestVert">Nearest polygon vertex to the point of intersection</param>
         /// <param name="normal">Normal unit-length vector, facing out from the side whose
         /// vertices are ordered counter-clockwise</param>
-        /// <param name="backFaceCull">True if backface culling should be done</param>
-        /// <returns>True iff the ray intersects the polygon</returns>
+        /// <param name="backFaceCull"><c>True</c> if backface culling should be done</param>
+        /// <returns><c>True</c> if the ray intersects the polygon</returns>
         public bool IntersectPolygon(Vec3F[] vertices, out Vec3F intersectionPoint,
             out Vec3F nearestVert, out Vec3F normal, bool backFaceCull)
         {

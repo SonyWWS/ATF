@@ -44,8 +44,8 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Is the opposite of CanEnter. Gets true iff the program's flow has entered the
-        /// 'using' block.</summary>
+        /// Gets a value indicating whether the function or program block has been safely entered. </summary>
+        /// <returns><c>True</c> if the program's flow has entered the 'using' block.</returns>
         public bool HasEntered
         {
             get { return m_entryCount > 0; }
@@ -61,7 +61,7 @@ namespace Sce.Atf
         }
 
         /// <summary>
-        /// Until the 'using' block has finished, CanEnter is 'false'. The number of times
+        /// Until the 'using' block has finished, CanEnter is <c>false</c>. The number of times
         /// entry and exit has occurred is tracked. No exception is thrown if reentry occurs.</summary>
         /// <returns>A temporary object to be used in a 'using' block</returns>
         public IDisposable EnterAndExitMultiple()

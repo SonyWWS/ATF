@@ -71,7 +71,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// Tests if key is a regular input key or a special key that requires preprocessing</summary>
         /// <param name="keyData">Key to test</param>
-        /// <returns>True iff key is input key</returns>
+        /// <returns><c>True</c> if key is input key</returns>
         protected override bool IsInputKey(Keys keyData)
         {
             if (keyData.Equals(Keys.Down) && m_showSplit)

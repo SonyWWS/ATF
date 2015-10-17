@@ -73,7 +73,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Callback to determine if an item in the tree is filtered in (return true) or out</summary>
         /// <param name="item">Item tested for filtering</param>
-        /// <returns>True if filtered in, false if filtered out</returns>
+        /// <returns><c>True</c> if filtered in, false if filtered out</returns>
         public bool DefaultFilter(object item)
         {
             bool result = true;

@@ -61,7 +61,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Test if can convert value from a type in a context</summary>
         /// <param name="context">Context in which conversion occurs</param>
         /// <param name="sourceType">Type to convert from</param>
-        /// <returns>True iff can convert type</returns>
+        /// <returns><c>True</c> if can convert type</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(string);
@@ -93,7 +93,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Test if can convert value to a type in a context</summary>
         /// <param name="context">Context in which conversion occurs</param>
         /// <param name="destinationType">Type to convert to</param>
-        /// <returns>True iff can convert type</returns>
+        /// <returns><c>True</c> if can convert type</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             return destinationType == typeof(string);

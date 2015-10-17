@@ -50,7 +50,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Returns whether or not the given values are equal</summary>
         /// <param name="value1">First value</param>
         /// <param name="value2">Second value</param>
-        /// <returns>True iff the given values are equal</returns>
+        /// <returns><c>True</c> if the given values are equal</returns>
         /// <remarks>Default is to do limited deep equality testing for array types, and
         /// allow small errors with floating point types. Override to customize this behavior.</remarks>
         public virtual bool AreEqual(object value1, object value2)
@@ -92,7 +92,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <summary>
         /// Tests if the property values for the current selection can be reset</summary>
         /// <param name="descriptor">Property descriptor representing property</param>
-        /// <returns>True iff the property values for the current selection can be reset</returns>
+        /// <returns><c>True</c> if the property values for the current selection can be reset</returns>
         public bool CanResetValue(PropertyDescriptor descriptor)
         {
             foreach (object selected in m_selection)

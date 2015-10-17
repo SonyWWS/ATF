@@ -123,7 +123,7 @@ namespace Sce.Atf.Wpf.Controls
         /// Checks whether the specified size is within the allowed size bounds</summary>
         /// <param name="width">Width of template</param>
         /// <param name="height">Height of template</param>
-        /// <returns>True if the size is within the allowed bounds, otherwise false</returns>
+        /// <returns><c>True</c> if the size is within the allowed bounds, otherwise false</returns>
         public bool IsRightSize(double width, double height)
         {
             return ((!MinimumSize.HasValue || (MinimumSize.Value.Width <= width && MinimumSize.Value.Height <= height)) &&

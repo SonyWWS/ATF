@@ -79,7 +79,7 @@ namespace Sce.Atf.Wpf.Applications
         /// Gets multiple file names for file "Open" operation</summary>
         /// <param name="pathNames">File names</param>
         /// <param name="filter">File extension filter, e.g., "Setting file (*.xml;*.txt)|*.xml;*.txt|Any (*.*)|*.*"</param>
-        /// <returns>true iff operation is not cancelled</returns>
+        /// <returns><c>True</c> if operation is not cancelled</returns>
         public FileDialogResult OpenFileNames(ref string[] pathNames, string filter)
         {
             var dialog = new OpenFileDialog();

@@ -224,7 +224,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <summary>
         /// Returns whether the control was hit during a picking operation</summary>
         /// <param name="hit">Hit record</param>
-        /// <returns>True if the control was hit during a picking operation</returns>
+        /// <returns><c>True</c> if the control was hit during a picking operation</returns>
         public bool IsHit(HitRecord hit)
         {
             return (hit.RenderObjectData[0] == m_nameBase);

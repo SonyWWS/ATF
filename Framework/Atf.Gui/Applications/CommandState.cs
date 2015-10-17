@@ -15,7 +15,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Constructor using command text and check indicator</summary>
         /// <param name="text">Command text</param>
-        /// <param name="check">True iff command has check</param>
+        /// <param name="check"><c>True</c> if command has check</param>
         public CommandState(string text, bool check)
         {
             m_text = text;

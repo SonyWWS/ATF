@@ -58,7 +58,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Tests if a module is in this layer</summary>
         /// <param name="element">Module to test</param>
-        /// <returns>True iff module is in this layer</returns>
+        /// <returns><c>True</c> if module is in this layer</returns>
         public bool Contains(Element element)
         {
             foreach (ElementRef reference in ElementRefs)

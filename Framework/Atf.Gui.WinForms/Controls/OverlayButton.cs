@@ -202,7 +202,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// When the left mouse button is pressed, show pressed image if it is not null</summary>
         /// <param name="e">MouseEventArgs describing event</param>
-        /// <returns>True iff the mouse event is handled</returns>        
+        /// <returns><c>True</c> if the mouse event is handled</returns>        
         public bool MouseDown(MouseEventArgs e)
         {
             if (!Visible) return false;
@@ -220,7 +220,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// When mouse enters show hover image unless it is pressed</summary>
         /// <param name="e">MouseEventArgs describing event</param>
-        /// <returns>True iff the mouse event is handled</returns>        
+        /// <returns><c>True</c> if the mouse event is handled</returns>        
         public bool MouseMove(MouseEventArgs e)
         {
             if (!Visible) return false;
@@ -245,7 +245,7 @@ namespace Sce.Atf.Controls
         /// <summary>
         /// When mouse button is released, show hover image</summary>     
         /// <param name="e">MouseEventArgs describing event</param>
-        /// <returns>True iff the mouse event is handled</returns>        
+        /// <returns><c>True</c> if the mouse event is handled</returns>        
         public bool MouseUp(MouseEventArgs e)
         {
             m_pressed = false;

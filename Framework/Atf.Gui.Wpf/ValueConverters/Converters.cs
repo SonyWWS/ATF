@@ -71,7 +71,7 @@ namespace Sce.Atf.Wpf.ValueConverters
         /// <param name="targetType">unused</param>
         /// <param name="parameter">unused</param>
         /// <param name="culture">unused</param>
-        /// <returns>True if the visibility is Visible, otherwise false</returns>
+        /// <returns><c>True</c> if the visibility is Visible, otherwise false</returns>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value != null)

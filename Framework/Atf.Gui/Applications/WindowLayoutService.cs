@@ -139,7 +139,7 @@ namespace Sce.Atf.Applications
         /// Rename a layout</summary>
         /// <param name="oldLayoutName">Old layout name</param>
         /// <param name="newLayoutName">New layout name</param>
-        /// <returns>True if layout renamed, or false if layout not removed or doesn't exist or new name is invalid</returns>
+        /// <returns><c>True</c> if layout renamed, or false if layout not removed or doesn't exist or new name is invalid</returns>
         public bool RenameLayout(string oldLayoutName, string newLayoutName)
         {
             if (string.IsNullOrEmpty(oldLayoutName) ||
@@ -166,7 +166,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Remove (i.e. delete) a layout</summary>
         /// <param name="layoutName">Layout name</param>
-        /// <returns>True if layout removed, or false if layout not removed or doesn't exist</returns>
+        /// <returns><c>True</c> if layout removed, or false if layout not removed or doesn't exist</returns>
         public bool RemoveLayout(string layoutName)
         {
             if (string.IsNullOrEmpty(layoutName))
@@ -374,7 +374,7 @@ namespace Sce.Atf.Applications
         /// <summary>
         /// Checks if a layout name is valid, meaning that it doesn't contain illegal characters</summary>
         /// <param name="layoutName">Layout name</param>
-        /// <returns>True iff valid</returns>
+        /// <returns><c>True</c> if valid</returns>
         public static bool IsValidLayoutName(string layoutName)
         {
             if (string.IsNullOrEmpty(layoutName))

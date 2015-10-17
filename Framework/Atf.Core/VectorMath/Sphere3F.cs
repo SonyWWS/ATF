@@ -140,7 +140,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests if other sphere is inside this sphere</summary>
         /// <param name="sphere">Other sphere</param>
-        /// <returns>True iff other sphere is inside this sphere</returns>
+        /// <returns><c>True</c> if other sphere is inside this sphere</returns>
         public bool Contains(Sphere3F sphere)
         {
             float length = (sphere.Center - Center).Length + sphere.Radius;
@@ -150,7 +150,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests if point is inside this sphere</summary>
         /// <param name="pt">Point</param>
-        /// <returns>True iff pt is inside this sphere</returns>
+        /// <returns><c>True</c> if pt is inside this sphere</returns>
         public bool Contains(Vec3F pt)
         {
             return ((pt - Center).Length < Radius);
@@ -189,7 +189,7 @@ namespace Sce.Atf.VectorMath
         /// <param name="ray">The ray, with an origin and unit-length direction. Only intersections in
         /// front of the ray count.</param>
         /// <param name="x">The intersection point, if there was an intersection</param>
-        /// <returns>True iff ray intersects this sphere</returns>
+        /// <returns><c>True</c> if ray intersects this sphere</returns>
         /// <remarks>Algorithm is from _Real-Time Rendering_, p. 299</remarks>
         public bool Intersects(Ray3F ray, out Vec3F x)
         {

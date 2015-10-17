@@ -182,7 +182,7 @@ namespace UnitTests.Atf
         //    return true;
         //}
         
-        // Returns true iff every ChildCountRule on this ChildInfo matches the given min and max.
+        // Returns <c>True</c> if every ChildCountRule on this ChildInfo matches the given min and max.
         private bool MinMaxCheck(ChildInfo info, int min, int max)
         {
             bool foundOne = false;

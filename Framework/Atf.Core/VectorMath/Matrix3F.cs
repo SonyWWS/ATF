@@ -598,7 +598,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Tests exact equality with the given matrix</summary>
         /// <param name="m">Other matrix</param>
-        /// <returns>True iff matrices are exactly equal</returns>
+        /// <returns><c>True</c> if matrices are exactly equal</returns>
         public bool Equals(Matrix3F m)
         {
             return
@@ -610,7 +610,7 @@ namespace Sce.Atf.VectorMath
         /// <summary>
         /// Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see></summary>
         /// <param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see></param>
-        /// <returns>True iff the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see></returns>
+        /// <returns><c>True</c> if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see></returns>
         public override bool Equals(object obj)
         {
             if (obj is Matrix3F)
@@ -625,7 +625,7 @@ namespace Sce.Atf.VectorMath
         /// Tests equality to another matrix within a given epsilon</summary>
         /// <param name="m">Other matrix</param>
         /// <param name="eps">Epsilon, or margin for error</param>
-        /// <returns>True iff all components of the two matrices are within epsilon</returns>
+        /// <returns><c>True</c> if all components of the two matrices are within epsilon</returns>
         public bool EpsilonEquals(Matrix3F m, double eps)
         {
             return

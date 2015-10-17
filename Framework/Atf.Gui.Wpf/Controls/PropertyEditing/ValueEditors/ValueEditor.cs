@@ -29,7 +29,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <summary>
         /// Can this editor edit a given PropertyNode?</summary>
         /// <param name="node">PropertyNode</param>
-        /// <returns>True iff editor can edit given PropertyNode</returns>
+        /// <returns><c>True</c> if editor can edit given PropertyNode</returns>
         public virtual bool CanEdit(PropertyNode node)
         {
             return true;
@@ -104,7 +104,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         /// <param name="command">ICommand to execute</param>
         /// <param name="element">Command target</param>
         /// <param name="parameter">Parameter to pass to command</param>
-        /// <returns>True iff the command was executed</returns>
+        /// <returns><c>True</c> if the command was executed</returns>
         public static bool ExecuteCommand(ICommand command, IInputElement element, object parameter)
         {
             var routedCommand = command as RoutedCommand;

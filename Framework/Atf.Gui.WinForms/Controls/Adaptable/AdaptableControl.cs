@@ -214,7 +214,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Returns whether the control has the specified adapter</summary>
         /// <typeparam name="T">Adapter type, must be ref type</typeparam>
-        /// <returns>True iff the given object can be converted</returns>
+        /// <returns><c>True</c> if the given object can be converted</returns>
         public bool Is<T>()
             where T : class
         {
@@ -269,7 +269,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Returns whether the control has the specified adapter</summary>
         /// <param name="type">Adapter type</param>
-        /// <returns>True iff the given object has the specified adapter</returns>
+        /// <returns><c>True</c> if the given object has the specified adapter</returns>
         public bool Is(Type type)
         {
             return As(type) != null;
@@ -341,7 +341,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Returns whether the context can be adapted</summary>
         /// <typeparam name="T">Context type, must be ref type</typeparam>
-        /// <returns>True iff the context can be adapted to the type</returns>
+        /// <returns><c>True</c> if the context can be adapted to the type</returns>
         public bool ContextIs<T>()
             where T : class
         {

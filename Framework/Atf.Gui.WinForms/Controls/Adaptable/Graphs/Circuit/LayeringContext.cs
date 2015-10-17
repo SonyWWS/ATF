@@ -74,7 +74,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Returns whether the context can copy the selection</summary>
-        /// <returns>True iff the context can copy</returns>
+        /// <returns><c>True</c> if the context can copy</returns>
         public bool CanCopy()
         {
             return Selection.Count > 0;
@@ -92,7 +92,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the context can insert the data object in the layer</summary>
         /// <param name="insertingObject">Data to insert in the layer</param>
-        /// <returns>True iff the context can insert the data object in the layer</returns>
+        /// <returns><c>True</c> if the context can insert the data object in the layer</returns>
         public bool CanInsert(object insertingObject)
         {
             return CanInsert(m_activeItem, insertingObject);
@@ -108,7 +108,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
         /// <summary>
         /// Returns whether the context can delete the selection from the layer</summary>
-        /// <returns>True iff the context can delete</returns>
+        /// <returns><c>True</c> if the context can delete</returns>
         public bool CanDelete()
         {
             foreach (DomNode domNode in GetSelection<DomNode>())
@@ -140,7 +140,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// Returns true if context can insert the child object</summary>
         /// <param name="parent">The proposed parent of the object to insert</param>
         /// <param name="insertingObject">Child to insert</param>
-        /// <returns>True iff the context can insert the child</returns>
+        /// <returns><c>True</c> if the context can insert the child</returns>
         public bool CanInsert(object parent, object insertingObject)
         {
             if (parent == null)
@@ -485,7 +485,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the item is visible</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item is visible</returns>
+        /// <returns><c>True</c> if the item is visible</returns>
         public bool IsVisible(object item)
         {
             LayerFolder layer = item.As<LayerFolder>();
@@ -495,7 +495,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the item can be made visible and invisible</summary>
         /// <param name="item">Item</param>
-        /// <returns>True iff the item can be made visible and invisible</returns>
+        /// <returns><c>True</c> if the item can be made visible and invisible</returns>
         public bool CanSetVisible(object item)
         {
             return item.Is<LayerFolder>() || item.Is<IVisible>();
@@ -561,7 +561,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <summary>
         /// Returns whether the item can be named</summary>
         /// <param name="item">Item to name</param>
-        /// <returns>True iff the item can be named</returns>
+        /// <returns><c>True</c> if the item can be named</returns>
         public bool CanSetName(object item)
         {
             return item.Is<LayerFolder>();

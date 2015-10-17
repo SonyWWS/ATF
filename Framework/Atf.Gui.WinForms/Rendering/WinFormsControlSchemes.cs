@@ -18,7 +18,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to rotate the camera</returns>
+        /// <returns><c>True</c> if the user wants to rotate the camera</returns>
         public static bool IsRotating(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
             return controlScheme.IsRotating(KeysInterop.ToAtf(modifierKeys), e);
@@ -29,7 +29,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to rotate the camera</returns>
+        /// <returns><c>True</c> if the user wants to rotate the camera</returns>
         public static bool IsRotating(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
             return controlScheme.IsRotating(KeysInterop.ToAtf(modifierKeys), MouseEventArgsInterop.ToAtf(e));
@@ -40,7 +40,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to zoom the camera</returns>
+        /// <returns><c>True</c> if the user wants to zoom the camera</returns>
         public static bool IsZooming(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
             return controlScheme.IsZooming(KeysInterop.ToAtf(modifierKeys), e);
@@ -51,7 +51,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to zoom the camera</returns>
+        /// <returns><c>True</c> if the user wants to zoom the camera</returns>
         public static bool IsZooming(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
             return controlScheme.IsZooming(KeysInterop.ToAtf(modifierKeys), MouseEventArgsInterop.ToAtf(e));
@@ -62,7 +62,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to pan the camera</returns>
+        /// <returns><c>True</c> if the user wants to pan the camera</returns>
         /// <remarks>This is used by the arcball and trackball camera controllers.</remarks>
         public static bool IsPanning(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
@@ -74,7 +74,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to pan the camera</returns>
+        /// <returns><c>True</c> if the user wants to pan the camera</returns>
         /// <remarks>This is used by the arcball and trackball camera controllers.</remarks>
         public static bool IsPanning(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
@@ -87,7 +87,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to turn the camera around in place</returns>
+        /// <returns><c>True</c> if the user wants to turn the camera around in place</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public static bool IsTurning(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
@@ -100,7 +100,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to turn the camera around in place</returns>
+        /// <returns><c>True</c> if the user wants to turn the camera around in place</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public static bool IsTurning(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
@@ -112,7 +112,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to move the camera up or down</returns>
+        /// <returns><c>True</c> if the user wants to move the camera up or down</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public static bool IsElevating(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
@@ -124,7 +124,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to move the camera up or down</returns>
+        /// <returns><c>True</c> if the user wants to move the camera up or down</returns>
         /// <remarks>This is used by the fly and walk camera controllers.</remarks>
         public static bool IsElevating(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
@@ -137,7 +137,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's AtfMouseEventArgs</param>
-        /// <returns>True if the user wants to adjust the camera</returns>
+        /// <returns><c>True</c> if the user wants to adjust the camera</returns>
         public static bool IsControllingCamera(this ControlScheme controlScheme, WfKeys modifierKeys, AtfMouseEventArgs e)
         {
             return controlScheme.IsControllingCamera(KeysInterop.ToAtf(modifierKeys), e);
@@ -149,7 +149,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The camera control's ModifierKeys property</param>
         /// <param name="e">The camera control's event handler's WfMouseEventArgs</param>
-        /// <returns>True if the user wants to adjust the camera</returns>
+        /// <returns><c>True</c> if the user wants to adjust the camera</returns>
         public static bool IsControllingCamera(this ControlScheme controlScheme, WfKeys modifierKeys, WfMouseEventArgs e)
         {
             return controlScheme.IsControllingCamera(KeysInterop.ToAtf(modifierKeys), MouseEventArgsInterop.ToAtf(e));
@@ -162,7 +162,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The Control's ModifierKeys property</param>
         /// <param name="e">The key event from the KeyDown event handler, for example</param>
-        /// <returns>True if the user is trying to move the camera using the keyboard</returns>
+        /// <returns><c>True</c> if the user is trying to move the camera using the keyboard</returns>
         public static bool IsControllingCamera(this ControlScheme controlScheme, WfKeys modifierKeys, AtfKeyEventArgs e)
         {
             return controlScheme.IsControllingCamera(KeysInterop.ToAtf(modifierKeys), e);
@@ -175,7 +175,7 @@ namespace Sce.Atf.Rendering
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="modifierKeys">The Control's ModifierKeys property</param>
         /// <param name="e">The key event from the KeyDown event handler, for example</param>
-        /// <returns>True if the user is trying to move the camera using the keyboard</returns>
+        /// <returns><c>True</c> if the user is trying to move the camera using the keyboard</returns>
         public static bool IsControllingCamera(this ControlScheme controlScheme, WfKeys modifierKeys, WfKeyEventArgs e)
         {
             return controlScheme.IsControllingCamera(KeysInterop.ToAtf(modifierKeys), KeyEventArgsInterop.ToAtf(e));
@@ -185,7 +185,7 @@ namespace Sce.Atf.Rendering
         /// Is key an input key for camera motion?</summary>
         /// <param name="controlScheme">The control scheme instance to extend</param>
         /// <param name="key">Key to test</param>
-        /// <returns>True iff key is input key for camera motion</returns>
+        /// <returns><c>True</c> if key is input key for camera motion</returns>
         public static bool IsInputKey(this ControlScheme controlScheme, WfKeys key)
         {
             return controlScheme.IsInputKey(KeysInterop.ToAtf(key));

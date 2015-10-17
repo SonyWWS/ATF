@@ -15,7 +15,7 @@ namespace Sce.Atf
         /// <summary>
         /// Tests if a string is null, empty, or whitespace</summary>
         /// <param name="s">String to test</param>
-        /// <returns>True iff string is null, empty, or whitespace</returns>
+        /// <returns><c>True</c> if string is null, empty, or whitespace</returns>
         public static bool IsNullOrEmptyOrWhitespace(string s)
         {
             if (string.IsNullOrEmpty(s))
