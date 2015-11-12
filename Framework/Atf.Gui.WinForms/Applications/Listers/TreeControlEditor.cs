@@ -166,7 +166,7 @@ namespace Sce.Atf.Applications
                 {
                     canInsert = ApplicationUtil.CanInsertBetween(
                         m_treeControlAdapter.TreeView,
-                        parent.Tag,
+                        parent != null ? parent.Tag : null,
                         before != null ? before.Tag : null,
                         e.Data);
                 }
@@ -199,7 +199,7 @@ namespace Sce.Atf.Applications
                 {
                     ApplicationUtil.InsertBetween(
                         m_treeControlAdapter.TreeView,
-                        parent.Tag,
+                        parent != null ? parent.Tag : null,
                         before != null ? before.Tag : null,
                         e.Data,
                         "Drag and Drop",
