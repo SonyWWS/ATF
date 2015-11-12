@@ -103,6 +103,7 @@
     <Compile Include="Applications\IHelpContext.cs" />
     <Compile Include="Applications\ILastHitAware.cs" />
     <Compile Include="Applications\IMessageBoxService.cs" />
+    <Compile Include="Applications\IOrderedInsertionContext.cs" />
     <Compile Include="Applications\IOscService.cs" />
     <Compile Include="Applications\IPinnable.cs" />
     <Compile Include="Applications\ISelectionPathProvider.cs" />
