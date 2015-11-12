@@ -638,22 +638,22 @@ namespace Sce.Atf.Applications
 
             // first node is the settings tree root
             Tree<object> node = m_userSettings;
-            path[0] = m_userSettings.Value;
+            path[0] = m_userSettings;
 
             // middle nodes are folders
             for (int i = 1; i < path.Length - 1; i++)
             {
                 node = GetOrCreateFolder(pathSegments[i - 1], node);
-                path[i] = node.Value;
+                path[i] = node;
             }
 
             // leaf node is user settings object
             foreach (Tree<object> leaf in node.Children)
             {
-                var info = node.Value as UserSettingsInfo;
+                UserSettingsInfo info = leaf.Value as UserSettingsInfo;
                 if (info != null && info.Name == pathSegments[pathSegments.Length - 1])
                 {
-                    path[path.Length - 1] = leaf.Value;
+                    path[path.Length - 1] = leaf;
                     break;
                 }
             }
