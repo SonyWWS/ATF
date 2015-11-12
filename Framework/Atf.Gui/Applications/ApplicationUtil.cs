@@ -103,5 +103,76 @@ namespace Sce.Atf.Applications
                     instancingContext.Insert(child);
             }
         }
+
+        /// <summary>
+        /// Inserts the specified item into 'parent', immediately after the 'before' object.</summary>
+        /// <param name="context">Should be adaptable to ITransactionContext to support undo/redo.
+        /// Must be adaptable to IOrderedInsertionContext to succeed.</param>
+        /// <param name="parent">The parent object of 'before' and the object that will become the parent of 'item'.
+        /// Can be null if the objects are in a flat list or if there are multiple roots and the objects are to be
+        /// inserted into the top level.</param>
+        /// <param name="before">The object that will be the sibling to 'item' and be before 'item'.</param>
+        /// <param name="item">The object to be inserted.</param>
+        /// <param name="operationName">Used to register the operation in the transaction context
+        /// and to update the status if successful. Can be the empty string, but must not be null.</param>
+        /// <param name="statusService">Optional. Status service that is updated if the operation
+        /// was successful. Can be null.</param>
+        /// <returns>True iff the insertion was successful</returns>
+        public static bool InsertBetween(object context, object parent, object before, object item, string operationName, IStatusService statusService)
+        {
+            ITransactionContext transactionContext = context.As<ITransactionContext>();
+
+            if (CanInsertBetween(context, parent, before, item))
+            {
+                if (transactionContext != null)
+                {
+                    // If we have a TransactionContext perform a transaction to make sure undo/redo is supported
+                    transactionContext.DoTransaction(delegate
+                    {
+                        DoInsert(context, parent, before, item);
+                    },
+                        operationName);
+                }
+                else
+                {
+                    // If we don't have a transaction context just perform the insert
+                    // and assume that our client does not support undo/redo functionality
+                    DoInsert(context, parent, before, item);
+                }
+
+                // Update the status service if available.
+                if (statusService != null)
+                    statusService.ShowStatus(operationName);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tests whether or not the specified item can be inserted under 'parent' and after 'before'.</summary>
+        /// <param name="context">Should be adaptable to ITransactionContext to support undo/redo.
+        /// Must be adaptable to IOrderedInsertionContext to succeed.</param>
+        /// <param name="parent">The parent object of 'before' and the object that will become the parent of 'item'.
+        /// Can be null if the objects are in a flat list or if there are multiple roots and the objects are to be
+        /// inserted into the top level.</param>
+        /// <param name="before">The object that will be the sibling to 'item' and be before 'item'.</param>
+        /// <param name="item">The object to be inserted.</param>
+        /// <returns>True if 'item' can be inserted and false otherwise</returns>
+        public static bool CanInsertBetween(object context, object parent, object before, object item)
+        {
+            var orderedInsertionContext = context.As<IOrderedInsertionContext>();
+            if (orderedInsertionContext != null)
+                return orderedInsertionContext.CanInsert(parent, before, item);
+
+            return false;
+        }
+
+        private static void DoInsert(object context, object parent, object before, object item)
+        {
+            var orderedInsertionContext = context.Cast<IOrderedInsertionContext>();
+            orderedInsertionContext.Insert(parent, before, item);
+        }
     }
 }
