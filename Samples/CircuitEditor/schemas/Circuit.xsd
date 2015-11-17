@@ -178,6 +178,14 @@
     <xs:attribute name="foreColor" type="xs:integer" default="-16777216"/>
   </xs:complexType>
 
+    <!-- Expression type -->
+
+    <xs:complexType name="expressionType">
+        <xs:attribute name="id" type="xs:ID" use="required" />
+        <xs:attribute name="label" type="xs:string" />
+        <xs:attribute name="script" type="xs:string"  default=""/>        
+    </xs:complexType>
+    
   <!--
   A circuit contains modules, connections among them, and annotations
   -->
@@ -186,7 +194,8 @@
       <xs:element name="module" type="moduleType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="connection" type="connectionType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="layerFolder" type="layerFolderType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="expression" type="expressionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="annotation" type="annotationType" minOccurs="0" maxOccurs="unbounded" />        
     </xs:sequence>
   </xs:complexType>
 

@@ -33,6 +33,7 @@ namespace CircuitEditorSample
             circuitDocumentType.moduleChild = circuitDocumentType.Type.GetChildInfo("module");
             circuitDocumentType.connectionChild = circuitDocumentType.Type.GetChildInfo("connection");
             circuitDocumentType.layerFolderChild = circuitDocumentType.Type.GetChildInfo("layerFolder");
+            circuitDocumentType.expressionChild = circuitDocumentType.Type.GetChildInfo("expression");
             circuitDocumentType.annotationChild = circuitDocumentType.Type.GetChildInfo("annotation");
             circuitDocumentType.prototypeFolderChild = circuitDocumentType.Type.GetChildInfo("prototypeFolder");
             circuitDocumentType.templateFolderChild = circuitDocumentType.Type.GetChildInfo("templateFolder");
@@ -41,6 +42,7 @@ namespace CircuitEditorSample
             circuitType.moduleChild = circuitType.Type.GetChildInfo("module");
             circuitType.connectionChild = circuitType.Type.GetChildInfo("connection");
             circuitType.layerFolderChild = circuitType.Type.GetChildInfo("layerFolder");
+            circuitType.expressionChild = circuitType.Type.GetChildInfo("expression");
             circuitType.annotationChild = circuitType.Type.GetChildInfo("annotation");
 
             moduleType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "moduleType");
@@ -81,6 +83,11 @@ namespace CircuitEditorSample
 
             moduleRefType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "moduleRefType");
             moduleRefType.refAttribute = moduleRefType.Type.GetAttributeInfo("ref");
+
+            expressionType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "expressionType");
+            expressionType.idAttribute = expressionType.Type.GetAttributeInfo("id");
+            expressionType.labelAttribute = expressionType.Type.GetAttributeInfo("label");
+            expressionType.scriptAttribute = expressionType.Type.GetAttributeInfo("script");
 
             annotationType.Type = getNodeType("http://sony.com/gametech/circuits/1_0", "annotationType");
             annotationType.textAttribute = annotationType.Type.GetAttributeInfo("text");
@@ -213,6 +220,7 @@ namespace CircuitEditorSample
             public static ChildInfo moduleChild;
             public static ChildInfo connectionChild;
             public static ChildInfo layerFolderChild;
+            public static ChildInfo expressionChild;
             public static ChildInfo annotationChild;
             public static ChildInfo prototypeFolderChild;
             public static ChildInfo templateFolderChild;
@@ -224,6 +232,7 @@ namespace CircuitEditorSample
             public static ChildInfo moduleChild;
             public static ChildInfo connectionChild;
             public static ChildInfo layerFolderChild;
+            public static ChildInfo expressionChild;
             public static ChildInfo annotationChild;
         }
 
@@ -279,6 +288,14 @@ namespace CircuitEditorSample
         {
             public static DomNodeType Type;
             public static AttributeInfo refAttribute;
+        }
+
+        public static class expressionType
+        {
+            public static DomNodeType Type;
+            public static AttributeInfo idAttribute;
+            public static AttributeInfo labelAttribute;
+            public static AttributeInfo scriptAttribute;
         }
 
         public static class annotationType

@@ -52,11 +52,13 @@ namespace Sce.Atf.Applications
             propertiesPanel.Controls.Add(m_propertyGrid);
 
             // select an initial node so something is displayed in the PropertyGrid
-            TreeControl.Node firstNode;
+            TreeControl.Node firstNode = null;
             if (pathName != null)
                 firstNode = m_treeControlAdapter.ExpandPath(m_settingsService.GetSettingsPath(pathName));
-            else
+            if (firstNode == null) // in case pathName is not null, but ExpandPath returns null  
                 firstNode = m_treeControl.ExpandToFirstLeaf();
+            
+
 
             firstNode.Selected = true;
             ShowProperties(m_settingsService.GetProperties((Tree<object>)firstNode.Tag)); //does auto-setting of column widths

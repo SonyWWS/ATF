@@ -82,8 +82,8 @@ namespace Sce.Atf.Controls
                 //  concatenated string literal.
                 // ReSharper disable once InvokeAsExtensionMethod
                 credits.Add(string.Format(Localizer.Localize(
-                    "Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen," +
-                    " Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott." +
+                    "Authoring Tools Framework (ATF {0}), by " +
+                    "Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott." +
                     " Copyright © 2014 Sony Computer Entertainment America LLC", "{0} is the version number"), v));
             }
 

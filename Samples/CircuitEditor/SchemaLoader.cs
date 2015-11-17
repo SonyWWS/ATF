@@ -83,12 +83,15 @@ namespace CircuitEditorSample
                 // ReferenceValidator should be the last validator attached to the root DomNode to fully track
                 // all the DOM editings of all other validators to update references properly 
                 Schema.circuitDocumentType.Type.Define(new ExtensionInfo<ReferenceValidator>());        // tracks references and targets
+                
 
                 // decorate circuit type
                 Schema.circuitType.Type.Define(new ExtensionInfo<GlobalHistoryContext>());
                 Schema.circuitType.Type.Define(new ExtensionInfo<ViewingContext>());                    // manages module and circuit bounds, efficient layout
                 Schema.circuitType.Type.Define(new ExtensionInfo<LayeringContext>());                   // circuit layer hierarchy
                 Schema.circuitType.Type.Define(new ExtensionInfo<PrintableDocument>());                 // printing
+                Schema.circuitType.Type.Define(new ExtensionInfo<ExpressionManager>());                 // printing
+
 
                 // decorate group type
                 Schema.groupType.Type.Define(new ExtensionInfo<CircuitEditingContext>());                    // main editable circuit adapter
@@ -96,7 +99,10 @@ namespace CircuitEditorSample
                 Schema.groupType.Type.Define(new ExtensionInfo<ViewingContext>());
 
                 Schema.connectionType.Type.Define(new ExtensionInfo<WireStyleProvider<Module, Connection, ICircuitPin>>());
-                                  
+
+                // register Expression.
+                Schema.expressionType.Type.Define(new ExtensionInfo<Expression>());
+
                 RegisterCircuitExtensions();
 
                 // types are initialized, register property descriptors on module, folder types
@@ -115,7 +121,20 @@ namespace CircuitEditorSample
                                 Schema.moduleType.nameAttribute, // 'nameAttribute' is unique id, label is user visible name
                                 null,
                                 "Unique ID".Localize(),
-                                true)
+                                true),
+                            new AttributePropertyDescriptor(
+                                "X".Localize(),
+                                Schema.moduleType.xAttribute, 
+                                null,
+                                "location x".Localize(),
+                                false),
+                            new AttributePropertyDescriptor(
+                                "Y".Localize(),
+                                Schema.moduleType.yAttribute, 
+                                null,
+                                "location Y".Localize(),
+                                false),
+
                     }));
 
                 Schema.layerFolderType.Type.SetTag(

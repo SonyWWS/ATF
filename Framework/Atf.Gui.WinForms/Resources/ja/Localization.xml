@@ -35,7 +35,7 @@
   <StringItem id="An application built using the Authoring Tools Framework" context="" translation="Authoring Tools Framework (ATF) を使用して構築されたアプリケーション" />
   <StringItem id="Analysis" context="" translation="解析" />
   <StringItem id="Application" context="" translation="アプリケーション" />
-  <StringItem id="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" context="{0} is the version number" translation="Authoring Tools Framework (ATF {0}), by Ron Little, Jianhua Shen, Julianne Harrington, Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" />
+  <StringItem id="Authoring Tools Framework (ATF {0}), by Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" context="{0} is the version number" translation="Authoring Tools Framework (ATF {0}), by Alan Beckus, Matt Mahony, Pat O'Leary, Paul Skibitzke, and Max Elliott. Copyright © 2014 Sony Computer Entertainment America LLC" />
   <StringItem id="Auto New Document" context="Create a new empty document on application startup" translation="新しいドキュメントを自動作成" />
   <StringItem id="Auto-load Documents" context="" translation="ドキュメントの自動読み込み" />
   <StringItem id="Basic" context="" translation="基本" />

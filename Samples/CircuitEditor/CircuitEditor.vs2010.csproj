@@ -73,6 +73,16 @@
     <Compile Include="CircuitReader.cs" />
     <Compile Include="CircuitRenderer.cs" />
     <Compile Include="CircuitWriter.cs" />
+    <Compile Include="Expression\DynamicDomNode.cs" />
+    <Compile Include="Expression\Expression.cs" />
+    <Compile Include="Expression\ExpressionCommands.cs" />
+    <Compile Include="Expression\ExpressionDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Expression\ExpressionDlg.designer.cs">
+      <DependentUpon>ExpressionDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Expression\ExpressionManager.cs" />
     <Compile Include="Resources\DynamicPropertyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +133,9 @@
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Expression\ExpressionDlg.resx">
+      <DependentUpon>ExpressionDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\and_16.png" />
   </ItemGroup>
   <ItemGroup>

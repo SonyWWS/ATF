@@ -861,14 +861,21 @@ namespace Sce.Atf.Controls.PropertyEditing
                 p.Context.ClearCachedSelection();
 
                 Control control = p.Control;
-                if (control != null &&
-                    !p.Cacheable)
+                if (control != null)
                 {
-                    // This is very expensive to remove, dispose, create, and add the Controls.
-                    //  ICacheablePropertyControl should be implemented as much as possible.
-                    Controls.Remove(control);
-                    control.Font = null;
-                    control.Dispose();
+                    if (!p.Cacheable)
+                    {
+                        // This is very expensive to remove, dispose, create, and add the Controls.
+                        //  ICacheablePropertyControl should be implemented as much as possible.
+                        Controls.Remove(control);
+                        control.Font = null;
+                        control.Dispose();
+                    }
+                    else if (m_editingContext == null) 
+                    {
+                         control.Visible = false;                            
+                    }
+
                 }
             }
             m_activeProperties.Clear();
@@ -1068,6 +1075,14 @@ namespace Sce.Atf.Controls.PropertyEditing
             }
 
             return category;
+        }
+
+
+        /// <summary>
+        /// Gets all categories</summary>
+        public IEnumerable<Category> Categories
+        {
+            get { return m_categories ?? EmptyArray<Category>.Instance; }
         }
 
         /// <summary>

@@ -103,6 +103,7 @@
     <Compile Include="Applications\IHelpContext.cs" />
     <Compile Include="Applications\ILastHitAware.cs" />
     <Compile Include="Applications\IMessageBoxService.cs" />
+    <Compile Include="Applications\IOrderedInsertionContext.cs" />
     <Compile Include="Applications\IOscService.cs" />
     <Compile Include="Applications\IPinnable.cs" />
     <Compile Include="Applications\ISelectionPathProvider.cs" />
@@ -810,6 +811,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\package_error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\selection_find16x16.png" />
+    <EmbeddedResource Include="Resources\selection_find24x24.png" />
+    <EmbeddedResource Include="Resources\selection_find32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

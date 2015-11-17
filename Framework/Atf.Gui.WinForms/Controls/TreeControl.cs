@@ -299,8 +299,10 @@ namespace Sce.Atf.Controls
             get { return m_dragBetween; }
         }
 
+
+        
         /// <summary>
-        /// Gets whether the control should display drag-between cue</summary>   
+        /// Gets or sets whether the control should display drag-between cue</summary>
         public bool ShowDragBetweenCue
         {
             get { return m_showDragBetweenCue; }
@@ -491,6 +493,54 @@ namespace Sce.Atf.Controls
             }
 
             return null;
+        }
+
+        /// <summary>  
+        /// Gets the nodes that indicate where in the hierarchy inserted nodes should be placed.</summary>  
+        /// <param name="clientPoint">Point, in client space. If using coordinates from a  
+        /// DragEventArgs, for example, convert to client space using PointToClient().</param>  
+        /// <param name="parent">The Node that will be the parent of inserted node(s).  
+        /// Can be null to indicate that the root (if any) will be replaced.</param>  
+        /// <param name="before">The Node that is closest to being before (higher on the screen)  
+        /// than clientPoint. Can be null to indicate that the insertion point will make  
+        /// the inserted nodes become the first child/children of 'parent'.</param>  
+        /// <returns>True if clientPoint represents a valid insertion point</returns>
+        public bool GetInsertionNodes(Point clientPoint, out Node parent, out Node before)
+        {
+            UpdateNodeMeasurements();
+
+            // First, find the node that is immediately before the target point. We don't care  
+            //  yet if 'before' is a parent or a sibling of the target point.  
+            before = null;
+            int y = clientPoint.Y + m_vScroll - ContentVerticalOffset;
+            foreach (Node node in VisibleNodes)
+            {
+                int rowHeight = GetRowHeight(node);
+                if (rowHeight > 0 && y <= rowHeight)
+                    break;
+
+                before = node;
+                y -= rowHeight;
+            }
+
+            // Now find the parent. 'before' may actually be the parent.  
+            parent = null;
+            if (before != null)
+            {
+                if (before.Expanded)
+                {
+                    parent = before;
+                    before = null;
+                }
+                else
+                {
+                    parent = before.Parent;
+                }
+            }
+
+            // For now, this method will always succeed. Perhaps in the future we can consider  
+            //  certain areas of the TreeControl out-of-bounds.  
+            return true;
         }
 
         /// <summary>
@@ -870,11 +920,14 @@ namespace Sce.Atf.Controls
                     break;
 
                 case HitType.CheckBox:
-                    CheckState checkState = (node.CheckState == CheckState.Checked) ? CheckState.Unchecked : CheckState.Checked;
-                    if (node.CheckState != checkState)
+                    if (node.CheckBoxEnabled)
                     {
-                        node.CheckState = checkState;
-                        OnNodeCheckStateEdited(new NodeEventArgs(node));
+                        CheckState checkState = (node.CheckState == CheckState.Checked) ? CheckState.Unchecked : CheckState.Checked;
+                        if (node.CheckState != checkState)
+                        {
+                            node.CheckState = checkState;
+                            OnNodeCheckStateEdited(new NodeEventArgs(node));
+                        }
                     }
                     break;
 
@@ -1377,6 +1430,7 @@ namespace Sce.Atf.Controls
             StopDragTimers();
 
             base.OnDragDrop(e);
+            m_dragBetween = false; 
         }
 
         /// <summary>
@@ -1506,7 +1560,7 @@ namespace Sce.Atf.Controls
             int halfCheckBoxHeight = m_itemRenderer.CheckBoxSize.Height / 2;
 
             int right = m_clientSize.Width;
-
+            // dragNode is used to draw drop-between cue 
             Node dragNode = null;
             if (ShowDragBetweenCue && DragBetween )
             {
@@ -2488,6 +2542,23 @@ namespace Sce.Atf.Controls
             }
 
             /// <summary>
+            /// Gets or sets whether check box is enabled</summary>
+            /// <remarks>Default is true.
+            /// This property makes sense only if HasCheck is true</remarks>
+            public bool CheckBoxEnabled
+            {
+                get { return GetFlag(Flags.CheckBoxEnabled); }
+                set
+                {
+                    if (SetFlag(Flags.CheckBoxEnabled, value))
+                    {
+                        m_owner.Invalidate();
+                    }
+                }
+            }
+
+
+            /// <summary>
             /// Gets or sets the state of the node's check box</summary>
             public CheckState CheckState
             {
@@ -2595,6 +2666,7 @@ namespace Sce.Atf.Controls
                 HasCheck = 0x10,
                 AllowLabelEdit = 0x20,
                 PartiallyExpanded = 0x40, // Some, but not all, child nodes are displayed ( filtered tree view)
+                CheckBoxEnabled = 0x80,
             }
 
             private bool GetFlag(Flags flag)

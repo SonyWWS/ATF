@@ -296,18 +296,23 @@ namespace Sce.Atf.Controls
         {
             Rectangle bounds = new Rectangle(x, y, CheckBoxSize.Width, CheckBoxSize.Height);
             if (node.CheckState == CheckState.Indeterminate)
-            {   // draw indeterminate state.                                               
+            {   // draw indeterminate state.
+                Brush fillBrush = SystemBrushes.Window;
+                Brush fillBrush2 = node.CheckBoxEnabled ? SystemBrushes.ControlText : SystemBrushes.GrayText;
+                Pen borderPen = node.CheckBoxEnabled ? SystemPens.ControlDark : SystemPens.InactiveBorder;
                 var rect = Rectangle.Inflate(bounds,-1, -1);
-                g.FillRectangle(SystemBrushes.Window, rect);
+                g.FillRectangle(fillBrush, rect);
                 var rect2 = Rectangle.Inflate(bounds,-4, -4);
-                g.FillRectangle(SystemBrushes.ControlText, rect2);
-                g.DrawRectangle(SystemPens.ControlDark, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);                
+                g.FillRectangle(fillBrush2, rect2);
+                g.DrawRectangle(borderPen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);                                 
             }
             else
             {
                 var buttonState = ButtonState.Flat;
                 if (node.CheckState == CheckState.Checked)
-                    buttonState |= ButtonState.Checked;            
+                    buttonState |= ButtonState.Checked;
+                if (!node.CheckBoxEnabled)
+                    buttonState |= ButtonState.Inactive;
                 ControlPaint.DrawCheckBox(g, bounds, buttonState);
             }            
         }

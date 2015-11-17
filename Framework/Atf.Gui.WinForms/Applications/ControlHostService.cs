@@ -101,37 +101,13 @@ namespace Sce.Atf.Applications
             get { return !m_dockPanel.AllowEndUserDocking; }
             set
             {
-                m_dockPanel.AllowEndUserDocking = !value;
-                var cmdService = m_commandService as CommandServiceBase;
-                if (cmdService != null )
-                {
-                    if (cmdService.UserSelectedImageSize == CommandServiceBase.ImageSizes.Size16x16)
-                    {
-                        m_uiLockImage = ResourceUtil.GetImage16(Resources.LockUIImage);
-                        m_uiUnlockImage = ResourceUtil.GetImage16(Resources.UnlockUIImage);
-                    }
-                    else if (cmdService.UserSelectedImageSize == CommandServiceBase.ImageSizes.Size32x32)
-                    {
-                        m_uiLockImage = ResourceUtil.GetImage32(Resources.LockUIImage);
-                        m_uiUnlockImage = ResourceUtil.GetImage32(Resources.UnlockUIImage);
-                    }
-                }
-
-                if ((RegisteredCommands & CommandRegister.UILock) == CommandRegister.UILock)
-                {
-                    CommandInfo.UILock.GetButton().Image = value ? m_uiLockImage : m_uiUnlockImage;
-                    CommandInfo.UILock.GetButton().ToolTipText = value
-                                                                     ? "Unlock UI Layout".Localize()
-                                                                     : "Lock UI Layout".Localize();
-                }
-
+                m_dockPanel.AllowEndUserDocking = !value;                
                 if (m_toolStripContainer != null)
                 {
                     var toolStrips = m_toolStripContainer.TopToolStripPanel.Controls.AsIEnumerable<ToolStrip>()
                         .Concat(m_toolStripContainer.BottomToolStripPanel.Controls.AsIEnumerable<ToolStrip>())
                         .Concat(m_toolStripContainer.LeftToolStripPanel.Controls.AsIEnumerable<ToolStrip>())
                         .Concat(m_toolStripContainer.RightToolStripPanel.Controls.AsIEnumerable<ToolStrip>());
-
                     foreach (var toolStrip in toolStrips)
                     {
                         toolStrip.GripStyle = value ? ToolStripGripStyle.Hidden : ToolStripGripStyle.Visible;
@@ -194,13 +170,7 @@ namespace Sce.Atf.Applications
                 m_settingsService.RegisterSettings(this,
                    new BoundPropertyDescriptor(this, () => UILocked, "UILocked", null, null));
             }
-
-            // Turn off the CommandService's polling of these commands.
-            CommandInfo.UILock.EnableCheckCanDoEvent(this);
-            CommandInfo.WindowTileHorizontal.EnableCheckCanDoEvent(this);
-            CommandInfo.WindowTileVertical.EnableCheckCanDoEvent(this);
-            CommandInfo.WindowTileTabbed.EnableCheckCanDoEvent(this);
-
+           
             if (m_commandService != null)
             {
                 if ((RegisteredCommands & CommandRegister.UILock) == CommandRegister.UILock)
@@ -557,7 +527,8 @@ namespace Sce.Atf.Applications
             if (control != null)
             {
                 DockContent dockContent = FindContent(control);
-                if (dockContent.Visible && !dockContent.IsHidden)
+                if (dockContent.Visible && !dockContent.IsHidden
+                    && !IsAutoHideState(dockContent))
                     dockContent.Hide();
                 else
                     dockContent.Show();
@@ -597,13 +568,25 @@ namespace Sce.Atf.Applications
                 string menuText = GetControlMenuText(control);
                 state.Text = menuText;
                 DockContent dockContent = FindContent(control);
-                state.Check = dockContent.Visible && !dockContent.IsHidden;
+                state.Check = dockContent.Visible && !dockContent.IsHidden
+                    && !IsAutoHideState(dockContent);
             }
             else if (commandTag is StandardCommand)
             {
                 if ( (StandardCommand) commandTag == StandardCommand.UILock)
                 {
                     state.Text = UILocked ? "Unlock UI Layout".Localize() : "Lock UI Layout".Localize();
+                    var cmdService = m_commandService as CommandServiceBase;
+                    if (cmdService != null)
+                    {
+                        string lockImgName = UILocked ? Resources.LockUIImage : Resources.UnlockUIImage;
+                        if (CommandInfo.UILock.ImageName != lockImgName)
+                        {
+                            CommandInfo.UILock.ImageName = lockImgName;
+                            cmdService.RefreshImage(CommandInfo.UILock);                            
+                            CommandInfo.UILock.GetButton().ToolTipText = state.Text;
+                        }
+                    }
                 }
             }
         }
@@ -716,6 +699,15 @@ namespace Sce.Atf.Applications
         {
             get { return DockPaneStripBase.MouseOverTabSwitchDelay; }
             set { DockPaneStripBase.MouseOverTabSwitchDelay = value; }
+        }
+
+        private bool IsAutoHideState(DockContent dockContent)
+        {
+            DockState dockState = dockContent.DockState;
+            return dockState == DockState.DockBottomAutoHide
+                || dockState == DockState.DockLeftAutoHide
+                || dockState == DockState.DockRightAutoHide
+                || dockState == DockState.DockTopAutoHide;
         }
 
         private void mainForm_Load(object sender, EventArgs e)

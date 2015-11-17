@@ -13,6 +13,7 @@ namespace Sce.Atf.Applications
         /// Constructor for items with no associated images to be drawn</summary>
         public ItemInfo()
         {
+            CheckBoxEnabled = true;
         }
 
         /// <summary>
@@ -49,6 +50,16 @@ namespace Sce.Atf.Applications
         {
             get { return m_hasCheck; }
             set { m_hasCheck = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether check box is enabled</summary>
+        /// <remarks>Default is true.
+        /// This property makes sense only if HasCheck is true</remarks>
+        public bool CheckBoxEnabled
+        {
+            get;
+            set;
         }
 
         /// <summary>

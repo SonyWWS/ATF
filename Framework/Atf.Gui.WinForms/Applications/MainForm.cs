@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Linq;
-
+using Sce.Atf.Adaptation;
 using Sce.Atf.Controls.PropertyEditing;
 
 namespace Sce.Atf.Applications
@@ -271,6 +271,9 @@ namespace Sce.Atf.Applications
             }
         }
 
+
+        
+
         /// <summary>
         /// Gets and sets the ToolStripContainer's state</summary>
         [Browsable(false)]
@@ -286,6 +289,28 @@ namespace Sce.Atf.Applications
                 xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", Encoding.UTF8.WebName, "yes"));
                 XmlElement root = xmlDoc.CreateElement("ToolStripContainerSettings");
                 xmlDoc.AppendChild(root);
+
+
+                // check if tool strip is locked       
+                bool locked = false;
+                var toolStrips = m_toolStripContainer.TopToolStripPanel.Controls.AsIEnumerable<ToolStrip>()
+                        .Concat(m_toolStripContainer.BottomToolStripPanel.Controls.AsIEnumerable<ToolStrip>())
+                        .Concat(m_toolStripContainer.LeftToolStripPanel.Controls.AsIEnumerable<ToolStrip>())
+                        .Concat(m_toolStripContainer.RightToolStripPanel.Controls.AsIEnumerable<ToolStrip>());
+                foreach (var toolStrip in toolStrips)
+                {
+                    // skip invisible or unnamed  toolStrip
+                    if (!toolStrip.Visible || toolStrip.Name == null || toolStrip.Name.Trim().Length == 0)
+                        continue;
+                    locked = toolStrip.GripStyle == ToolStripGripStyle.Hidden
+                        && !toolStrip.AllowItemReorder;
+                    break;
+                }
+
+                if (locked)
+                {
+                    root.SetAttribute("Locked", "true");
+                }
 
                 SavePanelState(m_toolStripContainer.TopToolStripPanel, "TopToolStripPanel", xmlDoc, root);
                 SavePanelState(m_toolStripContainer.LeftToolStripPanel, "LeftToolStripPanel", xmlDoc, root);
@@ -327,6 +352,16 @@ namespace Sce.Atf.Applications
                     XmlElement root = xmlDoc.DocumentElement;
                     if (root == null || root.Name != "ToolStripContainerSettings")
                         throw new InvalidOperationException("Invalid Toolstrip settings");
+
+
+                    if (root.GetAttribute("Locked") == "true")
+                    {
+                        foreach (var toolStrip in toolStrips.Values)
+                        {
+                            toolStrip.GripStyle = ToolStripGripStyle.Hidden;
+                            toolStrip.AllowItemReorder = false;
+                        }                        
+                    }
 
                     // walk xml to restore matching toolstrips and items to their previous state
                     XmlNodeList Panels = root.SelectNodes("ToolStripPanel");

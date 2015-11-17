@@ -92,6 +92,12 @@ namespace Sce.Atf
         [ImageResource("Selection16.png", "Selection24.png", "Selection32.png")]
         public static readonly string SelectionImage;
 
+
+        /// <summary>
+        /// "Select" icon name</summary>
+        [ImageResource("selection_find16x16.png", "selection_find24x24.png", "selection_find32x32.png")]
+        public static readonly string SelectionFindImage;
+
         /// <summary>
         /// "Save" icon name</summary>
         [ImageResource("Save16.png", "Save24.png", "Save32.png")]

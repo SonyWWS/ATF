@@ -106,7 +106,7 @@ namespace Sce.Atf.Applications
                 null,
                 CommandVisibility.ContextMenu, // context menu only
                 this);
-           
+
             m_commandService.RegisterCommand(
                Command.ViewInTextEditor,
                null,
@@ -117,6 +117,18 @@ namespace Sce.Atf.Applications
                null,
                CommandVisibility.ContextMenu, // context menu only
                this);
+
+            m_commandService.RegisterCommand(
+               Command.CreateNewPropertyEditor,
+               null,
+               null,
+               "Duplicate Property Editor".Localize(),
+               "Duplicate Property Editor".Localize(),
+               Keys.None,
+               null,
+               CommandVisibility.ContextMenu, // context menu only
+               this);
+
         }
 
         #endregion
@@ -129,7 +141,9 @@ namespace Sce.Atf.Applications
         /// <returns>True if client can do the command</returns>
         public virtual bool CanDoCommand(object commandTag)
         {
-            if (commandTag is Command && m_editingContext != null)
+            IPropertyEditingContext editingContext = GetPropertyEditingContext();
+
+            if (commandTag is Command && editingContext != null)
             {
                 switch ((Command)commandTag)
                 {
@@ -140,18 +154,18 @@ namespace Sce.Atf.Applications
 
                     case Command.PasteProperty:
                         {
-                            var lastObject = m_editingContext.Items.LastOrDefault();
+                            var lastObject = editingContext.Items.LastOrDefault();
 
                             return m_descriptor != null && CanPaste(m_copyValue, m_copyDescriptor, m_descriptor,
                                 m_descriptor.GetValue(lastObject));
                         }
 
                     case Command.ResetProperty:
-                        return CanResetValue(m_editingContext.Items, m_descriptor);                        
+                        return CanResetValue(editingContext.Items, m_descriptor);                        
 
                     case Command.CopyAll:
                         {
-                            foreach (var descriptor in m_editingContext.PropertyDescriptors)
+                            foreach (var descriptor in editingContext.PropertyDescriptors)
                             {
                                 if ( (descriptor is ChildPropertyDescriptor)
                                     || (descriptor is ChildAttributeCollectionPropertyDescriptor))
@@ -168,18 +182,19 @@ namespace Sce.Atf.Applications
                         return m_descriptorToValue.Count > 0;
 
                     case Command.ResetAll:
-                        foreach (PropertyDescriptor descriptor in m_editingContext.PropertyDescriptors)
+                        foreach (PropertyDescriptor descriptor in editingContext.PropertyDescriptors)
                         {
-                            if (CanResetValue(m_editingContext.Items, descriptor))
+                            if (CanResetValue(editingContext.Items, descriptor))
                                 return true;
                         }
                         break;
-
                        
                     case Command.ViewInTextEditor:
                         if (m_descriptor != null && m_descriptor.GetEditor(typeof(UITypeEditor)) is FileUriEditor)
                             return true;
                         break;
+                    case Command.CreateNewPropertyEditor:
+                        return editingContext == m_propertyEditor.PropertyGrid.PropertyGridView.EditingContext;
                 }
             }
 
@@ -191,14 +206,15 @@ namespace Sce.Atf.Applications
         /// <param name="commandTag">Command to be done</param>
         public virtual void DoCommand(object commandTag)
         {
-            ITransactionContext transactionContext = m_editingContext.As<ITransactionContext>();
+            IPropertyEditingContext editingContext = GetPropertyEditingContext();
+            ITransactionContext transactionContext = editingContext.As<ITransactionContext>();
             switch ((Command)commandTag)
             {
                 case Command.CopyProperty:
                     {
                         if (!(m_descriptor is ChildPropertyDescriptor))
                         {
-                            var lastObject = m_editingContext.Items.LastOrDefault();
+                            var lastObject = editingContext.Items.LastOrDefault();
                             m_copyDescriptor = m_descriptor;
                             m_copyValue = m_descriptor.GetValue(lastObject);
                         }
@@ -209,7 +225,7 @@ namespace Sce.Atf.Applications
                     {
                         transactionContext.DoTransaction(delegate
                         {
-                            foreach (object item in m_editingContext.Items)
+                            foreach (object item in editingContext.Items)
                             {
                                 PropertyUtils.SetProperty(item, m_descriptor, m_copyValue);
                             }
@@ -222,7 +238,7 @@ namespace Sce.Atf.Applications
                 case Command.ResetProperty:
                     transactionContext.DoTransaction(delegate
                         {
-                            PropertyUtils.ResetProperty(m_editingContext.Items, m_descriptor);
+                            PropertyUtils.ResetProperty(editingContext.Items, m_descriptor);
                         },
                         string.Format("Reset: {0}".Localize("'Reset' is a verb and this is the name of a command"),
                             m_descriptor.DisplayName));
@@ -230,8 +246,8 @@ namespace Sce.Atf.Applications
                 case Command.CopyAll:
                     {
                         m_descriptorToValue.Clear();
-                        var lastObject = m_editingContext.Items.LastOrDefault();                      
-                        foreach (var descriptor in m_editingContext.PropertyDescriptors)
+                        var lastObject = editingContext.Items.LastOrDefault();                      
+                        foreach (var descriptor in editingContext.PropertyDescriptors)
                         {
                             if( (descriptor is ChildPropertyDescriptor))
                                 continue;
@@ -250,13 +266,13 @@ namespace Sce.Atf.Applications
                     {
                         transactionContext.DoTransaction(delegate
                         {                            
-                            foreach (var descriptor in m_editingContext.PropertyDescriptors)
+                            foreach (var descriptor in editingContext.PropertyDescriptors)
                             {
                                 if (descriptor.IsReadOnly) continue; ;
                                 object value;
                                 if (m_descriptorToValue.TryGetValue(descriptor.GetPropertyDescriptorKey(), out value))
                                 {                                    
-                                    foreach (object item in m_editingContext.Items)
+                                    foreach (object item in editingContext.Items)
                                     {
                                         PropertyUtils.SetProperty(item,
                                             descriptor,
@@ -272,9 +288,9 @@ namespace Sce.Atf.Applications
                 case Command.ResetAll:
                     transactionContext.DoTransaction(delegate
                     {
-                        foreach (PropertyDescriptor descriptor in m_editingContext.PropertyDescriptors)
+                        foreach (PropertyDescriptor descriptor in editingContext.PropertyDescriptors)
                         {
-                            foreach (object item in m_editingContext.Items)
+                            foreach (object item in editingContext.Items)
                             {
                                 if (descriptor.CanResetValue(item))
                                     descriptor.ResetValue(item);
@@ -287,9 +303,14 @@ namespace Sce.Atf.Applications
                 case Command.ViewInTextEditor:
                     {
                         var fileUriEditor = m_descriptor.GetEditor(typeof(UITypeEditor)) as FileUriEditor;
-                        var fileUri = m_descriptor.GetValue(m_editingContext.Items.LastOrDefault()) as Uri;
+                        var fileUri = m_descriptor.GetValue(editingContext.Items.LastOrDefault()) as Uri;
                         if (fileUri != null && File.Exists(fileUri.LocalPath))
                             Process.Start(fileUriEditor.AssociatedTextEditor, fileUri.LocalPath);
+                    }
+                    break;
+                case Command.CreateNewPropertyEditor:
+                    {
+                        m_propertyEditor.Duplicate();
                     }
                     break;
             }
@@ -313,28 +334,16 @@ namespace Sce.Atf.Applications
         /// <param name="target">Right clicked object, or null if none</param>
         /// <returns>Enumeration of command tags for context menu</returns>
         public IEnumerable<object> GetCommands(object context, object target)
-        {
-            m_editingContext = null;
+        {        
+            m_contextRef = new WeakReference(context.As<IPropertyEditingContext>());            
+
+            IPropertyEditingContext editingContext = GetPropertyEditingContext();
             m_descriptor = null;
             PropertyDescriptor descriptor = target as PropertyDescriptor;
-
-            if (context != null)
+           
+            if(editingContext != null)
             {
-                // first try to get a client-defined IPropertyEditingContext
-                m_editingContext = context.As<IPropertyEditingContext>();
-                if (m_editingContext == null)
-                {
-                    // otherwise, try to get a client-defined ISelectionContext and adapt it
-                    ISelectionContext selectionContext = context.As<ISelectionContext>();
-                    m_defaultContext.SelectionContext = selectionContext;
-                    if (selectionContext != null)
-                        m_editingContext = m_defaultContext;
-                }                
-            }
-
-            if(m_editingContext != null)
-            {
-                 if (descriptor != null && m_editingContext.PropertyDescriptors.Contains(descriptor))
+                 if (descriptor != null && editingContext.PropertyDescriptors.Contains(descriptor))
                  {
                     m_descriptor = descriptor;
                     yield return Command.CopyProperty;
@@ -344,16 +353,28 @@ namespace Sce.Atf.Applications
                     yield return Command.PasteAll;
                     yield return Command.ResetAll;
                     yield return Command.ViewInTextEditor;
+                    if (!(context is IPropertyEditingContext))
+                        yield return Command.CreateNewPropertyEditor;
                  }
-                 else if(m_editingContext.Items.LastOrDefault() != null)
+                 else if(editingContext.Items.LastOrDefault() != null)
                  {
                     yield return Command.CopyAll;
                     yield return Command.PasteAll;
                     yield return Command.ResetAll;
+                    if (!(context is IPropertyEditingContext))
+                        yield return Command.CreateNewPropertyEditor;
                  }
             }
         }
 
+        private WeakReference m_contextRef;
+        private IPropertyEditingContext GetPropertyEditingContext()
+        {
+            IPropertyEditingContext edcontext = m_contextRef != null ?
+                (IPropertyEditingContext)m_contextRef.Target : null;
+            return edcontext ?? (m_propertyEditor == null ? null
+                : m_propertyEditor.PropertyGrid.PropertyGridView.EditingContext);
+        }
         private bool CanPaste(object srcValue, 
             PropertyDescriptor srcDescriptor, 
             PropertyDescriptor destDescriptor, 
@@ -408,9 +429,10 @@ namespace Sce.Atf.Applications
             PasteAll,
             ResetAll,
             ViewInTextEditor, 
+            CreateNewPropertyEditor,
         }
 
-        private IPropertyEditingContext m_editingContext;
+        //private IPropertyEditingContext m_editingContext;
         private PropertyDescriptor m_descriptor;
 
         // For copy/paste support from one property descriptor to another. This is different than
@@ -426,5 +448,10 @@ namespace Sce.Atf.Applications
         
         private readonly ICommandService m_commandService;
         private readonly SelectionPropertyEditingContext m_defaultContext = new SelectionPropertyEditingContext();
+
+        [Import(AllowDefault = false)]
+        private PropertyEditor m_propertyEditor;
+
+
     }
 }

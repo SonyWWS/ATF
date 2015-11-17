@@ -156,17 +156,38 @@ namespace Sce.Atf.Applications
         /// <param name="e">Event args from the tree control's DragOver event</param>
         protected virtual void OnDragOver(DragEventArgs e)
         {
-            bool showDragBetweenCue = TreeControl.ShowDragBetweenCue;
-            TreeControl.ShowDragBetweenCue = false;
 
-            bool canInsert = ApplicationUtil.CanInsert(
-                m_treeControlAdapter.TreeView,
-                m_treeControlAdapter.LastHit,
-                e.Data);
+            bool canInsert = false;
+
+            if (TreeControl.DragBetween)
+            {
+                TreeControl.Node parent, before;
+                Point clientPoint = TreeControl.PointToClient(new Point(e.X, e.Y));
+                if (TreeControl.GetInsertionNodes(clientPoint, out parent, out before))
+                {
+                    canInsert = ApplicationUtil.CanInsertBetween(
+                        m_treeControlAdapter.TreeView,
+                        parent != null ? parent.Tag : null,
+                        before != null ? before.Tag : null,
+                        e.Data);
+                }
+            }
+            else
+            {
+                canInsert = ApplicationUtil.CanInsert(
+                    m_treeControlAdapter.TreeView,
+                    m_treeControlAdapter.LastHit,
+                    e.Data);
+            }
+
+
+
             e.Effect = canInsert ? DragDropEffects.Move : DragDropEffects.None;
 
-            if (showDragBetweenCue != TreeControl.ShowDragBetweenCue)
-                TreeControl.Refresh();
+            // A refresh is required to display the drag-between cue.  
+            if (TreeControl.ShowDragBetweenCue)
+                TreeControl.Invalidate();
+
         }
 
         /// <summary>
@@ -174,17 +195,36 @@ namespace Sce.Atf.Applications
         /// <param name="e">Event args from the tree control's DragDrop event</param>
         protected virtual void OnDragDrop(DragEventArgs e)
         {
-            ApplicationUtil.Insert(
-                m_treeControlAdapter.TreeView, 
-                m_treeControlAdapter.LastHit, 
-                e.Data, 
-                "Drag and Drop", 
-                m_statusService);
+            if (TreeControl.DragBetween)
+            {
+                TreeControl.Node parent, before;
+                Point clientPoint = TreeControl.PointToClient(new Point(e.X, e.Y));
+                if (TreeControl.GetInsertionNodes(clientPoint, out parent, out before))
+                {
+                    ApplicationUtil.InsertBetween(
+                        m_treeControlAdapter.TreeView,
+                        parent != null ? parent.Tag : null,
+                        before != null ? before.Tag : null,
+                        e.Data,
+                        "Drag and Drop",
+                        m_statusService);
+                }
+            }
+            else
+            {
+                ApplicationUtil.Insert(
+                    m_treeControlAdapter.TreeView,
+                    m_treeControlAdapter.LastHit,
+                    e.Data,
+                    "Drag and Drop",
+                    m_statusService);
+            }
+
 
             if (!TreeControl.ShowDragBetweenCue)
                 return;
 
-            TreeControl.ShowDragBetweenCue = false;
+
             TreeControl.Invalidate();
         }
 

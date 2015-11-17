@@ -699,6 +699,7 @@ namespace Sce.Atf.Applications
             root.StateImageIndex = -1;
 
             root.IsLeaf = true;
+            root.CheckBoxEnabled = true;
             root.HasCheck = false;
             root.AllowSelect = false;
             root.AllowLabelEdit = false;
@@ -761,6 +762,7 @@ namespace Sce.Atf.Applications
 
             node.IsLeaf = info.IsLeaf;
             node.HasCheck = info.HasCheck;
+            node.CheckBoxEnabled = info.CheckBoxEnabled;
             node.CheckState = info.GetCheckState();
             node.AllowSelect = info.AllowSelect;
             node.AllowLabelEdit = info.AllowLabelEdit;
