@@ -92,7 +92,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             var group = type as Group;
             if (group == null)
-                return type.Inputs[index];
+            {
+                return type.Inputs.FirstOrDefault(p => p.Index == index);                
+            }
             return group.InputPin(index);
         }
 
@@ -105,7 +107,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             var group = type as Group;
             if (group == null)
-                return type.Outputs[index];
+            {
+                return type.Outputs.FirstOrDefault(p => p.Index == index);
+                
+            }
             return group.OutputPin(index);
         }
     }

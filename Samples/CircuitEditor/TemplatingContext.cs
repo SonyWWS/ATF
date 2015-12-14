@@ -113,13 +113,13 @@ namespace CircuitEditorSample
                         if (wire.InputElement == templateInstance)
                         {
                             wire.InputElement = copyInstance;
-                            wire.InputPin = copyInstance.Type.Inputs[wire.InputPin.Index];
+                            wire.InputPin = copyInstance.Type.GetInputPin(wire.InputPin.Index);
                             wire.SetPinTarget();
                         }
                         if (wire.OutputElement == templateInstance)
                         {
                             wire.OutputElement = copyInstance;
-                            wire.OutputPin = copyInstance.Type.Outputs[wire.OutputPin.Index];
+                            wire.OutputPin = copyInstance.Type.GetOutputPin(wire.OutputPin.Index);
                             wire.SetPinTarget();
                         }
                     }

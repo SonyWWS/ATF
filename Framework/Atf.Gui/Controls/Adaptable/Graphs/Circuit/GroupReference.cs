@@ -124,7 +124,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (m_targetGroup == null) //using MissingElementType
             {
                 var missingElement = Template.Target.As<Element>();
-                return missingElement.Type.Inputs[pinIndex];
+                return missingElement.Type.GetInputPin(pinIndex);
             }
             var pin = m_inputs.FirstOrDefault(x => x.Index == pinIndex);
             return pin;
@@ -139,7 +139,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (m_targetGroup == null)//using MissingElementType
             {
                 var missingElement = Template.Target.As<Element>();
-                return missingElement.Type.Outputs[pinIndex];
+                return missingElement.Type.GetOutputPin(pinIndex);
             }
             var pin = m_outputs.FirstOrDefault(x => x.Index == pinIndex);
             return pin;

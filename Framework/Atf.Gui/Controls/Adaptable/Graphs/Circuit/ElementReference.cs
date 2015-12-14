@@ -108,7 +108,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Input pin for given pin index</returns>
         public override ICircuitPin InputPin(int pinIndex)
         {
-            return Element.Type.Inputs[pinIndex];
+            return Element.Type.GetInputPin(pinIndex);            
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Output pin for given pin index</returns>
         public override ICircuitPin OutputPin(int pinIndex)
         {
-            return Element.Type.Outputs[pinIndex];
+            return Element.Type.GetOutputPin(pinIndex);            
         }
 
         /// <summary>

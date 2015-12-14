@@ -260,10 +260,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             outputPinIndex = OutputPin.Index; // GetAttribute<int>(OutputPinAttribute);
             inputPinIndex = InputPin.Index;   // GetAttribute<int>(InputPinAttribute);
-            return outputPinIndex < OutputElement.Type.Outputs.Count && inputPinIndex < InputElement.Type.Inputs.Count;
+            return OutputElement.Type.GetOutputPin(outputPinIndex) != null &&  InputElement.Type.GetInputPin(inputPinIndex) != null;
         }
-
-    
 
         private PinTarget m_inputPinTarget;
         private PinTarget m_outputPinTarget;

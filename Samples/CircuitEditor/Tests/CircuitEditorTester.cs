@@ -158,9 +158,9 @@ namespace CircuitEditorSample.Tests
 
 			Wire connection = domNode.As<Wire>();
 			connection.OutputElement = fromNode;
-			connection.OutputPin = fromNode.Type.Outputs[fromPinIndex];
+			connection.OutputPin = fromNode.Type.GetOutputPin(fromPinIndex);
 			connection.InputElement = toNode;
-			connection.InputPin = toNode.Type.Inputs[toPinIndex];
+			connection.InputPin = toNode.Type.GetInputPin(toPinIndex);
 			connection.SetPinTarget();
 			connection.Cast<WireStyleProvider<Module, Connection, ICircuitPin>>().EdgeStyle = EdgeStyle.DirectCurve;
 

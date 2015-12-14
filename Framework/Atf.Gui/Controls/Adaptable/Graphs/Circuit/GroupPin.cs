@@ -68,8 +68,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get
             {
-                ICircuitPin pin = IsInputSide ? PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.Inputs[PinTarget.LeafPinIndex] :
-                                                PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.Outputs[PinTarget.LeafPinIndex];
+                ICircuitPin pin = IsInputSide ? PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.GetInputPin(PinTarget.LeafPinIndex) :
+                                                PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.GetOutputPin(PinTarget.LeafPinIndex);
                 return pin.AllowFanIn;
             }
         }
@@ -80,8 +80,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             get
             {
-                ICircuitPin pin = IsInputSide ? PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.Inputs[PinTarget.LeafPinIndex] :
-                                                PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.Outputs[PinTarget.LeafPinIndex];
+                ICircuitPin pin = IsInputSide ? PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.GetInputPin(PinTarget.LeafPinIndex) :
+                                                PinTarget.LeafDomNode.Cast<ICircuitElement>().Type.GetOutputPin(PinTarget.LeafPinIndex);
                 return pin.AllowFanOut;
             }
         }

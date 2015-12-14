@@ -700,7 +700,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     var grpPin = MatchedGroupPin(connection.InputElement, connection.InputPin.Index, true);
                     if (grpPin == null)
                     {
-                        var inputPin = connection.InputElement.Type.Inputs[connection.InputPin.Index];
+                        //var inputPin = connection.InputElement.Type.Inputs[connection.InputPin.Index];
+                        var inputPin = connection.InputElement.InputPin(connection.InputPin.Index);
                         var groupPin = new DomNode(GroupPinType).As<GroupPin>();
                         groupPin.TypeName = inputPin.TypeName;
                         groupPin.InternalElement = connection.InputElement;
@@ -724,7 +725,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     var grpPin = MatchedGroupPin(connection.OutputElement, connection.OutputPin.Index, false);
                     if (grpPin == null)
                     {
-                        var outputPin = connection.OutputElement.Type.Outputs[connection.OutputPin.Index];
+                        //var outputPin = connection.OutputElement.Type.Outputs[connection.OutputPin.Index];
+                        var outputPin = connection.OutputElement.OutputPin(connection.OutputPin.Index);
                         var groupPin = new DomNode(GroupPinType).As<GroupPin>();
                         groupPin.TypeName = outputPin.TypeName;
                         groupPin.InternalElement = connection.OutputElement;
@@ -1158,7 +1160,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 foreach (var grpPin in m_inputs)
                 {
                     var leafModule = grpPin.PinTarget.LeafDomNode.Cast<Element>();
-                    var leafPin = leafModule.Type.Inputs[grpPin.PinTarget.LeafPinIndex];
+                    //var leafPin = leafModule.Type.Inputs[grpPin.PinTarget.LeafPinIndex];
+                    var leafPin = leafModule.Type.GetInputPin(grpPin.PinTarget.LeafPinIndex);
                     if (!leafPin.AllowFanIn)
                     {
                         GroupPin pin = grpPin;
@@ -1183,7 +1186,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 foreach (var grpPin in m_outputs)
                 {
                     var leafModule = grpPin.PinTarget.LeafDomNode.Cast<Element>();
-                    var leafPin = leafModule.Type.Outputs[grpPin.PinTarget.LeafPinIndex];
+                    var leafPin = leafModule.Type.GetOutputPin(grpPin.PinTarget.LeafPinIndex);
                     if (!leafPin.AllowFanOut)
                     {
                         GroupPin pin = grpPin;

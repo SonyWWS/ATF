@@ -55,8 +55,11 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_isConnector = isConnector;
             //m_size = size;
             m_image = image;
-            m_inputPins = inputPins.OrderBy(n => n.Index).ToArray();
-            m_outputPins = outputPins.OrderBy(n => n.Index).ToArray();
+            
+            //m_inputPins = inputPins.OrderBy(n => n.Index).ToArray();
+            m_inputPins = inputPins;
+            //m_outputPins = outputPins.OrderBy(n => n.Index).ToArray();
+            m_outputPins = outputPins;
         }
 
         /// <summary>

@@ -1227,7 +1227,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 (element.Is<ICircuitGroupType<TElement, TWire, TPin>>() && element.Cast<ICircuitGroupType<TElement, TWire, TPin>>().Expanded))
             {
                 // normal picking rectangles; the user may want to select the circuit element instead, for example
-                int pinIndex = 0;
+              //  int pinIndex = 0;
                 int iVisiblePin = 0;
                 foreach (TPin pin in allPins)
                 {
@@ -1236,20 +1236,20 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (pin == visiblePins[iVisiblePin])
                     {
                         ++iVisiblePin;
-                        int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                        int y = elementY + GetPinOffset(element, pin.Index, inputSide);
                         var normalPinBounds = new RectangleF(pinX, y, m_pinSize, m_pinSize);
                         normalPinBounds.Inflate(pickTolerance, pickTolerance);
                         if (normalPinBounds.Contains(p.X, p.Y))
                             return pin;
                     }
-                    ++pinIndex;
+                 //   ++pinIndex;
                 }
             }
             else
             {
                 // Use Extra-large picking rectangles for the pins since the user is actively making a connection.
                 // info.Size.Width is larger (?) and more accurate for the width than element.Bounds.
-                int pinIndex = 0;
+              //  int pinIndex = 0;
                 int iVisiblePin = 0;
                 foreach (TPin pin in allPins)
                 {
@@ -1258,7 +1258,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (pin == visiblePins[iVisiblePin])
                     {
                         ++iVisiblePin;
-                        int y = elementY + GetPinOffset(element, pinIndex, inputSide);
+                        int y = elementY + GetPinOffset(element, pin.Index, inputSide);
                         EdgeRouteDrawMode drawMode = GetEdgeRouteDrawMode(element, pin);
                         if (drawMode == EdgeRouteDrawMode.CanConnect)
                         {
@@ -1268,7 +1268,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                                 return pin;
                         }
                     }
-                    ++pinIndex;
+                 //   ++pinIndex;
                 }
             }
             return null;
