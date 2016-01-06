@@ -44,7 +44,7 @@ namespace Sce.Atf.Direct2D
                 // force  1 dip = 1 pixel
                 s_rtprops.DpiX = 96.0f;
                 s_rtprops.DpiY = 96.0f;
-                s_rtprops.PixelFormat = new PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied);
+                s_rtprops.PixelFormat = new PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied);
                 s_rtprops.Usage = RenderTargetUsage.GdiCompatible;
                 s_rtprops.MinLevel = FeatureLevel.Level_DEFAULT;
 
@@ -92,12 +92,13 @@ namespace Sce.Atf.Direct2D
             var wicBitmap = new SharpDX.WIC.Bitmap(s_wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPBGRA,
                 SharpDX.WIC.BitmapCreateCacheOption.CacheOnLoad);
 
+            
             var rtprops = new RenderTargetProperties 
             {
                 Type = RenderTargetType.Default,
                 DpiX = 96.0f, 
                 DpiY = 96.0f,
-                PixelFormat = new PixelFormat(Format.Unknown, AlphaMode.Unknown), 
+                PixelFormat = new PixelFormat(Format.Unknown, SharpDX.Direct2D1.AlphaMode.Unknown), 
                 Usage = RenderTargetUsage.None,
                 MinLevel = FeatureLevel.Level_DEFAULT
             };
@@ -307,16 +308,14 @@ namespace Sce.Atf.Direct2D
         /// <returns>A new instance of D2dTextLayout</returns>
         public static D2dTextLayout CreateTextLayout(string text, D2dTextFormat textFormat, float layoutWidth, float layoutHeight, Matrix3x2F transform)
         {
-            var matrix = new Matrix3x2
-            {
-                M11 = transform.M11,
-                M12 = transform.M12,
-                M21 = transform.M21,
-                M22 = transform.M22,
-                M31 = transform.DX,
-                M32 = transform.DY
-            };
-
+            var matrix = Matrix.Identity;
+            matrix.M11 = transform.M11;
+            matrix.M12 = transform.M12;
+            matrix.M21 = transform.M21;
+            matrix.M22 = transform.M22;
+            matrix.M31 = transform.DX;
+            matrix.M32 = transform.DY;
+            
             var textlayout = new TextLayout(s_dwFactory, text, textFormat.NativeTextFormat, 
                 layoutWidth, layoutHeight, 1, matrix, true);
 

@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -1155,27 +1156,36 @@ namespace UsingDirect2D
         {
             const int NumFrames = 1000;
             var allFrames = new long[NumFrames];
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+                        
             for (int i = 0; i < NumFrames; i++)
             {
-                long startTick = stopwatch.ElapsedTicks;
+                long startTick = Stopwatch.GetTimestamp();
                 Render();
-                long endTick = stopwatch.ElapsedTicks;
+                long endTick = Stopwatch.GetTimestamp();
                 allFrames[i] = endTick - startTick;
             }
-            stopwatch.Stop();
 
+            
             Array.Sort(allFrames); //sorts from lowest to highest
-            long meanTicks = allFrames[NumFrames / 2];
+            long sumticks = allFrames.Sum();
+
+            double frq = Stopwatch.Frequency;
+            
+            double medianframetime = (double)allFrames[NumFrames / 2] / frq;
+            double totalframetime = (double)sumticks / frq;
+            double fastest = (double)allFrames[0] / frq;
+            double slowest = (double)allFrames[allFrames.Length-1] / frq;                 
+            int medianFPS = (int)Math.Round(1.0 / medianframetime);
+
 
             var report = new StringBuilder();
             report.AppendLine("Rendered " + NumFrames + " frames");
             report.AppendLine();
-            report.AppendLine("Mean frame rendering time: " + meanTicks + " ticks");
-            report.AppendLine("Fastest frame rendering time: " + allFrames[0] + " ticks");
-            report.AppendLine("Slowest frame rendering time: " + allFrames[NumFrames - 1] + " ticks");
-            report.AppendLine("Total rendering time: " + stopwatch.ElapsedMilliseconds + "ms");
+            report.AppendLine("Median frame per second FPS: " + medianFPS);
+            report.AppendLine("Median frame rendering time: " + Math.Round(1000.0 * medianframetime, 3) + "ms");
+            report.AppendLine("Fastest frame rendering time: " + Math.Round(1000.0 * fastest, 3) + "ms");
+            report.AppendLine("Slowest frame rendering time: " + Math.Round(1000.0 * slowest, 3) + "ms");
+            report.AppendLine("Total rendering time: " + Math.Round(1000.0 * totalframetime,2) + "ms");
             MessageBox.Show(report.ToString(), "Performance Report");
         }
 
@@ -1259,14 +1269,14 @@ namespace UsingDirect2D
 
         private enum SampleDrawings
         {
-            FillSolidRects,            
+            FillSolidRects,
+            FillSolidRoundedRects,
             FillGradientRects1,
             FillGradientRects2,
             FillGradientRects3,
             DrawTriangle,
             DrawOrbs,            
-            FillBmpRects,
-            FillSolidRoundedRects,
+            FillBmpRects,            
             DrawRects,
             DrawRectsWithBitmapMasks,
             DrawRoundedRects,

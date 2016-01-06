@@ -458,14 +458,12 @@ namespace Sce.Atf.Controls
                 if (m_autoScroll && !VisibleClientRectangle.Contains(m_currentPoint) && !m_autoScrollTimer.Enabled)
                     m_autoScrollTimer.Start();
 
-                if (m_isMultiSelecting)
+                if (m_isMultiSelecting && DrawSelectionRectangleUsingGdi)
                 {
-                    Rectangle rect;
-
-                    rect = MakeSelectionRect(m_last, m_firstPoint);
+                    Rectangle rect = MakeSelectionRect(LastMouseDragPoint, FirstMouseDragPoint);
                     ControlPaint.DrawReversibleFrame(rect, BackColor, FrameStyle.Dashed);
 
-                    rect = MakeSelectionRect(m_currentPoint, m_firstPoint);
+                    rect = MakeSelectionRect(CurrentMouseDragPoint, FirstMouseDragPoint);
                     ControlPaint.DrawReversibleFrame(rect, BackColor, FrameStyle.Dashed);
                 }
                 else if (m_isScrolling)
@@ -492,6 +490,37 @@ namespace Sce.Atf.Controls
 
             base.OnMouseMove(e);
         }
+
+        /// <summary>
+        /// Gets the current mouse cursor position during a drag operation, in client coordinates
+        /// (relative to the upper left corner of the form). Comes from MouseEventArgs.</summary>
+        protected Point CurrentMouseDragPoint
+        {
+            get { return m_currentPoint; }
+        }
+
+        /// <summary>
+        /// Gets the previous mouse cursor position during a drag operation, in client coordinates
+        /// (relative to the upper left corner of the form). Comes from MouseEventArgs.</summary>
+        protected Point LastMouseDragPoint
+        {
+            get { return m_last; }
+        }
+
+        /// <summary>
+        /// Gets the first mouse cursor position during a drag operation, in client coordinates
+        /// (relative to the upper left corner of the form). Comes from MouseEventArgs.</summary>
+        protected Point FirstMouseDragPoint
+        {
+            get { return m_firstPoint; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether this class should draw the selection rectangle, which will be
+        /// done with GDI calls. If a derived class uses Direct2D, then set this property to
+        /// false and make use of IsMultiSelecting, FirstMouseDragPoint, and CurrentMouseDragPoint
+        /// to draw the selection rectangle during a paint event.</summary>
+        protected bool DrawSelectionRectangleUsingGdi = true;
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"></see> event</summary>
@@ -678,7 +707,7 @@ namespace Sce.Atf.Controls
             m_autoScrollTimer.Stop();
             if (!VisibleClientRectangle.Contains(m_currentPoint))
             {
-                if (m_isMultiSelecting)
+                if (m_isMultiSelecting && DrawSelectionRectangleUsingGdi)
                 {
                     Rectangle selectionRect = MakeSelectionRect(m_currentPoint, m_firstPoint);
                     ControlPaint.DrawReversibleFrame(selectionRect, BackColor, FrameStyle.Dashed);
@@ -710,7 +739,7 @@ namespace Sce.Atf.Controls
                 OnAutoScroll();
                 base.Update(); // without this, the selection rect doesn't draw correctly
 
-                if (m_isMultiSelecting)
+                if (m_isMultiSelecting && DrawSelectionRectangleUsingGdi)
                 {
                     Rectangle rect = MakeSelectionRect(m_currentPoint, m_firstPoint);
                     ControlPaint.DrawReversibleFrame(rect, BackColor, FrameStyle.Dashed);

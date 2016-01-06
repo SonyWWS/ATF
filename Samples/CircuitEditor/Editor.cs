@@ -323,6 +323,9 @@ namespace CircuitEditorSample
 
             var annotationAdaptor = new D2dAnnotationAdapter(m_theme); // display annotations under diagram
 
+            var d2dRectangleDragSelector = new D2dRectangleDragSelector();
+            var d2dRectangleDragRenderer = new D2dRectangleDragRenderer(d2dRectangleDragSelector);
+
             if (circuitNode.Is<Circuit>())
             {
                 var circuitAdapter = new D2dGraphAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, transformAdapter);
@@ -339,10 +342,11 @@ namespace CircuitEditorSample
                 circuitConnectionEditAdapter.EdgeRouteTraverser = CircuitUtil.EdgeRouteTraverser;
 
                 control.Adapt(
+                    // This end of the list is drawn first and receives mouse events last.
                     hoverAdapter,
                     scrollbarAdapter,
                     autoTranslateAdapter,
-                    new RectangleDragSelector(),
+                    d2dRectangleDragSelector, //Needs to be before annotationAdaptor, so that drag-and-selecting text works.
                     transformAdapter,
                     viewingAdapter,
                     canvasAdapter,
@@ -350,14 +354,16 @@ namespace CircuitEditorSample
                     mouseWheelManipulator,
                     new KeyboardIOGraphNavigator<Module, Connection, ICircuitPin>(),
                     new D2dGridAdapter(),
-                    annotationAdaptor,
+                    annotationAdaptor, //Needs to be before circuitAdapter so that comments appear under elements.
                     circuitAdapter,
-                    circuitModuleEditAdapter,
+                    circuitModuleEditAdapter, //lets user move circuit elements on canvas
                     circuitConnectionEditAdapter,
                     new LabelEditAdapter(),
+                    d2dRectangleDragRenderer,
                     new SelectionAdapter(),
                     new DragDropAdapter(m_statusService),
                     new ContextMenuAdapter(m_commandService, m_contextMenuCommandProviders)
+                    // This end of the list is drawn last and receives mouse events first.
                     );
             }
             else if (circuitNode.Is<Group>())
@@ -378,10 +384,11 @@ namespace CircuitEditorSample
                 canvasAdapter.UpdateTranslateMinMax = groupPinEditor.UpdateTranslateMinMax;
 
                 control.Adapt(
+                    // This end of the list is drawn first and receives mouse events last.
                   hoverAdapter,
                   scrollbarAdapter,
                   autoTranslateAdapter,
-                  new RectangleDragSelector(),
+                  d2dRectangleDragSelector,
                   transformAdapter,
                   viewingAdapter,
                   canvasAdapter,
@@ -395,9 +402,11 @@ namespace CircuitEditorSample
                   circuitConnectionEditAdapter,
                   new LabelEditAdapter(),
                   groupPinEditor,
+                  d2dRectangleDragRenderer,
                   new SelectionAdapter(),
                   new DragDropAdapter(m_statusService),
                   new ContextMenuAdapter(m_commandService, m_contextMenuCommandProviders)
+                    // This end of the list is drawn last and receives mouse events first.
                   );
             }
             else throw new NotImplementedException(

@@ -1,4 +1,4 @@
 These SharpDX dlls came from:
 http://sharpdx.org/
-
-These are the unsigned .NET 2.0 versions.
+SharpDX V2.6.3
+These are the unsigned .NET 4.0 versions.

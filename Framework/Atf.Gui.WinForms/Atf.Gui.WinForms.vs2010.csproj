@@ -230,6 +230,8 @@
     </Compile>
     <Compile Include="Controls\Adaptable\D2dAnnotationAdapter.cs" />
     <Compile Include="Controls\Adaptable\D2dGridAdapter.cs" />
+    <Compile Include="Controls\Adaptable\D2dRectangleDragRenderer.cs" />
+    <Compile Include="Controls\Adaptable\D2dRectangleDragSelector.cs" />
     <Compile Include="Controls\Adaptable\DiagramExpander.cs" />
     <Compile Include="Controls\Adaptable\DiagramLabel.cs" />
     <Compile Include="Controls\Adaptable\DiagramPin.cs" />
