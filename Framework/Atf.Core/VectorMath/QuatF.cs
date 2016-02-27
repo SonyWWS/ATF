@@ -217,9 +217,11 @@ namespace Sce.Atf.VectorMath
                 Y = (float)wwSqrt;
                 Z = (float)(m.M32 / (2.0 * wwSqrt));
             }
-
-            Y = 0;
-            Z = 1;
+            else
+            {
+                Y = 0;
+                Z = 1;
+            }
         }
 
         /// <summary>

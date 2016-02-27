@@ -111,6 +111,15 @@ namespace Sce.Atf.Controls.CurveEditing
         }
 
         /// <summary>
+        ///  <see cref="Sce.Atf.Controls.CurveEditing.CurveCanvas.PasteConnect"/>
+        /// </summary>
+        [DefaultValue(true)]
+        public bool PasteConnect
+        {
+            get { return m_curveControl.PasteConnect; }
+            set { m_curveControl.PasteConnect = value; }
+        }
+        /// <summary>
         /// Gets or sets origin lock mode</summary>
         public OriginLockMode LockOrigin
         {
@@ -303,7 +312,10 @@ namespace Sce.Atf.Controls.CurveEditing
             var snapToCurve = new ToolStripButton();
 
             m_undoBtn = new ToolStripButton();
-            m_redoBtn = new ToolStripButton();            
+            m_redoBtn = new ToolStripButton();
+            m_cutBtn = new ToolStripButton();
+            m_copyBtn = new ToolStripButton();
+            m_pasteBtn = new ToolStripButton();
             m_delBtn = new ToolStripButton();
 
             // suspendlayouts            
@@ -455,6 +467,21 @@ namespace Sce.Atf.Controls.CurveEditing
                 FlipY = !FlipY;
             };
 
+            
+            var connectMenu = new ToolStripMenuItem("Connect".Localize());
+            connectMenu.Name = "connect";
+            connectMenu.Click += delegate
+            {
+                PasteConnect = !PasteConnect;
+            };
+
+            var pasteOptionsMenu = new ToolStripMenuItem("Paste Options".Localize());
+            pasteOptionsMenu.DropDownItems.Add(connectMenu);
+            pasteOptionsMenu.DropDownOpening += delegate
+            {
+                connectMenu.Checked = PasteConnect;
+            };
+
             m_optionsMenu.DropDownOpening += delegate { m_flipYMenuItem.Checked = FlipY; };
                        
             inputmodeMenu.DropDownItems.Add(m_basicMenuItem);
@@ -484,6 +511,8 @@ namespace Sce.Atf.Controls.CurveEditing
                 }
             };
 
+            
+            m_optionsMenu.DropDownItems.Add(pasteOptionsMenu);
             m_optionsMenu.DropDownItems.Add(inputmodeMenu);
             m_optionsMenu.DropDownItems.Add(lockmenu);
             m_optionsMenu.DropDownItems.Add(m_flipYMenuItem);
@@ -542,7 +571,10 @@ namespace Sce.Atf.Controls.CurveEditing
             m_topStrip.Items.AddRange(m_infinityBtns);
             m_topStrip.Items.Add(new ToolStripSeparator());
             m_topStrip.Items.Add(m_undoBtn);
-            m_topStrip.Items.Add(m_redoBtn);            
+            m_topStrip.Items.Add(m_redoBtn);
+            m_topStrip.Items.Add(m_cutBtn);
+            m_topStrip.Items.Add(m_copyBtn);
+            m_topStrip.Items.Add(m_pasteBtn);
             m_topStrip.Items.Add(m_delBtn);
             m_topStrip.Items.Add(new ToolStripSeparator());
             m_topStrip.Location = new Point(0, 31);
@@ -783,6 +815,31 @@ namespace Sce.Atf.Controls.CurveEditing
             m_redoBtn.ToolTipText = "Redo";
             m_redoBtn.Click += delegate { m_curveControl.Redo(); };
 
+            m_cutBtn.Name = "cutBtn";
+            m_cutBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            m_cutBtn.Alignment = ToolStripItemAlignment.Left;
+            m_cutBtn.Image = ResourceUtil.GetImage24(Resources.CutImage);
+            m_cutBtn.ImageScaling = ToolStripItemImageScaling.None;
+            m_cutBtn.ToolTipText = "Cut selected points".Localize();
+            m_cutBtn.Click += delegate { m_curveControl.Cut(); };
+
+            m_copyBtn.Name = "copyBtn";
+            m_copyBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            m_copyBtn.Alignment = ToolStripItemAlignment.Left;
+            m_copyBtn.Image = ResourceUtil.GetImage24(Resources.CopyImage);
+            m_copyBtn.ImageScaling = ToolStripItemImageScaling.None;
+            m_copyBtn.ToolTipText = "Copy selected points".Localize();
+            m_copyBtn.Click += delegate { m_curveControl.Copy(); };
+
+            m_pasteBtn.Name = "pasteBtn";
+            m_pasteBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            m_pasteBtn.Alignment = ToolStripItemAlignment.Left;
+            m_pasteBtn.Image = ResourceUtil.GetImage24(Resources.PasteImage);
+            m_pasteBtn.ImageScaling = ToolStripItemImageScaling.None;
+            m_pasteBtn.ToolTipText = "Paste selected points".Localize();
+            m_pasteBtn.Click += delegate { m_curveControl.Paste(); };
+
+
             m_delBtn.Name = "delBtn";
             m_delBtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
             m_delBtn.Alignment = ToolStripItemAlignment.Left;
@@ -972,7 +1029,10 @@ namespace Sce.Atf.Controls.CurveEditing
             bool hasSelection = m_curveControl.Selection.Count > 0;
             
             m_undoBtn.Enabled = m_curveControl.HistoryContext.CanUndo;
-            m_redoBtn.Enabled = m_curveControl.HistoryContext.CanRedo;            
+            m_redoBtn.Enabled = m_curveControl.HistoryContext.CanRedo;
+            m_cutBtn.Enabled = hasSelection;
+            m_copyBtn.Enabled = hasSelection;
+            m_pasteBtn.Enabled = m_curveControl.CanPaste;
             m_delBtn.Enabled = hasSelection;            
         }
 
@@ -1028,8 +1088,17 @@ namespace Sce.Atf.Controls.CurveEditing
                 item.Tag = curve;
                 m_curvesListView.Items.Add(item);
             }
-            m_curvesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);            
+            m_curvesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);                        
             m_curvesListView.EndUpdate();
+            // select first visible curve.
+            foreach (ListViewItem item in m_curvesListView.Items)
+            {
+                if (item.Checked)
+                {
+                    item.Selected = true;
+                    break;
+                }
+            }
         }
 
         private void SetUI(bool enable)
@@ -1402,7 +1471,10 @@ namespace Sce.Atf.Controls.CurveEditing
         #region private fields
         private bool m_showTangentEditing = true;
         private ToolStripButton m_undoBtn;
-        private ToolStripButton m_redoBtn;        
+        private ToolStripButton m_redoBtn;
+        private ToolStripButton m_cutBtn;
+        private ToolStripButton m_copyBtn;
+        private ToolStripButton m_pasteBtn;
         private ToolStripButton m_delBtn;
         private ToolStripSeparator m_tanSeparator1;
         private ToolStripSeparator m_tanSeparator2;

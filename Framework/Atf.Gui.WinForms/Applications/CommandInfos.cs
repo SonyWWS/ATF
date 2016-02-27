@@ -69,19 +69,7 @@ namespace Sce.Atf.Applications
             var menuItem = commandInfo.GetMenuItem();
             if (menuItem == null)
                 return;
-
-            string displayString = string.Empty;
-            foreach (Keys k in commandInfo.Shortcuts)
-            {
-                if (k == Keys.None)
-                    continue;
-
-                if (displayString != string.Empty)
-                    displayString += " ; ";
-
-                displayString += Sce.Atf.KeysUtil.KeysToString(k, true);
-            }
-            menuItem.ShortcutKeyDisplayString = displayString;
+            menuItem.ShortcutKeyDisplayString = commandInfo.ShortcutKeyDisplayString;
         }
     }
 }

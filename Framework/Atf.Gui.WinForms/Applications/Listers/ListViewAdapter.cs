@@ -44,6 +44,7 @@ namespace Sce.Atf.Applications
             m_control.MouseUp += control_MouseUp;
             m_control.DragOver += control_DragOver;
             m_control.DragDrop += control_DragDrop;
+            m_control.SelectedIndexChanged += Control_SelectedIndexChanged;
         }
 
         /// <summary>
@@ -159,7 +160,6 @@ namespace Sce.Atf.Applications
                         }
                     }
                 }
-
                 Load();
             }
         }
@@ -292,76 +292,47 @@ namespace Sce.Atf.Applications
             Point clientPoint = m_control.PointToClient(new Point(e.X, e.Y));
             SetLastHit(clientPoint);
         }
+        private void Control_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (m_selectionContext == null
+                || m_changingSelection)
+                return;
+            try
+            {
+                m_changingSelection = true;
+                List<object> newSelection = new List<object>();                
+                foreach(ListViewItem listItem in m_control.SelectedItems)
+                {
+                    if (listItem.Tag != null)
+                        newSelection.Add(listItem.Tag);
+                }
+                m_selectionContext.SetRange(newSelection);
+                // if ItemSelected has any subscribers,
+                // then raise event for new selected items
+                // and for removed items.
+                var handler = ItemSelected;
+                if (handler != null)
+                {
+                    var oldSelectionSet = new HashSet<object>(m_selectionContext.Selection);
+                    var newSelectionSet = new HashSet<object>(newSelection);
+
+                    foreach (object removed in oldSelectionSet.Except(newSelectionSet))
+                        OnItemSelected(removed, false);
+                    
+                    foreach (object added in newSelection.Except(oldSelectionSet))
+                        OnItemSelected(added, true);
+                }
+            }
+            finally
+            {
+                m_changingSelection = false;
+            }
+        }
 
         private void control_MouseUp(object sender, MouseEventArgs e)
         {
-            if (m_selectionContext == null)
-                return;
-            
             Point clientPoint = new Point(e.X, e.Y);
             SetLastHit(clientPoint);
-
-            ListViewItem hitItem = Control.GetItemAt(e.X, e.Y);
-            if (hitItem == null)
-                return;
-
-            object item = hitItem.Tag;
-            if (item == null)
-                return;
-
-            HashSet<object> oldSelection = null;
-            HashSet<object> newSelection = null;
-            var handler = ItemSelected;
-            if (handler != null)
-                oldSelection = new HashSet<object>(m_selectionContext.Selection);
-
-            Keys keys = System.Windows.Forms.Control.ModifierKeys;
-            if (keys == Keys.Shift)
-            {
-                if (m_selectionStartItem != null)
-                {
-                    int startIndex = Math.Min(m_selectionStartItem.Index, hitItem.Index);
-                    int endIndex = Math.Max(m_selectionStartItem.Index, hitItem.Index);
-                    newSelection = new HashSet<object>();
-                    for (int i = startIndex; i <= endIndex; i++)
-                    {
-                        var listViewItem = Control.Items[i];
-                        if (listViewItem != null && listViewItem.Tag != null)
-                            newSelection.Add(listViewItem.Tag);
-                    }
-                    m_selectionContext.SetRange(newSelection);
-                }
-                else
-                {
-                    m_selectionContext.Set(hitItem);
-                    m_selectionStartItem = hitItem;
-                }
-            }
-            else if (keys == Keys.Control)
-            {
-                if (m_selectionContext.SelectionContains(item))
-                    m_selectionContext.Remove(item);
-                else
-                    m_selectionContext.Add(item);
-                m_selectionStartItem = hitItem;
-            }
-            else
-            {
-                m_selectionContext.Set(item);
-                m_selectionStartItem = hitItem;
-            }
-
-            if (handler != null)
-            {
-                if (newSelection == null)
-                    newSelection = new HashSet<object>(m_selectionContext.Selection);
-
-                foreach (object removed in oldSelection.Except(newSelection))
-                    OnItemSelected(removed, false);
-
-                foreach (object added in newSelection.Except(oldSelection))
-                    OnItemSelected(added, true);
-            }
         }
 
         private void control_MouseDown(object sender, MouseEventArgs e)
@@ -372,7 +343,7 @@ namespace Sce.Atf.Applications
 
         private void OnItemSelected(object t, bool selected)
         {
-            EventHandler<ItemSelectedEventArgs<object>> handler = ItemSelected;
+            var handler = ItemSelected;
             if (handler != null)
                 handler(this, new ItemSelectedEventArgs<object>(t, selected));
         }
@@ -493,8 +464,10 @@ namespace Sce.Atf.Applications
 
             if (m_selectionContext != null)
             {
+                m_changingSelection = true;
                 foreach (var pair in m_itemToListItemMap)
                     pair.Value.Selected = m_selectionContext.SelectionContains(pair.Key);
+                m_changingSelection = false;
             }
             m_control.FocusedItem = null;
 
@@ -845,7 +818,6 @@ namespace Sce.Atf.Applications
         private readonly Dictionary<string, int> m_columnWidths = new Dictionary<string, int>();
         private bool m_allowSorting;
         private bool m_changingSelection;
-
-        private ListViewItem m_selectionStartItem;
+        
     }
 }

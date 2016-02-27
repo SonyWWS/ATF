@@ -21,7 +21,7 @@ namespace Sce.Atf.Wpf.Applications
         /// <param name="cancelled">Whether or not work cancelled</param>
         public ProgressCompleteEventArgs(Exception progressError, object progressResult, bool cancelled)
         {
-            ProgressError = ProgressError;
+            ProgressError = progressError;
             ProgressResult = progressResult;
             Cancelled = cancelled;
         }

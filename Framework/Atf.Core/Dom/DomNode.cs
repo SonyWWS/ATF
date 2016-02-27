@@ -329,7 +329,28 @@ namespace Sce.Atf.Dom
         {
             object attribute = GetLocalAttribute(attributeInfo);
             if (attribute == null)
-                attribute = attributeInfo.DefaultValue;
+            {
+                // this if statement fixes the following  bug
+                // when an attribute value if default then it wouldn't be serialized by default.
+                // in this case calling GetAttribute() using AttributeInfo of the base node.
+                // then the default value of the base node's attributeInfo is returned
+                // but this incorrect if the derived node has different default value for 
+                // same attribute. (The issues can be reproduced using SimpleDomEditorSample.                                
+                if (attributeInfo.OwningType != m_type)
+                {
+                    // find the attribute owned by this node.
+                    var owningAttribInfo = m_type.GetAttributeInfo(attributeInfo.Name);
+                    if (attributeInfo.Equivalent(owningAttribInfo))
+                        attribute = owningAttribInfo.DefaultValue;
+                }
+                // if this node doesn't own the passed attributeInfo then use the default 
+                // value of the passed attributeInfo.
+                if(attribute == null)
+                {
+                    attribute = attributeInfo.DefaultValue;
+                }
+            }
+                
 
             return attribute;
         }

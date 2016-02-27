@@ -1,6 +1,7 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +24,8 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Default constructor</summary>
         public CurveCanvas()
-        {            
+        {
+            m_pasteAt = new PasteAt(this);
             OnlyEditSelectedCurves = true;
             m_renderer = new CurveRenderer();
             m_renderer.SetCartesian2dCanvas(this);
@@ -47,26 +49,19 @@ namespace Sce.Atf.Controls.CurveEditing
             m_contextMenu.AutoClose = true;
             m_contextMenu.Opening += menustrip_Opening;
 
+            List<CommandMenuItem> menuItemList = new List<CommandMenuItem>();
+            menuItemList.AddRange(new CommandMenuItem[] {null,null,null,null,null,null });
 
-            m_undoMenuItem = new ToolStripMenuItem("Undo".Localize());
-            m_undoMenuItem.Click += delegate { Undo(); };
-            m_undoMenuItem.ShortcutKeyDisplayString = KeysUtil.KeysToString(ShortcutKeys.Undo, true);
-
-            m_redoMenuItem = new ToolStripMenuItem("Redo".Localize());
-            m_redoMenuItem.Click += delegate { Redo(); };
-            m_redoMenuItem.ShortcutKeyDisplayString = KeysUtil.KeysToString(ShortcutKeys.Redo, true);
-
-            m_deleteMenuItem = new ToolStripMenuItem("Delete".Localize());
-            m_deleteMenuItem.Click += delegate { Delete(); };
-            m_deleteMenuItem.ShortcutKeyDisplayString = KeysUtil.KeysToString(ShortcutKeys.Delete, true);
-
-            m_contextMenu.Items.Add(m_undoMenuItem);
-            m_contextMenu.Items.Add(m_redoMenuItem);
+            menuItemList[UndoMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditUndo, Undo);            
+            menuItemList[RedoMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditRedo, Redo);            
             m_contextMenu.Items.Add(new ToolStripSeparator());
-            m_contextMenu.Items.AddRange(new ToolStripItem[]
-            {            
-                m_deleteMenuItem
-            });
+            menuItemList[CutMenuItemIndex] = new CommandMenuItem(m_contextMenu,CommandInfo.EditCut, Cut);            
+            menuItemList[CopyMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditCopy, Copy);            
+            menuItemList[PasteMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditPaste, Paste);            
+            menuItemList[DeleteMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditDelete, Delete);
+            m_commandItems = menuItemList.AsReadOnly();
+            SkinService.ApplyActiveSkin(m_contextMenu);
+            PasteConnect = true;
         }
        
         /// <summary>
@@ -141,7 +136,127 @@ namespace Sce.Atf.Controls.CurveEditing
             UpdateCurveLimits();
             Invalidate();
         }
-        
+
+        /// <summary>
+        /// Cuts selected points</summary>
+        public void Cut()
+        {                       
+            if (m_selection.Count > 0)
+            {
+                var clipboard = new IControlPoint[m_selection.Count];
+                m_transactionContext.DoTransaction(delegate
+                {
+                    int i = 0;
+                    foreach (IControlPoint cp in m_selection)
+                    {
+                        ICurve curve = cp.Parent;
+                        curve.RemoveControlPoint(cp);
+                        clipboard[i++] = cp;
+                    }
+                    s_clipboard = clipboard.OrderBy(item => item.X).ToArray();
+                    foreach (ICurve curve in m_selectedCurves)
+                        CurveUtils.ComputeTangent(curve);
+                }, m_commandItems[CutMenuItemIndex].MenuItem.Text);
+                ClearSelection();
+                UpdateCurveLimits();
+                Invalidate();
+                
+            }
+        }
+
+        /// <summary>
+        /// Copies selected points to internal clipboard</summary>
+        public void Copy()
+        {                       
+            if (m_selection.Count > 0)
+            {
+                var clipboard = new IControlPoint[m_selection.Count];
+                int i = 0;
+                foreach (IControlPoint pt in m_selection)
+                {
+                    var cpt = pt.Clone();
+                    if (cpt.Parent != null) cpt.Parent.RemoveControlPoint(cpt);
+                    clipboard[i++] = cpt;
+                }
+                s_clipboard = clipboard.OrderBy(item => item.X).ToArray();
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Pastes into selected curves from internal clipboard</summary>
+        public void Paste()
+        {
+            var curves = m_pasteAt.GetTargetCurve();
+            bool anycurve = curves.Any();           
+            if (!anycurve || m_pasteAt.NumberOfTargetCurves < 1) return;
+
+            // control points in s_clipboard are already sorted along x-axis.
+            var sortedPoints = s_clipboard.Select(cp => cp.Clone()).ToArray();
+            float origX = sortedPoints[0].X;
+            float origY = sortedPoints[0].Y;
+            // transform all the points to local space
+            // where the first point starts at (0,0)
+            if (PasteConnect)
+            {
+                sortedPoints.ForEach(item =>
+                {
+                    item.X -= origX;                   
+                });
+            }
+            else
+            {
+                sortedPoints.ForEach(item =>
+                {
+                    item.X -= origX;
+                    item.Y -= origY;
+                });
+            }
+            
+            
+            int pasteIndex;
+            float gx0 = m_pasteAt.Position;
+            float gx1 = gx0 + sortedPoints[sortedPoints.Length - 1].X;
+            m_transactionContext.DoTransaction(delegate
+                {
+                    pasteIndex = 0;
+                    foreach (var curve in curves)
+                    {                        
+                        var deleteList = new List<IControlPoint>();
+                        for (int i = 0; i < curve.ControlPoints.Count; i++)
+                        {
+                            var cpt = curve.ControlPoints[i];
+                            if (cpt.X < gx0 )
+                                pasteIndex = i + 1;
+
+                            if (cpt.X >= gx0 && cpt.X <= gx1)
+                                deleteList.Add(cpt);
+                        }
+
+                        deleteList.ForEach(p => curve.RemoveControlPoint(p));
+
+                        var cv = CurveUtils.CreateCurveEvaluator(curve);
+                        float gy = cv.Evaluate(gx0);
+
+                        // paste new control points
+                        foreach (var cp in sortedPoints)
+                        {
+                            var newCpt = cp.Clone();
+                            newCpt.X += gx0;
+                            if (!PasteConnect) newCpt.Y += gy;
+                            if (newCpt.X > curve.MaxX) break;
+                            if (newCpt.X < curve.MinX) continue;
+                            curve.InsertControlPoint(pasteIndex++, newCpt);
+                        }
+
+                        CurveUtils.ForceMinDistance(curve);
+                        CurveUtils.ComputeTangent(curve);  
+                    }
+                },
+                m_commandItems[PasteMenuItemIndex].MenuItem.Text);                        
+            Invalidate();           
+        }
+
         /// <summary>
         /// Deletes selected control points</summary>
         public void Delete()
@@ -157,7 +272,7 @@ namespace Sce.Atf.Controls.CurveEditing
                     }
                     foreach (ICurve curve in m_selectedCurves)
                         CurveUtils.ComputeTangent(curve);
-                }, "Delete".Localize());
+                }, m_commandItems[DeleteMenuItemIndex].MenuItem.Text);
                 ClearSelection();
                 UpdateCurveLimits();
                 Invalidate();                               
@@ -530,6 +645,18 @@ namespace Sce.Atf.Controls.CurveEditing
                 Invalidate();
             }
         }
+
+
+        /// <summary>
+        /// Gets whether can paste</summary>
+        public bool CanPaste
+        {
+            get
+            {
+                return m_pasteAt.NumberOfTargetCurves > 0;
+            }
+        }
+
         /// <summary>
         /// Gets or sets enabling auto snap drag point to other curve points</summary>
         public bool AutoPointSnap
@@ -599,6 +726,24 @@ namespace Sce.Atf.Controls.CurveEditing
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether to paste keys at target Y 
+        /// or at the Y of the first point of the pasted curve
+        /// segment.
+        /// if true it will paste at the Y coordinate of the first
+        /// point of the pasted curve segment.
+        /// </summary>
+        [DefaultValue(true)]
+        public bool PasteConnect
+        {
+            get { return m_pasteConnect; }
+            set
+            {
+                m_pasteConnect = value;
+                Invalidate();
+            }
+        }
+        private bool m_pasteConnect;
         /// <summary>
         /// Gets or sets input mode</summary>
         public InputModes InputMode
@@ -675,18 +820,14 @@ namespace Sce.Atf.Controls.CurveEditing
             //Keys kc = keyData & Keys.KeyCode;
             //bool CtrlPressed = (keyData & Keys.Control) == Keys.Control;
 
-            if (keyData == ShortcutKeys.Undo)
+            var cmdItem = GetCommandItem(keyData);
+            if (cmdItem != null)
             {
-                Undo();
-            }
-            else if (keyData == ShortcutKeys.Redo)
-            {
-                Redo();
-            }            
+                cmdItem.ClickAction();
+            }           
             else if (keyData == ShortcutKeys.Fit)
             {
                 Fit();
-
             }
             else if (keyData == ShortcutKeys.FitAll)
             {
@@ -714,10 +855,7 @@ namespace Sce.Atf.Controls.CurveEditing
             }            
             else
             {
-                consumed = keyData == ShortcutKeys.Cut
-                    || keyData == ShortcutKeys.Copy
-                    || keyData == ShortcutKeys.Paste;
-                    
+                consumed = false;                    
             }
            
             if (!consumed)
@@ -742,7 +880,7 @@ namespace Sce.Atf.Controls.CurveEditing
             MouseEditAction editAction = MouseEditAction.None;
             m_moveAxis = MoveAxis.None;
             m_selectionClickPoint = ClickPoint;
-            
+            m_pasteAt.HitTest(ClickPoint.X);
             m_originalValues = null;
             m_scalePivot = ClickGraphPoint;
             m_limitHit = null;
@@ -753,18 +891,25 @@ namespace Sce.Atf.Controls.CurveEditing
             m_visibleCurveCount = m_curves.Count(c => c.Visible);
 
             // create list of curves for picking.            
+            //m_pickableCurves = m_curves.Where(c => c.Visible
+            //    && (m_visibleCurveCount == 1 || !OnlyEditSelectedCurves || m_editSet.Count == 0 || m_editSet.Contains(c))).Reverse();
+            
             m_pickableCurves = m_curves.Where(c => c.Visible
-                && (m_visibleCurveCount == 1 || !OnlyEditSelectedCurves || m_editSet.Count == 0 || m_editSet.Contains(c))).Reverse();
+                && (!OnlyEditSelectedCurves ||  m_editSet.Contains(c))).Reverse();
 
             if (m_autoSnapToX)
-            {
                 m_scalePivot.X = CurveUtils.SnapTo(m_scalePivot.X, MajorTickX);
-            }
+           
             if (m_autoSnapToY)
-            {
                 m_scalePivot.Y = CurveUtils.SnapTo(m_scalePivot.Y, MajorTickY);
+
+
+            if (m_pasteAt.IsPicked)
+            {
+                m_mouseDownAction = MouseDownAction.PasteAtMove;
+                Cursor = m_cursors[CursorType.MoveHz];
             }
-            if (m_inputMode == InputModes.Basic)
+            else if (m_inputMode == InputModes.Basic)
             {
                 editAction = BasicOnMouseDown(e);
             }
@@ -786,7 +931,11 @@ namespace Sce.Atf.Controls.CurveEditing
             if (DraggingOverThreshold)
             {
                 MouseEditAction editAction = MouseEditAction.None;
-                if (m_mouseDownAction == MouseDownAction.Pan)
+                if (m_mouseDownAction == MouseDownAction.PasteAtMove)
+                {
+                    editAction = MouseEditAction.PasteAtMove;
+                }
+                else if (m_mouseDownAction == MouseDownAction.Pan)
                 {
                     editAction = MouseEditAction.Panning;
                 }
@@ -836,7 +985,11 @@ namespace Sce.Atf.Controls.CurveEditing
             }
             else if (e.Button == MouseButtons.None && m_curves.Count > 0)
             {
-                if (PickCurveLimits(out m_limitSide) != null)
+                if (m_pasteAt.HitTest(CurrentPoint.X))
+                {
+                    this.Cursor = m_cursors[CursorType.MoveHz];                    
+                }
+                else if (PickCurveLimits(out m_limitSide) != null)
                 {
                     this.Cursor = (m_limitSide == CurveLimitSides.Left ||
                       m_limitSide == CurveLimitSides.Right) ? m_cursors[CursorType.MoveHz]
@@ -1041,6 +1194,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 }
 
                 pen.Dispose();
+                m_pasteAt.Draw(e.Graphics);
             }
 
             //draw selection rect.
@@ -1052,7 +1206,6 @@ namespace Sce.Atf.Controls.CurveEditing
         #endregion
        
         #region private helper methods
-
 
         private MouseEditAction AdvancedOnMouseDown(MouseEventArgs e)
         {
@@ -1369,16 +1522,18 @@ namespace Sce.Atf.Controls.CurveEditing
         private void menustrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool hasSelection = m_selection.Count > 0;
-            ContextMenuStrip menustrip = sender as ContextMenuStrip;
-            foreach (ToolStripItem item in menustrip.Items)
+            
+            foreach (var cmdMenu in m_commandItems)
             {
-                item.Enabled = hasSelection;
+                cmdMenu.UpdateMenuItems();
+                cmdMenu.MenuItem.Enabled = hasSelection;                
             }
 
-            m_undoMenuItem.Enabled = m_historyContext.CanUndo;
-            m_undoMenuItem.Text = "Undo".Localize() + " " + m_historyContext.UndoDescription;
-            m_redoMenuItem.Enabled = m_historyContext.CanRedo;
-            m_redoMenuItem.Text = "Redo".Localize() + " " + m_historyContext.RedoDescription;            
+            m_commandItems[UndoMenuItemIndex].MenuItem.Enabled = m_historyContext.CanUndo;
+            m_commandItems[UndoMenuItemIndex].MenuItem.Text = "Undo".Localize() + " " + m_historyContext.UndoDescription;
+            m_commandItems[RedoMenuItemIndex].MenuItem.Enabled = m_historyContext.CanRedo;
+            m_commandItems[RedoMenuItemIndex].MenuItem.Text = "Redo".Localize() + " " + m_historyContext.RedoDescription;
+            m_commandItems[PasteMenuItemIndex].MenuItem.Enabled = CanPaste;
         }
 
         /// <summary>
@@ -1428,6 +1583,11 @@ namespace Sce.Atf.Controls.CurveEditing
 
             switch (action)
             {
+                case MouseEditAction.PasteAtMove:
+                    {
+                        m_pasteAt.Position = CurrentGraphPoint.X;
+                    }
+                    break;
                 case MouseEditAction.Panning:
                     {
                         Pan_d = new PointD(ClickPan_d.X + dx, ClickPan_d.Y + dy);
@@ -2151,9 +2311,8 @@ namespace Sce.Atf.Controls.CurveEditing
                     cpt.EditorData.SelectedRegion = PointSelectionRegions.Point;
                 curves[cpt.Parent] = null;
             }
-            m_selectedCurves = new ICurve[curves.Count];
-            curves.Keys.CopyTo(m_selectedCurves, 0);
 
+            m_selectedCurves = curves.Keys.ToArray();           
             SelectionChanged(this, EventArgs.Empty);
         }
 
@@ -2174,6 +2333,18 @@ namespace Sce.Atf.Controls.CurveEditing
             }
         }
 
+        private CommandMenuItem GetCommandItem(Keys shortcut)
+        {
+            var atfKey = KeysInterop.ToAtf(shortcut);
+            foreach (var cmdItem in m_commandItems)
+            {
+                if (cmdItem.CmdInfo.IsShortcut(atfKey))
+                    return cmdItem;
+            }
+            return null;
+        }
+
+
         #endregion
       
         #region private fields
@@ -2190,11 +2361,17 @@ namespace Sce.Atf.Controls.CurveEditing
         private object m_context;
         private ITransactionContext m_transactionContext = new DefaultTransactionContext();
         private IHistoryContext m_historyContext = new DefaultHistoryContext();
-        private readonly ContextMenuStrip m_contextMenu;
-        private readonly ToolStripMenuItem m_undoMenuItem;
-        private readonly ToolStripMenuItem m_redoMenuItem;        
-        private readonly ToolStripMenuItem m_deleteMenuItem;        
 
+        private readonly ContextMenuStrip m_contextMenu;
+        private readonly int UndoMenuItemIndex = 0;
+        private readonly int RedoMenuItemIndex = 1;
+        private readonly int CutMenuItemIndex = 2;
+        private readonly int CopyMenuItemIndex = 3;
+        private readonly int PasteMenuItemIndex = 4;
+        private readonly int DeleteMenuItemIndex = 5;
+        private readonly ReadOnlyCollection<CommandMenuItem> m_commandItems;        
+        private static IControlPoint[] s_clipboard = new IControlPoint[0];
+        
         private int m_visibleCurveCount; // number of visible curves. Cmputed on mouse down.
         private IEnumerable<ICurve> m_pickableCurves; // List of curves that can be picked. Computed on mouse down.
             
@@ -2223,7 +2400,7 @@ namespace Sce.Atf.Controls.CurveEditing
         private ReadOnlyCollection<ICurve> m_curves = s_emptyCurves;
         private static readonly ReadOnlyCollection<ICurve> s_emptyCurves = (new List<ICurve>()).AsReadOnly();
         private readonly CurveRenderer m_renderer;
-
+        private readonly PasteAt m_pasteAt;
         private const float MaxAngle = 1.5706217938697f; // = 89.99 degree
         private const float MinAngle = -1.5706217938697f; // =-89.99 degree        
         
@@ -2232,7 +2409,133 @@ namespace Sce.Atf.Controls.CurveEditing
         #endregion
 
         #region  enums and classes
+        private class PasteAt
+        {
+            private bool m_setInitialPosition = true;
+            public PasteAt(CurveCanvas canvas)
+            {
+                m_canvas = canvas;
 
+            }
+            public int NumberOfTargetCurves
+            {
+                get;
+                private set;
+            }
+            public bool IsPicked
+            {
+                get;
+                set;
+            }
+            public bool HitTest(float cx)
+            {
+                bool oldIsPick = IsPicked;
+                const float pickTolerance = 3; // pixels
+
+                // perform hit testing in screen space.
+                float cPos = m_canvas.GraphToClient(Position);
+                IsPicked = Visible && Math.Abs(cPos - cx) < pickTolerance;
+                if (oldIsPick != IsPicked) m_canvas.Invalidate();
+                return IsPicked;
+            }
+            public bool Visible
+            {
+                get;
+                private set;
+            }
+            public IEnumerable<ICurve> GetTargetCurve()
+            {
+                if (s_clipboard.Length > 0)
+                {
+                    if (m_canvas.OnlyEditSelectedCurves)
+                        return m_canvas.m_editSet.Where(c => c.Visible);
+                    return m_canvas.SelectedCurves.Where(c => c.Visible);
+                }
+                return EmptyArray<ICurve>.Instance;               
+            }
+            public void Draw(Graphics g)
+            {                               
+                NumberOfTargetCurves = 0;
+                var curves = GetTargetCurve();
+                Visible = curves.Any();
+                if (!Visible) return;
+
+                if (m_setInitialPosition)
+                {// one time, set initial position.
+                    m_setInitialPosition = false;
+                    float xs = m_canvas.ClientRectangle.Width / 2;
+                    Position = m_canvas.ClientToGraph(xs);
+                }
+
+                      
+                RectangleF crect = m_canvas.ClientRectangle;
+                float gMinX = m_canvas.ClientToGraph(crect.X);
+                float gMaxX = m_canvas.ClientToGraph(crect.Right);
+                // keep it in viewport.
+                Position = Math.Max(Position, gMinX + 3);
+                Position = Math.Min(Position, gMaxX - 3);
+
+                float cPos = m_canvas.GraphToClient(Position);
+
+                s_pen.Color = IsPicked ? s_hiColor : s_color;
+                s_brush.Color = IsPicked ? s_hiColor : s_color;               
+                g.DrawLine(s_pen, cPos, crect.Y, cPos, crect.Bottom);
+                
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                foreach (var curve in curves)
+                {
+                    bool inCurveLimit = (Position >= curve.MinX && Position <= curve.MaxX);
+                    if (inCurveLimit) NumberOfTargetCurves++;
+
+                    if (!m_canvas.PasteConnect)
+                    {
+                        ICurveEvaluator cv = CurveUtils.CreateCurveEvaluator(curve);
+                        float y = cv.Evaluate(Position);
+                        DrawIndicator(g, y, inCurveLimit);
+                    }
+                }
+
+                if (m_canvas.PasteConnect)
+                {
+                    DrawIndicator(g, s_clipboard[0].Y, NumberOfTargetCurves > 0);
+                }
+            }
+
+            private void DrawIndicator(Graphics g, float gy, bool valid)
+            {                
+                Vec2F gpt = new Vec2F(Position, gy);
+                Vec2F pt = m_canvas.GraphToClient(gpt);                                
+                if (NumberOfTargetCurves > 0)
+                {
+                    RectangleF ptRect = new RectangleF(0, 0, 9, 9);
+                    ptRect.X = pt.X - ptRect.Width / 2;
+                    ptRect.Y = pt.Y - ptRect.Height / 2;
+                    g.FillEllipse(s_brush, ptRect);
+                }
+                else
+                {
+                    pt.X = pt.X - s_noAction.Width / 2;
+                    pt.Y = pt.Y - s_noAction.Height / 2;
+                    g.DrawImage(s_noAction, pt);
+                }
+            }
+            static PasteAt()
+            {
+                s_pen = new Pen(s_color);
+                s_pen.Width = 1.0f;
+                s_brush = new SolidBrush(s_color);
+            }
+           
+            /// <summary>
+            /// Position of x-coordinate in graph space.</summary>
+            public float Position;
+            private static Color s_color = Color.Yellow;
+            private static Color s_hiColor = Color.FromArgb(255, 255, 128);
+            private static Pen s_pen;
+            private static SolidBrush s_brush;
+            private readonly CurveCanvas m_canvas;
+        }
         private class DefaultTransactionContext : ITransactionContext
         {
             #region ITransactionContext Members
@@ -2307,6 +2610,39 @@ namespace Sce.Atf.Controls.CurveEditing
             #endregion
         }
 
+        
+        // Pairs CommandInfo with tool strip menu item.
+        private class CommandMenuItem
+        {
+            public CommandMenuItem(ContextMenuStrip contextMenu, CommandInfo cmd, Action click)
+            {
+                ClickAction = click;
+                CmdInfo = cmd;
+                MenuItem = new ToolStripMenuItem(cmd.MenuText);
+                MenuItem.Click += (s, e) => ClickAction();
+                contextMenu.Items.Add(MenuItem);                
+            }
+            
+            public void UpdateMenuItems()
+            {               
+                //var commandService = (CommandService)CmdInfo.CommandService;
+                //CommandService.CommandControls commandControls =
+                //    commandService == null ? null : commandService.GetCommandControls(CmdInfo);
+                
+                //if (commandControls != null && commandControls.MenuItem != null)
+                //    MenuItem.Text = commandControls.MenuItem.Text;
+                //else                    
+                //    MenuItem.Text = CmdInfo.MenuText;
+
+                MenuItem.Text = CmdInfo.MenuText;
+                MenuItem.ShortcutKeyDisplayString = CmdInfo.ShortcutKeyDisplayString;
+            }
+            public readonly Action ClickAction;
+            public readonly CommandInfo CmdInfo;
+            public readonly ToolStripMenuItem MenuItem;
+            
+        }
+
         /// <summary>
         /// Default shortcut keys</summary>
         public static class ShortcutKeys
@@ -2316,16 +2652,7 @@ namespace Sce.Atf.Controls.CurveEditing
 
             /// <summary>Redo</summary>            
             public static Keys Redo = Keys.Control | Keys.Y;
-
-            /// <summary>Cut</summary>            
-            public static Keys Cut = Keys.Control | Keys.X;
-
-            /// <summary>Copy</summary>            
-            public static Keys Copy = Keys.Control | Keys.C;
-
-            /// <summary>Paste</summary>            
-            public static Keys Paste = Keys.Control | Keys.V;
-
+            
             /// <summary>Delete</summary>            
             public static Keys Delete = Keys.Delete;
 
@@ -2405,6 +2732,9 @@ namespace Sce.Atf.Controls.CurveEditing
 
             /// <summary>Resize curve limit</summary>
             CurveLimitResize,
+
+            /// <summary> Move paste at line</summary>
+            PasteAtMove,
         }
 
         /// <summary>
@@ -2439,7 +2769,8 @@ namespace Sce.Atf.Controls.CurveEditing
             ConstrainedMove,
             FreeScale,
             ConstrainedScale,
-            CurveLimitResize
+            CurveLimitResize,            
+            PasteAtMove
         }
 
         private enum CursorType
@@ -2507,7 +2838,7 @@ namespace Sce.Atf.Controls.CurveEditing
         Basic,
 
         /// <summary>
-        /// Sdvanced mode, similiar to Maya graph editor</summary>
+        /// Advanced mode, similar to Maya graph editor</summary>
         Advanced,
     }
 }

@@ -54,14 +54,13 @@ namespace Sce.Atf.Dom
         /// Synchronize undo/redo status among HistoryContexts that shares the global history
         /// </summary>
         /// <param name="newStatus"> the new status to set</param>
-        internal void SynchronizeUndoRedoStatus(bool newStatus)
+        public virtual void SynchronizeUndoRedoStatus(bool newStatus)
         {
             m_historyContext.UndoingOrRedoing = newStatus;
             foreach (var h in m_childHistoryContexts)
                 h.UndoingOrRedoing = newStatus;
         }
-
-        private HistoryContext m_historyContext;
+        protected HistoryContext m_historyContext;
         private HashSet<HistoryContext> m_childHistoryContexts;
     }
 }

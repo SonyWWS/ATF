@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Sce.Atf.Input;
 
 namespace Sce.Atf.Applications
@@ -132,8 +133,9 @@ namespace Sce.Atf.Applications
             ImageName = imageName;
             Visibility = visibility;
             HelpUrl = helpUrl;
-
+            
             ShortcutsEditable = true;
+            ShortcutsChanged += (e, s) => RebuildShortcutKeyDisplayString();
             ShortcutsChanged.Raise(this, EventArgs.Empty);
         }
 
@@ -173,6 +175,7 @@ namespace Sce.Atf.Applications
             HelpUrl = helpUrl;
             
             ShortcutsEditable = true;
+            ShortcutsChanged += (e, s) => RebuildShortcutKeyDisplayString();
             ShortcutsChanged.Raise(this, EventArgs.Empty);
         }
 
@@ -297,6 +300,40 @@ namespace Sce.Atf.Applications
         }
 
         /// <summary>
+        /// Check if the given key is a shortcut key</summary>        
+        public bool IsShortcut(Keys key)
+        {
+            return m_shortcutSet.Contains(key);
+        }
+
+
+        /// <summary>
+        /// Gets shortcut display string</summary>
+        public string ShortcutKeyDisplayString
+        {
+            get;
+            private set;
+        }
+
+        private void RebuildShortcutKeyDisplayString()
+        {
+            // rebuild on when ShortcutChanged event is raised.
+
+            StringBuilder displayString = new StringBuilder();
+            foreach (Keys k in Shortcuts)
+            {
+                if (k == Keys.None)
+                    continue;
+
+                if (displayString.Length > 0)
+                    displayString.Append(" ; ");
+                displayString.Append(KeysUtil.KeysToString(k, true));
+            }
+
+            ShortcutKeyDisplayString = displayString.ToString();
+        }
+
+        /// <summary>
         /// Gets or sets the collection of keyboard shortcuts that can activate this command.
         /// For key-combos, use bitwise OR (e.g. "Keys.Control | Keys.S" for Ctrl-S). 
         /// For no shortcuts, pass an enumeration containing only Keys.None.
@@ -307,6 +344,7 @@ namespace Sce.Atf.Applications
             set
             {
                 m_shortcuts = new List<Keys>(value);
+                m_shortcutSet = new HashSet<Keys>(value);
                 ShortcutsChanged.Raise(this, EventArgs.Empty);
             }
         }
@@ -338,6 +376,7 @@ namespace Sce.Atf.Applications
         public void ClearShortcuts()
         {
             m_shortcuts.Clear();
+            m_shortcutSet.Clear();
             ShortcutsChanged.Raise(this, EventArgs.Empty);
         }
 
@@ -351,9 +390,13 @@ namespace Sce.Atf.Applications
                 return;
 
             m_shortcuts.Remove(Keys.None);
+            m_shortcutSet.Remove(Keys.None);
 
             if (!m_shortcuts.Contains(shortcut))
+            {
                 m_shortcuts.Add(shortcut);
+                m_shortcutSet.Add(shortcut);
+            }
 
             ShortcutsChanged.Raise(this, EventArgs.Empty);
         }
@@ -368,7 +411,11 @@ namespace Sce.Atf.Applications
                 return;
 
             if (m_shortcuts.Remove(shortcut))
+            {
+                m_shortcutSet.Remove(shortcut);
                 ShortcutsChanged.Raise(this, EventArgs.Empty);
+            }
+                
         }
 
         /// <summary>
@@ -1109,6 +1156,7 @@ namespace Sce.Atf.Applications
         private static int s_count;
 
         private List<Keys> m_shortcuts;
+        private HashSet<Keys> m_shortcutSet = new HashSet<Keys>();
         private List<Keys> m_defaultShortcuts;
         private CommandVisibility m_visibility;
         private ICommandService m_commandService;
