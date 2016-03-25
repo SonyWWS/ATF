@@ -829,7 +829,7 @@ namespace Sce.Atf.Applications
 
         private DockPaneStripBase GetDockPaneStripBase(DockContent dockContent)
         {
-            DockPane dockPane = dockContent.Pane;
+            DockPane dockPane = dockContent?.Pane;
             if (dockPane != null)
             {
                 foreach (Control c in dockPane.Controls)
