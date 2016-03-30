@@ -12,8 +12,9 @@ using Sce.Atf.Input;
 namespace Sce.Atf.Controls.Adaptable
 {
     /// <summary>
-    /// Component that sets background color of annotations
-    /// </summary>
+    /// Component that gives context menu commands for quickly setting the background color of
+    /// annotations (or any selected object whose color can be set using an IColorContext). </summary>
+    /// <remarks>This class could have been called ColoringCommands.</remarks>
     [InheritedExport(typeof(IInitializable))]
     [InheritedExport(typeof(IContextMenuCommandProvider))]
     [InheritedExport(typeof(AnnotatingCommands))]
@@ -32,14 +33,14 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Preset annotation color</summary>
+        /// Preset color</summary>
         public class ColorPreset
         {
             /// <summary>
-            /// Gets or sets annotation background color name</summary>
+            /// Gets or sets the background color name</summary>
             public string Name { get; set; }
             /// <summary>
-            /// Gets or sets annotation background color value</summary>
+            /// Gets or sets the background color value</summary>
             public Color Color { get; set; }
         }
 
@@ -96,7 +97,7 @@ namespace Sce.Atf.Controls.Adaptable
                     if (selectionContext != null)
                     {
                         enabled = selectionContext.Selection.Any() &&
-                                  selectionContext.Selection.All(x => x.Is<IAnnotation>());
+                            selectionContext.Selection.All(x => context.CanSetColor(ColoringTypes.BackColor, x));
                     }
                 }
             }
@@ -117,9 +118,9 @@ namespace Sce.Atf.Controls.Adaptable
                 transactionContext.DoTransaction(() =>
                     {
                         var selectionContext = context.As<ISelectionContext>();
-                        foreach (var annotation in selectionContext.Selection.AsIEnumerable<IAnnotation>())
-                            context.SetColor(ColoringTypes.BackColor, annotation,colorPreset.Color);
-                    },"Annotation Color");
+                        foreach (var selectedObject in selectionContext.Selection)
+                            context.SetColor(ColoringTypes.BackColor, selectedObject, colorPreset.Color);
+                    },"Background Color");
                    
             }
         }
