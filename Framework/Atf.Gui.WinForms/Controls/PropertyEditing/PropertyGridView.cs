@@ -235,7 +235,14 @@ namespace Sce.Atf.Controls.PropertyEditing
         public object Pick(Point clientPnt, out int bottom, out IPropertyEditingContext editingContext)
         {
             editingContext = EditingContext;
-            int top = bottom = -m_scroll;
+            bottom = -m_scroll;
+
+            // This check is important for the recursive call below, because FindChildControls()
+            //  may return child controls in an arbitrary order or that aren't visible.
+            if (clientPnt.Y < Top || clientPnt.Y >= Bottom || !Visible)
+                return null;
+
+            int top = bottom;
             int defaultMiddleX = GetMiddleX();//name & value divider's X coordinate, in client coordinates
             foreach (object obj in VisibleItems)
             {
