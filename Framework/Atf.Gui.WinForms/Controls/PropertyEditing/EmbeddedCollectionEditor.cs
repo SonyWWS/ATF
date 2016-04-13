@@ -930,8 +930,37 @@ namespace Sce.Atf.Controls.PropertyEditing
                 m_context.TransactionContext.DoTransaction(
                     delegate
                     {
+                        // we should enable the inserter to return null
+                        // when inserting is disallowed; the use case here
+                        // is when you want to enforce rules regarding the
+                        // collection being edited, e.g. a list of game
+                        // object components where a given game object can
+                        // only have one of a particular component.
                         object item = inserter.InsertItemFunc();
-                        OnItemInserted(item);
+
+                        // when the inserter returns null, we can assume
+                        // there was no effect; but, because we're inside a
+                        // transaction an item will still be placed into the
+                        // history.
+
+                        // the only way to avoid cluttering the history
+                        // with what are effectively NOOPs is to throw an
+                        // InvalidTransactionException here.
+
+                        // this isn't going to crash the program;
+                        // ITransactionContext will catch the exception and
+                        // cancel the transaction.
+                        if (item == null)
+                        {
+                            throw new InvalidTransactionException(
+                                "Couldn't add collection item".Localize(),
+                                true // whether to report error
+                            );
+                        }
+                        else
+                        {
+                            OnItemInserted(item);
+                        }
                     }, "Insert child".Localize());
 
                 if (m_addSplitButton.Visible && m_addSplitButton.DropDownItems.Count > 1)
