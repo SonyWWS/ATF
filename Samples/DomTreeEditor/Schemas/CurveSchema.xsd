@@ -38,6 +38,7 @@
       <xs:attribute name="preInfinity" type="xs:string" use="required"/>
       <xs:attribute name="postInfinity" type="xs:string" use ="required"/>
       <xs:attribute name="color" type="xs:integer" default="-65536" />
+      <xs:attribute name="visible" type="xs:boolean" default="true"/>
       <xs:attribute name="xLabel" type="xs:string" default="X - Axis" />
       <xs:attribute name="yLabel" type="xs:string" default="Y - Axis" />
   </xs:complexType>

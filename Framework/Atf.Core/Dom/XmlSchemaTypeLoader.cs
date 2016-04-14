@@ -751,32 +751,32 @@ namespace Sce.Atf.Dom
                     }
 
                     if (childNodeType != null)
-                    {
-                        int minOccurs;
-                        int maxOccurs;
+                    {                        
+                        int minOccurs = (int)Math.Min(element.MinOccurs, Int32.MaxValue);
+                        int maxOccurs = (int)Math.Min(element.MaxOccurs, Int32.MaxValue);
 
-                        // If <xs:choice> is within a <xs:sequence>, choose the most relaxed constraints.
                         if (particle.Parent is XmlSchemaChoice)
                         {
                             var parent = (XmlSchemaChoice)particle.Parent;
-                            minOccurs = (int)Math.Min(Math.Min(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
-                            maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);
+                            if (parent.MinOccurs != 1)
+                                minOccurs = (int)Math.Min(Math.Max(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
+                            if (parent.MaxOccurs != 1)
+                                maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);                            
                         }
                         else if (particle.Parent is XmlSchemaSequence)
-                        {
-                            var parent = (XmlSchemaSequence)particle.Parent;
-                            minOccurs = (int)Math.Min(Math.Min(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
-                            maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);
+                        {   
+                            var parent = (XmlSchemaSequence)particle.Parent;                            
+                            if (parent.MinOccurs != 1)
+                                minOccurs = (int)Math.Min(Math.Max(element.MinOccurs, parent.MinOccurs), Int32.MaxValue);
+                            if (parent.MaxOccurs != 1)
+                                maxOccurs = (int)Math.Min(Math.Max(element.MaxOccurs, parent.MaxOccurs), Int32.MaxValue);
+                            
                         }
-                        else
-                        {
-                            minOccurs = (int)Math.Min(element.MinOccurs, Int32.MaxValue);
-                            maxOccurs = (int)Math.Min(element.MaxOccurs, Int32.MaxValue);
-                        }
-
+                      
                         ChildInfo childInfo = new ChildInfo(GetFieldName(element.QualifiedName), childNodeType, maxOccurs > 1);
 
-                        if (minOccurs > 0 || maxOccurs < Int32.MaxValue)
+                        if ( (minOccurs > 0 || maxOccurs < Int32.MaxValue)
+                              && minOccurs <= maxOccurs)
                         {
                             childInfo.AddRule(new ChildCountRule(minOccurs, maxOccurs));
                         }
@@ -794,22 +794,14 @@ namespace Sce.Atf.Dom
             }
             else
             {
-                // if sequence, continue collecting elements
-                XmlSchemaSequence sequence = particle as XmlSchemaSequence;
-                if (sequence != null)
+                XmlSchemaGroupBase grp = particle as XmlSchemaSequence;
+                if(grp == null) grp = particle as XmlSchemaChoice;
+                if (grp == null) grp = particle as XmlSchemaAll;
+
+                if (grp != null)
                 {
-                    foreach (XmlSchemaParticle subParticle in sequence.Items)
+                    foreach (XmlSchemaParticle subParticle in grp.Items)
                         WalkParticle(subParticle, nodeType);
-                }
-                else
-                {
-                    XmlSchemaChoice choice = particle as XmlSchemaChoice;
-                    if (choice != null)
-                    {
-                        // for now, treat choice as if it were a sequence
-                        foreach (XmlSchemaParticle subParticle in choice.Items)
-                            WalkParticle(subParticle, nodeType);
-                    }
                 }
             }
         }

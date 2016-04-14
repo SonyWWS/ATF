@@ -56,8 +56,8 @@ namespace DomTreeEditorSample
         /// Gets or sets visibility</summary>
         public bool Visible
         {
-            get { return m_visible; }
-            set { m_visible = value; }
+            get { return GetAttribute<bool>(UISchema.curveType.visibleAttribute); }
+            set { SetAttribute(UISchema.curveType.visibleAttribute,value); }
         }
 
         /// <summary>
@@ -196,8 +196,7 @@ namespace DomTreeEditorSample
         }
 
         private IList<IControlPoint> m_pointList;
-        private ReadOnlyCollection<IControlPoint> m_readonlyPointList;
-        private bool m_visible = true;
+        private ReadOnlyCollection<IControlPoint> m_readonlyPointList;        
         private InterpolationTypes m_interpolationType = InterpolationTypes.Hermite;
         #endregion        
     }

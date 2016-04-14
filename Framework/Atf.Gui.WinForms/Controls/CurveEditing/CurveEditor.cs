@@ -76,27 +76,7 @@ namespace Sce.Atf.Controls.CurveEditing
             m_controlHostService.RegisterControl(m_curveEditorControl, m_controlInfo, this);            
 
             // register settings for input modes.
-            if (m_settingsService != null)
-            {
-                // create setting to store command shortcuts
-                m_settingsService.RegisterSettings(this,
-                    new BoundPropertyDescriptor(
-                        m_curveEditorControl, () => m_curveEditorControl.InputMode, "Input mode".Localize(), null, null));
-
-                m_settingsService.RegisterSettings(this,
-                    new BoundPropertyDescriptor(
-                        m_curveEditorControl, () => m_curveEditorControl.LockOrigin,
-                        "Lock origin".Localize("This is the name of a command. Lock is a verb. Origin is like the origin of a graph."), null, null));
-
-                m_settingsService.RegisterSettings(this,
-                   new BoundPropertyDescriptor(
-                       m_curveEditorControl, () => m_curveEditorControl.FlipY, "Flip Y-axis".Localize("same as 'flip vertical axis'"), null, null));
-
-
-                m_settingsService.RegisterSettings(this,
-                   new BoundPropertyDescriptor(
-                       m_curveEditorControl, () => m_curveEditorControl.PasteConnect, "Paste connect".Localize(), null, null));
-            }
+            m_curveEditorControl.RegisterSettings(m_settingsService);            
         }
 
         #endregion

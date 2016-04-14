@@ -49,6 +49,8 @@ namespace DomTreeEditorSample
             var catalog = new TypeCatalog(
                 typeof(SettingsService),                // persistent settings and user preferences dialog
                 typeof(StatusService),                  // status bar at bottom of main Form
+                typeof(Outputs),                        // service that provides static methods for writing to IOutputWriter objects.
+                typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.                
                 typeof(CommandService),                 // handles commands in menus and toolbars
                 typeof(ControlHostService),             // docking control host
                 typeof(WindowLayoutService),            // multiple window layout support
@@ -117,26 +119,26 @@ namespace DomTreeEditorSample
             //  until all MEF composition has been completed.
             container.InitializeAll();
 
-            // Example of programmatic layout creation:
-            {
-                var windowLayoutService = container.GetExportedValue<IWindowLayoutService>();
-                var dockStateProvider = container.GetExportedValue<IDockStateProvider>();
+            //// Example of programmatic layout creation:
+            //{
+            //    var windowLayoutService = container.GetExportedValue<IWindowLayoutService>();
+            //    var dockStateProvider = container.GetExportedValue<IDockStateProvider>();
 
-                // Load custom XML and add it to the Window Layout Service
-                int layoutNum = 0;
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                foreach (string resourceName in assembly.GetManifestResourceNames())
-                {
-                    if (resourceName.Contains("Layout") && resourceName.EndsWith(".xml"))
-                    {
-                        var xmlDoc = new XmlDocument();
-                        xmlDoc.Load(assembly.GetManifestResourceStream(resourceName));
+            //    // Load custom XML and add it to the Window Layout Service
+            //    int layoutNum = 0;
+            //    Assembly assembly = Assembly.GetExecutingAssembly();
+            //    foreach (string resourceName in assembly.GetManifestResourceNames())
+            //    {
+            //        if (resourceName.Contains("Layout") && resourceName.EndsWith(".xml"))
+            //        {
+            //            var xmlDoc = new XmlDocument();
+            //            xmlDoc.Load(assembly.GetManifestResourceStream(resourceName));
 
-                        layoutNum++;
-                        windowLayoutService.SetOrAddLayout(dockStateProvider, "Programmatic Layout " + layoutNum, xmlDoc.InnerXml);
-                    }
-                }
-            }
+            //            layoutNum++;
+            //            windowLayoutService.SetOrAddLayout(dockStateProvider, "Programmatic Layout " + layoutNum, xmlDoc.InnerXml);
+            //        }
+            //    }
+            //}
 
             // Show the main form and start message handling. The main Form Load event provides a final chance
             //  for components to perform initialization and configuration.

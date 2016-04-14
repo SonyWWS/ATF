@@ -27,15 +27,18 @@ namespace DomTreeEditorSample
         /// Constructor, initializing fields</summary>
         /// <param name="contextRegistry">Context registry</param>
         /// <param name="documentRegistry">Document registry</param>
+        /// <param name="documentService">Document service</param>
         /// <param name="treeLister">Tree lister, which displays a tree view of UI data</param>
         /// <param name="schemaLoader">Schema loader</param>
         [ImportingConstructor]
         public Editor(
             IContextRegistry contextRegistry,
             IDocumentRegistry documentRegistry,
+            IDocumentService documentService,
             TreeLister treeLister,
             SchemaLoader schemaLoader)
         {
+            m_documentService = documentService;
             m_contextRegistry = contextRegistry;
             m_documentRegistry = documentRegistry;
             m_documentRegistry.ActiveDocumentChanged += documentRegistry_ActiveDocumentChanged;
@@ -118,6 +121,15 @@ namespace DomTreeEditorSample
         /// <returns>Document, or null if the document couldn't be opened or created</returns>
         public IDocument Open(Uri uri)
         {
+
+            Document activeDoc = m_documentRegistry.GetActiveDocument<Document>();
+            if (activeDoc != null)
+            {
+                if (!m_documentService.Close(activeDoc))
+                    return null;
+            }
+
+
             DomNode node = null;
             string filePath = uri.LocalPath;
 
@@ -202,8 +214,9 @@ namespace DomTreeEditorSample
                 m_domExplorer.Root = m_documentRegistry.GetActiveDocument<DomNode>();
         }
 
-        private IContextRegistry m_contextRegistry;
-        private IDocumentRegistry m_documentRegistry;
+        private readonly IDocumentService m_documentService;
+        private readonly IContextRegistry m_contextRegistry;
+        private readonly IDocumentRegistry m_documentRegistry;
         private TreeLister m_treeLister;
         private SchemaLoader m_schemaLoader;
 

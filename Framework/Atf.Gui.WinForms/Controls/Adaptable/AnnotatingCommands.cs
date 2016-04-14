@@ -5,19 +5,20 @@ using System.Drawing;
 using System.Linq;
 using System.ComponentModel.Composition;
 
-using Sce.Atf.Adaptation; 
+using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.Input;
 
 namespace Sce.Atf.Controls.Adaptable
 {
     /// <summary>
-    /// Component that sets background color of annotations
-    /// </summary>
+    /// Component that gives context menu commands for quickly setting the background color of
+    /// annotations (or any selected object whose color can be set using an IColorContext). </summary>
+    /// <remarks>This class could have been called ColoringCommands.</remarks>
     [InheritedExport(typeof(IInitializable))]
     [InheritedExport(typeof(IContextMenuCommandProvider))]
     [InheritedExport(typeof(AnnotatingCommands))]
-    [PartCreationPolicy(CreationPolicy.Any)]  
+    [PartCreationPolicy(CreationPolicy.Any)]
     public class AnnotatingCommands : ICommandClient, IInitializable, IContextMenuCommandProvider
     {
         /// <summary>
@@ -32,14 +33,14 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
         /// <summary>
-        /// Preset annotation color</summary>
+        /// Preset color</summary>
         public class ColorPreset
         {
             /// <summary>
-            /// Gets or sets annotation background color name</summary>
+            /// Gets or sets the background color name</summary>
             public string Name { get; set; }
             /// <summary>
-            /// Gets or sets annotation background color value</summary>
+            /// Gets or sets the background color value</summary>
             public Color Color { get; set; }
         }
 
@@ -48,10 +49,10 @@ namespace Sce.Atf.Controls.Adaptable
         /// <remarks>Set custom presets before Initialize() is called</remarks>
         public ColorPreset[] ColorPresets
         {
-            get { return m_colorPresets;  }
+            get { return m_colorPresets; }
             set { m_colorPresets = value; }
         }
-    
+
         #region IInitializable Members
 
         void IInitializable.Initialize()
@@ -73,7 +74,7 @@ namespace Sce.Atf.Controls.Adaptable
                 var menuItem = cmdInfo.GetMenuItem();
                 menuItem.Image = CreateBackColorIcon(m_colorPresets[i].Color, 24, 24);
             }
- 
+
         }
 
         #endregion
@@ -96,7 +97,7 @@ namespace Sce.Atf.Controls.Adaptable
                     if (selectionContext != null)
                     {
                         enabled = selectionContext.Selection.Any() &&
-                                  selectionContext.Selection.All(x => x.Is<IAnnotation>());
+                            selectionContext.Selection.All(x => context.CanSetColor(ColoringTypes.BackColor, x));
                     }
                 }
             }
@@ -115,12 +116,12 @@ namespace Sce.Atf.Controls.Adaptable
                 var colorPreset = (ColorPreset)commandTag;
 
                 transactionContext.DoTransaction(() =>
-                    {
-                        var selectionContext = context.As<ISelectionContext>();
-                        foreach (var annotation in selectionContext.Selection.AsIEnumerable<IAnnotation>())
-                            context.SetColor(ColoringTypes.BackColor, annotation,colorPreset.Color);
-                    },"Annotation Color");
-                   
+                {
+                    var selectionContext = context.As<ISelectionContext>();
+                    foreach (var selectedObject in selectionContext.Selection)
+                        context.SetColor(ColoringTypes.BackColor, selectedObject, colorPreset.Color);
+                }, "Background Color");
+
             }
         }
 
@@ -143,8 +144,8 @@ namespace Sce.Atf.Controls.Adaptable
         IEnumerable<object> IContextMenuCommandProvider.GetCommands(object context, object target)
         {
             if (context.Is<IColoringContext>())
-            {              
-                return m_colorPresets;             
+            {
+                return m_colorPresets;
             }
             return EmptyEnumerable<object>.Instance;
         }
@@ -157,35 +158,35 @@ namespace Sce.Atf.Controls.Adaptable
             {
                 m_colorPresets = new ColorPreset[6];
                 m_colorPresets[0] = new ColorPreset()
-                    {
-                        Name = "Yellow".Localize(),
-                        Color = SystemColors.Info
-                    };
+                {
+                    Name = "Yellow".Localize(),
+                    Color = SystemColors.Info
+                };
                 m_colorPresets[1] = new ColorPreset()
-                    {
-                        Name = "Blue".Localize(),
-                        Color = Color.LightSkyBlue
-                    };
+                {
+                    Name = "Blue".Localize(),
+                    Color = Color.LightSkyBlue
+                };
                 m_colorPresets[2] = new ColorPreset()
-                    {
-                        Name = "Green".Localize(),
-                        Color = Color.FromArgb(178, 255, 161)
-                    };
+                {
+                    Name = "Green".Localize(),
+                    Color = Color.FromArgb(178, 255, 161)
+                };
                 m_colorPresets[3] = new ColorPreset()
-                    {
-                        Name = "Pink".Localize(),
-                        Color = Color.LightPink
-                    };
+                {
+                    Name = "Pink".Localize(),
+                    Color = Color.LightPink
+                };
                 m_colorPresets[4] = new ColorPreset()
-                    {
-                        Name = "Purple".Localize(),
-                        Color = Color.FromArgb(182, 202, 255)
-                    };
+                {
+                    Name = "Purple".Localize(),
+                    Color = Color.FromArgb(182, 202, 255)
+                };
                 m_colorPresets[5] = new ColorPreset()
-                    {
-                        Name = "Gray".Localize(),
-                        Color = Color.LightGray
-                    };
+                {
+                    Name = "Gray".Localize(),
+                    Color = Color.LightGray
+                };
             }
         }
 

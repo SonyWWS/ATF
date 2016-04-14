@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Windows.Forms;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.VectorMath;
+using Sce.Atf.Controls.PropertyEditing;
 
 namespace Sce.Atf.Controls.CurveEditing
 {
@@ -25,8 +27,10 @@ namespace Sce.Atf.Controls.CurveEditing
         /// Default constructor</summary>
         public CurveCanvas()
         {
-            m_pasteAt = new PasteAt(this);
+            m_currentX = new CurrentX(this);
+            m_pasteOptions = new PasteOptions(this);
             OnlyEditSelectedCurves = true;
+            
             m_renderer = new CurveRenderer();
             m_renderer.SetCartesian2dCanvas(this);
             Dock = DockStyle.Fill;
@@ -48,7 +52,7 @@ namespace Sce.Atf.Controls.CurveEditing
             m_contextMenu = new ContextMenuStrip();
             m_contextMenu.AutoClose = true;
             m_contextMenu.Opening += menustrip_Opening;
-
+            
             List<CommandMenuItem> menuItemList = new List<CommandMenuItem>();
             menuItemList.AddRange(new CommandMenuItem[] {null,null,null,null,null,null });
 
@@ -56,18 +60,19 @@ namespace Sce.Atf.Controls.CurveEditing
             menuItemList[RedoMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditRedo, Redo);            
             m_contextMenu.Items.Add(new ToolStripSeparator());
             menuItemList[CutMenuItemIndex] = new CommandMenuItem(m_contextMenu,CommandInfo.EditCut, Cut);            
-            menuItemList[CopyMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditCopy, Copy);            
-            menuItemList[PasteMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditPaste, Paste);            
+            menuItemList[CopyMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditCopy, Copy);
+            menuItemList[PasteMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditPaste, Paste, ShowPasteOptionsForm);            
             menuItemList[DeleteMenuItemIndex] = new CommandMenuItem(m_contextMenu, CommandInfo.EditDelete, Delete);
             m_commandItems = menuItemList.AsReadOnly();
             SkinService.ApplyActiveSkin(m_contextMenu);
-            PasteConnect = true;
+           
         }
        
         /// <summary>
         /// Initialize static members</summary>
         static CurveCanvas()
         {
+            s_genBrush = new SolidBrush(Color.Black);
             s_marqueePen = new Pen(Color.FromArgb(40, 40, 40));
             s_marqueePen.DashPattern = new float[] { 3, 3 };
             s_noAction = new Bitmap(typeof(CurveUtils), "Resources.NoAction.png");
@@ -93,6 +98,77 @@ namespace Sce.Atf.Controls.CurveEditing
 
         #region public and protected methods
 
+        /// <summary>
+        /// Register settings.</summary>
+        /// <param name="settingsService"></param>
+        internal void RegisterSettings(ISettingsService settingsService)
+        {
+            if (settingsService == null || m_isSettingRegistered)
+                return;
+            m_isSettingRegistered = true;
+
+            // register settings.
+             settingsService.RegisterSettings(this,
+                    new BoundPropertyDescriptor(
+                        this, () => LockOrigin,
+                        "Lock origin".Localize("This is the name of a command. Lock is a verb. Origin is like the origin of a graph."), null, null));
+           
+            settingsService.RegisterSettings(this,
+                   new BoundPropertyDescriptor(
+                       this, () => DrawMinorTickEnabled, "Show subdivision lines".Localize(), null, null));
+
+
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.LocationMode, "LocationMode", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.Start, "Start", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.XOffset, "XOffset", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.YOffset, "YOffset", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.Copies, "Copies", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.PasteMethod, "PasteMethod", null, null));
+
+            settingsService.RegisterSettings(m_pasteOptions,
+                   new BoundPropertyDescriptor(
+                       m_pasteOptions, () => m_pasteOptions.Connect, "Connect", null, null));
+        }
+        private bool m_isSettingRegistered;
+        
+        public Color CurrentXColor
+        {
+            get { return m_currentX.Color; }
+            set
+            {
+                m_currentX.Color = value;
+                Invalidate();
+            }
+        }
+
+        public Color CurrentXHoverColor
+        {
+            get { return m_currentX.HoverColor; }
+            set
+            {
+                m_currentX.HoverColor = value;
+                Invalidate();
+            }
+        }
+            
         /// <summary>
         /// Removes all the control points of the curve from the selection</summary>
         /// <param name="curve">Curve whose control points are removed</param>
@@ -183,72 +259,164 @@ namespace Sce.Atf.Controls.CurveEditing
             }
         }
 
+
         /// <summary>
         /// Pastes into selected curves from internal clipboard</summary>
         public void Paste()
         {
-            var curves = m_pasteAt.GetTargetCurve();
-            bool anycurve = curves.Any();           
-            if (!anycurve || m_pasteAt.NumberOfTargetCurves < 1) return;
-
+            if (!CanPaste) return;
+            var curves = GetPasteTargetCurves();
+            
+           
             // control points in s_clipboard are already sorted along x-axis.
             var sortedPoints = s_clipboard.Select(cp => cp.Clone()).ToArray();
+            
+
+
             float origX = sortedPoints[0].X;
             float origY = sortedPoints[0].Y;
             // transform all the points to local space
             // where the first point starts at (0,0)
-            if (PasteConnect)
-            {
-                sortedPoints.ForEach(item =>
-                {
-                    item.X -= origX;                   
-                });
-            }
-            else
+            if (m_pasteOptions.Connect)
             {
                 sortedPoints.ForEach(item =>
                 {
                     item.X -= origX;
                     item.Y -= origY;
                 });
+                
             }
+            else
+            {
+                sortedPoints.ForEach(item =>
+                {
+                    item.X -= origX;
+                });
+            }
+
+
+            if (m_pasteOptions.Copies > 1 && sortedPoints.Length > 1)
+            {
+                var lastPt = sortedPoints[sortedPoints.Length - 1];
+                float xoffset = lastPt.X;
+                float yoffset = lastPt.Y;
+                     
+                int ncopies = (int)m_pasteOptions.Copies;
+                int length = ncopies * (sortedPoints.Length - 1) + 1;
+                List<IControlPoint> pointlist = new List<IControlPoint>(length);
+                pointlist.AddRange(sortedPoints);
+                pointlist.RemoveAt(pointlist.Count - 1);
+                for (int c = 1; c < (ncopies); c++)
+                {
+                    float cx = xoffset * c;
+                    float cy = yoffset * c;
+                    int ptCount =  c == ncopies-1 ? sortedPoints.Length : sortedPoints.Length-1;
+                    for (int i = 0; i < ptCount; i++)
+                    {
+                        var clone = sortedPoints[i].Clone();
+                        clone.X += cx;
+                        if (m_pasteOptions.Connect) clone.Y += cy;
+                        pointlist.Add(clone);
+                    }
+                }
+
+                sortedPoints = pointlist.ToArray();
+
+            }
+
             
-            
-            int pasteIndex;
-            float gx0 = m_pasteAt.Position;
+
+            float gx0 = m_pasteOptions.GetPasteAtX();
             float gx1 = gx0 + sortedPoints[sortedPoints.Length - 1].X;
             m_transactionContext.DoTransaction(delegate
                 {
-                    pasteIndex = 0;
+                    var deleteList = new List<IControlPoint>();
+
                     foreach (var curve in curves)
-                    {                        
-                        var deleteList = new List<IControlPoint>();
+                    {
+
+                        var cv = CurveUtils.CreateCurveEvaluator(curve);
+                        float gy0 = cv.Evaluate(gx0) + m_pasteOptions.YOffset;
+
+
+                        // find insert index.
+                        int pasteIndex = curve.ControlPoints.Count;
                         for (int i = 0; i < curve.ControlPoints.Count; i++)
                         {
                             var cpt = curve.ControlPoints[i];
-                            if (cpt.X < gx0 )
-                                pasteIndex = i + 1;
-
-                            if (cpt.X >= gx0 && cpt.X <= gx1)
-                                deleteList.Add(cpt);
+                            if (gx0 <= cpt.X)
+                            {
+                                pasteIndex = i;
+                                break;
+                            }
                         }
 
-                        deleteList.ForEach(p => curve.RemoveControlPoint(p));
-
-                        var cv = CurveUtils.CreateCurveEvaluator(curve);
-                        float gy = cv.Evaluate(gx0);
+                        if (m_pasteOptions.PasteMethod == PasteOptions.PasteMethods.Insert)
+                        {
+                            float xoffset = (gx1 - gx0) + CurveUtils.Epsilone;
+                            for (int i = pasteIndex; i < curve.ControlPoints.Count; i++)
+                                curve.ControlPoints[i].X += xoffset;
+                            
+                        }
+                        else if (m_pasteOptions.PasteMethod == PasteOptions.PasteMethods.Replace)
+                        {
+                            foreach (var cpt in curve.ControlPoints)
+                            {                                
+                                if (cpt.X >= gx0 && cpt.X <= gx1)
+                                    deleteList.Add(cpt);
+                            }
+                            deleteList.ForEach(p => curve.RemoveControlPoint(p));
+                            deleteList.Clear();
+                        }
+                        else if (m_pasteOptions.PasteMethod != PasteOptions.PasteMethods.Merge)
+                        {
+                            throw new InvalidTransactionException("Paste method "+m_pasteOptions.PasteMethod + " is not supported");
+                        }
 
                         // paste new control points
                         foreach (var cp in sortedPoints)
                         {
                             var newCpt = cp.Clone();
                             newCpt.X += gx0;
-                            if (!PasteConnect) newCpt.Y += gy;
-                            if (newCpt.X > curve.MaxX) break;
-                            if (newCpt.X < curve.MinX) continue;
+                            if (m_pasteOptions.Connect) newCpt.Y += gy0;
                             curve.InsertControlPoint(pasteIndex++, newCpt);
                         }
 
+                        
+                        // remove any point outside limit.
+                        foreach (var cpt in curve.ControlPoints)
+                        {
+                            if (cpt.X < curve.MinX || cpt.X > curve.MaxX)
+                                deleteList.Add(cpt);
+
+                        }
+                        deleteList.ForEach(p => curve.RemoveControlPoint(p));
+                        deleteList.Clear();
+
+
+                        CurveUtils.Sort(curve);
+
+                        // if merging then accept new point when it overlaps with existing one.
+                        if (m_pasteOptions.PasteMethod == PasteOptions.PasteMethods.Merge)
+                        {
+
+                            var pastePointSet = new HashSet<IControlPoint>(sortedPoints);
+                            var overlapSet = new HashSet<IControlPoint>();
+                            for (int i = 0; i < (curve.ControlPoints.Count - 1); i++)
+                            {
+                                var cpt1 = curve.ControlPoints[i];
+                                var cpt2 = curve.ControlPoints[i + 1];
+                                if (Math.Abs(cpt2.X - cpt1.X) < CurveUtils.Epsilone)
+                                {
+                                    overlapSet.Add(cpt1);
+                                    overlapSet.Add(cpt2);
+                                }
+                            }
+                            // remove any point that is overlapping and it is not new.
+                            var todelete = overlapSet.Except(pastePointSet);
+                            todelete.ForEach(p => curve.RemoveControlPoint(p));
+                        }
+                        
                         CurveUtils.ForceMinDistance(curve);
                         CurveUtils.ComputeTangent(curve);  
                     }
@@ -466,12 +634,22 @@ namespace Sce.Atf.Controls.CurveEditing
             }
         }
 
+        private bool m_fitAllRequest;
         /// <summary>
         /// Frames all curves so that all curves fit in the window</summary>
         public void FitAll()
         {
+            if (!Visible)
+            {
+               // delay the FitAll action until it is visible.
+                m_fitAllRequest = true;
+                return;                
+            }
+            
             if (m_curves.Count > 0)
             {
+                m_fitAllRequest = false;
+
                 RectangleF bound = RectangleF.Empty;
                 foreach (ICurve curve in m_curves)
                 {
@@ -488,7 +666,7 @@ namespace Sce.Atf.Controls.CurveEditing
                     bound.Inflate(bound.Width * padding, bound.Height * padding);
                     Frame(bound);
                     Invalidate();
-                }
+                }                
             }
         }
 
@@ -531,7 +709,16 @@ namespace Sce.Atf.Controls.CurveEditing
 
         #endregion
 
-        #region public properties
+        #region public and internal properties
+
+       
+        /// <summary>
+        /// Gets or sets the renderer responsible for drawing the curves and handling hit testing</summary>
+        public CurveRenderer Renderer
+        {
+            get { return m_renderer; }            
+        }
+
 
         /// <summary>
         /// Gets whether the control editing curve properties</summary>
@@ -653,7 +840,7 @@ namespace Sce.Atf.Controls.CurveEditing
         {
             get
             {
-                return m_pasteAt.NumberOfTargetCurves > 0;
+                return GetPasteTargetCurves().Any();
             }
         }
 
@@ -726,24 +913,8 @@ namespace Sce.Atf.Controls.CurveEditing
             }
         }
 
-        /// <summary>
-        /// Gets or sets whether to paste keys at target Y 
-        /// or at the Y of the first point of the pasted curve
-        /// segment.
-        /// if true it will paste at the Y coordinate of the first
-        /// point of the pasted curve segment.
-        /// </summary>
-        [DefaultValue(true)]
-        public bool PasteConnect
-        {
-            get { return m_pasteConnect; }
-            set
-            {
-                m_pasteConnect = value;
-                Invalidate();
-            }
-        }
-        private bool m_pasteConnect;
+        
+        
         /// <summary>
         /// Gets or sets input mode</summary>
         public InputModes InputMode
@@ -777,7 +948,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 m_curves = value ?? s_emptyCurves;
                 ClearSelection();
                 UpdateCurveLimits();
-                PanToOrigin(false);
+                if(Visible) PanToOrigin(false);
                 CurvesChanged(this, EventArgs.Empty);
                 EditableCurves = EmptyEnumerable<int>.Instance;
                 Invalidate();
@@ -813,7 +984,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// True to consume this key press, so this
         /// event is not passed on to any other methods or controls.</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
+        {            
             bool consumed = true;
 
             // extract keycode from Keys
@@ -880,7 +1051,7 @@ namespace Sce.Atf.Controls.CurveEditing
             MouseEditAction editAction = MouseEditAction.None;
             m_moveAxis = MoveAxis.None;
             m_selectionClickPoint = ClickPoint;
-            m_pasteAt.HitTest(ClickPoint.X);
+            m_currentX.HitTest(ClickPoint.X);
             m_originalValues = null;
             m_scalePivot = ClickGraphPoint;
             m_limitHit = null;
@@ -904,7 +1075,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 m_scalePivot.Y = CurveUtils.SnapTo(m_scalePivot.Y, MajorTickY);
 
 
-            if (m_pasteAt.IsPicked)
+            if (m_currentX.IsPicked)
             {
                 m_mouseDownAction = MouseDownAction.PasteAtMove;
                 Cursor = m_cursors[CursorType.MoveHz];
@@ -985,7 +1156,7 @@ namespace Sce.Atf.Controls.CurveEditing
             }
             else if (e.Button == MouseButtons.None && m_curves.Count > 0)
             {
-                if (m_pasteAt.HitTest(CurrentPoint.X))
+                if (m_currentX.HitTest(CurrentPoint.X))
                 {
                     this.Cursor = m_cursors[CursorType.MoveHz];                    
                 }
@@ -1194,19 +1365,101 @@ namespace Sce.Atf.Controls.CurveEditing
                 }
 
                 pen.Dispose();
-                m_pasteAt.Draw(e.Graphics);
+                m_currentX.Draw(e.Graphics);
+                DrawPasteAtIndicators(e.Graphics);
             }
 
-            //draw selection rect.
+            //draw selection rectangle
             if (SelectionRect != RectangleF.Empty)
             {
                 e.Graphics.DrawRectangle(s_marqueePen, Rectangle.Truncate(SelectionRect));
             }
+            if (m_fitAllRequest) FitAll();
         }
         #endregion
-       
+
         #region private helper methods
 
+        private void DrawPasteAtIndicators(Graphics g)
+        {
+            var targeCurves = GetPasteTargetCurves();
+            if (!targeCurves.Any()) return;
+
+            RectangleF ptRect = new RectangleF(0, 0, 9, 9);
+            s_genBrush.Color = Color.Gold;
+
+            float gx = m_pasteOptions.GetPasteAtX();
+            if (m_pasteOptions.Connect)
+            {
+
+                foreach (var curve in targeCurves)
+                {
+                    ICurveEvaluator cv = CurveUtils.CreateCurveEvaluator(curve);
+                    float gy = cv.Evaluate(gx) + m_pasteOptions.YOffset;
+
+                    Vec2F gpt = new Vec2F(gx, gy);
+                    Vec2F pt = GraphToClient(gpt);
+                    ptRect.X = pt.X - ptRect.Width / 2;
+                    ptRect.Y = pt.Y - ptRect.Height / 2;
+                    g.FillEllipse(s_genBrush, ptRect);
+                }
+            }
+            else
+            {
+                float gy = s_clipboard[0].Y + m_pasteOptions.YOffset;
+                Vec2F gpt = new Vec2F(gx, gy);
+                Vec2F pt = GraphToClient(gpt);
+                ptRect.X = pt.X - ptRect.Width / 2;
+                ptRect.Y = pt.Y - ptRect.Height / 2;
+                g.FillEllipse(s_genBrush, ptRect);
+            }
+        }
+
+        private PasteOptionsForm m_pasteOptionsForm;
+        private Rectangle m_pasteOptionsFormBounds;
+       
+        private void ShowPasteOptionsForm()
+        {
+            if (m_pasteOptionsForm != null && !m_pasteOptionsForm.IsDisposed)
+            {
+                m_pasteOptionsForm.Activate();
+            }
+            else
+            {
+
+                m_pasteOptionsForm = new PasteOptionsForm(this);
+
+                m_pasteOptionsForm.SizeChanged += delegate
+                {
+                    m_pasteOptionsFormBounds = m_pasteOptionsForm.Bounds;
+                };
+                m_pasteOptionsForm.LocationChanged += delegate
+                {
+                    m_pasteOptionsFormBounds = m_pasteOptionsForm.Bounds;
+                };
+
+                m_pasteOptionsForm.FormClosed += delegate
+                {                    
+                    m_pasteOptionsForm = null;
+                };               
+                m_pasteOptionsForm.Disposed += delegate
+                {
+                    m_pasteOptionsForm = null;
+                };
+
+                if (m_pasteOptionsFormBounds != Rectangle.Empty)
+                {
+                    m_pasteOptionsForm.Bounds = m_pasteOptionsFormBounds;
+                }
+                else
+                {
+                    m_pasteOptionsForm.Location = PointToScreen(Point.Empty);
+                }
+                var parentForm = FindForm();
+                
+                m_pasteOptionsForm.Show(parentForm);
+            }
+        }
         private MouseEditAction AdvancedOnMouseDown(MouseEventArgs e)
         {
             MouseEditAction editAction = MouseEditAction.None;
@@ -1585,7 +1838,7 @@ namespace Sce.Atf.Controls.CurveEditing
             {
                 case MouseEditAction.PasteAtMove:
                     {
-                        m_pasteAt.Position = CurrentGraphPoint.X;
+                        m_currentX.Position = CurrentGraphPoint.X;
                     }
                     break;
                 case MouseEditAction.Panning:
@@ -2344,6 +2597,16 @@ namespace Sce.Atf.Controls.CurveEditing
             return null;
         }
 
+        private IEnumerable<ICurve> GetPasteTargetCurves()
+        {
+            if (s_clipboard.Length > 0)
+            {
+                if (OnlyEditSelectedCurves)
+                    return m_editSet.Where(c => c.Visible);
+                return SelectedCurves.Where(c => c.Visible);
+            }
+            return EmptyArray<ICurve>.Instance;
+        }
 
         #endregion
       
@@ -2354,7 +2617,6 @@ namespace Sce.Atf.Controls.CurveEditing
         private readonly SortedDictionary<float, CurveLimitSides> m_limitHits = new SortedDictionary<float, CurveLimitSides>();
         private ICurve m_limitHit;
         private CurveLimitSides m_limitSide;
-
         private const float SnapThreshold = 16.0f; // in pixel
        
         // context strip items.
@@ -2399,29 +2661,33 @@ namespace Sce.Atf.Controls.CurveEditing
         private ICurve[] m_selectedCurves = new ICurve[0];
         private ReadOnlyCollection<ICurve> m_curves = s_emptyCurves;
         private static readonly ReadOnlyCollection<ICurve> s_emptyCurves = (new List<ICurve>()).AsReadOnly();
-        private readonly CurveRenderer m_renderer;
-        private readonly PasteAt m_pasteAt;
+        private CurveRenderer m_renderer;
+        private readonly CurrentX m_currentX;
+        private readonly PasteOptions m_pasteOptions;
         private const float MaxAngle = 1.5706217938697f; // = 89.99 degree
         private const float MinAngle = -1.5706217938697f; // =-89.99 degree        
         
         private static readonly Bitmap s_noAction;
         private static readonly Pen s_marqueePen;
+        private static readonly SolidBrush s_genBrush;
         #endregion
 
-        #region  enums and classes
-        private class PasteAt
+        #region private and internal classes
+        /// <summary>
+        /// This is similar to current time in Maya's graph editor</summary>
+        private class CurrentX
         {
             private bool m_setInitialPosition = true;
-            public PasteAt(CurveCanvas canvas)
+            public CurrentX(CurveCanvas canvas)
             {
                 m_canvas = canvas;
+                Color = Color.Yellow;
+                HoverColor = Color.FromArgb(255, 255, 128);
+            }
 
-            }
-            public int NumberOfTargetCurves
-            {
-                get;
-                private set;
-            }
+            public Color Color { get; set; }
+            public Color HoverColor { get; set; }
+          
             public bool IsPicked
             {
                 get;
@@ -2443,23 +2709,13 @@ namespace Sce.Atf.Controls.CurveEditing
                 get;
                 private set;
             }
-            public IEnumerable<ICurve> GetTargetCurve()
-            {
-                if (s_clipboard.Length > 0)
-                {
-                    if (m_canvas.OnlyEditSelectedCurves)
-                        return m_canvas.m_editSet.Where(c => c.Visible);
-                    return m_canvas.SelectedCurves.Where(c => c.Visible);
-                }
-                return EmptyArray<ICurve>.Instance;               
-            }
+           
             public void Draw(Graphics g)
-            {                               
-                NumberOfTargetCurves = 0;
-                var curves = GetTargetCurve();
+            {                
+                var curves = m_canvas.GetPasteTargetCurves();
                 Visible = curves.Any();
                 if (!Visible) return;
-
+              
                 if (m_setInitialPosition)
                 {// one time, set initial position.
                     m_setInitialPosition = false;
@@ -2467,81 +2723,47 @@ namespace Sce.Atf.Controls.CurveEditing
                     Position = m_canvas.ClientToGraph(xs);
                 }
 
-                      
                 RectangleF crect = m_canvas.ClientRectangle;
-                float gMinX = m_canvas.ClientToGraph(crect.X);
-                float gMaxX = m_canvas.ClientToGraph(crect.Right);
-                // keep it in viewport.
-                Position = Math.Max(Position, gMinX + 3);
-                Position = Math.Min(Position, gMaxX - 3);
-
                 float cPos = m_canvas.GraphToClient(Position);
+                float leftEdge = crect.X + 3;
+                float rightEdge = crect.Right - 3;
 
-                s_pen.Color = IsPicked ? s_hiColor : s_color;
-                s_brush.Color = IsPicked ? s_hiColor : s_color;               
+                if (cPos < leftEdge || cPos > rightEdge)
+                {
+                    cPos = MathUtil.Clamp(cPos, leftEdge, rightEdge);
+                    Position = m_canvas.ClientToGraph(cPos);
+                }
+
+                s_pen.Color = IsPicked ? HoverColor : Color;
+                s_brush.Color = IsPicked ? HoverColor : Color;
                 g.DrawLine(s_pen, cPos, crect.Y, cPos, crect.Bottom);
-                
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                foreach (var curve in curves)
-                {
-                    bool inCurveLimit = (Position >= curve.MinX && Position <= curve.MaxX);
-                    if (inCurveLimit) NumberOfTargetCurves++;
-
-                    if (!m_canvas.PasteConnect)
-                    {
-                        ICurveEvaluator cv = CurveUtils.CreateCurveEvaluator(curve);
-                        float y = cv.Evaluate(Position);
-                        DrawIndicator(g, y, inCurveLimit);
-                    }
-                }
-
-                if (m_canvas.PasteConnect)
-                {
-                    DrawIndicator(g, s_clipboard[0].Y, NumberOfTargetCurves > 0);
-                }
+                            
+                float strValY = m_canvas.Bottom - 2f * m_canvas.ScaleTextFont.Height - GridTextMargin - 8.0f;
+                string strVal = Math.Round(Position, 4).ToString();
+                g.DrawString(strVal, m_canvas.ScaleTextFont, s_brush, new PointF(cPos + 4, strValY));
             }
-
-            private void DrawIndicator(Graphics g, float gy, bool valid)
-            {                
-                Vec2F gpt = new Vec2F(Position, gy);
-                Vec2F pt = m_canvas.GraphToClient(gpt);                                
-                if (NumberOfTargetCurves > 0)
-                {
-                    RectangleF ptRect = new RectangleF(0, 0, 9, 9);
-                    ptRect.X = pt.X - ptRect.Width / 2;
-                    ptRect.Y = pt.Y - ptRect.Height / 2;
-                    g.FillEllipse(s_brush, ptRect);
-                }
-                else
-                {
-                    pt.X = pt.X - s_noAction.Width / 2;
-                    pt.Y = pt.Y - s_noAction.Height / 2;
-                    g.DrawImage(s_noAction, pt);
-                }
-            }
-            static PasteAt()
+          
+            static CurrentX()
             {
-                s_pen = new Pen(s_color);
+                s_pen = new Pen(Color.Yellow);
                 s_pen.Width = 1.0f;
-                s_brush = new SolidBrush(s_color);
+                s_brush = new SolidBrush(Color.Yellow);
             }
-           
+
             /// <summary>
             /// Position of x-coordinate in graph space.</summary>
             public float Position;
-            private static Color s_color = Color.Yellow;
-            private static Color s_hiColor = Color.FromArgb(255, 255, 128);
             private static Pen s_pen;
             private static SolidBrush s_brush;
             private readonly CurveCanvas m_canvas;
         }
+
         private class DefaultTransactionContext : ITransactionContext
         {
             #region ITransactionContext Members
 
             public void Begin(string transactionName)
-            {                
+            {
             }
 
             public bool InTransaction
@@ -2550,11 +2772,11 @@ namespace Sce.Atf.Controls.CurveEditing
             }
 
             public void Cancel()
-            {                
+            {
             }
 
             public void End()
-            {                
+            {
             }
 
             #endregion
@@ -2610,49 +2832,159 @@ namespace Sce.Atf.Controls.CurveEditing
             #endregion
         }
 
-        
+        private class CustomToolStripMenuItem : ToolStripMenuItem
+        {
+            public EventHandler ButtonClick = delegate { };
+            public CustomToolStripMenuItem(){ }
+
+            public CustomToolStripMenuItem(string text)
+                : base(text, null, (EventHandler)null)
+            {
+
+            }
+
+            protected override void OnClick(EventArgs e)
+            {
+                if (m_mouseIsOnButton)
+                {
+                    var handler = ButtonClick;
+                    handler(this, EventArgs.Empty);
+                    return;
+                }                
+                base.OnClick(e);
+            }
+
+            private const int ButtonMargin = 2;
+            private Rectangle GetButtonRect()
+            {
+                
+                var buttonRect = ContentRectangle;
+                buttonRect.Height -= (2 * ButtonMargin + 1);
+                buttonRect.Width = buttonRect.Height;
+                buttonRect.Y += ButtonMargin;
+                buttonRect.X = ContentRectangle.Width - buttonRect.Width - ButtonMargin;
+                return buttonRect;
+            }
+            private Rectangle m_buttonRect;
+
+            private Color GetBkgColor()
+            {
+                if (Owner == null) return BackColor;
+                if (BackColor != Owner.BackColor) return BackColor;
+                var proRenderer = Owner.Renderer as ToolStripProfessionalRenderer;
+                if (proRenderer != null)
+                    return proRenderer.ColorTable.ToolStripDropDownBackground;              
+                return (!ToolStripManager.VisualStylesEnabled) ? BackColor : SystemColors.Menu; 
+            }
+
+            protected override void OnPaint(PaintEventArgs e)
+            {                
+                if (Owner == null)
+                {
+                    base.OnPaint(e);
+                    return;
+                }
+                base.OnPaint(e);
+                Color bkgColor = GetBkgColor();
+                m_buttonRect = GetButtonRect();                               
+                Color borderColor = Enabled ? ForeColor : Color.Gray;
+               
+                if (!m_mouseIsOnButton && Enabled && Selected)
+                {                    
+                    using (Brush b = new SolidBrush(bkgColor))
+                    {
+                        var fillRect = ContentRectangle;
+                        fillRect.X = m_buttonRect.X - ButtonMargin;
+                        fillRect.Width = ContentRectangle.Right - fillRect.X + 1;
+                        fillRect.Y -= 1;
+                        fillRect.Height += 2;
+
+                        e.Graphics.FillRectangle(b, fillRect);                       
+                    }
+                }
+
+                using (Pen p = new Pen(borderColor))
+                {
+                    e.Graphics.DrawRectangle(p, m_buttonRect);
+                    var dotRect = m_buttonRect;
+                    dotRect.Size = new Size(1, 1);
+                    dotRect.Y = m_buttonRect.Bottom - 2;
+                    dotRect.X += (m_buttonRect.Width - 5) / 2;
+                    Brush b = new SolidBrush(borderColor);
+
+                    e.Graphics.FillRectangle(b, dotRect);
+                    dotRect.X += 2;
+                    e.Graphics.FillRectangle(b, dotRect);
+                    dotRect.X += 2;
+                    e.Graphics.FillRectangle(b, dotRect);
+                }
+               
+            }
+
+            private bool m_mouseIsOnButton;
+            protected override void OnMouseMove(MouseEventArgs mea)
+            {
+                base.OnMouseMove(mea);                
+                m_mouseIsOnButton = Enabled && mea.X > m_buttonRect.X;
+                Invalidate();
+            }
+            
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                m_mouseIsOnButton = false;
+                base.OnMouseLeave(e);
+            }
+
+            protected override void OnMouseDown(MouseEventArgs e)
+            {                
+                Invalidate();
+                base.OnMouseDown(e);
+            }
+        }
+
         // Pairs CommandInfo with tool strip menu item.
         private class CommandMenuItem
         {
-            public CommandMenuItem(ContextMenuStrip contextMenu, CommandInfo cmd, Action click)
+            public CommandMenuItem(ContextMenuStrip contextMenu, CommandInfo cmd, Action click, Action buttonClick = null)
             {
                 ClickAction = click;
                 CmdInfo = cmd;
-                MenuItem = new ToolStripMenuItem(cmd.MenuText);
-                MenuItem.Click += (s, e) => ClickAction();
-                contextMenu.Items.Add(MenuItem);                
-            }
-            
-            public void UpdateMenuItems()
-            {               
-                //var commandService = (CommandService)CmdInfo.CommandService;
-                //CommandService.CommandControls commandControls =
-                //    commandService == null ? null : commandService.GetCommandControls(CmdInfo);
-                
-                //if (commandControls != null && commandControls.MenuItem != null)
-                //    MenuItem.Text = commandControls.MenuItem.Text;
-                //else                    
-                //    MenuItem.Text = CmdInfo.MenuText;
 
+                if (buttonClick != null)
+                {
+                    var customItem = new CustomToolStripMenuItem(cmd.MenuText);
+                    customItem.ButtonClick += (s,e) => buttonClick();
+                    MenuItem = customItem;
+                }
+                else
+                {                                       
+                    MenuItem = new ToolStripMenuItem(cmd.MenuText);
+                }
+                                
+                MenuItem.Click += (s, e) => ClickAction();
+                contextMenu.Items.Add(MenuItem);
+            }
+
+            public void UpdateMenuItems()
+            {
                 MenuItem.Text = CmdInfo.MenuText;
                 MenuItem.ShortcutKeyDisplayString = CmdInfo.ShortcutKeyDisplayString;
             }
             public readonly Action ClickAction;
             public readonly CommandInfo CmdInfo;
             public readonly ToolStripMenuItem MenuItem;
-            
         }
 
         /// <summary>
         /// Default shortcut keys</summary>
-        public static class ShortcutKeys
+        internal static class ShortcutKeys
         {
             /// <summary>Undo</summary>            
             public static Keys Undo = Keys.Control | Keys.Z;
 
             /// <summary>Redo</summary>            
             public static Keys Redo = Keys.Control | Keys.Y;
-            
+
             /// <summary>Delete</summary>            
             public static Keys Delete = Keys.Delete;
 
@@ -2675,6 +3007,872 @@ namespace Sce.Atf.Controls.CurveEditing
             public static Keys Deselect = Keys.Escape;
         }
 
+        /// <summary>
+        /// Holds all the paste related options</summary>
+        private class PasteOptions
+        {
+            private CurveCanvas m_canvas;
+            public PasteOptions(CurveCanvas canvas)
+            {
+                m_canvas = canvas;
+                LocationMode = XLocationMode.Current;
+                Connect = true;
+                Copies = 1;
+                PasteMethod = PasteMethods.Replace;
+            }
+
+
+            /// <summary>
+            /// Computes X position of paste target</summary>
+            public float GetPasteAtX()
+            {
+                float posX = XOffset;
+                if (LocationMode == XLocationMode.Current)
+                    posX += m_canvas.m_currentX.Position;
+                else if (LocationMode == XLocationMode.Start)
+                    posX += Start;
+                else if (LocationMode == XLocationMode.Clipboard)
+                    posX += CurveCanvas.s_clipboard.Length > 0 ? CurveCanvas.s_clipboard[0].X : 0;
+
+                return posX;                
+            }
+
+            /// <summary>
+            /// Gets or sets whether to paste keys at target Y 
+            /// or at the Y of the first point of the pasted curve
+            /// segment.
+            /// if true it will paste at the Y coordinate of the first
+            /// point of the pasted curve segment.
+            /// </summary>
+            [DefaultValue(true)]
+            public bool Connect
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets the starting value of paste operation.
+            /// <note> this property is used only when
+            /// the value of LocationMode property is XLocationMode.Start</note>
+            /// </summary>
+            public float Start
+            {
+                get;
+                set;
+            }
+
+            
+
+            /// <summary>
+            /// Gets or sets X offset</summary>
+            public float XOffset
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets Y offset.</summary>
+            public float YOffset
+            {
+                get;
+                set;
+            }
+
+
+            private uint m_numCopies;
+            /// <summary>
+            /// Gets and sets number of time the paste operation is
+            /// performed.             
+            /// </summary>
+            public uint Copies
+            {
+                get { return m_numCopies; }
+                set { m_numCopies = MathUtil.Clamp<uint>(value, 1, 100); }
+            }
+
+            /// <summary>
+            /// Gets or sets the mode that controls how the location of paste is computed</summary>
+            public XLocationMode LocationMode
+            {
+                get;
+                set;
+            }
+
+
+            /// <summary>
+            /// Gets or sets the value that controls paste method.</summary>
+            public PasteMethods PasteMethod
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Paste methods</summary>
+            public enum PasteMethods
+            {
+                /// <summary>
+                /// Insert, shift all the keys to right
+                /// and insert the new keys starting at the specified location.                
+                /// </summary>
+                Insert,
+
+                /// <summary>
+                /// Paste at the specified locaiton and replace any key that
+                /// overlapse with the keys.</summary>
+                Replace,
+
+                /// <summary>
+                /// Paste at the specified location with out removing or modifying existing keys.
+                /// But if the new and existing keys have same value then new exiting key will be 
+                /// replace with the new key.
+                /// </summary>
+                Merge,
+            }
+
+            /// <summary>
+            /// paste location modes.</summary>
+            public enum XLocationMode
+            {
+                /// <summary>
+                /// Paste starting at the current location indicated 
+                /// by current x line</summary>
+                Current,
+
+                /// <summary>
+                /// Paste starting from the value of Start property</summary>
+                Start,
+
+                /// <summary>
+                /// Paste at the original value.</summary>
+                Clipboard
+            }
+        }
+        private class PasteOptionsForm : Form
+        {
+            // paste at controls.                        
+            private GroupBox m_pasteAtgrp;
+            private Label m_xlocLbl;            
+            private RadioButton m_startRdo;
+            private RadioButton m_currentRdo;
+            private RadioButton m_clipboardRdo;
+            private InputField<float> m_startField;
+            private InputField<float> m_xOffsetField;
+            private InputField<float> m_yOffsetField;
+            private InputField<uint>  m_copiesField;
+
+
+            private GroupBox m_pasteMethodGrp;
+            private Label m_pasteMethodLbl;
+            private RadioButton m_insertRdo;
+            private RadioButton m_replaceRdo;
+            private RadioButton m_mergeRdo;
+            private CheckBox m_connectChk;
+
+            // buttons
+            private Control m_buttonsPanel;
+            private Button m_okBtn;
+            private Button m_closeBtn;
+            private Button m_applyBtn;
+
+
+            private CurveCanvas m_canvas;
+            
+            public PasteOptionsForm(CurveCanvas canvas)
+            {
+                m_canvas = canvas;
+                
+                // paste at group.
+                m_pasteAtgrp = new GroupBox();
+                
+                m_xlocLbl = new Label();
+                m_xlocLbl.AutoSize = true;
+                m_xlocLbl.Text = "X Location".Localize();
+                
+                // radio buttons.
+                m_startRdo = new RadioButton();
+                m_startRdo.AutoSize = true;
+                m_startRdo.Text = "Start".Localize();
+                m_startRdo.Checked = true;
+               
+                
+                m_currentRdo = new RadioButton();
+                m_currentRdo.AutoSize = true;
+                m_currentRdo.Text = "Current".Localize();
+                
+                m_clipboardRdo = new RadioButton();
+                m_clipboardRdo.Text = "Clipboard".Localize();
+                m_clipboardRdo.AutoSize = true;
+                                
+                // input fields.
+                m_startField = new InputField<float>("Start".Localize(), 150);                
+                m_xOffsetField = new InputField<float>("X Offset".Localize(), 150);                
+                m_yOffsetField = new InputField<float>("Y Offset".Localize(), 150);                
+                m_copiesField = new InputField<uint>("Copies".Localize(), 100);
+                
+                m_pasteAtgrp.Controls.AddRange(new Control[] {
+                    m_xlocLbl,
+                    m_startRdo,
+                    m_currentRdo,
+                    m_clipboardRdo,
+                    m_startField,
+                    m_xOffsetField,
+                    m_yOffsetField,
+                    m_copiesField,
+                });
+
+                
+                // paste method group.
+                m_pasteMethodGrp = new GroupBox();
+                
+                m_pasteMethodLbl = new Label();
+                m_pasteMethodLbl.Text = "Paste Method".Localize();
+                m_pasteMethodLbl.AutoSize = true;
+                
+                m_insertRdo = new RadioButton();
+                m_insertRdo.Text = "Insert".Localize();
+                m_insertRdo.AutoSize = true;
+                m_insertRdo.Checked = true;
+
+                m_replaceRdo = new RadioButton();
+                m_replaceRdo.Text = "Replace".Localize();
+                m_replaceRdo.AutoSize = true;
+                
+
+                m_mergeRdo = new RadioButton();
+                m_mergeRdo.Text = "Merge".Localize();
+                m_mergeRdo.AutoSize = true;
+                
+
+                m_connectChk = new CheckBox();
+                m_connectChk.Text = "Connect".Localize();
+                m_connectChk.AutoSize = true;
+                
+                m_pasteMethodGrp.Controls.AddRange(new Control[]
+                {
+                    m_pasteMethodLbl,
+                    m_insertRdo,
+                    m_replaceRdo,
+                    m_mergeRdo,
+                    m_connectChk
+                });
+
+
+                // buttons panel.
+                m_buttonsPanel = new Panel();
+                
+                m_okBtn = new Button
+                {
+                    Text = "Ok".Localize(),                                        
+                };
+                m_okBtn.Click += (s, e) => ApplyAndClose();
+              
+                
+                m_applyBtn = new Button
+                {
+                    Text = "Apply".Localize(),
+                    
+                };
+                m_applyBtn.Click += (s, e) => Apply();
+
+
+                m_closeBtn = new Button
+                {
+                    Text = "Close".Localize(),                    
+                };
+                m_closeBtn.Click += (s, e) => Close();
+
+                m_buttonsPanel.Controls.AddRange(new[]
+                    {
+                        m_okBtn,                        
+                        m_applyBtn,
+                        m_closeBtn,
+                    });
+                                
+                SuspendLayout();
+
+                Controls.AddRange(new[]
+                {
+                    m_buttonsPanel,
+                    m_pasteMethodGrp,
+                    m_pasteAtgrp,                                       
+                });
+                                
+                AutoScaleMode = AutoScaleMode.None;                                              
+                FormBorderStyle = FormBorderStyle.SizableToolWindow;                
+                Name = "PasteOptionsForm";
+                ShowIcon = false;
+                ShowInTaskbar = false;
+                StartPosition = FormStartPosition.Manual;
+                Text = "Curve Editor - Paste options".Localize();
+                
+                SizeChanged += (s, e) => DoLayout();
+                m_startField.SizeChanged += (s, e) => DoLayout();
+                ClientSize = new Size(530, 410);
+                ResumeLayout(false);
+                PerformLayout();
+
+                // set tab orders
+                m_pasteAtgrp.TabStop = false;
+                m_pasteAtgrp.TabIndex = 0;
+
+                m_startRdo.TabStop = true;
+                m_startRdo.TabIndex = 0;
+                
+
+                m_currentRdo.TabStop = true;
+                m_currentRdo.TabIndex = 1;
+
+                m_clipboardRdo.TabStop = true;
+                m_clipboardRdo.TabIndex = 2;
+
+                m_startField.TabIndex = 3;
+                m_xOffsetField.TabIndex = 4;
+                m_yOffsetField.TabIndex = 5;
+                m_copiesField.TabIndex = 6;
+
+
+                m_pasteMethodGrp.TabStop = false;
+                m_pasteMethodGrp.TabIndex = 1;
+
+                m_insertRdo.TabStop = true;
+                m_insertRdo.TabIndex = 0;
+
+                m_replaceRdo.TabStop = true;
+                m_replaceRdo.TabIndex = 1;
+                    
+                m_mergeRdo.TabStop = true;
+                m_mergeRdo.TabIndex = 2;
+
+                m_connectChk.TabStop = true;
+                m_connectChk.TabIndex = 3;
+
+                m_buttonsPanel.TabStop = false;
+                m_buttonsPanel.TabIndex = 2;
+                m_okBtn.TabIndex = 0;
+                m_applyBtn.TabIndex = 1;
+                m_closeBtn.TabIndex = 2;
+
+                Shown += (s, e) =>
+                    {
+                        DoLayout();
+                        ModelToView();
+                    };
+                    
+                
+                Deactivate += (s, e) => ViewToModel();
+                
+                
+                m_startRdo.CheckedChanged += RdoCheckedChanged;
+                m_currentRdo.CheckedChanged += RdoCheckedChanged;
+                m_clipboardRdo.CheckedChanged += RdoCheckedChanged;
+                m_insertRdo.CheckedChanged += RdoCheckedChanged;
+                m_replaceRdo.CheckedChanged += RdoCheckedChanged;
+                m_mergeRdo.CheckedChanged += RdoCheckedChanged;
+
+                m_startField.ValueChanged += (s, e) => ViewToModel();
+                m_xOffsetField.ValueChanged += (s, e) => ViewToModel();
+                m_yOffsetField.ValueChanged += (s, e) => ViewToModel();
+                m_copiesField.ValueChanged += (s, e) => ViewToModel();
+                m_connectChk.CheckedChanged += (s, e) => ViewToModel();
+            }
+
+            
+                       
+            private void ApplyAndClose()
+            {
+                Apply();
+                Close();
+            }
+            private void Apply()
+            {
+                ViewToModel();
+                m_canvas.Paste();                
+            }
+
+            private bool m_updatingView;
+            private void ModelToView()
+            {
+                try
+                {
+                    m_updatingView = true;
+                    var po = m_canvas.m_pasteOptions;
+                    m_startRdo.Checked = po.LocationMode == PasteOptions.XLocationMode.Start;
+                    m_currentRdo.Checked = po.LocationMode == PasteOptions.XLocationMode.Current;
+                    m_clipboardRdo.Checked = po.LocationMode == PasteOptions.XLocationMode.Clipboard;
+
+                    m_startField.Value = po.Start;
+                    m_startField.Enabled = m_startRdo.Checked;
+
+                    m_xOffsetField.Value = po.XOffset;
+                    m_yOffsetField.Value = po.YOffset;
+
+                    m_copiesField.Value = po.Copies;
+
+                    m_insertRdo.Checked = po.PasteMethod == PasteOptions.PasteMethods.Insert;
+                    m_replaceRdo.Checked = po.PasteMethod == PasteOptions.PasteMethods.Replace;
+                    m_mergeRdo.Checked = po.PasteMethod == PasteOptions.PasteMethods.Merge;
+                    m_connectChk.Checked = po.Connect;
+                }
+                finally
+                {
+                    m_updatingView = false;
+                }
+            }
+
+            private void RdoCheckedChanged(object sender, EventArgs e)
+            {
+                var rdo = sender as RadioButton;
+                rdo.TabStop = true;
+
+                if (m_updatingView) return;                
+                if(rdo == m_startRdo) m_startField.Enabled = m_startRdo.Checked;
+                if (rdo.Checked) ViewToModel();                    
+            }
+
+            private void ViewToModel()
+            {
+                if (m_updatingView) return;
+
+                var po = m_canvas.m_pasteOptions;
+                if (m_startRdo.Checked) po.LocationMode = PasteOptions.XLocationMode.Start;
+                else if (m_currentRdo.Checked) po.LocationMode = PasteOptions.XLocationMode.Current;                
+                else if (m_clipboardRdo.Checked) po.LocationMode = PasteOptions.XLocationMode.Clipboard;
+
+                po.Start = m_startField.Value;
+                po.XOffset = m_xOffsetField.Value;
+                po.YOffset = m_yOffsetField.Value;
+                po.Copies = m_copiesField.Value;
+
+                if(m_insertRdo.Checked)  po.PasteMethod = PasteOptions.PasteMethods.Insert;
+                else if (m_replaceRdo.Checked) po.PasteMethod = PasteOptions.PasteMethods.Replace;
+                else if (m_mergeRdo.Checked )  po.PasteMethod = PasteOptions.PasteMethods.Merge;
+
+                po.Connect = m_connectChk.Checked;
+
+                if (po.Copies != m_copiesField.Value)
+                    m_copiesField.Value = po.Copies;
+                m_canvas.Invalidate();
+
+            }
+
+            private void DoLayout()
+            {                
+                int outerMargin = 4;
+                int grpLeftRightMargin = 16;
+                int leftPadding = 30;
+                int vSpacing = 8; // vertical spacing between fields.
+                int vSpacingGrp = 16;
+                int hSpacing = 4; // horizontal spacing between fields.
+
+                int pad = 16;
+                int cw = ClientSize.Width - 2 * grpLeftRightMargin;
+                m_pasteAtgrp.Location = new Point(grpLeftRightMargin, outerMargin);
+                m_pasteAtgrp.Height = m_currentRdo.Height + 2 * pad + 3 * vSpacingGrp + vSpacing + 4 * m_startField.Height;
+
+                int txtLeft = m_xlocLbl.Width + 6;
+                int rdoX = leftPadding + txtLeft;
+
+                m_xlocLbl.Location = new Point(leftPadding, pad + (m_startRdo.Height - m_xlocLbl.Height) / 2);
+
+                m_startRdo.Location = new Point(rdoX, pad);
+                
+                rdoX += (m_startRdo.Width + hSpacing);
+                m_currentRdo.Location = new Point(rdoX, pad);
+
+                rdoX += (m_currentRdo.Width + hSpacing);
+                m_clipboardRdo.Location = new Point(rdoX, pad);
+
+                int fieldY = m_clipboardRdo.Bottom + vSpacingGrp;
+                
+
+                m_startField.Location = new Point(leftPadding + (txtLeft - m_startField.TextBoxLocation.X), fieldY);
+                fieldY += (m_startField.Height + vSpacingGrp);
+
+                m_xOffsetField.Location = new Point(leftPadding + (txtLeft- m_xOffsetField.TextBoxLocation.X),fieldY);
+                fieldY += (m_startField.Height + vSpacing);
+
+                m_yOffsetField.Location = new Point(leftPadding + (txtLeft - m_yOffsetField.TextBoxLocation.X), fieldY);
+                fieldY += (m_startField.Height + vSpacingGrp);
+                
+                m_copiesField.Location = new Point(leftPadding + (txtLeft - m_copiesField.TextBoxLocation.X), fieldY);
+
+                m_pasteAtgrp.Width = Math.Max(m_clipboardRdo.Right, cw); ;
+
+                m_pasteMethodGrp.Width = m_pasteAtgrp.Width;
+                m_pasteMethodGrp.Location = new Point(grpLeftRightMargin, m_pasteAtgrp.Bottom + vSpacingGrp);
+                m_pasteMethodGrp.Height = 2 * pad + m_insertRdo.Height + vSpacing + m_connectChk.Height;
+
+                m_pasteMethodLbl.Location = new Point(leftPadding, pad);
+                m_insertRdo.Location = new Point(m_pasteMethodLbl.Right + hSpacing, pad);
+                m_replaceRdo.Location = new Point(m_insertRdo.Right + hSpacing, pad);
+                m_mergeRdo.Location = new Point(m_replaceRdo.Right + hSpacing, pad);
+                m_connectChk.Location = new Point(m_insertRdo.Left, m_mergeRdo.Bottom + vSpacing);
+
+
+                m_buttonsPanel.Height = m_applyBtn.Height + vSpacing + 1;
+                m_buttonsPanel.Width = cw;               
+                m_buttonsPanel.Location = new Point(grpLeftRightMargin, ClientSize.Height - m_buttonsPanel.Height);
+
+                int closeBtnW = TextRenderer.MeasureText(m_closeBtn.Text, m_closeBtn.Font).Width;
+                int applyBtnW = TextRenderer.MeasureText(m_applyBtn.Text, m_applyBtn.Font).Width;
+                int okBtnW = TextRenderer.MeasureText(m_okBtn.Text, m_okBtn.Font).Width;
+                int btnW = Math.Max(closeBtnW, applyBtnW);
+                btnW = Math.Max(btnW, okBtnW) * 2;
+                
+                m_closeBtn.Width = btnW;
+                m_applyBtn.Width = btnW;
+                m_okBtn.Width = btnW;
+                              
+                m_closeBtn.Location = new Point(m_buttonsPanel.ClientSize.Width - m_closeBtn.Width , 1);
+                m_applyBtn.Location = new Point(m_closeBtn.Left - m_closeBtn.Width - hSpacing, 1);
+                m_okBtn.Location = new Point(m_applyBtn.Left - m_okBtn.Width - hSpacing, 1);
+            }
+
+            private class InputField<T> : Control where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+            {
+
+                public event EventHandler ValueChanged = delegate { };
+
+
+                private readonly NumberTextBox<T> m_txtBox;
+                private readonly Label m_label;
+                private int m_txtWidth;
+                
+                public InputField(string label, int length)
+                {
+                    m_txtWidth = length;
+                    if (m_txtWidth < 20) m_txtWidth = 20;
+
+                    
+                    m_label = new Label();
+                    m_label.AutoSize = true;
+                    m_label.Location = new Point(1, 1);
+                    m_label.Name = "m_label";                  
+                    m_label.Text = label;
+
+
+                    m_txtBox = new NumberTextBox<T>();
+                    m_txtBox.Location = new Point(26, 1);
+                    m_txtBox.Name = "m_txtBox";
+                    m_txtBox.Size = new Size(m_txtWidth, 30);
+                    m_txtBox.TabIndex = 0;
+                    m_txtBox.TabStop = true;
+
+                    m_txtBox.ValueChanged += (s, e) => m_dirty = true;
+                    m_txtBox.Validated += (s, e) => RaiseValueChanged();
+                    m_txtBox.KeyDown += (s, e) =>
+                    {
+                        if (e.KeyCode == Keys.Enter)
+                        {
+                            RaiseValueChanged();
+                        }
+                    };
+
+                                        
+                    Controls.Add(m_label);
+                    Controls.Add(m_txtBox);
+
+                    m_txtBox.SizeChanged += (ts, te) => DoLayout();
+                    m_label.SizeChanged += (ls, le) => DoLayout();
+                    SizeChanged += (s, e) => DoLayout();
+                    Size = new Size(200, 30);
+                    TabStop = false;
+                }
+
+                private bool m_dirty;
+                private void RaiseValueChanged()
+                {
+                    if (m_dirty)
+                    {
+                        m_dirty = false;
+                        var h = ValueChanged;
+                        h(this, EventArgs.Empty);
+                    }
+                }
+            
+                //private PropertyInfo m_boundProperty;
+                //private object m_source;
+                //public void SetBinding(object source, Expression<Func<T>> expr)
+                //{
+                //    m_boundProperty = null;
+                //    m_source = source;                    
+                //    if (source == null) return;                                     
+                //    var memexpr = expr.Body as MemberExpression;
+                //    PropertyInfo propInfo = memexpr != null ? memexpr.Member as PropertyInfo : null;
+                //    if (propInfo == null) throw new ArgumentException("property not found");
+                //    if (propInfo.CanRead && propInfo.CanWrite) m_boundProperty = propInfo;
+                //}
+
+
+                public Point TextBoxLocation
+                {
+                    get { return m_txtBox.Location; }
+                }
+
+                public T Value
+                {
+                    get { return m_txtBox.Value; }
+                    set { m_txtBox.Value = value; }
+                }
+               
+                private void DoLayout()
+                {
+                    Height = Math.Max(m_label.Height, m_txtBox.Height);
+                    Width = m_label.Width + m_txtBox.Width + 3;                                                               
+                    m_label.Location = new Point(1, (Height - m_label.Height) / 2);
+                    m_txtBox.Location = new Point(m_label.Bounds.Right, (Height - m_txtBox.Height) / 2);
+                }
+            }
+            /// <summary>
+            /// Numeric text box</summary>    
+            class NumberTextBox<T> : TextBox where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+            {
+                /// <summary>
+                /// this event is raised when Value changed. </summary>
+                public event EventHandler ValueChanged = delegate { };
+
+                /// <summary>
+                /// Constructs and verifies that T is one of the numeric data type.</summary>
+                public NumberTextBox()
+                {
+                    ttype = typeof(T);
+                    if (ttype == typeof(sbyte) || ttype == typeof(short)
+                        || ttype == typeof(int) || ttype == typeof(long))
+                    {
+                        IsInteger = true;
+                        IsSigned = true;
+                    }
+
+                    else if (ttype == typeof(byte) || ttype == typeof(ushort)
+                        || ttype == typeof(uint) || ttype == typeof(ulong))
+                    {
+                        IsInteger = true;
+                        IsSigned = false;
+                    }
+                    else if (ttype == typeof(float) || ttype == typeof(double))
+                    {
+                        IsInteger = false;
+                        IsSigned = true;
+                    }
+                    else
+                    {
+                        throw new Exception(ttype.FullName + " is not supported"); ;
+                    }
+
+                    Value = default(T);
+
+                    TextChanged += NumberTextBox_TextChanged;
+                    KeyPress += NumberTextBox_KeyPress;
+                    LostFocus += NumberTextBox_LostFocus;
+                }
+
+                private void NumberTextBox_LostFocus(object sender, EventArgs e)
+                {
+                    T val;
+                    string str = Text;
+                    if (!TryParseT(str, out val))
+                    {
+                        Value = default(T);
+                    }
+
+                }
+
+                private void NumberTextBox_KeyPress(object sender, KeyPressEventArgs e)
+                {
+                    // drop invalid key presses.
+                    if (!char.IsControl(e.KeyChar))
+                    {
+                        T val;
+                        string str = Text.Insert(SelectionStart, e.KeyChar.ToString());
+                        if (!IsSigned || str != "-")
+                            e.Handled = !TryParseT(str, out val);
+                    }
+                }
+
+                private void NumberTextBox_TextChanged(object sender, EventArgs e)
+                {
+                    string str = Text;
+                    if (IsSigned && str == "-") return;
+                    if (!IsInteger && str == ".") return;
+
+                    T val = default(T);
+
+                    if (!string.IsNullOrWhiteSpace(str) && !TryParseT(str, out val))
+                    {
+                        int pos = SelectionStart;
+                        Text = ValueToString(m_val);
+                        SelectionStart = pos > 0 ? pos - 1 : pos;
+                    }
+                    else if (!((IEquatable<T>)val).Equals(m_val))
+                    {
+                        m_val = val;
+                        OnValueChanged(EventArgs.Empty);
+                    }
+                }
+
+                /// <summary>
+                /// Gets and sets the value of this numeric text box.</summary>
+                public T Value
+                {
+                    get { return m_val; }
+                    set
+                    {
+                        string strval = ValueToString(value);
+                        if (Text != strval) Text = strval;
+                        if (!((IEquatable<T>)m_val).Equals(value))
+                        {
+                            m_val = value;
+                            OnValueChanged(EventArgs.Empty);
+                        }
+                    }
+                }
+
+                protected virtual void OnValueChanged(EventArgs e)
+                {
+                    var h = ValueChanged;
+                    h(this, EventArgs.Empty);
+                }
+
+                #region mouse handling
+                private bool m_selectAll;
+                
+                protected override void OnEnter(EventArgs e)
+                {
+                    base.OnEnter(e);
+                    m_selectAll = MouseButtons == MouseButtons.Left;
+                    if (MouseButtons == MouseButtons.None)
+                    {// select all, when tabbing into this control.
+                        SelectAll();
+                    }
+                }
+                
+                protected override void OnLeave(EventArgs e)
+                {
+                    base.OnLeave(e);
+                    m_selectAll = false;
+                }
+                
+                protected override void OnMouseUp(MouseEventArgs mevent)
+                {
+                    base.OnMouseUp(mevent);
+                    if (m_selectAll && SelectionLength == 0)
+                    {
+                        m_selectAll = false;
+                        SelectAll();
+                        Focus();
+                    }
+
+                }                
+                protected override void OnMouseDown(MouseEventArgs e)
+                {
+                    if (e.Button == MouseButtons.Left &&
+                        e.Clicks == 2)
+                    {
+                        SelectAll();
+                        return;
+                    }
+                    base.OnMouseDown(e);
+                }
+
+                #endregion
+
+                #region private methods.
+
+                private bool TryParseT(string s, out T value)
+                {
+                    bool valid;
+
+                    // var converter = TypeDescriptor.GetConverter(ttype);
+                    // val = (T)converter.ConvertFrom(s);
+
+                    if (ttype == typeof(sbyte))
+                    {
+                        sbyte val;
+                        valid = sbyte.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(byte))
+                    {
+                        byte val;
+                        valid = byte.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(short))
+                    {
+                        short val;
+                        valid = short.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(ushort))
+                    {
+                        ushort val;
+                        valid = ushort.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(int))
+                    {
+                        int val;
+                        valid = int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(uint))
+                    {
+                        uint val;
+                        valid = uint.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(long))
+                    {
+                        long val;
+                        valid = long.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(ulong))
+                    {
+                        ulong val;
+                        valid = ulong.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(float))
+                    {
+                        float val;
+                        valid = float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else if (ttype == typeof(double))
+                    {
+                        double val;
+                        valid = double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out val);
+                        value = (T)(object)val;
+                    }
+                    else
+                    {
+                        value = default(T);
+                        valid = false;
+                    }
+                    return valid;
+                }
+
+                private string ValueToString(T val)
+                {
+                    if (IsInteger) return ((IFormattable)val).ToString(null, CultureInfo.InvariantCulture);
+                    return ((IFormattable)val).ToString("R", CultureInfo.InvariantCulture);
+                }
+                #endregion
+                private T m_val;
+                private readonly Type ttype;
+                private readonly bool IsInteger;
+                private readonly bool IsSigned;
+            }
+
+        }
+        #endregion
+
+        #region  private enums
+        
         /// <summary>Mouse editing action enums</summary>
         private enum MouseEditAction
         {
@@ -2740,7 +3938,7 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Curve limit sides</summary>
         [Flags]
-        enum CurveLimitSides
+        private enum CurveLimitSides
         {
             None = 0,
             Left = 1,
@@ -2840,5 +4038,5 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <summary>
         /// Advanced mode, similar to Maya graph editor</summary>
         Advanced,
-    }
+    }    
 }

@@ -19,8 +19,8 @@ namespace Sce.Atf.Controls.CurveEditing
         {
             SuspendLayout();
             Name = "Cartesian2dCanvas";
-            Size = new System.Drawing.Size(400, 400);
-            BackColor = System.Drawing.Color.FromArgb(161, 161, 161);
+            Size = new Size(400, 400);
+            BackColor =  Color.FromArgb(150, 150, 150);
             ResumeLayout(false);
             m_scaleTextFont = new Font(Font.Name, 8.25f);            
             
@@ -391,7 +391,8 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawHorizontalMinorTicks(Graphics g)
         {
-           DrawHorizontalTicks(g, m_minorGridlinePen, m_majorTickY / m_numOfMinorTicks);            
+            if (DrawMinorTickEnabled) 
+                DrawHorizontalTicks(g, m_minorGridlinePen, m_majorTickY / m_numOfMinorTicks);            
         }
 
 
@@ -400,7 +401,8 @@ namespace Sce.Atf.Controls.CurveEditing
         /// <param name="g">Graphics object</param>
         public virtual void DrawVerticalMinorTicks(Graphics g)
         {
-           DrawVerticalTicks(g, m_minorGridlinePen, m_majorTickX / m_numOfMinorTicks);
+            if (DrawMinorTickEnabled)
+                DrawVerticalTicks(g, m_minorGridlinePen, m_majorTickX / m_numOfMinorTicks);
         }
         
         /// <summary>
@@ -454,10 +456,13 @@ namespace Sce.Atf.Controls.CurveEditing
             //There is no need to apply expensive anti-aliasing for vertical and horizontal lines.
             //There is no need for transparency.
             g.SmoothingMode = SmoothingMode.None;
-            g.CompositingMode = CompositingMode.SourceCopy;                                    
-                        
-            DrawHorizontalMinorTicks(g);
-            DrawVerticalMinorTicks(g);
+            g.CompositingMode = CompositingMode.SourceCopy;
+
+            if (DrawMinorTickEnabled)
+            {
+                DrawHorizontalMinorTicks(g);
+                DrawVerticalMinorTicks(g);
+            }
             DrawVerticalMajorTicks(g);
             DrawHorizontalMajorTicks(g);
             DrawCoordinateAxes(g);
@@ -535,7 +540,23 @@ namespace Sce.Atf.Controls.CurveEditing
                 Invalidate();
             }
         }
-        
+
+
+
+        /// <summary>
+        /// Gets or sets whether to draw minor ticks</summary>
+        public bool DrawMinorTickEnabled
+        {
+            get { return m_drawMinorTicks; }
+            set
+            {
+                m_drawMinorTicks = value;
+                Invalidate();
+            }
+        }
+        private bool m_drawMinorTicks;
+
+
         /// <summary>
         /// Gets or sets Brush used for drawing 
         /// number scale along the axes</summary>
@@ -564,7 +585,7 @@ namespace Sce.Atf.Controls.CurveEditing
             get { return m_majorGridlinePen; }
             set { SetDisposableVar(ref m_majorGridlinePen, value); }
         }        
-        private Pen m_majorGridlinePen = new Pen(Color.FromArgb(180, 180, 180));
+        private Pen m_majorGridlinePen = new Pen(Color.FromArgb(85, 85, 85));
 
         /// <summary>
         /// Gets or sets Pen used for drawing minor gridlines.</summary>
@@ -573,7 +594,7 @@ namespace Sce.Atf.Controls.CurveEditing
             get { return m_minorGridlinePen; }
             set { SetDisposableVar(ref m_minorGridlinePen, value); }
         }
-        private Pen m_minorGridlinePen = new Pen(Color.FromArgb(200, 200, 200));
+        private Pen m_minorGridlinePen = new Pen(Color.FromArgb(90, 90, 90));
 
         /// <summary>
         /// Gets or sets Pen used for drawing the axes.</summary>
@@ -582,7 +603,7 @@ namespace Sce.Atf.Controls.CurveEditing
             get { return m_axisPen; }
             set { SetDisposableVar(ref m_axisPen, value); }
         }
-        private Pen m_axisPen = new Pen(Color.Black);
+        private Pen m_axisPen = new Pen(Color.FromArgb(200,200,200));
 
         /// <summary>
         /// Gets or sets Font used for drawing axis labels</summary>
@@ -1041,7 +1062,7 @@ namespace Sce.Atf.Controls.CurveEditing
         // grid related members.        
         private double m_numOfMinorTicks = 5;                
         private double m_majorTickSpacing = 50.0f;        
-        private const float  GridTextMargin = 3.0f;
+        public  const float  GridTextMargin = 3.0f;
         private double m_majorTickY = 60;
         private double m_majorTickX = 60;               
         private OriginLockMode m_lockorg = OriginLockMode.Free;

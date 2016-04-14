@@ -13,18 +13,106 @@ namespace Sce.Atf.Controls.CurveEditing
     /// Class used by curve control for picking and rendering</summary>
     public class CurveRenderer : IDisposable
     {
+
+        /// <summary>
+        /// Construct CurveRenderer with default values</summary>
+        public CurveRenderer()
+        {
+            TangentColor = Color.Magenta;
+            TangentInColor = Color.Cyan;
+            TangentOutColor = Color.Magenta;
+
+            SelectedTangentColor = Color.Gold;
+            SelectedPointColor = Color.Gold;
+        }
+
+
         /// <summary>
         /// Gets or sets control point size</summary>
         public float PointSize
         {
             get { return m_pointSize; }
+            set { m_pointSize = MathUtil.Clamp(value, 2, 64); }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the color for drawing selected tangents</summary>
+        public Color SelectedTangentColor
+        {
+            get;
+            set;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the color for drawing tangent</summary>
+        public Color TangentColor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the color for drawing the tangentIn when tangents are broken.</summary>
+        public Color TangentInColor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the color for drawing the tangentOut when tangents are broken.</summary>
+        public Color TangentOutColor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the color for drawing control points that are not selected</summary>
+        public Color PointColor
+        {
+            get { return m_pointBrush.Color; }
+            set { m_pointBrush.Color = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the color for drawing the selected control points</summary>
+        public Color SelectedPointColor
+        {
+            get { return m_pointHiBrush.Color; }
+            set { m_pointHiBrush.Color = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the brush to be used for the control points that are not selected.
+        /// Can't be null. Setting the brush disposes of the current one.</summary>
+        [Obsolete("Use PointColor instead")]
+        public Brush PointBrush
+        {
+            get { return m_pointBrush; }
             set
             {
-                if (value < 2 || value > 64)
-                    throw new ArgumentOutOfRangeException();
-                m_pointSize = value;
+                m_pointBrush.Dispose();
+                m_pointBrush = (SolidBrush)value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the brush to be used for the selected control points.
+        /// Can't be null. Setting the brush disposes of the current one.</summary>
+        [Obsolete("Use SelectedPointColor instead")]
+        public Brush PointHighlightBrush
+        {
+            get { return m_pointHiBrush; }
+            set
+            {
+                m_pointHiBrush.Dispose();
+                m_pointHiBrush = (SolidBrush)value;
+            }
+        }
+
 
         /// <summary>
         /// Picks one or more control points within given rectangle</summary>
@@ -355,41 +443,7 @@ namespace Sce.Atf.Controls.CurveEditing
                 throw new InvalidOperationException("curveControl is already been set");
             m_canvas = control;
         }
-
-        /// <summary>
-        /// Gets or sets the color for the tangent arrow</summary>
-        public Color TangentColor
-        {
-            get { return m_tangentColor; }
-            set { m_tangentColor = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the brush to be used for the control points that are not selected.
-        /// Can't be null. Setting the brush disposes of the current one.</summary>
-        public Brush PointBrush
-        {
-            get { return m_pointBrush; }
-            set
-            {
-                m_pointBrush.Dispose();
-                m_pointBrush = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the brush to be used for the selected control points.
-        /// Can't be null. Setting the brush disposes of the current one.</summary>
-        public Brush PointHighlightBrush
-        {
-            get { return m_pointHiBrush; }
-            set
-            {
-                m_pointHiBrush.Dispose();
-                m_pointHiBrush = value;
-            }
-        }
-
+      
         /// <summary>
         /// Draws single control point</summary>
         /// <param name="prevTanType">Previous CurveTangentTypes</param>
@@ -408,13 +462,18 @@ namespace Sce.Atf.Controls.CurveEditing
                     Vec2F tangIn = Vec2F.Normalize(m_canvas.GraphToClientTangent(cp.TangentIn));
                     tangIn.X = -tangIn.X;
                     tangIn.Y = -tangIn.Y;
-                    DrawArrow(p, p + tangIn * m_tangentLength, g, m_tangentColor);
+                    Color color = region == PointSelectionRegions.TangentIn?
+                    SelectedTangentColor :
+                        cp.BrokenTangents ? TangentInColor : TangentColor;
+                    DrawArrow(p, p + tangIn * m_tangentLength, g, color);
                 }
 
                 if (cp.TangentOutType != CurveTangentTypes.Stepped && cp.TangentOutType != CurveTangentTypes.SteppedNext)
                 {
+                    Color color = region == PointSelectionRegions.TangentOut ?
+                    SelectedTangentColor : cp.BrokenTangents ? TangentOutColor : TangentColor;
                     Vec2F tangOut = Vec2F.Normalize(m_canvas.GraphToClientTangent(cp.TangentOut));
-                    DrawArrow(p, p + tangOut * m_tangentLength, g, m_tangentColor);
+                    DrawArrow(p, p + tangOut * m_tangentLength, g, color);
                 }
             }
 
@@ -526,19 +585,17 @@ namespace Sce.Atf.Controls.CurveEditing
         private const float FinLength = 10.0f;
         private const float sin = 0.5f; // cached value             
         private const float cos = 0.8660254f; // cached value       
-
-        private Color m_tangentColor = Color.DeepSkyBlue;
-        private Brush m_pointBrush = new SolidBrush(Color.Black);
-        private Brush m_pointHiBrush = new SolidBrush(Color.Red);
+        
+        private SolidBrush m_pointBrush = new SolidBrush(Color.Black);
+        private SolidBrush m_pointHiBrush = new SolidBrush(Color.Red);
+        private SolidBrush m_tangentArrowHeadBrush = (SolidBrush)Brushes.DarkCyan;
+        private Pen m_tangentArrowLinePen = new Pen(Color.DarkCyan, 2);
+        private Pen m_infinityPen = new Pen(Color.FromArgb(40, 40, 40)) { DashPattern = new float[] { 2, 2 } };
+        private Pen m_curvePen = new Pen(Color.Black);
 
         private float m_pointSize = 5.0f;
         private float m_tangentLength = 40.0f;
-        private int m_tessellation = 4; // in pixel
-
-        private Pen m_tangentArrowLinePen = new Pen(Color.DarkCyan, 2);
-        private SolidBrush m_tangentArrowHeadBrush = (SolidBrush)Brushes.DarkCyan;
-        private Pen m_infinityPen = new Pen(Color.FromArgb(40, 40, 40)) { DashPattern = new float[] { 2, 2 } };
-        private Pen m_curvePen = new Pen(Color.Black);
+        private int m_tessellation = 4; // in pixel        
         private static readonly PointF[] s_arrowPts = new PointF[3];
     }
 }

@@ -74,6 +74,7 @@ namespace DomTreeEditorSample
             curveType.preInfinityAttribute = curveType.Type.GetAttributeInfo("preInfinity");
             curveType.postInfinityAttribute = curveType.Type.GetAttributeInfo("postInfinity");
             curveType.colorAttribute = curveType.Type.GetAttributeInfo("color");
+            curveType.visibleAttribute = curveType.Type.GetAttributeInfo("visible");
             curveType.xLabelAttribute = curveType.Type.GetAttributeInfo("xLabel");
             curveType.yLabelAttribute = curveType.Type.GetAttributeInfo("yLabel");
             curveType.controlPointChild = curveType.Type.GetChildInfo("controlPoint");
@@ -199,6 +200,7 @@ namespace DomTreeEditorSample
             public static AttributeInfo preInfinityAttribute;
             public static AttributeInfo postInfinityAttribute;
             public static AttributeInfo colorAttribute;
+            public static AttributeInfo visibleAttribute;
             public static AttributeInfo xLabelAttribute;
             public static AttributeInfo yLabelAttribute;
             public static ChildInfo controlPointChild;

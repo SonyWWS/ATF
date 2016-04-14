@@ -616,8 +616,7 @@ namespace Sce.Atf.Applications
         private static void WindowCreated(Form form)
         {            
             ApplyActiveSkin(form, null);
-            s_skinnableObjects.Add(new WeakKey<object>(form));
-
+            
             var ncRenderer = new FormNcRenderer(form);
             ncRenderer.Skin = s_ncSkin;
             ncRenderer.CustomPaintDisabled = ActiveSkin == null;
@@ -985,12 +984,16 @@ namespace Sce.Atf.Applications
                     continue;
                 }
 
+                object childPropertyValue = null;
                 if (setter.ValueInfo != null)
-                    childPropertyInfo.SetValue(instance, GetInstance(instance, childPropertyInfo, setter.ValueInfo), null);
+                    childPropertyValue = GetInstance(instance, childPropertyInfo, setter.ValueInfo);
                 else if (setter.ListInfo != null)
-                    childPropertyInfo.SetValue(instance, GetInstance(setter.ListInfo), null);
+                    childPropertyValue = GetInstance(setter.ListInfo);
                 else
                     throw new InvalidOperationException("Setter '" + setter.PropertyName + "' doesn't have a valueInfo, nor listInfo, specified.  Must have one (and only one) of either.");
+
+                if(childPropertyInfo.CanWrite)
+                    childPropertyInfo.SetValue(instance, childPropertyValue, null);
             }
 
             if (valueInfo.Setters.Count == 0 && valueInfo.Value != null)
@@ -1043,7 +1046,8 @@ namespace Sce.Atf.Applications
                         continue;
                     }
 
-                    tuple.Item2.SetValue(control, keyValue.Value, null);
+                    if(tuple.Item2.CanWrite)
+                        tuple.Item2.SetValue(control, keyValue.Value, null);
 
                     // ToolStrips and MenuStrips are controls, but none of their contents are.
                     // Since it is essential that they be skinnable, we need to custom handle them here.
@@ -1068,6 +1072,7 @@ namespace Sce.Atf.Applications
             //  it once a skin has been loaded. This is promised behavior. We want to allow
             //  clients to call ApplyActiveSkin before a skin has loaded.
             s_skinnableObjects.Add(new WeakKey<object>(control));
+            
 
             if (ActiveSkin == null)
                 return;
@@ -1206,9 +1211,15 @@ namespace Sce.Atf.Applications
             if (obj == null)
                 return;
 
-            var control = obj as Control;            
+            var control = obj as Control;
             if (control != null)
+            {
                 control.SuspendLayout();
+                foreach (Control child in control.Controls)
+                {
+                    ApplyNewPropertyValues(child, skinnedControls);
+                }
+            }
 
             // Only set the properties if this is the first time we've seen this Control.
             if (skinnedControls == null || skinnedControls.Add(obj))
@@ -1235,8 +1246,10 @@ namespace Sce.Atf.Applications
                             newPropertyValue = GetInstance(setter.ListInfo);
                         else
                             throw new Exception("Setter '" + setter.PropertyName + "' does not have its ValueInfo nor ListInfo set");
-
-                        propertyInfo.SetValue(obj, newPropertyValue, null);
+                        if (skinnedControls != null && (newPropertyValue is Control))
+                            skinnedControls.Add(newPropertyValue);
+                        if(propertyInfo.CanWrite)
+                            propertyInfo.SetValue(obj, newPropertyValue, null);
                     }
                 }
 
@@ -1254,14 +1267,8 @@ namespace Sce.Atf.Applications
 
             // Children, such as menus and toolbars, may have been added since ActiveSkin last changed.
             if (control != null)
-            {
-                foreach (Control child in control.Controls)
-                {                                     
-                    ApplyNewPropertyValues(child, skinnedControls);
-                }
-
                 control.ResumeLayout();
-            }
+            
         }
 
         // Finds the best matching skin style for the given target type, or null.
@@ -1480,7 +1487,8 @@ namespace Sce.Atf.Applications
         //private const string NameAttribute = "name";
         private const string ConverterAttribute = "converter";
         private const BindingFlags PropertyLookupType = BindingFlags.Instance | 
-                                                        BindingFlags.Static   | 
+                                                        BindingFlags.Static   |
+                                                        BindingFlags.NonPublic |
                                                         BindingFlags.Public;
     }
 }

@@ -25,7 +25,7 @@
 			<valueInfo type="System.Drawing.Color" value="#FF333333" />
 		</setter>
 		<setter propertyName="ForeColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFF0F0F0" />
 		</setter>
 		<setter propertyName="Font">
 			<valueInfo type="System.Drawing.Font">
@@ -55,7 +55,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -71,7 +71,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -87,7 +87,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -103,7 +103,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -119,7 +119,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -135,7 +135,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -151,7 +151,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -167,7 +167,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -183,7 +183,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -199,7 +199,7 @@
 							<valueInfo type="System.Drawing.Drawing2D.LinearGradientMode" value="Vertical" />
 						</setter>
 						<setter propertyName="TextColor">
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</setter>
 					</valueInfo>
 				</setter>
@@ -208,7 +208,7 @@
 	</style>
 	<style name="ButtonStyle" targetType="System.Windows.Forms.Button">
 		<setter propertyName="ForeColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 		<setter propertyName="FlatStyle">
 			<valueInfo type="System.Windows.Forms.FlatStyle" value="Flat" />
@@ -219,16 +219,27 @@
 			<valueInfo type="System.Drawing.Color" value="#00000000" />
 		</setter>
 	</style>
-	<style name="LabelStyle" targetType="System.Windows.Forms.Label">
-		<setter propertyName="BackColor">
-			<valueInfo type="System.Drawing.Color" value="#00000000" />
-		</setter>
-	</style>
+    <style name="LabelStyle" targetType="System.Windows.Forms.Label">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#00000000" />
+        </setter>
+    </style>
+
+    <style name="TextBoxBaseStyle" targetType="System.Windows.Forms.TextBoxBase">
+        <setter propertyName="BackColor">
+            <valueInfo type="System.Drawing.Color" value="#FF202020" />
+        </setter>
+    </style>
+    
+    
 	<style name="RadioButtonStyle" targetType="System.Windows.Forms.RadioButton">
 		<setter propertyName="BackColor">
 			<valueInfo type="System.Drawing.Color" value="#00000000" />
 		</setter>
-	</style>
+        <setter propertyName="FlatStyle">
+            <valueInfo type="System.Windows.Forms.FlatStyle" value="Flat"/>
+        </setter>
+    </style>
 	<style name="SplitContainerStyle" targetType="System.Windows.Forms.SplitContainer">
 		<setter propertyName="BackColor">
 			<valueInfo type="System.Drawing.Color" value="#FF484848" />
@@ -241,7 +252,7 @@
 		<setter propertyName="TextBrush">
 			<valueInfo type="System.Drawing.SolidBrush">
 				<constructorParams>
-					<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+					<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 				</constructorParams>
 			</valueInfo>
 		</setter>
@@ -257,7 +268,7 @@
 		<setter propertyName="PropertyTextBrush">
 			<valueInfo type="System.Drawing.SolidBrush">
 				<constructorParams>
-					<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+					<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 				</constructorParams>
 			</valueInfo>
 		</setter>
@@ -285,7 +296,7 @@
 		<setter propertyName="CategoryNameBrush">
 			<valueInfo type="System.Drawing.SolidBrush">
 				<constructorParams>
-					<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+					<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 				</constructorParams>
 			</valueInfo>
 		</setter>
@@ -334,21 +345,21 @@
 				<setter propertyName="TextBrush">
 					<valueInfo type="System.Drawing.SolidBrush">
 						<constructorParams>
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</constructorParams>
 					</valueInfo>
 				</setter>
 				<setter propertyName="ExpanderPen">
 					<valueInfo type="System.Drawing.Pen">
 						<constructorParams>
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</constructorParams>
 					</valueInfo>
 				</setter>
 				<setter propertyName="HierarchyLinePen">
 					<valueInfo type="System.Drawing.Pen">
 						<constructorParams>
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</constructorParams>
 					</valueInfo>
 				</setter>
@@ -359,23 +370,20 @@
 						</constructorParams>
 					</valueInfo>
 				</setter>
-
-                <setter propertyName="MatchedHighlightBrush">
-                    <valueInfo type="System.Drawing.SolidBrush">
-                        <constructorParams>
-                            <valueInfo type="System.Drawing.Color" value="#FFEFCB05"/>
-                        </constructorParams>
-                    </valueInfo>
-                </setter>
-
-                <setter propertyName="NoMatchHighlightBrush">
-                    <valueInfo type="System.Drawing.SolidBrush">
-                        <constructorParams>
-                            <valueInfo type="System.Drawing.Color" value="#FF646464"/>
-                        </constructorParams>
-                    </valueInfo>
-                </setter>
-                
+				<setter propertyName="MatchedHighlightBrush">
+					<valueInfo type="System.Drawing.SolidBrush">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FFEFCB05" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="NoMatchHighlightBrush">
+					<valueInfo type="System.Drawing.SolidBrush">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FF646464" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
 				<setter propertyName="DeactiveHighlightBrush">
 					<valueInfo type="System.Drawing.SolidBrush">
 						<constructorParams>
@@ -386,7 +394,7 @@
 				<setter propertyName="HighlightTextBrush">
 					<valueInfo type="System.Drawing.SolidBrush">
 						<constructorParams>
-							<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+							<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 						</constructorParams>
 					</valueInfo>
 				</setter>
@@ -411,7 +419,7 @@
 			<valueInfo type="System.Drawing.Color" value="#FF484848" />
 		</setter>
 		<setter propertyName="ForeColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 		<setter propertyName="Renderer">
 			<valueInfo type="Sce.Atf.Controls.CustomToolStripRenderer">
@@ -511,7 +519,7 @@
 							<valueInfo type="System.Drawing.Color" value="#FF6EB2F1" />
 						</setter>
 						<setter propertyName="SettableMenuItemBorder">
-							<valueInfo type="System.Drawing.Color" value="#FF4E7192" />
+							<valueInfo type="System.Drawing.Color" value="#004E7192" />
 						</setter>
 						<setter propertyName="SettableMenuBorder">
 							<valueInfo type="System.Drawing.Color" value="#FF777777" />
@@ -526,10 +534,10 @@
 							<valueInfo type="System.Drawing.Color" value="#FF777777" />
 						</setter>
 						<setter propertyName="SettableMenuItemPressedGradientMiddle">
-							<valueInfo type="System.Drawing.Color" value="#FF555555" />
+							<valueInfo type="System.Drawing.Color" value="#FF777777" />
 						</setter>
 						<setter propertyName="SettableMenuItemPressedGradientEnd">
-							<valueInfo type="System.Drawing.Color" value="#FF333333" />
+							<valueInfo type="System.Drawing.Color" value="#FF777777" />
 						</setter>
 						<setter propertyName="SettableRaftingContainerGradientBegin">
 							<valueInfo type="System.Drawing.Color" value="#FFF0F0F0" />
@@ -598,10 +606,10 @@
 			<valueInfo type="System.Drawing.Color" value="#FF3a3a3a" />
 		</setter>
 		<setter propertyName="NormalTextColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 		<setter propertyName="ExternalEditorTextColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 	</style>
 	<style name="LinkLabelStyle" targetType="System.Windows.Forms.LinkLabel">
@@ -614,7 +622,7 @@
 			<valueInfo type="System.Drawing.Color" value="#FF555555" />
 		</setter>
 		<setter propertyName="ForeColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 		<setter propertyName="Font">
 			<valueInfo type="System.Drawing.Font">
@@ -642,7 +650,7 @@
 			<valueInfo type="System.Drawing.Color" value="#FF1818FF" />
 		</setter>
 		<setter propertyName="SelectionFocusedForeColor">
-			<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+			<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 		</setter>
 		<setter propertyName="SelectionUnfocusedBackColor">
 			<valueInfo type="System.Drawing.Color" value="#FF181888" />
@@ -670,7 +678,7 @@
 				<valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
 					<constructorParams>
 						<valueInfo type="string" value="DefaultStyle" />
-						<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+						<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 					</constructorParams>
 				</valueInfo>
 				<valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
@@ -718,10 +726,93 @@
 				<valueInfo type="Sce.Atf.Controls.SyntaxEditorControl.TextHighlightStyle">
 					<constructorParams>
 						<valueInfo type="string" value="OperatorStyle" />
-						<valueInfo type="System.Drawing.Color" value="#FFFFFFFF" />
+						<valueInfo type="System.Drawing.Color" value="#FFFCFCFC" />
 					</constructorParams>
 				</valueInfo>
 			</listInfo>
+		</setter>
+	</style>
+	<style name="CurveEditingControlStyle" targetType="Sce.Atf.Controls.CurveEditing.CurveEditingControl">
+		<setter propertyName="CurveCanvas">
+			<valueInfo type="Sce.Atf.Controls.CurveEditing.CurveCanvas">
+				<setter propertyName="BackColor">
+					<valueInfo type="System.Drawing.Color" value="#FF606060" />
+				</setter>
+				<setter propertyName="ScaleTextFont">
+					<valueInfo type="System.Drawing.Font">
+						<constructorParams>
+							<valueInfo type="string" value="Verdana" />
+							<valueInfo type="float" value="8.25" />
+							<valueInfo type="System.Drawing.FontStyle" value="Regular" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="ScaleTextBrush">
+					<valueInfo type="System.Drawing.SolidBrush">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FF101010" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="MajorGridlinePen">
+					<valueInfo type="System.Drawing.Pen">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FF535353" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="MinorGridlinePen">
+					<valueInfo type="System.Drawing.Pen">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FF505050" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="AxisPen">
+					<valueInfo type="System.Drawing.Pen">
+						<constructorParams>
+							<valueInfo type="System.Drawing.Color" value="#FF7A7A7A" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="AxisLabelFont">
+					<valueInfo type="System.Drawing.Font">
+						<constructorParams>
+							<valueInfo type="string" value="Verdana" />
+							<valueInfo type="float" value="13.0" />
+							<valueInfo type="System.Drawing.FontStyle" value="Regular" />
+						</constructorParams>
+					</valueInfo>
+				</setter>
+				<setter propertyName="CurrentXColor">
+					<valueInfo type="System.Drawing.Color" value="#FFFFEA03" />
+				</setter>
+				<setter propertyName="CurrentXHoverColor">
+					<valueInfo type="System.Drawing.Color" value="#FFFFFFC4" />
+				</setter>
+				<setter propertyName="Renderer">
+					<valueInfo type="Sce.Atf.Controls.CurveEditing.CurveRenderer">
+						<setter propertyName="SelectedPointColor">
+							<valueInfo type="System.Drawing.Color" value="#FFE6E600" />
+						</setter>
+						<setter propertyName="PointColor">
+							<valueInfo type="System.Drawing.Color" value="#FF101010" />
+						</setter>
+						<setter propertyName="SelectedTangentColor">
+							<valueInfo type="System.Drawing.Color" value="#FFE6E600" />
+						</setter>
+						<setter propertyName="TangentColor">
+							<valueInfo type="System.Drawing.Color" value="#FFFF00FF" />
+						</setter>
+						<setter propertyName="TangentInColor">
+							<valueInfo type="System.Drawing.Color" value="#FF00FFFF" />
+						</setter>
+						<setter propertyName="TangentOutColor">
+							<valueInfo type="System.Drawing.Color" value="#FFFF00FF" />
+						</setter>
+					</valueInfo>
+				</setter>
+			</valueInfo>
 		</setter>
 	</style>
 </skin>

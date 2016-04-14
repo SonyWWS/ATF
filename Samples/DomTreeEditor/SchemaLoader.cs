@@ -69,6 +69,8 @@ namespace DomTreeEditorSample
                 UISchema.UIType.Type.Define(new ExtensionInfo<EditingContext>());
                 UISchema.UIType.Type.Define(new ExtensionInfo<TreeView>());
                 UISchema.UIType.Type.Define(new ExtensionInfo<Document>());
+                UISchema.UIType.Type.Define(new ExtensionInfo<MultipleHistoryContext>());
+                
 
                 // register adapters on the root for data validation
                 UISchema.UIType.Type.Define(new ExtensionInfo<Validator>());            // makes sure referenced resources are in package
