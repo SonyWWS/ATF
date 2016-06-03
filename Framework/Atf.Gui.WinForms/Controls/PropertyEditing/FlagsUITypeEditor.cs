@@ -120,7 +120,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 if (value is string)
                     FillCheckedListBoxFromString(value, checkedListBox);
-                else if (value is int)
+                else if (value is int || value is uint)
                     FillCheckedListBoxFromInt(value, checkedListBox);
                 // otherwise, ignore value
 
