@@ -83,16 +83,35 @@ namespace Sce.Atf.Controls.PropertyEditing
             if (flagString != null)
             {
                 string internalNames = string.Empty;
-                string[] displayNames = flagString.Split('|');
-                foreach (string displayName in displayNames)
+
+                // Support the case when users type a value like "6" to mean 4 | 2.
+                int intvalue = 0;
+                if (Int32.TryParse(flagString, out intvalue))
                 {
-                    string name = GetInternalName(displayName);
-                    if (name != null)
+                    for (int idx = 0; idx < m_values.Length; idx++)
                     {
-                        if (internalNames != string.Empty)
-                            internalNames += '|' + name;
-                        else
-                            internalNames = name;
+                        if ((intvalue & m_values[idx]) == m_values[idx])
+                        {
+                            if (internalNames != string.Empty)
+                                internalNames += '|' + m_displayNames[idx];
+                            else
+                                internalNames = m_displayNames[idx];
+                        }
+                    }
+                }
+                else
+                {
+                    string[] displayNames = flagString.Split('|');
+                    foreach (string displayName in displayNames)
+                    {
+                        string name = GetInternalName(displayName);
+                        if (name != null)
+                        {
+                            if (internalNames != string.Empty)
+                                internalNames += '|' + name;
+                            else
+                                internalNames = name;
+                        }
                     }
                 }
                 // Returning the given value allows for editing the enum as long as the DomValueValidator also
