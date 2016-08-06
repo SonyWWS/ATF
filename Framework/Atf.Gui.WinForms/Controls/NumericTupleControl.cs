@@ -250,7 +250,14 @@ namespace Sce.Atf.Controls
                 }
             }
             ResumeLayout(true);
-            base.OnResize(e);          
+
+            // Invalidate the Control to ensure that 1) OnPaint() gets called below so that
+            //  the labels get placed correctly and 2) the PaintEventArgs.ClipRectangle is as
+            //  large as it needs to be. Without Invalidate(), the ClipRectangle could be very
+            //  small or the paint event may not even happen at all.
+            Invalidate();
+
+            base.OnResize(e);
         }
 
         /// <summary>
