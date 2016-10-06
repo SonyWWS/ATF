@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDomEditorWpf.vs2010",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPropertyEditor.vs2010", "WpfPropertyEditor\WpfPropertyEditor.vs2010.csproj", "{6FBC7FC4-8729-410F-B73A-EE26A47850A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atf.Osc.vs2010", "..\Framework\Atf.Osc\Atf.Osc.vs2010.csproj", "{A1BA1C75-5990-4B8B-BE7B-94C39376921B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -494,6 +496,18 @@ Global
 		{6FBC7FC4-8729-410F-B73A-EE26A47850A7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6FBC7FC4-8729-410F-B73A-EE26A47850A7}.Release|x64.ActiveCfg = Release|Any CPU
 		{6FBC7FC4-8729-410F-B73A-EE26A47850A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1BA1C75-5990-4B8B-BE7B-94C39376921B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

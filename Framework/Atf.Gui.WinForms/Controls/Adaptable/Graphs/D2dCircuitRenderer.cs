@@ -321,6 +321,22 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
         }
 
+
+        /// <summary>
+        /// Gets pin position in element local space 
+        /// where the y is at center of the pin</summary>
+        /// <param name="element">Element</param>
+        /// <param name="pinIndex">Pin index</param>
+        /// <param name="inputSide">True if pin side is input, false for output side</param>
+        /// <param name="g">Graphics object</param>
+        /// <returns>Pin position</returns>
+        public Point GetPinPositionCenterY(TElement element, int pinIndex, bool inputSide, D2dGraphics g)
+        {
+            Point pt = GetPinPosition(element, pinIndex, inputSide, g);
+            pt.Y += m_pinSize / 2;
+            return pt;
+        }
+
         /// <summary>
         /// Gets pin position in element local space</summary>
         /// <param name="element">Element</param>
@@ -423,7 +439,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
 
             DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
-            DrawWire(g, pen, start.X, start.Y, end.X, end.Y, 0, null);
         }
 
         /// <summary>
@@ -522,15 +537,27 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             }
             else
             {
+                // pick edges
                 foreach (TWire edge in edges)
-                {
+                {                  
                     if (PickEdge(edge, p, g))
                     {
                         pickedWire = edge;
                         break;
                     }
                 }
+
+                if (pickedWire != null)
+                {
+                    // wire connecting expanded group has higher pick priority than elements.
+                    var group = pickedWire.FromNode.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                    if (group == null || !group.Expanded)
+                        group = pickedWire.ToNode.As<ICircuitGroupType<TElement, TWire, TPin>>();
+                    if(group != null && group.Expanded)                        
+                        return new GraphHitRecord<TElement, TWire, TPin>(null, pickedWire, null, null);                    
+                }
             }
+
 
             Point pickedInputPos = new Point();
             Point pickedOutputPos = new Point();
@@ -564,10 +591,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     }
 
                     if (pickedInput != null)
-                        pickedInputPos = GetPinPosition(pickedElement, pickedInput.Index, true, g);
+                        pickedInputPos = GetPinPositionCenterY(pickedElement, pickedInput.Index, true, g);
                     if (pickedOutput != null)
-                        pickedOutputPos = GetPinPosition(pickedElement, pickedOutput.Index, false, g);
+                        pickedOutputPos = GetPinPositionCenterY(pickedElement, pickedOutput.Index, false, g);
                 }
+            }
+
+            if (pickedElement == null)
+            {
+                if(pickedWire != null)
+                    return new GraphHitRecord<TElement, TWire, TPin>(null, pickedWire, null, null);
+                return new GraphHitRecord<TElement, TWire, TPin>();
             }
 
             DiagramLabel label = null;
@@ -576,92 +610,81 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             TPin pickedSubInput = null;
             TPin pickedSubOutput = null;
 
-            if (pickedElement != null) // if an element is picked, further check if its label or expander is picked. They take priority over wire picking.
-            {
-                RectangleF bounds = GetElementBounds(pickedElement, g);
-                var labelBounds = new RectangleF(
-                    bounds.Left, bounds.Bottom + m_pinMargin, bounds.Width, m_rowSpacing);
+            RectangleF bounds = GetElementBounds(pickedElement, g);
+            var labelBounds = new RectangleF(
+                bounds.Left, bounds.Bottom + m_pinMargin, bounds.Width, m_rowSpacing);
 
-                var hitRecord = PickShowPinsToggle(pickedElement, p, g);
+            var hitRecord = PickShowPinsToggle(pickedElement, p, g);
+            if (hitRecord != null)
+                return hitRecord;
+
+            label = new DiagramLabel(
+                  new Rectangle((int)labelBounds.Left, (int)labelBounds.Top, (int)labelBounds.Width, (int)labelBounds.Height),
+                  TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
+            if (labelBounds.Contains(p))
+                return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, label);
+
+
+            if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            {
+                hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
                 if (hitRecord != null)
                     return hitRecord;
 
-                label = new DiagramLabel(
-                      new Rectangle((int)labelBounds.Left, (int)labelBounds.Top, (int)labelBounds.Width, (int)labelBounds.Height),
-                      TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
-                if (labelBounds.Contains(p))
-                    return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, label);
+                // check title bar
+                var titleBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
+                if (titleBar.Contains(p))
+                    return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
 
-
-                if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+                //pickedWire == null && 
+                if (pickedOutput == null && pickedInput == null) // check border lastly
                 {
-                    hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
-                    if (hitRecord != null)
-                        return hitRecord;
-
-                    // check title bar
-                    var titleBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
-                    if (titleBar.Contains(p))
-                        return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
-
-
-                    if (pickedWire == null && pickedOutput == null && pickedInput == null) // check border lastly
+                    var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
+                    if (border.Contains(p))
+                        borderPart.Border = DiagramBorder.BorderType.Left;
+                    else
                     {
-                        var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
+                        border.Offset(bounds.Width, 0);
                         if (border.Contains(p))
-                            borderPart.Border = DiagramBorder.BorderType.Left;
+                            borderPart.Border = DiagramBorder.BorderType.Right;
                         else
                         {
-                            border.Offset(bounds.Width, 0);
+                            border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
                             if (border.Contains(p))
-                                borderPart.Border = DiagramBorder.BorderType.Right;
+                                borderPart.Border = DiagramBorder.BorderType.Top;
                             else
                             {
-                                border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
+                                border.Offset(0, bounds.Height);
                                 if (border.Contains(p))
-                                    borderPart.Border = DiagramBorder.BorderType.Top;
-                                else
-                                {
-                                    border.Offset(0, bounds.Height);
-                                    if (border.Contains(p))
-                                        borderPart.Border = DiagramBorder.BorderType.Bottom;
-                                }
+                                    borderPart.Border = DiagramBorder.BorderType.Bottom;
                             }
                         }
                     }
-
-                    subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g,
-                        out pickedSubInput, out pickedSubOutput);
                 }
+
+                subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g,
+                    out pickedSubInput, out pickedSubOutput);
             }
+
+
+            
+            
 
             if (pickedSubInput != null)
             {
                 pickedInput = pickedSubInput;
-                pickedInputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubInput.Index, true, g);
+                pickedInputPos = GetPinPositionCenterY(subPick.First.First().Cast<TElement>(), pickedSubInput.Index, true, g);
                 pickedInputPos.Offset(ParentWorldOffset(subPick.First));
             }
             if (pickedSubOutput != null)
             {
                 pickedOutput = pickedSubOutput;
-                pickedOutputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubOutput.Index, false, g);
+                pickedOutputPos = GetPinPositionCenterY(subPick.First.First().Cast<TElement>(), pickedSubOutput.Index, false, g);
                 pickedOutputPos.Offset(ParentWorldOffset(subPick.First));
             }
-
-            if (pickedWire != null && pickedElement != null &&
-                pickedInput == null && pickedOutput == null && // favor picking pin over wire, need to check no pin is picked
-                pickedSubInput == null && pickedSubOutput == null)
-            {
-                // favor picking wire over element, but we don't want to select wires that are hidden by the element
-                // a rough check here probably should suffice most of the time: the bounds of the wire should not be enclosed by the picked node
-                var elementBounds = GetElementBounds(pickedElement, g);
-                var curveBounds = GetWireBounds(pickedWire, g);
-                if (!elementBounds.Contains(curveBounds))
-                    return new GraphHitRecord<TElement, TWire, TPin>(null, pickedWire, null, null);
-            }
-
+          
             var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement, pickedWire, pickedOutput, pickedInput);
-            if (pickedElement != null && pickedWire == null && pickedOutput == null && pickedInput == null)
+            if (pickedElement != null && pickedOutput == null && pickedInput == null)
                 result.Part = borderPart.Border == DiagramBorder.BorderType.None ? null : borderPart;
             result.DefaultPart = label;
             result.SubItem = subPick.First == null ? null : subPick.First.First();
@@ -674,6 +697,173 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             result.HitPathInversed = subPick.First;
             return result;
+
+            #region old pick code
+            //TElement pickedElement = null;
+            //TPin pickedInput = null;
+            //TPin pickedOutput = null;
+            //TWire pickedWire = null;
+
+            //if (priorityEdge != null &&
+            //    PickEdge(priorityEdge, p, g))
+            //{
+            //    pickedWire = priorityEdge;
+            //}
+            //else
+            //{
+            //    foreach (TWire edge in edges)
+            //    {
+            //        if (PickEdge(edge, p, g))
+            //        {
+            //            pickedWire = edge;
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //Point pickedInputPos = new Point();
+            //Point pickedOutputPos = new Point();
+            //foreach (TElement element in nodes)
+            //{
+            //    if (Pick(element, g, p))
+            //    {
+            //        if (pickedElement != null && element.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            //        {
+            //            bool higherPriority = true;
+            //            var group = element.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+            //            if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            //            {
+            //                var pickedGroup = pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>();
+            //                if (group.Info.PickingPriority <= pickedGroup.Info.PickingPriority)
+            //                    higherPriority = false;
+            //            }
+
+            //            if (group.Expanded && higherPriority)
+            //            {
+            //                pickedElement = element;
+            //                pickedInput = PickInput(element, g, p);
+            //                pickedOutput = PickOutput(element, g, p);
+            //            }
+            //        }
+            //        else if (pickedElement == null)
+            //        {
+            //            pickedElement = element;
+            //            pickedInput = PickInput(element, g, p);
+            //            pickedOutput = PickOutput(element, g, p);
+            //        }
+
+            //        if (pickedInput != null)
+            //            pickedInputPos = GetPinPosition(pickedElement, pickedInput.Index, true, g);
+            //        if (pickedOutput != null)
+            //            pickedOutputPos = GetPinPosition(pickedElement, pickedOutput.Index, false, g);
+            //    }
+            //}
+
+            //DiagramLabel label = null;
+            //var subPick = new Pair<IEnumerable<TElement>, object>();
+            //var borderPart = new DiagramBorder(pickedElement);
+            //TPin pickedSubInput = null;
+            //TPin pickedSubOutput = null;
+
+            //if (pickedElement != null) // if an element is picked, further check if its label or expander is picked. They take priority over wire picking.
+            //{
+            //    RectangleF bounds = GetElementBounds(pickedElement, g);
+            //    var labelBounds = new RectangleF(
+            //        bounds.Left, bounds.Bottom + m_pinMargin, bounds.Width, m_rowSpacing);
+
+            //    var hitRecord = PickShowPinsToggle(pickedElement, p, g);
+            //    if (hitRecord != null)
+            //        return hitRecord;
+
+            //    label = new DiagramLabel(
+            //          new Rectangle((int)labelBounds.Left, (int)labelBounds.Top, (int)labelBounds.Width, (int)labelBounds.Height),
+            //          TextFormatFlags.SingleLine | TextFormatFlags.HorizontalCenter);
+            //    if (labelBounds.Contains(p))
+            //        return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, label);
+
+
+            //    if (pickedElement.Is<ICircuitGroupType<TElement, TWire, TPin>>())
+            //    {
+            //        hitRecord = PickExpander(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g);
+            //        if (hitRecord != null)
+            //            return hitRecord;
+
+            //        // check title bar
+            //        var titleBar = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, bounds.Width, TitleHeight);
+            //        if (titleBar.Contains(p))
+            //            return new GraphHitRecord<TElement, TWire, TPin>(pickedElement, new DiagramTitleBar(pickedElement));
+
+
+            //        if (pickedWire == null && pickedOutput == null && pickedInput == null) // check border lastly
+            //        {
+            //            var border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
+            //            if (border.Contains(p))
+            //                borderPart.Border = DiagramBorder.BorderType.Left;
+            //            else
+            //            {
+            //                border.Offset(bounds.Width, 0);
+            //                if (border.Contains(p))
+            //                    borderPart.Border = DiagramBorder.BorderType.Right;
+            //                else
+            //                {
+            //                    border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
+            //                    if (border.Contains(p))
+            //                        borderPart.Border = DiagramBorder.BorderType.Top;
+            //                    else
+            //                    {
+            //                        border.Offset(0, bounds.Height);
+            //                        if (border.Contains(p))
+            //                            borderPart.Border = DiagramBorder.BorderType.Bottom;
+            //                    }
+            //                }
+            //            }
+            //        }
+
+            //        subPick = PickSubItem(pickedElement.Cast<ICircuitGroupType<TElement, TWire, TPin>>(), p, g,
+            //            out pickedSubInput, out pickedSubOutput);
+            //    }
+            //}
+
+            //if (pickedSubInput != null)
+            //{
+            //    pickedInput = pickedSubInput;
+            //    pickedInputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubInput.Index, true, g);
+            //    pickedInputPos.Offset(ParentWorldOffset(subPick.First));
+            //}
+            //if (pickedSubOutput != null)
+            //{
+            //    pickedOutput = pickedSubOutput;
+            //    pickedOutputPos = GetPinPosition(subPick.First.First().Cast<TElement>(), pickedSubOutput.Index, false, g);
+            //    pickedOutputPos.Offset(ParentWorldOffset(subPick.First));
+            //}
+
+            //if (pickedWire != null && pickedElement != null &&
+            //    pickedInput == null && pickedOutput == null && // favor picking pin over wire, need to check no pin is picked
+            //    pickedSubInput == null && pickedSubOutput == null)
+            //{
+            //    // favor picking wire over element, but we don't want to select wires that are hidden by the element
+            //    // a rough check here probably should suffice most of the time: the bounds of the wire should not be enclosed by the picked node
+            //    var elementBounds = GetElementBounds(pickedElement, g);
+            //    var curveBounds = GetWireBounds(pickedWire, g);
+            //    if (!elementBounds.Contains(curveBounds))
+            //        return new GraphHitRecord<TElement, TWire, TPin>(null, pickedWire, null, null);
+            //}
+
+            //var result = new GraphHitRecord<TElement, TWire, TPin>(pickedElement, pickedWire, pickedOutput, pickedInput);
+            //if (pickedElement != null && pickedWire == null && pickedOutput == null && pickedInput == null)
+            //    result.Part = borderPart.Border == DiagramBorder.BorderType.None ? null : borderPart;
+            //result.DefaultPart = label;
+            //result.SubItem = subPick.First == null ? null : subPick.First.First();
+            //result.SubPart = subPick.Second;
+            //result.ToRoutePos = pickedInputPos;
+            //result.FromRoutePos = pickedOutputPos;
+
+            //if (subPick.Second.Is<TWire>())
+            //    result.SubItem = subPick.Second; // if a sub-edge is picked
+
+            //result.HitPathInversed = subPick.First;
+            //return result;
+            #endregion
         }
 
         /// <summary>
@@ -2026,14 +2216,17 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             int x1 = op.X + info.Size.Width;
             if (PinDrawStyle == PinStyle.OnBorderFilled)
                 x1 += m_pinSize / 2;
-            int y1 = op.Y + GetPinOffset(outputElement, outputPin.Index, false);
+            int y1 = op.Y + GetPinOffset(outputElement, outputPin.Index, false)
+                + m_pinSize / 2;
 
             Point ip = inputElement.Bounds.Location;
             ip.Offset(WorldOffset(m_graphPath));
             int x2 = ip.X;
             if (PinDrawStyle == PinStyle.OnBorderFilled)
                 x2 -= m_pinSize / 2;
-            int y2 = ip.Y + GetPinOffset(inputElement, inputPin.Index, true);
+            int y2 = ip.Y + GetPinOffset(inputElement, inputPin.Index, true)
+            + m_pinSize / 2;
+
 
             DrawWire(g, pen, x1, y1, x2, y2, 0.0f, null);
         }
@@ -2051,7 +2244,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             float x = ep.X;
             if (PinDrawStyle == PinStyle.OnBorderFilled)
                 x += m_pinSize * 0.5f;
-            float y = ep.Y + GetPinOffset(element, pin.Index, !fromOutput);
+            float y = m_pinSize / 2 + ep.Y + GetPinOffset(element, pin.Index, !fromOutput);
             if (fromOutput)
                 x += info.Size.Width;
 
@@ -2156,7 +2349,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 pinIndex = visiblePins.IndexOf(pin);
             }
 
-            return m_rowSpacing + 2 * m_pinMargin + pinIndex * m_rowSpacing + m_pinOffset + m_pinSize / 2;
+            return TitleHeight + m_pinMargin + pinIndex * m_rowSpacing + m_pinOffset;
+           // return m_rowSpacing + 2 * m_pinMargin + pinIndex * m_rowSpacing + m_pinOffset + m_pinSize / 2;
         }
 
         private void SetPinSpacing()

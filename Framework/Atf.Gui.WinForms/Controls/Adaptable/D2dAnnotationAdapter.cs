@@ -19,10 +19,20 @@ namespace Sce.Atf.Controls.Adaptable
     /// annotations (comments)</summary>
     public class D2dAnnotationAdapter : DraggingControlAdapter,
         IPickingAdapter2,
-        IItemDragAdapter,
-       // IPrintingAdapter,        
+        IItemDragAdapter,       
         IDisposable
     {
+
+
+
+        /// <summary>
+        /// Gets or set whether picking is disabled</summary>
+        public bool PickingDisabled
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Constructor</summary>
         /// <param name="theme">Diagram rendering theme</param>
@@ -30,6 +40,7 @@ namespace Sce.Atf.Controls.Adaptable
         {
             m_theme = theme;
             m_theme.Redraw += theme_Redraw;
+            m_solidBrush = D2dFactory.CreateSolidBrush(Color.FromArgb(128, 120, 120, 120));                
         }
 
         /// <summary>
@@ -39,6 +50,9 @@ namespace Sce.Atf.Controls.Adaptable
             //Don't set m_theme to null because there can be timing issues where m_theme is needed
             //  even after Dispose is called.
                 m_theme.Redraw -= theme_Redraw;
+                m_solidBrush.Dispose();
+                m_solidBrush = null;
+
         }
 
         private void theme_Redraw(object sender, EventArgs e)
@@ -118,6 +132,8 @@ namespace Sce.Atf.Controls.Adaptable
                 get { return Part as DiagramBorder; }
             }
 
+
+
             /// <summary>
             /// Hit position in Textlayout local space
             /// </summary>
@@ -127,152 +143,33 @@ namespace Sce.Atf.Controls.Adaptable
         /// <summary>
         /// Performs a pick operation on the diagram annotations</summary>
         /// <param name="p">Picking point</param>
-        /// <returns>Information about which annotation, if any, was hit by point</returns>
+        /// <returns>Information about which annotation, if any, was hit by point</returns>        
         public AnnotationHitEventArgs Pick(Point p)
-        {           
-            if (m_annotatedDiagram != null)
-            {
-                if (m_transformAdapter != null)
-                   p = GdiUtil.InverseTransform(m_transformAdapter.Transform, p);
-
-                foreach (IAnnotation annotation in m_annotatedDiagram.Annotations.Reverse())
-                {
-                    Rectangle bounds = GetBounds(annotation);
-                    if (bounds.IsEmpty)
-                        continue;
-                    var inflated = bounds;
-                    int tolerance = m_theme.PickTolerance;
-                    inflated.Inflate(tolerance, tolerance);
-                    if (inflated.Contains(p) && m_annotationEditors.ContainsKey(annotation))
-                    {
-                        // check titlebar
-                        var titlebarRect = new RectangleF(bounds.Left + 2 * tolerance, bounds.Y - tolerance,
-                            bounds.Width -  4 * tolerance, Margin.Top + tolerance);
-                        if (titlebarRect.Contains(p))
-                        {                          
-                            return new AnnotationHitEventArgs(annotation, new DiagramTitleBar(annotation));
-                        }
-
-                        var annotationData = m_annotationEditors[annotation];
-                        // check scroll bar
-                        if (annotationData.VerticalScrollBarVisibe)
-                        {
-                            var scrollbarRect = new RectangleF(bounds.Right - Margin.Right - ScrollBarWidth - 2 * ScrollBarMargin, bounds.Y,
-                                ScrollBarWidth + 2 * ScrollBarMargin, bounds.Height);
-                            if (scrollbarRect.Contains(p))
-                                return new AnnotationHitEventArgs(annotation, new DiagramScrollBar(annotation, Orientation.Vertical));
-                        }
-                       
-
-                        // check borders
-                        // check corners first
-                        var border = new RectangleF(bounds.Right - 2 * tolerance, bounds.Bottom - 2 * tolerance, 4 * tolerance, 4 * tolerance);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                            {
-                                Border = DiagramBorder.BorderType.LowerRightCorner
-                            };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-
-                        border = new RectangleF(bounds.Left - 2 * tolerance, bounds.Top - 2 * m_theme.PickTolerance, 4 * tolerance, 4 * tolerance);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                            {
-                                Border = DiagramBorder.BorderType.UpperLeftCorner
-                            };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-
-                        border = new RectangleF(bounds.Right - 2 * m_theme.PickTolerance, bounds.Top - 2 * m_theme.PickTolerance, 4 * tolerance, 4 * tolerance);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                            {
-                                Border = DiagramBorder.BorderType.UpperRightCorner
-                            };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-
-                        border = new RectangleF(bounds.Left - 2 * m_theme.PickTolerance, bounds.Bottom - 2 * m_theme.PickTolerance, 4 * tolerance, 4 * tolerance);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                            {
-                                Border = DiagramBorder.BorderType.LowerLeftCorner
-                            };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-
-                        border = new RectangleF(bounds.Left - m_theme.PickTolerance, bounds.Y, 2 * m_theme.PickTolerance, bounds.Height);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                                {
-                                    Border = DiagramBorder.BorderType.Left
-                                };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-                        border.Offset(bounds.Width, 0);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                                {
-                                    Border = DiagramBorder.BorderType.Right
-                                };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-                        border = new RectangleF(bounds.Left, bounds.Y - m_theme.PickTolerance, bounds.Width, 2 * m_theme.PickTolerance);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                                {
-                                    Border = DiagramBorder.BorderType.Top
-                                };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-                        border.Offset(0, bounds.Height);
-                        if (border.Contains(p))
-                        {
-                            var borderPart = new DiagramBorder(annotation)
-                                {
-                                    Border = DiagramBorder.BorderType.Bottom
-                                };
-                            return new AnnotationHitEventArgs(annotation, borderPart);
-                        }
-
-                        // check label
-                        inflated.Inflate(tolerance, tolerance);
-                        DiagramLabel label = null;
-                        if (inflated.Contains(p))
-                        {
-                            var textBounds = new Rectangle(bounds.X + Margin.Left, bounds.Y + Margin.Top,
-                                (int)annotationData.TextLayout.LayoutWidth + SystemInformation.VerticalScrollBarWidth, (int)annotationData.TextLayout.LayoutHeight);
-                            label = new DiagramLabel(textBounds, TextFormatFlags.LeftAndRightPadding);
-
-                            // set initial editing position
-                            var contentBounds = new RectangleF(bounds.X + Margin.Left, bounds.Y + Margin.Top,
-                                               bounds.Width - Margin.Size.Width, bounds.Height - Margin.Size.Height);
-                            contentBounds.Width = Math.Max(contentBounds.Width, MinimumWidth);
-                            contentBounds.Height = Math.Max(contentBounds.Height, MinimumHeight);
-
-                            PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - annotationData.GetLineYOffset(annotationData.TopLine) );
-                            var result = new AnnotationHitEventArgs(annotation, label);
-                            result.Position = new PointF(p.X - origin.X, p.Y - origin.Y);
-                            return result;
-                            
-                        }
-                                                
-                        
-                    }
-                }
-            }
-
-            return new AnnotationHitEventArgs();
+        {
+            return (AnnotationHitEventArgs)((IPickingAdapter2)this).Pick(p);
         }
 
+
+        /// <summary>
+        /// Pick using all bound IPickingAdapter2s</summary>        
+        private AnnotationHitEventArgs PickAll(Point p)
+        {
+            DiagramHitRecord hitRecord = null;
+            if (AdaptedControl.Context != null)
+            {
+                foreach (IPickingAdapter2 pickingAdapter in m_pickingAdapters)
+                {
+                    hitRecord = pickingAdapter.Pick(p);
+                    if (hitRecord != null && hitRecord.Item != null)
+                        break;
+                }
+            }
+            AnnotationHitEventArgs annotHit = hitRecord as AnnotationHitEventArgs;
+            if (annotHit == null) annotHit = new AnnotationHitEventArgs();
+            return annotHit;
+        }
+
+      
         #region IPickingAdapter2 Members
 
         /// <summary>
@@ -281,7 +178,161 @@ namespace Sce.Atf.Controls.Adaptable
         /// <returns>Hit record for a point, in client coordinates</returns>
         DiagramHitRecord IPickingAdapter2.Pick(Point p)
         {
-            return Pick(p);
+            if (m_annotatedDiagram != null && !PickingDisabled)
+            {
+                if (m_transformAdapter != null)
+                    p = GdiUtil.InverseTransform(m_transformAdapter.Transform, p);
+
+                foreach (IAnnotation annotation in m_annotatedDiagram.Annotations.Reverse())
+                {
+
+                    TextEditor textEditor;
+                    m_annotationEditors.TryGetValue(annotation, out textEditor);
+                    Rectangle bounds = GetBounds(annotation);
+                    if (bounds.IsEmpty && textEditor == null)
+                        continue;
+                    var inflated = bounds;
+                    int tolerance = m_theme.PickTolerance;
+                    inflated.Inflate(tolerance, tolerance);
+
+                    if (!inflated.Contains(p)) continue;
+
+                    Rectangle contentRect = bounds;
+                    contentRect.X += Margin.Left;
+                    contentRect.Y += Margin.Right;
+                    contentRect.Size -= Margin.Size;
+                    if (contentRect.Contains(p))
+                    {
+                        
+                        // check scroll bar
+                        if (textEditor != null && textEditor.VerticalScrollBarVisibe)
+                        {
+                            var scrollbarRect = new Rectangle(bounds.Right - Margin.Right - ScrollBarWidth - 2 * ScrollBarMargin, bounds.Y,
+                                ScrollBarWidth + 2 * ScrollBarMargin, bounds.Height);
+                            if (scrollbarRect.Contains(p))
+                                return new AnnotationHitEventArgs(annotation, new DiagramScrollBar(annotation, Orientation.Vertical));
+                        }
+
+                        //var textBounds = new Rectangle(contentRect.X, contentRect.Y,
+                        //    contentRect.Width, contentRect.Height);
+
+                        var textBounds = contentRect;
+                        DiagramLabel label = new DiagramLabel(textBounds, TextFormatFlags.LeftAndRightPadding);
+
+                        PointF origin = textEditor != null ?
+                            new PointF(contentRect.X, contentRect.Y - textEditor.GetLineYOffset(textEditor.TopLine))
+                        : contentRect.Location;
+                        var result = new AnnotationHitEventArgs(annotation, label);
+                        result.Position = new PointF(p.X - origin.X, p.Y - origin.Y);
+                        return result;
+                    }
+
+                    //// check titlebar
+                    //var titlebarRect = new RectangleF(bounds.Left + 2 * tolerance, bounds.Y - tolerance,
+                    //    bounds.Width - 4 * tolerance, Margin.Top + tolerance);
+                    //if (titlebarRect.Contains(p))
+                    //{
+                    //    return new AnnotationHitEventArgs(annotation, new DiagramTitleBar(annotation));
+                    //}
+
+                    // margin between inflated bounds and content bound.
+                    int leftPad = contentRect.X - inflated.X;
+                    int rightPad = inflated.Right - contentRect.Right;
+                    int topPad = contentRect.Y - inflated.Y;
+                    int bottomPad = inflated.Bottom - contentRect.Bottom;
+
+
+                    // lower right
+                    var corner = new Rectangle(contentRect.Right, contentRect.Bottom, rightPad, bottomPad);
+                    if (corner.Contains(p))
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.LowerRightCorner
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+                    
+                    // upper left
+                    corner = new Rectangle(inflated.X, inflated.Y, leftPad, topPad);
+                    if (corner.Contains(p))
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.UpperLeftCorner
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+                    
+                    // upper right
+                    corner = new Rectangle(contentRect.Right, inflated.Y, rightPad, topPad);
+                    if (corner.Contains(p))
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.UpperRightCorner
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+                    // lower left.
+                    corner = new Rectangle(inflated.X, contentRect.Bottom, leftPad, bottomPad);
+                    if (corner.Contains(p))
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.LowerLeftCorner
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+
+                    // right border.
+                    if (p.X >= contentRect.Right)
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.Right
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+                    // bottom border
+                    if (p.Y >= contentRect.Bottom)
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.Bottom
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+                    // left border
+                    if (p.X <= contentRect.X)
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.Left
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+                    }
+
+
+                    // top border
+                    if (p.Y <= contentRect.Y)
+                    {
+                        var borderPart = new DiagramBorder(annotation)
+                        {
+                            Border = DiagramBorder.BorderType.Top
+                        };
+                        return new AnnotationHitEventArgs(annotation, borderPart);
+
+                    }                
+                }
+            }
+
+            return new AnnotationHitEventArgs();
         }
 
         /// <summary>
@@ -290,7 +341,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <returns>Items that overlap with the rectangle, in client coordinates</returns>
         IEnumerable<object> IPickingAdapter2.Pick(Rectangle bounds)
         {
-            if (m_annotatedDiagram == null)
+            if (m_annotatedDiagram == null || PickingDisabled) 
                 return EmptyEnumerable<object>.Instance;
 
             List<object> hit = new List<object>();
@@ -369,9 +420,7 @@ namespace Sce.Atf.Controls.Adaptable
 
         void IItemDragAdapter.BeginDrag(ControlAdapter initiator)
         {
-            m_draggingAnnotations = m_selectionContext.GetSelection<IAnnotation>().ToArray();
-            m_moving = true;
-
+            m_draggingAnnotations = m_selectionContext.GetSelection<IAnnotation>().ToArray();            
             m_newPositions = new Point[m_draggingAnnotations.Length];
             m_oldPositions = new Point[m_draggingAnnotations.Length];
             for (int i = 0; i < m_draggingAnnotations.Length; i++)
@@ -419,18 +468,21 @@ namespace Sce.Atf.Controls.Adaptable
             m_transformAdapter = control.As<ITransformAdapter>();
             m_autoTranslateAdapter = control.As<IAutoTranslateAdapter>();
 
+            m_pickingAdapters = control.AsAll<IPickingAdapter2>().ToArray();
+            Array.Reverse(m_pickingAdapters);
+
             var d2dControl = control as D2dAdaptableControl;
             d2dControl.ContextChanged += control_ContextChanged;
             d2dControl.DrawingD2d += control_Paint;
             d2dControl.KeyPress += control_KeyPress;
             d2dControl.PreviewKeyDown += control_PreviewKeyDown;
             d2dControl.GotFocus += control_GotFocus;
-            d2dControl.LostFocus += control_LostFocus;
-            d2dControl.DoubleClick += control_DoubleClick;
+            d2dControl.LostFocus += control_LostFocus;            
+            
             base.Bind(control);
         }
 
-
+       
         /// <summary>
         /// Unbinds the adapter from the adaptable control</summary>
         /// <param name="control">Adaptable control</param>
@@ -445,13 +497,14 @@ namespace Sce.Atf.Controls.Adaptable
             d2dControl.LostFocus -= control_LostFocus;      
             m_transformAdapter = null;
             m_autoTranslateAdapter = null;
+            m_pickingAdapters = null;
             base.Unbind(control);
         }
 
         private void control_ContextChanged(object sender, EventArgs e)
         {
             m_annotationEditors.Clear();
-
+            m_editingAnnotation = null;
             IAnnotatedDiagram annotatedContext = AdaptedControl.ContextAs<IAnnotatedDiagram>();
             m_coloringContext = AdaptedControl.ContextAs<IColoringContext>();
             if (m_annotatedDiagram != annotatedContext)
@@ -466,11 +519,7 @@ namespace Sce.Atf.Controls.Adaptable
                         //m_observableContext.Reloaded -= context_Reloaded;
                         m_observableContext = null;
                     }
-                    if (m_selectionContext != null)
-                    {
-                        m_selectionContext.SelectionChanged -= selection_Changed;
-                        m_selectionContext = null;
-                    }
+                    
                 }
 
                 m_annotatedDiagram = annotatedContext;
@@ -486,12 +535,7 @@ namespace Sce.Atf.Controls.Adaptable
                        // m_observableContext.Reloaded += context_Reloaded;
                     }
 
-                    m_selectionContext = AdaptedControl.ContextAs<ISelectionContext>();
-                    if (m_selectionContext != null)
-                    {
-                       m_selectionContext.SelectionChanged += selection_Changed;
-                    }
-
+                    m_selectionContext = AdaptedControl.ContextAs<ISelectionContext>();                    
                     m_layoutContext = AdaptedControl.ContextAs<ILayoutContext>();
                 }
             }
@@ -508,8 +552,8 @@ namespace Sce.Atf.Controls.Adaptable
             Matrix3x2F invXform = gfx.Transform;
             m_scaleX = invXform.M11;  // get the scale before inverting.
             invXform.Invert();
-                       
-            RectangleF graphBound = D2dUtil.Transform(invXform, control.ClientRectangle);
+                                   
+            RectangleF graphBound = Matrix3x2F.Transform( invXform,  control.ClientRectangle);
 
             D2dParagraphAlignment paragraphAlign = m_theme.TextFormat.ParagraphAlignment;
             D2dTextAlignment textAlign = m_theme.TextFormat.TextAlignment;
@@ -518,9 +562,14 @@ namespace Sce.Atf.Controls.Adaptable
             m_theme.TextFormat.ParagraphAlignment = D2dParagraphAlignment.Near;
             m_theme.TextFormat.TextAlignment = D2dTextAlignment.Leading;
             m_theme.TextFormat.DrawTextOptions = D2dDrawTextOptions.Clip;
+            float opacity = m_theme.TextHighlightBrush.Opacity;
+            m_theme.TextHighlightBrush.Opacity = 0.5f;
+                
+                    
 
             bool drawText = (m_scaleX * m_theme.TextFormat.FontHeight) > 5.0f;
-            // draw all annotations in their current position, ghosting those which are dragging
+            if (!drawText) HideCaret();
+            // draw all annotations in their current position
             foreach (IAnnotation annotation in m_annotatedDiagram.Annotations)
             {
                 Rectangle bounds = annotation.Bounds;
@@ -555,60 +604,11 @@ namespace Sce.Atf.Controls.Adaptable
 
                 DrawAnnotation(annotation, style, gfx, drawText, graphBound);
             }
-            
+
+            m_theme.TextHighlightBrush.Opacity = opacity;
             m_theme.TextFormat.ParagraphAlignment = paragraphAlign;
             m_theme.TextFormat.TextAlignment = textAlign;
             m_theme.TextFormat.DrawTextOptions = drawTextOptions;
-        }
-
-
-        /// <summary>
-        /// Performs custom actions on adaptable control MouseMove events. The base method should
-        /// be called first.</summary>
-        /// <param name="sender">Adaptable control</param>
-        /// <param name="e">Event args</param>
-        protected override void OnMouseMove(object sender, MouseEventArgs e)
-        {
-            base.OnMouseMove(sender, e);
-
-            AnnotationHitEventArgs hitRecord = Pick(CurrentPoint);
-            if (hitRecord.Annotation != null && AdaptedControl.Cursor == Cursors.Default)
-            {
-                if (hitRecord.Label != null)
-                {
-                    AdaptedControl.Cursor = Cursors.IBeam;
-                }
-                else if (hitRecord.Part.Is<DiagramTitleBar>())
-                    AdaptedControl.Cursor = Cursors.SizeAll;
-                else if (hitRecord.Part.Is<DiagramBorder>())
-                {
-                    var borderPart = hitRecord.Part.Cast<DiagramBorder>();
-
-                    AdaptedControl.AutoResetCursor = false;
-                    if (borderPart.Border == DiagramBorder.BorderType.Right || borderPart.Border == DiagramBorder.BorderType.Left)
-                        AdaptedControl.Cursor = Cursors.SizeWE;
-                    else if (borderPart.Border == DiagramBorder.BorderType.Bottom || borderPart.Border == DiagramBorder.BorderType.Top)
-                        AdaptedControl.Cursor = Cursors.SizeNS;
-                    else if (borderPart.Border == DiagramBorder.BorderType.LowerRightCorner)
-                        AdaptedControl.Cursor = Cursors.SizeNWSE;
-                    else if (borderPart.Border == DiagramBorder.BorderType.UpperLeftCorner)
-                        AdaptedControl.Cursor = Cursors.SizeNWSE;
-                    else if (borderPart.Border == DiagramBorder.BorderType.UpperRightCorner)
-                        AdaptedControl.Cursor = Cursors.SizeNESW;
-                    else if (borderPart.Border == DiagramBorder.BorderType.LowerLeftCorner)
-                        AdaptedControl.Cursor = Cursors.SizeNESW;
-                }
-                else if (hitRecord.Part.Is<DiagramScrollBar>())
-                {
-                    //AdaptedControl.Cursor = Cursors.HSplit;
-                }
-                else
-                    AdaptedControl.Cursor = Cursors.SizeAll;
-                AdaptedControl.AutoResetCursor = false;
-            }
-            else
-                AdaptedControl.AutoResetCursor = true;
-            
         }
 
         /// <summary>
@@ -618,40 +618,78 @@ namespace Sce.Atf.Controls.Adaptable
         protected override void OnMouseDown(object sender, MouseEventArgs e)
         {
             base.OnMouseDown(sender, e);
-            var hitRecord = Pick(CurrentPoint);
-            AdaptedControl.HasKeyboardFocus = false;
-            bool editingText = m_editingText;
-            m_editingText = false;
 
             // set caret position
-            if (e.Button == MouseButtons.Left && ((Control.ModifierKeys & Keys.Alt) == 0))
+            if (e.Button == MouseButtons.Left && ((Control.ModifierKeys & Keys.Alt) == 0) && e.Clicks == 1)
             {
-                if (hitRecord.Annotation != null && hitRecord.Label != null) // hit the text
+                var hitRecord = PickAll(CurrentPoint);
+                if (hitRecord.Annotation == null || hitRecord.Annotation != m_editingAnnotation)
                 {
-
-                    m_editingText = true;
-                    AdaptedControl.HasKeyboardFocus = true;
-                    if (m_annotationEditors.ContainsKey(hitRecord.Annotation))
+                    EndEditAnnotation();
+                }
+                else if (hitRecord.Label != null) // hit the text
+                {
+                    TextEditor annotationEditor;
+                    if (m_annotationEditors.TryGetValue(m_editingAnnotation, out annotationEditor))
                     {
-                        var annotationEditor = m_annotationEditors[hitRecord.Annotation];
                         annotationEditor.SetSelectionFromPoint(hitRecord.Position.X, hitRecord.Position.Y, false);
-                        AdaptedControl.Invalidate();
                     }
-                    if (AdaptedControl.Cursor == Cursors.Default)
-                        AdaptedControl.Cursor = Cursors.IBeam;
-                }                
+                }
             }
             else if (e.Button == MouseButtons.Right)
             {
                 m_rmbPressed = true;
-                // activate standard editing commands on annotation nodes via on context menu when user clicks over the title bar  
-                if (hitRecord.Annotation != null && hitRecord.Part.Is<DiagramTitleBar>())
-                    AdaptedControl.HasKeyboardFocus = false;
             }
-
-            if (editingText != m_editingText)
-                AdaptedControl.Invalidate();
+            AdaptedControl.Invalidate();
         }
+        
+        /// <summary>
+        /// Performs custom actions on adaptable control MouseMove events. The base method should
+        /// be called first.</summary>
+        /// <param name="sender">Adaptable control</param>
+        /// <param name="e">Event args</param>
+        protected override void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            base.OnMouseMove(sender, e);
+            if (e.Button == MouseButtons.None)
+            {
+                var annotHitRecord = PickAll(CurrentPoint);
+                
+                if (annotHitRecord.Annotation != null && AdaptedControl.Cursor == Cursors.Default)
+                {                    
+                    if (annotHitRecord.Label != null )
+                    {
+                        AdaptedControl.AutoResetCursor = false;
+                        if (m_editingAnnotation == annotHitRecord.Annotation)
+                            AdaptedControl.Cursor = Cursors.IBeam;
+                        else
+                            AdaptedControl.Cursor = Cursors.SizeAll;
+
+                    }                    
+                    else if (annotHitRecord.Border != null)
+                    {
+                        AdaptedControl.AutoResetCursor = false;
+                        var borderPart = annotHitRecord.Border;                        
+                        if (borderPart.Border == DiagramBorder.BorderType.Right || borderPart.Border == DiagramBorder.BorderType.Left)
+                            AdaptedControl.Cursor = Cursors.SizeWE;
+                        else if (borderPart.Border == DiagramBorder.BorderType.Bottom || borderPart.Border == DiagramBorder.BorderType.Top)
+                            AdaptedControl.Cursor = Cursors.SizeNS;
+                        else if (borderPart.Border == DiagramBorder.BorderType.LowerRightCorner)
+                            AdaptedControl.Cursor = Cursors.SizeNWSE;
+                        else if (borderPart.Border == DiagramBorder.BorderType.UpperLeftCorner)
+                            AdaptedControl.Cursor = Cursors.SizeNWSE;
+                        else if (borderPart.Border == DiagramBorder.BorderType.UpperRightCorner)
+                            AdaptedControl.Cursor = Cursors.SizeNESW;
+                        else if (borderPart.Border == DiagramBorder.BorderType.LowerLeftCorner)
+                            AdaptedControl.Cursor = Cursors.SizeNESW;
+                    }
+                }
+                else
+                    AdaptedControl.AutoResetCursor = true;
+            }            
+        }
+
+        
 
         /// <summary>
         /// Handles mouse up event</summary>
@@ -663,64 +701,79 @@ namespace Sce.Atf.Controls.Adaptable
         }
 
 
+        protected override void OnMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            base.OnMouseDoubleClick(sender, e);
+
+            var hitRecord = PickAll(e.Location); // use all pick adapters.
+
+            if (hitRecord.Annotation == null) 
+                return;
+
+            var annotationEditor = m_annotationEditors[hitRecord.Annotation];
+
+            if (hitRecord.Annotation  == m_editingAnnotation)
+            {
+                if (hitRecord.Label != null)
+                {
+                    annotationEditor.SetSelectionFromPoint(hitRecord.Position.X, hitRecord.Position.Y, false);
+                    annotationEditor.SetSelection(TextEditor.SelectionMode.SingleWord, 0, true, false);
+                }                
+            }
+            else
+            {
+                BeginEditAnnotation(hitRecord.Annotation);
+                if (hitRecord.Label != null)
+                    annotationEditor.SetSelectionFromPoint(hitRecord.Position.X, hitRecord.Position.Y, false);
+            }
+            AdaptedControl.Cursor = Cursors.IBeam;
+            AdaptedControl.Invalidate();
+        }
+
+        private bool m_isDragInitiator;
         /// <summary>
         /// Performs custom actions when beginning a mouse dragging operation</summary>
         /// <param name="e">Mouse event args</param>
         protected override void OnBeginDrag(MouseEventArgs e)
         {
             base.OnBeginDrag(e);
+            m_resizing = false;
+            m_selecting = false;
+            m_scrolling = false;
+            m_isDragInitiator = false;
 
             if (m_layoutContext != null && e.Button == MouseButtons.Left &&
                    ((Control.ModifierKeys & Keys.Alt) == 0) && !AdaptedControl.Capture)
             {
-                m_mousePick = Pick(FirstPoint);
-                if (m_mousePick.Item != null)
+
+                m_mousePick = PickAll(FirstPoint);
+                if (m_mousePick.Annotation != null)
                 {
-                    foreach (var itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
-                        if (itemDragAdapter != this)
-                            itemDragAdapter.BeginDrag(this);
-
-                    m_draggingAnnotations = m_selectionContext.GetSelection<IAnnotation>().ToArray();
-
-                    if (m_mousePick.Item.Is<IAnnotation>())
-                    {
-                        // resizing
-                        if (m_mousePick.Part.Is<DiagramBorder>())
-                        {
-
-                            m_startBounds = m_mousePick.Item.Cast<IAnnotation>().Bounds;
-                            m_resizing = true;
-                        }
-                        else if (m_mousePick.Part.Is<DiagramTitleBar>())
-                        {
-                            m_moving = true;
-                        }
-                        else if (m_mousePick.Part.Is<DiagramLabel>())
-                        {
-                            m_selecting = true;
-                        }
-                        else if (m_mousePick.Part.Is<DiagramScrollBar>())
-                        {
-                            var annotationData = m_annotationEditors[m_mousePick.Item.Cast<IAnnotation>()];
-                            m_startTopLine = annotationData.TopLine;
-                            m_scrolling = true;                           
-                        }
-                    }
-
-                    m_newPositions = new Point[m_draggingAnnotations.Length];
-                    m_oldPositions = new Point[m_draggingAnnotations.Length];
-                    for (int i = 0; i < m_draggingAnnotations.Length; i++)
-                    {
-                        // Initialize m_newPositions in case the mouse up event occurs before
-                        //  a paint event, which can happen during rapid clicking.
-                        Point currentLocation = m_draggingAnnotations[i].Bounds.Location;
-                        m_newPositions[i] = currentLocation;
-                        m_oldPositions[i] = currentLocation;
-                    }
-                   
-
+                    m_isDragInitiator = true;
                     AdaptedControl.Capture = true;
 
+                    if (m_mousePick.Part.Is<DiagramBorder>())
+                    {
+                        m_startBounds = m_mousePick.Annotation.Bounds;
+                        m_resizing = true;
+                    }
+                    else if (m_mousePick.Part.Is<DiagramScrollBar>())
+                    {
+                        var annotationEditor = m_annotationEditors[m_mousePick.Annotation];
+                        m_startTopLine = annotationEditor.TopLine;
+                        m_scrolling = true;
+                    }
+                    else if (m_mousePick.Part.Is<DiagramLabel>())
+                    {
+                        if (m_mousePick.Annotation == m_editingAnnotation)
+                            m_selecting = true;
+                        else
+                        {                            
+                            foreach (var itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
+                                itemDragAdapter.BeginDrag(this);
+                        }
+                    }
+                                       
                     if (m_autoTranslateAdapter != null)
                         // annotation local text scrolling should not operate when dragging out of control's client area
                         m_autoTranslateAdapter.Enabled = !m_scrolling; 
@@ -737,59 +790,46 @@ namespace Sce.Atf.Controls.Adaptable
 
             if (m_resizing)
             {
-                ResizeAnnotation(m_mousePick.Part.As<DiagramBorder>());            
-                D2dControl.Invalidate();
-                return;
-            }
-            if (m_scrolling)
+                ResizeAnnotation(m_mousePick.Border);                
+            } 
+            else if (m_scrolling)
             {
-                ScrollAnnotation(m_mousePick.Part.As<DiagramScrollBar>());
-                D2dControl.Invalidate();
-                return;
+                ScrollAnnotation(m_mousePick.Part.As<DiagramScrollBar>());                
             }
-
-            if (m_draggingAnnotations != null )
+            else if (m_selecting)
             {
-                if (m_moving)
+                var hitRecord = PickAll(CurrentPoint);
+                if (hitRecord.Annotation != null && hitRecord.Label != null)
                 {
-                    Matrix3x2F invXform = Matrix3x2F.Invert(D2dControl.D2dGraphics.Transform);
-                    PointF deltaF = Matrix3x2F.TransformVector(invXform, Delta);
-                    Point delta = new Point((int) deltaF.X, (int) deltaF.Y); //world coordinates
-
-                    // set dragged nodes' positions, offsetting by drag delta and applying layout constraints
-                    for (int i = 0; i < m_draggingAnnotations.Length; i++)
+                    if (hitRecord.Annotation == m_editingAnnotation)
                     {
-                        IAnnotation annotation = m_draggingAnnotations[i];
-                        Rectangle bounds = GetBounds(annotation); //world coordinates
-                        bounds.X = m_oldPositions[i].X + delta.X;
-                        bounds.Y = m_oldPositions[i].Y + delta.Y;
-                        m_newPositions[i] = bounds.Location;
-                        m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location); //world coordinates
-                    }
+                        var annotationEditor = m_annotationEditors[hitRecord.Annotation];
+                        annotationEditor.SetSelectionFromPoint(hitRecord.Position.X, hitRecord.Position.Y, true);
+                    }                    
                 }
-                else if (m_selecting)
-                {
-                    AnnotationHitEventArgs hitRecord = Pick(CurrentPoint);
-                    if (hitRecord.Annotation != null && hitRecord.Label != null)
-                    {
-                        if (m_annotationEditors.ContainsKey(hitRecord.Annotation))
-                        {
-                            // Drag current selection.
-                           
-                            var annotationEditor = m_annotationEditors[hitRecord.Annotation];
-                            annotationEditor.SetSelectionFromPoint(hitRecord.Position.X, hitRecord.Position.Y, true);
-                            // update selection range
-                            //int startPosition = annotationData.CaretPosition;
-                            //int currentPosition = annotationData.TextPosition; // Pick() updated TextPosition
-                            //annotationData.SelectionStart = Math.Min(startPosition, currentPosition);
-                            //annotationData.SelectionLength = Math.Abs(currentPosition - startPosition);
-                            AdaptedControl.Invalidate();
-                        }
-                    }
-                }
-
                 D2dControl.Invalidate();
             }
+            else if (m_draggingAnnotations != null )
+            {
+                Matrix3x2F invXform = Matrix3x2F.Invert(D2dControl.D2dGraphics.Transform);
+                PointF deltaF = Matrix3x2F.TransformVector(invXform, Delta);
+                Point delta = new Point((int)deltaF.X, (int)deltaF.Y); //world coordinates
+
+                // set dragged nodes' positions, offsetting by drag delta and applying layout constraints
+                for (int i = 0; i < m_draggingAnnotations.Length; i++)
+                {
+                    IAnnotation annotation = m_draggingAnnotations[i];
+                    Rectangle bounds = GetBounds(annotation); //world coordinates
+                    bounds.X = m_oldPositions[i].X + delta.X;
+                    bounds.Y = m_oldPositions[i].Y + delta.Y;
+                    m_newPositions[i] = bounds.Location;
+                    m_layoutContext.SetBounds(annotation, bounds, BoundsSpecified.Location); //world coordinates
+                }                                          
+            }
+
+            if (m_isDragInitiator)
+                D2dControl.DrawD2d();
+            
         }
 
         /// <summary>
@@ -798,53 +838,52 @@ namespace Sce.Atf.Controls.Adaptable
         protected override void OnEndDrag(MouseEventArgs e)
         {
             base.OnEndDrag(e);
+            var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
+
             if (m_draggingAnnotations != null)
             {
-                var transactionContext = AdaptedControl.ContextAs<ITransactionContext>();
-                if (m_moving)
-                {
-                    foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
-                        itemDragAdapter.EndingDrag(); //call ourselves, too
-                   
-                    transactionContext.DoTransaction(
+                foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
+                    itemDragAdapter.EndingDrag(); //call ourselves, too
+                
+                transactionContext.DoTransaction(
                         () =>
-                            {
-                                foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
-                                    itemDragAdapter.EndDrag(); //call ourselves, too
-                            }, "Drag Items".Localize());
-                }
-                else if (m_selecting)
-                {
-                    //// update caret position
-                    //var annotation = m_mousePick.Item.Cast<IAnnotation>();
-                    //if (m_annotationEditors.ContainsKey(annotation))
-                    //{
-                    //    var annotationData = m_annotationEditors[annotation];
-                    //    if (annotationData.SelectionStart < annotationData.CaretPosition)
-                    //        annotationData.CaretPosition = annotationData.SelectionStart;
-                    //}
+                        {
+                            foreach (IItemDragAdapter itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
+                                itemDragAdapter.EndDrag(); //call ourselves, too
+                        }, "Drag Items".Localize());
+            }
+            else if (m_selecting)
+            {
+                //// update caret position
+                //var annotation = m_mousePick.Item.Cast<IAnnotation>();
+                //if (m_annotationEditors.ContainsKey(annotation))
+                //{
+                //    var annotationData = m_annotationEditors[annotation];
+                //    if (annotationData.SelectionStart < annotationData.CaretPosition)
+                //        annotationData.CaretPosition = annotationData.SelectionStart;
+                //}
 
-                }
-                else if (m_resizing)
-                {
-                      transactionContext.DoTransaction( 
-                          () => ResizeAnnotation(m_mousePick.Part.Cast<DiagramBorder>()),
-                          "Resize Annotation".Localize());
-                }
+            }
+            else if (m_resizing)
+            {
+                // restore original size so the final will be recorded.
+                m_layoutContext.SetBounds(m_mousePick.Annotation, m_startBounds, BoundsSpecified.Size);
 
-                if (m_autoTranslateAdapter != null)
-                    m_autoTranslateAdapter.Enabled = false;
-
-                m_draggingAnnotations = null;
-                m_newPositions = null;
-                m_oldPositions = null;
-                AdaptedControl.Invalidate();
+                transactionContext.DoTransaction(
+                    () => ResizeAnnotation(m_mousePick.Part.Cast<DiagramBorder>()),
+                    "Resize Annotation".Localize());
             }
 
+            if (m_autoTranslateAdapter != null)
+                m_autoTranslateAdapter.Enabled = false;
+
+            m_draggingAnnotations = null;
+            m_newPositions = null;
+            m_oldPositions = null;           
             m_resizing = false;
-            m_scrolling = false;
-            m_moving = false;
+            m_scrolling = false;            
             m_selecting = false;
+            AdaptedControl.Invalidate();
         }
 
         private void DrawAnnotation(IAnnotation annotation, DiagramDrawingStyle style, D2dGraphics g, bool drawText, RectangleF graphBound)
@@ -859,61 +898,35 @@ namespace Sce.Atf.Controls.Adaptable
                         ? SystemColors.WindowText
                         : m_coloringContext.GetColor(ColoringTypes.ForeColor, annotation);
 
-            // keep the width of border in 1 pixel after transformation to avoid D2d antialiasing away the line
-            float borderThickness = 1.0f/m_scaleX;
+            // keep the width of border in 2 pixel after transformation to avoid D2d antialiasing away the line
+            float borderThickness = 2.0f/m_scaleX;
             g.FillRectangle(bounds, backColor);
-            g.DrawRectangle(bounds, ControlPaint.Dark(backColor), borderThickness, null);
-       
-            // draw titlebar
-            if (style == DiagramDrawingStyle.LastSelected || style == DiagramDrawingStyle.Selected)
-            {
-                var titleBarRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, Margin.Top - 1);
-                g.FillRectangle(titleBarRect, ControlPaint.Dark(backColor));
-            }
-            // line seperate titlebar from text content     
-            g.DrawLine(bounds.X, bounds.Y + Margin.Top-1, bounds.X + bounds.Width, bounds.Y + Margin.Top-1, ControlPaint.Dark(backColor), borderThickness);
 
+            g.DrawRectangle(bounds, m_theme.GetOutLineBrush(style), borderThickness);
+       
+            //// draw titlebar
+            //if (style == DiagramDrawingStyle.LastSelected || style == DiagramDrawingStyle.Selected)
+            //{
+            //    var titleBarRect = new RectangleF(bounds.X, bounds.Y, bounds.Width, Margin.Top - 1);
+            //    g.FillRectangle(titleBarRect, ControlPaint.Dark(backColor));
+            //}
+            //// line seperate titlebar from text content     
+            //g.DrawLine(bounds.X, bounds.Y + Margin.Top-1, bounds.X + bounds.Width, bounds.Y + Margin.Top-1, ControlPaint.Dark(backColor), borderThickness);
+            
             // draw content
             if (drawText)
             {
                 var contentBounds = new RectangleF(bounds.X + Margin.Left, bounds.Y + Margin.Top,
                                                bounds.Width - Margin.Size.Width, bounds.Height - Margin.Size.Height);
-
                 contentBounds.Width = Math.Max(contentBounds.Width, MinimumWidth);
                 contentBounds.Height = Math.Max(contentBounds.Height, MinimumHeight);
-                var textBounds = contentBounds;              
-    
-                int topLine = 0;
-                D2dTextLayout textLayout = null;
-
-                if (m_annotationEditors.ContainsKey(annotation))
-                {
-                                     
-                    var annotationEditor = m_annotationEditors[annotation];
-                    if (annotationEditor.TextLayout.Text != annotation.Text) // text content changed, for example, undo,redo
-                    {
-                        // TextLayout.Text is immutable, have to recreate TextLayout object
-                        annotationEditor.ResetText(annotation.Text);
-                    }
-                    topLine = annotationEditor.TopLine;
-                    textLayout = annotationEditor.TextLayout;
-                    annotationEditor.VerticalScrollBarVisibe = textLayout.Height > textLayout.LayoutHeight;
-
-                    if (annotationEditor.VerticalScrollBarVisibe)
-                        textBounds.Width -= ScrollBarWidth + 2 * ScrollBarMargin;
-                    if (Math.Abs(textLayout.LayoutWidth - textBounds.Width) +
-                        Math.Abs(textLayout.LayoutHeight - textBounds.Height) > 1.0)
-                    {
-                        textLayout.LayoutWidth = textBounds.Width; // layout width and height can be updated
-                        textLayout.LayoutHeight = textBounds.Height;
-                        annotationEditor.Validate();
-                    }
-                }
-
-                if (textLayout == null)
+                var textBounds = contentBounds;
+                
+                TextEditor textEditor;
+                if (!m_annotationEditors.TryGetValue(annotation,out textEditor))
                 {
                     // first assume no v-scroll bar needed
-                    textLayout = D2dFactory.CreateTextLayout(annotation.Text, m_theme.TextFormat, contentBounds.Width, contentBounds.Height);
+                    var textLayout = D2dFactory.CreateTextLayout(annotation.Text, m_theme.TextFormat, contentBounds.Width, contentBounds.Height);
                     if (m_theme.TextFormat.Underlined)
                         textLayout.SetUnderline(true, 0, annotation.Text.Length);
                     if (m_theme.TextFormat.Strikeout)
@@ -921,50 +934,56 @@ namespace Sce.Atf.Controls.Adaptable
 
                     if (textLayout.Height >  textLayout.LayoutHeight) // need v-scroll bar
                     {
-                        textLayout.LayoutWidth = contentBounds.Width - ScrollBarWidth - 2*ScrollBarMargin;
+                        textLayout.LayoutWidth = contentBounds.Width - ScrollBarWidth - 2 * ScrollBarMargin;
                       
                     }
-                    m_annotationEditors.Add(annotation, new TextEditor()
-                        {
-                            TextLayout = textLayout,
-                            TextFormat = m_theme.TextFormat,
-                            TopLine =  topLine,
-                            VerticalScrollBarVisibe = textLayout.Height > textLayout.LayoutHeight
-                        });
+
+                    textEditor = new TextEditor
+                    {
+                        TextLayout = textLayout,
+                        TextFormat = m_theme.TextFormat,
+                        TopLine =  0,
+                        VerticalScrollBarVisibe = textLayout.Height > textLayout.LayoutHeight
+                    };
+                    m_annotationEditors.Add(annotation, textEditor);                        
+                }
+                else if (textEditor.TextLayout.Text != annotation.Text) // text content changed, for example, undo,redo
+                {                
+                    textEditor.ResetText(annotation.Text);                    
                 }
 
-                var annotationData = m_annotationEditors[annotation];
-                float yOffset = annotationData.GetLineYOffset(topLine);
+                int topLine = textEditor.TopLine;
+                textEditor.VerticalScrollBarVisibe = textEditor.TextLayout.Height > textEditor.TextLayout.LayoutHeight;
+
+                if (textEditor.VerticalScrollBarVisibe)
+                    textBounds.Width -= ScrollBarWidth + 2 * ScrollBarMargin;
+                if (Math.Abs(textEditor.TextLayout.LayoutWidth - textBounds.Width) +
+                    Math.Abs(textEditor.TextLayout.LayoutHeight - textBounds.Height) > 1.0)
+                {
+                    textEditor.TextLayout.LayoutWidth = textBounds.Width; // layout width and height can be updated
+                    textEditor.TextLayout.LayoutHeight = textBounds.Height;
+                    textEditor.Validate();
+                }
+
+                float yOffset = textEditor.GetLineYOffset(topLine);                
                 PointF origin = new PointF(contentBounds.Location.X, contentBounds.Location.Y - yOffset);
 
                 g.PushAxisAlignedClip(contentBounds);
 
-                // draw the selection range behind the text.
-                if (annotationData.SelectionLength > 0)
-                {
-                    var hitTestMetrics = textLayout.HitTestTextRange(annotationData.SelectionStart, annotationData.SelectionLength, 0, 0);
-                    for (int i = 0; i < hitTestMetrics.Length; ++i)
-                    {
+               
 
-                        var highlightRect = new RectangleF(hitTestMetrics[i].Point.X, hitTestMetrics[i].Point.Y, hitTestMetrics[i].Width,
-                                                           hitTestMetrics[i].Height);
-                        highlightRect.Offset(origin);
-                        g.FillRectangle(highlightRect, m_theme.TextHighlightBrush);
-                    }               
-                }
-
-                // draw caret             
-                if ( style == DiagramDrawingStyle.Selected || style == DiagramDrawingStyle.LastSelected)
-                {
-                    textLayout = annotationData.TextLayout;
-                    var caretRect = m_annotationEditors[annotation].GetCaretRect();
-                    caretRect.Offset(origin);
-                    //g.FillRectangle(caretRect, m_theme.HotBrush);
-
+                // adjust caret.
+                // pull out this code to the caller.
+                if ( annotation == m_editingAnnotation  && m_caretCreated)
+                {                    
+                    var caretRect = textEditor.GetCaretRect();
+                    caretRect.Offset(origin);                   
                     // set Windows caret position                  
-                    if (m_editingText && contentBounds.IntersectsWith(caretRect) && graphBound.IntersectsWith(caretRect) && AdaptedControl.Focused)
+                    if (contentBounds.IntersectsWith(caretRect) && AdaptedControl.Focused)
                     {
-                        var caretClientRect = GdiUtil.Transform(m_transformAdapter.Transform, caretRect);
+                        Matrix3x2F xform = m_transformAdapter != null ? m_transformAdapter.Transform
+                            : g.Transform;
+                        var caretClientRect = Matrix3x2F.Transform(xform, caretRect);
                         float ratio = m_scaleX*m_theme.TextFormat.FontHeight/CaretHeight;                      
                         if (ratio > 1.1f || ratio < 0.9f) // adjust caret height
                         {
@@ -981,28 +1000,43 @@ namespace Sce.Atf.Controls.Adaptable
                         HideCaret();
                 }
 
+                // draw the selection range above the text.
+                if (textEditor.SelectionLength > 0)
+                {
+                    D2dBrush hibrush = AdaptedControl.Focused ? m_theme.TextHighlightBrush : m_solidBrush;
+                    var hitTestMetrics = textEditor.TextLayout.HitTestTextRange(textEditor.SelectionStart, textEditor.SelectionLength, 0, 0);
+                    for (int i = 0; i < hitTestMetrics.Length; ++i)
+                    {
+                        var highlightRect = new RectangleF(hitTestMetrics[i].Point.X, hitTestMetrics[i].Point.Y, hitTestMetrics[i].Width,
+                                                           hitTestMetrics[i].Height);
+                        highlightRect.Offset(origin);
+                        g.FillRectangle(highlightRect, hibrush);
+                    }
+                }
+                
                 // draw text 
-                g.DrawTextLayout(origin, textLayout, foreColor); 
+                g.DrawTextLayout(origin, textEditor.TextLayout, foreColor);
+
+                
 
                 g.PopAxisAlignedClip();
 
                 // draw v-scroll bar
-                if (contentBounds.Height < textLayout.Height)
+               // if (contentBounds.Height < textEditor.TextLayout.Height)
+                if(textEditor.VerticalScrollBarVisibe)
                 {
-                    float visibleLines = annotationData.GetVisibleLines();
-                    float vMin = topLine * contentBounds.Height / textLayout.LineCount;
-                    float vMax = (topLine + visibleLines - 1) * contentBounds.Height / textLayout.LineCount;
-                    if (m_scrolling)
-                    {
+                    float visibleLines = textEditor.GetVisibleLines();
+                    float vMin = topLine * contentBounds.Height / textEditor.TextLayout.LineCount;
+                    float vMax = (topLine + visibleLines - 1) * contentBounds.Height / textEditor.TextLayout.LineCount;
+                   // if (m_scrolling)
+                   // {
                         var trackBounds = new RectangleF(contentBounds.Right - ScrollBarMargin - ScrollBarWidth, contentBounds.Y, ScrollBarWidth, contentBounds.Height);
                         g.FillRectangle(trackBounds, Color.Gainsboro);                    
-                    }
+                   // }
                     var thumbBounds = new RectangleF(contentBounds.Right - ScrollBarMargin - ScrollBarWidth, contentBounds.Y + vMin, ScrollBarWidth, vMax - vMin);
                     g.FillRectangle(thumbBounds, Color.DimGray);
                 }                
-            }
-            else
-                HideCaret();
+            }                
         }
 
         // 'location' is in world coordinates
@@ -1065,8 +1099,8 @@ namespace Sce.Atf.Controls.Adaptable
         private Rectangle ConstrainBounds(Rectangle annotationBounds)
         {
            return new Rectangle(annotationBounds.X, annotationBounds.Y,
-                (int)Math.Max(annotationBounds.Width, MinimumWidth),
-                (int)Math.Max(annotationBounds.Height, MinimumHeight+ Margin.Top));
+                Math.Max(annotationBounds.Width, MinimumWidth + Margin.Size.Width  ),
+                Math.Max(annotationBounds.Height, MinimumHeight+ Margin.Size.Height));
         }
 
         private void ScrollAnnotation(DiagramScrollBar scrollBar)
@@ -1074,8 +1108,9 @@ namespace Sce.Atf.Controls.Adaptable
             if (scrollBar == null)
                 return;
 
+            var annotation = scrollBar.Item.Cast<IAnnotation>();
             Point delta = Delta;
-            var annotationData = m_annotationEditors[scrollBar.Item.Cast<IAnnotation>()];
+            var annotationData = m_annotationEditors[annotation];
             float lineHeight = annotationData.TextLayout.Height /annotationData.TextLayout.LineCount;
             float lines = delta.Y / lineHeight;
             int newTopLine = m_startTopLine + (int)Math.Ceiling(lines);
@@ -1085,7 +1120,9 @@ namespace Sce.Atf.Controls.Adaptable
                 newTopLine = 0;
             if ((int)(newTopLine + visibleLines - 1) > annotationData.TextLayout.LineCount)
                 newTopLine = annotationData.TopLine;
-            annotationData.TopLine =  newTopLine >=0?  newTopLine:0;
+            annotationData.TopLine =  newTopLine >=0 ?  newTopLine:0;
+
+            annotationData.ResetText(annotation.Text); 
         }
         
         private Rectangle GetBounds(IAnnotation annotation)
@@ -1105,8 +1142,7 @@ namespace Sce.Atf.Controls.Adaptable
             return bounds;
         }
 
-       
-
+      
         #region text editing
 
         private void control_KeyPress(object sender, KeyPressEventArgs e)
@@ -1114,7 +1150,7 @@ namespace Sce.Atf.Controls.Adaptable
             if (!AdaptedControl.HasKeyboardFocus)
                 return;
 
-            var annotation = m_selectionContext.GetSelection<IAnnotation>().FirstOrDefault();
+            var annotation = m_editingAnnotation;
             if (annotation == null)
                 return;
 
@@ -1184,7 +1220,7 @@ namespace Sce.Atf.Controls.Adaptable
             if (!AdaptedControl.HasKeyboardFocus)
                 return;
 
-            var annotation = m_selectionContext.GetSelection<IAnnotation>().FirstOrDefault();
+            var annotation = m_editingAnnotation;
             if (annotation == null)
                 return;
 
@@ -1335,41 +1371,39 @@ namespace Sce.Atf.Controls.Adaptable
             User32.DestroyCaret();
             m_caretCreated = false;
             AdaptedControl.HasKeyboardFocus = false;
+            AdaptedControl.Invalidate();
+
         }
 
         void control_GotFocus(object sender, EventArgs e)
         {
             CaretHeight = (int) (m_scaleX* m_theme.TextFormat.FontHeight);// AdaptedControl.Font.Height;
-            User32.CreateCaret(AdaptedControl.Handle, IntPtr.Zero, CaretWidth, CaretHeight);
-            User32.ShowCaret(AdaptedControl.Handle);
+            User32.CreateCaret(AdaptedControl.Handle, IntPtr.Zero, CaretWidth, CaretHeight);           
             m_caretCreated = true;
-            if (m_selectionContext != null)
-            {
-                bool caretVisible = m_selectionContext.GetSelection<IAnnotation>().FirstOrDefault() != null;
-                if (caretVisible)
-                    AdaptedControl.Invalidate();
-                else
-                    HideCaret();
-            }
+            User32.ShowCaret(AdaptedControl.Handle);
+            HideCaret(); // sets caret outside client area.
             
         }
 
-        void control_DoubleClick(object sender, EventArgs e)
+        private void BeginEditAnnotation(IAnnotation annotation)
         {
-            Point clientPoint = AdaptedControl.PointToClient(Control.MousePosition);
-            AnnotationHitEventArgs hitRecord = Pick(clientPoint);
-            if (hitRecord.Annotation != null && hitRecord.Label != null)
-            {
-                //select the word
-                if (m_annotationEditors.ContainsKey(hitRecord.Annotation))
-                {
-                    var annotationEditor = m_annotationEditors[hitRecord.Annotation];
-                    annotationEditor.SetSelection(TextEditor.SelectionMode.SingleWord, 0, true, false);                
-                    AdaptedControl.Invalidate();
-                }
-            }
+            if (annotation == null)
+                throw new ArgumentNullException("annotation");
+            if (m_editingAnnotation != null)
+                throw new InvalidOperationException("BeginEditAnnotation is already called");
+            m_editingAnnotation = annotation;
+            AdaptedControl.HasKeyboardFocus = false;
+           
+
 
         }
+        private void EndEditAnnotation()
+        {
+            m_editingAnnotation = null;
+            HideCaret();
+        }
+
+        
 
         /// <summary>
         /// Deletes any existing selection</summary>
@@ -1426,9 +1460,7 @@ namespace Sce.Atf.Controls.Adaptable
             {
                 var textProperty = annotation.GetType().GetProperty("Text");
                 if (textProperty.CanWrite)
-                {
-                 
-
+                {                
                     //DeleteTextSelection(annotation);
                     var annotationEditor = m_annotationEditors[annotation];
                     var newValue = annotationEditor.InsertTextAt(annotation.Text, text);
@@ -1444,9 +1476,8 @@ namespace Sce.Atf.Controls.Adaptable
         /// <param name="annotation">IAnnotation to test</param>
         /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanDeleteTextSelection(IAnnotation annotation)
-        {           
-            return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
-                AdaptedControl.HasKeyboardFocus;
+        {
+            return m_selectionContext.SelectionContains(annotation) && AdaptedControl.HasKeyboardFocus;
         }
 
 
@@ -1456,8 +1487,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// <returns>True iff the annotation is selected and the adapted control has keyboard focus</returns>
         public bool CanInsertText(IAnnotation annotation)
         {
-            return m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
-                AdaptedControl.HasKeyboardFocus;
+            return m_selectionContext.SelectionContains(annotation) && AdaptedControl.HasKeyboardFocus;
 
         }
 
@@ -1468,8 +1498,7 @@ namespace Sce.Atf.Controls.Adaptable
         /// and text selected for the annotation node</returns>
         public bool CanCopyText(IAnnotation annotation)
         {
-            if (m_selectionContext.GetSelection<IAnnotation>().Contains(annotation) &&
-                AdaptedControl.Focused)
+            if (m_selectionContext.SelectionContains(annotation) && AdaptedControl.Focused)
             {
                 string textSelected = TextSelected(annotation);
                 return !string.IsNullOrEmpty(textSelected);
@@ -1492,27 +1521,18 @@ namespace Sce.Atf.Controls.Adaptable
             return string.Empty;
         }
 
-        private void selection_Changed(object sender, EventArgs e)
-        {
-            if (m_caretCreated && m_selectionContext != null)
-            {
-
-                bool caretVisible = m_selectionContext.GetSelection<IAnnotation>().FirstOrDefault() != null;
-                if (!caretVisible)
-                    HideCaret();
-
-            }
-        }
+        
 
         private void HideCaret()
         {
-             User32.SetCaretPos(-10, 0);
+            if(m_caretCreated)
+                User32.SetCaretPos(-10, 0);
              AdaptedControl.HasKeyboardFocus = false;
         }
 
         #endregion
 
-        private static readonly Padding Margin = new Padding(5, 12, 3, 3);
+        private static readonly Padding Margin = new Padding(3, 3, 3, 3);
         private static readonly string EditAnnotation = "Edit Annotation".Localize("the name of a command");
         private const int ScrollBarWidth =  5;
         private const int ScrollBarMargin = 2;
@@ -1520,7 +1540,8 @@ namespace Sce.Atf.Controls.Adaptable
         private int MinimumHeight = 13;
         private const int CaretWidth =2;
         private int CaretHeight=12;
- 
+
+        private D2dSolidColorBrush m_solidBrush;
         private readonly Dictionary<IAnnotation, TextEditor> m_annotationEditors = new Dictionary<IAnnotation, TextEditor>(); 
         private D2dDiagramTheme m_theme;        
         private ITransformAdapter m_transformAdapter;
@@ -1532,20 +1553,24 @@ namespace Sce.Atf.Controls.Adaptable
         private ISelectionContext m_selectionContext;
         private ILayoutContext m_layoutContext;
 
+        private IPickingAdapter2[] m_pickingAdapters;
+
         private AnnotationHitEventArgs m_mousePick;
-        private IAnnotation[] m_draggingAnnotations;        
+        private IAnnotation[] m_draggingAnnotations;
+        
+        private IAnnotation m_editingAnnotation; 
+
         private Point[] m_newPositions;
         private Point[] m_oldPositions;
 
         private Rectangle m_startBounds;
         private float m_scaleX = 1.0f;
         private bool m_resizing;
-        private bool m_scrolling;
-        private bool m_moving;
+        private bool m_scrolling;        
         private bool m_selecting;    
         private int  m_startTopLine;
         private bool m_caretCreated;
-        private bool m_editingText;
+        //private bool m_editingText;
         private bool m_rmbPressed; //right mouse button pressed
     }
 }

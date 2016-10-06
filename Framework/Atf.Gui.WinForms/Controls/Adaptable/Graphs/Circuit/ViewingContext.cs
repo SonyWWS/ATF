@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 
 using Sce.Atf.Adaptation;
 using Sce.Atf.Applications;
 using Sce.Atf.Direct2D;
 using Sce.Atf.Dom;
+using Sce.Atf.VectorMath;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
@@ -90,10 +92,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 Rectangle adapterBounds = pickingAdapter.GetBounds(items);
                 if (!adapterBounds.IsEmpty)
                 {
-                    if (bounds.IsEmpty)
-                        bounds = adapterBounds;
-                    else
-                        bounds = Rectangle.Union(bounds, adapterBounds);
+                    bounds = bounds.IsEmpty ? adapterBounds : Rectangle.Union(bounds, adapterBounds);                   
                 }
             }
 
@@ -105,22 +104,15 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Bounding rectangle of all circuit items in client coordinates</returns>
         public Rectangle GetBounds()
         {
-            var items = new List<object>();
-            if (m_graphContainer != null)
-            {
-                items.AddRange(m_graphContainer.Elements.AsIEnumerable<object>());
-                if (m_graphContainer.Annotations != null)
-                    items.AddRange(m_graphContainer.Annotations.AsIEnumerable<object>());
-            }
-            else
-            {
-                if (m_graph != null)
-                    items.AddRange(m_graph.Nodes.AsIEnumerable<IGraphNode>().AsIEnumerable<object>());
-                //TODO: including Annotations 
-            }
 
+            if (m_graph == null) return Rectangle.Empty;
+            IEnumerable<object> items = m_graph.Nodes;
+            var annoDiagram = m_graph.As<IAnnotatedDiagram>();
+            if (annoDiagram != null) items = items.Concat(annoDiagram.Annotations);                        
             Rectangle bounds = GetBounds(items);
-            if (DomNode.Is<Group>()) // the view is associated with a group editor
+
+
+            if (DomNode.Is<Group>()) 
             {
                 // include group pins y range
                 var group = DomNode.Cast<Group>();
@@ -128,36 +120,28 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 int yMin = int.MaxValue;
                 int yMax = int.MinValue;
 
-                foreach (var pin in group.InputGroupPins)
+                foreach (var pin in group.InputGroupPins.Concat(group.OutputGroupPins))
                 {
                     var grpPin = pin.Cast<GroupPin>();
-                    if (grpPin.Bounds.Location.Y < yMin)
-                        yMin = grpPin.Bounds.Location.Y;
-                    if (grpPin.Bounds.Location.Y > yMax)
-                        yMax = grpPin.Bounds.Location.Y;
+                    if (grpPin.Bounds.Y < yMin)
+                        yMin = grpPin.Bounds.Y;
+                    if (grpPin.Bounds.Y > yMax)
+                        yMax = grpPin.Bounds.Y;
                 }
-
-                foreach (var pin in group.OutputGroupPins)
-                {
-                    var grpPin = pin.Cast<GroupPin>();
-                    if (grpPin.Bounds.Location.Y < yMin)
-                        yMin = grpPin.Bounds.Location.Y;
-                    if (grpPin.Bounds.Location.Y > yMax)
-                        yMax = grpPin.Bounds.Location.Y;
-                }
-
+              
                 // transform y range to client space
                 if (yMin != int.MaxValue && yMax != int.MinValue)
                 {
                     var transformAdapter = m_control.Cast<ITransformAdapter>();
-                    var yRange = D2dUtil.TransformVector(transformAdapter.Transform, new PointF(yMin, yMax));
-                    yMin = (int)Math.Min(yRange.X, yRange.Y);
-                    yMax = (int)Math.Max(yRange.X, yRange.Y);
+                    var minPt = Matrix3x2F.TransformPoint(transformAdapter.Transform, new PointF(0, yMin));
+                    var maxPt = Matrix3x2F.TransformPoint(transformAdapter.Transform, new PointF(0, yMax));
+
+                    yMin = (int)minPt.Y;
+                    yMax = (int)maxPt.Y;
                     int width = bounds.Width;
                     int height = yMax - yMin + 1;
-                    bounds = Rectangle.Union(bounds, new Rectangle(bounds.Location.X, yMin, width, height));
+                    bounds = Rectangle.Union(bounds, new Rectangle(bounds.X, yMin, width, height));
                 }
-
             }
             return bounds;
         }

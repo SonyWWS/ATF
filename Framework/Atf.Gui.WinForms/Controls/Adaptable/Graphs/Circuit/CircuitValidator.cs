@@ -85,8 +85,13 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             foreach (HistoryContext historyContext in node.AsAll<HistoryContext>())
             {
+                //Alan: re-enabled historyContext's merge feature.
+                //      It was disabled with the below with comment. 
+                //      But from the commit comment it seems that the feature was
+                //      disabled because of some functional test failure in a particular ATF base tool (creature editor).
+                //      
                 // Disable automatically combining attribute setting operations, as operations such as grouping pin index changes better run its course   
-                historyContext.PendingSetOperationLifetime = TimeSpan.Zero;
+                //historyContext.PendingSetOperationLifetime = TimeSpan.Zero;
                 m_historyContexts.Add(historyContext);
             }
 

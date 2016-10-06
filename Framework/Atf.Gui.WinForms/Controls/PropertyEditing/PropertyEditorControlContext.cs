@@ -32,7 +32,7 @@ namespace Sce.Atf.Controls.PropertyEditing
             // MultiPropertyDescriptors need the SelectedObjects delegate
             // to be able to retrieve the selection. They need the delegate
             // rather than just the current selection because of control caching.
-            var desc = descriptor as Sce.Atf.Dom.MultiPropertyDescriptor;
+            var desc = descriptor as Dom.MultiPropertyDescriptor;
             if (desc != null)
                 desc.GetSelectionFunc = () => SelectedObjects;
         }
@@ -69,37 +69,18 @@ namespace Sce.Atf.Controls.PropertyEditing
         }
 
         /// <summary>
-        /// Cache current selection</summary>
-        public void CacheSelection()
-        {
-            object[] selection = m_editingControlOwner.SelectedObjects;
-            m_cachedSelection = new List<object>(selection.Length);
-            m_cachedSelection.AddRange(selection);
-        }
-
-        /// <summary>
-        /// Clear cached selection</summary>
-        public void ClearCachedSelection()
-        {
-            m_cachedSelection = null;
-        }
-
-        /// <summary>
-        /// Gets cached selection if any, otherwise gets current selection</summary>
+        /// Gets current selection</summary>
         public IEnumerable<object> SelectedObjects
         {
-            get { return (IEnumerable<object>)m_cachedSelection ?? m_editingControlOwner.SelectedObjects; }
+            get { return m_editingControlOwner.SelectedObjects; }
         }
 
         /// <summary>
-        /// Gets last selected object from cached selection if any, otherwise gets last selected object from current selection</summary>
+        /// Gets last selected object from current selection</summary>
         public object LastSelectedObject
         {
             get
-            {
-                if (m_cachedSelection != null)
-                    return m_cachedSelection.Count > 0 ? m_cachedSelection[m_cachedSelection.Count - 1] : null;
-
+            {               
                 object[] selectedObjects = m_editingControlOwner.SelectedObjects;
                 return selectedObjects.Length > 0 ? selectedObjects[selectedObjects.Length - 1] : null;
             }
@@ -321,8 +302,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         private readonly IPropertyEditingControlOwner m_editingControlOwner;
         private readonly PropertyDescriptor m_descriptor;
-        private readonly IContextRegistry m_contextRegistry;
-        private List<object> m_cachedSelection;
+        private readonly IContextRegistry m_contextRegistry;        
         private ITransactionContext m_transactionContext;
     }
 }

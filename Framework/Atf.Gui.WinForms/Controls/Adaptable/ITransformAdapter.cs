@@ -4,6 +4,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
+
+using Sce.Atf.VectorMath;
+
 namespace Sce.Atf.Controls.Adaptable
 {
     /// <summary>
@@ -218,64 +221,8 @@ namespace Sce.Atf.Controls.Adaptable
                 Math.Max(minScale.Y, Math.Min(maxScale.Y, scale.Y)));
         }
 
-        /// <summary>
-        /// Sets scroll and zoom so that the largest axis of the given rectangle almost
-        /// fills the client area</summary>
-        /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="bounds">Rectangle to frame, in Windows client coordinates</param>
-        public static void Frame(this ITransformAdapter adapter, RectangleF bounds)
-        {
-            if (bounds.IsEmpty)
-                return;
-
-            RectangleF worldBounds = GdiUtil.InverseTransform(adapter.Transform, bounds);
-
-            // calculate scale so bounding rectangle (in world coordinates) fills client
-            //  rectangle with some margin around the edges
-            RectangleF clientRect = adapter.AdaptedControl.ClientRectangle;
-            const float MarginScale = 0.86f;
-            PointF scale = new PointF(
-                Math.Abs(clientRect.Width / worldBounds.Width) * MarginScale,
-                Math.Abs(clientRect.Height / worldBounds.Height) * MarginScale);
-
-            if (adapter.UniformScale)
-                scale.X = scale.Y = Math.Min(scale.X, scale.Y);
-
-            scale = adapter.ConstrainScale(scale);
-
-            // calculate translation needed to put bounds center at center of view
-            PointF worldBoundsCenter = new PointF(
-                worldBounds.X + worldBounds.Width / 2,
-                worldBounds.Y + worldBounds.Height / 2);
-
-            PointF translation = new PointF(
-                clientRect.Width / 2 - worldBoundsCenter.X * scale.X,
-                clientRect.Height / 2 - worldBoundsCenter.Y * scale.Y);
-
-            adapter.SetTransform(
-                scale.X,
-                scale.Y,
-                translation.X,
-                translation.Y);
-        }
-
-        /// <summary>
-        /// If the given rectangle isn't visible, sets scroll and scale so that the largest axis
-        /// of the rectangle almost fills the client area</summary>
-        /// <param name="adapter">Adapter managing transform</param>
-        /// <param name="bounds">Rectangle to make visible, in Windows client coordinates</param>
-        public static void EnsureVisible(this ITransformAdapter adapter, RectangleF bounds)
-        {
-            // check rectangle is already in the visible rect
-            RectangleF clientRect = adapter.AdaptedControl.ClientRectangle;
-            if (clientRect.Contains(bounds))
-            {
-                // already visible
-                return;
-            }
-
-            adapter.Frame(bounds);
-        }
+        
+       
 
         /// <summary>
         /// Pans the view the minimum necessary so that the given rectangle is visible</summary>

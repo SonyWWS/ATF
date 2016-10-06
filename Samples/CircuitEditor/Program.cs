@@ -1,12 +1,9 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Drawing;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -61,7 +58,6 @@ namespace CircuitEditorSample
 
             // Create a type catalog with the types of components we want in the application
             var catalog = new TypeCatalog(
-
                 typeof(SettingsService),                // persistent settings and user preferences dialog
                 typeof(StatusService),                  // status bar at bottom of main Form
                 typeof(CommandService),                 // handles commands in menus and toolbars
@@ -108,13 +104,13 @@ namespace CircuitEditorSample
                 typeof(OutputService),                  // rich text box for displaying error and warning messages. Implements IOutputWriter.
                 typeof(DomRecorder),                    // records and displays changes to the DOM for diagnostic purposes
 
-                typeof(Editor),                         // editor which manages circuit documents and controls
+                typeof(Editor),                         // editor which manages circuit documents and controls                
+                typeof(BirdEyeView),
                 typeof(SchemaLoader),                   // loads circuit schema and extends types
                 typeof(GroupingCommands),               // circuit group/ungroup commands
                 typeof(CircuitControlRegistry),         // circuit controls management
                 typeof(LayeringCommands),               // "Add Layer" command
-                typeof(GraphViewCommands),              // zooming with presets
-                typeof(PerformanceMonitor),             // displays the frame rate and memory usage
+                typeof(GraphViewCommands),              // zooming with presets                
                 typeof(DefaultTabCommands),             // provides the default commands related to document tab Controls
                 typeof(ModulePlugin),                   // component that defines circuit module types
                 typeof(TemplateLister),                 // template library for subgraph referencing or instancing 
@@ -125,7 +121,7 @@ namespace CircuitEditorSample
                 typeof(DynamicPropertyCommands),        // context commands for user-defined properties in the property editors
                 typeof(ExpressionCommands),             // 
                 typeof(CircuitTestCommands),            // circuit tester commands
-
+                typeof(SkinService),
                 typeof(PythonService),                  // scripting service for automated tests
                 typeof(ScriptConsole),                  // provides a dockable command console for entering Python commands
                 typeof(AtfScriptVariables),             // exposes common ATF services as script variables

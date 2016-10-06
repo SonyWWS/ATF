@@ -201,11 +201,14 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return false;
         }
 
+
+        private bool m_isDragInitiator;
         /// <summary>
         /// Raises the BeginDrag event and performs custom processing</summary>
         /// <param name="e">A MouseEventArgs that contains the event data</param>
         protected override void OnBeginDrag(MouseEventArgs e)
         {
+            m_isDragInitiator = false;
             base.OnBeginDrag(e);
             if (m_layoutContext != null && e.Button == MouseButtons.Left &&
                    ((Control.ModifierKeys & Keys.Alt) == 0) &&
@@ -215,6 +218,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 m_mousePick = m_graphAdapter.Pick(FirstPoint);
                 if (CanDragging())
                 {
+                    m_isDragInitiator = true;
                     foreach (var itemDragAdapter in AdaptedControl.AsAll<IItemDragAdapter>())
                         if (itemDragAdapter != this)
                             itemDragAdapter.BeginDrag(this);
@@ -399,8 +403,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                         m_movingNodesCrossContainer = true;
                     }
                 }
-                // directly drawing is faster than invalidating and waiting for OnPaint.
-                d2dControl.DrawD2d();
+
+                if (m_isDragInitiator)
+                    d2dControl.DrawD2d();
             }
         }
 

@@ -16,10 +16,21 @@ namespace Sce.Atf.Dom
         /// Constructor</summary>
         /// <param name="name">Attribute name</param>
         /// <param name="type">Attribute type</param>
-        public AttributeInfo(string name, AttributeType type)
+        /// <param name="forceSerialize">Force serialize this attribute even when it has default value</param>
+        public AttributeInfo(string name, AttributeType type, bool forceSerialize = false)
             : base(name)
         {
             m_type = type;
+            ForceSerialize = forceSerialize;
+        }
+
+        /// <summary>
+        /// Gets whether to force serialize this attribute
+        /// event when it has default value</summary>
+        public bool ForceSerialize
+        {
+            get;
+            private set;
         }
 
         /// <summary>

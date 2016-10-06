@@ -1,8 +1,10 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Sce.Atf.Applications;
+using Sce.Atf.VectorMath;
 
 namespace Sce.Atf.Controls.Adaptable
 {
@@ -23,6 +25,11 @@ namespace Sce.Atf.Controls.Adaptable
         /// Gets or sets bounding margin around objects</summary>
         public Size MarginSize { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets whether toggle mode is enabled for frame operation.</summary>
+        public bool ToggleFramingEnabled { get; set; }
+
         #region IViewingContext Members
 
         /// <summary>
@@ -35,18 +42,50 @@ namespace Sce.Atf.Controls.Adaptable
             // this fixed the problem that 'A' or 'F' chars cannot be typed into a comment 
             // because these 2 chars happen to be shortcuts for ViewFrameSelection and ViewFrameAll commands.
             if (AdaptedControl.HasKeyboardFocus) 
-                return false; 
-            return IsBounded(items);
+                return false;
+            return IsBounded(items) || (ToggleFramingEnabled && m_isUnframing);
         }
 
+
+        // is framing or unframing, only used if ToggleFramingEnabled is true.
+        private bool m_isUnframing;
+        private Matrix3x2F m_unframeMtrx;
         /// <summary>
         /// Frames the items in the current view</summary>
         /// <param name="items">Items to frame</param>
         public void Frame(IEnumerable<object> items)
         {
+            if (ToggleFramingEnabled)
+            {
+                if (m_isUnframing)
+                {
+                    m_isUnframing = false;
+                    m_transformAdapter.SetTransform(m_unframeMtrx.M11, m_unframeMtrx.M22, m_unframeMtrx.DX, m_unframeMtrx.DY);
+                    return;
+                }
+                m_isUnframing = true;
+                m_unframeMtrx = m_transformAdapter.Transform;
+            }
+
+
+
             var bounds = GetBounds(items);
-            bounds.Inflate(MarginSize);
-            m_transformAdapter.Frame(bounds);
+
+            // transform bounds from client space to graph space.
+            Matrix3x2F invXform = Matrix3x2F.Invert(m_transformAdapter.Transform);
+            var gBounds = Matrix3x2F.Transform(invXform, bounds);            
+            var crect = AdaptedControl.ClientRectangle;
+            crect.Inflate(-MarginSize.Width, -MarginSize.Height);
+            if (crect.Width < 1 || crect.Height < 1) return;
+
+            float sx = MathUtil.Clamp(crect.Width / gBounds.Width, m_transformAdapter.MinScale.X, m_transformAdapter.MaxScale.X);
+            float sy = MathUtil.Clamp(crect.Height / gBounds.Height, m_transformAdapter.MinScale.Y, m_transformAdapter.MaxScale.Y);
+            float scale = Math.Min(sx, sy);
+            crect.X +=(int) (crect.Width - gBounds.Width * scale) / 2;
+            crect.Y += (int)(crect.Height - gBounds.Height * scale) / 2;
+            float tx = crect.X - gBounds.X * scale;
+            float ty = crect.Y - gBounds.Y * scale;
+            m_transformAdapter.SetTransform(scale, scale, tx, ty);            
         }
 
         /// <summary>
@@ -64,7 +103,15 @@ namespace Sce.Atf.Controls.Adaptable
         /// <param name="items">Items to show</param>
         public void EnsureVisible(IEnumerable<object> items)
         {
-            m_transformAdapter.EnsureVisible(GetBounds(items));
+            var bounds = GetBounds(items);
+            // check rectangle is already in the visible rect
+            RectangleF clientRect = AdaptedControl.ClientRectangle;
+            if (clientRect.Contains(bounds))
+            {
+                // already visible
+                return;
+            }
+            Frame(items);            
         }
 
         #endregion
@@ -122,8 +169,7 @@ namespace Sce.Atf.Controls.Adaptable
                 {
                     bounds = bounds.IsEmpty ? adapterBounds : Rectangle.Union(bounds, adapterBounds);
                 }
-            }
-            bounds.Inflate(MarginSize);
+            }            
             return bounds;
         }
 

@@ -98,8 +98,52 @@ namespace Sce.Atf.Controls.PropertyEditing
                 // Returning the given value allows for editing the enum as long as the DomValueValidator also
                 //  permits it. Not returning 'value' but instead calling base.ConvertFrom will throw an
                 //  exception and thus prevent the user from creating new enums.
-                return internalNames;
+               // return internalNames;
             }
+
+            //======================================================
+            if (flagString != null)
+            {
+                string internalNames = string.Empty;
+                // Support the case when users type a value like "6" to mean 4 | 2.  
+                int intvalue = 0;
+                if (Int32.TryParse(flagString, out intvalue))
+                {
+                    for (int idx = 0; idx < m_values.Length; idx++)
+                    {
+
+                        if ((intvalue & m_values[idx]) == m_values[idx])
+                        {
+                            if (internalNames != string.Empty)
+                                internalNames += '|' + m_names[idx];
+                            else
+                                internalNames = m_names[idx];
+                        }
+                    }
+                }
+                else
+                {
+                    string[] displayNames = flagString.Split('|');
+                    foreach (string displayName in displayNames)
+                    {
+                        string name = GetInternalName(displayName);
+                        if (name != null)
+                        {
+                            if (internalNames != string.Empty)
+                                internalNames += '|' + name;
+                            else
+                                internalNames = name;
+                        }
+                    }
+
+
+                }
+
+
+            }
+
+
+            //=======================================================
             return base.ConvertFrom(context, culture, value);
         }
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Sce.Atf.Controls.Adaptable
@@ -68,6 +69,9 @@ namespace Sce.Atf.Controls.Adaptable
         protected override void Bind(AdaptableControl control)
         {
             control.ContextChanged += control_ContextChanged;
+            m_pickingAdapters = control.AsAll<IPickingAdapter2>().ToArray();
+            Array.Reverse(m_pickingAdapters);
+
         }
 
         private void control_ContextChanged(object sender, EventArgs e)
@@ -94,8 +98,7 @@ namespace Sce.Atf.Controls.Adaptable
         protected override void Unbind(AdaptableControl control)
         {
             StopHover();
-
-           // control.Invalidated -= control_Invalidated;
+            m_pickingAdapters = null;           
             control.MouseDown -= control_MouseDown;
             control.MouseMove -= control_MouseMove;
             control.MouseLeave -= control_MouseLeave;
@@ -104,33 +107,15 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void control_MouseMove(object sender, MouseEventArgs e)
         {           
-            if (e.Button == MouseButtons.None &&
-                AdaptedControl.Focused)
-            {
-                object pickedItem = null;
+            if (e.Button == MouseButtons.None && AdaptedControl.Focused)
+            {                
                 DiagramHitRecord hitRecord = null;
-                foreach (IPickingAdapter pickingAdapter in AdaptedControl.AsAll<IPickingAdapter>())
+                foreach (var pickingAdapter in m_pickingAdapters)
                 {
-                    hitRecord = pickingAdapter.Pick(new Point(e.X, e.Y));
-                    if (hitRecord.Item != null)
-                    {
-                        pickedItem = hitRecord.Item;
-                        break;
-                    }
+                    hitRecord = pickingAdapter.Pick(e.Location);
+                    if (hitRecord.Item != null) break;                    
                 }
-
-                if (pickedItem == null)
-                {
-                    foreach (IPickingAdapter2 pickingAdapter in AdaptedControl.AsAll<IPickingAdapter2>())
-                    {
-                        hitRecord = pickingAdapter.Pick(new Point(e.X, e.Y));
-                        if (hitRecord.Item != null)
-                        {
-                            break;
-                        }
-                    }
-                }
-
+               
                 if (hitRecord != null &&
                     (hitRecord.Item != m_hoverItem || hitRecord.Part != m_hoverPart ||
                     hitRecord.SubItem != m_hoverSubItem || hitRecord.SubPart != m_hoverSubPart))
@@ -180,7 +165,8 @@ namespace Sce.Atf.Controls.Adaptable
             }
             m_hoverTimer.Stop();
         }
-                
+
+        private IPickingAdapter2[] m_pickingAdapters;
         private readonly Timer m_hoverTimer;
         private object m_hoverItem;
         private object m_hoverPart;

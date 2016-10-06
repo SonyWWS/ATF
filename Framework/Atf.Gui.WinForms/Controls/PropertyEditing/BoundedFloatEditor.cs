@@ -29,7 +29,7 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// Constructs BoundedFloatEditor using the given arguments</summary>
         /// <param name="min">Min value</param>
         /// <param name="max">Max value</param>
-        public BoundedFloatEditor(int min = 0, int max = 0)
+        public BoundedFloatEditor(float min = 0, float max = 0)
         {
             if (min >= max)
                 throw new ArgumentOutOfRangeException("min must be less than max");

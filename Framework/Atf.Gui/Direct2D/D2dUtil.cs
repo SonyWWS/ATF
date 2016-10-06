@@ -123,11 +123,7 @@ namespace Sce.Atf.Direct2D
         /// <returns>Transformed rectangle</returns>
         public static RectangleF Transform(Matrix3x2F matrix, RectangleF r)
         {
-            s_tempPtsF[0] = new PointF(r.Left, r.Top);
-            s_tempPtsF[1] = new PointF(r.Right, r.Bottom);
-            s_tempPtsF[0] = Matrix3x2F.TransformPoint(matrix, s_tempPtsF[0]);
-            s_tempPtsF[1] = Matrix3x2F.TransformPoint(matrix, s_tempPtsF[1]);
-            return MakeRectangle(s_tempPtsF[0], s_tempPtsF[1]);
+            return Matrix3x2F.Transform(matrix, r);          
         }
 
         /// <summary>
@@ -136,12 +132,9 @@ namespace Sce.Atf.Direct2D
         /// <param name="p">Point</param>
         /// <returns>Inverse transformed point</returns>
         public static Point InverseTransform(Matrix3x2F matrix, Point p)
-        {
-            Matrix3x2F inverse = matrix;
-            inverse.Invert();
-            s_tempPtsF[0] = p;
-            s_tempPtsF[0] = Matrix3x2F.TransformPoint(inverse, s_tempPtsF[0]);
-            return new Point((int)s_tempPtsF[0].X, (int)s_tempPtsF[0].Y);
+        {            
+            Matrix3x2F inverse = Matrix3x2F.Invert(matrix);
+            return Point.Truncate(Matrix3x2F.TransformPoint(inverse, p));                       
         }
 
         /// <summary>
@@ -150,10 +143,8 @@ namespace Sce.Atf.Direct2D
         /// <param name="v">Vector</param>
         /// <returns>Transformed vector</returns>
         public static PointF TransformVector(Matrix3x2F matrix, PointF v)
-        {
-            s_tempPtsF[0] = v;
-            Matrix3x2F.TransformVector(matrix, s_tempPtsF[0]);
-            return s_tempPtsF[0];
+        {            
+            return Matrix3x2F.TransformVector(matrix, v);
         }
 
       

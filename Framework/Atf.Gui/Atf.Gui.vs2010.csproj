@@ -44,12 +44,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bespoke.Common">
-      <HintPath>..\..\ThirdParty\Bespoke\Bespoke.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Bespoke.Common.Osc">
-      <HintPath>..\..\ThirdParty\Bespoke\Bespoke.Common.Osc.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Scripting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\IronPython\Microsoft.Scripting.dll</HintPath>
@@ -104,13 +98,11 @@
     <Compile Include="Applications\ILastHitAware.cs" />
     <Compile Include="Applications\IMessageBoxService.cs" />
     <Compile Include="Applications\IOrderedInsertionContext.cs" />
-    <Compile Include="Applications\IOscService.cs" />
     <Compile Include="Applications\IPinnable.cs" />
     <Compile Include="Applications\ISelectionPathProvider.cs" />
     <Compile Include="Applications\ISettingsPathsProvider.cs" />
     <Compile Include="Applications\ISubSelectionContext.cs" />
     <Compile Include="Applications\IWindowLayoutService.cs" />
-    <Compile Include="Applications\LemurOscService.cs" />
     <Compile Include="Applications\Listers\FilteredTreeView.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -128,8 +120,6 @@
     <Compile Include="Applications\NetworkTargetServices\TargetScope.cs" />
     <Compile Include="Applications\NetworkTargetServices\TcpIpTargetInfo.cs" />
     <Compile Include="Applications\NetworkTargetServices\TcpIpTargetProvider.cs" />
-    <Compile Include="Applications\OscCommandReceiver.cs" />
-    <Compile Include="Applications\OscService.cs" />
     <Compile Include="Applications\PinnableActiveCollection.cs" />
     <Compile Include="Applications\ScriptingService.cs" />
     <Compile Include="Applications\SettingsServiceBase.cs" />

@@ -68,14 +68,26 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         }
 
         /// <summary>
+        /// Gets or sets whether to disable setting VisibleWorldBounds on the renderer.
+        /// Since m_renderer is shared by multiple instances.
+        /// There are case where it is needed to keep the last setting of 
+        ///  m_renderer.VisibleWorldBounds (CircuitMagnifier uses this feature).
+        /// </summary>
+        public bool SettingVisibleWorldBoundsDisabled 
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Renders entire graph</summary>
         protected override void OnRender()
         {
             if (m_graph == s_emptyGraph)
                 return;
             base.OnRender();
-
-            m_renderer.VisibleWorldBounds = GdiUtil.InverseTransform(m_transformAdapter.Transform, AdaptedControl.ClientRectangle);
+            if(!SettingVisibleWorldBoundsDisabled)
+                m_renderer.VisibleWorldBounds = GdiUtil.InverseTransform(m_transformAdapter.Transform, AdaptedControl.ClientRectangle);
 
             // render group pins
             var group = m_graph.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();

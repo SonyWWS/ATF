@@ -40,6 +40,7 @@ namespace DomPropertyEditorSample
             gameObjectType.scaleAttribute = gameObjectType.Type.GetAttributeInfo("scale");
 
             clubType.Type = getNodeType("GameWorld", "clubType");
+            clubType.nameAttribute = clubType.Type.GetAttributeInfo("name");
             clubType.spikesAttribute = clubType.Type.GetAttributeInfo("spikes");
             clubType.DamageAttribute = clubType.Type.GetAttributeInfo("Damage");
             clubType.wieghtAttribute = clubType.Type.GetAttributeInfo("wieght");
@@ -95,6 +96,7 @@ namespace DomPropertyEditorSample
         public static class clubType
         {
             public static DomNodeType Type;
+            public static AttributeInfo nameAttribute;
             public static AttributeInfo spikesAttribute;
             public static AttributeInfo DamageAttribute;
             public static AttributeInfo wieghtAttribute;

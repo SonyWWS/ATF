@@ -120,7 +120,7 @@ namespace Sce.Atf.Controls.PropertyEditing
 
                 if (value is string)
                     FillCheckedListBoxFromString(value, checkedListBox);
-                else if (value is int)
+                else if (value is int || value is uint)
                     FillCheckedListBoxFromInt(value, checkedListBox);
                 // otherwise, ignore value
 
@@ -183,7 +183,9 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         private void FillCheckedListBoxFromInt(object value, CheckedListBox listBox)
         {
-            int flags = (int)value;
+            if (!(value is int || value is uint))  
+                  throw new ArgumentException("value must be int or uint");  
+            int flags = Convert.ToInt32(value);              
             for (int i = 0; i < m_values.Length; ++i)
             {
                 bool isChecked = (flags & m_values[i]) == m_values[i];

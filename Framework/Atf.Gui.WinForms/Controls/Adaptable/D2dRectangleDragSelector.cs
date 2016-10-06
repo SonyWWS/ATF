@@ -62,6 +62,8 @@ namespace Sce.Atf.Controls.Adaptable
         /// <param name="control">Adaptable control</param>
         protected override void Unbind(AdaptableControl control)
         {
+            m_transformAdapter = null;
+            m_autoTranslateAdapter = null;
             base.Unbind(control);
         }
 

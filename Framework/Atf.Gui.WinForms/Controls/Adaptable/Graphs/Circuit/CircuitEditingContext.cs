@@ -839,12 +839,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             if (newParent == null)
                 newParent = this;
 
+            
             var movingItems = movingObjects.ToArray();
 
+
+            var movingAnnotations = movingItems.AsIEnumerable<Annotation>().ToArray();            
             var moduleSet = new HashSet<Element>();
             var movingNodes = movingItems.AsIEnumerable<Element>().ToArray();
             var newContainer = newParent.Cast<ICircuitContainer>();
-            var oldContainer = movingNodes.First().DomNode.Parent.Cast<ICircuitContainer>();
+
+            var oldContainer = movingNodes.Length > 0 ?
+                movingNodes.First().DomNode.Parent.Cast<ICircuitContainer>() :
+                movingAnnotations.First().DomNode.Parent.Cast<ICircuitContainer>();
             Debug.Assert(oldContainer != newContainer);
 
 
@@ -878,6 +884,16 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 var relLoc = module.Bounds.Location;
                 relLoc.Offset(offset);
                 module.Bounds = new Rectangle(relLoc, module.Bounds.Size);
+            }
+
+            foreach (var annot in movingAnnotations)
+            {
+                oldContainer.Annotations.Remove(annot);
+                newContainer.Annotations.Add(annot);
+
+                var relLoc = annot.Bounds.Location;
+                relLoc.Offset(offset);
+                annot.Bounds = new Rectangle(relLoc, annot.Bounds.Size);
             }
 
             graphValidator.Suspended = false;

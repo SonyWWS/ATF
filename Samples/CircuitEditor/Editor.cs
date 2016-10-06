@@ -74,9 +74,9 @@ namespace CircuitEditorSample
 
             string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\..\\components\\wws_atf\\Samples\\CircuitEditor\\data");
             EditorInfo.InitialDirectory = initialDirectory;
-            m_theme = new D2dDiagramTheme();
-            m_circuitRenderer = new CircuitRenderer(m_theme, documentRegistry);
-            m_subGraphRenderer = new D2dSubCircuitRenderer<Module, Connection, ICircuitPin>(m_theme);
+            Theme = new D2dDiagramTheme();
+            CircuitRenderer = new CircuitRenderer(Theme, documentRegistry);
+            SubCircuitRenderer = new D2dSubCircuitRenderer<Module, Connection, ICircuitPin>(Theme);
 
             //// Note: Santa Monica uses following render settings: 
             //m_circuitRenderer.TitleBackgroundFilled = true;
@@ -92,10 +92,12 @@ namespace CircuitEditorSample
             m_d2dHoverControl.Dock = DockStyle.Fill;
             var xformAdapter = new TransformAdapter();
             xformAdapter.EnforceConstraints = false;//to allow the canvas to be panned to view negative coordinates
-            m_d2dHoverControl.Adapt(xformAdapter, new D2dGraphAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, xformAdapter));
-            m_d2dHoverControl.DrawingD2d += m_d2dHoverControl_DrawingD2d;           
+            m_d2dHoverControl.Adapt(xformAdapter, new D2dGraphAdapter<Module, Connection, ICircuitPin>(CircuitRenderer, xformAdapter));
+            m_d2dHoverControl.DrawingD2d += m_d2dHoverControl_DrawingD2d;            
         }
 
+
+        
         private IControlHostService m_controlHostService;
         private ICommandService m_commandService;
         private IContextRegistry m_contextRegistry;
@@ -155,6 +157,13 @@ namespace CircuitEditorSample
             {
                 var settings = new[] 
                 {
+
+                    new BoundPropertyDescriptor(this, () => SnapToGridEnabled,
+                        "Snap to grid".Localize(), "Circuit Editor".Localize(),
+                        "Snaps circuit element to grid when dragging".Localize(),
+                        new BoolEditor(), null), 
+
+
                   new BoundPropertyDescriptor(typeof (CircuitDefaultStyle),
                         () => CircuitDefaultStyle.EdgeStyle,
                         "Wire Style".Localize(), "Circuit Editor".Localize(),
@@ -180,9 +189,9 @@ namespace CircuitEditorSample
             {
                 // define pin/connection pens
                 var pen = D2dFactory.CreateSolidBrush(Color.LightSeaGreen);
-                m_theme.RegisterCustomBrush(m_modulePlugin.BooleanPinTypeName, pen);
+                Theme.RegisterCustomBrush(m_modulePlugin.BooleanPinTypeName, pen);
                 pen = D2dFactory.CreateSolidBrush(Color.LightSeaGreen);
-                m_theme.RegisterCustomBrush(m_modulePlugin.FloatPinTypeName, pen);
+                Theme.RegisterCustomBrush(m_modulePlugin.FloatPinTypeName, pen);
             }
 
             D2dGradientStop[] gradstops = 
@@ -190,12 +199,11 @@ namespace CircuitEditorSample
                 new D2dGradientStop(Color.White, 0),
                 new D2dGradientStop(Color.MediumVioletRed, 1.0f),
             };
-            m_theme.RegisterCustomBrush(MissingModule.MissingTypeName, D2dFactory.CreateLinearGradientBrush(gradstops));
+            Theme.RegisterCustomBrush(MissingModule.MissingTypeName, D2dFactory.CreateLinearGradientBrush(gradstops));
 
             CircuitEditingContext.CircuitFormat = CircuitFormat;
-
         }
-
+        
         #endregion
 
         #region IDocumentClient Members
@@ -285,11 +293,16 @@ namespace CircuitEditorSample
                 editingContext.SchemaLoader = m_schemaLoader; // schema needed for cut and paste between applications
 
                 m_circuitControlRegistry.RegisterControl(node, control, controlInfo, this);
-
+                SkinService.ApplyActiveSkin(control);
                 // Set the zoom and translation to show the existing items (if any).
                 var enumerableContext = editingContext.Cast<IEnumerableContext>();
                 if (viewingContext.CanFrame(enumerableContext.Items))
                     viewingContext.Frame(enumerableContext.Items);
+
+                //var viewingAdapter = control.As<ViewingAdapter>();
+                // enable toggle after initial frame operation.
+              //  viewingAdapter.ToggleFramingEnabled = true; // toggle frame/unframe.
+                
             }
 
             return circuitCircuitDocument;
@@ -305,10 +318,10 @@ namespace CircuitEditorSample
             var transformAdapter = new TransformAdapter();
             transformAdapter.EnforceConstraints = false; //to allow the canvas to be panned to view negative coordinates
             transformAdapter.UniformScale = true;
-            transformAdapter.MinScale = new PointF(0.25f, 0.25f);
+            transformAdapter.MinScale = new PointF(0.01f, 0.01f);
             transformAdapter.MaxScale = new PointF(4, 4);
             var viewingAdapter = new ViewingAdapter(transformAdapter);
-            viewingAdapter.MarginSize = new Size(25, 25);
+            viewingAdapter.MarginSize = new Size(25, 25);            
             var canvasAdapter = new CanvasAdapter();
             ((ILayoutConstraint)canvasAdapter).Enabled = false; //to allow negative coordinates for circuit elements within groups
 
@@ -321,24 +334,27 @@ namespace CircuitEditorSample
             hoverAdapter.HoverStarted += control_HoverStarted;
             hoverAdapter.HoverStopped += control_HoverStopped;
 
-            var annotationAdaptor = new D2dAnnotationAdapter(m_theme); // display annotations under diagram
+            var annotationAdaptor = new D2dAnnotationAdapter(Theme); // display annotations under diagram
 
             var d2dRectangleDragSelector = new D2dRectangleDragSelector();
             var d2dRectangleDragRenderer = new D2dRectangleDragRenderer(d2dRectangleDragSelector);
-
+            var gridAdapter = new D2dGridAdapter();
+            gridAdapter.ConstraintEnabled = SnapToGridEnabled;
+            //gridAdapter.Enabled = false;
+            //gridAdapter.Visible = true;
             if (circuitNode.Is<Circuit>())
             {
-                var circuitAdapter = new D2dGraphAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, transformAdapter);
+                var circuitAdapter = new D2dGraphAdapter<Module, Connection, ICircuitPin>(CircuitRenderer, transformAdapter);
 
                 // The "AllFirst" policy will try to draw edges (wires) before nodes, as much as possible.
                 //circuitAdapter.EdgeRenderPolicy = D2dGraphAdapter<Module, Connection, ICircuitPin>.DrawEdgePolicy.AllFirst;
                 
                 var circuitModuleEditAdapter = new D2dGraphNodeEditAdapter<Module, Connection, ICircuitPin>(
-                    m_circuitRenderer, circuitAdapter, transformAdapter);
+                    CircuitRenderer, circuitAdapter, transformAdapter);
                 circuitModuleEditAdapter.DraggingSubNodes = false;
 
                 var circuitConnectionEditAdapter =
-                    new D2dGraphEdgeEditAdapter<Module, Connection, ICircuitPin>(m_circuitRenderer, circuitAdapter, transformAdapter);
+                    new D2dGraphEdgeEditAdapter<Module, Connection, ICircuitPin>(CircuitRenderer, circuitAdapter, transformAdapter);
                 circuitConnectionEditAdapter.EdgeRouteTraverser = CircuitUtil.EdgeRouteTraverser;
 
                 control.Adapt(
@@ -352,8 +368,8 @@ namespace CircuitEditorSample
                     canvasAdapter,
                     mouseTransformManipulator,
                     mouseWheelManipulator,
-                    new KeyboardIOGraphNavigator<Module, Connection, ICircuitPin>(),
-                    new D2dGridAdapter(),
+                    new KeyboardIOGraphNavigator<Module, Connection, ICircuitPin>(),                    
+                    gridAdapter,
                     annotationAdaptor, //Needs to be before circuitAdapter so that comments appear under elements.
                     circuitAdapter,
                     circuitModuleEditAdapter, //lets user move circuit elements on canvas
@@ -368,18 +384,18 @@ namespace CircuitEditorSample
             }
             else if (circuitNode.Is<Group>())
             {
-                var circuitAdapter = new D2dSubgraphAdapter<Module, Connection, ICircuitPin>(m_subGraphRenderer,
+                var circuitAdapter = new D2dSubgraphAdapter<Module, Connection, ICircuitPin>(SubCircuitRenderer,
                                                                                       transformAdapter);
                 var circuitModuleEditAdapter = new D2dGraphNodeEditAdapter<Module, Connection, ICircuitPin>(
-                    m_subGraphRenderer, circuitAdapter, transformAdapter);
+                    SubCircuitRenderer, circuitAdapter, transformAdapter);
                 circuitModuleEditAdapter.DraggingSubNodes = false;
 
                 var circuitConnectionEditAdapter =
-                    new D2dGraphEdgeEditAdapter<Module, Connection, ICircuitPin>(m_subGraphRenderer, circuitAdapter, transformAdapter);
+                    new D2dGraphEdgeEditAdapter<Module, Connection, ICircuitPin>(SubCircuitRenderer, circuitAdapter, transformAdapter);
                 circuitConnectionEditAdapter.EdgeRouteTraverser = CircuitUtil.EdgeRouteTraverser;
 
                 var groupPinEditor = new GroupPinEditor(transformAdapter);
-                groupPinEditor.GetPinOffset = m_subGraphRenderer.GetPinOffset;
+                groupPinEditor.GetPinOffset = SubCircuitRenderer.GetPinOffset;
 
                 canvasAdapter.UpdateTranslateMinMax = groupPinEditor.UpdateTranslateMinMax;
 
@@ -395,7 +411,7 @@ namespace CircuitEditorSample
                   mouseTransformManipulator,
                   mouseWheelManipulator,
                   new KeyboardIOGraphNavigator<Module, Connection, ICircuitPin>(),
-                  new D2dGridAdapter(),
+                  gridAdapter,
                   annotationAdaptor,
                   circuitAdapter,
                   circuitModuleEditAdapter,
@@ -418,7 +434,6 @@ namespace CircuitEditorSample
             control.MouseDown += control_MouseDown;
             return control;
         }
-
 
         private void control_DoubleClick(object sender, EventArgs e)
         {
@@ -504,7 +519,6 @@ namespace CircuitEditorSample
             }
         }
 
-
         private void control_MouseDown(object sender, MouseEventArgs e)
         {
             var d2dControl = (AdaptableControl)sender;
@@ -559,7 +573,6 @@ namespace CircuitEditorSample
                 }
             }
         }
-
 
         /// <summary>
         /// Makes the document visible to the user</summary>
@@ -658,6 +671,26 @@ namespace CircuitEditorSample
 
         #endregion
 
+        private bool m_snapToGridEnabled;
+        public bool SnapToGridEnabled
+        {
+            get { return m_snapToGridEnabled; }
+            set
+            {                
+                m_snapToGridEnabled = value;
+                var kvpairs = m_circuitControlRegistry.CircuitNodeControls;
+                //IEnumerable< KeyValuePair<DomNode, Pair<Control, ControlInfo>>>
+                foreach (var kv in kvpairs)
+                {
+                    var control = kv.Value.First as AdaptableControl;
+                    var grid = control.As<D2dGridAdapter>();
+                    if (grid != null) 
+                        grid.ConstraintEnabled = m_snapToGridEnabled;
+
+                }
+            }
+        }
+
         /// <summary>
         /// Gets and sets a string to be used as the initial directory for the open/save dialog box
         /// regardless of whatever directory the user may have previously navigated to. The default
@@ -690,28 +723,17 @@ namespace CircuitEditorSample
         {
             StringBuilder sb = new StringBuilder();
 
-            var hoverItem = e.Object;
+          //  var hoverItem = e.Object;
             var hoverPart = e.Part;
-
             if (e.SubPart.Is<GroupPin>())
             {
-                sb.Append(e.SubPart.Cast<GroupPin>().Name);
-                CircuitUtil.GetDomNodeName(e.SubPart.Cast<DomNode>());
-            }
-            else if (e.SubObject.Is<DomNode>())
-            {
-                CircuitUtil.GetDomNodeName(e.SubObject.Cast<DomNode>());
-            }
+                sb.Append(e.SubPart.Cast<GroupPin>().Name);               
+            }          
             else if (hoverPart.Is<GroupPin>())
             {
                 sb.Append(hoverPart.Cast<GroupPin>().Name);
-                CircuitUtil.GetDomNodeName(hoverPart.Cast<DomNode>());
-            }
-            else if (hoverItem.Is<DomNode>())
-            {
-                CircuitUtil.GetDomNodeName(hoverItem.Cast<DomNode>());
-            }
-
+               
+            }            
             HoverBase result = null;
             if (sb.Length > 0) // remove trailing '\n'
             {
@@ -730,6 +752,7 @@ namespace CircuitEditorSample
                 m_hoverForm.Controls.Clear();
                 m_hoverForm.Close();
                 m_hoverForm.Dispose();
+                m_hoverForm = null;
             }
         }
 
@@ -787,9 +810,10 @@ namespace CircuitEditorSample
         [Import]
         private CircuitControlRegistry m_circuitControlRegistry = null;
 
-        private D2dCircuitRenderer<Module, Connection, ICircuitPin> m_circuitRenderer;
-        private D2dSubCircuitRenderer<Module, Connection, ICircuitPin> m_subGraphRenderer;
-        private D2dDiagramTheme m_theme;
+        public D2dCircuitRenderer<Module, Connection, ICircuitPin> CircuitRenderer { get; private set; }
+        public D2dSubCircuitRenderer<Module, Connection, ICircuitPin> SubCircuitRenderer { get; private set; }
+        public  D2dDiagramTheme Theme { get; private set;}
+
         private HoverBase m_hoverForm;
         private D2dAdaptableControl m_d2dHoverControl; // a child of hover form
 

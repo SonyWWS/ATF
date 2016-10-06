@@ -11,9 +11,11 @@ namespace Sce.Atf.Dom
         /// Constructor</summary>
         /// <param name="name">Attribute name</param>
         /// <param name="type">Attribute type</param>
-        public XmlAttributeInfo(string name, AttributeType type)
-            : base(name, type)
-        {
+        /// <param name="forceSerialize">Force serialize this attribute even when it has default value</param>
+        public XmlAttributeInfo(string name, AttributeType type,
+            bool forceSerialize = false)
+            : base(name, type, forceSerialize)
+        {            
         }
 
         /// <summary>

@@ -739,33 +739,39 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         private void OpenDropDownEditor()
         {
+            if (m_isEditing) return; 
             try
             {
-                m_isEditing = true;
-
-                PropertyEditorControlContext oldContext = m_context;
+                m_isEditing = true;                
                 object oldValue, value;
-                try
+                var oldContext = m_context;
+
+                // Alan Beckus: save references to all the required objects to perform the transaction.
+                // Because EditValue(...) enters modal loop using Application.DonEvent()
+                // consequently selectedObjects, transaction and event m_context itself can change 
+                // before returning from EditValue(...).
+                // note: previous attempt to solve this issue was to cache selected objects inside
+                //       m_context but it failed to solve the issue because the cache was cleared 
+                //       by PropertyView before it can be used.
+                List<object> selection = new List<object>(m_context.SelectedObjects);
+                var transactionContext = m_context.TransactionContext;
+                var descriptor = m_context.Descriptor;
+                oldValue = m_context.GetValue();
+
+                UITypeEditor editor = WinFormsPropertyUtils.GetUITypeEditor(m_descriptor, this);
+
+                // Bring up the editor which can cause Bind() to be called, so make sure that we use the
+                //  correct context and selection after this EditValue call.
+                value = editor.EditValue(this, this, oldValue);
+
+
+                transactionContext.DoTransaction(delegate
                 {
-                    // Certain property editing controls like the FlagsUITypeEditor's private CheckedListBox will
-                    //  not lose focus until the user clicks away, and the user's click may change the
-                    //  PropertyEditorControlContext's selection, so let's temporarily freeze the selection.
-                    oldContext.CacheSelection();
+                    foreach (object selectedObject in selection)
+                        PropertyUtils.SetProperty(selectedObject, descriptor, value);
+                },string.Format("Edit: {0}".Localize(), descriptor.DisplayName));
 
-                    oldValue = m_context.GetValue();
-                    UITypeEditor editor = WinFormsPropertyUtils.GetUITypeEditor(m_descriptor, this);
-
-                    // Bring up the editor which can cause Bind() to be called, so make sure that we use the
-                    //  correct context and selection after this EditValue call.
-                    value = editor.EditValue(this, this, oldValue);
-
-                    oldContext.SetValue(value);
-                }
-                finally
-                {
-                    oldContext.ClearCachedSelection();
-                }
-
+               
                 // notify that we just changed a value
                 NotifyPropertyEdit(oldValue, value);
 

@@ -95,8 +95,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="node">GraphNode</param>
         public void Frame(TNode node)
         {
-            Rectangle bounds = GetBounds(node);
-            m_transformAdapter.Frame(bounds);
+           // Rectangle bounds = GetBounds(node);
+            //m_transformAdapter.Frame(bounds);
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="nodes">Collection of nodes</param>
         public void Frame(IEnumerable<TNode> nodes)
         {
-            Rectangle bounds = GetBounds(nodes);
-            m_transformAdapter.Frame(bounds);
+           // Rectangle bounds = GetBounds(nodes);
+           // m_transformAdapter.Frame(bounds);
         }
 
         /// <summary>
@@ -113,8 +113,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <param name="nodes">Nodes</param>
         public void EnsureVisible(IEnumerable<TNode> nodes)
         {
-            Rectangle bounds = GetBounds(nodes);
-            m_transformAdapter.EnsureVisible(bounds);
+            //Rectangle bounds = GetBounds(nodes);
+           // m_transformAdapter.EnsureVisible(bounds);
         }
 
         /// <summary>

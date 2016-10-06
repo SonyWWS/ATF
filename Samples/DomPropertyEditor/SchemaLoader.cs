@@ -46,8 +46,7 @@ namespace DomPropertyEditorSample
             if (propertyGridView.CustomizeAttributes != null)
                 throw new InvalidOperationException("Someone else set PropertyGridView's CustomizeAttributes already");
             propertyGridView.CustomizeAttributes = new[]
-                {
-                    new PropertyView.CustomizeAttribute("Orcs".Localize(), horizontalEditorOffset:0, nameHasWholeRow:true),
+                {                    
                     new PropertyView.CustomizeAttribute("Armor".Localize(), horizontalEditorOffset:64),
                     new PropertyView.CustomizeAttribute("Club".Localize(), horizontalEditorOffset:64)
                 };
@@ -110,6 +109,8 @@ namespace DomPropertyEditorSample
 
                 // Descriptors for armorType.
                 string general = "General".Localize();
+
+                #region  Schema.armorType propertyDescriptors
                 var armorDescriptors = new PropertyDescriptorCollection(null);
                 armorDescriptors.Add(new AttributePropertyDescriptor(
                            "Name".Localize(),
@@ -138,9 +139,20 @@ namespace DomPropertyEditorSample
                     ));
 
                 Schema.armorType.Type.SetTag(armorDescriptors);
-                
+                #endregion
+
+                #region Schema.clubType propertyDescriptors
                 // club type property descriptors.
                 var clubDescriptors = new PropertyDescriptorCollection(null);
+
+                clubDescriptors.Add(new AttributePropertyDescriptor(
+                          "Name".Localize(),
+                          Schema.clubType.nameAttribute,
+                          general,
+                          "club name".Localize() + " " + url,
+                          false
+                   ));
+
                 clubDescriptors.Add(new AttributePropertyDescriptor(
                          "Spike".Localize(),
                          Schema.clubType.spikesAttribute,
@@ -170,7 +182,9 @@ namespace DomPropertyEditorSample
                  ));
 
                 Schema.clubType.Type.SetTag(clubDescriptors);
-               
+                #endregion 
+
+                #region Schema.gameObjectType propertyDescriptors
                 var gobDescriptors = new PropertyDescriptorCollection(null);
                 gobDescriptors.Add(
                      new AttributePropertyDescriptor(
@@ -233,8 +247,10 @@ namespace DomPropertyEditorSample
                            ));
 
                 Schema.gameObjectType.Type.SetTag(gobDescriptors);
+                #endregion
 
-                // Defines property descriptors for orcType.
+
+                #region Defines property descriptors for orcType.
                 var orcDescriptors = new PropertyDescriptorCollection(null);
                 string chCategory = "Character attributes".Localize();
 
@@ -424,17 +440,6 @@ namespace DomPropertyEditorSample
                        collectionEditor
                        ));
 
-                orcDescriptors.Add(
-                new ChildPropertyDescriptor(
-                       "Orcs".Localize(),
-                       Schema.orcType.orcChild,
-                       "Children".Localize(),
-                       "Orc children".Localize() + " " + url,
-                       false,
-                       collectionEditor
-                       ));
-
-
 
                  string renderingCategory = "Rendering".Localize();
 
@@ -513,7 +518,8 @@ namespace DomPropertyEditorSample
                         ));
                 
                 Schema.orcType.Type.SetTag(orcDescriptors);
-               
+                #endregion
+
                 // only one namespace
                 break;
             }            
@@ -555,7 +561,8 @@ namespace DomPropertyEditorSample
             WorldDomination = 1,
             Work = 2,
             Eat = 4,
-            Sleep = 8,        
+            Sleep = 8, 
+            Explore = 16,            
         }
 
         private readonly PropertyEditor m_propertyEditor;        

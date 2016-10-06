@@ -170,7 +170,9 @@ namespace Sce.Atf.Direct2D
             catch (SharpDXException ex)
             {
                 if (ex.ResultCode == D2DERR_RECREATE_TARGET
-                 || ex.ResultCode == D2DERR_WRONG_RESOURCE_DOMAIN)
+                 || ex.ResultCode == D2DERR_WRONG_RESOURCE_DOMAIN
+                 || ex.ResultCode == D2DERR_DISPLAY_STATE_INVALID
+                 || ex.ResultCode == E_HANDLE)
                 {
                     D2dFactory.CheckForRecreateTarget();
                     RecreateTargetAndResources();
@@ -1611,6 +1613,10 @@ namespace Sce.Atf.Direct2D
         private uint m_renderTargetNumber;
         private static readonly Result D2DERR_WRONG_RESOURCE_DOMAIN = new Result(0x88990015);
         private static readonly Result D2DERR_RECREATE_TARGET = new Result(0x8899000C);
+        private static readonly Result D2DERR_DISPLAY_STATE_INVALID = new Result(0x88990006);
+        private static readonly Result E_HANDLE = new Result(0x80070006);
+        
+
         //private static readonly Result D2DERR_PUSH_POP_UNBALANCED = new Result(0x88990016);
         private const double DPI = 3.1415926535897931;
         private const float ToRadian = (float)(DPI / 180.0);

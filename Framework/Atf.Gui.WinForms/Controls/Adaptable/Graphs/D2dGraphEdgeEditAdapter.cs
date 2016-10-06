@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Sce.Atf.Adaptation;
 using Sce.Atf.Direct2D;
+using Sce.Atf.VectorMath;
 
 namespace Sce.Atf.Controls.Adaptable.Graphs
 {
@@ -131,14 +132,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             public PointF ToRoutePos
             {
                 get { return m_toRoutePos; }
-                set
-                {
-                    if (value == PointF.Empty)
-                    {
-
-                    }
-                    m_toRoutePos = value;
-                }
+                set{ m_toRoutePos = value; }
             }
 
             private PointF m_toRoutePos;
@@ -278,6 +272,41 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_mainEditableGraph = AdaptedControl.ContextAs<IEditableGraph<TNode, TEdge, TEdgeRoute>>();
         }
 
+        public class DragEdge
+        {
+            public TNode FromNode { get; internal set; }
+            public TEdgeRoute FromRoute { get; internal set; }
+            public TNode ToNode { get; internal set; }
+            public TEdgeRoute ToRoute { get; internal set; }
+            public string Label { get; internal set; }
+            public PointF StartPoint { get; internal set; }
+            public PointF EndPoint { get; internal set; }
+        }
+
+        /// <summary>
+        /// Get currently dragging edge or null 
+        /// if currently no edige is being dragged.</summary>
+        /// <returns></returns>
+        public DragEdge GetDraggingEdge()
+        {
+            if (!m_isConnecting) return null;
+
+            var d2dControl = this.AdaptedControl as D2dAdaptableControl;
+            D2dGraphics gfx = d2dControl.D2dGraphics;
+            var invXform = Matrix3x2F.Invert(gfx.Transform);
+
+            var edge = new DragEdge();
+            edge.FromNode = m_draggingContext.ActualFromNode();
+            edge.FromRoute = m_draggingContext.ActualFromRoute(edge.FromNode);
+            edge.ToNode = m_draggingContext.ActualToNode();
+            edge.ToRoute = m_draggingContext.ActualToRoute(edge.ToNode);
+            edge.Label = m_draggingContext.ExistingEdge != null ? m_draggingContext.ExistingEdge.Label : null;
+            edge.StartPoint = edge.FromRoute == null ? Matrix3x2F.TransformPoint(invXform, m_edgeDragPoint) : m_draggingContext.FromRoutePos;
+            edge.EndPoint = edge.ToRoute == null ? Matrix3x2F.TransformPoint(invXform, m_edgeDragPoint) : m_draggingContext.ToRoutePos;
+            return edge;
+        }
+
+
         /// <summary>
         /// DrawingD2d event handler</summary>
         /// <param name="sender">Adaptable control</param>
@@ -292,7 +321,6 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
             string label = m_draggingContext.ExistingEdge != null ? m_draggingContext.ExistingEdge.Label : null;
 
-
             TNode dragFromNode = m_draggingContext.ActualFromNode();
             TEdgeRoute dragFromRoute = m_draggingContext.ActualFromRoute(dragFromNode);
             TNode dragToNode = m_draggingContext.ActualToNode();
@@ -306,7 +334,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_renderer.DrawPartialEdge(dragFromNode, dragFromRoute, dragToNode, dragToRoute, label,
                 start, end, gfx);
         }
-
+             
         /// <summary>
         /// Performs custom actions on adaptable control MouseMove events; base method should
         /// be called first</summary>
@@ -605,8 +633,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
 
                 AdaptedControl.AutoResetCursor = false;
                 AdaptedControl.Cursor = cursor;
-                var d2dControl = this.AdaptedControl as D2dAdaptableControl;
-                d2dControl.DrawD2d();
+                AdaptedControl.Invalidate();
+                //var d2dControl = this.AdaptedControl as D2dAdaptableControl;
+                //d2dControl.DrawD2d();
             }
         }
 

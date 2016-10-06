@@ -92,9 +92,20 @@ namespace Sce.Atf.DirectWrite
 
         }
 
+        private int m_topline;
         /// <summary>
         /// Gets or sets top visible line number</summary>
-        public int TopLine { get; set; }
+        public int TopLine 
+        {
+            get { return m_topline; }
+            set
+            {
+                m_topline = value;
+                if (m_topline >= TextLayout.LineCount) m_topline = TextLayout.LineCount - 1;
+                if (m_topline < 0) m_topline = 0;                
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets whether the vertical scroll bar should be visible</summary>
@@ -465,8 +476,9 @@ namespace Sce.Atf.DirectWrite
                 var lineMetrics = TextLayout.GetLineMetrics();
                 int linePosition;
                 GetLineFromPosition(lineMetrics, m_caretPosition, out  line, out linePosition);
-                if (line <= TopLine)
-                    TopLine = TopLine - 1 >= 0 ? TopLine - 1 : 0; // scroll down a line of text 
+               
+                if (line < TopLine)
+                     TopLine = line;
 
                 float visibleLines = TextLayout.Height / lineMetrics[0].Height;
                 if (line > TopLine + visibleLines)
@@ -591,10 +603,10 @@ namespace Sce.Atf.DirectWrite
         /// position of that line by summing up the lengths. When the starting
         /// line position is beyond the given text position, we have our line.</summary>
         /// <param name="lineMetrics">Line metrics</param>
-        /// <param name="textPosition">Text position</param>
+        /// <param name="caretPosition">Text position</param>
         /// <param name="line">Line text</param>
         /// <param name="linePosition">Line position</param>
-        private void  GetLineFromPosition(LineMetrics[] lineMetrics, int textPosition, out int line, out int linePosition)
+        private void  GetLineFromPosition(LineMetrics[] lineMetrics, int caretPosition, out int line, out int linePosition)
         {
             line = 0;
             linePosition = 0;
@@ -604,7 +616,7 @@ namespace Sce.Atf.DirectWrite
             {
                 linePosition = nextLinePosition;
                 nextLinePosition = linePosition + lineMetrics[line].Length;
-                if (nextLinePosition > textPosition)
+                if (nextLinePosition > caretPosition)
                 {
                     // The next line is beyond the desired text position,
                     // so it must be in the current line.
@@ -619,7 +631,7 @@ namespace Sce.Atf.DirectWrite
         }
 
         /// <summary>
-        /// Return how many lines can be displayed within the desired LayoutWidth*LayoutHeight.</summary>
+        /// Return how many lines can be displayed within the desired LayoutHeight.</summary>
         /// <returns>Number of lines that can be displayed within constraints</returns>
         public int GetVisibleLines()
         {
@@ -647,7 +659,7 @@ namespace Sce.Atf.DirectWrite
 
             float totalHeight = 0;
             var lineMetrics = TextLayout.GetLineMetrics();
-            for (int i = 0; i < line - 1; ++i)
+            for (int i = 0; i < line; ++i)
                 totalHeight += lineMetrics[i].Height;
 
             return totalHeight;
@@ -665,7 +677,7 @@ namespace Sce.Atf.DirectWrite
             int linePosition;
             int line;
             GetLineFromPosition(lineMetrics, m_caretPosition, out  line, out linePosition);
-            if (line > TopLine + numVisibleLines-1)
+            if (line > TopLine + numVisibleLines)
             {
                 int lines = line- TopLine - numVisibleLines+1;
                 TopLine = TopLine + lines;

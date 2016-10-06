@@ -143,28 +143,23 @@ namespace Sce.Atf.Controls.Adaptable
 
                 PointF scale = EnforceConstraints ? this.ConstrainScale(new PointF(xScale, yScale)) : new PointF(xScale, yScale);
                 if (m[0] != scale.X || m[3] != scale.Y)
-                {
-                    m_transform = new Matrix(scale.X, 0, 0, scale.Y, m_transform.OffsetX, m_transform.OffsetY);
-                    OnTransformChanged(EventArgs.Empty);
-                    TransformChanged.Raise(this, EventArgs.Empty);
+                {                                        
                     transformChanged = true;
                 }
 
                 PointF translation = EnforceConstraints ? this.ConstrainTranslation(new PointF(xTranslation, yTranslation)) : new PointF(xTranslation, yTranslation);
                 if (m[4] != translation.X || m[5] != translation.Y)
-                {
-                    m_transform = new Matrix(scale.X, 0, 0, scale.Y, translation.X, translation.Y);
-                    OnTransformChanged(EventArgs.Empty);
-                    TransformChanged.Raise(this, EventArgs.Empty);
+                {                    
                     transformChanged = true;
                 }
 
                 if (transformChanged)
                 {
-                    var d2dCtrl = AdaptedControl as D2dAdaptableControl;
-                    if (d2dCtrl != null)
-                        d2dCtrl.DrawD2d();
-                    else if (AdaptedControl != null)
+                    m_transform = new Matrix(scale.X, 0, 0, scale.Y, translation.X, translation.Y);
+                    OnTransformChanged(EventArgs.Empty);
+                    TransformChanged.Raise(this, EventArgs.Empty);
+
+                    if (AdaptedControl != null)
                         AdaptedControl.Invalidate();
                 }
             }

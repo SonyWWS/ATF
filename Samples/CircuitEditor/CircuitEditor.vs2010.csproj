@@ -69,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotation.cs" />
+    <Compile Include="BirdEyeView.cs" />
     <Compile Include="CategoryUniqueIdValidator.cs" />
+    <Compile Include="CircuitMagnifier.cs" />
     <Compile Include="CircuitReader.cs" />
     <Compile Include="CircuitRenderer.cs" />
     <Compile Include="CircuitWriter.cs" />

@@ -696,9 +696,7 @@ namespace Sce.Atf.Wpf.Controls.PropertyEditing
         {
             foreach (Property p in m_activeProperties)
             {
-                p.Context.TransactionContext = null;
-                p.Context.ClearCachedSelection();
-
+                p.Context.TransactionContext = null;               
                 Control control = p.Control;
                 if (control != null &&
                     !p.Cacheable)

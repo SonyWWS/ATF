@@ -831,7 +831,7 @@ namespace Sce.Atf.Applications
                 StandardCommandGroup.ViewZoomIn,
                 "Frame All".Localize("Frame all objects in view"),
                 "Frames all objects in the current view".Localize(),
-                Keys.Shift | Keys.F,
+                new Keys[]{Keys.Shift | Keys.F, Keys.A},
                 null);
 
         /// <summary>

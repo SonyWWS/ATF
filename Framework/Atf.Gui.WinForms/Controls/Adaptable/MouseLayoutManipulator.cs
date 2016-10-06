@@ -199,8 +199,7 @@ namespace Sce.Atf.Controls.Adaptable
             if (Dragging())
             {
                 UpdateBounds();
-                var d2dControl = this.AdaptedControl as D2dAdaptableControl;
-                d2dControl.DrawD2d();                
+                AdaptedControl.Invalidate();
             } 
         }
 

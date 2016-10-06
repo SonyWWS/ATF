@@ -1,14 +1,16 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 using Sce.Atf;
+using Sce.Atf.Applications;
 using Sce.Atf.Dom;
 
 namespace DomPropertyEditorSample
 {
     /// <summary>
     /// Used for updating PropertyEditor on Undo/Redo</summary>
-    public class GameEditingContext : EditingContext, IObservableContext
+    public class GameEditingContext : EditingContext, ITreeView, IItemView, IObservableContext
     {
         /// <summary>
         /// Performs initialization when the adapter's node is set.
@@ -36,6 +38,46 @@ namespace DomPropertyEditorSample
         /// <summary>
         /// Event that is raised when the DomNode tree has been reloaded.</summary>
         public event EventHandler Reloaded;
+        #endregion
+
+        #region ITreeView Members
+
+        object ITreeView.Root
+        {
+            get { return DomNode; }
+        }
+
+        IEnumerable<object> ITreeView.GetChildren(object parent)
+        {
+             DomNode node = parent as DomNode;
+             if (node != null) return node.Children;
+             return EmptyArray<object>.Instance;             
+        }
+
+        #endregion
+
+        #region IItemView Members
+
+        void IItemView.GetInfo(object item, ItemInfo info)
+        {
+              var node = item as DomNode;
+              if (node != null)
+              {
+                  string name = node.GetId();
+                  if (string.IsNullOrEmpty(name))
+                  {
+                      var attInfo = node.Type.GetAttributeInfo("name");
+                      if (attInfo == null) attInfo = node.Type.GetAttributeInfo("label");
+                      if (attInfo != null && attInfo.Type.Type == AttributeTypes.String)
+                          name = (string)node.GetAttribute(attInfo);                                               
+                  }
+                      
+                  info.AllowLabelEdit = false;
+                  info.IsLeaf = !node.Children.Any();
+                  info.Label = string.IsNullOrWhiteSpace(name) ? node.Type.Name : name;
+              }
+        }
+
         #endregion
     }
 }

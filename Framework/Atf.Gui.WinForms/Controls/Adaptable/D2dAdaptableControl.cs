@@ -51,6 +51,8 @@ namespace Sce.Atf.Controls.Adaptable
             set;
         }
 
+
+        private bool m_reEntryGuard;
         /// <summary>
         /// Draws one complete 'frame' using Direct2D. Is equivalent to this Control receiving a Paint message.
         /// Raises the DrawingD2d event.</summary>
@@ -58,10 +60,19 @@ namespace Sce.Atf.Controls.Adaptable
         {
             if (SuppressDraw)
                 return;
+            if (m_reEntryGuard) return;
 
-            OnBeginDrawD2d();
-            OnDrawingD2d();
-            OnEndDrawD2d();
+            try
+            {
+                m_reEntryGuard = true;
+                OnBeginDrawD2d();
+                OnDrawingD2d();
+                OnEndDrawD2d();
+            }
+            finally
+            {
+                m_reEntryGuard = false;
+            }
         }
 
         /// <summary>

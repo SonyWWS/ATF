@@ -53,6 +53,7 @@
 
 
   <xs:complexType name="clubType">
+    <xs:attribute name="name" type="xs:string"  default ="Club"/>
     <xs:attribute name="spikes" type="xs:boolean" default="true" />
     <xs:attribute name="Damage" type="xs:int" default ="20"/>
     <xs:attribute name="wieght" type="xs:float" default ="10"/>    

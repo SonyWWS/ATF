@@ -37,6 +37,9 @@ namespace Sce.Atf.Controls.Adaptable
 
         private void control_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (!AdaptedControl.ClientRectangle.Contains(e.Location))
+                return;
+
             PointF translation = m_transformAdapter.Translation;
             PointF scale = m_transformAdapter.Scale;
             PointF scaleCenterStart = new PointF(

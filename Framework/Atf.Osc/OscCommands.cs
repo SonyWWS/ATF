@@ -189,10 +189,10 @@ namespace Sce.Atf.Applications
         private string m_oscAddressOfPropertyDescriptor;
 
         [Import(AllowDefault = true)]
-        private IWin32Window m_mainWindow;
+        private IWin32Window m_mainWindow = null;
 
         [Import(AllowDefault = true)]
-        private OscCommandReceiver m_commandReceiver;
+        private OscCommandReceiver m_commandReceiver = null;
 
         private static readonly string s_copyOscAddressText = "Copy OSC Address".Localize();
     }

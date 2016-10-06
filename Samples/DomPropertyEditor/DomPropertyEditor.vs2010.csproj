@@ -69,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaLoader.cs" />
     <Compile Include="Schemas\Schema.cs" />
+    <Compile Include="TreeLister.cs" />
     <None Include="app.config" />
     <EmbeddedResource Include="Schemas\game.xsd">
       <SubType>Designer</SubType>

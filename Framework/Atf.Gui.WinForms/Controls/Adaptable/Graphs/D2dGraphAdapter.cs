@@ -35,7 +35,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {            
             m_renderer = renderer;
             m_renderer.Redraw += renderer_Redraw;
-            m_renderer.GetStyle = GetStyle;
+            EdgeRenderPolicy = DrawEdgePolicy.AllFirst;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public enum DrawEdgePolicy
         {
             /// <summary>
-            /// Draw an edge after its start and end nodes are drawn (default)</summary>
+            /// Draw an edge after its start and end nodes are drawn</summary>
             Associated,
             /// <summary>
             /// Draw all edges first, followed by nodes</summary>            
@@ -162,13 +162,18 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Hit record for a point, in client coordinates</returns>
         DiagramHitRecord IPickingAdapter2.Pick(Point pickPoint)
         {
-            Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
-            PointF pt = Matrix3x2F.TransformPoint(invXform, pickPoint);
+            m_renderer.GetStyle = GetStyle;
+            if (AdaptedControl.Context != null)
+            {
+                Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
+                PointF pt = Matrix3x2F.TransformPoint(invXform, pickPoint);
 
-            TEdge priorityEdge = null;
-            if (m_selectionContext != null)
-                priorityEdge = m_selectionContext.GetLastSelected<TEdge>();
-            return m_renderer.Pick(m_graph, priorityEdge, pt, m_d2dGraphics);                                    
+                TEdge priorityEdge = null;
+                if (m_selectionContext != null)
+                    priorityEdge = m_selectionContext.GetLastSelected<TEdge>();
+                return m_renderer.Pick(m_graph, priorityEdge, pt, m_d2dGraphics);
+            }
+            return new GraphHitRecord<TNode, TEdge, TEdgeRoute>();
         }
 
         /// <summary>
@@ -179,13 +184,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Hit record for a point, in client coordinates</returns>
         public GraphHitRecord<TNode, TEdge, TEdgeRoute> Pick(IEnumerable<TNode> nodes, IEnumerable<TEdge> edges, Point pickPoint)
         {
-            Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
-            PointF pt = Matrix3x2F.TransformPoint(invXform, pickPoint);
+            m_renderer.GetStyle = GetStyle;
 
-            TEdge priorityEdge = null;
-            if (m_selectionContext != null)
-                priorityEdge = m_selectionContext.GetLastSelected<TEdge>();
-            return m_renderer.Pick(nodes, edges, priorityEdge, pt, m_d2dGraphics);
+            if (AdaptedControl.Context != null)
+            {
+                Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
+                PointF pt = Matrix3x2F.TransformPoint(invXform, pickPoint);
+
+                TEdge priorityEdge = null;
+                if (m_selectionContext != null)
+                    priorityEdge = m_selectionContext.GetLastSelected<TEdge>();
+                return m_renderer.Pick(nodes, edges, priorityEdge, pt, m_d2dGraphics);
+            }
+            return new GraphHitRecord<TNode, TEdge, TEdgeRoute>();
         }
 
         /// <summary>
@@ -194,6 +205,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         /// <returns>Items that overlap with the rectangle, in client coordinates</returns>
         public virtual IEnumerable<object> Pick(Rectangle pickRect)
         {
+            m_renderer.GetStyle = GetStyle;
             Matrix3x2F invXform = Matrix3x2F.Invert(m_d2dGraphics.Transform);
             RectangleF rect = D2dUtil.Transform(invXform,pickRect);
             return m_renderer.Pick(m_graph, rect, m_d2dGraphics);           
@@ -206,6 +218,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         public virtual Rectangle GetBounds(IEnumerable<object> items)
         {
             RectangleF bounds = m_renderer.GetBounds(items.AsIEnumerable<TNode>(), m_d2dGraphics);
+            if (bounds.IsEmpty) return Rectangle.Empty;
             bounds = D2dUtil.Transform(m_d2dGraphics.Transform, bounds); 
             return Rectangle.Truncate(bounds);
         }
@@ -306,6 +319,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (m_d2dControl != null)
                 throw new InvalidOperationException("We can only bind to one D2dAdaptableControl at a time");
+
+            m_draggingAdapters = control.AsAll<DraggingControlAdapter>().ToArray();
+
             m_d2dControl = (D2dAdaptableControl)control;
             m_d2dGraphics = m_d2dControl.D2dGraphics;
             m_d2dControl.ContextChanged += control_ContextChanged;
@@ -315,7 +331,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_d2dControl.MouseLeave += d2dControl_MouseLeave;
             m_selectionPathProvider = control.As<ISelectionPathProvider>();  
         }
-        
+
+        private DraggingControlAdapter[] m_draggingAdapters;
         
         /// <summary>
         /// Unbinds the adapter from the adaptable control</summary>
@@ -324,6 +341,10 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         {
             if (m_d2dControl != control)
                 throw new InvalidOperationException("We can only unbind from a D2dAdaptableControl that we previously were bound to");
+
+
+            m_draggingAdapters = null;
+
             m_d2dControl.ContextChanged -= control_ContextChanged;
             m_d2dControl.DrawingD2d -= control_Paint;
             m_d2dControl.MouseDown -= d2dControl_MouseDown;
@@ -334,156 +355,192 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             m_selectionPathProvider = null;
         }
 
+
+        private Multimap<TNode, TEdge> m_nodeEdges = new Multimap<TNode, TEdge>();
+        private Dictionary<TEdge, int> m_edgeNodeEncounter = new Dictionary<TEdge, int>();
+        private List<TNode> m_draggingNodes = new List<TNode>();
+        private List<TNode> m_selectedNodes = new List<TNode>();
+        private List<TNode> m_expandedGroups = new List<TNode>();
+        private List<TEdge> m_edgesOnGroups = new List<TEdge>();
+
         /// <summary>
         /// Renders entire graph</summary>
         protected virtual void OnRender()
         {
-            m_d2dGraphics.AntialiasMode = D2dAntialiasMode.PerPrimitive;
-            Matrix3x2F invMtrx = m_d2dGraphics.Transform;
-            invMtrx.Invert();
-            RectangleF boundsGr = Matrix3x2F.Transform(invMtrx, this.AdaptedControl.ClientRectangle);
-
-            // Either draw (most) edges first or prepare multimaps for draw-as-we-go edges.
-            List<TEdge> edgesOnGroups = null;
-            if (EdgeRenderPolicy == DrawEdgePolicy.AllFirst)
+            try
             {
-                edgesOnGroups = new List<TEdge>();
-                foreach (var edge in m_graph.Edges)
+                m_renderer.GetStyle = GetStyle;
+                m_d2dGraphics.AntialiasMode = D2dAntialiasMode.PerPrimitive;
+                Matrix3x2F invMtrx = m_d2dGraphics.Transform;
+                invMtrx.Invert();
+                RectangleF boundsGr = Matrix3x2F.Transform(invMtrx, this.AdaptedControl.ClientRectangle);
+
+                // Either draw (most) edges first or prepare multimaps for draw-as-we-go edges.                
+                if (EdgeRenderPolicy == DrawEdgePolicy.AllFirst)
                 {
-                    var group = edge.FromNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                    if (group != null && group.Expanded)
-                        edgesOnGroups.Add(edge);
-                    else
+                    foreach (var edge in m_graph.Edges)
                     {
-                        group = edge.ToNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                        if (edge == m_hiddenEdge) continue;
+                        RectangleF bounds = m_renderer.GetBounds(edge, m_d2dGraphics);
+                        if (!boundsGr.IntersectsWith(bounds)) continue;
+
+                        var group = edge.FromNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                        if (group == null || !group.Expanded)
+                            group = edge.ToNode.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
                         if (group != null && group.Expanded)
-                            edgesOnGroups.Add(edge);
+                            m_edgesOnGroups.Add(edge);
                         else
-                            DrawEdge(edge, boundsGr);
-                    }
-                }
-            }
-            else
-            {
-                // build node to edge maps
-                m_fromNodeEdges.Clear();
-                m_toNodeEdges.Clear();
-                m_edgeNodeEncounter.Clear();
-                foreach (TEdge edge in m_graph.Edges)
-                {
-                    m_fromNodeEdges.Add(edge.FromNode, edge);
-                    m_toNodeEdges.Add(edge.ToNode, edge);
-                    m_edgeNodeEncounter.Add(edge, 0);
-                }
-            }
-
-            // Draw normal nodes first
-            TNode containerOfSelectedNode = null;
-            var draggingNodes = new List<TNode>();
-            var selectedNodes = new List<TNode>();
-            var expandedGroups = new List<TNode>();
-            foreach (var node in m_graph.Nodes)
-            {
-                RectangleF nodeBounds = m_renderer.GetBounds(node, m_d2dGraphics);
-                if (boundsGr.IntersectsWith(nodeBounds))
-                {
-                    DiagramDrawingStyle drawStyle = GetStyle(node);
-                    
-                    // Draw all dragged nodes (even expanded groups) last.
-                    if (drawStyle == DiagramDrawingStyle.DragSource)
-                    {
-                        draggingNodes.Add(node);
-                    }
-                    else
-                    {
-                        // Draw selected nodes after normal nodes. If the node
-                        //  is hot, check if it's selected.
-                        if (drawStyle == DiagramDrawingStyle.Selected ||
-                            drawStyle == DiagramDrawingStyle.LastSelected ||
-                            (drawStyle == DiagramDrawingStyle.Hot && m_selectionContext != null &&
-                                m_selectionContext.SelectionContains(node)))
                         {
-                            selectedNodes.Add(node);
+                            DiagramDrawingStyle style = GetStyle(edge);
+                            m_renderer.Draw(edge, style, m_d2dGraphics);
+                        }
+                    }
+                }
+                else
+                {
+                    // build node to edge maps                    
+                    foreach (TEdge edge in m_graph.Edges)
+                    {
+                        m_nodeEdges.Add(edge.FromNode, edge);
+                        m_nodeEdges.Add(edge.ToNode, edge);
+                        m_edgeNodeEncounter.Add(edge, 0);
+                    }
+                }
+
+                // Draw normal nodes first
+                TNode containerOfSelectedNode = null;
+                
+                foreach (var node in m_graph.Nodes)
+                {
+                    RectangleF nodeBounds = m_renderer.GetBounds(node, m_d2dGraphics);
+                    if (boundsGr.IntersectsWith(nodeBounds))
+                    {
+                        DiagramDrawingStyle drawStyle = GetStyle(node);
+
+                        // Draw all dragged nodes (even expanded groups) last.
+                        if (drawStyle == DiagramDrawingStyle.DragSource)
+                        {
+                            m_draggingNodes.Add(node);
                         }
                         else
                         {
-                            // Expanded groups are drawn after normal nodes.
-                            bool expandedGroup = false;
-                            var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                            if (group != null)
+                            // Draw selected nodes after normal nodes. If the node
+                            //  is hot, check if it's selected.
+                            if (drawStyle == DiagramDrawingStyle.Selected ||
+                                drawStyle == DiagramDrawingStyle.LastSelected ||
+                                (drawStyle == DiagramDrawingStyle.Hot && m_selectionContext != null &&
+                                    m_selectionContext.SelectionContains(node)))
                             {
-                                group.Info.PickingPriority = 0;
-                                if (group.Expanded)
+                                m_selectedNodes.Add(node);
+                            }
+                            else
+                            {
+                                // Expanded groups are drawn after normal nodes.
+                                bool expandedGroup = false;
+                                var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                                if (group != null)
                                 {
-                                    if (node == ActiveContainer())
-                                        containerOfSelectedNode = node;
-                                    else
-                                        expandedGroups.Add(node);
-                                    expandedGroup = true;
+                                    group.Info.PickingPriority = 0;
+                                    if (group.Expanded)
+                                    {
+                                        if (node == ActiveContainer())
+                                            containerOfSelectedNode = node;
+                                        else
+                                            m_expandedGroups.Add(node);
+                                        expandedGroup = true;
+                                    }
+                                }
+
+                                // Draw normal nodes and collapsed groups.
+                                if (!expandedGroup)
+                                {
+                                    m_renderer.Draw(node, drawStyle, m_d2dGraphics);
+                                    if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                                        DrawAssociatedEdges(node, boundsGr);
                                 }
                             }
-
-                            // Draw normal nodes and collapsed groups.
-                            if (!expandedGroup)
-                            {
-                                m_renderer.Draw(node, drawStyle, m_d2dGraphics);
-                                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                                    TryDrawAssociatedEdges(node, boundsGr);
-                            }
                         }
                     }
+                    else if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                        DrawAssociatedEdges(node, boundsGr);
                 }
-                else if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(node, boundsGr);
-            }
 
-            // Draw expanded groups on top of normal sibling nodes, so that normal nodes that overlap
-            //  these groups don't appear as if they are in the groups.
-            int pickPriority = 0;
-            foreach (var node in expandedGroups)
-            {
-                var group = node.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                group.Info.PickingPriority = pickPriority++;
-                m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
-                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(node, boundsGr);
-            }
-
-            // Draw the expanded group that contains a selected or dragged child node, so that
-            //  if multiple expanded groups overlap, that the user can see the owning group.
-            if (containerOfSelectedNode != null)
-            {
-                var group = containerOfSelectedNode.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                group.Info.PickingPriority = pickPriority++;
-                m_renderer.Draw(containerOfSelectedNode, GetStyle(containerOfSelectedNode), m_d2dGraphics);
-                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(containerOfSelectedNode, boundsGr);
-            }
-
-            // Draw selected nodes.
-            foreach (var node in selectedNodes)
-            {
-                var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
-                if (group != null)
+                // Draw expanded groups on top of normal sibling nodes, so that normal nodes that overlap
+                //  these groups don't appear as if they are in the groups.
+                int pickPriority = 0;
+                foreach (var node in m_expandedGroups)
+                {
+                    var group = node.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
                     group.Info.PickingPriority = pickPriority++;
-                m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
-                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(node, boundsGr);
-            }
+                    m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
+                    if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                        DrawAssociatedEdges(node, boundsGr);
+                }
 
-            // Draw "all first" edges that connect to expanded groups.
-            if (EdgeRenderPolicy == DrawEdgePolicy.AllFirst)
-            {
-                foreach (var edge in edgesOnGroups)
-                    DrawEdge(edge, boundsGr);
-            }
+                // Draw the expanded group that contains a selected or dragged child node, so that
+                //  if multiple expanded groups overlap, that the user can see the owning group.
+                if (containerOfSelectedNode != null)
+                {
+                    var group = containerOfSelectedNode.Cast<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                    group.Info.PickingPriority = pickPriority++;
+                    m_renderer.Draw(containerOfSelectedNode, GetStyle(containerOfSelectedNode), m_d2dGraphics);
+                    if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                        DrawAssociatedEdges(containerOfSelectedNode, boundsGr);
+                }
 
-            // Draw dragging nodes last to ensure they are visible (necessary for container-crossing move operation)
-            foreach (var node in draggingNodes)
+                // Draw selected nodes.
+                foreach (var node in m_selectedNodes)
+                {
+                    var group = node.As<ICircuitGroupType<TNode, TEdge, TEdgeRoute>>();
+                    if (group != null)
+                        group.Info.PickingPriority = pickPriority++;
+                    m_renderer.Draw(node, GetStyle(node), m_d2dGraphics);
+                    if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                        DrawAssociatedEdges(node, boundsGr);
+                }
+
+                             
+                // Draw dragging nodes last to ensure they are visible (necessary for container-crossing move operation)
+                foreach (var node in m_draggingNodes)
+                {
+                    m_renderer.Draw(node, DiagramDrawingStyle.DragSource, m_d2dGraphics);
+                    if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
+                        DrawAssociatedEdges(node, boundsGr);
+                }
+
+                // Draw "all first" edges that connect to expanded groups.
+                foreach (var edge in m_edgesOnGroups)
+                {
+                    DiagramDrawingStyle style = GetStyle(edge);
+                    m_renderer.Draw(edge, style, m_d2dGraphics);
+                }                        
+            }
+            finally
             {
-                m_renderer.Draw(node, DiagramDrawingStyle.DragSource, m_d2dGraphics);
-                if (EdgeRenderPolicy == DrawEdgePolicy.Associated)
-                    TryDrawAssociatedEdges(node, boundsGr);
+                m_nodeEdges.Clear();
+                m_edgeNodeEncounter.Clear();
+                m_draggingNodes.Clear();
+                m_selectedNodes.Clear();
+                m_expandedGroups.Clear();
+                m_edgesOnGroups.Clear();
+            }
+        }
+
+        private void DrawAssociatedEdges(TNode node, RectangleF clipBounds)
+        {
+            
+            var edges = m_nodeEdges.Find(node);
+            foreach (var edge in edges)
+            {
+                int edgeVisit = m_edgeNodeEncounter[edge] + 1;
+                m_edgeNodeEncounter[edge] = edgeVisit;
+                if (edgeVisit == 2)
+                {
+                    RectangleF bounds = m_renderer.GetBounds(edge, m_d2dGraphics);
+                    DiagramDrawingStyle style = GetStyle(edge);
+                    if (clipBounds.IntersectsWith(bounds) && style != DiagramDrawingStyle.Hidden)
+                        m_renderer.Draw(edge, style, m_d2dGraphics);
+                }
             }
         }
 
@@ -496,49 +553,9 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             return null;
         }
 
-        // draw an edge as soon as both of its start and end nodes are drawn
-        private void TryDrawAssociatedEdges(TNode nodeDrawn, RectangleF clipBounds)
-        {
-            if (m_fromNodeEdges.ContainsKey(nodeDrawn))
-            {
-                var edges = m_fromNodeEdges[nodeDrawn];
-                foreach (var edge in edges)
-                {
-                    m_edgeNodeEncounter[edge] = m_edgeNodeEncounter[edge] + 1;
-                    if (m_edgeNodeEncounter[edge] == 2) // draw edge
-                    {
-                        DrawEdge(edge, clipBounds);
-                    }
-                }
-            }
-
-            if (m_toNodeEdges.ContainsKey(nodeDrawn))
-            {
-                var edges = m_toNodeEdges[nodeDrawn];
-                foreach (var edge in edges)
-                {
-                    m_edgeNodeEncounter[edge] = m_edgeNodeEncounter[edge] + 1;
-                    if (m_edgeNodeEncounter[edge] == 2) //draw edge
-                    {
-                        DrawEdge(edge, clipBounds);
-                    }
-                }
-            }
-        }
-
-        private void DrawEdge(TEdge edge, RectangleF clipBounds)
-        {
-            if (edge == m_hiddenEdge) return;
-
-            RectangleF edgeBounds = m_renderer.GetBounds(edge, m_d2dGraphics);
-            if (!clipBounds.IntersectsWith(edgeBounds)) return;
-
-            DiagramDrawingStyle style = GetStyle(edge);
-            m_renderer.Draw(edge, style, m_d2dGraphics);
-        }
-
         private void control_Paint(object sender, EventArgs e)
         {
+            m_renderer.GetStyle = GetStyle;
             OnRender();
         }
 
@@ -672,11 +689,19 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
             Invalidate();
         }
 
+        private bool IsDragging()
+        {
+            if (m_draggingAdapters != null)
+            {
+                foreach (var adpater in m_draggingAdapters)
+                    if (adpater.IsDragging) return true;
+            }
+            return false;
+        }
         private void Invalidate()
         {
-            var d2dControl = this.AdaptedControl as D2dAdaptableControl;
-            if (d2dControl != null)
-                d2dControl.Invalidate();
+            if(!IsDragging())// no need to invalidate when dragging.
+                AdaptedControl.Invalidate();            
         }
 
         /// <summary>
@@ -716,11 +741,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
         private IObservableContext m_observableContext;
         private ISelectionContext m_selectionContext;
         private IVisibilityContext m_visibilityContext;
-        private Multimap<TNode, TEdge> m_fromNodeEdges = new Multimap<TNode, TEdge>();
-        private Multimap<TNode, TEdge> m_toNodeEdges = new Multimap<TNode, TEdge>();
-        private Dictionary<TEdge, int> m_edgeNodeEncounter = new Dictionary<TEdge, int>();
-
-
+        
         /// <summary>
         /// EmptyGraph object</summary>
         protected static readonly EmptyGraph s_emptyGraph = new EmptyGraph();

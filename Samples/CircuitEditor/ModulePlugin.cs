@@ -1,5 +1,6 @@
 ﻿//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -10,6 +11,7 @@ using Sce.Atf;
 using Sce.Atf.Applications;
 using Sce.Atf.Controls.Adaptable;
 using Sce.Atf.Controls.Adaptable.Graphs;
+using Sce.Atf.Controls.PropertyEditing;
 using Sce.Atf.Dom;
 
 using PropertyDescriptor = Sce.Atf.Dom.PropertyDescriptor;
@@ -137,7 +139,7 @@ namespace CircuitEditorSample
                 },
                 m_schemaLoader);
 
-            DefineModuleType(
+            var lightType = DefineModuleType(
                 new XmlQualifiedName("lightType", Schema.NS),
                 "Light".Localize(),
                 "Light source".Localize(),
@@ -148,6 +150,29 @@ namespace CircuitEditorSample
                 },
                 EmptyArray<ElementType.Pin>.Instance,
                 m_schemaLoader);
+
+            // define and add new attribute to light type.
+            var featuresAttribute = new AttributeInfo("features".Localize(), AttributeType.IntType);
+            featuresAttribute.DefaultValue = 3;
+            lightType.Define(featuresAttribute);
+            // create property descriptor for the above attribute.
+            FlagsUITypeEditor featuresEditor = new FlagsUITypeEditor(new[] { "ENERGY STAR", "High CRI" }, new[] { 1, 2 });
+            FlagsTypeConverter featuresConverter = new FlagsTypeConverter(new[] { "Energy Star", "High CRI" }, new[] { 1, 2 });
+            lightType.SetTag(
+               new PropertyDescriptorCollection(
+                   new PropertyDescriptor[] {
+                        new AttributePropertyDescriptor(
+                            "Features".Localize(),
+                            featuresAttribute,
+                            null, //category
+                            "Features".Localize(), //description
+                            false,
+                            featuresEditor,
+                            featuresConverter) //is not read-only
+                    }));
+
+            
+
 
             DomNodeType speakerNodeType = DefineModuleType(
                 new XmlQualifiedName("speakerType", Schema.NS),
@@ -161,6 +186,17 @@ namespace CircuitEditorSample
                 EmptyArray<ElementType.Pin>.Instance,
                 m_schemaLoader);
             var speakerManufacturerInfo = new AttributeInfo("Manufacturer".Localize(), AttributeType.StringType);
+
+            // add bass level attribute to demo/test BoundedFloatEditor()
+            float bassMin = -1;
+            float bassMax = 1;
+            var bassLevel = new AttributeInfo("bassLevel".Localize("bass level"), AttributeType.FloatType);
+            bassLevel.AddRule(new NumericMinRule(bassMin, true));
+            bassLevel.AddRule(new NumericMaxRule(bassMax, true));
+            bassLevel.DefaultValue = 0.1f;
+            //bassLevel.def
+            speakerNodeType.Define(bassLevel);
+
             speakerNodeType.Define(speakerManufacturerInfo);
             speakerNodeType.SetTag(
                 new PropertyDescriptorCollection(
@@ -170,7 +206,15 @@ namespace CircuitEditorSample
                             speakerManufacturerInfo,
                             null, //category
                             "Manufacturer".Localize(), //description
-                            false) //is not read-only
+                            false),
+             
+                        new AttributePropertyDescriptor(
+                            "Bass Level".Localize(),
+                            bassLevel,
+                            null, //category
+                            "Bass Level".Localize(), //description
+                            false,
+                            new BoundedFloatEditor(bassMin,bassMax))
                     }));
 
             DefineModuleType(

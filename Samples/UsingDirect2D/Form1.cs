@@ -32,8 +32,9 @@ namespace UsingDirect2D
             //can.Dock = DockStyle.Fill;
             //Controls.Add(can);
 
-            this.ClientSize = new Size(1280, 900);
+            ClientSize = new Size(1280, 900);
 
+            
 
             //// create test forms
             //for (int i = 0; i < 4; i++)

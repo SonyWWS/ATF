@@ -391,7 +391,10 @@ namespace Sce.Atf.Dom
         /// <returns>True iff attribute's value should be persisted</returns>
         protected virtual bool ShouldWriteAttribute(DomNode node, AttributeInfo attributeInfo)
         {
-            return PersistDefaultAttributes || !node.IsAttributeDefault(attributeInfo);
+            
+            return PersistDefaultAttributes
+                || attributeInfo.ForceSerialize
+                || !node.IsAttributeDefault(attributeInfo);
         }
 
         /// <summary>

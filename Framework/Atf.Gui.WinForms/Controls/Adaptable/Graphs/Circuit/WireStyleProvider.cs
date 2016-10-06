@@ -144,8 +144,8 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 // --- edge starts from the output pin 
                 var group = connection.OutputElement.As<ICircuitGroupType<TElement, TWire, TPin>>();
                 foreach (var groupPin in connection.OutputPinSinkChain)
-                {                   
-                    var pt = circuitRender.GetPinPosition(group.Cast<TElement>(), groupPin.Index, false, g);
+                {
+                    var pt = circuitRender.GetPinPositionCenterY(group.Cast<TElement>(), groupPin.Index, false, g);
                     pt.Offset(worldOffset);
                     pt.Offset(circuitRender.WorldOffset(relativePath.AsIEnumerable<TElement>()));
                     relativePath.Add(group);
@@ -163,7 +163,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     {
                         // the first data starts from sub-node/pin    
                         var firstGroupPin = dataPoints[0].GroupPin;
-                        Point p0 = circuitRender.GetPinPosition(firstGroupPin.InternalElement.Cast<TElement>(), firstGroupPin.InternalPinIndex, false, g);
+                        Point p0 = circuitRender.GetPinPositionCenterY(firstGroupPin.InternalElement.Cast<TElement>(), firstGroupPin.InternalPinIndex, false, g);
                         p0.Offset(worldOffset);
                         p0.Offset(circuitRender.WorldOffset(relativePath.AsIEnumerable<TElement>()));
                         dataPoints.Insert(0, new GroupPinData { Pos = p0 });
@@ -172,7 +172,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
                 else // edge starts from a non-expanded node
                 {
-                    Point p0 = circuitRender.GetPinPosition(connection.OutputElement.Cast<TElement>(), connection.OutputPin.Index, false, g);
+                    Point p0 = circuitRender.GetPinPositionCenterY(connection.OutputElement.Cast<TElement>(), connection.OutputPin.Index, false, g);
                     p0.Offset(worldOffset);
                     dataPoints.Add(new GroupPinData { Pos = p0});
                 }
@@ -185,7 +185,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 group = connection.InputElement.As<ICircuitGroupType<TElement, TWire, TPin>>();
                 foreach (var groupPin in connection.InputPinSinkChain)
                 {
-                    var pt = circuitRender.GetPinPosition(group.Cast<TElement>(), groupPin.Index, true, g);
+                    var pt = circuitRender.GetPinPositionCenterY(group.Cast<TElement>(), groupPin.Index, true, g);
                     pt.Offset(worldOffset);
                     pt.Offset(circuitRender.WorldOffset(relativePath.AsIEnumerable<TElement>()));
                     relativePath.Add(group);
@@ -202,7 +202,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                     if (lastGroup.Expanded) // the edge ends at an expanded group pin, need to draw the virtual link to subnode
                     {
                         // the last data ends at sub-node/pin              
-                        Point pn = circuitRender.GetPinPosition(lastGroupPin.InternalElement.Cast<TElement>(), lastGroupPin.InternalPinIndex, true, g);
+                        Point pn = circuitRender.GetPinPositionCenterY(lastGroupPin.InternalElement.Cast<TElement>(), lastGroupPin.InternalPinIndex, true, g);
                         pn.Offset(worldOffset);
                         pn.Offset(circuitRender.WorldOffset(relativePath.AsIEnumerable<TElement>()));
                         dataPoints.Add(new GroupPinData { Pos = pn});
@@ -211,7 +211,7 @@ namespace Sce.Atf.Controls.Adaptable.Graphs
                 }
                 else // edge ends at a non-expanded node
                 {
-                    Point pn = circuitRender.GetPinPosition(connection.InputElement.Cast<TElement>(), connection.InputPin.Index, true, g);
+                    Point pn = circuitRender.GetPinPositionCenterY(connection.InputElement.Cast<TElement>(), connection.InputPin.Index, true, g);
                     pn.Offset(worldOffset);
                     dataPoints.Add(new GroupPinData { Pos = pn });
                 }

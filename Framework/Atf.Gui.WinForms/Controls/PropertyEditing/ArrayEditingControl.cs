@@ -479,7 +479,9 @@ namespace Sce.Atf.Controls.PropertyEditing
             foreach (Control c in Controls)
             {
                 c.Top = top;
+                c.Width = Width;
                 top += c.Height;
+
             }
             
             base.OnSizeChanged(e);
@@ -539,7 +541,9 @@ namespace Sce.Atf.Controls.PropertyEditing
             {
                 m_firstSelectedIndex = index;
                 foreach (ItemControl c in m_itemControls.Values)
+                {                    
                     c.Selected = (c.Index == index);
+                }
             }
 
             UpdateDeleteButton(true);
@@ -606,7 +610,7 @@ namespace Sce.Atf.Controls.PropertyEditing
                     // See this tracker item: http://tracker.ship.scea.com/jira/browse/CORETEXTEDITOR-363
                     Font defaultFont = (Parent != null) ? Parent.Font : Font;
 
-                    var itemControl = new ItemControl(m_itemControls.Count, item, m_indexColumnWidth)
+                    var itemControl = new ItemControl(id, item, m_indexColumnWidth)
                     {
                         Width = m_toolStrip.Width,
                         Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
@@ -713,9 +717,9 @@ namespace Sce.Atf.Controls.PropertyEditing
                     };
 
                 GotFocus += (sender, e) => m_editControl.Focus();
-                m_editControl.GotFocus += (sender, e) => UpdateSelection();                                       
+                m_editControl.GotFocus += (sender, e) => UpdateSelection();
             }
-
+            
             private bool m_useModifierKeys;
             private void UpdateSelection()
             {

@@ -647,8 +647,7 @@ namespace Sce.Atf.Applications
 
 
                 /// <summary>
-                /// Raises the Reloaded event</summary>
-                /// <param name="e">Event args</param>
+                /// Raises the Reloaded event</summary>                
                 public void OnReloaded()
                 {
                     Reloaded.Raise(this, EventArgs.Empty);

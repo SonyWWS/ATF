@@ -706,9 +706,10 @@ namespace Sce.Atf.Dom
                 if (simpleType != null &&
                     element.MaxOccurs == 1)
                 {
+                    bool forceSerialize = element.MinOccurs == 1;
                     XmlAttributeType attributeType = GetAttributeType(simpleType);
                     string fieldName = GetFieldName(element.QualifiedName);
-                    XmlAttributeInfo attributeInfo = new XmlAttributeInfo(fieldName, attributeType);
+                    XmlAttributeInfo attributeInfo = new XmlAttributeInfo(fieldName, attributeType, forceSerialize);
 
                     nodeType.Define(attributeInfo);
                     m_annotations.Add(attributeInfo, GetAnnotation(element));
@@ -794,6 +795,7 @@ namespace Sce.Atf.Dom
             }
             else
             {
+                // handle xs:all, xs:sequence and xs:choice
                 XmlSchemaGroupBase grp = particle as XmlSchemaSequence;
                 if(grp == null) grp = particle as XmlSchemaChoice;
                 if (grp == null) grp = particle as XmlSchemaAll;

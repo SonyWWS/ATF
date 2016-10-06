@@ -30,21 +30,26 @@ namespace DomPropertyEditorSample
                     rootNode.SetAttribute(Schema.gameType.nameAttribute, "Game");
 
                     // create Orc game object and add it to rootNode.
-                    var orc = CreateOrc();
-                    rootNode.GetChildList(Schema.gameType.gameObjectChild).Add(orc);
+                    var orc1 = CreateOrc("Orc1");
+                    rootNode.GetChildList(Schema.gameType.gameObjectChild).Add(orc1);
 
                     // add a child Orc.
-                    var orcChildList = orc.GetChildList(Schema.orcType.orcChild);
+                    var orcChildList = orc1.GetChildList(Schema.orcType.orcChild);
                     orcChildList.Add(CreateOrc("Child Orc1"));
+
+
+                    var orc2 = CreateOrc("Orc2");
+                    rootNode.GetChildList(Schema.gameType.gameObjectChild).Add(orc2);
+
 
                     rootNode.InitializeExtensions();
 
-                    var edContext = rootNode.Cast<GameEditingContext>();
-                    edContext.Set(orc);
 
                     // set active context and select orc object.
                     m_contextRegistry.ActiveContext = rootNode;
                     
+                    var selectionContext = rootNode.Cast<ISelectionContext>();
+                    selectionContext.Set(new AdaptablePath<object>(orc1.GetPath()));                                       
                 };
         }
 
@@ -65,7 +70,7 @@ namespace DomPropertyEditorSample
             armorList.Add(CreateArmor("Iron breast plate",20,300));
 
             var clubList = orc.GetChildList(Schema.orcType.clubChild);
-            clubList.Add(CreateClub(true, 20, 30));
+            clubList.Add(CreateClub("Iron club",true, 20, 30));
 
             return orc;
         }
@@ -79,9 +84,11 @@ namespace DomPropertyEditorSample
             return armor;
         }
 
-        private static DomNode CreateClub(bool hasSpikes, int damage, float weight)
+        private static DomNode CreateClub(string name, bool hasSpikes, int damage, float weight)
         {
             var club = new DomNode(Schema.clubType.Type);
+
+            club.SetAttribute(Schema.clubType.nameAttribute, name);
             club.SetAttribute(Schema.clubType.spikesAttribute, hasSpikes);
             club.SetAttribute(Schema.clubType.DamageAttribute, damage);
             club.SetAttribute(Schema.clubType.wieghtAttribute, weight);

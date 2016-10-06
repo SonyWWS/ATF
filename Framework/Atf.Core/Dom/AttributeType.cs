@@ -821,6 +821,12 @@ namespace Sce.Atf.Dom
         }
         private static readonly AttributeType s_intType = new AttributeType("int", typeof(int), 1);
 
+        
+        
+        /// <summary>
+        /// Gets a generic AttributeType that specifies a CLR uint</summary>
+        public static readonly AttributeType UIntType = new AttributeType("uint", typeof(uint));
+
         /// <summary>
         /// Gets a generic AttributeType that specifies a CLR float</summary>
         public static AttributeType FloatType
