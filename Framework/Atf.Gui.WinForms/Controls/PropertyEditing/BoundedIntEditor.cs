@@ -2,6 +2,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Globalization;
@@ -19,10 +21,9 @@ namespace Sce.Atf.Controls.PropertyEditing
 
         /// <summary>
         /// Default constructor</summary>
-        public BoundedIntEditor()
+        public BoundedIntEditor() : this(0,100)
         {
-            Min = 0;
-            Max = 100;
+            
         }
 
         /// <summary>
@@ -31,19 +32,15 @@ namespace Sce.Atf.Controls.PropertyEditing
         /// <param name="max">Max value</param>
         public BoundedIntEditor(int min, int max)
         {
-            if (min >= max)
-                throw new ArgumentOutOfRangeException("min must be less than max");
-            Min = min;
-            Max = max;
-
+            SetMinMax(min, max);
         }
-        
+
         /// <summary>
         /// Gets or sets the editor's minimum value</summary>
         public int Min
         {
             get { return m_min; }
-            set { m_min = value; }
+            set { SetMinMax(value, m_max); }
         }
 
         /// <summary>
@@ -51,8 +48,34 @@ namespace Sce.Atf.Controls.PropertyEditing
         public int Max
         {
             get { return m_max; }
-            set { m_max = value; }
+            set { SetMinMax(m_min, value); }
         }
+
+
+        /// <summary>
+        /// Sets min and max
+        /// </summary>
+        /// <param name="min">min value</param>
+        /// <param name="max">max value</param>
+        public void SetMinMax(int min, int max)
+        {
+            if (min >= max)
+                throw new ArgumentOutOfRangeException("min must be less than max");
+            if (m_min != min || m_max != max)
+            {
+                m_min = min;
+                m_max = max;
+                foreach (var item in m_controlRefList)
+                {
+                    var ctrl = (BoundedIntControl)item.Target;
+                    if (ctrl != null) ctrl.SetMinMax(m_min, m_max);
+                }
+                m_controlRefList.RemoveAll(item => !item.IsAlive);
+            }
+        }
+        private List<WeakReference> m_controlRefList = new List<WeakReference>();
+
+
 
        
         #region IPropertyEditor Members
@@ -69,6 +92,8 @@ namespace Sce.Atf.Controls.PropertyEditing
         { 
             var control = new BoundedIntControl(context, m_min, m_max);          
             SkinService.ApplyActiveSkin(control);
+            m_controlRefList.RemoveAll(item => !item.IsAlive);
+            m_controlRefList.Add(new WeakReference(control));
             return control;
         }
 

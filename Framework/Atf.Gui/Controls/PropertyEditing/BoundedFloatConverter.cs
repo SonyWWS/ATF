@@ -40,6 +40,22 @@ namespace Sce.Atf.Controls.PropertyEditing
         #endregion
 
         /// <summary>
+        /// Sets min and max
+        /// </summary>
+        /// <param name="min">min value</param>
+        /// <param name="max">max value</param>
+        public void SetMinMax(float min, float max)
+        {
+            if (min >= max)
+                throw new ArgumentOutOfRangeException("min must be less than max");
+            if ((m_min.HasValue && m_min.Value != min) || (m_max.HasValue && m_max.Value != max))
+            {
+                m_min = min;
+                m_max = max;               
+            }
+        }
+
+        /// <summary>
         /// Converts the given object to the type of this converter, using the specified context and culture information</summary>
         /// <param name="context">An System.ComponentModel.ITypeDescriptorContext that provides a format context</param>
         /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture</param>

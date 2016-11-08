@@ -106,11 +106,7 @@ namespace Sce.Atf.Controls
             get { return m_min; }
             set
             {
-                if (value >= m_max)
-                    throw new ArgumentException("Min");
-                m_min = value;
-                if (m_value < m_min)
-                    Value = m_min;
+                SetMinMax(value, m_max);
                 this.Invalidate();
             }
         }
@@ -122,12 +118,24 @@ namespace Sce.Atf.Controls
             get { return m_max; }
             set
             {
-                if(value <= m_min)
-                    throw new ArgumentException("Max");
-                m_max = value;
-                if (m_value > m_max)
-                    Value = m_max;
-                this.Invalidate();
+                SetMinMax(m_min, value);                
+            }
+        }
+
+        /// <summary>
+        /// Sets min and max
+        /// </summary>
+        /// <param name="min">min value</param>
+        /// <param name="max">max value</param>
+        public void SetMinMax(float min, float max)
+        {
+            if (min >= max)
+                throw new ArgumentOutOfRangeException("min must be less than max");
+            if (m_min != min || m_max != max)
+            {
+                m_min = min;
+                m_max = max;
+                Value = MathUtil.Clamp(m_value, m_min, m_max);                
             }
         }
 
