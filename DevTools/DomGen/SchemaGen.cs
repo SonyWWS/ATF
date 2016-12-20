@@ -1,4 +1,4 @@
-//Copyright © 2014 Sony Computer Entertainment America LLC. See License.txt.
+//Copyright Â© 2014 Sony Computer Entertainment America LLC. See License.txt.
 
 using System;
 using System.Collections.Generic;
@@ -60,6 +60,7 @@ namespace DomGen
 
             GenerateFileProlog(codeNamespace, args, sb);
 
+            WriteLine(sb, "    [System.CodeDom.Compiler.GeneratedCode(\"DomGen\", \"1.0.0.0\")]");
             WriteLine(sb, "    public static class {0}", className);
             WriteLine(sb, "    {{");
 
