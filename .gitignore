@@ -177,3 +177,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+/Test/.vs/Everything.vs2010/v15
+/Test/Everything.vs2010.VC.db
+/Test/Everything.vs2010.VC.db
