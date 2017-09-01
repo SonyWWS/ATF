@@ -4,12 +4,14 @@ using System;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Windows.Controls.Primitives;
+using Sce.Atf.Wpf.Docking.Automation;
 
 namespace Sce.Atf.Wpf.Docking
 {
@@ -652,6 +654,13 @@ namespace Sce.Atf.Wpf.Docking
             writer.WriteEndElement();
         }
 
+        #endregion
+
+        #region Automation
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new DockedWindowAutomationPeer(this);
+        }
         #endregion
     }
 }

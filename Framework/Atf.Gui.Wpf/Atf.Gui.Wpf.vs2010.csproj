@@ -255,6 +255,8 @@
     </Compile>
     <Compile Include="DataContextSpy.cs" />
     <Compile Include="DebugUtils.cs" />
+    <Compile Include="Docking\Automation\DockedWindowAutomationPeer.cs" />
+    <Compile Include="Docking\Automation\DockPanelAutomationPeer.cs" />
     <Compile Include="Docking\ContentSettings.cs" />
     <Compile Include="Docking\DockContent.cs" />
     <Compile Include="Docking\DockedWindow.cs" />

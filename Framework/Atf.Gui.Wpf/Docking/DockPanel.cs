@@ -7,14 +7,15 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
+using Sce.Atf.Wpf.Docking.Automation;
 
 namespace Sce.Atf.Wpf.Docking
 {
@@ -1478,6 +1479,13 @@ namespace Sce.Atf.Wpf.Docking
             ((IDockLayout)this).Dock(null, e.Content, (DockTo)m_dockPreview);
         }
 
+        #endregion
+
+        #region Automation
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new DockPanelAutomationPeer(this);            
+        }
         #endregion
     }
 }
