@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="schemas\collada.xsd" />
+    <None Include="app.config" />
     <None Include="schemas\GenSchemaDef.bat" />
     <EmbeddedResource Include="schemas\xml.xsd" />
   </ItemGroup>

@@ -67,6 +67,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\Tao.OpenGl\DDSUtils.dll</HintPath>
     </Reference>
+    <Reference Include="DevILSharp">
+      <HintPath>..\..\ThirdParty\DevILSharp\DevILSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\Test\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
@@ -75,10 +81,6 @@
     <Reference Include="Tao.Cg, Version=1.4.1.1, Culture=neutral, PublicKeyToken=52fa5aba625fe731, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.Cg.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.DevIl, Version=1.6.8.0, Culture=neutral, PublicKeyToken=7ec4053013524957, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.DevIl.dll</HintPath>
     </Reference>
     <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -155,6 +157,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ja\Localization.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

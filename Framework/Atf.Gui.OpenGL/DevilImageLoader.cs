@@ -2,9 +2,13 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
-using Tao.DevIl;
 using Tao.OpenGl;
+
+using Devil = DevILSharp;
+using DevILSharp;
+using System.Runtime.InteropServices;
 
 namespace Sce.Atf.Rendering
 {
@@ -37,6 +41,19 @@ namespace Sce.Atf.Rendering
     [Obsolete("Has memory corruption problems. https://github.com/SonyWWS/ATF/issues/9")]
     public class DevilImageLoader : IImageLoader
     {
+        public static void InitDevil()
+        {
+            if (s_initialized) return;
+            s_initialized = true;
+
+            Bootstrap.Init();
+            IL.Init();
+            IL.Enable(EnableCap.AbsoluteOrigin);
+            IL.OriginFunc(OriginMode.UpperLeft);
+            IL.Enable(EnableCap.OverwriteExistingFile);
+            IL.Enable(EnableCap.ConvertPalette);
+        }
+
         /// <summary>
         /// Constructs a DevilImageLoader object that loads images implied by the given file
         /// extension. If that fails, the binary data is inspected to try to determine
@@ -46,6 +63,8 @@ namespace Sce.Atf.Rendering
         public DevilImageLoader(string extension)
         {
             m_extension = extension;
+
+            InitDevil();
         }
 
         /// <summary>
@@ -57,51 +76,52 @@ namespace Sce.Atf.Rendering
             string[] extensions;
             try
             {
-                string oneList = Il.ilGetString(Il.IL_LOAD_EXT);
-                extensions = oneList.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < extensions.Length; i++)
-                {
-                    extensions[i] = '.' + extensions[i];
-                }
+                //TODO: make the names in the below string array all start with lower case
+
+                string[] devILSharpImageFormats = Enum.GetNames(typeof(Devil.ImageType));
+
+                extensions = devILSharpImageFormats;
             }
             catch (BadImageFormatException)
             {
-                // Tao.DevIl will load the unmanaged 32-bit DevIl.dll which won't work if the current process
-                //  is running as 64-bit.
                 extensions = new string[0];
             }
 
             return extensions;
         }
 
+        // Since DevILSharp doesn't have Origin Mode Int set
+        private static int ILOriginMode = 1539;
+
         /// <summary>
         /// Loads texture image from stream</summary>
         /// <param name="imageStream">Stream holding texture image</param>
+        /// <param name="qualityLevel">Quality level parameter, cannot be negative 1, will find more info on this param shortly</param>
         /// <returns>Texture image</returns>
         public Image LoadImage(Stream imageStream)
         {
-            Image image = null;
+            // Has to be null-initialized due to no default Constructor
+            Image image;
 
-            // Don't need to call ilShutDown(). ilInit() can be called multiple times and will only really initialize once.
-            Il.ilInit();
+            Devil.IL.Init();
 
-            //ilInit() and ilShutDown() do not clear the error stack.
             ClearErrors();
 
-            int devilImageId = Il.ilGenImage();
+            int devilImageId = Devil.IL.GenImage();
 
             try
             {
-                Il.ilBindImage(devilImageId);
+                Devil.IL.BindImage(devilImageId);
                 CheckError();
-
+                
                 // Don't uncompress DXT1, DXT3 or DXT5 formats. OpenGl can handle them as-is.
-                Il.ilSetInteger(Il.IL_KEEP_DXTC_DATA, Il.IL_TRUE);
+                Devil.IL.SetInteger((int)Devil.CompressedDataFormat.KeepDxtData, 1);
                 CheckError();
 
                 // For targa files and others, we need to ensure a consistent origin.
-                Il.ilEnable(Il.IL_ORIGIN_SET);
-                Il.ilSetInteger(Il.IL_ORIGIN_MODE, Il.IL_ORIGIN_UPPER_LEFT);
+                Devil.IL.Enable(EnableCap.AbsoluteOrigin);
+
+                Devil.IL.SetInteger(ILOriginMode, (int)OriginMode.UpperLeft);
                 CheckError();
 
                 // Load from the memory stream in to DevIl's internal unmanaged memory.
@@ -109,19 +129,19 @@ namespace Sce.Atf.Rendering
 
                 // Determine the target file format. OpenGl supports DXT1, DXT3, and DXT5, so don't convert those.
                 // Get those pixels out of DevIl and into a managed array of bytes.
-                int width = Il.ilGetInteger(Il.IL_IMAGE_WIDTH);
-                int height = Il.ilGetInteger(Il.IL_IMAGE_HEIGHT);
-                int numMipMaps = Il.ilGetInteger(Il.IL_NUM_MIPMAPS);
+                int width = Devil.IL.GetInteger((int)IntName.ImageWidth);
+                int height = Devil.IL.GetInteger((int)IntName.ImageHeight);
+                int numMipMaps = Devil.IL.GetInteger((int)IntName.ImageMipMapCount);
                 if (numMipMaps == 0)
                     numMipMaps = 1;
                 CheckError();
 
                 byte[] targetBytes;
-                int targetNumElements;
-                int targetOpenGlFormat;
+                int targetNumElements = 0;
+                int targetOpenGlFormat = 0;
 
-                int dxtFormat = Il.ilGetInteger(Il.IL_DXTC_DATA_FORMAT);
-                bool isDxt = (dxtFormat != Il.IL_DXT_NO_COMP);
+                int dxtFormat = Devil.IL.GetInteger((int)Devil.CompressedDataFormat.DxtcDataFormat);
+                bool isDxt = (dxtFormat != (int)Devil.CompressedDataFormat.DxtNoCompression);
 
                 if (isDxt)
                 {
@@ -144,12 +164,10 @@ namespace Sce.Atf.Rendering
             }
             finally
             {
-                Il.ilDeleteImage(devilImageId);
+                Devil.IL.DeleteImage(devilImageId);
                 CheckError();
-
-                // For performance reasons, let's keep it going.
-                //Il.ilShutDown();
             }
+
             return image;
         }
 
@@ -160,23 +178,23 @@ namespace Sce.Atf.Rendering
             // If the file extension is null or empty or not recognized, then 'type' is
             //  Il.IL_TYPE_UNKNOWN and DevIl will try to determine the format by examining the
             //  binary data. This is potentially much slower.
-            int fileType = Il.IL_TYPE_UNKNOWN;
+            int fileType = (int)ImageType.Unkwown;
 
             // Passing in null or empty strings places an error on the internal error stack which
             //  we would then have to clear. So, check first.
             if (!string.IsNullOrEmpty(m_extension))
-                fileType = Il.ilTypeFromExt(m_extension);
+                fileType = Array.IndexOf(Enum.GetValues(typeof(ImageType)),Devil.IL.TypeFromExt(m_extension));
 
             // Second try. If we have the actual file extension available, use that. Is much
             //  faster than doing the detective work of inspecting the binary data.
-            if (fileType == Il.IL_TYPE_UNKNOWN)
+            if (fileType == (int)ImageType.Unkwown)
             {
                 FileStream fileStream = imageStream as FileStream;
                 if (fileStream != null)
                 {
                     string extension = Path.GetExtension(fileStream.Name);
                     if (!string.IsNullOrEmpty(extension))
-                        fileType = Il.ilTypeFromExt(extension);
+                        fileType = Array.IndexOf(Enum.GetValues(typeof(ImageType)), Devil.IL.TypeFromExt(m_extension));
                 }
             }
 
@@ -188,9 +206,14 @@ namespace Sce.Atf.Rendering
                 readBytes = binaryReader.ReadBytes(readSize);
             }
 
+            //Creating the IntPtr from the readBytes value
+            IntPtr readBytesPtr = Marshal.AllocHGlobal(readBytes.Length);
+            Marshal.Copy(readBytes, 0, readBytesPtr, readBytes.Length);
+            Marshal.FreeHGlobal(readBytesPtr);
+
             // If the extension wasn't recognized, DevIl will likely still be able to figure
             //  out the actual format based on inspecting the binary data.
-            if (!Il.ilLoadL(fileType, readBytes, readBytes.Length))
+            if (!Devil.IL.LoadL((Devil.ImageType)fileType, readBytesPtr, readBytes.Length))
                 throw new InvalidOperationException("DevilImageLoader failed to load image");
             CheckError();
 
@@ -199,29 +222,28 @@ namespace Sce.Atf.Rendering
 
         private unsafe byte[] GetBytesFromDxt(int dxtFormat, out int targetNumElements, out int targetOpenGlFormat)
         {
-            int targetSize = Il.ilGetDXTCData(IntPtr.Zero, 0, dxtFormat);
+            int targetSize = Devil.IL.GetDXTCData(IntPtr.Zero, 0, (Devil.CompressedDataFormat)dxtFormat);
             byte[] targetBytes = new byte[targetSize];
 
             fixed (byte* p = targetBytes)
             {
                 IntPtr targetPtr = new IntPtr(p);
-                int bytesCopied = Il.ilGetDXTCData(targetPtr, targetSize, dxtFormat);
+                int bytesCopied = Devil.IL.GetDXTCData(targetPtr, targetSize, (Devil.CompressedDataFormat)dxtFormat);
                 if (bytesCopied != targetSize)
                     throw new InvalidOperationException("copied bytes didn't match expected #");
             }
 
             switch (dxtFormat)
             {
-                case Il.IL_DXT1:
+                case (int)Devil.CompressedDataFormat.Dxt1:
                     targetOpenGlFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
                     break;
-                case Il.IL_DXT3:
+                case (int)Devil.CompressedDataFormat.Dxt3:
                     targetOpenGlFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
                     break;
-                case Il.IL_DXT5:
+                case (int)Devil.CompressedDataFormat.Dxt5:
                     targetOpenGlFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
                     break;
-                case Il.IL_DXT_NO_COMP:
                 default:
                     // OpenGl doesn't support DXT2 or DXT4. DevIl does not seem to decompress DXT2 correctly
                     //  and will not load DXT4 currently. If it's important to a client, we could call
@@ -235,22 +257,22 @@ namespace Sce.Atf.Rendering
 
         private unsafe byte[] GetUncompressedBytes(int width, int height, out int targetNumElements, out int targetOpenGlFormat)
         {
-            targetNumElements = Il.ilGetInteger(Il.IL_IMAGE_BYTES_PER_PIXEL);
+            targetNumElements = Devil.IL.GetInteger((int)Devil.IntName.ImageBytesPerPixel);
             if (targetNumElements != 3)
                 targetNumElements = 4;
 
             int targetSize;
             targetSize = width * height * targetNumElements;
-            
+
             int targetFormat;
             if (targetNumElements == 3)
             {
-                targetFormat = Il.IL_BGR;
+                targetFormat = (int)Devil.ChannelFormat.BGR;
                 targetOpenGlFormat = Gl.GL_BGR;
             }
             else
             {
-                targetFormat = Il.IL_BGRA;
+                targetFormat = (int)Devil.ChannelFormat.BGRA;
                 targetOpenGlFormat = Gl.GL_BGRA;
             }
 
@@ -258,7 +280,7 @@ namespace Sce.Atf.Rendering
             fixed (byte* p = targetBytes)
             {
                 IntPtr targetPtr = new IntPtr(p);
-                int bytesCopied = Il.ilCopyPixels(0, 0, 0, width, height, 1, targetFormat, Il.IL_UNSIGNED_BYTE, targetPtr);
+                int bytesCopied = Devil.IL.CopyPixels(0, 0, 0, width, height, 1, (Devil.ChannelFormat)targetFormat, Devil.ChannelType.UnsignedByte, targetPtr);
                 if (bytesCopied != targetSize)
                     throw new InvalidOperationException("copied bytes didn't match expected #");
             }
@@ -268,17 +290,21 @@ namespace Sce.Atf.Rendering
 
         private void CheckError()
         {
-            int error = Il.ilGetError();
-            if (error != Il.IL_NO_ERROR)
-                throw new InvalidOperationException(string.Format("DevIl error {0}", error));
+            var error = Devil.IL.GetError();
+            if (error != ErrorCode.NoError)
+            {
+                throw new InvalidOperationException(string.Format("Devil error {0}", error));
+            }
         }
 
         private void ClearErrors()
         {
-            while (Il.ilGetError() != Il.IL_NO_ERROR)
-                ;
+            while (Devil.IL.GetError() != ErrorCode.NoError) ;
         }
 
         private readonly string m_extension;
+
+        private static object s_devilLock = new object();
+        private static bool s_initialized = false;
     }
 }

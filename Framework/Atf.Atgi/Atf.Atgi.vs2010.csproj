@@ -118,6 +118,7 @@
     <EmbeddedResource Include="schemas\atgi.xsd" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="schemas\GenSchemaDef.bat" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
