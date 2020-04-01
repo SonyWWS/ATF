@@ -78,10 +78,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.Cg, Version=1.4.1.1, Culture=neutral, PublicKeyToken=52fa5aba625fe731, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.Cg.dll</HintPath>
-    </Reference>
     <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.OpenGl.dll</HintPath>
@@ -99,7 +95,6 @@
     <Compile Include="CanvasControl3D.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CgfxCore.cs" />
     <Compile Include="DdsCompressor.cs" />
     <Compile Include="DdsImageLoader.cs" />
     <Compile Include="DesignControl.cs">
