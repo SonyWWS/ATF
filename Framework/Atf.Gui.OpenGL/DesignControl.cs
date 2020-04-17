@@ -10,7 +10,7 @@ using System.Xml;
 using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.Dom
 {
@@ -61,11 +61,7 @@ namespace Sce.Atf.Rendering.Dom
 
         /// <summary>
         /// Gets and sets the context object (e.g., an EditingContext)</summary>
-        public object Context
-        {
-            get { return m_context; }
-            set { m_context = value; }
-        }
+        public object Context { get; set; }
 
         /// <summary>
         /// Gets and sets the render action</summary>
@@ -185,7 +181,7 @@ namespace Sce.Atf.Rendering.Dom
         {
             get
             {
-                return base.BackColor;
+                return BackColor;
             }
             set
             {
@@ -193,7 +189,7 @@ namespace Sce.Atf.Rendering.Dom
                 if (value.A != 255)
                     return;
                 m_scene.BackgroundColor = value;
-                base.BackColor = value;
+                BackColor = value;
             }
         }
 
@@ -229,9 +225,6 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            // grab focus
-            Focus();
-
             // Check if we've hit a manipulator. Only control with the left mouse button so that
             //  right-clicks can bring up the context menu rather than hitting the manipulator.
             if (CanvasControl3D.ControlScheme.IsControllingCamera(ModifierKeys,e)==false &&
@@ -251,7 +244,7 @@ namespace Sce.Atf.Rendering.Dom
                     int height = base.Height;
                     float x = (float)e.X / (float)width - 0.5f;
                     float y = 1.0f - ((float)e.Y / (float)height) - 0.5f;
-                    manipulator.OnHit(hits, x, y, m_pickAction, m_renderAction, Camera, m_context);
+                    manipulator.OnHit(hits, x, y, m_pickAction, m_renderAction, Camera, Context);
                     
                     // Don't call base method if a manipulator was found. Why?
                     return;
@@ -280,7 +273,7 @@ namespace Sce.Atf.Rendering.Dom
                     {
                         // Push render state
                         m_scene.StateStack.Push(m_renderState);
-                        m_manipulator.OnDrag(m_manipulatorHitRecords, x, y, m_pickAction, m_renderAction, Camera, m_context);
+                        m_manipulator.OnDrag(m_manipulatorHitRecords, x, y, m_pickAction, m_renderAction, Camera, Context);
                         m_scene.StateStack.Pop();
 
                         OnManipulatorUpdate(new ManipulatorEventArgs(m_manipulator));
@@ -338,7 +331,7 @@ namespace Sce.Atf.Rendering.Dom
                 int height = base.Height;
                 float x = (float)e.X / (float)width - 0.5f;
                 float y = 1.0f - ((float)e.Y / (float)height) - 0.5f;
-                m_manipulator.OnEndDrag(m_manipulatorHitRecords, x, y, m_pickAction, m_renderAction, Camera, m_context);
+                m_manipulator.OnEndDrag(m_manipulatorHitRecords, x, y, m_pickAction, m_renderAction, Camera, Context);
 
                 OnManipulatorEnd(new ManipulatorEventArgs(m_manipulator));
                 Clear();
@@ -593,69 +586,72 @@ namespace Sce.Atf.Rendering.Dom
                 //  Set the projection to orthogonal for perspective views
                 float h = (float)Height / (float)Width;
 
-                Gl.glMatrixMode(Gl.GL_PROJECTION);
-                Gl.glLoadIdentity();
+                OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Projection);
+                OTK.OpenGL.GL.LoadIdentity();
 
-                Gl.glOrtho(-1, 1, -h, h, 1,1000);
+                OTK.OpenGL.GL.Ortho(-1, 1, -h, h, 1, 1000);
                 nearP = 1.1f;
                 width = 0.92f;
                 height = h * 0.90f;
             }
 
             // Push the view matrix
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Modelview);
             Matrix4F V = new Matrix4F(Camera.ViewMatrix);
             V.Translation = Vec3F.ZeroVector;
 
             // Disable lighting
-            Gl.glDisable(Gl.GL_LIGHTING);
-            Gl.glDisable(Gl.GL_TEXTURE_2D);
+            OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Lighting);
+            OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Texture2D);
 
-            Gl.glPushMatrix();
-            Gl.glLoadIdentity();
-            Gl.glTranslatef(-width, -height, -nearP);
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.LoadIdentity();
+            OTK.OpenGL.GL.Translate(-width, -height, nearP);
             Util3D.glMultMatrixf(V);
 
             // Render the system
             RenderAxis(width/15);
 
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         private void RenderAxis(float s)
         {
             // Render X
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
+            OTK.OpenGL.GL.Color3(1.0f, 0.0f, 0.0f);
 
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(s, 0, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(s, 0, 0);
+            OTK.OpenGL.GL.End();
 
-            Gl.glRasterPos3f(s, 0, 0);
-            Gl.glCallLists(1, Gl.GL_UNSIGNED_BYTE, "x");
+            OTK.OpenGL.GL.RasterPos3(s, 0, 0);
+            IntPtr xList = new IntPtr(Convert.ToInt32("x", 16));
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, xList);
 
             // Render Y
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
+            OTK.OpenGL.GL.Color3(0.0f, 1.0f, 0.0f);
 
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(0, s, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(0, s, 0);
+            OTK.OpenGL.GL.End();
 
-            Gl.glRasterPos3f(0, s, 0);
-            Gl.glCallLists(1, Gl.GL_UNSIGNED_BYTE, "y");
+            OTK.OpenGL.GL.RasterPos3(s, 0, 0);
+            IntPtr yList = new IntPtr(Convert.ToInt32("y", 16));
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, yList);
 
             // Render Z
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
+            OTK.OpenGL.GL.Color3(0.0f, 0.0f,1.0f);
 
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(0, 0, s);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(0, 0, s);
+            OTK.OpenGL.GL.End();
 
-            Gl.glRasterPos3f(0, 0, s);
-            Gl.glCallLists(1, Gl.GL_UNSIGNED_BYTE, "z");
+            OTK.OpenGL.GL.RasterPos3(s, 0, 0);
+            IntPtr zList = new IntPtr(Convert.ToInt32("z", 16));
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, zList);
         }
 
         private void SetManipulator(IManipulator manipulator, HitRecord[] hits)
@@ -665,7 +661,6 @@ namespace Sce.Atf.Rendering.Dom
         }
 
         private readonly Scene m_scene;
-        private object m_context;
         private IRenderAction m_renderAction;
         private IPickAction m_pickAction;
         private IManipulator m_manipulator;

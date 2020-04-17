@@ -6,8 +6,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-using Tao.OpenGl;
+
 using Tao.Platform.Windows;
+
+using OpenTK;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -139,7 +141,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="text">Text string to draw</param>
         public static void DrawText(string text)
         {
-            Gl.glListBase(TEXT_DISPLAY_LIST_BASE);
+            OpenTK.Graphics.OpenGL.GL.ListBase(TEXT_DISPLAY_LIST_BASE);
 
             IList<int> codePoints = StringUtil.GetUnicodeCodePoints(text);
             ushort[] aMsg = new ushort[codePoints.Count];
@@ -154,8 +156,7 @@ namespace Sce.Atf.Rendering.OpenGL
                     aMsg[i] = (ushort)displayListIdOffset;
                 }
             }
-
-            Gl.glCallLists(aMsg.Length, Gl.GL_UNSIGNED_SHORT, aMsg);
+            OpenTK.Graphics.OpenGL.GL.CallLists(aMsg.Length, OpenTK.Graphics.OpenGL.ListNameType.UnsignedShort, aMsg);
         }
 
         /// <summary>

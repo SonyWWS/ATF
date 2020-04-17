@@ -10,16 +10,20 @@
     b:CS4Options.DisplayMode="True"
     b:CS4Options.UseLayoutRounding="True"
     Name="me"
+    Background="#2e3440" Foreground="#eceff4"
     >
     <DockPanel Name="dockPanel">
         <Menu DockPanel.Dock="Top" Name="menuBar" 
               ItemsSource="{Binding MainMenuViewModel.Menus, ElementName=me}" 
-              Style="{StaticResource ResourceKey={x:Static l:Resources.MenuStyleKey}}"/>
+              Style="{StaticResource ResourceKey={x:Static l:Resources.MenuStyleKey}}"
+              Background="#3b4252" Foreground="#eceff4"/>
         <ToolBarTray DockPanel.Dock="Top" Name="toolBarTray"  
-              Style="{StaticResource ResourceKey={x:Static l:Resources.ToolBarTrayStyleKey}}"/>
+              Style="{StaticResource ResourceKey={x:Static l:Resources.ToolBarTrayStyleKey}}"
+              Background="#434c5e"/>
         <StatusBar DockPanel.Dock="Bottom" Name="statusBar" 
               MinHeight="16"
               ItemsSource="{Binding StatusItems, ElementName=me}" 
-              Style="{StaticResource ResourceKey={x:Static l:Resources.StatusBarStyleKey}}"/>
+              Style="{StaticResource ResourceKey={x:Static l:Resources.StatusBarStyleKey}}"
+              Background="#3b4252" Foreground="#eceff4"/>
     </DockPanel>
 </Window>

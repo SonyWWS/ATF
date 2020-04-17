@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -61,22 +61,35 @@ namespace Sce.Atf.Rendering.OpenGL
             if (OpenGlCore.FrameBufferObjectSupported)
             {
                 // Set up a FBO with one renderbuffer attachment and one depth buffer attachment.
-                Gl.glGenFramebuffersEXT(1, out m_framebuffer);
-                Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, m_framebuffer);
+                OTK.OpenGL.GL.GenFramebuffers(1, out m_framebuffer);
+                OTK.OpenGL.GL.BindFramebuffer(OTK.OpenGL.FramebufferTarget.Framebuffer, m_framebuffer);
 
-                Gl.glGenRenderbuffersEXT(1, out m_renderbuffer);
-                Gl.glBindRenderbufferEXT(Gl.GL_RENDERBUFFER_EXT, m_renderbuffer);
-                Gl.glRenderbufferStorageEXT(Gl.GL_RENDERBUFFER_EXT, Gl.GL_RGBA8, m_width, m_height);
-                Gl.glFramebufferRenderbufferEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_RENDERBUFFER_EXT, m_renderbuffer);
+                OTK.OpenGL.GL.GenRenderbuffers(1, out m_renderbuffer);
+                OTK.OpenGL.GL.BindRenderbuffer(OTK.OpenGL.RenderbufferTarget.Renderbuffer, m_renderbuffer);
+                OTK.OpenGL.GL.RenderbufferStorage(OTK.OpenGL.RenderbufferTarget.Renderbuffer,
+                                                            OTK.OpenGL.RenderbufferStorage.Rgba8,
+                                                            m_width,
+                                                            m_height);
+                OTK.OpenGL.GL.FramebufferRenderbuffer(OpenTK.Graphics.OpenGL.FramebufferTarget.Framebuffer,
+                                                                OpenTK.Graphics.OpenGL.FramebufferAttachment.ColorAttachment0,
+                                                                OpenTK.Graphics.OpenGL.RenderbufferTarget.Renderbuffer,
+                                                                m_renderbuffer);
 
-                Gl.glGenFramebuffersEXT(1, out m_depthBuffer);
-                Gl.glBindRenderbufferEXT(Gl.GL_RENDERBUFFER_EXT, m_depthBuffer);
-                Gl.glRenderbufferStorageEXT(Gl.GL_RENDERBUFFER_EXT, Gl.GL_DEPTH_COMPONENT24, m_width, m_height);
-                Gl.glFramebufferRenderbufferEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_RENDERBUFFER_EXT, m_depthBuffer);
+                OTK.OpenGL.GL.GenFramebuffers(1, out m_depthBuffer);
+                OTK.OpenGL.GL.BindRenderbuffer(OpenTK.Graphics.OpenGL.RenderbufferTarget.Renderbuffer, m_depthBuffer);
+                OTK.OpenGL.GL.RenderbufferStorage(OpenTK.Graphics.OpenGL.RenderbufferTarget.Renderbuffer,
+                                                            OpenTK.Graphics.OpenGL.RenderbufferStorage.DepthComponent24,
+                                                            m_width,
+                                                            m_height);
+                OTK.OpenGL.GL.FramebufferRenderbuffer(OpenTK.Graphics.OpenGL.FramebufferTarget.Framebuffer,
+                                                                OpenTK.Graphics.OpenGL.FramebufferAttachment.DepthAttachment, OpenTK.Graphics.OpenGL.RenderbufferTarget.Renderbuffer,
+                                                                m_depthBuffer);
 
-                int status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT);
-                if (status != Gl.GL_FRAMEBUFFER_COMPLETE_EXT)
+                int status = (int)OTK.OpenGL.GL.CheckFramebufferStatus(OpenTK.Graphics.OpenGL.FramebufferTarget.Framebuffer);
+                if(status != (int)OTK.OpenGL.FramebufferStatus.FramebufferComplete)
+                {
                     throw new InvalidOperationException("couldn't create frame buffer object");
+                }
             }
             else
             {
@@ -84,13 +97,13 @@ namespace Sce.Atf.Rendering.OpenGL
                 m_form.ClientSize = new Size(Width, Height);
                 m_form.Controls.Add(this);
             }
-            
-            
-            Gl.glPushAttrib(Gl.GL_VIEWPORT_BIT);
-            Gl.glViewport(0, 0, m_width, m_height);
+
+
+            OTK.OpenGL.GL.PushAttrib(OpenTK.Graphics.OpenGL.AttribMask.ViewportBit);
+            OTK.OpenGL.GL.Viewport(0, 0, m_width, m_height);
 
             //Util3D.ReportErrors();
-            
+
             base.BeginPaint();
             paintCallback();
             base.EndPaint();
@@ -116,11 +129,11 @@ namespace Sce.Atf.Rendering.OpenGL
                 // The given coordinates are from the lower-left corner and will need 
                 // to be flipped vertically.
                 IntPtr pixels = lockedPixelData.Scan0;
-                Gl.glReadPixels(
+                OTK.OpenGL.GL.ReadPixels(
                     0, 0,
                     m_width, m_height,
-                    Gl.GL_BGR_EXT,
-                    Gl.GL_UNSIGNED_BYTE,
+                    OTK.OpenGL.PixelFormat.Bgr,
+                    OTK.OpenGL.PixelType.UnsignedByte,
                     pixels);
                 //Util3D.ReportErrors();
             }
@@ -131,16 +144,15 @@ namespace Sce.Atf.Rendering.OpenGL
             }
             
             //Util3D.ReportErrors();
-            Gl.glPopAttrib();
+            OTK.OpenGL.GL.PopAttrib();
 
             if (OpenGlCore.FrameBufferObjectSupported)
             {
-                Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0);
-                
+                OTK.OpenGL.GL.BindFramebuffer(OTK.OpenGL.FramebufferTarget.Framebuffer, 0);
                 // Clean-up
-                Gl.glDeleteRenderbuffersEXT(1, ref m_depthBuffer);
-                Gl.glDeleteRenderbuffersEXT(1, ref m_renderbuffer);
-                Gl.glDeleteFramebuffersEXT(1, ref m_framebuffer);
+                OTK.OpenGL.GL.DeleteRenderbuffers(1, ref m_depthBuffer);
+                OTK.OpenGL.GL.DeleteRenderbuffers(1, ref m_renderbuffer);
+                OTK.OpenGL.GL.DeleteFramebuffers(1, ref m_framebuffer);
                 //Util3D.ReportErrors();
             }
             

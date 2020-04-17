@@ -3,7 +3,8 @@
 using System;
 using System.Collections.Generic;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -34,10 +35,9 @@ namespace Sce.Atf.Rendering.OpenGL
             int name;
             if (!m_vboMap.TryGetValue(dataId, out name))
             {
-                Gl.glGenBuffersARB(1, out name);
-                Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, name);
-                Gl.glBufferDataARB(Gl.GL_ARRAY_BUFFER_ARB, new IntPtr(data.Length * 4),
-                    data, Gl.GL_STATIC_DRAW_ARB);
+                OTK.OpenGL.GL.GenBuffers(1, out name);
+                OTK.OpenGL.GL.BindBuffer(OTK.OpenGL.BufferTarget.ArrayBuffer, name);
+                OTK.OpenGL.GL.BufferData(OTK.OpenGL.BufferTarget.ArrayBuffer, new IntPtr(data.Length * 4), data, OTK.OpenGL.BufferUsageHint.StaticDraw);
 
                 m_vboMap[dataId] = name;
 
@@ -58,7 +58,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="name">VBO handle, assigned by the manager</param>
         public void BindVbo(int name)
         {
-            Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, name);
+            OTK.OpenGL.GL.BindBuffer(OTK.OpenGL.BufferTarget.ArrayBuffer, name);
         }
 
         /// <summary>
@@ -66,14 +66,14 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="name">VBO handle, assigned by the manager</param>
         public void DestroyVbo(int name)
         {
-            Gl.glDeleteBuffersARB(1, ref name);
+            OTK.OpenGL.GL.DeleteBuffers(1, ref name);
         }
 
         /// <summary>
         /// Unbinds all VBOs</summary>
         public void UnbindVbos()
         {
-            try {Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, 0);}
+            try { OTK.OpenGL.GL.BindBuffer(OTK.OpenGL.BufferTarget.ArrayBuffer, 0); }
             catch
             {
                 Console.WriteLine("UnbindVbos FAILED...\n");
@@ -92,11 +92,11 @@ namespace Sce.Atf.Rendering.OpenGL
                 for (int i = 0; i < vbos.Length; i++)
                     vbos[i] = vboList[i].Name;
 
-                Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
-                Gl.glDisableClientState(Gl.GL_NORMAL_ARRAY);
-                Gl.glDisableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
+                OTK.OpenGL.GL.DisableClientState(OTK.OpenGL.ArrayCap.VertexArray);
+                OTK.OpenGL.GL.DisableClientState(OTK.OpenGL.ArrayCap.NormalArray);
+                OTK.OpenGL.GL.DisableClientState(OTK.OpenGL.ArrayCap.TextureCoordArray);
 
-                Gl.glDeleteBuffersARB(vbos.Length, vbos);
+                OTK.OpenGL.GL.DeleteBuffers(vbos.Length, vbos);
 
                 m_vboContexts.Remove(contextId);
 

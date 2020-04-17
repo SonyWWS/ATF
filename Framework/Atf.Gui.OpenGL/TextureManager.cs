@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -127,7 +127,7 @@ namespace Sce.Atf.Rendering.OpenGL
                 {
                     int[] texs = new int[texCollection.Names.Count];
                     texCollection.Names.CopyTo(texs, 0);
-                    Gl.glDeleteTextures(texs.Length, texs);
+                    OTK.OpenGL.GL.DeleteTextures(texs.Length, texs);
                     Util3D.ReportErrors();
                 }
 
@@ -186,30 +186,30 @@ namespace Sce.Atf.Rendering.OpenGL
             textureInfo.Components = image.ElementsPerPixel;
 
             // Relax pixel data alignment restrictions down from 4 to 1
-            Gl.glPixelStorei(Gl.GL_UNPACK_ALIGNMENT, 1);
+            OTK.OpenGL.GL.PixelStore(OTK.OpenGL.PixelStoreParameter.UnpackAlignment, 1);
 
             int textureName;
-            Gl.glGenTextures(1, out textureName);
+            OTK.OpenGL.GL.GenTextures(1, out textureName);
 
             if (image.IsCubeMap)
             {
-                Gl.glEnable(Gl.GL_TEXTURE_CUBE_MAP);
-                Gl.glBindTexture(Gl.GL_TEXTURE_CUBE_MAP, textureName);
+                OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.TextureCubeMap);
+                OTK.OpenGL.GL.BindTexture(OTK.OpenGL.TextureTarget.TextureCubeMap, textureName);
                 // Initialize bound texture state
-                Gl.glTexParameteri(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_WRAP_R, Gl.GL_CLAMP_TO_EDGE);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MAX_LEVEL, image.Levels - 1);
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.TextureCubeMap, OTK.OpenGL.TextureParameterName.TextureWrapR, new int[] { (int)OTK.OpenGL.TextureParameterName.ClampToEdge});
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.TextureCubeMap, OTK.OpenGL.TextureParameterName.TextureWrapS, new int[] { (int)OTK.OpenGL.TextureParameterName.ClampToEdge });
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.TextureCubeMap, OTK.OpenGL.TextureParameterName.TextureWrapT, new int[] { (int)OTK.OpenGL.TextureParameterName.ClampToEdge });
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.TextureCubeMap, OTK.OpenGL.TextureParameterName.TextureMinFilter, new int[] { (int)OTK.OpenGL.All.LinearMipmapLinear });
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.TextureCubeMap, OTK.OpenGL.TextureParameterName.TextureMaxLevel, new int[] { image.Levels - 1 });
                 textureInfo.EnableFlipImage = false;
             }
             else
             {
-                Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureName);
+                OTK.OpenGL.GL.BindTexture(OTK.OpenGL.TextureTarget.Texture2D, textureName);
                 // Initialize bound texture state
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureWrapS, new int[] { (int)OTK.OpenGL.All.Repeat });
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureWrapT, new int[] { (int)OTK.OpenGL.All.Repeat });
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureMagFilter, new int[] { (int)OTK.OpenGL.All.Linear });
             }
 
             // If EnableFlipImage, we want to flip the image up side down
@@ -240,12 +240,12 @@ namespace Sce.Atf.Rendering.OpenGL
                 int levels = image.Levels;
                 if ((levels > 1) && CompressedTextureContainsAllMipmaps(image))
                 {
-                    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR);
+                    OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureMinFilter, new int[] { (int)OTK.OpenGL.All.NearestMipmapLinear});
                 }
                 else
                 {
                     levels = 1;
-                    Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+                    OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureMinFilter, new int[] { (int)OTK.OpenGL.All.Linear});
                 }
 
                 if (image.IsCubeMap)
@@ -255,14 +255,16 @@ namespace Sce.Atf.Rendering.OpenGL
             }
             else
             {
-                Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR);
-                Glu.gluBuild2DMipmaps(
-                    Gl.GL_TEXTURE_2D,
-                    image.ElementsPerPixel,
+                OTK.OpenGL.GL.TextureParameterI((int)OTK.OpenGL.TextureTarget.Texture2D, OTK.OpenGL.TextureParameterName.TextureMinFilter, new int[] { (int)OTK.OpenGL.All.NearestMipmapLinear});
+                OTK.OpenGL.GL.TexImage2D(
+                    OTK.OpenGL.TextureTarget.Texture2D,
+                    image.Levels,
+                    (OTK.OpenGL.PixelInternalFormat)image.OpenGlPixelFormat,
                     image.Width,
                     image.Height,
-                    image.OpenGlPixelFormat,
-                    Gl.GL_UNSIGNED_BYTE,
+                    0, 
+                    (OTK.OpenGL.PixelFormat)image.PixelFormat,
+                    OTK.OpenGL.PixelType.UnsignedByte,
                     image.Pixels);
             }
             Util3D.ReportErrors();
@@ -286,14 +288,9 @@ namespace Sce.Atf.Rendering.OpenGL
 
         private unsafe void CompressedTextureLoadPixelData(Image image, int levels)
         {
-            IntPtr glCompressedTexImage2DARB =
-                Gl.GetFunctionPointerForExtensionMethod("glCompressedTexImage2DARB");
-            if (glCompressedTexImage2DARB == IntPtr.Zero)
-                    return;
-
             int nBlockSize;
 
-            if (image.OpenGlPixelFormat == Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+            if (image.OpenGlPixelFormat == (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt1Ext)
                 nBlockSize = 8;
             else
                 nBlockSize = 16;
@@ -315,16 +312,15 @@ namespace Sce.Atf.Rendering.OpenGL
 
                     nSize = ((nWidth + 3) / 4) * ((nHeight + 3) / 4) * nBlockSize;
 
-                    Gl.glCompressedTexImage2DARB(
-                        Gl.GL_TEXTURE_2D,
+                    OTK.OpenGL.GL.CompressedTexImage2D(
+                        OTK.OpenGL.TextureTarget.Texture2D,
                         i,
-                        image.OpenGlPixelFormat,
+                        (OTK.OpenGL.InternalFormat)image.OpenGlPixelFormat,
                         nWidth,
                         nHeight,
                         0,
                         nSize,
                         new IntPtr(pixels + nOffset));
-
                     nOffset += nSize;
 
                     // Half the image size for the next mip-map level...
@@ -341,14 +337,9 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="levels">Mipmap levels</param>
         private unsafe void CompressedTextureLoadPixelDataCUBEMAP(Image image, int levels)
         {
-            IntPtr glCompressedTexImage2DARB =
-                Gl.GetFunctionPointerForExtensionMethod("glCompressedTexImage2DARB");
-            if (glCompressedTexImage2DARB == IntPtr.Zero)
-                return;
-
             int nBlockSize;
 
-            if (image.OpenGlPixelFormat == Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+            if (image.OpenGlPixelFormat == (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt1Ext)
                 nBlockSize = 8;
             else
                 nBlockSize = 16;
@@ -374,16 +365,15 @@ namespace Sce.Atf.Rendering.OpenGL
                     {
                         pixel[j] = image.Pixels[o];
                     }
-                    Gl.glCompressedTexImage2DARB(
-                        Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                    OTK.OpenGL.GL.CompressedTexImage2D(
+                        OTK.OpenGL.TextureTarget.TextureCubeMapPositiveX + face,
                         i,
-                        image.OpenGlPixelFormat,
+                        (OTK.OpenGL.InternalFormat)image.OpenGlPixelFormat,
                         nWidth,
                         nHeight,
                         0,
                         nSize,
                         pixel);
-
                     offset += nSize;
 
                     // Half the image size for the next mip-map level...

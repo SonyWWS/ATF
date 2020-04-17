@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+using OpenTK.Graphics.OpenGL;
 
 namespace Sce.Atf.Rendering.Dom
 {
@@ -22,7 +22,7 @@ namespace Sce.Atf.Rendering.Dom
             : base(renderStateGuardian)
         {
             m_selectionBuffer = new int[65536];
-            m_openGlHits = 0;
+            m_openGLHits = 0;
             m_pickTolerance = 3.0f;
             m_viewFrust0 = new Frustum();
         }
@@ -30,7 +30,7 @@ namespace Sce.Atf.Rendering.Dom
         #region IPickAction Members
 
         /// <summary>
-        /// Sets the filter that determines the single type of RenderObjects to dispatch in the pick
+        /// Sets the filter that determines the sinGLe type of RenderObjects to dispatch in the pick
         /// operation. For multiple types, use the TypesFilter property. To allow all types, set to
         /// 'null'. Setting this also clears the internal HitRecord array.</summary>
         public Type TypeFilter
@@ -72,7 +72,7 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="x2">Bottom right x windows coordinate</param>
         /// <param name="y2">Bottom right y windows coordinate</param>
         /// <param name="multiPick">True to perform a multiple pick operation</param>
-        /// <param name="usePickingFrustum">True to set the frustum according to the picking rectangle</param>
+        /// <param name="usePickingFrustum">True to set the frustum according to the picking rectanGLe</param>
         public void Init(Camera camera, int x1, int y1, int x2, int y2, bool multiPick, bool usePickingFrustum)
         {
             m_multiPick = multiPick;
@@ -84,11 +84,11 @@ namespace Sce.Atf.Rendering.Dom
             m_y = y1;
 
             ClearHitList();
-            Gl.glSelectBuffer(65536, m_selectionBuffer);
-            Gl.glRenderMode(Gl.GL_SELECT);
+            GL.SelectBuffer(65536, m_selectionBuffer);
+            GL.RenderMode(RenderingMode.Select);
 
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glLoadIdentity();
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
 
             int[] viewPort = new int[4];
             // Setup viewport
@@ -102,7 +102,7 @@ namespace Sce.Atf.Rendering.Dom
             float width = Math.Abs(x1 - x2);
             float height = Math.Abs(y1 - y2);
 
-            Glu.gluPickMatrix(
+            GLu.GLuPickMatrix(
                 xCenter,
                 yCenter,
                 width + 2.0f * m_pickTolerance,
@@ -124,7 +124,7 @@ namespace Sce.Atf.Rendering.Dom
                 m_viewFrust0.Clip(left, right, top, bottom);
             }
 
-            Gl.glInitNames();
+            GL.InitNames();
         }
 
         /// <summary>
@@ -171,17 +171,17 @@ namespace Sce.Atf.Rendering.Dom
             if (m_frustumPick == true && multiPick == false)
                 throw new InvalidOperationException("results can't be sorted front-to-back with frustum picking");
 
-            // First get the hits from OpenGL pick. Gl.glRenderMode resets this value when it is called,
-            // so consecutive calls to GetHits() will fail. Thus, we need to cache glRenderMode(GL_RENDER).
-            if (m_openGlHits == 0)
+            // First get the hits from OpenGL pick. GL.GLRenderMode resets this value when it is called,
+            // so consecutive calls to GetHits() will fail. Thus, we need to cache GLRenderMode(GL_RENDER).
+            if (m_openGLHits == 0)
             {
-                m_openGlHits = Gl.glRenderMode(Gl.GL_RENDER);
+                m_openGLHits = GL.RenderMode(RenderingMode.Render);
             }
             HitRecord[] renderSelect = null;
 
-            if (m_openGlHits > 0 && traverseList.Count > 0)
+            if (m_openGLHits > 0 && traverseList.Count > 0)
             {
-                renderSelect = PopulateOpenGlSelection(traverseList);
+                renderSelect = PopulateOpenGLSelection(traverseList);
             }
             else
             {
@@ -209,9 +209,9 @@ namespace Sce.Atf.Rendering.Dom
             // if the caller only wants one result, just give them one.
             if (multiPick == false && select.Length > 1)
             {
-                HitRecord[] singleHit = new HitRecord[1];
-                singleHit[0] = select[0];
-                select = singleHit;
+                HitRecord[] sinGLeHit = new HitRecord[1];
+                sinGLeHit[0] = select[0];
+                select = sinGLeHit;
             }
 
             // useful debug output
@@ -474,7 +474,7 @@ namespace Sce.Atf.Rendering.Dom
                             }
                         }
                         else
-                        {   //Single pick. We care about distance from camera eye.
+                        {   //SinGLe pick. We care about distance from camera eye.
                             //Make a copy of the ray in world-space and tranform it to object space.
                             Ray3F rayObj = rayWorld; //remember, Ray3F is a value type, not a reference type.
                             rayObj.Transform(worldToObj);
@@ -493,7 +493,7 @@ namespace Sce.Atf.Rendering.Dom
                                 // Transform to world space and then to screen space.
                                 objToWorld.Transform(intersectionPt, out intersectionPt);
                                 objToWorld.Transform(nearestVert, out nearestVert);
-                                // Prepare a single-pick HitRecord, as if OpenGL had calculated this.
+                                // Prepare a sinGLe-pick HitRecord, as if OpenGL had calculated this.
                                 HitRecord hit = new HitRecord(
                                     node.GraphPath,
                                     renderObject,
@@ -520,7 +520,7 @@ namespace Sce.Atf.Rendering.Dom
                     {
                         // Picking by "rendering", using OpenGL pick.
                         PushMatrix(node.Transform, false);
-                        Gl.glPushName(index);
+                        GL.PushName(index);
                         IRenderPick pickInterface = renderObject as IRenderPick;
                         if (pickInterface != null)
                         {
@@ -530,7 +530,7 @@ namespace Sce.Atf.Rendering.Dom
                         {
                             renderObject.Dispatch(node.GraphPath, node.RenderState, this, camera);
                         }
-                        Gl.glPopName();
+                        GL.PopName();
                         PopMatrix();
                     }
                 }
@@ -550,12 +550,12 @@ namespace Sce.Atf.Rendering.Dom
             // Calling the base method causes every render-picked object to be selected.
             //base.SetupProjection(camera);
 
-            Gl.glViewport(0, 0, m_width, m_height);
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
+            GL.Viewport(0, 0, m_width, m_height);
+            GL.MatrixMode(MatrixMode.Projection);
 
             if (camera.Frustum.IsOrtho)
             {
-                Gl.glOrtho(
+                GL.Ortho(
                     camera.Frustum.Left,
                     camera.Frustum.Right,
                     camera.Frustum.Bottom,
@@ -566,7 +566,7 @@ namespace Sce.Atf.Rendering.Dom
             }
             else
             {
-                Glu.gluPerspective(
+                GLu.GLuPerspective(
                     camera.Frustum.FovY * 180 / Math.PI,
                     (double)m_width / (double)m_height,
                     camera.Frustum.Near,
@@ -624,7 +624,7 @@ namespace Sce.Atf.Rendering.Dom
             double winX = (double)screenX;
             double winY = (double)viewport[3] - (double)screenY;
 
-            Glu.gluUnProject(
+            GLu.GLuUnProject(
                 winX,
                 winY,
                 screenZ,
@@ -642,7 +642,7 @@ namespace Sce.Atf.Rendering.Dom
             return intersectionPt;
         }
 
-        private HitRecord[] PopulateOpenGlSelection(ICollection<TraverseNode> traverseList)
+        private HitRecord[] PopulateOpenGLSelection(ICollection<TraverseNode> traverseList)
         {
             // Ensure that OpenGL is in correct state.
             double[] viewMat = null;
@@ -650,20 +650,20 @@ namespace Sce.Atf.Rendering.Dom
             int[] viewport = null;
             if (m_frustumPick == false)
             {
-                Gl.glViewport(0, 0, m_width, m_height);
-                Gl.glMatrixMode(Gl.GL_PROJECTION);
-                Gl.glLoadIdentity();
+                GL.Viewport(0, 0, m_width, m_height);
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
                 Util3D.glMultMatrixf(m_projectionMatrix);
 
-                Gl.glMatrixMode(Gl.GL_MODELVIEW);
-                Gl.glLoadIdentity();
+                GL.MatrixMode(MatrixMode.Modelview);
+                GL.LoadIdentity();
                 Util3D.glMultMatrixf(m_viewMatrix);
 
                 viewMat = new double[16];
-                Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, viewMat);
+                GL.GetDouble(GetPName.ModelviewMatrix, viewMat);
 
                 projectionMat = new double[16];
-                Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projectionMat);
+                GL.GetDouble(GetPName.ProjectionMatrix, projectionMat);
 
                 viewport = new int[4];
                 viewport[0] = viewport[1] = 0;
@@ -678,7 +678,7 @@ namespace Sce.Atf.Rendering.Dom
             traverseList.CopyTo(travArray, 0);
 
             uint start = 0;
-            for (int i = 0; i < m_openGlHits; ++i)
+            for (int i = 0; i < m_openGLHits; ++i)
             {
                 uint nameCount = (uint)m_selectionBuffer[start];
 
@@ -747,11 +747,11 @@ namespace Sce.Atf.Rendering.Dom
 
         private void ClearHitList()
         {
-            m_openGlHits = 0;
+            m_openGLHits = 0;
             m_geoHitList.Clear();
         }
 
-        //'m_selectionBuffer' will be filled in by a series of hit records by a call to glSelectBuffer.
+        //'m_selectionBuffer' will be filled in by a series of hit records by a call to GLSelectBuffer.
         // The values should be treated as unsigned ints, but our OpenGL wrapper needs int[].
         //From OpenGL documenation:
         //"The hit record consists of the number of names in the name stack at the time of the event,
@@ -759,10 +759,10 @@ namespace Sce.Atf.Rendering.Dom
         // event, followed by the name stack contents, bottom name first."
         private readonly int[] m_selectionBuffer;
 
-        //m_openGlHits must be set to null whenever we re-render. The problem is that the OpenGl
-        //call to glRenderMode(GL_RENDER) resets the # of render hits, so we can't call it twice
-        //in between renderings. Set m_openGlHits to 0 whenever m_geoHitList is cleared.
-        private int m_openGlHits;
+        //m_openGLHits must be set to null whenever we re-render. The problem is that the OpenGL
+        //call to GLRenderMode(GL_RENDER) resets the # of render hits, so we can't call it twice
+        //in between renderings. Set m_openGLHits to 0 whenever m_geoHitList is cleared.
+        private int m_openGLHits;
         private readonly List<HitRecord> m_geoHitList = new List<HitRecord>();
         private bool m_frustumPick; //is a frustum used rather than a ray? No surface points or surface normals.
         private bool m_multiPick; //does the caller want multiple results?

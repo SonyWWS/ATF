@@ -6,7 +6,7 @@ using System.Drawing;
 
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -19,7 +19,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="color">Color</param>
         public static void SetColor(Color color)
         {
-            Gl.glColor3ub(color.R, color.G, color.B);
+            OTK.OpenGL.GL.Color3(color.R, color.G, color.B);
         }
 
         /// <summary>
@@ -29,11 +29,11 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="color">Line color</param>
         public static void DrawLine(Vec3F p1, Vec3F p2, Color color)
         {
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glColor3ub(color.R, color.G, color.B);
-            Gl.glVertex3d(p1.X, p1.Y, p1.Z);
-            Gl.glVertex3d(p2.X, p2.Y, p2.Z);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Color3(color.R, color.G, color.B);
+            OTK.OpenGL.GL.Vertex3(p1.X, p1.Y, p1.Z);
+            OTK.OpenGL.GL.Vertex3(p2.X, p2.Y, p2.Z);
+            OTK.OpenGL.GL.End();
             Util3D.RenderStats.VertexCount += 2;
         }
 
@@ -43,10 +43,10 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="p2">Point 2</param>        
         public static void DrawLine(Vec3F p1, Vec3F p2)
         {
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3d(p1.X, p1.Y, p1.Z);
-            Gl.glVertex3d(p2.X, p2.Y, p2.Z);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(p1.X, p1.Y, p1.Z);
+            OTK.OpenGL.GL.Vertex3(p2.X, p2.Y, p2.Z);
+            OTK.OpenGL.GL.End();
             Util3D.RenderStats.VertexCount += 2;
         }
 
@@ -57,41 +57,18 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="coneSize">Arrow head base diameter</param>
         public static void DrawArrow(Vec3F p1, Vec3F p2, float coneSize)
         {
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(p1.X, p1.Y, p1.Z);
-            Gl.glVertex3f(p2.X, p2.Y, p2.Z);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(p1.X, p1.Y, p1.Z);
+            OTK.OpenGL.GL.Vertex3(p2.X, p2.Y, p2.Z);
+            OTK.OpenGL.GL.End();
 
-            Gl.glPushMatrix();
-            Gl.glTranslatef(p2.X, p2.Y, p2.Z);
-            Gl.glPushMatrix();
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.Translate(p2.X, p2.Y, p2.Z);
+            OTK.OpenGL.GL.PushMatrix();
             Util3D.glMultMatrixf(LookAtMatrix(p2 - p1));
-            DrawCone((double)coneSize, (double)coneSize * 2, 8, 1, RenderStyle.Solid);
-            Gl.glPopMatrix();
-            Gl.glPopMatrix();
-            Util3D.RenderStats.VertexCount += 2;
-        }
-
-        /// <summary>
-        /// Draws a 3D arrow from point 1 to point 2 using an OpenGL display list for greatly improved
-        /// performance. This method must not be called in between Gl.glNewList and Gl.glEndList.</summary>
-        /// <param name="p1">Point 1</param>
-        /// <param name="p2">Point 2</param>
-        /// <param name="coneSize">Arrow head base diameter</param>
-        public static void DrawArrowDisplayList(Vec3F p1, Vec3F p2, float coneSize)
-        {
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(p1.X, p1.Y, p1.Z);
-            Gl.glVertex3f(p2.X, p2.Y, p2.Z);
-            Gl.glEnd();
-
-            Gl.glPushMatrix();
-            Gl.glTranslatef(p2.X, p2.Y, p2.Z);
-            Gl.glPushMatrix();
-            Util3D.glMultMatrixf(LookAtMatrix(p2 - p1));
-            DrawConeDisplayList(coneSize, coneSize * 2, RenderStyle.Solid);
-            Gl.glPopMatrix();
-            Gl.glPopMatrix();
+            DrawCone((double)coneSize * 2);
+            OTK.OpenGL.GL.PopMatrix();
+            OTK.OpenGL.GL.PopMatrix();
             Util3D.RenderStats.VertexCount += 2;
         }
 
@@ -114,246 +91,85 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="renderStyle">Render style: Wireframe or Solid</param>
         public static void DrawCube(double size, RenderStyle renderStyle)
         {
-            Gl.glPushMatrix();
-            Gl.glScalef((float)size, (float)size, (float)size);
-            DrawUnitBox((renderStyle == RenderStyle.Wireframe) ? Gl.GL_LINE_LOOP : Gl.GL_QUADS);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.Scale((float)size, (float)size, (float)size);
+            DrawUnitBox((renderStyle == RenderStyle.Wireframe) ? (int)OTK.OpenGL.All.LineLoop : (int)OTK.OpenGL.All.Quads);
+            OTK.OpenGL.GL.PopMatrix();
 
             Util3D.RenderStats.VertexCount += 6 * 4;
             Util3D.RenderStats.PrimCount += 6;
         }
 
-        /// <summary>
-        /// Draws a cube, using an OpenGL display list for greatly improved performance. This method must
-        /// not be called in between Gl.glNewList and Gl.glEndList.</summary>
-        /// <param name="size">Dimension of side of cube</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawCubeDisplayList(float size, RenderStyle renderStyle)
+        public static double[] CalculateFaceNormal(double[] pointa, double[] pointb, double[] pointc)
         {
-            int displayList;
-            Gl.glPushMatrix();
-            Gl.glScalef(size, size, size);
+            double[] vec1 = { pointb[0] - pointa[0],
+                              pointb[1] - pointa[1],
+                              pointb[2] - pointa[2] };
+            double[] vec2 = { pointc[0] - pointa[0],
+                              pointc[1] - pointa[1],
+                              pointc[2] - pointa[2] };
 
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-            if (!s_cubeDisplayLists.TryGetValue(drawStyle, out displayList))
+            return new double[]
             {
-                displayList = Gl.glGenLists(1);
-                Gl.glNewList(displayList, Gl.GL_COMPILE);
-
-                DrawUnitBox((renderStyle == RenderStyle.Wireframe) ? Gl.GL_LINE_LOOP : Gl.GL_QUADS);
-
-                Gl.glEndList();
-                s_cubeDisplayLists.Add(drawStyle, displayList);
-            }
-            Gl.glCallList(displayList);
-            Gl.glPopMatrix();
-
-            Util3D.RenderStats.VertexCount += 6 * 4;
-            Util3D.RenderStats.PrimCount += 6;
+                vec1[1] * vec2[2] - vec2[1] * vec1[2],
+                -(vec1[0] * vec2[2] - vec2[0] * vec1[2]),
+                vec1[0] * vec2[1] - vec2[0] * vec1[1]
+            };
         }
 
-        /// <summary>
-        /// Draws a sphere, slowly. Consider using DrawSphereDisplayList(), which has less
-        /// flexibility but is much faster.</summary>
-        /// <param name="radius">Sphere radius</param>
-        /// <param name="slices">Number of longitudinal segments</param>
-        /// <param name="stacks">Number of latitudinal segments</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawSphere(double radius, int slices, int stacks, RenderStyle renderStyle)
+        public static void DrawCone(double height)
         {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-            Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-            Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-            Glu.gluSphere(s_quadric, radius, slices, stacks);
+            int primCount = 0;
+            int vertCount = 0;
 
-            Util3D.RenderStats.PrimCount += slices * stacks; //2 stacks are triangles; rest are quads.
-            Util3D.RenderStats.VertexCount +=       //each stack is a separate tri fan / quad strip?
-                (2 + slices) * 2 +                  //the two triangle fans at top and bottom of sphere.
-                (2 + slices * 2) * (stacks - 2);    //the remaining stacks are quad strips.
-        }
+            double[] baseVertices = { 0.0, height, 0.0 };
 
-        /// <summary>
-        /// Draws a sphere very quickly using an OpenGL display list. This method must not be called
-        /// in between Gl.glNewList and Gl.glEndList.</summary>
-        /// <param name="radius">Sphere radius</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawSphereDisplayList(float radius, RenderStyle renderStyle)
-        {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
+            double[] secVertices, terVertices;
 
-            Gl.glPushMatrix();
-            Gl.glScalef(radius, radius, radius);
+            secVertices = new double[3];
+            terVertices = new double[3];
 
-            int displayList;
-            if (!s_sphereDisplayLists.TryGetValue(drawStyle, out displayList))
+            secVertices[1] = 0;
+            terVertices[1] = 0;
+
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Triangles);
+
+            for(double angle = 0; angle <=360; angle +=45)
             {
-                displayList = Gl.glGenLists(1);
-                Gl.glNewList(displayList, Gl.GL_COMPILE);
+                terVertices[0] = secVertices[0];
+                terVertices[2] = secVertices[2];
 
-                Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-                Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-                Glu.gluSphere(s_quadric, 1.0f, FAST_SPHERE_SLICES, FAST_SPHERE_STACKS);
+                secVertices[0] = Math.Cos(OpenTK.MathHelper.DegreesToRadians(angle));
+                secVertices[2] = Math.Sin(OpenTK.MathHelper.DegreesToRadians(angle));
 
-                Gl.glEndList();
-                s_sphereDisplayLists.Add(drawStyle, displayList);
+                if(angle != 0)
+                {
+                    OTK.OpenGL.GL.Normal3(CalculateFaceNormal(baseVertices, secVertices, terVertices));
+                    OTK.OpenGL.GL.Vertex3(baseVertices);
+                    OTK.OpenGL.GL.Vertex3(secVertices);
+                    OTK.OpenGL.GL.Vertex3(terVertices);
+
+                    primCount += 1;
+                    vertCount += 3;
+                }
             }
 
-            Gl.glCallList(displayList);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.End();
 
-            Util3D.RenderStats.PrimCount += FAST_SPHERE_SLICES * FAST_SPHERE_STACKS; //2 stacks are triangles; rest are quads.
-            Util3D.RenderStats.VertexCount +=       //each stack is a separate tri fan / quad strip?
-                (2 + FAST_SPHERE_SLICES) * 2 +                  //the two triangle fans at top and bottom of sphere.
-                (2 + FAST_SPHERE_SLICES * 2) * (FAST_SPHERE_STACKS - 2);    //the remaining stacks are quad strips.
-        }
-
-        /// <summary>
-        /// Draws a cone, without a bottom disk. For much better performance, use DrawConeDisplayList().</summary>
-        /// <param name="baseRadius">Radius at base of cone</param>
-        /// <param name="height">Cone height</param>
-        /// <param name="slices">Number of longitudinal segments</param>
-        /// <param name="stacks">Number of latitudinal segments</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawCone(double baseRadius, double height, int slices, int stacks, RenderStyle renderStyle)
-        {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-            Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-            Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-            Glu.gluCylinder(s_quadric, baseRadius, 0.0, height, slices, stacks);
-
-            // Note that we are not rendering the bottom. That would require a separate call to gluDisk.
-            // Assuming that each stack is a quad strip. This cone could be more efficiently rendered
-            // as a triangle fan.
-            Util3D.RenderStats.PrimCount += slices * stacks;
-            Util3D.RenderStats.VertexCount += (2 + slices * 2) * stacks;
-        }
-
-        /// <summary>
-        /// Draws a cone very quickly using an OpenGL display list, with no bottom disk and
-        /// 8 slices radiating from the tip. This method must not be called in between Gl.glNewList
-        /// and Gl.glEndList.</summary>
-        /// <param name="baseRadius">Radius at base of cone</param>
-        /// <param name="height">Cone height</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawConeDisplayList(float baseRadius, float height, RenderStyle renderStyle)
-        {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-
-            Gl.glPushMatrix();
-            Gl.glScalef(baseRadius, baseRadius, height);
-
-            int displayList;
-            if (!s_coneDisplayLists.TryGetValue(drawStyle, out displayList))
-            {
-                displayList = Gl.glGenLists(1);
-                Gl.glNewList(displayList, Gl.GL_COMPILE);
-
-                Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-                Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-                Glu.gluCylinder(s_quadric, 1.0, 0.0, 1.0, FAST_CONE_SLICES, FAST_CONE_STACKS);
-
-                Gl.glEndList();
-                s_coneDisplayLists.Add(drawStyle, displayList);
-            }
-
-            Gl.glCallList(displayList);
-            Gl.glPopMatrix();
-
-            // Note that we are not rendering the bottom. That would require a separate call to gluDisk.
-            // Assuming that each stack is a quad strip. This cone could be more efficiently rendered
-            // as a triangle fan.
-            Util3D.RenderStats.PrimCount += FAST_CONE_SLICES * FAST_CONE_STACKS;
-            Util3D.RenderStats.VertexCount += (2 + FAST_CONE_SLICES * 2) * FAST_CONE_STACKS;
-        }
-
-        /// <summary>
-        /// Draws a cylinder, slowly. For better performance, consider using DrawCylinderDisplayList.</summary>
-        /// <param name="radius">Cylinder radius</param>
-        /// <param name="height">Cylinder height</param>
-        /// <param name="slices">Number of longitudinal segments</param>
-        /// <param name="stacks">Number of latitudinal segments</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawCylinder(double radius, double height, int slices, int stacks, RenderStyle renderStyle)
-        {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-            Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-            Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-            Glu.gluCylinder(s_quadric, radius, radius, height, slices, stacks);
-
-            Gl.glPushMatrix();
-            Gl.glRotatef(180.0f, 1, 0, 0);
-            Glu.gluDisk(s_quadric, 0, radius, slices, 1);
-            Gl.glPopMatrix();
-
-            Gl.glPushMatrix();
-            Gl.glTranslatef(0, 0, (float)height);
-            Glu.gluDisk(s_quadric, 0, radius, slices, 1);
-            Gl.glPopMatrix();
-
-            Util3D.RenderStats.PrimCount += slices * stacks + 2 * slices;
-            Util3D.RenderStats.VertexCount +=
-                (2 + slices * 2) * stacks + //quad strips for the sides of the cylinder
-                (2 + slices) * 2;           //top and bottom triangle fans
-        }
-
-        /// <summary>
-        /// Draws a cylinder very quickly using an OpenGL display list, with 10 slices along
-        /// the cylinder's axis. This method must not be called in between Gl.glNewList and
-        /// Gl.glEndList.</summary>
-        /// <param name="radius">Cylinder radius</param>
-        /// <param name="height">Cylinder height</param>
-        /// <param name="renderStyle">Render style: Wireframe or Solid</param>
-        public static void DrawCylinderDisplayList(float radius, float height, RenderStyle renderStyle)
-        {
-            int drawStyle = (renderStyle == RenderStyle.Wireframe) ? Glu.GLU_LINE : Glu.GLU_FILL;
-
-            Gl.glPushMatrix();
-            Gl.glScalef(radius, radius, height);
-
-            int displayList;
-            if (!s_cylinderDisplayLists.TryGetValue(drawStyle, out displayList))
-            {
-                displayList = Gl.glGenLists(1);
-                Gl.glNewList(displayList, Gl.GL_COMPILE);
-
-                Glu.gluQuadricDrawStyle(s_quadric, drawStyle);
-                Glu.gluQuadricNormals(s_quadric, Glu.GLU_SMOOTH);
-                Glu.gluCylinder(s_quadric, 1.0f, 1.0f, 1.0f, FAST_CYLINDER_SLICES, FAST_CYLINDER_STACKS);
-
-                Gl.glPushMatrix();
-                Gl.glRotatef(180.0f, 1, 0, 0);
-                Glu.gluDisk(s_quadric, 0, 1.0f, FAST_CYLINDER_SLICES, 1);
-                Gl.glPopMatrix();
-
-                Gl.glPushMatrix();
-                Gl.glTranslatef(0, 0, 1.0f);
-                Glu.gluDisk(s_quadric, 0, 1.0f, FAST_CYLINDER_SLICES, 1);
-                Gl.glPopMatrix();
-
-                Gl.glEndList();
-                s_cylinderDisplayLists.Add(drawStyle, displayList);
-            }
-
-            Gl.glCallList(displayList);
-            Gl.glPopMatrix();
-
-            Util3D.RenderStats.PrimCount +=
-                FAST_CYLINDER_SLICES * FAST_CYLINDER_STACKS + 2 * FAST_CYLINDER_SLICES;
-            Util3D.RenderStats.VertexCount +=
-                (2 + FAST_CYLINDER_SLICES * 2) * FAST_CYLINDER_STACKS + //quad strips for the sides
-                (2 + FAST_CYLINDER_SLICES) * 2;           //top and bottom triangle fans
+            Util3D.RenderStats.PrimCount += primCount;
+            Util3D.RenderStats.VertexCount += vertCount;
         }
 
         /// <summary>
         /// Begins text drawing</summary>
         public static void BeginText()
         {
-            Gl.glDisable(Gl.GL_DEPTH_TEST);
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glLoadIdentity();
-            Gl.glOrtho(-1, 1, -1, 1, -1, 1);
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
+            OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.DepthTest);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Projection);
+            OTK.OpenGL.GL.LoadIdentity();
+            OTK.OpenGL.GL.Ortho(-1, 1, -1, 1, -1, 1);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Modelview);
+            OTK.OpenGL.GL.LoadIdentity();
         }
 
         /// <summary>
@@ -369,7 +185,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="y">Y coordinate</param>
         public static void DrawText(string text, int x, int y)
         {
-            Gl.glRasterPos2i(x, y);
+            OTK.OpenGL.GL.RasterPos2(x, y);
             OpenGlCore.DrawText(text);
         }
 
@@ -381,18 +197,18 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="color">Frame color</param>
         public static void DrawHatchedFrame(Size controlSize, Point first, Point current, Color color)
         {
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glLoadIdentity();
-            Gl.glOrtho(-1, 1, -1, 1, -1, 1);
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Projection);
+            OTK.OpenGL.GL.LoadIdentity();
+            OTK.OpenGL.GL.Ortho(-1, 1, -1, 1, -1, 1);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Modelview);
+            OTK.OpenGL.GL.LoadIdentity();
 
-            Gl.glPushAttrib(Gl.GL_LINE_BIT);
-            Gl.glDisable(Gl.GL_LIGHTING);
-            Gl.glDisable(Gl.GL_DEPTH_TEST);
-            Gl.glEnable(Gl.GL_LINE_STIPPLE);
-            Gl.glLineWidth(1);
-            unchecked { Gl.glLineStipple(4, (short)0xAAAA); }
+            OTK.OpenGL.GL.PushAttrib(OTK.OpenGL.AttribMask.LineBit);
+            OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Lighting);
+            OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.DepthTest);
+            OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.LineStipple);
+            OTK.OpenGL.GL.LineWidth(1);
+            unchecked { OTK.OpenGL.GL.LineStipple(4, (short)0xAAAA); }
             SetColor(color);
 
             float ooWidth = 1.0f / controlSize.Width;
@@ -402,13 +218,13 @@ namespace Sce.Atf.Rendering.OpenGL
             float y1 = first.Y * ooHeight * -2 + 1;
             float y2 = current.Y * ooHeight * -2 + 1;
 
-            Gl.glBegin(Gl.GL_LINE_LOOP);
-            Gl.glVertex2f(x1, y1);
-            Gl.glVertex2f(x2, y1);
-            Gl.glVertex2f(x2, y2);
-            Gl.glVertex2f(x1, y2);
-            Gl.glEnd();
-            Gl.glPopAttrib();
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.LineLoop);
+            OTK.OpenGL.GL.Vertex2(x1, y1);
+            OTK.OpenGL.GL.Vertex2(x2, y1);
+            OTK.OpenGL.GL.Vertex2(x2, y2);
+            OTK.OpenGL.GL.Vertex2(x1, y2);
+            OTK.OpenGL.GL.End();
+            OTK.OpenGL.GL.PopAttrib();
             Util3D.RenderStats.VertexCount += 4;
         }
 
@@ -543,7 +359,7 @@ namespace Sce.Atf.Rendering.OpenGL
         {
             get
             {
-                return Gl.glGetString(Gl.GL_VENDOR);
+                return OTK.OpenGL.GL.GetString(OTK.OpenGL.StringName.Vendor);
             }
         }
 
@@ -578,7 +394,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="m">Matrix to multiply</param>
         public static void glMultMatrixf(Matrix4F m)
         {
-            Gl.glMultMatrixf(CastToIntPtr(m));
+            OTK.OpenGL.GL.MultMatrix(m.ToArray());
         }
 
         /// <summary>
@@ -586,7 +402,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="m">Matrix to load</param>
         public static void glLoadMatrixf(Matrix4F m)
         {
-            Gl.glLoadMatrixf(CastToIntPtr(m));
+            OTK.OpenGL.GL.LoadMatrix(m.ToArray());
         }
 
         /// <summary>
@@ -595,7 +411,7 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="m">State variable as Matrix4F</param>
         public static void glGetFloatv(int pname, Matrix4F m)
         {
-            Gl.glGetFloatv(pname, CastToIntPtr(m));
+            OTK.OpenGL.GL.GetFloat((OTK.OpenGL.GetPName)pname, m.ToArray());
         }
 
         #endregion
@@ -621,32 +437,32 @@ namespace Sce.Atf.Rendering.OpenGL
 
             switch (errorId)
             {
-                case Gl.GL_NO_ERROR:
+                case (int)OTK.OpenGL.ErrorCode.NoError:
                     errorText = "No error has been recorded.";
                     break;
-                case Gl.GL_INVALID_ENUM:
+                case (int)OTK.OpenGL.ErrorCode.InvalidEnum:
                     errorText = "An unacceptable value is specified for an enumerated argument.";
                     break;
-                case Gl.GL_INVALID_VALUE:
+                case (int)OTK.OpenGL.ErrorCode.InvalidValue:
                     errorText = "A numeric argument is out of range.";
                     break;
-                case Gl.GL_INVALID_OPERATION:
+                case (int)OTK.OpenGL.ErrorCode.InvalidFramebufferOperationExt:
                     errorText = "The specified operation is not allowed in the current state.";
                     break;
-                case Gl.GL_STACK_OVERFLOW:
+                case (int)OTK.OpenGL.ErrorCode.StackOverflow:
                     errorText = "This command would cause a stack overflow.";
                     break;
-                case Gl.GL_STACK_UNDERFLOW:
+                case (int)OTK.OpenGL.ErrorCode.StackUnderflow:
                     errorText = "This command would cause a stack underflow.";
                     break;
-                case Gl.GL_OUT_OF_MEMORY:
+                case (int)OTK.OpenGL.ErrorCode.OutOfMemory:
                     errorText =
                         "There is not enough memory left to execute the command.\n" +
                         "The state of the GL is undefined,\n" +
                         "except for the state of the error flags,\n" +
                         "after this error is recorded.";
                     break;
-                case Gl.GL_TABLE_TOO_LARGE:
+                case (int)OTK.OpenGL.ErrorCode.TableTooLarge:
                     errorText = "The specified table exceeds the implementation's maximum supported table size.";
                     break;
                 default:
@@ -667,7 +483,7 @@ namespace Sce.Atf.Rendering.OpenGL
         {
             int errorCount = 0;
             int errorId;
-            while ((errorId = Gl.glGetError()) != 0)
+            while ((errorId = (int)OTK.OpenGL.GL.GetError()) != 0)
             {
                 if (errorCount++ < MaxErrorsToReport)
                     ErrorHandler(errorId);
@@ -699,13 +515,13 @@ namespace Sce.Atf.Rendering.OpenGL
 
             for (int i = 5; i >= 0; i--)
             {
-                Gl.glBegin(type);
-                Gl.glNormal3fv(n[i]);
-                Gl.glVertex3fv(v[faces[i, 0]]);
-                Gl.glVertex3fv(v[faces[i, 1]]);
-                Gl.glVertex3fv(v[faces[i, 2]]);
-                Gl.glVertex3fv(v[faces[i, 3]]);
-                Gl.glEnd();
+                OTK.OpenGL.GL.Begin((OTK.OpenGL.PrimitiveType)type);
+                OTK.OpenGL.GL.Normal3(n[i]);
+                OTK.OpenGL.GL.Vertex3(v[faces[i, 0]]);
+                OTK.OpenGL.GL.Vertex3(v[faces[i, 1]]);
+                OTK.OpenGL.GL.Vertex3(v[faces[i, 2]]);
+                OTK.OpenGL.GL.Vertex3(v[faces[i, 3]]);
+                OTK.OpenGL.GL.End();
             }
         }
 
@@ -739,8 +555,6 @@ namespace Sce.Atf.Rendering.OpenGL
             {5, 6, 2, 1},
             {7, 4, 0, 3}
         };
-
-        private static readonly Glu.GLUquadric s_quadric = Glu.gluNewQuadric();
         
         // key: OpenGl drawing mode. value: display list.
         private static readonly Dictionary<int,int> s_cubeDisplayLists = new Dictionary<int,int>();

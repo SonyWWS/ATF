@@ -4,7 +4,8 @@ using System;
 using System.IO;
 using System.Text;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering
 {
@@ -282,11 +283,11 @@ namespace Sce.Atf.Rendering
             switch (bpp)
             {
                 case 24:
-                    return Gl.GL_BGR;
+                    return (int)OTK.OpenGL.PixelFormat.Bgr;
                     
                 case 32:
-                    return Gl.GL_BGRA;
-                    
+                    return (int)OTK.OpenGL.PixelFormat.Bgra;
+
                 default:
                     throw new InvalidOperationException("Unknown pixel depth.");
             }

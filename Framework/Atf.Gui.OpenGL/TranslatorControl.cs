@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.Dom
 {
@@ -85,7 +86,7 @@ namespace Sce.Atf.Rendering.Dom
             float s1, s2, s3;
 
             // apply xform
-            Gl.glPushMatrix();
+            OTK.OpenGL.GL.PushMatrix();
             Util3D.glMultMatrixf(transform);
 
             CalcAxisLengths(camera, transform, out s1, out s2, out s3);
@@ -113,7 +114,7 @@ namespace Sce.Atf.Rendering.Dom
             RenderYZSquare(s2 * SquareLength, s3 * SquareLength, true);
             RenderXZSquare(s1 * SquareLength, s3 * SquareLength, true);
             
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace Sce.Atf.Rendering.Dom
             action.RenderStateGuardian.Commit(renderState);
 
             // apply xform
-            Gl.glPushMatrix();
+            OTK.OpenGL.GL.PushMatrix();
             Util3D.glMultMatrixf(transform);
 
             float s1, s2, s3;
@@ -142,67 +143,67 @@ namespace Sce.Atf.Rendering.Dom
             // Mark each axis with a different name.
             // Since the OpenGl selection buffer does a bad job in detecting lines we'll use
             //  triangles instead.
-            Gl.glPushName(m_nameBase);
+            OTK.OpenGL.GL.PushName(m_nameBase);
 
             if (drawX)
             {
-                Gl.glPushName((int)HitElement.X_ARROW);
-                Gl.glBegin(Gl.GL_TRIANGLES);
-                Gl.glVertex3f(squareSideX, 0, 0);
-                Gl.glVertex3f(s1, 0, 0);
-                Gl.glVertex3f(squareSideX, 0, 0);
-                Gl.glEnd();
+                OTK.OpenGL.GL.PushName((int) HitElement.X_ARROW);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Triangles);
+                OTK.OpenGL.GL.Vertex3(squareSideX, 0, 0);
+                OTK.OpenGL.GL.Vertex3(s1, 0, 0);
+                OTK.OpenGL.GL.Vertex3(squareSideX, 0, 0);
+                OTK.OpenGL.GL.End();
                 RenderXArrow(s1);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
             if (drawY)
             {
-                Gl.glPushName((int)HitElement.Y_ARROW);
-                Gl.glBegin(Gl.GL_TRIANGLES);
-                Gl.glVertex3f(0, squareSideY, 0);
-                Gl.glVertex3f(0, s2, 0);
-                Gl.glVertex3f(0, squareSideY, 0);
-                Gl.glEnd();
+                OTK.OpenGL.GL.PushName((int)HitElement.Y_ARROW);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Triangles);
+                OTK.OpenGL.GL.Vertex3(0, squareSideY, 0);
+                OTK.OpenGL.GL.Vertex3(0, s2, 0);
+                OTK.OpenGL.GL.Vertex3(0, squareSideY, 0);
+                OTK.OpenGL.GL.End();
                 RenderYArrow(s2);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
             if (drawZ)
             {
-                Gl.glPushName((int)HitElement.Z_ARROW);
-                Gl.glBegin(Gl.GL_TRIANGLES);
-                Gl.glVertex3f(0, 0, squareSideZ);
-                Gl.glVertex3f(0, 0, s3);
-                Gl.glVertex3f(0, 0, squareSideZ);
-                Gl.glEnd();
+                OTK.OpenGL.GL.PushName((int)HitElement.Z_ARROW);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Triangles);
+                OTK.OpenGL.GL.Vertex3(0, 0, squareSideZ);
+                OTK.OpenGL.GL.Vertex3(0, 0, s3);
+                OTK.OpenGL.GL.Vertex3(0, 0, squareSideZ);
+                OTK.OpenGL.GL.End();
                 RenderZArrow(s3);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
             if (drawX && drawY)
             {
-                Gl.glPushName((int)HitElement.XY_SQUARE);
+                OTK.OpenGL.GL.PushName((int)HitElement.XY_SQUARE);
                 RenderXYSquare(squareSideX, squareSideY, true);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
             if (drawY && drawZ)
             {
-                Gl.glPushName((int)HitElement.YZ_SQUARE);
+                OTK.OpenGL.GL.PushName((int)HitElement.YZ_SQUARE);
                 RenderYZSquare(squareSideY, squareSideZ, true);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
             if (drawX && drawZ)
             {
-                Gl.glPushName((int)HitElement.XZ_SQUARE);
+                OTK.OpenGL.GL.PushName((int)HitElement.XZ_SQUARE);
                 RenderXZSquare(squareSideX, squareSideZ, true);
-                Gl.glPopName();
+                OTK.OpenGL.GL.PopName();
             }
 
-            Gl.glPopMatrix();
-            Gl.glPopName();
+            OTK.OpenGL.GL.PopMatrix();
+            OTK.OpenGL.GL.PopName();
         }
 
         /// <summary>
@@ -360,155 +361,152 @@ namespace Sce.Atf.Rendering.Dom
 
         private void RenderXAxis(float s)
         {
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
-
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(1.5f * SquareLength * s, 0, 0);
-            Gl.glVertex3f(s, 0, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(1.0f, 0.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(1.5f * SquareLength * s, 0, 0);
+            OTK.OpenGL.GL.Vertex3(s, 0, 0);
+            OTK.OpenGL.GL.End();
 
         }
 
         private void RenderXArrow(float s)
         {
-            Gl.glColor3f(1, 0, 0);
+            OTK.OpenGL.GL.Color3(1, 0, 0);
 
-            Gl.glPushMatrix();
-            Gl.glTranslatef(s, 0, 0);
-            Gl.glRotatef(90, 0, 1, 0);
-            Util3D.DrawConeDisplayList(s / 20, s / 8, Util3D.RenderStyle.Solid);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.Translate(s, 0, 0);
+            OTK.OpenGL.GL.Rotate(90, 0, 1, 0);
+            Util3D.DrawCube(s / 8, Util3D.RenderStyle.Solid);
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         private void RenderYAxis(float s)
         {
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
-
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 1.5f * SquareLength * s, 0);
-            Gl.glVertex3f(0, s, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 1.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 1.5f * SquareLength * s, 0);
+            OTK.OpenGL.GL.Vertex3(0, s, 0);
+            OTK.OpenGL.GL.End();
         }
 
         private void RenderYArrow(float s)
         {
-            Gl.glColor3f(0, 1, 0);
-            
-            Gl.glPushMatrix();
-            Gl.glTranslatef(0, s, 0);
-            Gl.glRotatef(-90, 1, 0, 0);
-            Util3D.DrawConeDisplayList(s / 20, s / 8, Util3D.RenderStyle.Solid);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.Color3(0, 1, 0);
+
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.Translate(0, s, 0);
+            OTK.OpenGL.GL.Rotate(-90, 1, 0, 0);
+            Util3D.DrawCube(s / 8, Util3D.RenderStyle.Solid);
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         private void RenderZAxis(float s)
         {
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
-
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 1.5f * SquareLength * s);
-            Gl.glVertex3f(0, 0, s);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 0.0f, 1.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 1.5f * SquareLength * s);
+            OTK.OpenGL.GL.Vertex3(0, 0, s);
+            OTK.OpenGL.GL.End();
         }
 
         private void RenderZArrow(float s)
         {
-            Gl.glColor3f(0.0f, 0, 1.0f);
-            
-            Gl.glPushMatrix();
-            Gl.glTranslatef(0, 0, s);
-            Util3D.DrawConeDisplayList(s / 20, s / 8, Util3D.RenderStyle.Solid);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.Color3(0.0f, 0.0f, 1.0f);
+
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.Translate(0, 0, s);
+            Util3D.DrawCube(s / 8, Util3D.RenderStyle.Solid);
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         private void RenderXYSquare(float a, float b, bool solid)
         {
             if (solid)
             {
-                Gl.glColor4f(0.5f, 0.5f, 0.5f, 0.4f);
-                Gl.glBegin(Gl.GL_TRIANGLE_FAN);
-                Gl.glVertex3f(0, 0, 0);
-                Gl.glVertex3f(a, 0, 0);
-                Gl.glVertex3f(a, b, 0);
-                Gl.glVertex3f(0, b, 0);
-                Gl.glEnd();
+                OTK.OpenGL.GL.Color4(0.5f, 0.5f, 0.5f, 0.4f);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.TriangleFan);
+                OTK.OpenGL.GL.Vertex3(0, 0, 0);
+                OTK.OpenGL.GL.Vertex3(a, 0, 0);
+                OTK.OpenGL.GL.Vertex3(a, b, 0);
+                OTK.OpenGL.GL.Vertex3(0, b, 0);
+                OTK.OpenGL.GL.End();
             }
 
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(a, 0, 0);
-            Gl.glVertex3f(a, 0, 0);
-            Gl.glVertex3f(a, b, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(1.0f, 0.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, b, 0);
+            OTK.OpenGL.GL.End();
 
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(a, b, 0);
-            Gl.glVertex3f(0, b, 0);
-            Gl.glVertex3f(0, b, 0);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 1.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(a, b, 0);
+            OTK.OpenGL.GL.Vertex3(0, b, 0);
+            OTK.OpenGL.GL.Vertex3(0, b, 0);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.End();
         }
 
         private void RenderYZSquare(float a, float b, bool solid)
         {
             if (solid)
             {
-                Gl.glColor4f(0.5f, 0.5f, 0.5f, 0.4f);
-                Gl.glBegin(Gl.GL_TRIANGLE_FAN);
-                Gl.glVertex3f(0, 0, 0);
-                Gl.glVertex3f(0, a, 0);
-                Gl.glVertex3f(0, a, b);
-                Gl.glVertex3f(0, 0, b);
-                Gl.glEnd();
+                OTK.OpenGL.GL.Color4(0.5f, 0.5f, 0.5f, 0.4f);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.TriangleFan);
+                OTK.OpenGL.GL.Vertex3(0, 0, 0);
+                OTK.OpenGL.GL.Vertex3(0, a, 0);
+                OTK.OpenGL.GL.Vertex3(0, a, b);
+                OTK.OpenGL.GL.Vertex3(0, 0, b);
+                OTK.OpenGL.GL.End();
             }
 
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(0, a, 0);
-            Gl.glVertex3f(0, a, 0);
-            Gl.glVertex3f(0, a, b);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 1.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(0, a, 0);
+            OTK.OpenGL.GL.Vertex3(0, a, 0);
+            OTK.OpenGL.GL.Vertex3(0, a, b);
+            OTK.OpenGL.GL.End();
 
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, a, b);
-            Gl.glVertex3f(0, 0, b);
-            Gl.glVertex3f(0, 0, b);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 0.0f, 1.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, a, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.End();
         }
 
         private void RenderXZSquare(float a, float b, bool solid)
         {
             if (solid)
             {
-                Gl.glColor4f(0.5f, 0.5f, 0.5f, 0.4f);
-                Gl.glBegin(Gl.GL_TRIANGLE_FAN);
-                Gl.glVertex3f(0, 0, 0);
-                Gl.glVertex3f(a, 0, 0);
-                Gl.glVertex3f(a, 0, b);
-                Gl.glVertex3f(0, 0, b);
-                Gl.glEnd();
+                OTK.OpenGL.GL.Color4(0.5f, 0.5f, 0.5f, 0.4f);
+                OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.TriangleFan);
+                OTK.OpenGL.GL.Vertex3(0, 0, 0);
+                OTK.OpenGL.GL.Vertex3(a, 0, 0);
+                OTK.OpenGL.GL.Vertex3(a, 0, b);
+                OTK.OpenGL.GL.Vertex3(0, 0, b);
+                OTK.OpenGL.GL.End();
             }
 
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(a, 0, 0);
-            Gl.glVertex3f(a, 0, 0);
-            Gl.glVertex3f(a, 0, b);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(1.0f, 0.0f, 0.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, 0, 0);
+            OTK.OpenGL.GL.Vertex3(a, 0, b);
+            OTK.OpenGL.GL.End();
 
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glVertex3f(a, 0, b);
-            Gl.glVertex3f(0, 0, b);
-            Gl.glVertex3f(0, 0, b);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glEnd();
+            OTK.OpenGL.GL.Color3(0.0f, 0.0f, 1.0f);
+            OTK.OpenGL.GL.Begin(OTK.OpenGL.PrimitiveType.Lines);
+            OTK.OpenGL.GL.Vertex3(a, 0, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, b);
+            OTK.OpenGL.GL.Vertex3(0, 0, 0);
+            OTK.OpenGL.GL.End();
         }
 
         private void CalcAxisLengths(Camera camera, Matrix4F globalTransform, out float s1, out float s2, out float s3)

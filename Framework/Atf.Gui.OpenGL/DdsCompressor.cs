@@ -2,7 +2,7 @@
 
 using System.IO;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering
 {
@@ -56,7 +56,7 @@ namespace Sce.Atf.Rendering
             }
 
 
-            if (image.OpenGlPixelFormat == Gl.GL_BGRA)
+            if (image.OpenGlPixelFormat == (int)OTK.OpenGL.PixelFormat.Bgra)
             {
                 DDSUtils.ImageConverter.CompressARGB(image.Width,
                     image.Height,

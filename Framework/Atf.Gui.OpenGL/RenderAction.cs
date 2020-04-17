@@ -8,7 +8,7 @@ using System.Drawing;
 using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.Dom
 {
@@ -415,19 +415,19 @@ namespace Sce.Atf.Rendering.Dom
 
             // set the clear values
             Color backgroundColor = scene.BackgroundColor;
-            Gl.glClearColor(
+            OTK.OpenGL.GL.ClearColor(
                 backgroundColor.R * (1.0f / 255),
                 backgroundColor.G * (1.0f / 255),
                 backgroundColor.B * (1.0f / 255),
                 0);
-            Gl.glClearDepth(1.0);
+            OTK.OpenGL.GL.ClearDepth(1.0);
 
             // ensure that the buffers are writeable
-            Gl.glDepthMask(Gl.GL_TRUE);
-            Gl.glColorMask(Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE, Gl.GL_TRUE);
+            OTK.OpenGL.GL.DepthMask(true);
+            OTK.OpenGL.GL.ColorMask(true, true, true, true);
 
             // clear the buffers
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            OTK.OpenGL.GL.Clear(OTK.OpenGL.ClearBufferMask.ColorBufferBit | OTK.OpenGL.ClearBufferMask.DepthBufferBit);
         }
 
         /// <summary>
@@ -435,9 +435,9 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="camera">Camera that determines projection</param>
         protected virtual void SetupProjection(Camera camera)
         {
-            Gl.glViewport(0, 0, m_width, m_height);
-            Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glLoadIdentity();
+            OTK.OpenGL.GL.Viewport(0, 0, m_width, m_height);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Projection);
+            OTK.OpenGL.GL.LoadIdentity();
             Util3D.glMultMatrixf(camera.ProjectionMatrix);
         }
 
@@ -446,12 +446,12 @@ namespace Sce.Atf.Rendering.Dom
         /// <param name="camera">Camera that determines view matrix</param>
         protected virtual void SetupView(Camera camera)
         {
-            Gl.glMatrixMode(Gl.GL_TEXTURE);
-            Gl.glLoadIdentity();
-            Gl.glMultMatrixf(TextureMatrix);
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Texture);
+            OTK.OpenGL.GL.LoadIdentity();
+            OTK.OpenGL.GL.MultMatrix(TextureMatrix);
 
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
+            OTK.OpenGL.GL.MatrixMode(OTK.OpenGL.MatrixMode.Modelview);
+            OTK.OpenGL.GL.LoadIdentity();
             Util3D.glMultMatrixf(camera.ViewMatrix);
         }
 
@@ -506,12 +506,12 @@ namespace Sce.Atf.Rendering.Dom
             rs.SolidColor = new Vec4F(1, 1, 1, 1);
             m_renderStateGuardian.Commit(rs);
 
-            Gl.glPushMatrix();
-            Gl.glLoadIdentity();
-            Gl.glTranslated(-width, height, -nearP);
-            Gl.glRasterPos2i(0, 0);
+            OTK.OpenGL.GL.PushMatrix();
+            OTK.OpenGL.GL.LoadIdentity();
+            OTK.OpenGL.GL.Translate(-width, height, -nearP);
+            OTK.OpenGL.GL.RasterPos2(0, 0);
             OpenGlCore.DrawText(message);
-            Gl.glPopMatrix();
+            OTK.OpenGL.GL.PopMatrix();
         }
 
         /// <summary>

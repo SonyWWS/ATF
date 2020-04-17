@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Windows.Media;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,7 @@ namespace Sce.Atf.Wpf.Controls
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         /// <summary>

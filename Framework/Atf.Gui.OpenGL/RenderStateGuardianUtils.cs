@@ -2,7 +2,8 @@
 
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -44,19 +45,19 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 if (RenderStatesDiffer(previousRenderState, renderState, RenderMode.Wireframe))
                 {
-                    Gl.glDisable(Gl.GL_TEXTURE_2D);
-                    Gl.glDisable(Gl.GL_CULL_FACE);
-                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Texture2D);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.CullFace);
+                    OTK.OpenGL.GL.PolygonMode(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.PolygonMode.Fill);
 
-                    Gl.glPolygonOffset(-1.0f, -1.0f);
-                    Gl.glEnable(Gl.GL_POLYGON_OFFSET_LINE);
+                    OTK.OpenGL.GL.PolygonOffset(-1.0f, -1.0f);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.PolygonOffsetLine);
 
                     Util3D.RenderStats.RenderStateChanges++;
                     //Console.WriteLine("CommitWire");
                 }
 
                 Vec4F color = renderState.WireframeColor;
-                Gl.glColor4f(color.X, color.Y, color.Z, color.W);
+                OTK.OpenGL.GL.Color4(color.X, color.Y, color.Z, color.W);
 
                 bool makeGlCall = false;
 
@@ -71,7 +72,7 @@ namespace Sce.Atf.Rendering.OpenGL
                 }
 
                 if (makeGlCall)
-                    Gl.glLineWidth(renderState.LineThickness);
+                    OTK.OpenGL.GL.LineWidth(renderState.LineThickness);
             }
         }
 
@@ -81,14 +82,14 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 if (RenderStatesDiffer(previousRenderState, renderState, RenderMode.Smooth))
                 {
-                    Gl.glShadeModel(Gl.GL_SMOOTH);
-                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
+                    OTK.OpenGL.GL.ShadeModel(OTK.OpenGL.ShadingModel.Smooth);
+                    OTK.OpenGL.GL.PolygonMode(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.PolygonMode.Fill);
                     Util3D.RenderStats.RenderStateChanges++;
                     //Console.WriteLine("CommitSmooth");
                 }
 
                 Vec4F color = renderState.SolidColor;
-                Gl.glColor4f(color.X, color.Y, color.Z, color.W);
+                OTK.OpenGL.GL.Color4(color.X, color.Y, color.Z, color.W);
             }
         }
 
@@ -98,18 +99,16 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 if ((renderState.RenderMode & RenderMode.Alpha) != 0)
                 {
-                    Gl.glEnable(Gl.GL_BLEND);
-                    Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.Blend);
+                    OTK.OpenGL.GL.BlendFunc(OTK.OpenGL.BlendingFactor.SrcAlpha, OTK.OpenGL.BlendingFactor.OneMinusSrcAlpha);
                     //Gl.glDepthMask(Gl.GL_FALSE);
                 }
                 else
                 {
-                    Gl.glDisable(Gl.GL_BLEND);
-                    //Gl.glDepthMask(Gl.GL_TRUE);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Blend);
                 }
 
                 Util3D.RenderStats.RenderStateChanges++;
-                //Console.WriteLine("CommitAlpha");
             }
         }
 
@@ -119,12 +118,12 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 if ((renderState.RenderMode & RenderMode.Lit) != 0)
                 {
-                    Gl.glEnable(Gl.GL_LIGHTING);
-                    Gl.glEnable(Gl.GL_LIGHT0);
-                    Gl.glEnable(Gl.GL_NORMALIZE);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.Lighting);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.Light0);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.Normalize);
                 }
                 else
-                    Gl.glDisable(Gl.GL_LIGHTING);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Lighting);
 
                 Util3D.RenderStats.RenderStateChanges++;
                 //Console.WriteLine("CommitLighting");
@@ -136,29 +135,29 @@ namespace Sce.Atf.Rendering.OpenGL
                     Vec4F colorVec = renderState.EmissionColor;
                     float[] color = { colorVec.X, colorVec.Y, colorVec.Z, colorVec.W };
 
-                    Gl.glMaterialfv(Gl.GL_FRONT_AND_BACK, Gl.GL_EMISSION, color);
+                    OTK.OpenGL.GL.Material(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.MaterialParameter.Emission, color);
                 }
                 {
                     Vec4F colorVec = renderState.AmbientColor;
                     float[] color = { colorVec.X, colorVec.Y, colorVec.Z, colorVec.W };
 
-                    Gl.glMaterialfv(Gl.GL_FRONT_AND_BACK, Gl.GL_AMBIENT, color);
+                    OTK.OpenGL.GL.Material(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.MaterialParameter.Ambient, color);
                 }
                 {
                     Vec4F colorVec = renderState.SolidColor;
                     float[] color = { colorVec.X, colorVec.Y, colorVec.Z, colorVec.W };
 
-                    Gl.glMaterialfv(Gl.GL_FRONT_AND_BACK, Gl.GL_DIFFUSE, color);
+                    OTK.OpenGL.GL.Material(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.MaterialParameter.Diffuse, color);
                 }
                 {
                     Vec4F specularcolorVec = renderState.SpecularColor;
                     float[] color = { specularcolorVec.X, specularcolorVec.Y, specularcolorVec.Z, specularcolorVec.W };
 
-                    Gl.glMaterialfv(Gl.GL_FRONT_AND_BACK, Gl.GL_SPECULAR, color);
+                    OTK.OpenGL.GL.Material(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.MaterialParameter.Specular, color);
                 }
                 {
                     float Shininess = renderState.Shininess;
-                    Gl.glMaterialf(Gl.GL_FRONT_AND_BACK, Gl.GL_SHININESS, Shininess);
+                    OTK.OpenGL.GL.Material(OTK.OpenGL.MaterialFace.FrontAndBack, OTK.OpenGL.MaterialParameter.Shininess, Shininess);
                 }
             }
         }
@@ -168,11 +167,11 @@ namespace Sce.Atf.Rendering.OpenGL
             if (RenderStatesDiffer(previousRenderState, renderState, RenderMode.DisableZBuffer))
             {
                 if ((renderState.RenderMode & RenderMode.DisableZBuffer) != 0)
-                    Gl.glDisable(Gl.GL_DEPTH_TEST);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.DepthTest);
                 else
                 {
-                    Gl.glEnable(Gl.GL_DEPTH_TEST);
-                    Gl.glDepthFunc(Gl.GL_LEQUAL);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.DepthTest);
+                    OTK.OpenGL.GL.DepthFunc(OTK.OpenGL.DepthFunction.Lequal);
                 }
 
                 Util3D.RenderStats.RenderStateChanges++;
@@ -185,9 +184,9 @@ namespace Sce.Atf.Rendering.OpenGL
             if (RenderStatesDiffer(previousRenderState, renderState, RenderMode.DisableZBufferWrite))
             {
                 if ((renderState.RenderMode & RenderMode.DisableZBufferWrite) != 0)
-                    Gl.glDepthMask(Gl.GL_FALSE);
+                    OTK.OpenGL.GL.DepthMask(false);
                 else
-                    Gl.glDepthMask(Gl.GL_TRUE);
+                    OTK.OpenGL.GL.DepthMask(true);
 
                 Util3D.RenderStats.RenderStateChanges++;
                 //Console.WriteLine("CommitDepthMask");
@@ -201,12 +200,12 @@ namespace Sce.Atf.Rendering.OpenGL
             {
                 if ((renderState.RenderMode & RenderMode.Textured) != 0)
                 {
-                    Gl.glEnable(Gl.GL_TEXTURE_2D);
-                    Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.Texture2D);
+                    OTK.OpenGL.GL.TexEnv(OTK.OpenGL.TextureEnvTarget.TextureEnv, OTK.OpenGL.TextureEnvParameter.TextureEnvMode, (float)OTK.OpenGL.TextureEnvMode.Modulate);
                 }
                 else
                 {
-                    Gl.glDisable(Gl.GL_TEXTURE_2D);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.Texture2D);
                 }
                 Util3D.RenderStats.RenderStateChanges++;
                 //Console.WriteLine("CommitTextures -- enable/disable textures");
@@ -217,7 +216,7 @@ namespace Sce.Atf.Rendering.OpenGL
                 if (textureBitChange ||
                     previousRenderState.TextureName != renderState.TextureName)
                 {
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, renderState.TextureName);
+                    OTK.OpenGL.GL.BindTexture(OTK.OpenGL.TextureTarget.Texture2D, renderState.TextureName);
                     Util3D.RenderStats.RenderStateChanges++;
                     //Console.WriteLine("CommitTextures -- new texture {0}", renderState.TextureName);
                 }
@@ -230,11 +229,11 @@ namespace Sce.Atf.Rendering.OpenGL
                 RenderStatesDiffer(previousRenderState, renderState, RenderMode.Wireframe))
             {
                 if ((renderState.RenderMode & RenderMode.CullBackFace) == 0)
-                    Gl.glDisable(Gl.GL_CULL_FACE);
+                    OTK.OpenGL.GL.Disable(OTK.OpenGL.EnableCap.CullFace);
                 else
                 {
-                    Gl.glEnable(Gl.GL_CULL_FACE);
-                    Gl.glCullFace(Gl.GL_BACK);
+                    OTK.OpenGL.GL.Enable(OTK.OpenGL.EnableCap.CullFace);
+                    OTK.OpenGL.GL.CullFace(OTK.OpenGL.CullFaceMode.Back);
                 }
 
                 Util3D.RenderStats.RenderStateChanges++;

@@ -4,7 +4,8 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering
 {
@@ -35,7 +36,7 @@ namespace Sce.Atf.Rendering
             using (bitmap)
             {    
                 int glPixelFormat = CalculateGlPixelFormat(bitmap);
-                int pixelDepth = (glPixelFormat == Gl.GL_BGRA) ? 4 : 3;
+                int pixelDepth = (glPixelFormat == (int)OTK.OpenGL.PixelFormat.Bgra) ? 4 : 3;
                 
                 System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
                 System.Drawing.Imaging.BitmapData bitmapData = 
@@ -62,10 +63,10 @@ namespace Sce.Atf.Rendering
             switch (bitmap.PixelFormat)
             {
                 case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                    return Gl.GL_BGRA;
+                    return (int)OTK.OpenGL.PixelFormat.Bgra;
                     
                 case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    return Gl.GL_BGR;
+                    return (int)OTK.OpenGL.PixelFormat.Bgr;
                     
                 default:
                     throw new NotSupportedException("Unknown bitmap pixel depth '" + 

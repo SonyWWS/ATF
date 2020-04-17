@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering
 {
@@ -129,19 +130,19 @@ namespace Sce.Atf.Rendering
             {
                 switch (m_pixelFormat)
                 {
-                    case Gl.GL_BGRA:
+                    case (int)OTK.OpenGL.PixelFormat.Bgra:
                         return PixelFormat.ARGB32;
 
-                    case Gl.GL_BGR:
+                    case (int)OTK.OpenGL.PixelFormat.Bgr:
                         return PixelFormat.RGB24;
 
-                    case Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+                    case (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt1Ext:
                         return PixelFormat.DXT1;
 
-                    case Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
+                    case (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt3Ext:
                         return PixelFormat.DXT3;
 
-                    case Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
+                    case (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt5Ext:
                         return PixelFormat.DXT5;
                 }
 
@@ -152,23 +153,23 @@ namespace Sce.Atf.Rendering
                 switch (value)
                 {
                     case PixelFormat.ARGB32:
-                        m_pixelFormat = Gl.GL_BGRA;
+                        m_pixelFormat = (int)OTK.OpenGL.PixelFormat.Bgra;
                         break;
 
                     case PixelFormat.RGB24:
-                        m_pixelFormat = Gl.GL_BGR;
+                        m_pixelFormat = (int)OTK.OpenGL.PixelFormat.Bgr;
                         break;
 
                     case PixelFormat.DXT1:
-                        m_pixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                        m_pixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                         break;
 
                     case PixelFormat.DXT3:
-                        m_pixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                        m_pixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                         break;
 
                     case PixelFormat.DXT5:
-                        m_pixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                        m_pixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                         break;
                 }
             }

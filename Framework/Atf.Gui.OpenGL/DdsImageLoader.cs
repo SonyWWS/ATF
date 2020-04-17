@@ -4,7 +4,8 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Tao.OpenGl;
+//using Tao.OpenGl;
+using OTK = OpenTK.Graphics;
 
 namespace Sce.Atf.Rendering
 {
@@ -133,7 +134,7 @@ namespace Sce.Atf.Rendering
                             0x0000FF00,
                             0x000000FF))
                         {
-                            glPixelFormat = Gl.GL_BGRA; //OpenGl's format tag is the reverse order
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Bgra;
                         }
                         else if (pixelFormat.HasAlphaRedGreenBlueMasks(
                             0xFF000000,
@@ -141,14 +142,14 @@ namespace Sce.Atf.Rendering
                             0x0000FF00,
                             0x00FF0000))
                         {
-                            glPixelFormat = Gl.GL_RGBA;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Rgba;
                         }
                         else if (pixelFormat.HasRedGreenBlueMasks(
                             0x00FF0000,
                             0x0000FF00,
                             0x000000FF))
                         {
-                            glPixelFormat = Gl.GL_BGR;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Bgr;
                             converter = Create32BitTo24BitConverter(0, 1, 2);
                             elementsPerPixel = 3;
                         }
@@ -157,13 +158,13 @@ namespace Sce.Atf.Rendering
                             0x0000FF00,
                             0x00FF0000))
                         {
-                            glPixelFormat = Gl.GL_RGB;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Rgb;
                             converter = Create32BitTo24BitConverter(0, 1, 2);
                             elementsPerPixel = 3;
                         }
                         else
                         {
-                            glPixelFormat = Gl.GL_RGBA;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Rgba;
                         }
                         break;
                     case 24:
@@ -173,11 +174,11 @@ namespace Sce.Atf.Rendering
                             0x0000FF00,
                             0x000000FF))
                         {
-                            glPixelFormat = Gl.GL_BGR;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Bgr;
                         }
                         else
                         {
-                            glPixelFormat = Gl.GL_RGB;
+                            glPixelFormat = (int)OTK.OpenGL.PixelFormat.Rgb;
                         }
                         break;
                     default:
@@ -193,21 +194,21 @@ namespace Sce.Atf.Rendering
                 case DDPIXELFORMAT.FOURCC_DXT1:
                     // DXT1's compression ratio is 8:1
                     compressionFactor = 2;
-                    glPixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                    glPixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     elementsPerPixel = 3;
                     break;
 
                 case DDPIXELFORMAT.FOURCC_DXT3:
                     // DXT3's compression ratio is 4:1
                     compressionFactor = 4;
-                    glPixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                    glPixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                     elementsPerPixel = 4;
                     break;
 
                 case DDPIXELFORMAT.FOURCC_DXT5:
                     // DXT5's compression ratio is 4:1
                     compressionFactor = 4;
-                    glPixelFormat = Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                    glPixelFormat = (int)OTK.OpenGL.PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     elementsPerPixel = 4;
                     break;
 
