@@ -60,10 +60,6 @@ namespace Sce.Atf.Rendering.Dom
         #endregion
 
         /// <summary>
-        /// Gets and sets the context object (e.g., an EditingContext)</summary>
-        public object Context { get; set; }
-
-        /// <summary>
         /// Gets and sets the render action</summary>
         public IRenderAction RenderAction
         {
@@ -556,7 +552,7 @@ namespace Sce.Atf.Rendering.Dom
 
                 // When picking, we don't want to display this buffer, so don't swap OpenGl buffers.
                 // This property gets reset by base.EndPaint().
-                SwapBuffers = false;
+                vSwapBuffers = false;
             }
             else
             {

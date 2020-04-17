@@ -3,7 +3,9 @@
 using System;
 using System.Windows.Forms;
 
-using Tao.Platform.Windows;
+//using Tao.Platform.Windows;
+
+using OpenTK;
 
 namespace Sce.Atf.Rendering.OpenGL
 {
@@ -12,7 +14,7 @@ namespace Sce.Atf.Rendering.OpenGL
     /// <remarks>This class's constructor initializes OpenGL so that other tools that use OpenGL, such as
     /// the Texture Manager, work even if BeginPaint has not been called. This allows
     /// Panel3D to work in a tabbed interface like the FAST Editor.</remarks>
-    public class Panel3D : InteropControl
+    public class Panel3D : OpenTK.GLControl
     {
         /// <summary>
         /// Constructor</summary>
@@ -65,7 +67,8 @@ namespace Sce.Atf.Rendering.OpenGL
         protected virtual void BeginPaint()
         {
             StartGlIfNecessary();
-            if (!Wgl.wglMakeCurrent(m_hdc, m_hglrc))
+            this.MakeCurrent();
+            if (!this.Context.IsCurrent)
             {
                 Util3D.ReportErrors();
                 throw new InvalidOperationException("Can't make this panel's GL context to be current");
@@ -75,22 +78,23 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <summary>
         /// Whether the OpenGl buffers should be swapped by the EndPaint method. Is always set to true when
         /// EndPaint finishes. Default is true.</summary>
-        protected bool SwapBuffers = true;
+        protected bool vSwapBuffers = true;
 
         /// <summary>
         /// Ends painting</summary>
         protected virtual void EndPaint()
         {
-            if (SwapBuffers)
-                Gdi.SwapBuffers(m_hdc);
-            SwapBuffers = true;
+            if (vSwapBuffers)
+                SwapBuffers();
+            vSwapBuffers = true;
         }
 
         /// <summary>
         /// Makes this panel's OpenGL context current</summary>
         protected void SetCurrentContext()
         {
-            if (!Wgl.wglMakeCurrent(m_hdc, m_hglrc))
+            this.MakeCurrent();
+            if (!this.Context.IsCurrent)
             {
                 Util3D.ReportErrors();
                 throw new InvalidOperationException("Can't make this panel's GL context to be current");
@@ -116,7 +120,7 @@ namespace Sce.Atf.Rendering.OpenGL
                 try
                 {
                     // Attempt To Get A Device Context
-                    m_hdc = User.GetDC(Handle);
+                    m_hdc = this.WindowInfo.Handle;
                     if (m_hdc == IntPtr.Zero)
                         throw new InvalidOperationException("Can't get device context");
 
@@ -140,7 +144,7 @@ namespace Sce.Atf.Rendering.OpenGL
 
             if (disposing && (m_hdc != IntPtr.Zero))
             {
-                User.ReleaseDC(Handle, m_hdc);
+                base.Dispose();
                 m_hdc = IntPtr.Zero;
             }
 
