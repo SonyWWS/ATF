@@ -3,8 +3,6 @@
 using System;
 using System.Windows.Forms;
 
-//using Tao.Platform.Windows;
-
 using OpenTK;
 
 namespace Sce.Atf.Rendering.OpenGL
@@ -14,7 +12,7 @@ namespace Sce.Atf.Rendering.OpenGL
     /// <remarks>This class's constructor initializes OpenGL so that other tools that use OpenGL, such as
     /// the Texture Manager, work even if BeginPaint has not been called. This allows
     /// Panel3D to work in a tabbed interface like the FAST Editor.</remarks>
-    public class Panel3D : OpenTK.GLControl
+    public class Panel3D : GLControl
     {
         /// <summary>
         /// Constructor</summary>
@@ -24,6 +22,7 @@ namespace Sce.Atf.Rendering.OpenGL
         public Panel3D()
         {
             RenderStateGuardianUtils.InitRenderStateGuardian(m_renderStateGuardian);
+            this.MakeCurrent();
             StartGlIfNecessary();
         }
 
@@ -104,13 +103,15 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <summary>
         /// Client entry to initialize custom OpenGL resources</summary>
         protected virtual void Initialize() 
-        { 
+        {
+            
         }
 
         /// <summary>
         /// Client entry to unload custom OpenGL resources</summary>
         protected virtual void Shutdown() 
-        { 
+        {
+
         }
 
         private void StartGlIfNecessary()
@@ -124,7 +125,7 @@ namespace Sce.Atf.Rendering.OpenGL
                     if (m_hdc == IntPtr.Zero)
                         throw new InvalidOperationException("Can't get device context");
 
-                    OpenGlCore.InitOpenGl(m_hdc, out m_hglrc);
+                    OpenGlCore.InitOpenGl(this, out m_hglrc);
                     Initialize();
                     m_isStarted = true;
                 }
@@ -139,8 +140,7 @@ namespace Sce.Atf.Rendering.OpenGL
 
         private void StopGl(bool disposing)
         {
-            Shutdown();
-            OpenGlCore.ShutdownOpenGl(ref m_hglrc);
+            OpenGlCore.ShutdownOpenGl(this, ref m_hglrc);
 
             if (disposing && (m_hdc != IntPtr.Zero))
             {

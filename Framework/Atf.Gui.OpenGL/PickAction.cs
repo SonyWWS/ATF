@@ -7,6 +7,7 @@ using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace Sce.Atf.Rendering.Dom
 {
@@ -102,13 +103,17 @@ namespace Sce.Atf.Rendering.Dom
             float width = Math.Abs(x1 - x2);
             float height = Math.Abs(y1 - y2);
 
-            GLu.GLuPickMatrix(
-                xCenter,
-                yCenter,
-                width + 2.0f * m_pickTolerance,
-                height + 2.0f * m_pickTolerance,
-                viewPort);
-            
+            var deltaX = width + 2.0f * m_pickTolerance;
+            var deltaY = height + 2.0f * m_pickTolerance;
+
+            if (deltaX <= 0 ||deltaY <= 0)
+            {
+                return;
+            }
+
+            GL.Translate((viewPort[2] - 2 * (xCenter - viewPort[0])) / deltaX, (viewPort[3] - 2 * (yCenter - viewPort[1])) / deltaY, 0);
+            GL.Scale(viewPort[2] / deltaX, viewPort[3] / deltaY, 1.0);
+
             // Calc new view frustum according to mouse coords
             m_viewFrust0.Set(camera.Frustum);
 
@@ -566,9 +571,9 @@ namespace Sce.Atf.Rendering.Dom
             }
             else
             {
-                GLu.GLuPerspective(
-                    camera.Frustum.FovY * 180 / Math.PI,
-                    (double)m_width / (double)m_height,
+                OpenTK.Matrix4.CreatePerspectiveFieldOfView(
+                    camera.Frustum.FovY,
+                    (float)m_width / (float)m_height,
                     camera.Frustum.Near,
                     camera.Frustum.Far);
             }
@@ -619,26 +624,21 @@ namespace Sce.Atf.Rendering.Dom
             float screenX, float screenY, float screenZ,
             double[] viewMat, double[] projectionMat, int[] viewport)
         {
-            double posX, posY, posZ;
+            float winX = (float)screenX;
+            float winY = (float)viewport[3] - (float)screenY;
 
-            double winX = (double)screenX;
-            double winY = (double)viewport[3] - (double)screenY;
+            Matrix4 viewMat4 = new Matrix4(
+                               (float)viewMat[0], (float)viewMat[1], (float)viewMat[2], (float)viewMat[3],
+                               (float)viewMat[4], (float)viewMat[5], (float)viewMat[6], (float)viewMat[7],
+                               (float)viewMat[8], (float)viewMat[9], (float)viewMat[10], (float)viewMat[11],
+                               (float)viewMat[12], (float)viewMat[13], (float)viewMat[14], (float)viewMat[15]);
+            viewMat4.Invert();
 
-            GLu.GLuUnProject(
-                winX,
-                winY,
-                screenZ,
-                viewMat,
-                projectionMat,
-                viewport,
-                out posX,
-                out posY,
-                out posZ);
-            
-            Vec3F intersectionPt = new Vec3F(
-                (float)posX,
-                (float)posY,
-                (float)posZ);
+            Vector3 screenVec = new Vector3(screenX, screenY, screenZ);
+
+            var result = OpenTK.Vector3.Unproject(screenVec, winX, winY, viewport[2], viewport[3], 0, 1, viewMat4);
+
+            Vec3F intersectionPt = new Vec3F(result.X, result.Y, result.Z);
             return intersectionPt;
         }
 

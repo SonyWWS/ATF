@@ -82,23 +82,19 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.Platform.Windows, Version=1.0.0.3, Culture=neutral, PublicKeyToken=701104b2da67a104">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\Tao.OpenGl\Tao.Platform.Windows.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArcBallCameraController.cs" />
     <Compile Include="BitmapContext.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CanvasControl3D.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DdsCompressor.cs" />
     <Compile Include="DdsImageLoader.cs" />
     <Compile Include="DesignControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DevilImageLoader.cs" />
     <Compile Include="FlyCameraController.cs" />
@@ -108,7 +104,7 @@
     <Compile Include="MsBitmapImageLoader.cs" />
     <Compile Include="OpenGlCore.cs" />
     <Compile Include="Panel3D.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="PickAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

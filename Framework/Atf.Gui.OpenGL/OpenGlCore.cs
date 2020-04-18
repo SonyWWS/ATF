@@ -7,8 +7,6 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 
 
-using Tao.Platform.Windows;
-
 using OpenTK;
 
 namespace Sce.Atf.Rendering.OpenGL
@@ -55,22 +53,12 @@ namespace Sce.Atf.Rendering.OpenGL
         /// Initializes an OpenGL context with the associated Win32 device context</summary>
         /// <param name="hdc">HDC from the window to which the new OpenGL context is bound</param>
         /// <param name="hglrc">Handle to the new OpenGL context</param>
-        public static void InitOpenGl(IntPtr hdc, out IntPtr hglrc)
+        public static void InitOpenGl(GLControl control, out IntPtr hglrc)
         {
-            Gdi.PIXELFORMATDESCRIPTOR pfd = new Gdi.PIXELFORMATDESCRIPTOR();
-            PopulatePixelFormatDescriptor(ref pfd);
-
-            // Attempt To Find An Appropriate Pixel Format
-            int pixelFormat = Gdi.ChoosePixelFormat(hdc, ref pfd);
-            if (pixelFormat == 0)
-                throw new InvalidOperationException("Can't find a suitable PixelFormat");
-
-            // Attempt To Set The Pixel Format?
-            if (!Gdi.SetPixelFormat(hdc, pixelFormat, ref pfd))
-                throw new InvalidOperationException("Can't set the PixelFormat");
+            control.MakeCurrent();
 
             // Attempt To Get The Rendering Context
-            hglrc = Wgl.wglCreateContext(hdc);
+            hglrc = control.WindowInfo.Handle;
             if (hglrc == IntPtr.Zero)
                 throw new InvalidOperationException("Can't create GL rendering context");
 
@@ -78,12 +66,10 @@ namespace Sce.Atf.Rendering.OpenGL
                 s_sharedHglrc = hglrc;
             else
             {
-                // We don't throw an exception on failure because the caller may be on another thread or is
-                //  using a different pixel format.
-                Wgl.wglShareLists(s_sharedHglrc, hglrc);
+                throw new Exception("s_sharedHglrc is not IntPtr.Zero");
             }
 
-            if (!Wgl.wglMakeCurrent(hdc, hglrc))
+            if (!control.Context.IsCurrent)
                 throw new InvalidOperationException("Can't make the OpenGL rendering context to be the current context.");
 
             // Load all extensions for mainline rendering
@@ -94,17 +80,17 @@ namespace Sce.Atf.Rendering.OpenGL
             }
 
             // Init fonts
-            using (Font defaultFont = SystemFonts.DefaultFont)
-            {
-                Gdi.SelectObject(hdc, defaultFont.ToHfont());
-            }
-            foreach (IntSet.Range range in s_fontMap.Ranges)
-            {
-                int baseDisplayListId = range.PreviousItemsCount + TEXT_DISPLAY_LIST_BASE;
+            //using (Font defaultFont = SystemFonts.DefaultFont)
+            //{
+            //    Gdi.SelectObject(hdc, defaultFont.ToHfont());
+            //}
+            //foreach (IntSet.Range range in s_fontMap.Ranges)
+            //{
+            //    int baseDisplayListId = range.PreviousItemsCount + TEXT_DISPLAY_LIST_BASE;
 
-                if (!wglUseFontBitmaps(hdc, range.Min, range.Count, (uint)baseDisplayListId))
-                    throw new InvalidOperationException("Font bitmaps were unable to be created.");
-            }
+            //    if (!wglUseFontBitmaps(hdc, range.Min, range.Count, (uint)baseDisplayListId))
+            //        throw new InvalidOperationException("Font bitmaps were unable to be created.");
+            //}
             s_fontMap.Lock();
 
             Util3D.ReportErrors();
@@ -162,55 +148,58 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <summary>
         /// Destroys the provided OpenGL context</summary>
         /// <param name="hglrc">OpenGL render context that was initialized in InitOpenGl</param>
-        public static void ShutdownOpenGl(ref IntPtr hglrc)
+        public static void ShutdownOpenGl(GLControl control,ref IntPtr hglrc)
         {
-            if (hglrc != IntPtr.Zero)
+            //if (hglrc != IntPtr.Zero)
+            //{
+            //    Wgl.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+            //    Wgl.wglDeleteContext(hglrc);
+            //    hglrc = IntPtr.Zero;
+            //}
+
+            if(hglrc != IntPtr.Zero)
             {
-                Wgl.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-                Wgl.wglDeleteContext(hglrc);
+                control.Context.MakeCurrent(null);
+                control.Dispose();
                 hglrc = IntPtr.Zero;
             }
         }
         
-        private static void PopulatePixelFormatDescriptor(ref Gdi.PIXELFORMATDESCRIPTOR pfd)
-        {
-            pfd.nSize = (short)Marshal.SizeOf(pfd);
-            pfd.nVersion = 1;
-            pfd.dwFlags = Gdi.PFD_DRAW_TO_WINDOW |
-                Gdi.PFD_SUPPORT_OPENGL |
-                Gdi.PFD_DOUBLEBUFFER;
-            pfd.iPixelType = (byte)Gdi.PFD_TYPE_RGBA;
-            pfd.cColorBits = (byte)32;
-            pfd.cRedBits = 0;
-            pfd.cRedShift = 0;
-            pfd.cGreenBits = 0;
-            pfd.cGreenShift = 0;
-            pfd.cBlueBits = 0;
-            pfd.cBlueShift = 0;
-            pfd.cAlphaBits = 0;
-            pfd.cAlphaShift = 0;
-            pfd.cAccumBits = 0;
-            pfd.cAccumRedBits = 0;
-            pfd.cAccumGreenBits = 0;
-            pfd.cAccumBlueBits = 0;
-            pfd.cAccumAlphaBits = 0;
-            pfd.cDepthBits = 32;
-            pfd.cStencilBits = 0;
-            pfd.cAuxBuffers = 0;
-            pfd.iLayerType = (byte)Gdi.PFD_MAIN_PLANE;
-            pfd.bReserved = 0;
-            pfd.dwLayerMask = 0;
-            pfd.dwVisibleMask = 0;
-            pfd.dwDamageMask = 0;
-        }
-
-        [DllImport("opengl32.dll")]
-        private static extern IntPtr glGetString(uint name);
+        //private static void PopulatePixelFormatDescriptor(ref Gdi.PIXELFORMATDESCRIPTOR pfd)
+        //{
+        //    pfd.nSize = (short)Marshal.SizeOf(pfd);
+        //    pfd.nVersion = 1;
+        //    pfd.dwFlags = Gdi.PFD_DRAW_TO_WINDOW |
+        //        Gdi.PFD_SUPPORT_OPENGL |
+        //        Gdi.PFD_DOUBLEBUFFER;
+        //    pfd.iPixelType = (byte)Gdi.PFD_TYPE_RGBA;
+        //    pfd.cColorBits = (byte)32;
+        //    pfd.cRedBits = 0;
+        //    pfd.cRedShift = 0;
+        //    pfd.cGreenBits = 0;
+        //    pfd.cGreenShift = 0;
+        //    pfd.cBlueBits = 0;
+        //    pfd.cBlueShift = 0;
+        //    pfd.cAlphaBits = 0;
+        //    pfd.cAlphaShift = 0;
+        //    pfd.cAccumBits = 0;
+        //    pfd.cAccumRedBits = 0;
+        //    pfd.cAccumGreenBits = 0;
+        //    pfd.cAccumBlueBits = 0;
+        //    pfd.cAccumAlphaBits = 0;
+        //    pfd.cDepthBits = 32;
+        //    pfd.cStencilBits = 0;
+        //    pfd.cAuxBuffers = 0;
+        //    pfd.iLayerType = (byte)Gdi.PFD_MAIN_PLANE;
+        //    pfd.bReserved = 0;
+        //    pfd.dwLayerMask = 0;
+        //    pfd.dwVisibleMask = 0;
+        //    pfd.dwDamageMask = 0;
+        //}
 
         private static void LoadAllExtensions()
         {
-            IntPtr extensionsPtr = glGetString(0x00001f03);
-            string extensionsString = Marshal.PtrToStringAnsi(extensionsPtr);
+            string extensionsString = OpenTK.Graphics.OpenGL.GL.GetString(OpenTK.Graphics.OpenGL.StringName.Extensions);
             string[] extensions = extensionsString.Split(' ');
             s_extensions = extensions;
 
@@ -251,10 +240,6 @@ namespace Sce.Atf.Rendering.OpenGL
                     break;
             }
         }
-
-        // Get wglUseFontBitmapsW (unicode). The one in Tao's Wgl is wglUseFontBitmapsA (ANSI).
-        [DllImport("opengl32.dll", EntryPoint = "wglUseFontBitmaps", CharSet = CharSet.Unicode)]
-        private static extern bool wglUseFontBitmaps(IntPtr hdc, int start, int count, uint listbase);
 
         private static IntPtr s_sharedHglrc = IntPtr.Zero;
         private static bool s_initialized = false;

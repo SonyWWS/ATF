@@ -9,7 +9,7 @@ using Sce.Atf.Rendering.Dom;
 using Sce.Atf.Rendering.OpenGL;
 using Sce.Atf.VectorMath;
 
-using Tao.OpenGl;
+using OpenTK.Graphics.OpenGL;
 
 namespace ModelViewerSample.Rendering
 {
@@ -76,11 +76,11 @@ namespace ModelViewerSample.Rendering
 
                 // determine primitive type
                 if (m_primitives.PrimitiveType == "POLYGONS")
-                    m_drawMode = Gl.GL_POLYGON;
+                    m_drawMode = (int)OpenTK.Graphics.OpenGL.All.Polygon;
                 else if (m_primitives.PrimitiveType == "TRIANGLES")
-                    m_drawMode = Gl.GL_TRIANGLES;
+                    m_drawMode = (int)OpenTK.Graphics.OpenGL.All.Triangles;
                 else if (m_primitives.PrimitiveType == "TRISTRIPS")
-                    m_drawMode = Gl.GL_TRIANGLE_STRIP;
+                    m_drawMode = (int)OpenTK.Graphics.OpenGL.All.TriangleStrip;
 
                 // add draw commands
                 AddCommand( NormalsTag, Function.glNormal3fv);
@@ -122,7 +122,7 @@ namespace ModelViewerSample.Rendering
         {
             if (m_displayListId != 0)
             {
-                Gl.glDeleteLists(m_displayListId, 1);//fyi: can't call from a finalizer
+                GL.DeleteLists(m_displayListId, 1);
                 m_displayListId = 0;
                 #if MEMORY_DEBUG
                 lock(s_lock) NumDisplayListIds--;
@@ -140,7 +140,7 @@ namespace ModelViewerSample.Rendering
         protected override void Render(SceneNode[] graphPath, RenderState renderState, IRenderAction action, Camera camera)
         {
             // apply xform
-            Gl.glPushMatrix();
+            GL.PushMatrix();
             Util3D.glMultMatrixf(action.TopMatrix);
 
             if (m_displayListId == 0)
@@ -149,22 +149,22 @@ namespace ModelViewerSample.Rendering
                 RenderStats ourStats = new RenderStats();
                 Util3D.RenderStats = ourStats;
 
-                m_displayListId = Gl.glGenLists(1);
+                m_displayListId = GL.GenLists(1);
                 #if MEMORY_DEBUG
                 lock(s_lock) NumDisplayListIds++;
                 #endif
-                Gl.glNewList(m_displayListId, Gl.GL_COMPILE);
+                GL.NewList(m_displayListId, ListMode.Compile);
                 Render(action);
-                Gl.glEndList();
+                GL.EndList();
 
                 m_numPrimitives = ourStats.PrimCount;
                 m_numVertices = ourStats.VertexCount;
                 Util3D.RenderStats = globalStats;
             }
 
-            Gl.glCallList(m_displayListId);
+            GL.CallList(m_displayListId);
 
-            Gl.glPopMatrix();
+            GL.PopMatrix();
             Util3D.RenderStats.PrimCount += m_numPrimitives;
             Util3D.RenderStats.VertexCount += m_numVertices;
         }
@@ -180,10 +180,10 @@ namespace ModelViewerSample.Rendering
             action.RenderStateGuardian.Commit(renderState);
 
             // apply xform
-            Gl.glPushMatrix();
+            GL.PushMatrix();
             Util3D.glMultMatrixf(action.TopMatrix);
             RenderVertices(action);
-            Gl.glPopMatrix();
+            GL.PopMatrix();
         }
 
         private IMesh TryGetMesh()
@@ -220,7 +220,7 @@ namespace ModelViewerSample.Rendering
             {
                 int primSize = sizes[i % sizes.Length];
                 Util3D.RenderStats.VertexCount += primSize;
-                Gl.glBegin(m_drawMode);
+                GL.Begin((PrimitiveType)m_drawMode);
                 
                 for (int j = 0; j < primSize; j++)
                 {
@@ -230,7 +230,7 @@ namespace ModelViewerSample.Rendering
                         CallFunction(cmd, offset);
                     }
                 }
-                Gl.glEnd();
+                GL.End();
                 primBaseIndex += primSize * m_bindingCount;
             }
         }
@@ -248,13 +248,13 @@ namespace ModelViewerSample.Rendering
             {
                 int primSize = sizes[i % sizes.Length];
                 Util3D.RenderStats.VertexCount += primSize;
-                Gl.glBegin(m_drawMode);
+                GL.Begin((PrimitiveType)m_drawMode);
                 for (int j = 0; j < primSize; j++)
                 {
                     int offset = indices[primBaseIndex + j * m_bindingCount + m_vxCommand.PrimitiveIndex] * m_vxCommand.Stride;
                     CallFunction(m_vxCommand, offset);
                 }
-                Gl.glEnd();
+                GL.End();
                 primBaseIndex += primSize * m_bindingCount;
             }
         }
@@ -269,16 +269,16 @@ namespace ModelViewerSample.Rendering
             switch (cmd.Function)
             {
                 case Function.glColor3fv:
-                    Gl.glColor3f(f[offset], f[offset + 1], f[offset + 2]);
+                    GL.Color3(f[offset], f[offset + 1], f[offset + 2]);
                     break;
                 case Function.glNormal3fv:
-                    Gl.glNormal3f(f[offset], f[offset + 1], f[offset + 2]);
+                    GL.Normal3(f[offset], f[offset + 1], f[offset + 2]);
                     break;
                 case Function.glTexCoord2fv:
-                    Gl.glTexCoord2f(f[offset], f[offset + 1]);
+                    GL.TexCoord2(f[offset], f[offset + 1]);
                     break;
                 case Function.glVertex3fv:
-                    Gl.glVertex3f(f[offset], f[offset + 1], f[offset + 2]);
+                    GL.Vertex3(f[offset], f[offset + 1], f[offset + 2]);
                     break;
             }
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -25,6 +26,14 @@ namespace Sce.Atf.Rendering.Dom
         {
             m_scene = scene;
 
+            if(scene == null)
+            {
+                throw new Exception("scene is null from ctor!!");
+            }
+            if (m_scene == null)
+            {
+                throw new Exception("m_scene is null from ctor!!");
+            }
             m_renderAction = new RenderAction(RenderStateGuardian);
             m_pickAction = new PickAction(RenderStateGuardian);
 
@@ -175,18 +184,7 @@ namespace Sce.Atf.Rendering.Dom
         /// Gets or sets the background color of the DesignControl</summary>
         public override Color BackColor
         {
-            get
-            {
-                return BackColor;
-            }
-            set
-            {
-                //transparency is not allowed
-                if (value.A != 255)
-                    return;
-                m_scene.BackgroundColor = value;
-                BackColor = value;
-            }
+            get;set;
         }
 
         /// <summary>
@@ -622,8 +620,7 @@ namespace Sce.Atf.Rendering.Dom
             OTK.OpenGL.GL.End();
 
             OTK.OpenGL.GL.RasterPos3(s, 0, 0);
-            IntPtr xList = new IntPtr(Convert.ToInt32("x", 16));
-            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, xList);
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, Marshal.StringToHGlobalAnsi("x"));
 
             // Render Y
             OTK.OpenGL.GL.Color3(0.0f, 1.0f, 0.0f);
@@ -634,8 +631,7 @@ namespace Sce.Atf.Rendering.Dom
             OTK.OpenGL.GL.End();
 
             OTK.OpenGL.GL.RasterPos3(s, 0, 0);
-            IntPtr yList = new IntPtr(Convert.ToInt32("y", 16));
-            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, yList);
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, Marshal.StringToHGlobalAnsi("y"));
 
             // Render Z
             OTK.OpenGL.GL.Color3(0.0f, 0.0f,1.0f);
@@ -646,8 +642,7 @@ namespace Sce.Atf.Rendering.Dom
             OTK.OpenGL.GL.End();
 
             OTK.OpenGL.GL.RasterPos3(s, 0, 0);
-            IntPtr zList = new IntPtr(Convert.ToInt32("z", 16));
-            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, zList);
+            OTK.OpenGL.GL.CallLists(1, OTK.OpenGL.ListNameType.UnsignedByte, Marshal.StringToHGlobalAnsi("z"));
         }
 
         private void SetManipulator(IManipulator manipulator, HitRecord[] hits)
