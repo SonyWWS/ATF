@@ -80,6 +80,9 @@ namespace Sce.Atf.Rendering.OpenGL
             }
 
             // Init fonts
+
+            // TODO: Commented out until I can figure out how to render text
+
             //using (Font defaultFont = SystemFonts.DefaultFont)
             //{
             //    Gdi.SelectObject(hdc, defaultFont.ToHfont());
@@ -150,13 +153,6 @@ namespace Sce.Atf.Rendering.OpenGL
         /// <param name="hglrc">OpenGL render context that was initialized in InitOpenGl</param>
         public static void ShutdownOpenGl(GLControl control,ref IntPtr hglrc)
         {
-            //if (hglrc != IntPtr.Zero)
-            //{
-            //    Wgl.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            //    Wgl.wglDeleteContext(hglrc);
-            //    hglrc = IntPtr.Zero;
-            //}
-
             if(hglrc != IntPtr.Zero)
             {
                 control.Context.MakeCurrent(null);
@@ -164,38 +160,6 @@ namespace Sce.Atf.Rendering.OpenGL
                 hglrc = IntPtr.Zero;
             }
         }
-        
-        //private static void PopulatePixelFormatDescriptor(ref Gdi.PIXELFORMATDESCRIPTOR pfd)
-        //{
-        //    pfd.nSize = (short)Marshal.SizeOf(pfd);
-        //    pfd.nVersion = 1;
-        //    pfd.dwFlags = Gdi.PFD_DRAW_TO_WINDOW |
-        //        Gdi.PFD_SUPPORT_OPENGL |
-        //        Gdi.PFD_DOUBLEBUFFER;
-        //    pfd.iPixelType = (byte)Gdi.PFD_TYPE_RGBA;
-        //    pfd.cColorBits = (byte)32;
-        //    pfd.cRedBits = 0;
-        //    pfd.cRedShift = 0;
-        //    pfd.cGreenBits = 0;
-        //    pfd.cGreenShift = 0;
-        //    pfd.cBlueBits = 0;
-        //    pfd.cBlueShift = 0;
-        //    pfd.cAlphaBits = 0;
-        //    pfd.cAlphaShift = 0;
-        //    pfd.cAccumBits = 0;
-        //    pfd.cAccumRedBits = 0;
-        //    pfd.cAccumGreenBits = 0;
-        //    pfd.cAccumBlueBits = 0;
-        //    pfd.cAccumAlphaBits = 0;
-        //    pfd.cDepthBits = 32;
-        //    pfd.cStencilBits = 0;
-        //    pfd.cAuxBuffers = 0;
-        //    pfd.iLayerType = (byte)Gdi.PFD_MAIN_PLANE;
-        //    pfd.bReserved = 0;
-        //    pfd.dwLayerMask = 0;
-        //    pfd.dwVisibleMask = 0;
-        //    pfd.dwDamageMask = 0;
-        //}
 
         private static void LoadAllExtensions()
         {
